@@ -17,7 +17,7 @@ export interface HotelCardProps {
 }
 
 export function HotelCard({ hotel, minPrice, currency = 'USD', nights = 1, onSelect }: HotelCardProps) {
-  const imageUrl = getHotelMainImage(hotel) || '/images/placeholder-hotel.jpg';
+  const imageUrl = getHotelMainImage(hotel);
   const address = formatHotelAddress(hotel);
   const rating = hotel.review_score || 0;
   const ratingColor = getRatingColor(rating);

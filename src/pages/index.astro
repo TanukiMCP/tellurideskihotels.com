@@ -3,25 +3,70 @@ import PageLayout from '@/components/layout/PageLayout.astro';
 import Container from '@/components/layout/Container.astro';
 import HotelSearchWidget from '@/components/lodging/HotelSearchWidget';
 import { SITE_NAME, SITE_DESCRIPTION } from '@/lib/constants';
+import { getHomepageHeroImage, getFeaturedImages } from '@/lib/image-library';
+
+// Static images for homepage
+const heroImage = getHomepageHeroImage();
+const featuredImages = getFeaturedImages();
 ---
 
 <PageLayout
   title={`Best Ski Hotels in Telluride, Colorado | Compare & Book Direct`}
   description={SITE_DESCRIPTION}
+  image={heroImage?.url}
 >
+  {heroImage && (
+    <div class="relative h-96 md:h-[500px] overflow-hidden">
+      <img 
+        src={heroImage.url} 
+        alt="Telluride Ski Resort" 
+        class="w-full h-full object-cover"
+        loading="eager"
+      />
+      <div class="absolute inset-0 bg-gradient-to-r from-black/60 to-black/30"></div>
+      <div class="absolute inset-0 flex items-center justify-center">
+        <div class="text-center text-white px-4">
+          <h1 class="text-4xl md:text-6xl font-bold mb-4 drop-shadow-lg">
+            Find Your Perfect Ski Hotel in Telluride
+          </h1>
+          <p class="text-xl md:text-2xl drop-shadow-md">
+            Search and compare 100+ hotels in Telluride, Colorado
+          </p>
+        </div>
+      </div>
+    </div>
+  )}
+
   <Container class="py-12">
-    <div class="max-w-4xl mx-auto mb-12 text-center">
-      <h1 class="text-4xl md:text-5xl font-bold mb-4 text-gray-900">
-        Find Your Perfect Ski Hotel in Telluride
-      </h1>
-      <p class="text-xl text-gray-600 mb-8">
-        Search and compare 100+ hotels in Telluride, Colorado. Real-time availability, best prices, instant confirmation.
-      </p>
+    <div class="max-w-3xl mx-auto mb-16 -mt-8 relative z-10">
+      <div class="bg-white rounded-lg shadow-xl p-6">
+        <HotelSearchWidget client:load />
+      </div>
     </div>
 
-    <div class="max-w-3xl mx-auto mb-16">
-      <HotelSearchWidget client:load />
-    </div>
+    <!-- Featured Images Gallery -->
+    {featuredImages.length > 0 && (
+      <div class="mb-16">
+        <h2 class="text-3xl font-bold text-center mb-8">Discover Telluride's Finest Hotels</h2>
+        <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+          {featuredImages.map((image) => (
+            <div class="relative h-64 md:h-80 rounded-lg overflow-hidden group">
+              <img 
+                src={image.url} 
+                alt={`Telluride hotel - ${image.category}`}
+                class="w-full h-full object-cover transition-transform group-hover:scale-110 duration-300"
+                loading="lazy"
+              />
+              <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
+                <div class="absolute bottom-4 left-4 right-4">
+                  <p class="text-white text-sm font-medium capitalize">{image.category}</p>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    )}
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-16">
       <div class="text-center">

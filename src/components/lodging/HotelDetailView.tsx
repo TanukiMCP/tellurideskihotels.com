@@ -9,7 +9,7 @@ import { AddonsSection } from '@/components/addons/AddonsSection';
 import { HotelReviews } from './HotelReviews';
 import { CheckoutFlow } from '@/components/checkout/CheckoutFlow';
 import type { LiteAPIHotel, LiteAPIRate } from '@/lib/liteapi/types';
-import { getHotelImage, formatHotelAddress, getHotelRatingColor } from '@/lib/liteapi/utils';
+import { getHotelImage, formatHotelAddress, getHotelRatingColor, getHotelImages } from '@/lib/liteapi/utils';
 import { formatCurrency, calculateNights } from '@/lib/utils';
 import { getRatingColor } from '@/lib/constants';
 import type { SelectedRoom, SelectedAddon } from '@/lib/types';
@@ -31,8 +31,12 @@ export function HotelDetailView({ hotel, checkIn, checkOut, adults, children = 0
   const nights = calculateNights(checkIn, checkOut);
   const rating = hotel.review_score || 0;
   const ratingColor = getRatingColor(rating);
-  const images = hotel.images || [];
-  const mainImage = images.find(img => img.type === 'main' || img.type === 'featured')?.url || images[0]?.url || '/images/placeholder-hotel.jpg';
+  
+  // Get images from LiteAPI or fallback to image library
+  const apiImages = hotel.images || [];
+  const allImages = getHotelImages(hotel);
+  const mainImage = allImages[0] || '/images/placeholder-hotel.jpg';
+  const galleryImages = allImages.slice(1, 5);
 
   const handleRoomSelect = (rateId: string, roomData: LiteAPIRate) => {
     const price = roomData.total?.amount || roomData.net?.amount || 0;
@@ -116,10 +120,10 @@ export function HotelDetailView({ hotel, checkIn, checkOut, adults, children = 0
             className="w-full h-96 object-cover rounded-lg"
           />
         </div>
-        {images.slice(1, 5).map((img, index) => (
+        {galleryImages.map((imgUrl, index) => (
           <ImageWithLoading
             key={index}
-            src={img.url || ''}
+            src={imgUrl}
             alt={`${hotel.name} - Image ${index + 2}`}
             className="w-full h-48 object-cover rounded-lg"
           />
