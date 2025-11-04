@@ -1,5 +1,4 @@
 import { Star } from 'lucide-react';
-import { Badge } from '@/components/ui/Badge';
 import { getRatingColor } from '@/lib/constants';
 
 export interface Review {
