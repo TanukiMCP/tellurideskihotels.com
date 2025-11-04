@@ -1,5 +1,5 @@
 import { cn } from '@/lib/utils';
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { createContext, useContext, useEffect, type ReactNode } from 'react';
 import { X } from 'lucide-react';
 
 interface DialogContextType {

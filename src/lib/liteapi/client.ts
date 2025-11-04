@@ -1,4 +1,4 @@
-import { LITEAPI_BASE_URL, LITEAPI_PUBLIC_KEY, LITEAPI_PRIVATE_KEY } from './config';
+import { LITEAPI_BASE_URL, LITEAPI_PRIVATE_KEY } from './config';
 
 export class LiteAPIError extends Error {
   constructor(

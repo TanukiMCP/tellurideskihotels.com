@@ -1,8 +1,8 @@
 ---
 import PageLayout from '@/components/layout/PageLayout.astro';
 import Container from '@/components/layout/Container.astro';
-import HotelDetailView from '@/components/lodging/HotelDetailView';
-import Breadcrumbs from '@/components/seo/Breadcrumbs';
+import { HotelDetailView } from '@/components/lodging/HotelDetailView';
+import Breadcrumbs from '@/components/seo/Breadcrumbs.astro';
 import type { LiteAPIHotel } from '@/lib/liteapi/types';
 
 const { hotelId } = Astro.params;

@@ -1,9 +1,9 @@
 ---
 import PageLayout from '@/components/layout/PageLayout.astro';
 import Container from '@/components/layout/Container.astro';
-import HotelGrid from '@/components/lodging/HotelGrid';
-import HotelSearchWidget from '@/components/lodging/HotelSearchWidget';
-import Breadcrumbs from '@/components/seo/Breadcrumbs';
+import { HotelGrid } from '@/components/lodging/HotelGrid';
+import { HotelSearchWidget } from '@/components/lodging/HotelSearchWidget';
+import Breadcrumbs from '@/components/seo/Breadcrumbs.astro';
 import type { LiteAPIHotel } from '@/lib/liteapi/types';
 import { DEFAULT_LOCATION, DEFAULT_COUNTRY_CODE } from '@/lib/constants';
 
@@ -94,7 +94,7 @@ const nights = checkIn && checkOut
         minPrices={minPrices}
         currency="USD"
         nights={nights}
-        onHotelSelect={(hotelId) => {
+        onHotelSelect={(hotelId: string) => {
           const params = new URLSearchParams({ hotelId });
           if (checkIn) params.append('checkIn', checkIn);
           if (checkOut) params.append('checkOut', checkOut);

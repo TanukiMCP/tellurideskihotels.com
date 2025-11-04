@@ -14,7 +14,7 @@ export function getHotelMainImage(hotel: LiteAPIHotel): string | null {
 
 export function getHotelImages(hotel: LiteAPIHotel): string[] {
   // Only use images from LiteAPI - no fallbacks
-  return hotel.images?.map(img => img.url).filter(Boolean) || [];
+  return hotel.images?.map(img => img.url).filter((url): url is string => Boolean(url)) || [];
 }
 
 export function formatHotelAddress(hotel: LiteAPIHotel): string {

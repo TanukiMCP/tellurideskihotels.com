@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { LoadingSpinner } from '@/components/shared/LoadingSpinner';
 import { Input } from '@/components/ui/Input';
-import { formatCurrency, calculateNights } from '@/lib/utils';
+import { formatCurrency } from '@/lib/utils';
 import type { LiteAPIAddon } from '@/lib/liteapi/types';
 import type { SelectedAddon } from '@/lib/types';
 
@@ -19,8 +19,6 @@ export interface AddonsSectionProps {
 
 export function AddonsSection({
   hotelId,
-  checkIn,
-  checkOut,
   nights,
   adults,
   children = 0,
