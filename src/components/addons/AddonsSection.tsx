@@ -9,8 +9,6 @@ import type { SelectedAddon } from '@/lib/types';
 
 export interface AddonsSectionProps {
   hotelId: string;
-  checkIn: string;
-  checkOut: string;
   nights: number;
   adults: number;
   children?: number;

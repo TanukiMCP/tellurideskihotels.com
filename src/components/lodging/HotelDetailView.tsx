@@ -26,7 +26,6 @@ export function HotelDetailView({ hotel, checkIn, checkOut, adults, children = 0
   const [selectedRoom, setSelectedRoom] = useState<SelectedRoom | null>(null);
   const [selectedAddons, setSelectedAddons] = useState<SelectedAddon[]>([]);
   const [showCheckout, setShowCheckout] = useState(false);
-  const [, setBookingId] = useState<string | null>(null);
 
   const nights = calculateNights(checkIn, checkOut);
   const rating = hotel.review_score || 0;
@@ -61,7 +60,6 @@ export function HotelDetailView({ hotel, checkIn, checkOut, adults, children = 0
   };
 
   const handleBookingComplete = (bookingId: string) => {
-    setBookingId(bookingId);
     setShowCheckout(false);
     if (typeof window !== 'undefined') {
       window.location.href = `/booking/confirmation/${bookingId}`;
@@ -176,8 +174,6 @@ export function HotelDetailView({ hotel, checkIn, checkOut, adults, children = 0
           <CardContent className="p-6">
             <AddonsSection
               hotelId={hotel.hotel_id}
-              checkIn={checkIn}
-              checkOut={checkOut}
               nights={nights}
               adults={adults}
               children={children}
