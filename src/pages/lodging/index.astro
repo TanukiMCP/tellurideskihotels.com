@@ -1,4 +1,6 @@
 ---
+export const prerender = false; // Server-rendered to handle dynamic searches
+
 import PageLayout from '@/components/layout/PageLayout.astro';
 import Container from '@/components/layout/Container.astro';
 import { HotelGrid } from '@/components/lodging/HotelGrid';
@@ -18,42 +20,52 @@ let hotels: LiteAPIHotel[] = [];
 let minPrices: Record<string, number> = {};
 let loading = false;
 
-if (location) {
+// Only fetch if we have a location parameter (avoids build-time API calls)
+if (location && searchParams.has('location')) {
   try {
     loading = true;
-    const hotelResponse = await fetch(
-      `${url.origin}/api/hotels/search?cityName=${encodeURIComponent(location)}&countryCode=${DEFAULT_COUNTRY_CODE}&limit=100`
-    );
+    // Direct LiteAPI call instead of internal API to avoid build issues
+    const { searchHotels } = await import('@/lib/liteapi/hotels');
+    const hotelData = await searchHotels({
+      cityName: location,
+      countryCode: DEFAULT_COUNTRY_CODE,
+      limit: 100,
+    });
     
-    if (hotelResponse.ok) {
-      const hotelData = await hotelResponse.json();
-      hotels = hotelData.data || [];
-      
-      // Fetch rates for each hotel if dates are provided
-      if (checkIn && checkOut && hotels.length > 0) {
+    hotels = hotelData.data || [];
+    
+    // Fetch rates for each hotel if dates are provided
+    if (checkIn && checkOut && hotels.length > 0) {
+      try {
+        const { searchRates } = await import('@/lib/liteapi/rates');
         const hotelIds = hotels.slice(0, 10).map(h => h.hotel_id).join(',');
-        const ratesResponse = await fetch(
-          `${url.origin}/api/hotels/rates?hotelIds=${hotelIds}&checkIn=${checkIn}&checkOut=${checkOut}&adults=${adults}`
-        );
+        const ratesData = await searchRates({
+          hotelIds,
+          checkIn,
+          checkOut,
+          adults,
+        });
         
-        if (ratesResponse.ok) {
-          const ratesData = await ratesResponse.json();
-          if (ratesData.data) {
-            ratesData.data.forEach((hotel: any) => {
-              const hotelMinPrice = hotel.rooms?.flatMap((r: any) => 
-                r.rates?.map((rate: any) => rate.total?.amount || rate.net?.amount || Infinity)
-              ).filter((p: number) => p !== Infinity);
-              
-              if (hotelMinPrice && hotelMinPrice.length > 0) {
-                minPrices[hotel.hotel_id] = Math.min(...hotelMinPrice);
-              }
-            });
-          }
+        if (ratesData.data) {
+          ratesData.data.forEach((hotel: any) => {
+            const hotelMinPrice = hotel.rooms?.flatMap((r: any) => 
+              r.rates?.map((rate: any) => rate.total?.amount || rate.net?.amount || Infinity)
+            ).filter((p: number) => p !== Infinity);
+            
+            if (hotelMinPrice && hotelMinPrice.length > 0) {
+              minPrices[hotel.hotel_id] = Math.min(...hotelMinPrice);
+            }
+          });
         }
+      } catch (rateError) {
+        // Rates fetch failed - continue without prices
+        console.error('Error fetching rates:', rateError);
       }
     }
   } catch (error) {
+    // Hotel search failed - continue with empty results (client can retry)
     console.error('Error fetching hotels:', error);
+    hotels = [];
   } finally {
     loading = false;
   }
