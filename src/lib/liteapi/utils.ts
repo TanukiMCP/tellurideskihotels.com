@@ -1,5 +1,4 @@
 import type { LiteAPIHotel } from './types';
-import { getHotelFallbackImages } from '../image-library';
 
 export function getHotelImage(hotel: LiteAPIHotel, index: number = 0): string | null {
   if (!hotel.images || hotel.images.length === 0) {
@@ -10,28 +9,12 @@ export function getHotelImage(hotel: LiteAPIHotel, index: number = 0): string | 
 
 export function getHotelMainImage(hotel: LiteAPIHotel): string | null {
   const mainImage = hotel.images?.find(img => img.type === 'main' || img.type === 'featured');
-  const imageUrl = mainImage?.url || getHotelImage(hotel, 0);
-  
-  // Fallback to image library if no LiteAPI image
-  if (!imageUrl) {
-    const fallbackImages = getHotelFallbackImages(hotel);
-    return fallbackImages[0]?.url || null;
-  }
-  
-  return imageUrl;
+  return mainImage?.url || getHotelImage(hotel, 0);
 }
 
 export function getHotelImages(hotel: LiteAPIHotel): string[] {
-  const apiImages = hotel.images?.map(img => img.url).filter(Boolean) || [];
-  
-  // If we have API images, use them
-  if (apiImages.length > 0) {
-    return apiImages;
-  }
-  
-  // Otherwise, use fallback images from library
-  const fallbackImages = getHotelFallbackImages(hotel);
-  return fallbackImages.map(img => img.url);
+  // Only use images from LiteAPI - no fallbacks
+  return hotel.images?.map(img => img.url).filter(Boolean) || [];
 }
 
 export function formatHotelAddress(hotel: LiteAPIHotel): string {

@@ -32,8 +32,7 @@ export function HotelDetailView({ hotel, checkIn, checkOut, adults, children = 0
   const rating = hotel.review_score || 0;
   const ratingColor = getRatingColor(rating);
   
-  // Get images from LiteAPI or fallback to image library
-  const apiImages = hotel.images || [];
+  // Get images from LiteAPI only - no fallbacks
   const allImages = getHotelImages(hotel);
   const mainImage = allImages[0] || '/images/placeholder-hotel.jpg';
   const galleryImages = allImages.slice(1, 5);

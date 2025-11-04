@@ -2,6 +2,11 @@
 import PageLayout from '@/components/layout/PageLayout.astro';
 import Container from '@/components/layout/Container.astro';
 import Breadcrumbs from '@/components/seo/Breadcrumbs';
+import { getImagesByCategory } from '@/lib/image-library';
+
+// Get static images for about page
+const resortImages = getImagesByCategory('resort');
+const aboutImage = resortImages[1] || resortImages[0]; // Use second resort image or first if only one
 ---
 
 <PageLayout
@@ -13,6 +18,17 @@ import Breadcrumbs from '@/components/seo/Breadcrumbs';
       { label: 'Home', href: '/' },
       { label: 'About', href: undefined },
     ]} />
+
+    {aboutImage && (
+      <div class="mb-12">
+        <img 
+          src={aboutImage.url} 
+          alt="Telluride Ski Resort" 
+          class="w-full h-96 object-cover rounded-lg"
+          loading="lazy"
+        />
+      </div>
+    )}
 
     <div class="max-w-3xl mx-auto prose prose-lg">
       <h1 class="text-4xl font-bold mb-6">About Telluride Ski Hotels</h1>

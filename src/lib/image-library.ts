@@ -62,47 +62,18 @@ export function getFeaturedImages(): ImageLibraryImage[] {
   return featured;
 }
 
-// Static fallback images for hotels - uses hotel ID hash for consistent selection
-export function getHotelFallbackImages(hotel?: any): ImageLibraryImage[] {
-  const images: ImageLibraryImage[] = [];
-  
-  // Get all category images
+// Static images for marketing/content pages (NOT for hotel listings)
+// Use these for About page, hero sections, etc.
+export function getStaticContentImages(count: number = 3): ImageLibraryImage[] {
   const resortImages = getImagesByCategory('resort');
+  const luxuryImages = getImagesByCategory('luxury');
   const exteriorImages = getImagesByCategory('exterior');
-  const interiorImages = getImagesByCategory('interior');
-  const roomImages = getImagesByCategory('rooms');
   
-  // Use hotel ID to determine which images to use (consistent per hotel)
-  let hash = 0;
-  if (hotel?.hotel_id) {
-    for (let i = 0; i < hotel.hotel_id.length; i++) {
-      hash = ((hash << 5) - hash) + hotel.hotel_id.charCodeAt(i);
-      hash = hash & hash; // Convert to 32bit integer
-    }
-  }
+  const images: ImageLibraryImage[] = [];
+  if (resortImages[2]) images.push(resortImages[2]);
+  if (luxuryImages[2]) images.push(luxuryImages[2]);
+  if (exteriorImages[2]) images.push(exteriorImages[2]);
   
-  // Select specific images based on hash (consistent per hotel)
-  if (resortImages.length > 0) {
-    images.push(resortImages[Math.abs(hash) % resortImages.length]);
-  }
-  if (exteriorImages.length > 0 && images.length < 3) {
-    images.push(exteriorImages[(Math.abs(hash) + 1) % exteriorImages.length]);
-  }
-  const combinedInterior = [...interiorImages, ...roomImages];
-  if (combinedInterior.length > 0 && images.length < 3) {
-    images.push(combinedInterior[(Math.abs(hash) + 2) % combinedInterior.length]);
-  }
-  
-  // Fill remaining slots with first images from categories
-  if (images.length < 5 && resortImages.length > 0) {
-    const nextResort = resortImages.find(img => !images.find(e => e.id === img.id));
-    if (nextResort) images.push(nextResort);
-  }
-  if (images.length < 5 && exteriorImages.length > 0) {
-    const nextExterior = exteriorImages.find(img => !images.find(e => e.id === img.id));
-    if (nextExterior) images.push(nextExterior);
-  }
-  
-  return images;
+  return images.slice(0, count);
 }
 
