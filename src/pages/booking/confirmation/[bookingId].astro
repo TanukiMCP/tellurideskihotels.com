@@ -1,0 +1,30 @@
+---
+import PageLayout from '@/components/layout/PageLayout.astro';
+import Container from '@/components/layout/Container.astro';
+import BookingConfirmation from '@/components/checkout/BookingConfirmation';
+import Breadcrumbs from '@/components/seo/Breadcrumbs';
+
+const { bookingId } = Astro.params;
+
+// In a real implementation, you would fetch booking details from your database
+// For now, we'll just show the confirmation page with the booking ID
+---
+
+<PageLayout
+  title="Booking Confirmation"
+  description="Your booking has been confirmed"
+  noindex={true}
+>
+  <Container class="py-12">
+    <Breadcrumbs items={[
+      { label: 'Home', href: '/' },
+      { label: 'Booking Confirmation', href: undefined },
+    ]} />
+    
+    <BookingConfirmation
+      client:load
+      bookingId={bookingId || ''}
+    />
+  </Container>
+</PageLayout>
+

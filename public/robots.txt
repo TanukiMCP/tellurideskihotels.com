@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://tellurideskihotels.com/sitemap.xml
+

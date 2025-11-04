@@ -1,0 +1,110 @@
+---
+import PageLayout from '@/components/layout/PageLayout.astro';
+import Container from '@/components/layout/Container.astro';
+import HotelGrid from '@/components/lodging/HotelGrid';
+import HotelSearchWidget from '@/components/lodging/HotelSearchWidget';
+import Breadcrumbs from '@/components/seo/Breadcrumbs';
+import type { LiteAPIHotel } from '@/lib/liteapi/types';
+import { DEFAULT_LOCATION, DEFAULT_COUNTRY_CODE } from '@/lib/constants';
+
+const url = Astro.url;
+const searchParams = url.searchParams;
+const location = searchParams.get('location') || DEFAULT_LOCATION;
+const checkIn = searchParams.get('checkIn') || '';
+const checkOut = searchParams.get('checkOut') || '';
+const adults = parseInt(searchParams.get('adults') || '2', 10);
+
+let hotels: LiteAPIHotel[] = [];
+let minPrices: Record<string, number> = {};
+let loading = false;
+
+if (location) {
+  try {
+    loading = true;
+    const hotelResponse = await fetch(
+      `${url.origin}/api/hotels/search?cityName=${encodeURIComponent(location)}&countryCode=${DEFAULT_COUNTRY_CODE}&limit=100`
+    );
+    
+    if (hotelResponse.ok) {
+      const hotelData = await hotelResponse.json();
+      hotels = hotelData.data || [];
+      
+      // Fetch rates for each hotel if dates are provided
+      if (checkIn && checkOut && hotels.length > 0) {
+        const hotelIds = hotels.slice(0, 10).map(h => h.hotel_id).join(',');
+        const ratesResponse = await fetch(
+          `${url.origin}/api/hotels/rates?hotelIds=${hotelIds}&checkIn=${checkIn}&checkOut=${checkOut}&adults=${adults}`
+        );
+        
+        if (ratesResponse.ok) {
+          const ratesData = await ratesResponse.json();
+          if (ratesData.data) {
+            ratesData.data.forEach((hotel: any) => {
+              const hotelMinPrice = hotel.rooms?.flatMap((r: any) => 
+                r.rates?.map((rate: any) => rate.total?.amount || rate.net?.amount || Infinity)
+              ).filter((p: number) => p !== Infinity);
+              
+              if (hotelMinPrice && hotelMinPrice.length > 0) {
+                minPrices[hotel.hotel_id] = Math.min(...hotelMinPrice);
+              }
+            });
+          }
+        }
+      }
+    }
+  } catch (error) {
+    console.error('Error fetching hotels:', error);
+  } finally {
+    loading = false;
+  }
+}
+
+const nights = checkIn && checkOut 
+  ? Math.ceil((new Date(checkOut).getTime() - new Date(checkIn).getTime()) / (1000 * 60 * 60 * 24))
+  : 1;
+---
+
+<PageLayout
+  title={`Ski Hotels in ${location} - Search & Compare Prices`}
+  description={`Search and book ski hotels in ${location}. Compare prices, read reviews, and book directly with instant confirmation.`}
+>
+  <Container class="py-8">
+    <Breadcrumbs items={[
+      { label: 'Home', href: '/' },
+      { label: 'Hotels', href: '/lodging' },
+    ]} />
+
+    <div class="mb-8">
+      <HotelSearchWidget
+        client:load
+        initialLocation={location}
+        initialDates={checkIn && checkOut ? {
+          checkIn: new Date(checkIn),
+          checkOut: new Date(checkOut),
+        } : undefined}
+        initialGuests={{ adults, children: 0 }}
+      />
+    </div>
+
+    <div id="hotel-grid">
+      <HotelGrid
+        client:load
+        hotels={hotels}
+        loading={loading}
+        minPrices={minPrices}
+        currency="USD"
+        nights={nights}
+        onHotelSelect={(hotelId) => {
+          const params = new URLSearchParams({ hotelId });
+          if (checkIn) params.append('checkIn', checkIn);
+          if (checkOut) params.append('checkOut', checkOut);
+          params.append('adults', adults.toString());
+          if (typeof window !== 'undefined') {
+            window.location.href = `/lodging/${hotelId}?${params.toString()}`;
+          }
+        }}
+      />
+    </div>
+  </Container>
+</PageLayout>
+

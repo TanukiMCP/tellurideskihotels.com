@@ -1,0 +1,42 @@
+---
+import PageLayout from '@/components/layout/PageLayout.astro';
+import Container from '@/components/layout/Container.astro';
+import Breadcrumbs from '@/components/seo/Breadcrumbs';
+---
+
+<PageLayout
+  title="About Us - Telluride Ski Hotels"
+  description="Learn about Telluride Ski Hotels - your trusted source for booking ski hotels in Telluride, Colorado."
+>
+  <Container class="py-12">
+    <Breadcrumbs items={[
+      { label: 'Home', href: '/' },
+      { label: 'About', href: undefined },
+    ]} />
+
+    <div class="max-w-3xl mx-auto prose prose-lg">
+      <h1 class="text-4xl font-bold mb-6">About Telluride Ski Hotels</h1>
+      
+      <p class="text-lg text-gray-700 mb-6">
+        Telluride Ski Hotels is your trusted partner for finding and booking the perfect ski hotel in Telluride, Colorado. 
+        We provide real-time availability, competitive pricing, and instant booking confirmation for hundreds of hotels.
+      </p>
+
+      <h2 class="text-2xl font-semibold mt-8 mb-4">Our Mission</h2>
+      <p class="text-gray-700 mb-6">
+        Our mission is to make it easy for ski enthusiasts to find and book the perfect accommodation in Telluride. 
+        We work with leading hotel providers to offer you the best selection of properties at competitive prices.
+      </p>
+
+      <h2 class="text-2xl font-semibold mt-8 mb-4">Why Choose Us</h2>
+      <ul class="list-disc pl-6 space-y-2 text-gray-700">
+        <li>Real-time availability and pricing</li>
+        <li>Instant booking confirmation</li>
+        <li>Secure payment processing</li>
+        <li>24/7 customer support</li>
+        <li>Best price guarantee</li>
+      </ul>
+    </div>
+  </Container>
+</PageLayout>
+

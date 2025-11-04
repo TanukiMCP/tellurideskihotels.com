@@ -1,0 +1,57 @@
+---
+import PageLayout from '@/components/layout/PageLayout.astro';
+import Container from '@/components/layout/Container.astro';
+import HotelSearchWidget from '@/components/lodging/HotelSearchWidget';
+import { SITE_NAME, SITE_DESCRIPTION } from '@/lib/constants';
+---
+
+<PageLayout
+  title={`Best Ski Hotels in Telluride, Colorado | Compare & Book Direct`}
+  description={SITE_DESCRIPTION}
+>
+  <Container class="py-12">
+    <div class="max-w-4xl mx-auto mb-12 text-center">
+      <h1 class="text-4xl md:text-5xl font-bold mb-4 text-gray-900">
+        Find Your Perfect Ski Hotel in Telluride
+      </h1>
+      <p class="text-xl text-gray-600 mb-8">
+        Search and compare 100+ hotels in Telluride, Colorado. Real-time availability, best prices, instant confirmation.
+      </p>
+    </div>
+
+    <div class="max-w-3xl mx-auto mb-16">
+      <HotelSearchWidget client:load />
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-16">
+      <div class="text-center">
+        <div class="bg-turquoise-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+          <svg class="w-8 h-8 text-turquoise-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+        </div>
+        <h3 class="text-xl font-semibold mb-2">Real-Time Availability</h3>
+        <p class="text-gray-600">See current availability and prices updated in real-time</p>
+      </div>
+      <div class="text-center">
+        <div class="bg-turquoise-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+          <svg class="w-8 h-8 text-turquoise-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+        </div>
+        <h3 class="text-xl font-semibold mb-2">Best Prices</h3>
+        <p class="text-gray-600">Compare prices across multiple hotels to find the best deal</p>
+      </div>
+      <div class="text-center">
+        <div class="bg-turquoise-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+          <svg class="w-8 h-8 text-turquoise-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+        </div>
+        <h3 class="text-xl font-semibold mb-2">Instant Confirmation</h3>
+        <p class="text-gray-600">Get instant booking confirmation with secure payment processing</p>
+      </div>
+    </div>
+  </Container>
+</PageLayout>
+
