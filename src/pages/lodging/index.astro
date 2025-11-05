@@ -34,7 +34,7 @@ try {
   const hotelData = await searchHotels({
     cityName: location,
     countryCode: DEFAULT_COUNTRY_CODE,
-    limit: 20, // Show first 20 hotels for better performance
+    limit: 100, // Get all Telluride hotels for full search experience
   });
   
   hotels = hotelData.data || [];
