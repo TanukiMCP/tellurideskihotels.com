@@ -31,15 +31,41 @@ export function FeaturedHotels({ limit = 6 }: FeaturedHotelsProps) {
         
         console.log('[FeaturedHotels] Fetched hotels:', allHotels.length);
         console.log('[FeaturedHotels] Sample hotel:', allHotels[0]);
+        console.log('[FeaturedHotels] Sample hotel keys:', Object.keys(allHotels[0] || {}));
         
         // Filter to only featured hotels, maintaining order
+        // Note: API returns 'id' field, need to check both id and hotel_id
         const featuredHotels = FEATURED_HOTEL_IDS
-          .map(id => allHotels.find((h: LiteAPIHotel) => h.hotel_id === id))
+          .map(id => allHotels.find((h: any) => h.hotel_id === id || h.id === id))
           .filter((h): h is LiteAPIHotel => h !== undefined)
           .slice(0, limit);
         
         console.log('[FeaturedHotels] Featured hotels found:', featuredHotels.length);
-        setHotels(featuredHotels);
+        
+        // Fetch detailed info including images for each featured hotel
+        if (featuredHotels.length > 0) {
+          const hotelsWithDetails = await Promise.all(
+            featuredHotels.map(async (hotel) => {
+              try {
+                const hotelId = (hotel as any).hotel_id || (hotel as any).id;
+                const detailsResponse = await fetch(`/api/hotels/details?hotelId=${hotelId}`);
+                if (detailsResponse.ok) {
+                  const details = await detailsResponse.json();
+                  return { ...hotel, ...details, hotel_id: hotelId };
+                }
+              } catch (err) {
+                console.error(`[FeaturedHotels] Error fetching details for hotel:`, err);
+              }
+              return hotel;
+            })
+          );
+          
+          console.log('[FeaturedHotels] Hotels with details:', hotelsWithDetails.length);
+          console.log('[FeaturedHotels] Sample hotel with details:', hotelsWithDetails[0]);
+          setHotels(hotelsWithDetails);
+        } else {
+          setHotels(featuredHotels);
+        }
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to load hotels');
         console.error('Error fetching featured hotels:', err);
