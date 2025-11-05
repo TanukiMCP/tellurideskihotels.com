@@ -16,57 +16,102 @@ export interface RateSearchResponse {
 }
 
 export async function searchRates(params: LiteAPIRateSearchParams): Promise<RateSearchResponse> {
-  // Convert hotelIds to array format as per LiteAPI docs
-  const hotelIdsArray = Array.isArray(params.hotelIds) 
-    ? params.hotelIds 
+  // Convert hotelIds to array format
+  const hotelIdsArray = Array.isArray(params.hotelIds)
+    ? params.hotelIds
     : params.hotelIds.split(',').filter(id => id.trim() !== '');
-  
+
+  // Calculate number of nights
+  const checkIn = new Date(params.checkIn);
+  const checkOut = new Date(params.checkOut);
+  const nights = Math.ceil((checkOut.getTime() - checkIn.getTime()) / (1000 * 60 * 60 * 24));
+
   console.log('[LiteAPI Rates] Starting rate search:', {
     hotelIds: hotelIdsArray.length + ' hotels',
     checkIn: params.checkIn,
     checkOut: params.checkOut,
+    nights,
     adults: params.adults,
-    children: params.children,
   });
-  
+
+  // Build occupancies array (children is array of ages, not count)
+  const occupancies = [{
+    adults: params.adults,
+    children: [], // Array of ages
+  }];
+
   // LiteAPI rates endpoint is POST with JSON body
   const requestBody = {
     hotelIds: hotelIdsArray,
-    checkIn: params.checkIn,
-    checkOut: params.checkOut,
-    adults: params.adults,
-    ...(params.children && { children: params.children }),
+    checkin: params.checkIn,  // lowercase 'checkin'
+    checkout: params.checkOut,  // lowercase 'checkout'
+    occupancies,
+    currency: 'USD',
+    guestNationality: 'US',
     margin: params.margin || LITEAPI_MARKUP_PERCENT,
   };
 
   const endpoint = `/hotels/rates`;
-  
+
   try {
-    const response = await liteAPIClient<RateSearchResponse>(endpoint, {
+    const response = await liteAPIClient<any>(endpoint, {
       method: 'POST',
       body: JSON.stringify(requestBody),
     });
-    
-    console.log('[LiteAPI Rates] Response received:', {
-      hotelsWithRates: response.data?.length || 0,
-      totalRooms: response.data?.reduce((sum, h) => sum + (h.rooms?.length || 0), 0) || 0,
-    });
 
-    // Apply markup to all rates if margin wasn't applied server-side
-    if (response.data) {
-      response.data.forEach((hotel) => {
-        hotel.rooms?.forEach((room) => {
-          room.rates?.forEach((rate) => {
-            if (rate.net?.amount && rate.total?.amount) {
-              const markedUpPrice = applyMarkup(rate.net.amount, LITEAPI_MARKUP_PERCENT);
-              rate.total.amount = Math.round(markedUpPrice * 100) / 100;
-            }
+    // Transform response structure: data[] → roomTypes[] → rates[]
+    const rawData = Array.isArray(response.data) ? response.data : [];
+    
+    const transformedData = rawData.map((hotelData: any) => {
+      const roomTypes = hotelData.roomTypes || [];
+      const rooms: any[] = [];
+
+      roomTypes.forEach((roomType: any) => {
+        const rates = roomType.rates || [];
+        
+        rates.forEach((rate: any) => {
+          // Extract TOTAL price (for entire stay, not per night)
+          const totalPrice = 
+            rate.retailRate?.suggestedSellingPrice?.[0]?.amount ||
+            rate.retailRate?.total?.[0]?.amount ||
+            0;
+          
+          // Calculate per-night price
+          const pricePerNight = nights > 0 ? totalPrice / nights : totalPrice;
+
+          rooms.push({
+            room_id: roomType.roomTypeId,
+            room_name: rate.name || roomType.name,
+            rates: [{
+              rate_id: rate.rateId,
+              net: {
+                amount: pricePerNight,
+                currency: rate.retailRate?.suggestedSellingPrice?.[0]?.currency || 'USD',
+              },
+              total: {
+                amount: totalPrice,
+                currency: rate.retailRate?.suggestedSellingPrice?.[0]?.currency || 'USD',
+              },
+              board_type: rate.boardName || 'Room Only',
+              cancellation_policy: rate.cancellationPolicies,
+            }],
           });
         });
       });
-    }
 
-    return response;
+      return {
+        hotel_id: hotelData.hotelId,
+        rooms,
+      };
+    });
+
+    console.log('[LiteAPI Rates] Response received:', {
+      hotelsWithRates: transformedData.length,
+      totalRooms: transformedData.reduce((sum: number, h: any) => sum + (h.rooms?.length || 0), 0),
+      sampleRate: transformedData[0]?.rooms?.[0]?.rates?.[0],
+    });
+
+    return { data: transformedData };
   } catch (error) {
     console.error('[LiteAPI Rates] Error fetching rates:', {
       error: error instanceof Error ? error.message : 'Unknown error',
@@ -77,8 +122,7 @@ export async function searchRates(params: LiteAPIRateSearchParams): Promise<Rate
         checkOut: params.checkOut,
       }
     });
-    
-    // Return empty response instead of throwing
+
     return { data: [] };
   }
 }

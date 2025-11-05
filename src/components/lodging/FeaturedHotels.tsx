@@ -19,8 +19,8 @@ export function FeaturedHotels({ limit = 6 }: FeaturedHotelsProps) {
       try {
         setLoading(true);
         
-        // Fetch all hotels first
-        const response = await fetch(`/api/hotels/search?cityName=Telluride&countryCode=US&limit=500`);
+        // Fetch hotels with images (search now fetches full details)
+        const response = await fetch(`/api/hotels/search?cityName=Telluride&countryCode=US&limit=${limit}`);
         
         if (!response.ok) {
           throw new Error('Failed to fetch hotels');
@@ -31,39 +31,9 @@ export function FeaturedHotels({ limit = 6 }: FeaturedHotelsProps) {
         
         console.log('[FeaturedHotels] Fetched hotels:', allHotels.length);
         console.log('[FeaturedHotels] Sample hotel:', allHotels[0]);
-        console.log('[FeaturedHotels] Sample hotel keys:', Object.keys(allHotels[0] || {}));
+        console.log('[FeaturedHotels] Sample images:', allHotels[0]?.images);
         
-        // For now, use first N hotels from Telluride as featured
-        // TODO: Update FEATURED_HOTEL_IDS in constants.ts with actual hotel IDs from API
-        const featuredHotels = allHotels
-          .slice(0, limit) as LiteAPIHotel[];
-        
-        console.log('[FeaturedHotels] Featured hotels found:', featuredHotels.length);
-        
-        // Fetch detailed info including images for each featured hotel
-        if (featuredHotels.length > 0) {
-          const hotelsWithDetails = await Promise.all(
-            featuredHotels.map(async (hotel) => {
-              try {
-                const hotelId = (hotel as any).hotel_id || (hotel as any).id;
-                const detailsResponse = await fetch(`/api/hotels/details?hotelId=${hotelId}`);
-                if (detailsResponse.ok) {
-                  const details = await detailsResponse.json();
-                  return { ...hotel, ...details, hotel_id: hotelId };
-                }
-              } catch (err) {
-                console.error(`[FeaturedHotels] Error fetching details for hotel:`, err);
-              }
-              return hotel;
-            })
-          );
-          
-          console.log('[FeaturedHotels] Hotels with details:', hotelsWithDetails.length);
-          console.log('[FeaturedHotels] Sample hotel with details:', hotelsWithDetails[0]);
-          setHotels(hotelsWithDetails);
-        } else {
-          setHotels(featuredHotels);
-        }
+        setHotels(allHotels);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to load hotels');
         console.error('Error fetching featured hotels:', err);

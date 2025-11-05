@@ -28,41 +28,33 @@ export async function searchHotels(params: LiteAPIHotelSearchParams): Promise<Ho
 
   const response = await liteAPIClient<any>(endpoint);
   
-  // Transform API response to match our types
-  // LiteAPI returns different field names than what we expected
-  const transformedData = response.data?.map((hotel: any) => ({
-    hotel_id: hotel.id || hotel.hotel_id,
-    name: hotel.name,
-    star_rating: hotel.starRating,
-    review_score: hotel.reviewScore,
-    review_count: hotel.reviewCount,
-    address: hotel.address ? {
-      line1: hotel.address.line1 || hotel.address.streetAddress,
-      city: hotel.address.city || hotel.address.cityName,
-      state: hotel.address.state || hotel.address.stateProvinceCode,
-      postal_code: hotel.address.postalCode,
-      country: hotel.address.countryName,
-    } : undefined,
-    location: hotel.location ? {
-      latitude: hotel.location.latitude,
-      longitude: hotel.location.longitude,
-    } : undefined,
-    // Images are not included in search response, need to fetch details
-    images: hotel.images || hotel.hotelImages || [],
-    description: hotel.hotelDescription ? {
-      text: hotel.hotelDescription,
-    } : undefined,
-  })) || [];
+  // LiteAPI returns hotelIds at ROOT level (not nested in data)
+  const hotelIds = response.hotelIds || [];
+  
+  console.log('[LiteAPI Hotels] Search returned hotel IDs:', {
+    count: hotelIds.length,
+    sampleIds: hotelIds.slice(0, 3),
+  });
+  
+  // Fetch details for each hotel to get full info including images
+  const hotelDetailsPromises = hotelIds.map((id: string) => 
+    getHotelDetails(id).catch(err => {
+      console.error(`[LiteAPI Hotels] Error fetching details for ${id}:`, err);
+      return null;
+    })
+  );
+  
+  const hotels = await Promise.all(hotelDetailsPromises);
+  const validHotels = hotels.filter((h): h is LiteAPIHotel => h !== null);
   
   console.log('[LiteAPI Hotels] Search complete:', {
-    hotelsFound: transformedData.length,
-    sampleHotel: transformedData[0],
-    sampleKeys: Object.keys(response.data?.[0] || {}),
+    hotelsFound: validHotels.length,
+    sampleHotel: validHotels[0],
   });
   
   return {
-    ...response,
-    data: transformedData,
+    data: validHotels,
+    total: validHotels.length,
   };
 }
 
@@ -70,29 +62,39 @@ export async function getHotelDetails(hotelId: string): Promise<LiteAPIHotel> {
   const endpoint = `/data/hotel?hotelId=${hotelId}`;
   const response = await liteAPIClient<any>(endpoint);
   
+  // LiteAPI returns data nested in response.data
+  const hotel = response.data || response;
+  
   // Transform API response to match our types
+  // Field names: id, starRating, rating, hotelImages, hotelFacilities
   return {
-    hotel_id: response.id || response.hotel_id || hotelId,
-    name: response.name,
-    star_rating: response.starRating,
-    review_score: response.reviewScore,
-    review_count: response.reviewCount,
-    address: response.address ? {
-      line1: response.address.line1 || response.address.streetAddress,
-      city: response.address.city || response.address.cityName,
-      state: response.address.state || response.address.stateProvinceCode,
-      postal_code: response.address.postalCode,
-      country: response.address.countryName,
+    hotel_id: hotel.id || hotelId,
+    name: hotel.name,
+    star_rating: hotel.starRating,
+    review_score: hotel.rating,  // Guest rating (0-10 scale)
+    review_count: hotel.reviewCount,
+    address: {
+      line1: hotel.address,  // Full address as single string
+      city: hotel.city,
+      state: hotel.state,
+      postal_code: hotel.postalCode,
+      country: hotel.country,
+    },
+    location: hotel.location ? {
+      latitude: hotel.location.latitude,
+      longitude: hotel.location.longitude,
     } : undefined,
-    location: response.location ? {
-      latitude: response.location.latitude,
-      longitude: response.location.longitude,
+    images: (hotel.hotelImages || []).map((img: any) => ({
+      type: img.defaultImage ? 'main' : 'gallery',
+      url: img.url,
+      description: img.caption,
+    })),
+    amenities: (hotel.hotelFacilities || []).map((facility: string) => ({
+      name: facility,
+    })),
+    description: hotel.hotelDescription ? {
+      text: hotel.hotelDescription,
     } : undefined,
-    images: response.images || response.hotelImages || [],
-    amenities: response.amenities || response.facilities || [],
-    description: response.hotelDescription ? {
-      text: response.hotelDescription,
-    } : response.description,
   };
 }
 
