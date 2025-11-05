@@ -128,3 +128,48 @@ export function isHotelNearTelluride(lat: number, lon: number): boolean {
   return distance <= MAX_DISTANCE_FROM_CENTER_KM;
 }
 
+/**
+ * Find the closest trail/lift to a hotel
+ * @param hotelLat Hotel latitude
+ * @param hotelLon Hotel longitude
+ * @param trails Array of trail features with geometry coordinates
+ * @returns The closest trail/lift with distance in meters
+ */
+export function findClosestTrail(
+  hotelLat: number,
+  hotelLon: number,
+  trails: any[]
+): { trail: any; distance: number } | null {
+  if (!trails || trails.length === 0) return null;
+
+  let closestTrail = null;
+  let minDistance = Infinity;
+
+  trails.forEach((trail) => {
+    if (!trail.geometry?.coordinates) return;
+
+    // For LineString, find the closest point on the line
+    const coordinates = trail.geometry.coordinates;
+    coordinates.forEach((coord: [number, number]) => {
+      const distance = calculateDistance(hotelLat, hotelLon, coord[1], coord[0]) * 1000; // Convert to meters
+      if (distance < minDistance) {
+        minDistance = distance;
+        closestTrail = trail;
+      }
+    });
+  });
+
+  return closestTrail ? { trail: closestTrail, distance: minDistance } : null;
+}
+
+/**
+ * Calculate walking time in minutes based on distance in meters
+ * Assumes average walking speed of 5 km/h
+ */
+export function calculateWalkingTime(distanceMeters: number): number {
+  const walkingSpeedKmH = 5;
+  const distanceKm = distanceMeters / 1000;
+  const timeHours = distanceKm / walkingSpeedKmH;
+  return Math.round(timeHours * 60);
+}
+

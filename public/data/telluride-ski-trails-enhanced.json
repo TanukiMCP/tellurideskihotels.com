@@ -1,0 +1,305 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "see-forever",
+        "name": "See Forever",
+        "type": "trail",
+        "piste:type": "downhill",
+        "piste:difficulty": "intermediate",
+        "difficulty": "BLUE",
+        "piste:grooming": "classic",
+        "vertical_drop": 3165,
+        "length_miles": 4.6,
+        "description": "The longest groomed run in Telluride - stunning views from top to bottom",
+        "status": "open",
+        "area": "Prospect Bowl"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-107.8201, 37.9367],
+          [-107.8198, 37.9362],
+          [-107.8195, 37.9358],
+          [-107.8192, 37.9354],
+          [-107.8189, 37.9350],
+          [-107.8186, 37.9346],
+          [-107.8183, 37.9342],
+          [-107.8180, 37.9338],
+          [-107.8177, 37.9334],
+          [-107.8174, 37.9330]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "plunge",
+        "name": "Plunge",
+        "type": "trail",
+        "piste:type": "downhill",
+        "piste:difficulty": "easy",
+        "difficulty": "GREEN",
+        "piste:grooming": "classic",
+        "vertical_drop": 1200,
+        "length_miles": 1.2,
+        "description": "Easy groomed trail from Apex lift - perfect for beginners",
+        "status": "open",
+        "area": "Mountain Village"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-107.8150, 37.9375],
+          [-107.8152, 37.9370],
+          [-107.8154, 37.9365],
+          [-107.8156, 37.9360],
+          [-107.8158, 37.9355],
+          [-107.8160, 37.9350]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "palmyra",
+        "name": "Palmyra",
+        "type": "trail",
+        "piste:type": "downhill",
+        "piste:difficulty": "expert",
+        "difficulty": "DOUBLE BLACK",
+        "piste:grooming": "moguls",
+        "vertical_drop": 2000,
+        "length_miles": 0.8,
+        "description": "Legendary bump run with sustained steep terrain",
+        "status": "open",
+        "area": "Palmyra Peak"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-107.8220, 37.9350],
+          [-107.8218, 37.9348],
+          [-107.8216, 37.9346],
+          [-107.8214, 37.9344],
+          [-107.8212, 37.9342],
+          [-107.8210, 37.9340],
+          [-107.8208, 37.9338]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "gold-hill",
+        "name": "Gold Hill",
+        "type": "trail",
+        "piste:type": "downhill",
+        "piste:difficulty": "expert",
+        "difficulty": "DOUBLE BLACK",
+        "piste:grooming": "backcountry",
+        "vertical_drop": 2500,
+        "length_miles": 1.1,
+        "description": "Expert chutes and extreme terrain - must sign waiver",
+        "status": "open",
+        "area": "Gold Hill"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-107.8250, 37.9330],
+          [-107.8248, 37.9328],
+          [-107.8246, 37.9326],
+          [-107.8244, 37.9324],
+          [-107.8242, 37.9322],
+          [-107.8240, 37.9320],
+          [-107.8238, 37.9318]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "sundance",
+        "name": "Sundance",
+        "type": "trail",
+        "piste:type": "downhill",
+        "piste:difficulty": "intermediate",
+        "difficulty": "BLUE",
+        "piste:grooming": "classic",
+        "vertical_drop": 1800,
+        "length_miles": 2.1,
+        "description": "Beautiful intermediate cruiser to the village",
+        "status": "open",
+        "area": "Mountain Village"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-107.8170, 37.9380],
+          [-107.8172, 37.9375],
+          [-107.8174, 37.9370],
+          [-107.8176, 37.9365],
+          [-107.8178, 37.9360],
+          [-107.8180, 37.9355],
+          [-107.8182, 37.9350],
+          [-107.8184, 37.9345],
+          [-107.8186, 37.9340]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "telluride-trail",
+        "name": "Telluride Trail",
+        "type": "trail",
+        "piste:type": "downhill",
+        "piste:difficulty": "easy",
+        "difficulty": "GREEN",
+        "piste:grooming": "classic",
+        "vertical_drop": 3165,
+        "length_miles": 3.2,
+        "description": "Long beginner trail from Revelation Bowl to town",
+        "status": "open",
+        "area": "Revelation Bowl"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-107.8100, 37.9400],
+          [-107.8105, 37.9395],
+          [-107.8110, 37.9390],
+          [-107.8115, 37.9385],
+          [-107.8120, 37.9380],
+          [-107.8125, 37.9375]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "kant-mak-m",
+        "name": "Kant-Mak-M",
+        "type": "trail",
+        "piste:type": "downhill",
+        "piste:difficulty": "advanced",
+        "difficulty": "BLACK",
+        "piste:grooming": "moguls",
+        "vertical_drop": 1450,
+        "length_miles": 0.9,
+        "description": "Classic black diamond bump run",
+        "status": "open",
+        "area": "Prospect Bowl"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-107.8185, 37.9365],
+          [-107.8187, 37.9362],
+          [-107.8189, 37.9359],
+          [-107.8191, 37.9356],
+          [-107.8193, 37.9353],
+          [-107.8195, 37.9350]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "gondola",
+        "name": "Gondola",
+        "type": "lift",
+        "lift:type": "gondola",
+        "capacity": 6,
+        "vertical_rise": 3165,
+        "length_miles": 2.8,
+        "description": "High-speed gondola from town to Mountain Village",
+        "status": "open"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-107.8123, 37.9375],
+          [-107.8135, 37.9370],
+          [-107.8147, 37.9365],
+          [-107.8159, 37.9360],
+          [-107.8171, 37.9355]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "coonskin-lift",
+        "name": "Coonskin Lift",
+        "type": "lift",
+        "lift:type": "chairlift",
+        "capacity": 4,
+        "vertical_rise": 1200,
+        "length_miles": 0.9,
+        "description": "High-speed quad chairlift",
+        "status": "open"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-107.8160, 37.9350],
+          [-107.8165, 37.9355],
+          [-107.8170, 37.9360],
+          [-107.8175, 37.9365]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "revelation-bowl-lift",
+        "name": "Revelation Bowl Lift",
+        "type": "lift",
+        "lift:type": "chairlift",
+        "capacity": 6,
+        "vertical_rise": 1685,
+        "length_miles": 1.2,
+        "description": "Six-passenger high-speed lift to expert terrain",
+        "status": "open"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-107.8100, 37.9380],
+          [-107.8105, 37.9385],
+          [-107.8110, 37.9390],
+          [-107.8115, 37.9395],
+          [-107.8120, 37.9400]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "prospect-bowl-lift",
+        "name": "Prospect Bowl Lift",
+        "type": "lift",
+        "lift:type": "chairlift",
+        "capacity": 4,
+        "vertical_rise": 1300,
+        "length_miles": 0.8,
+        "description": "Accesses advanced terrain",
+        "status": "open"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-107.8190, 37.9340],
+          [-107.8193, 37.9345],
+          [-107.8196, 37.9350],
+          [-107.8199, 37.9355]
+        ]
+      }
+    }
+  ]
+}
+

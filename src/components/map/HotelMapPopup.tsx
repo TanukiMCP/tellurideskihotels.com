@@ -4,6 +4,7 @@
  */
 import type { LiteAPIHotel } from '@/lib/liteapi/types';
 import { formatMapPrice } from '@/lib/mapbox-utils';
+import HotelProximityBadge from './HotelProximityBadge';
 
 interface HotelMapPopupProps {
   hotel: LiteAPIHotel;
@@ -11,6 +12,10 @@ interface HotelMapPopupProps {
   currency?: string;
   checkInDate?: string;
   onViewDetails: () => void;
+  nearestTrail?: {
+    trail: any;
+    distance: number;
+  } | null;
 }
 
 export default function HotelMapPopup({ 
@@ -18,7 +23,8 @@ export default function HotelMapPopup({
   minPrice = 0,
   currency = 'USD',
   checkInDate,
-  onViewDetails 
+  onViewDetails,
+  nearestTrail 
 }: HotelMapPopupProps) {
   // Get primary image from LiteAPI only
   const primaryImage = hotel.images?.[0]?.url;
@@ -97,6 +103,17 @@ export default function HotelMapPopup({
           <span className="text-xs text-gray-600">
             {hotel.review_count ? `${hotel.review_count} reviews` : 'Guest rating'}
           </span>
+        </div>
+      )}
+
+      {/* Proximity Badge */}
+      {nearestTrail && (
+        <div className="mb-3">
+          <HotelProximityBadge
+            distanceMeters={nearestTrail.distance}
+            trailName={nearestTrail.trail.properties?.name}
+            trailType={nearestTrail.trail.properties?.type}
+          />
         </div>
       )}
 
