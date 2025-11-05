@@ -23,7 +23,7 @@ export function HotelCard({ hotel, minPrice, currency = 'USD', nights = 1, onSel
   const ratingColor = getRatingColor(rating);
 
   return (
-    <Card className="overflow-hidden hover:shadow-strong transition-all duration-300 cursor-pointer hover-lift group" style="box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+    <Card className="overflow-hidden hover:shadow-strong transition-all duration-300 cursor-pointer hover-lift group shadow-soft">
       <div className="relative h-48 overflow-hidden" onClick={() => onSelect(hotel.hotel_id)}>
         <ImageWithLoading
           src={imageUrl}
