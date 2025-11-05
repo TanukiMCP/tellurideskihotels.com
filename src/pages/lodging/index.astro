@@ -23,11 +23,26 @@ let loading = false;
 // Always show hotels, defaulting to Telluride
 try {
   loading = true;
+  
+  // If no dates provided, use defaults (30-37 days out for better availability)
+  let effectiveCheckIn = checkIn;
+  let effectiveCheckOut = checkOut;
+  let usingDefaultDates = false;
+  
+  if (!checkIn || !checkOut) {
+    const { format, addDays } = await import('date-fns');
+    effectiveCheckIn = format(addDays(new Date(), 30), 'yyyy-MM-dd');
+    effectiveCheckOut = format(addDays(new Date(), 37), 'yyyy-MM-dd');
+    usingDefaultDates = true;
+    console.log('[Lodging Page] No dates provided, using defaults:', { effectiveCheckIn, effectiveCheckOut });
+  }
+  
   console.log('[Lodging Page] Loading hotels:', {
     location,
-    checkIn,
-    checkOut,
+    checkIn: effectiveCheckIn,
+    checkOut: effectiveCheckOut,
     adults,
+    usingDefaultDates,
   });
   
   const { searchHotels } = await import('@/lib/liteapi/hotels');
@@ -40,7 +55,7 @@ try {
   hotels = hotelData.data || [];
   console.log('[Lodging Page] Hotels loaded:', hotels.length);
     
-            if (checkIn && checkOut && hotels.length > 0) {
+            if (effectiveCheckIn && effectiveCheckOut && hotels.length > 0) {
       try {
         console.log('[Lodging Page] Fetching rates for', hotels.length, 'hotels');
         
@@ -53,8 +68,8 @@ try {
           const { searchRates } = await import('@/lib/liteapi/rates');
           const ratesData = await searchRates({
             hotelIds: hotelIds.join(','),
-            checkIn,
-            checkOut,
+            checkIn: effectiveCheckIn,
+            checkOut: effectiveCheckOut,
             adults,
           });
         
@@ -71,19 +86,25 @@ try {
               }
             });
             
-            // Filter hotels to only show those with available rates
-            const hotelsWithRates = new Set(Object.keys(minPrices));
-            hotels = hotels.filter(h => hotelsWithRates.has(h.hotel_id));
+            // Only filter hotels if user explicitly selected dates
+            if (!usingDefaultDates) {
+              const hotelsWithRates = new Set(Object.keys(minPrices));
+              hotels = hotels.filter(h => hotelsWithRates.has(h.hotel_id));
+              console.log('[Lodging Page] User selected dates - filtered to hotels with availability');
+            }
             
-            console.log('[Lodging Page] Filtered to hotels with availability:', {
+            console.log('[Lodging Page] Hotels with prices:', {
               hotelsWithPrices: Object.keys(minPrices).length,
-              hotelsAfterFilter: hotels.length,
+              totalHotels: hotels.length,
               samplePrice: Object.values(minPrices)[0],
+              usingDefaultDates,
             });
           } else {
             console.warn('[Lodging Page] No rate data returned');
-            // If dates are selected but no rates returned, show no hotels
-            hotels = [];
+            // If user explicitly selected dates but no rates, show no hotels
+            if (!usingDefaultDates) {
+              hotels = [];
+            }
           }
         }
       } catch (rateError) {
@@ -104,8 +125,8 @@ try {
   console.log('[Lodging Page] Load complete');
 }
 
-const nights = checkIn && checkOut 
-  ? Math.ceil((new Date(checkOut).getTime() - new Date(checkIn).getTime()) / (1000 * 60 * 60 * 24))
+const nights = effectiveCheckIn && effectiveCheckOut 
+  ? Math.ceil((new Date(effectiveCheckOut).getTime() - new Date(effectiveCheckIn).getTime()) / (1000 * 60 * 60 * 24))
   : 1;
 ---
 
@@ -153,8 +174,8 @@ const nights = checkIn && checkOut
       minPrices={minPrices}
       currency="USD"
       nights={nights}
-      checkIn={checkIn}
-      checkOut={checkOut}
+      checkIn={effectiveCheckIn}
+      checkOut={effectiveCheckOut}
       adults={adults}
     />
   </Container>

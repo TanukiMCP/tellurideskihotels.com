@@ -19,6 +19,7 @@ import { format, addDays } from 'date-fns';
 let featuredHotelsData: LiteAPIHotel[] = [];
 let allHotels: LiteAPIHotel[] = [];
 let minPrices: Record<string, number> = {};
+let featuredCheckInDate: string | undefined;
 
 try {
   // Get all hotels for the map (without rates)
@@ -34,6 +35,7 @@ try {
   // Use dates 30-37 days out for better availability during ski season
   const checkIn = format(addDays(new Date(), 30), 'yyyy-MM-dd');
   const checkOut = format(addDays(new Date(), 37), 'yyyy-MM-dd');
+  featuredCheckInDate = checkIn;
   
   console.log('[Homepage] Searching for hotels with availability:', { checkIn, checkOut });
   
@@ -189,7 +191,7 @@ try {
           Discover our handpicked selection of the finest ski hotels. Real-time availability and competitive pricing.
         </p>
       </div>
-      <FeaturedHotels client:load limit={6} initialHotels={featuredHotelsData} minPrices={minPrices} currency="USD" />
+      <FeaturedHotels client:load limit={6} initialHotels={featuredHotelsData} minPrices={minPrices} currency="USD" checkInDate={featuredCheckInDate} />
       <div class="text-center mt-16">
         <a 
           href="/lodging" 

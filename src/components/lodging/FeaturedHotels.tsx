@@ -7,12 +7,14 @@ interface FeaturedHotelsProps {
   initialHotels: LiteAPIHotel[];
   minPrices?: Record<string, number>;
   currency?: string;
+  checkInDate?: string;
 }
 
 export function FeaturedHotels({ 
   initialHotels, 
   minPrices = {},
-  currency = 'USD' 
+  currency = 'USD',
+  checkInDate
 }: FeaturedHotelsProps) {
   const hotels = initialHotels;
 
@@ -39,6 +41,7 @@ export function FeaturedHotels({
             hotel={hotel}
             minPrice={minPrices[hotel.hotel_id]}
             currency={currency}
+            checkInDate={checkInDate}
             onSelect={handleHotelSelect}
           />
       ))}

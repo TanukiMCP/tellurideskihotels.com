@@ -12,6 +12,7 @@ export interface HotelCardProps {
   minPrice?: number;
   currency?: string;
   nights?: number;
+  checkInDate?: string;
   onSelect: (hotelId: string) => void;
   isSelected?: boolean;
   isHovered?: boolean;
@@ -23,7 +24,8 @@ export function HotelCard({
   hotel, 
   minPrice, 
   currency = 'USD', 
-  nights: _nights = 1, 
+  nights: _nights = 1,
+  checkInDate,
   onSelect,
   isSelected = false,
   isHovered = false,
@@ -99,6 +101,11 @@ export function HotelCard({
           <>
             <div className="mb-4 pb-4 border-b border-neutral-200">
               <div className="flex flex-col">
+                {checkInDate && (
+                  <span className="text-xs text-neutral-500 mb-1">
+                    Next available: {new Date(checkInDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                  </span>
+                )}
                 <span className="text-xs text-neutral-500 uppercase tracking-wide mb-1">From</span>
                 <div className="flex items-baseline gap-1">
                   <span className="text-2xl font-bold text-primary-600">
