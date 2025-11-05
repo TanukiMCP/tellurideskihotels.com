@@ -21,6 +21,7 @@ let allHotels: LiteAPIHotel[] = [];
 let minPrices: Record<string, number> = {};
 
 try {
+  // Get all hotels for the map (without rates)
   const hotelData = await searchHotels({
     cityName: 'Telluride',
     countryCode: 'US',
@@ -29,55 +30,45 @@ try {
   
   allHotels = hotelData.data || [];
   
-  // Get top 6 hotels by review score for featured section
+  // For featured section, get hotels WITH availability and rates
+  // Use dates 30-37 days out for better availability during ski season
+  const checkIn = format(addDays(new Date(), 30), 'yyyy-MM-dd');
+  const checkOut = format(addDays(new Date(), 37), 'yyyy-MM-dd');
+  
+  console.log('[Homepage] Searching for hotels with availability:', { checkIn, checkOut });
+  
+  try {
+    const { searchHotelsWithRates } = await import('@/lib/liteapi/rates');
+    const availableHotels = await searchHotelsWithRates({
+      cityName: 'Telluride',
+      countryCode: 'US',
+      checkIn,
+      checkOut,
+      adults: 2,
+      limit: 100,
+    });
+    
+    // Get top 6 hotels by review score from those with availability
+    featuredHotelsData = availableHotels.hotels
+      .filter(h => h.review_score && h.review_count && h.review_count > 20)
+      .sort((a, b) => (b.review_score || 0) - (a.review_score || 0))
+      .slice(0, 6);
+    
+    minPrices = availableHotels.minPrices;
+    
+    console.log('[Homepage] Featured hotels with availability:', {
+      totalAvailable: availableHotels.hotels.length,
+      featured: featuredHotelsData.length,
+      withPrices: Object.keys(minPrices).length,
+    });
+  } catch (error) {
+    console.error('[Homepage] Error fetching hotels with availability:', error);
+    // Fallback to showing top-rated hotels without availability check
   featuredHotelsData = allHotels
     .filter(h => h.review_score && h.review_count && h.review_count > 50)
     .sort((a, b) => (b.review_score || 0) - (a.review_score || 0))
     .slice(0, 6);
-  
-  // Fetch rates for featured hotels with default dates (7 days from now for 7 nights)
-  if (featuredHotelsData.length > 0) {
-    try {
-      const checkIn = format(addDays(new Date(), 7), 'yyyy-MM-dd');
-      const checkOut = format(addDays(new Date(), 14), 'yyyy-MM-dd');
-      const hotelIds = featuredHotelsData.map(h => h.hotel_id).filter(Boolean);
-      
-      if (hotelIds.length > 0) {
-        const { searchRates } = await import('@/lib/liteapi/rates');
-        const ratesData = await searchRates({
-          hotelIds: hotelIds.join(','),
-          checkIn,
-          checkOut,
-          adults: 2,
-        });
-        
-        if (ratesData.data && ratesData.data.length > 0) {
-          ratesData.data.forEach((hotel: any) => {
-            const hotelMinPrice = hotel.rooms?.flatMap((r: any) =>
-              r.rates?.map((rate: any) => rate.net?.amount || Infinity)
-            ).filter((p: number) => p !== Infinity);
-
-            if (hotelMinPrice && hotelMinPrice.length > 0) {
-              minPrices[hotel.hotel_id] = Math.min(...hotelMinPrice);
-            }
-          });
-          
-          // Only show featured hotels that have rates available
-          const hotelsWithRates = new Set(Object.keys(minPrices));
-          featuredHotelsData = featuredHotelsData.filter(h => hotelsWithRates.has(h.hotel_id));
-          
-          console.log('[Homepage] Prices fetched for featured hotels:', {
-            hotelsWithPrices: Object.keys(minPrices).length,
-            featuredHotelsAfterFilter: featuredHotelsData.length
-          });
-        } else {
-          // If no rates available, don't filter - show hotels without prices
-          console.log('[Homepage] No rates available, showing hotels without prices');
-        }
-      }
-    } catch (error) {
-      console.error('[Homepage] Error fetching rates:', error);
-    }
+    console.log('[Homepage] Fallback: Showing top-rated hotels without availability');
   }
 } catch (error) {
   console.error('[Homepage] Error fetching featured hotels:', error);
