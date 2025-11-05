@@ -72,8 +72,10 @@ export default function LodgingMap({
     if (!mapRef.current || hotels.length === 0 || isLoading) return;
 
     const coordinates = hotels
-      .filter(h => h.location?.latitude && h.location?.longitude)
-      .map(h => ({ lng: h.location!.longitude, lat: h.location!.latitude }));
+      .filter((h): h is LiteAPIHotel & { location: { latitude: number; longitude: number } } => 
+        h.location?.latitude !== undefined && h.location?.longitude !== undefined
+      )
+      .map(h => ({ lng: h.location.longitude, lat: h.location.latitude }));
 
     if (coordinates.length === 0) return;
 
