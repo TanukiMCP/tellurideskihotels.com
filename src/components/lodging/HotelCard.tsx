@@ -13,9 +13,23 @@ export interface HotelCardProps {
   currency?: string;
   nights?: number;
   onSelect: (hotelId: string) => void;
+  isSelected?: boolean;
+  isHovered?: boolean;
+  onMouseEnter?: () => void;
+  onMouseLeave?: () => void;
 }
 
-export function HotelCard({ hotel, minPrice, currency = 'USD', nights: _nights = 1, onSelect }: HotelCardProps) {
+export function HotelCard({ 
+  hotel, 
+  minPrice, 
+  currency = 'USD', 
+  nights: _nights = 1, 
+  onSelect,
+  isSelected = false,
+  isHovered = false,
+  onMouseEnter,
+  onMouseLeave,
+}: HotelCardProps) {
   const imageUrl = getHotelMainImage(hotel);
   const address = formatHotelAddress(hotel);
   const rating = hotel.review_score || 0;
@@ -27,7 +41,13 @@ export function HotelCard({ hotel, minPrice, currency = 'USD', nights: _nights =
   }
 
   return (
-    <Card className="overflow-hidden hover:shadow-card-hover transition-all duration-300 group">
+    <Card 
+      className={`overflow-hidden hover:shadow-card-hover transition-all duration-300 group ${
+        isSelected ? 'ring-2 ring-primary-600 shadow-card-hover' : ''
+      } ${isHovered ? 'shadow-card-hover' : ''}`}
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
+    >
       <div 
         className="relative h-56 overflow-hidden cursor-pointer" 
         onClick={() => onSelect(hotel.hotel_id)}
@@ -75,27 +95,43 @@ export function HotelCard({ hotel, minPrice, currency = 'USD', nights: _nights =
           </p>
         )}
         
-        {minPrice !== undefined && (
-          <div className="mb-4 pb-4 border-b border-neutral-200">
-            <div className="flex items-baseline gap-1">
-              <span className="text-3xl font-bold text-neutral-900">
-                {formatCurrency(minPrice, currency)}
-              </span>
-              <span className="text-sm text-neutral-600">/ night</span>
+        {minPrice !== undefined && minPrice > 0 ? (
+          <>
+            <div className="mb-4 pb-4 border-b border-neutral-200">
+              <div className="flex flex-col">
+                <span className="text-xs text-neutral-500 uppercase tracking-wide mb-1">From</span>
+                <div className="flex items-baseline gap-1">
+                  <span className="text-2xl font-bold text-primary-600">
+                    {formatCurrency(minPrice, currency)}
+                  </span>
+                  <span className="text-sm text-neutral-600">/ night</span>
+                </div>
+              </div>
             </div>
-          </div>
+            
+            <Button
+              onClick={(e) => {
+                e.stopPropagation();
+                onSelect(hotel.hotel_id);
+              }}
+              className="w-full"
+              variant="primary"
+            >
+              View Details & Book
+            </Button>
+          </>
+        ) : (
+          <Button
+            onClick={(e) => {
+              e.stopPropagation();
+              onSelect(hotel.hotel_id);
+            }}
+            className="w-full"
+            variant="primary"
+          >
+            View Details & Check Rates
+          </Button>
         )}
-        
-        <Button
-          onClick={(e) => {
-            e.stopPropagation();
-            onSelect(hotel.hotel_id);
-          }}
-          className="w-full"
-          variant="primary"
-        >
-          View Details
-        </Button>
       </CardContent>
     </Card>
   );

@@ -14,6 +14,10 @@ export interface HotelGridProps {
   checkIn?: string;
   checkOut?: string;
   adults?: number;
+  selectedHotelId?: string | null;
+  hoveredHotelId?: string | null;
+  onHotelSelect?: (hotelId: string) => void;
+  onHotelHover?: (hotelId: string | null) => void;
 }
 
 const ITEMS_PER_PAGE = 12;
@@ -29,6 +33,10 @@ export function HotelGrid({
   checkIn,
   checkOut,
   adults = 2,
+  selectedHotelId,
+  hoveredHotelId,
+  onHotelSelect,
+  onHotelHover,
 }: HotelGridProps) {
   const [currentPage, setCurrentPage] = useState(1);
   const [sortBy, setSortBy] = useState<SortOption>('rating');
@@ -85,8 +93,18 @@ export function HotelGrid({
   const handleSelect = (hotelId: string) => {
     if (typeof window !== 'undefined') {
       const params = new URLSearchParams();
-      if (checkIn) params.append('checkIn', checkIn);
-      if (checkOut) params.append('checkOut', checkOut);
+      
+      // Use provided dates or generate defaults (7 days from now for check-in, 7 days for duration)
+      const defaultCheckIn = new Date();
+      defaultCheckIn.setDate(defaultCheckIn.getDate() + 7);
+      const defaultCheckOut = new Date(defaultCheckIn);
+      defaultCheckOut.setDate(defaultCheckOut.getDate() + 7);
+      
+      const finalCheckIn = checkIn || defaultCheckIn.toISOString().split('T')[0];
+      const finalCheckOut = checkOut || defaultCheckOut.toISOString().split('T')[0];
+      
+      params.append('checkIn', finalCheckIn);
+      params.append('checkOut', finalCheckOut);
       params.append('adults', adults.toString());
       window.location.href = `/lodging/${hotelId}?${params.toString()}`;
     }
@@ -118,7 +136,7 @@ export function HotelGrid({
       </div>
 
       {/* Hotel Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
         {paginatedHotels.map((hotel) => (
           <HotelCard
             key={hotel.hotel_id}
@@ -127,6 +145,10 @@ export function HotelGrid({
             currency={currency}
             nights={nights}
             onSelect={handleSelect}
+            isSelected={hotel.hotel_id === selectedHotelId}
+            isHovered={hotel.hotel_id === hoveredHotelId}
+            onMouseEnter={() => onHotelHover?.(hotel.hotel_id)}
+            onMouseLeave={() => onHotelHover?.(null)}
           />
         ))}
       </div>

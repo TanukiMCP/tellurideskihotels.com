@@ -3,7 +3,7 @@ export const prerender = false;
 
 import PageLayout from '@/components/layout/PageLayout.astro';
 import Container from '@/components/layout/Container.astro';
-import { HotelGrid } from '@/components/lodging/HotelGrid';
+import { HotelGridWithMap } from '@/components/lodging/HotelGridWithMap';
 import { HotelSearchWidget } from '@/components/lodging/HotelSearchWidget';
 import Breadcrumbs from '@/components/seo/Breadcrumbs.astro';
 import type { LiteAPIHotel } from '@/lib/liteapi/types';
@@ -127,29 +127,28 @@ const nights = checkIn && checkOut
       />
     </div>
 
-          <div class="mb-6">
-            <h2 class="text-2xl font-bold text-neutral-900 mb-2">
-              {hotels.length > 0 ? `${hotels.length} Hotels in ${location}` : 'Loading Hotels...'}
-            </h2>
-            {checkIn && checkOut && (
-              <p class="text-neutral-600">
-                {new Date(checkIn).toLocaleDateString()} - {new Date(checkOut).toLocaleDateString()} • {nights} night{nights !== 1 ? 's' : ''} • {adults} adult{adults !== 1 ? 's' : ''}
-              </p>
-            )}
-          </div>
-
-    <div id="hotel-grid">
-      <HotelGrid
-        client:load
-        hotels={hotels}
-        loading={loading}
-        minPrices={minPrices}
-        currency="USD"
-        nights={nights}
-        checkIn={checkIn}
-        checkOut={checkOut}
-        adults={adults}
-      />
+    <div class="mb-6">
+      <h2 class="text-2xl font-bold text-neutral-900 mb-2">
+        {hotels.length > 0 ? `${hotels.length} Hotels in ${location}` : 'Loading Hotels...'}
+      </h2>
+      {checkIn && checkOut && (
+        <p class="text-neutral-600">
+          {new Date(checkIn).toLocaleDateString()} - {new Date(checkOut).toLocaleDateString()} • {nights} night{nights !== 1 ? 's' : ''} • {adults} adult{adults !== 1 ? 's' : ''}
+        </p>
+      )}
     </div>
+
+    <!-- Split-screen Layout with Map Sync -->
+    <HotelGridWithMap
+      client:load
+      hotels={hotels}
+      loading={loading}
+      minPrices={minPrices}
+      currency="USD"
+      nights={nights}
+      checkIn={checkIn}
+      checkOut={checkOut}
+      adults={adults}
+    />
   </Container>
 </PageLayout>

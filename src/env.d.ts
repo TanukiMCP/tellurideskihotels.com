@@ -10,6 +10,7 @@ interface ImportMetaEnv {
   readonly PUBLIC_STRIPE_PUBLISHABLE_KEY: string;
   readonly PUBLIC_SITE_URL: string;
   readonly PEXELS_API_KEY: string;
+  readonly PUBLIC_MAPBOX_ACCESS_TOKEN: string;
 }
 
 interface ImportMeta {

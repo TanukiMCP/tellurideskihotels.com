@@ -33,8 +33,17 @@ export function HotelDetailView({ hotel, checkIn, checkOut, adults, children = 0
   
   // Get images from LiteAPI only - no fallbacks
   const allImages = getHotelImages(hotel);
-  const mainImage = allImages[0] || '/images/placeholder-hotel.jpg';
+  const mainImage = allImages[0];
   const galleryImages = allImages.slice(1, 5);
+  
+  // Don't render if no images available
+  if (!mainImage) {
+    return (
+      <div className="text-center py-12">
+        <p className="text-neutral-600">Hotel images not available</p>
+      </div>
+    );
+  }
 
   const handleRoomSelect = (rateId: string, roomData: LiteAPIRate) => {
     const price = roomData.total?.amount || roomData.net?.amount || 0;
@@ -127,12 +136,51 @@ export function HotelDetailView({ hotel, checkIn, checkOut, adults, children = 0
         ))}
       </div>
 
+      {/* Hotel Info Cards Row */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        {hotel.star_rating && (
+          <Card>
+            <CardContent className="p-4 text-center">
+              <Star className="h-8 w-8 mx-auto mb-2 text-accent-500 fill-accent-500" />
+              <div className="text-2xl font-bold text-neutral-900">{hotel.star_rating} Stars</div>
+              <div className="text-sm text-neutral-600">Hotel Rating</div>
+            </CardContent>
+          </Card>
+        )}
+        
+        {rating > 0 && (
+          <Card>
+            <CardContent className="p-4 text-center">
+              <div className={`inline-flex items-center justify-center w-16 h-16 rounded-full ${ratingColor.bg} mb-2`}>
+                <span className={`text-2xl font-bold ${ratingColor.text}`}>{rating.toFixed(1)}</span>
+              </div>
+              <div className="text-sm text-neutral-600">
+                {hotel.review_count ? `${hotel.review_count.toLocaleString()} reviews` : 'Guest Rating'}
+              </div>
+            </CardContent>
+          </Card>
+        )}
+        
+        {hotel.location && (
+          <Card>
+            <CardContent className="p-4 text-center">
+              <MapPin className="h-8 w-8 mx-auto mb-2 text-primary-600" />
+              <div className="text-sm font-semibold text-neutral-900">Prime Location</div>
+              <div className="text-xs text-neutral-600">Telluride, Colorado</div>
+            </CardContent>
+          </Card>
+        )}
+      </div>
+
       {/* Description */}
       {hotel.description?.text && (
         <Card>
           <CardContent className="p-6">
-            <h2 className="text-xl font-semibold mb-4">About</h2>
-            <p className="text-gray-700 whitespace-pre-line">{hotel.description.text}</p>
+            <h2 className="text-2xl font-bold mb-4 text-neutral-900">About This Hotel</h2>
+            <div 
+              className="text-neutral-700 leading-relaxed prose prose-sm max-w-none"
+              dangerouslySetInnerHTML={{ __html: hotel.description.text.replace(/\n/g, '<br/>') }}
+            />
           </CardContent>
         </Card>
       )}
@@ -141,12 +189,16 @@ export function HotelDetailView({ hotel, checkIn, checkOut, adults, children = 0
       {hotel.amenities && hotel.amenities.length > 0 && (
         <Card>
           <CardContent className="p-6">
-            <h2 className="text-xl font-semibold mb-4">Amenities</h2>
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+            <h2 className="text-2xl font-bold mb-6 text-neutral-900">Hotel Amenities</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
               {hotel.amenities.map((amenity, index) => (
-                <div key={index} className="flex items-center text-sm">
-                  <span className="mr-2">✓</span>
-                  <span>{amenity.name || amenity.code}</span>
+                <div key={index} className="flex items-center text-sm bg-neutral-50 rounded-lg p-3 border border-neutral-200">
+                  <div className="w-5 h-5 rounded-full bg-primary-600 flex items-center justify-center mr-3 flex-shrink-0">
+                    <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                    </svg>
+                  </div>
+                  <span className="text-neutral-700 font-medium">{amenity.name || amenity.code}</span>
                 </div>
               ))}
             </div>
@@ -157,6 +209,7 @@ export function HotelDetailView({ hotel, checkIn, checkOut, adults, children = 0
       {/* Room Selection */}
       <Card>
         <CardContent className="p-6">
+          <h2 className="text-2xl font-bold mb-6 text-neutral-900">Select Your Room</h2>
           <RoomSelector
             hotelId={hotel.hotel_id}
             checkIn={checkIn}

@@ -1,5 +1,6 @@
 import { liteAPIClient } from './client';
 import type { LiteAPIHotel, LiteAPIHotelSearchParams } from './types';
+import { isHotelNearTelluride } from '@/lib/mapbox-utils';
 
 export interface HotelSearchResponse {
   data: LiteAPIHotel[];
@@ -58,13 +59,31 @@ export async function searchHotels(params: LiteAPIHotelSearchParams): Promise<Ho
     validHotels.push(...validBatch);
   }
   
+  // Filter out hotels that are too far from Telluride (e.g., Sawpit)
+  const nearbyHotels = validHotels.filter(hotel => {
+    if (!hotel.location?.latitude || !hotel.location?.longitude) {
+      return false; // Exclude hotels without coordinates
+    }
+    const isNearby = isHotelNearTelluride(hotel.location.latitude, hotel.location.longitude);
+    if (!isNearby) {
+      console.log('[LiteAPI Hotels] Filtering out hotel too far from Telluride:', {
+        name: hotel.name,
+        city: hotel.address?.city,
+        lat: hotel.location.latitude,
+        lng: hotel.location.longitude,
+      });
+    }
+    return isNearby;
+  });
+  
   console.log('[LiteAPI Hotels] Search complete:', {
-    hotelsFound: validHotels.length,
-    sampleHotel: validHotels[0],
+    hotelsFound: nearbyHotels.length,
+    filtered: validHotels.length - nearbyHotels.length,
+    sampleHotel: nearbyHotels[0],
   });
   
   return {
-    data: validHotels,
+    data: nearbyHotels,
     total: hotelIds.length,
   };
 }

@@ -1,8 +1,11 @@
 ---
+export const prerender = false;
+
 import PageLayout from '@/components/layout/PageLayout.astro';
 import Container from '@/components/layout/Container.astro';
 import { HotelSearchWidget } from '@/components/lodging/HotelSearchWidget';
 import { FeaturedHotels } from '@/components/lodging/FeaturedHotels';
+import LodgingMap from '@/components/map/LodgingMap';
 import { SITE_DESCRIPTION, FEATURED_HOTEL_IDS } from '@/lib/constants';
 import { getHomepageHeroImage, getFeaturedImages } from '@/lib/image-library';
 import { searchHotels } from '@/lib/liteapi/hotels';
@@ -12,8 +15,12 @@ const featuredImages = getFeaturedImages();
 
 // Fetch featured hotels server-side (has access to API key)
 import type { LiteAPIHotel } from '@/lib/liteapi/types';
+import { format, addDays } from 'date-fns';
 
 let featuredHotelsData: LiteAPIHotel[] = [];
+let allHotels: LiteAPIHotel[] = [];
+let minPrices: Record<string, number> = {};
+
 try {
   const hotelData = await searchHotels({
     cityName: 'Telluride',
@@ -21,10 +28,47 @@ try {
     limit: 100,
   });
   
-  const allHotels = hotelData.data || [];
-  featuredHotelsData = FEATURED_HOTEL_IDS.slice(0, 6)
-    .map(id => allHotels.find(h => h.hotel_id === id))
-    .filter((h): h is LiteAPIHotel => h !== null && h !== undefined);
+  allHotels = hotelData.data || [];
+  
+  // Get top 6 hotels by review score for featured section
+  featuredHotelsData = allHotels
+    .filter(h => h.review_score && h.review_count && h.review_count > 50)
+    .sort((a, b) => (b.review_score || 0) - (a.review_score || 0))
+    .slice(0, 6);
+  
+  // Fetch rates for featured hotels with default dates (7 days from now for 7 nights)
+  if (featuredHotelsData.length > 0) {
+    try {
+      const checkIn = format(addDays(new Date(), 7), 'yyyy-MM-dd');
+      const checkOut = format(addDays(new Date(), 14), 'yyyy-MM-dd');
+      const hotelIds = featuredHotelsData.map(h => h.hotel_id).filter(Boolean);
+      
+      if (hotelIds.length > 0) {
+        const { searchRates } = await import('@/lib/liteapi/rates');
+        const ratesData = await searchRates({
+          hotelIds: hotelIds.join(','),
+          checkIn,
+          checkOut,
+          adults: 2,
+        });
+        
+        if (ratesData.data && ratesData.data.length > 0) {
+          ratesData.data.forEach((hotel: any) => {
+            const hotelMinPrice = hotel.rooms?.flatMap((r: any) =>
+              r.rates?.map((rate: any) => rate.net?.amount || Infinity)
+            ).filter((p: number) => p !== Infinity);
+
+            if (hotelMinPrice && hotelMinPrice.length > 0) {
+              minPrices[hotel.hotel_id] = Math.min(...hotelMinPrice);
+            }
+          });
+          console.log('[Homepage] Prices fetched for featured hotels:', Object.keys(minPrices).length);
+        }
+      }
+    } catch (error) {
+      console.error('[Homepage] Error fetching rates:', error);
+    }
+  }
 } catch (error) {
   console.error('[Homepage] Error fetching featured hotels:', error);
 }
@@ -50,7 +94,7 @@ try {
           <div class="max-w-5xl mx-auto">
             <!-- Hero Content -->
             <div class="text-center text-white mb-16 lg:mb-20 animate-slide-up px-4">
-              <h1 class="text-display-md lg:text-display-lg mb-6 drop-shadow-2xl">
+              <h1 class="text-display-md lg:text-display-lg mb-6 drop-shadow-2xl font-extrabold">
             Find Your Perfect Ski Hotel in Telluride
           </h1>
               <p class="text-xl lg:text-2xl mb-8 text-white/90 font-medium leading-relaxed max-w-3xl mx-auto">
@@ -84,8 +128,8 @@ try {
           </div>
         </div>
         <div class="flex items-center gap-3">
-          <div class="w-12 h-12 rounded-full bg-accent-100 flex items-center justify-center">
-            <svg class="w-6 h-6 text-accent-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div class="w-12 h-12 rounded-full bg-sky-100 flex items-center justify-center">
+            <svg class="w-6 h-6 text-sky-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
           </div>
@@ -95,8 +139,8 @@ try {
           </div>
         </div>
         <div class="flex items-center gap-3">
-          <div class="w-12 h-12 rounded-full bg-secondary-100 flex items-center justify-center">
-            <svg class="w-6 h-6 text-secondary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div class="w-12 h-12 rounded-full bg-accent-100 flex items-center justify-center">
+            <svg class="w-6 h-6 text-accent-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
           </div>
@@ -106,8 +150,8 @@ try {
           </div>
         </div>
         <div class="flex items-center gap-3">
-          <div class="w-12 h-12 rounded-full bg-primary-100 flex items-center justify-center">
-            <svg class="w-6 h-6 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div class="w-12 h-12 rounded-full bg-secondary-100 flex items-center justify-center">
+            <svg class="w-6 h-6 text-secondary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
           </div>
@@ -120,16 +164,31 @@ try {
     </Container>
     </div>
 
+  <!-- Explore Map Section -->
+  <div class="bg-neutral-50 py-16 lg:py-20">
+    <Container>
+      <div class="text-center mb-10">
+        <h2 class="text-display-sm lg:text-display-md mb-4 text-neutral-900">Explore Telluride Hotels</h2>
+        <p class="text-lg text-neutral-600 max-w-2xl mx-auto">
+          Browse all available hotels on the map and find the perfect location for your ski adventure
+        </p>
+      </div>
+      <div class="h-[400px] lg:h-[500px]">
+        <LodgingMap client:load hotels={allHotels} />
+      </div>
+    </Container>
+    </div>
+
   <Container class="py-20 lg:py-32">
     <!-- Featured Hotels Section -->
     <section class="mb-32">
       <div class="text-center mb-16">
-        <h2 class="text-display-sm lg:text-display-md mb-4 text-neutral-900">Featured Hotels in Telluride</h2>
-        <p class="text-xl text-neutral-600 max-w-2xl mx-auto leading-relaxed">
+        <h2 class="text-display-sm lg:text-display-md mb-4 text-neutral-900 font-bold">Featured Hotels in Telluride</h2>
+        <p class="text-xl text-neutral-600 max-w-2xl mx-auto leading-relaxed font-normal">
           Discover our handpicked selection of the finest ski hotels. Real-time availability and competitive pricing.
         </p>
       </div>
-      <FeaturedHotels client:load limit={6} initialHotels={featuredHotelsData} />
+      <FeaturedHotels client:load limit={6} initialHotels={featuredHotelsData} minPrices={minPrices} currency="USD" />
       <div class="text-center mt-16">
         <a 
           href="/lodging" 
@@ -146,8 +205,8 @@ try {
     <!-- Why Choose Us Section -->
     <section class="mb-32">
       <div class="text-center mb-16">
-        <h2 class="text-display-sm lg:text-display-md mb-4 text-neutral-900">Why Book With Us</h2>
-        <p class="text-xl text-neutral-600 max-w-2xl mx-auto leading-relaxed">
+        <h2 class="text-display-sm lg:text-display-md mb-4 text-neutral-900 font-bold">Why Book With Us</h2>
+        <p class="text-xl text-neutral-600 max-w-2xl mx-auto leading-relaxed font-normal">
           Everything you need for the perfect ski vacation in one place
         </p>
       </div>
@@ -190,14 +249,14 @@ try {
 
 
     <!-- Final CTA Section -->
-    <section class="bg-gradient-primary rounded-3xl p-12 lg:p-20 text-white shadow-elevated text-center">
-      <h2 class="text-display-sm lg:text-display-md mb-6">Ready to Plan Your Ski Adventure?</h2>
-      <p class="text-xl lg:text-2xl mb-10 text-white/90 max-w-2xl mx-auto leading-relaxed">
+    <section class="bg-primary-600 rounded-3xl p-12 lg:p-20 text-white shadow-card text-center">
+      <h2 class="text-display-sm lg:text-display-md mb-6 font-extrabold">Ready to Plan Your Ski Adventure?</h2>
+      <p class="text-xl lg:text-2xl mb-10 max-w-2xl mx-auto leading-relaxed font-medium">
         Start exploring Telluride's best ski hotels and find your perfect mountain getaway today
       </p>
       <a 
         href="/lodging" 
-        class="inline-flex items-center gap-2 bg-white text-primary-600 px-12 py-5 rounded-xl font-bold text-lg shadow-elevated hover:scale-105 transition-all duration-300"
+        class="inline-flex items-center gap-2 bg-white text-primary-600 px-12 py-5 rounded-xl font-bold text-lg shadow-card hover:shadow-card-hover hover:scale-105 transition-all duration-300"
       >
         Browse All Hotels
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

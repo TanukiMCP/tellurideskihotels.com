@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -33,11 +33,16 @@
   }
   body {
     @apply bg-white text-gray-900;
-    font-family: 'Inter', sans-serif;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 400;
   }
   h1, h2, h3, h4, h5, h6 {
-    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
     letter-spacing: -0.02em;
+  }
+  h1 {
+    font-weight: 800;
   }
   html {
     scroll-behavior: smooth;
@@ -73,14 +78,6 @@
   
   .gradient-overlay {
     background: linear-gradient(180deg, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0.1) 100%);
-  }
-  
-  .gradient-primary {
-    background: linear-gradient(135deg, #0066CC 0%, #1e40af 100%);
-  }
-  
-  .gradient-accent {
-    background: linear-gradient(135deg, #F59E0B 0%, #d97706 100%);
   }
   
   .animate-fade-in {

@@ -5,9 +5,15 @@ import { format, addDays } from 'date-fns';
 interface FeaturedHotelsProps {
   limit?: number;
   initialHotels: LiteAPIHotel[];
+  minPrices?: Record<string, number>;
+  currency?: string;
 }
 
-export function FeaturedHotels({ initialHotels }: FeaturedHotelsProps) {
+export function FeaturedHotels({ 
+  initialHotels, 
+  minPrices = {},
+  currency = 'USD' 
+}: FeaturedHotelsProps) {
   const hotels = initialHotels;
 
   const handleHotelSelect = (hotelId: string) => {
@@ -31,7 +37,8 @@ export function FeaturedHotels({ initialHotels }: FeaturedHotelsProps) {
           <HotelCard
           key={hotel.hotel_id}
             hotel={hotel}
-            currency="USD"
+            minPrice={minPrices[hotel.hotel_id]}
+            currency={currency}
             onSelect={handleHotelSelect}
           />
       ))}
