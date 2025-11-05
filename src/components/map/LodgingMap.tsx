@@ -222,100 +222,144 @@ export default function LodgingMap({
             return geoJsonData;
           })
           .then(geoJsonData => {
-            map.addSource('ski-trails', {
-              type: 'geojson',
-              data: geoJsonData
-            });
+            try {
+              map.addSource('ski-trails', {
+                type: 'geojson',
+                data: geoJsonData
+              });
 
-            // Add fill layer for trails - try multiple possible field names
-            map.addLayer({
-              id: 'ski-trails-fill',
-              type: 'line',
-              source: 'ski-trails',
-              paint: {
-                'line-color': [
-                  'match',
-                  ['coalesce', ['get', 'DIFFICULTY'], ['get', 'CLASS'], ['get', 'piste:difficulty'], ['get', 'difficulty'], ''],
-                  'EASY', '#00FF00',        // Green
-                  'GREEN', '#00FF00',       // Green
-                  'BEGINNER', '#00FF00',    // Green
-                  'easy', '#00FF00',        // Green
-                  'INTERMEDIATE', '#0000FF', // Blue
-                  'BLUE', '#0000FF',        // Blue
-                  'intermediate', '#0000FF', // Blue
-                  'ADVANCED', '#000000',     // Black
-                  'BLACK', '#000000',        // Black
-                  'advanced', '#000000',     // Black
-                  'EXPERT', '#FF0000',       // Red
-                  'DOUBLE BLACK', '#FF0000', // Red
-                  'expert', '#FF0000',       // Red
-                  '#808080'                  // Default gray
-                ],
-                'line-width': [
-                  'match',
-                  ['coalesce', ['get', 'DIFFICULTY'], ['get', 'CLASS'], ['get', 'piste:difficulty'], ['get', 'difficulty'], ''],
-                  'EASY', 3,
-                  'GREEN', 3,
-                  'BEGINNER', 3,
-                  'easy', 3,
-                  'INTERMEDIATE', 4,
-                  'BLUE', 4,
-                  'intermediate', 4,
-                  'ADVANCED', 5,
-                  'BLACK', 5,
-                  'advanced', 5,
-                  'EXPERT', 6,
-                  'DOUBLE BLACK', 6,
-                  'expert', 6,
-                  3
-                ],
-                'line-opacity': 0.8
-              }
-            });
+              // Add fill layer for trails - try multiple possible field names
+              map.addLayer({
+                id: 'ski-trails-fill',
+                type: 'line',
+                source: 'ski-trails',
+                paint: {
+                  'line-color': [
+                    'match',
+                    ['coalesce', ['get', 'DIFFICULTY'], ['get', 'CLASS'], ['get', 'piste:difficulty'], ['get', 'difficulty'], ''],
+                    'EASY', '#00FF00',        // Green
+                    'GREEN', '#00FF00',       // Green
+                    'BEGINNER', '#00FF00',    // Green
+                    'easy', '#00FF00',        // Green
+                    'INTERMEDIATE', '#0000FF', // Blue
+                    'BLUE', '#0000FF',        // Blue
+                    'intermediate', '#0000FF', // Blue
+                    'ADVANCED', '#000000',     // Black
+                    'BLACK', '#000000',        // Black
+                    'advanced', '#000000',     // Black
+                    'EXPERT', '#FF0000',       // Red
+                    'DOUBLE BLACK', '#FF0000', // Red
+                    'expert', '#FF0000',       // Red
+                    '#808080'                  // Default gray
+                  ],
+                  'line-width': [
+                    'match',
+                    ['coalesce', ['get', 'DIFFICULTY'], ['get', 'CLASS'], ['get', 'piste:difficulty'], ['get', 'difficulty'], ''],
+                    'EASY', 3,
+                    'GREEN', 3,
+                    'BEGINNER', 3,
+                    'easy', 3,
+                    'INTERMEDIATE', 4,
+                    'BLUE', 4,
+                    'intermediate', 4,
+                    'ADVANCED', 5,
+                    'BLACK', 5,
+                    'advanced', 5,
+                    'EXPERT', 6,
+                    'DOUBLE BLACK', 6,
+                    'expert', 6,
+                    3
+                  ],
+                  'line-opacity': 0.8
+                }
+              });
 
-            // Add trail name labels - try multiple possible field names
-            map.addLayer({
-              id: 'ski-trails-labels',
-              type: 'symbol',
-              source: 'ski-trails',
-              layout: {
-                'text-field': ['coalesce', ['get', 'NAME'], ['get', 'TRAIL_NAME'], ['get', 'name'], ['get', 'trail_name'], ''],
-                'text-size': 12,
-                'text-anchor': 'center',
-                'text-justify': 'center',
-                'symbol-placement': 'line-center',
-                'text-allow-overlap': false,
-                'text-ignore-placement': false
-              },
-              paint: {
-                'text-color': '#FFFFFF',
-                'text-halo-color': '#000000',
-                'text-halo-width': 2
-              }
-            });
+              // Add trail name labels - try multiple possible field names
+              map.addLayer({
+                id: 'ski-trails-labels',
+                type: 'symbol',
+                source: 'ski-trails',
+                layout: {
+                  'text-field': ['coalesce', ['get', 'NAME'], ['get', 'TRAIL_NAME'], ['get', 'name'], ['get', 'trail_name'], ''],
+                  'text-size': 12,
+                  'text-anchor': 'center',
+                  'text-justify': 'center',
+                  'symbol-placement': 'line-center',
+                  'text-allow-overlap': false,
+                  'text-ignore-placement': false
+                },
+                paint: {
+                  'text-color': '#FFFFFF',
+                  'text-halo-color': '#000000',
+                  'text-halo-width': 2
+                }
+              });
+            } catch (mapError) {
+              console.error('Failed to add ski trail layers to map:', mapError);
+            }
           })
           .catch(error => {
             console.error('Failed to load ski trail data:', error);
+            // Try fallback to sample data
+            fetch('/data/telluride-ski-trails.json')
+              .then(r => r.json())
+              .then(sampleData => {
+                try {
+                  map.addSource('ski-trails', {
+                    type: 'geojson',
+                    data: sampleData
+                  });
+                  // Add sample layers with simplified styling
+                  map.addLayer({
+                    id: 'ski-trails-fill',
+                    type: 'line',
+                    source: 'ski-trails',
+                    paint: {
+                      'line-color': '#808080',
+                      'line-width': 3,
+                      'line-opacity': 0.8
+                    }
+                  });
+                } catch (fallbackError) {
+                  console.error('Fallback ski trail loading also failed:', fallbackError);
+                }
+              })
+              .catch(fallbackError => {
+                console.error('Fallback data load failed:', fallbackError);
+              });
           });
       } else {
         // Source exists, just show layers
-        map.setLayoutProperty('ski-trails-fill', 'visibility', 'visible');
-        map.setLayoutProperty('ski-trails-labels', 'visibility', 'visible');
+        try {
+          if (map.getLayer('ski-trails-fill')) {
+            map.setLayoutProperty('ski-trails-fill', 'visibility', 'visible');
+          }
+          if (map.getLayer('ski-trails-labels')) {
+            map.setLayoutProperty('ski-trails-labels', 'visibility', 'visible');
+          }
+        } catch (visibilityError) {
+          console.error('Failed to show ski trail layers:', visibilityError);
+        }
       }
     } else {
       // Hide ski trail layers
-      if (map.getLayer('ski-trails-fill')) {
-        map.setLayoutProperty('ski-trails-fill', 'visibility', 'none');
-      }
-      if (map.getLayer('ski-trails-labels')) {
-        map.setLayoutProperty('ski-trails-labels', 'visibility', 'none');
+      try {
+        if (map.getLayer('ski-trails-fill')) {
+          map.setLayoutProperty('ski-trails-fill', 'visibility', 'none');
+        }
+        if (map.getLayer('ski-trails-labels')) {
+          map.setLayoutProperty('ski-trails-labels', 'visibility', 'none');
+        }
+      } catch (visibilityError) {
+        console.error('Failed to hide ski trail layers:', visibilityError);
       }
     }
   }, [showSkiTrails, isLoading]);
 
+  // Fallback for when hotels.length === 0
   if (hotels.length === 0) {
     return (
-      <div 
+      <div
         className={`rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 flex items-center justify-center ${className}`}
         style={{ height }}
       >
@@ -330,7 +374,9 @@ export default function LodgingMap({
     );
   }
 
-  return (
+  // Error boundary wrapper
+  try {
+    return (
     <div className={`relative ${className}`} style={{ height }}>
       {/* Loading Overlay */}
       {isLoading && (
@@ -545,6 +591,23 @@ export default function LodgingMap({
         }
       `}</style>
     </div>
-  );
-}
+    );
+  } catch (error) {
+    console.error('LodgingMap component error:', error);
+    // Fallback UI for when the map fails to load
+    return (
+      <div
+        className={`rounded-lg border-2 border-red-200 bg-red-50 flex items-center justify-center ${className}`}
+        style={{ height }}
+      >
+        <div className="text-center p-6">
+          <svg className="w-12 h-12 text-red-400 mx-auto mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
+          </svg>
+          <p className="text-sm font-medium text-red-900">Map temporarily unavailable</p>
+          <p className="text-xs text-red-600 mt-1">Please refresh the page to try again</p>
+        </div>
+      </div>
+    );
+  }
 
