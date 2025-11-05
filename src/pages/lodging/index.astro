@@ -42,40 +42,49 @@ if (location && searchParams.has('location')) {
     
     if (checkIn && checkOut && hotels.length > 0) {
       try {
-        // Get hotel IDs and filter out any undefined/null values
-        const validHotels = hotels.slice(0, 10).filter(h => h && h.hotel_id);
-        const hotelIds = validHotels.map(h => h.hotel_id).join(',');
+        // Log first hotel to see structure
+        console.log('[Lodging Page] First hotel sample:', JSON.stringify(hotels[0], null, 2).substring(0, 500));
+        
+        // Get hotel IDs - check different possible property names
+        const validHotels = hotels.slice(0, 10).filter(h => {
+          const hasId = h && (h.hotel_id || h.hotelId || h.id);
+          if (!hasId) {
+            console.warn('[Lodging Page] Hotel missing ID:', Object.keys(h || {}));
+          }
+          return hasId;
+        });
+        
+        const hotelIds = validHotels.map(h => h.hotel_id || h.hotelId || h.id).join(',');
         
         console.log('[Lodging Page] Fetching rates for', validHotels.length, 'hotels');
         console.log('[Lodging Page] Hotel IDs:', hotelIds.substring(0, 100) + '...');
         
-        if (!hotelIds) {
-          console.warn('[Lodging Page] No valid hotel IDs found');
-          return;
-        }
-        
-        const { searchRates } = await import('@/lib/liteapi/rates');
-        const ratesData = await searchRates({
-          hotelIds,
-          checkIn,
-          checkOut,
-          adults,
-        });
-        
-        if (ratesData.data && ratesData.data.length > 0) {
-          console.log('[Lodging Page] Processing rates for', ratesData.data.length, 'hotels');
-          ratesData.data.forEach((hotel: any) => {
-            const hotelMinPrice = hotel.rooms?.flatMap((r: any) => 
-              r.rates?.map((rate: any) => rate.total?.amount || rate.net?.amount || Infinity)
-            ).filter((p: number) => p !== Infinity);
-            
-            if (hotelMinPrice && hotelMinPrice.length > 0) {
-              minPrices[hotel.hotel_id] = Math.min(...hotelMinPrice);
-            }
-          });
-          console.log('[Lodging Page] Prices calculated for', Object.keys(minPrices).length, 'hotels');
+        if (!hotelIds || hotelIds.trim() === '') {
+          console.warn('[Lodging Page] No valid hotel IDs found after filtering');
         } else {
-          console.warn('[Lodging Page] No rate data returned');
+          const { searchRates } = await import('@/lib/liteapi/rates');
+          const ratesData = await searchRates({
+            hotelIds,
+            checkIn,
+            checkOut,
+            adults,
+          });
+        
+          if (ratesData.data && ratesData.data.length > 0) {
+            console.log('[Lodging Page] Processing rates for', ratesData.data.length, 'hotels');
+            ratesData.data.forEach((hotel: any) => {
+              const hotelMinPrice = hotel.rooms?.flatMap((r: any) => 
+                r.rates?.map((rate: any) => rate.total?.amount || rate.net?.amount || Infinity)
+              ).filter((p: number) => p !== Infinity);
+              
+              if (hotelMinPrice && hotelMinPrice.length > 0) {
+                minPrices[hotel.hotel_id] = Math.min(...hotelMinPrice);
+              }
+            });
+            console.log('[Lodging Page] Prices calculated for', Object.keys(minPrices).length, 'hotels');
+          } else {
+            console.warn('[Lodging Page] No rate data returned');
+          }
         }
       } catch (rateError) {
         console.error('[Lodging Page] Error fetching rates:', {
