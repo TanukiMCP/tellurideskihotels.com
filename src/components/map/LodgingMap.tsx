@@ -53,6 +53,7 @@ export default function LodgingMap({
   const [isMapActive, setIsMapActive] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [popupHotel, setPopupHotel] = useState<LiteAPIHotel | null>(null);
+  const [showSkiTrails, setShowSkiTrails] = useState(false);
   const [viewState, setViewState] = useState({
     longitude: TELLURIDE_CENTER[0],
     latitude: TELLURIDE_CENTER[1],
@@ -179,6 +180,91 @@ export default function LodgingMap({
     setIsLoading(false);
   }, []);
 
+  // Add/remove ski trail layer
+  useEffect(() => {
+    if (!mapRef.current || isLoading) return;
+
+    const map = mapRef.current.getMap();
+
+    if (showSkiTrails) {
+      // Add ski trail source if it doesn't exist
+      if (!map.getSource('ski-trails')) {
+        fetch('/data/telluride-ski-trails.json')
+          .then(response => response.json())
+          .then(data => {
+            map.addSource('ski-trails', {
+              type: 'geojson',
+              data: data
+            });
+
+            // Add fill layer for trails
+            map.addLayer({
+              id: 'ski-trails-fill',
+              type: 'line',
+              source: 'ski-trails',
+              paint: {
+                'line-color': [
+                  'match',
+                  ['get', 'piste:difficulty'],
+                  'easy', '#00FF00',        // Green
+                  'intermediate', '#0000FF', // Blue
+                  'advanced', '#000000',     // Black
+                  'expert', '#FF0000',       // Red
+                  '#808080'                  // Default gray
+                ],
+                'line-width': [
+                  'match',
+                  ['get', 'piste:difficulty'],
+                  'easy', 3,
+                  'intermediate', 4,
+                  'advanced', 5,
+                  'expert', 6,
+                  3
+                ],
+                'line-opacity': 0.8
+              }
+            });
+
+            // Add trail name labels
+            map.addLayer({
+              id: 'ski-trails-labels',
+              type: 'symbol',
+              source: 'ski-trails',
+              layout: {
+                'text-field': ['get', 'name'],
+                'text-size': 12,
+                'text-anchor': 'center',
+                'text-justify': 'center',
+                'symbol-placement': 'line-center',
+                'text-allow-overlap': false,
+                'text-ignore-placement': false
+              },
+              paint: {
+                'text-color': '#FFFFFF',
+                'text-halo-color': '#000000',
+                'text-halo-width': 2
+              }
+            });
+          })
+          .catch(error => {
+            console.error('Failed to load ski trail data:', error);
+          });
+      } else {
+        // Source exists, just show layers
+        map.setLayoutProperty('ski-trails-fill', 'visibility', 'visible');
+        map.setLayoutProperty('ski-trails-labels', 'visibility', 'visible');
+      }
+    } else {
+      // Hide ski trail layers
+      if (map.getLayer('ski-trails-fill')) {
+        map.setLayoutProperty('ski-trails-fill', 'visibility', 'none');
+      }
+      if (map.getLayer('ski-trails-labels')) {
+        map.setLayoutProperty('ski-trails-labels', 'visibility', 'none');
+      }
+    }
+  }, [showSkiTrails, isLoading]);
+
   if (hotels.length === 0) {
     return (
       <div 
@@ -244,6 +330,22 @@ export default function LodgingMap({
       >
         {/* Navigation Controls */}
         <NavigationControl position="top-right" showCompass={false} />
+
+        {/* Ski Trail Toggle */}
+        <div className="absolute top-2 left-2 z-[1000]">
+          <button
+            onClick={() => setShowSkiTrails(!showSkiTrails)}
+            className="bg-white hover:bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 shadow-md flex items-center gap-2 transition-colors"
+            title={showSkiTrails ? 'Hide ski trails' : 'Show ski trails'}
+          >
+            <svg className="w-5 h-5 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+            </svg>
+            <span className="text-sm font-medium text-gray-700">
+              {showSkiTrails ? 'Hide Slopes' : 'Show Slopes'}
+            </span>
+          </button>
+        </div>
 
         {/* Hotel Markers */}
         {hotels.map((hotel) => {
@@ -328,6 +430,31 @@ export default function LodgingMap({
             <span className="text-sm font-semibold text-gray-900">
               {hotels.length} {hotels.length === 1 ? 'Hotel' : 'Hotels'}
             </span>
+          </div>
+        </div>
+      )}
+
+      {/* Ski Trail Legend */}
+      {showSkiTrails && !isLoading && (
+        <div className="absolute bottom-4 left-4 bg-white rounded-lg shadow-md p-3 z-[1000] pointer-events-none">
+          <h4 className="font-semibold text-sm mb-2 text-gray-900">Trail Difficulty</h4>
+          <div className="space-y-1">
+            <div className="flex items-center gap-2">
+              <div className="w-4 h-2 bg-green-500 rounded"></div>
+              <span className="text-xs text-gray-700">Green (Easy)</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-4 h-2 bg-blue-500 rounded"></div>
+              <span className="text-xs text-gray-700">Blue (Intermediate)</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-4 h-2 bg-black rounded"></div>
+              <span className="text-xs text-gray-700">Black (Advanced)</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-4 h-2 bg-red-600 rounded"></div>
+              <span className="text-xs text-gray-700">Double Black (Expert)</span>
+            </div>
           </div>
         </div>
       )}

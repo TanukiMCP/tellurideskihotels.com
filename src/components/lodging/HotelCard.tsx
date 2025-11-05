@@ -24,7 +24,7 @@ export function HotelCard({
   hotel, 
   minPrice, 
   currency = 'USD', 
-  nights: _nights = 1,
+  nights: _nights = 1, 
   checkInDate,
   onSelect,
   isSelected = false,
