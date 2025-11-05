@@ -42,25 +42,24 @@ if (location && searchParams.has('location')) {
     
     if (checkIn && checkOut && hotels.length > 0) {
       try {
-        // Log first hotel to see structure
-        console.log('[Lodging Page] First hotel sample:', JSON.stringify(hotels[0], null, 2).substring(0, 500));
-        
-        // Get hotel IDs - check different possible property names
-        const validHotels = hotels.slice(0, 10).filter(h => {
-          const hasId = h && (h.hotel_id || h.hotelId || h.id);
-          if (!hasId) {
-            console.warn('[Lodging Page] Hotel missing ID:', Object.keys(h || {}));
-          }
-          return hasId;
+        // Log first hotel to debug structure
+        const firstHotel = hotels[0];
+        console.log('[Lodging Page] First hotel:', {
+          hasHotelId: !!firstHotel?.hotel_id,
+          hotelId: firstHotel?.hotel_id,
+          name: firstHotel?.name,
+          keys: Object.keys(firstHotel || {}),
         });
         
-        const hotelIds = validHotels.map(h => h.hotel_id || h.hotelId || h.id).join(',');
+        // Get hotel IDs - use hotel_id as per LiteAPI types
+        const validHotels = hotels.slice(0, 10).filter(h => h && h.hotel_id);
+        const hotelIds = validHotels.map(h => h.hotel_id).join(',');
         
         console.log('[Lodging Page] Fetching rates for', validHotels.length, 'hotels');
         console.log('[Lodging Page] Hotel IDs:', hotelIds.substring(0, 100) + '...');
         
         if (!hotelIds || hotelIds.trim() === '') {
-          console.warn('[Lodging Page] No valid hotel IDs found after filtering');
+          console.warn('[Lodging Page] No valid hotel IDs found - hotels may be missing hotel_id property');
         } else {
           const { searchRates } = await import('@/lib/liteapi/rates');
           const ratesData = await searchRates({
