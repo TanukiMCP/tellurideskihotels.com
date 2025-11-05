@@ -19,28 +19,26 @@ export function FeaturedHotels({ limit = 6 }: FeaturedHotelsProps) {
       try {
         setLoading(true);
         
-        // Fetch specific featured hotels by ID for better performance
-        const hotelDetailsPromises = FEATURED_HOTEL_IDS.slice(0, limit).map(async (hotelId) => {
-          try {
-            const response = await fetch(`/api/hotels/details?hotelId=${hotelId}`);
-            if (!response.ok) {
-              console.warn(`[FeaturedHotels] Failed to fetch hotel ${hotelId}`);
-              return null;
-            }
-            return await response.json();
-          } catch (err) {
-            console.error(`[FeaturedHotels] Error fetching hotel ${hotelId}:`, err);
-            return null;
-          }
+        // Fetch specific featured hotels by ID using the search endpoint
+        // which already has all the hotels loaded
+        const { searchHotels } = await import('@/lib/liteapi/hotels');
+        const hotelData = await searchHotels({
+          cityName: 'Telluride',
+          countryCode: 'US',
+          limit: 100,
         });
         
-        const hotelResults = await Promise.all(hotelDetailsPromises);
-        const validHotels = hotelResults.filter((h): h is LiteAPIHotel => h !== null);
+        const allHotels = hotelData.data || [];
         
-        console.log('[FeaturedHotels] Loaded featured hotels:', validHotels.length);
-        console.log('[FeaturedHotels] Sample:', validHotels[0]);
+        // Filter to only featured hotel IDs
+        const featuredHotels = FEATURED_HOTEL_IDS.slice(0, limit)
+          .map(id => allHotels.find(h => h.hotel_id === id))
+          .filter((h): h is LiteAPIHotel => h !== null && h !== undefined);
         
-        setHotels(validHotels);
+        console.log('[FeaturedHotels] Loaded featured hotels:', featuredHotels.length);
+        console.log('[FeaturedHotels] Sample:', featuredHotels[0]);
+        
+        setHotels(featuredHotels);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to load hotels');
         console.error('[FeaturedHotels] Error:', err);

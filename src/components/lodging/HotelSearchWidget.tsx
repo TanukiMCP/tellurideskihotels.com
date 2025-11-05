@@ -103,7 +103,7 @@ export function HotelSearchWidget({
         <Button
           type="submit"
           size="lg"
-          className="w-full h-12 bg-gradient-to-r from-primary-600 to-accent-600 text-white hover:opacity-90 shadow-cta transition-all duration-200"
+          className="w-full"
         >
           <Search className="mr-2 h-5 w-5" />
           Search Hotels
