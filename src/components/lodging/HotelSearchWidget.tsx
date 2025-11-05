@@ -46,10 +46,10 @@ export function HotelSearchWidget({
   };
 
   return (
-    <div className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-strong p-8 border border-gray-100">
-      <div className="mb-6">
-        <h2 className="text-3xl font-bold mb-2 text-gray-900 font-display">Find Your Perfect Stay</h2>
-        <p className="text-gray-600">Discover the best ski hotels in Telluride</p>
+    <div className="bg-white rounded-2xl shadow-strong p-8 md:p-12 border border-gray-200" style="box-shadow: 0 20px 60px rgba(0,0,0,0.15);">
+      <div className="mb-8">
+        <h2 className="text-3xl md:text-4xl font-bold mb-3 text-gray-900" style="font-size: 32px; line-height: 1.3;">Find Your Perfect Stay</h2>
+        <p className="text-gray-600 text-lg" style="font-size: 18px; line-height: 1.6;">Discover the best ski hotels in Telluride</p>
       </div>
       <form onSubmit={handleSubmit} className="space-y-5">
         <div className="relative">
@@ -148,7 +148,7 @@ export function HotelSearchWidget({
             </div>
           </div>
         </div>
-        <Button type="submit" size="lg" className="w-full bg-gradient-accent hover:opacity-90 shadow-medium hover:shadow-strong transition-all duration-300 text-white font-semibold py-3.5">
+        <Button type="submit" size="lg" className="w-full bg-primary-500 hover:bg-primary-600 shadow-medium hover:shadow-strong transition-all duration-300 text-white font-semibold" style="height: 56px; font-weight: 600;">
           <Search className="mr-2 h-5 w-5" />
           Search Hotels
         </Button>
