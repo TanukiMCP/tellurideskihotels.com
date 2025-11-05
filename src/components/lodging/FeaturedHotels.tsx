@@ -33,12 +33,10 @@ export function FeaturedHotels({ limit = 6 }: FeaturedHotelsProps) {
         console.log('[FeaturedHotels] Sample hotel:', allHotels[0]);
         console.log('[FeaturedHotels] Sample hotel keys:', Object.keys(allHotels[0] || {}));
         
-        // Filter to only featured hotels, maintaining order
-        // Note: API returns 'id' field, need to check both id and hotel_id
-        const featuredHotels = FEATURED_HOTEL_IDS
-          .map(id => allHotels.find((h: any) => h.hotel_id === id || h.id === id))
-          .filter((h): h is LiteAPIHotel => h !== undefined)
-          .slice(0, limit);
+        // For now, use first N hotels from Telluride as featured
+        // TODO: Update FEATURED_HOTEL_IDS in constants.ts with actual hotel IDs from API
+        const featuredHotels = allHotels
+          .slice(0, limit) as LiteAPIHotel[];
         
         console.log('[FeaturedHotels] Featured hotels found:', featuredHotels.length);
         
