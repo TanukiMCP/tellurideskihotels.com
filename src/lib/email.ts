@@ -1,9 +1,10 @@
 /**
  * Email service for booking confirmations
- * Uses Resend API for transactional emails
+ * Uses Mailgun API for transactional emails
  */
 
-const RESEND_API_KEY = import.meta.env.RESEND_API_KEY || '';
+const MAILGUN_API_KEY = import.meta.env.MAILGUN_API_KEY || '';
+const MAILGUN_DOMAIN = import.meta.env.MAILGUN_DOMAIN || 'tellurideskihotels.com';
 const FROM_EMAIL = import.meta.env.FROM_EMAIL || 'bookings@tellurideskihotels.com';
 const SITE_URL = import.meta.env.PUBLIC_SITE_URL || 'https://tellurideskihotels.com';
 
@@ -26,8 +27,13 @@ export interface BookingEmailData {
  * Send booking confirmation email to guest
  */
 export async function sendBookingConfirmation(data: BookingEmailData): Promise<boolean> {
-  if (!RESEND_API_KEY) {
-    console.warn('[Email] RESEND_API_KEY not configured, skipping email');
+  if (!MAILGUN_API_KEY) {
+    console.warn('[Email] MAILGUN_API_KEY not configured, skipping email');
+    return false;
+  }
+
+  if (!MAILGUN_DOMAIN) {
+    console.warn('[Email] MAILGUN_DOMAIN not configured, skipping email');
     return false;
   }
 
@@ -168,27 +174,53 @@ export async function sendBookingConfirmation(data: BookingEmailData): Promise<b
   `;
 
   try {
-    const response = await fetch('https://api.resend.com/emails', {
+    // Mailgun API endpoint
+    const mailgunUrl = `https://api.mailgun.net/v3/${MAILGUN_DOMAIN}/messages`;
+
+    // Create form data for Mailgun
+    const formData = new FormData();
+    formData.append('from', `Telluride Ski Hotels <${FROM_EMAIL}>`);
+    formData.append('to', data.guestEmail);
+    formData.append('subject', `Booking Confirmation - ${data.hotelName} - ${data.confirmationNumber}`);
+    formData.append('html', emailHtml);
+    formData.append('text', `
+Booking Confirmed!
+
+Confirmation Number: ${data.confirmationNumber}
+Hotel: ${data.hotelName}
+Room: ${data.roomName}
+Check-in: ${checkInDate}
+Check-out: ${checkOutDate}
+Guests: ${data.adults} Adult${data.adults !== 1 ? 's' : ''}${data.children ? `, ${data.children} Child${data.children !== 1 ? 'ren' : ''}` : ''}
+Total: ${new Intl.NumberFormat('en-US', { style: 'currency', currency: data.currency }).format(data.totalPrice)}
+
+View your booking: ${SITE_URL}/booking/confirmation/${data.bookingId}
+
+Questions? Contact us at support@tellurideskihotels.com
+    `.trim());
+
+    const response = await fetch(mailgunUrl, {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${RESEND_API_KEY}`,
-        'Content-Type': 'application/json',
+        'Authorization': 'Basic ' + btoa(`api:${MAILGUN_API_KEY}`),
       },
-      body: JSON.stringify({
-        from: FROM_EMAIL,
-        to: data.guestEmail,
-        subject: `Booking Confirmation - ${data.hotelName} - ${data.confirmationNumber}`,
-        html: emailHtml,
-      }),
+      body: formData,
     });
 
     if (!response.ok) {
       const error = await response.text();
-      console.error('[Email] Failed to send:', error);
+      console.error('[Email] Mailgun API error:', {
+        status: response.status,
+        error,
+      });
       return false;
     }
 
-    console.log('[Email] Booking confirmation sent to:', data.guestEmail);
+    const result = await response.json();
+    console.log('[Email] Booking confirmation sent:', {
+      to: data.guestEmail,
+      messageId: result.id,
+    });
     return true;
   } catch (error) {
     console.error('[Email] Error sending confirmation:', error);
