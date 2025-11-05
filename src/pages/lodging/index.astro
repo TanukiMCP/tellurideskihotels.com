@@ -23,6 +23,13 @@ let loading = false;
 if (location && searchParams.has('location')) {
   try {
     loading = true;
+    console.log('[Lodging Page] Starting search:', {
+      location,
+      checkIn,
+      checkOut,
+      adults,
+    });
+    
     const { searchHotels } = await import('@/lib/liteapi/hotels');
     const hotelData = await searchHotels({
       cityName: location,
@@ -31,9 +38,11 @@ if (location && searchParams.has('location')) {
     });
     
     hotels = hotelData.data || [];
+    console.log('[Lodging Page] Hotels loaded:', hotels.length);
     
     if (checkIn && checkOut && hotels.length > 0) {
       try {
+        console.log('[Lodging Page] Fetching rates for top 10 hotels');
         const { searchRates } = await import('@/lib/liteapi/rates');
         const hotelIds = hotels.slice(0, 10).map(h => h.hotel_id).join(',');
         const ratesData = await searchRates({
@@ -43,7 +52,8 @@ if (location && searchParams.has('location')) {
           adults,
         });
         
-        if (ratesData.data) {
+        if (ratesData.data && ratesData.data.length > 0) {
+          console.log('[Lodging Page] Processing rates for', ratesData.data.length, 'hotels');
           ratesData.data.forEach((hotel: any) => {
             const hotelMinPrice = hotel.rooms?.flatMap((r: any) => 
               r.rates?.map((rate: any) => rate.total?.amount || rate.net?.amount || Infinity)
@@ -53,16 +63,26 @@ if (location && searchParams.has('location')) {
               minPrices[hotel.hotel_id] = Math.min(...hotelMinPrice);
             }
           });
+          console.log('[Lodging Page] Prices calculated for', Object.keys(minPrices).length, 'hotels');
+        } else {
+          console.warn('[Lodging Page] No rate data returned');
         }
       } catch (rateError) {
-        console.error('Error fetching rates:', rateError);
+        console.error('[Lodging Page] Error fetching rates:', {
+          error: rateError instanceof Error ? rateError.message : 'Unknown error',
+          stack: rateError instanceof Error ? rateError.stack : undefined,
+        });
       }
     }
   } catch (error) {
-    console.error('Error fetching hotels:', error);
+    console.error('[Lodging Page] Error fetching hotels:', {
+      error: error instanceof Error ? error.message : 'Unknown error',
+      stack: error instanceof Error ? error.stack : undefined,
+    });
     hotels = [];
   } finally {
     loading = false;
+    console.log('[Lodging Page] Search complete');
   }
 }
 

@@ -7,6 +7,12 @@ export interface HotelSearchResponse {
 }
 
 export async function searchHotels(params: LiteAPIHotelSearchParams): Promise<HotelSearchResponse> {
+  console.log('[LiteAPI Hotels] Starting hotel search:', {
+    cityName: params.cityName,
+    countryCode: params.countryCode,
+    limit: params.limit,
+  });
+  
   const searchParams = new URLSearchParams();
   
   if (params.cityName) searchParams.append('cityName', params.cityName);
@@ -20,7 +26,13 @@ export async function searchHotels(params: LiteAPIHotelSearchParams): Promise<Ho
   const queryString = searchParams.toString();
   const endpoint = `/data/hotels${queryString ? `?${queryString}` : ''}`;
 
-  return liteAPIClient<HotelSearchResponse>(endpoint);
+  const response = await liteAPIClient<HotelSearchResponse>(endpoint);
+  
+  console.log('[LiteAPI Hotels] Search complete:', {
+    hotelsFound: response.data?.length || 0,
+  });
+  
+  return response;
 }
 
 export async function getHotelDetails(hotelId: string): Promise<LiteAPIHotel> {
