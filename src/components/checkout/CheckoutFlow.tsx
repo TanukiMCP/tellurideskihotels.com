@@ -33,7 +33,10 @@ export function CheckoutFlow({ hotelId, hotelName, room, addons = [], onComplete
     setStep(2);
   };
 
+  const [isProcessing, setIsProcessing] = useState(false);
+  
   const handlePaymentComplete = async (paymentIntentId: string) => {
+    setIsProcessing(true);
     try {
       // Prebook
       const prebookResponse = await fetch('/api/booking/prebook', {
@@ -60,7 +63,8 @@ export function CheckoutFlow({ hotelId, hotelName, room, addons = [], onComplete
       });
 
       if (!prebookResponse.ok) {
-        throw new Error('Prebook failed');
+        const errorData = await prebookResponse.json().catch(() => ({}));
+        throw new Error(errorData.error || 'Failed to reserve room. Please try again.');
       }
 
       const prebookData = await prebookResponse.json();
@@ -91,30 +95,42 @@ export function CheckoutFlow({ hotelId, hotelName, room, addons = [], onComplete
       });
 
       if (!confirmResponse.ok) {
-        throw new Error('Booking confirmation failed');
+        const errorData = await confirmResponse.json().catch(() => ({}));
+        throw new Error(errorData.error || 'Failed to confirm booking. Please contact support with your payment confirmation.');
       }
 
       const bookingData = await confirmResponse.json();
       onComplete(bookingData.booking_id);
     } catch (error) {
       console.error('Booking error:', error);
-      alert('Booking failed. Please try again.');
+      alert(error instanceof Error ? error.message : 'Booking failed. Please try again.');
+      setIsProcessing(false);
     }
   };
 
   return (
     <div className="max-w-4xl mx-auto">
+      {isProcessing && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center">
+          <div className="bg-white rounded-2xl p-8 max-w-md mx-4 text-center shadow-2xl">
+            <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-primary-600 mx-auto mb-4"></div>
+            <h3 className="text-xl font-bold text-neutral-900 mb-2">Processing Your Booking</h3>
+            <p className="text-neutral-600">Please wait while we confirm your reservation...</p>
+          </div>
+        </div>
+      )}
+      
       <div className="mb-6">
         <div className="flex items-center justify-between">
-          <div className={`flex items-center ${step >= 1 ? 'text-turquoise-500' : 'text-gray-400'}`}>
-            <div className={`w-8 h-8 rounded-full flex items-center justify-center ${step >= 1 ? 'bg-turquoise-500 text-white' : 'bg-gray-200'}`}>
+          <div className={`flex items-center ${step >= 1 ? 'text-primary-600' : 'text-gray-400'}`}>
+            <div className={`w-8 h-8 rounded-full flex items-center justify-center ${step >= 1 ? 'bg-primary-600 text-white' : 'bg-gray-200'}`}>
               1
             </div>
             <span className="ml-2 font-medium">Guest Information</span>
           </div>
           <div className="flex-1 h-0.5 bg-gray-200 mx-4" />
-          <div className={`flex items-center ${step >= 2 ? 'text-turquoise-500' : 'text-gray-400'}`}>
-            <div className={`w-8 h-8 rounded-full flex items-center justify-center ${step >= 2 ? 'bg-turquoise-500 text-white' : 'bg-gray-200'}`}>
+          <div className={`flex items-center ${step >= 2 ? 'text-primary-600' : 'text-gray-400'}`}>
+            <div className={`w-8 h-8 rounded-full flex items-center justify-center ${step >= 2 ? 'bg-primary-600 text-white' : 'bg-gray-200'}`}>
               2
             </div>
             <span className="ml-2 font-medium">Payment</span>

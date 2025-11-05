@@ -18,7 +18,6 @@ import {
   getIconSize,
   MAP_PADDING,
   MAX_BOUNDS_ZOOM,
-  findClosestTrail,
 } from '@/lib/mapbox-utils';
 import 'mapbox-gl/dist/mapbox-gl.css';
 
@@ -26,7 +25,8 @@ import 'mapbox-gl/dist/mapbox-gl.css';
 const MAP_STYLES = {
   streets: 'mapbox://styles/mapbox/streets-v12',
   satellite: 'mapbox://styles/mapbox/satellite-streets-v12',
-  terrain: 'mapbox://styles/mapbox/outdoors-v12'
+  terrain: 'mapbox://styles/mapbox/outdoors-v12',
+  ski: 'mapbox://styles/mapbox/outdoors-v12' // Outdoors style has ski trails built-in
 };
 
 interface LodgingMapProps {
@@ -62,17 +62,7 @@ export default function LodgingMap({
   const [isMobile, setIsMobile] = useState(false);
   const [popupHotel, setPopupHotel] = useState<LiteAPIHotel | null>(null);
   const [showSkiTrails, setShowSkiTrails] = useState(false);
-  const [trailFilters, setTrailFilters] = useState({
-    green: true,
-    blue: true,
-    black: true,
-    expert: true,
-    lifts: true
-  });
   const [trailOpacity, setTrailOpacity] = useState(0.8);
-  const [mapStyle, setMapStyle] = useState<'streets' | 'satellite' | 'terrain'>('streets');
-  const [selectedTrail, setSelectedTrail] = useState<any | null>(null);
-  const [trailData, setTrailData] = useState<any[]>([]);
   const [viewState, setViewState] = useState({
     longitude: TELLURIDE_CENTER[0],
     latitude: TELLURIDE_CENTER[1],
@@ -199,273 +189,113 @@ export default function LodgingMap({
     setIsLoading(false);
   }, []);
 
-  // Add/remove ski trail layer with enhanced filtering
+  // Simple ski trail layer enhancement using Mapbox's built-in data
   useEffect(() => {
     if (!mapRef.current || isLoading) return;
 
     const map = mapRef.current.getMap();
 
     if (showSkiTrails) {
-      // Add ski trail source if it doesn't exist
-      if (!map.getSource('ski-trails')) {
-        // Try enhanced data first, fall back to original
-        fetch('/data/telluride-ski-trails-enhanced.json')
-          .then(response => {
-            if (!response.ok) {
-              return fetch('/data/telluride-ski-trails.json').then(r => r.json());
-            }
-            return response.json();
-          })
-          .then(geoJsonData => {
-            // Store trail data for proximity calculations
-            setTrailData(geoJsonData.features || []);
-            
-            try {
-              map.addSource('ski-trails', {
-                type: 'geojson',
-                data: geoJsonData
-              });
-
-              // Add trails layer with enhanced styling and glow effect
-              map.addLayer({
-                id: 'ski-trails-glow',
-                type: 'line',
-                source: 'ski-trails',
-                filter: ['==', ['get', 'type'], 'trail'],
-                paint: {
-                  'line-color': [
-                    'match',
-                    ['get', 'difficulty'],
-                    'GREEN', '#22c55e',
-                    'BLUE', '#3b82f6',
-                    'BLACK', '#000000',
-                    'DOUBLE BLACK', '#dc2626',
-                    '#6b7280'
-                  ],
-                  'line-width': 8,
-                  'line-opacity': 0.3,
-                  'line-blur': 4
-                }
-              });
-
-              // Add main trails layer
-              map.addLayer({
-                id: 'ski-trails-fill',
-                type: 'line',
-                source: 'ski-trails',
-                filter: ['==', ['get', 'type'], 'trail'],
-                paint: {
-                  'line-color': [
-                    'match',
-                    ['get', 'difficulty'],
-                    'GREEN', '#22c55e',
-                    'BLUE', '#3b82f6',
-                    'BLACK', '#000000',
-                    'DOUBLE BLACK', '#dc2626',
-                    '#6b7280'
-                  ],
-                  'line-width': [
-                    'match',
-                    ['get', 'difficulty'],
-                    'GREEN', 3,
-                    'BLUE', 4,
-                    'BLACK', 5,
-                    'DOUBLE BLACK', 6,
-                    3
-                  ],
-                  'line-opacity': trailOpacity
-                }
-              });
-
-              // Add lifts layer
-              map.addLayer({
-                id: 'ski-lifts',
-                type: 'line',
-                source: 'ski-trails',
-                filter: ['==', ['get', 'type'], 'lift'],
-                paint: {
-                  'line-color': '#f59e0b',
-                  'line-width': 3,
-                  'line-dasharray': [2, 2],
-                  'line-opacity': trailOpacity
-                }
-              });
-
-              // Add lift symbols/icons
-              map.addLayer({
-                id: 'ski-lifts-symbols',
-                type: 'symbol',
-                source: 'ski-trails',
-                filter: ['==', ['get', 'type'], 'lift'],
-                layout: {
-                  'symbol-placement': 'line',
-                  'symbol-spacing': 100,
-                  'icon-image': 'marker-15',
-                  'icon-size': 0.8
-                }
-              });
-
-              // Add trail name labels
-              map.addLayer({
-                id: 'ski-trails-labels',
-                type: 'symbol',
-                source: 'ski-trails',
-                filter: ['==', ['get', 'type'], 'trail'],
-                layout: {
-                  'text-field': ['get', 'name'],
-                  'text-size': 11,
-                  'text-anchor': 'center',
-                  'text-justify': 'center',
-                  'symbol-placement': 'line-center',
-                  'text-allow-overlap': false,
-                  'text-ignore-placement': false,
-                  'text-font': ['DIN Pro Bold', 'Arial Unicode MS Bold']
-                },
-                paint: {
-                  'text-color': '#FFFFFF',
-                  'text-halo-color': [
-                    'match',
-                    ['get', 'difficulty'],
-                    'GREEN', '#15803d',
-                    'BLUE', '#1e40af',
-                    'BLACK', '#000000',
-                    'DOUBLE BLACK', '#7f1d1d',
-                    '#374151'
-                  ],
-                  'text-halo-width': 2,
-                  'text-halo-blur': 1
-                }
-              });
-
-              // Add lift labels
-              map.addLayer({
-                id: 'ski-lifts-labels',
-                type: 'symbol',
-                source: 'ski-trails',
-                filter: ['==', ['get', 'type'], 'lift'],
-                layout: {
-                  'text-field': ['get', 'name'],
-                  'text-size': 10,
-                  'text-anchor': 'center',
-                  'symbol-placement': 'line-center',
-                  'text-font': ['DIN Pro Italic', 'Arial Unicode MS Regular']
-                },
-                paint: {
-                  'text-color': '#f59e0b',
-                  'text-halo-color': '#000000',
-                  'text-halo-width': 2
-                }
-              });
-
-              // Add click handlers for trails
-              map.on('click', 'ski-trails-fill', (e) => {
-                if (e.features && e.features.length > 0) {
-                  const feature = e.features[0];
-                  setSelectedTrail(feature.properties);
-                }
-              });
-
-              // Change cursor on hover
-              map.on('mouseenter', 'ski-trails-fill', () => {
-                map.getCanvas().style.cursor = 'pointer';
-              });
-              map.on('mouseleave', 'ski-trails-fill', () => {
-                map.getCanvas().style.cursor = '';
-              });
-
-            } catch (mapError) {
-              console.error('Failed to add ski trail layers to map:', mapError);
-            }
-          })
-          .catch(error => {
-            console.error('Failed to load ski trail data:', error);
-          });
-      } else {
-        // Source exists, update visibility
-        updateTrailLayerVisibility(map);
-      }
-    } else {
-      // Hide all ski trail layers
+      // Mapbox Outdoors style already has piste/ski trail layers
+      // We just need to enhance their visibility and styling
       try {
-        const layers = ['ski-trails-glow', 'ski-trails-fill', 'ski-lifts', 'ski-lifts-symbols', 'ski-trails-labels', 'ski-lifts-labels'];
-        layers.forEach(layerId => {
-          if (map.getLayer(layerId)) {
-            map.setLayoutProperty(layerId, 'visibility', 'none');
+        // Find and enhance existing piste layers
+        const style = map.getStyle();
+        if (!style || !style.layers) return;
+
+        // Look for piste/ski-related layers in the current style
+        const pisteLayerIds = style.layers
+          .filter((layer: any) => 
+            layer.id.includes('piste') || 
+            layer.id.includes('aerialway') ||
+            layer.source === 'composite' && layer['source-layer'] === 'landuse'
+          )
+          .map((layer: any) => layer.id);
+
+        console.log('Found piste layers:', pisteLayerIds);
+
+        // Enhance piste line styling
+        pisteLayerIds.forEach((layerId: string) => {
+          if (layerId.includes('piste')) {
+            try {
+              // Increase line width and opacity for better visibility
+              if (map.getLayer(layerId)) {
+                map.setPaintProperty(layerId, 'line-width', [
+                  'interpolate',
+                  ['linear'],
+                  ['zoom'],
+                  12, 2,
+                  16, 6
+                ]);
+                map.setPaintProperty(layerId, 'line-opacity', trailOpacity);
+                
+                // Color code by difficulty if available
+                const currentColor = map.getPaintProperty(layerId, 'line-color');
+                if (!currentColor || currentColor === '#808080') {
+                  map.setPaintProperty(layerId, 'line-color', [
+                    'match',
+                    ['get', 'piste:difficulty'],
+                    'novice', '#22c55e',
+                    'easy', '#22c55e',
+                    'intermediate', '#3b82f6',
+                    'advanced', '#000000',
+                    'expert', '#dc2626',
+                    'freeride', '#dc2626',
+                    '#3b82f6' // default blue
+                  ]);
+                }
+              }
+            } catch (e) {
+              console.log('Could not style layer:', layerId, e);
+            }
+          }
+          
+          // Enhance aerialway (lift) styling
+          if (layerId.includes('aerialway')) {
+            try {
+              if (map.getLayer(layerId)) {
+                map.setPaintProperty(layerId, 'line-width', 2.5);
+                map.setPaintProperty(layerId, 'line-color', '#f59e0b');
+                map.setPaintProperty(layerId, 'line-opacity', trailOpacity);
+              }
+            } catch (e) {
+              console.log('Could not style aerialway:', layerId, e);
+            }
           }
         });
-      } catch (visibilityError) {
-        console.error('Failed to hide ski trail layers:', visibilityError);
+
+      } catch (error) {
+        console.error('Failed to enhance ski trail layers:', error);
+      }
+    } else {
+      // Reset to default styling when trails are hidden
+      try {
+        const style = map.getStyle();
+        if (!style || !style.layers) return;
+
+        style.layers.forEach((layer: any) => {
+          if (layer.id.includes('piste') || layer.id.includes('aerialway')) {
+            try {
+              if (map.getLayer(layer.id)) {
+                // Reset to original subtle styling
+                if (layer.id.includes('piste')) {
+                  map.setPaintProperty(layer.id, 'line-opacity', 0.3);
+                  map.setPaintProperty(layer.id, 'line-width', 1);
+                }
+                if (layer.id.includes('aerialway')) {
+                  map.setPaintProperty(layer.id, 'line-opacity', 0.3);
+                }
+              }
+            } catch (e) {
+              // Layer might not exist, that's ok
+            }
+          }
+        });
+      } catch (error) {
+        console.error('Failed to reset trail layers:', error);
       }
     }
-  }, [showSkiTrails, isLoading]);
-
-  // Update trail layer visibility based on filters
-  const updateTrailLayerVisibility = useCallback((map: any) => {
-    if (!map) return;
-
-    try {
-      // Build filter expression for trails
-      const difficultyFilters: any[] = ['any'];
-      if (trailFilters.green) difficultyFilters.push(['==', ['get', 'difficulty'], 'GREEN']);
-      if (trailFilters.blue) difficultyFilters.push(['==', ['get', 'difficulty'], 'BLUE']);
-      if (trailFilters.black) difficultyFilters.push(['==', ['get', 'difficulty'], 'BLACK']);
-      if (trailFilters.expert) difficultyFilters.push(['==', ['get', 'difficulty'], 'DOUBLE BLACK']);
-
-      const trailFilter = ['all', ['==', ['get', 'type'], 'trail'], difficultyFilters];
-
-      // Apply filters to trail layers
-      if (map.getLayer('ski-trails-glow')) {
-        map.setFilter('ski-trails-glow', trailFilter);
-        map.setLayoutProperty('ski-trails-glow', 'visibility', 'visible');
-      }
-      if (map.getLayer('ski-trails-fill')) {
-        map.setFilter('ski-trails-fill', trailFilter);
-        map.setLayoutProperty('ski-trails-fill', 'visibility', 'visible');
-      }
-      if (map.getLayer('ski-trails-labels')) {
-        map.setFilter('ski-trails-labels', trailFilter);
-        map.setLayoutProperty('ski-trails-labels', 'visibility', 'visible');
-      }
-
-      // Apply lift filter
-      const liftVisibility = trailFilters.lifts ? 'visible' : 'none';
-      if (map.getLayer('ski-lifts')) {
-        map.setLayoutProperty('ski-lifts', 'visibility', liftVisibility);
-      }
-      if (map.getLayer('ski-lifts-symbols')) {
-        map.setLayoutProperty('ski-lifts-symbols', 'visibility', liftVisibility);
-      }
-      if (map.getLayer('ski-lifts-labels')) {
-        map.setLayoutProperty('ski-lifts-labels', 'visibility', liftVisibility);
-      }
-    } catch (error) {
-      console.error('Failed to update trail layer visibility:', error);
-    }
-  }, [trailFilters]);
-
-  // Update filters when they change
-  useEffect(() => {
-    if (!mapRef.current || isLoading || !showSkiTrails) return;
-    const map = mapRef.current.getMap();
-    updateTrailLayerVisibility(map);
-  }, [trailFilters, isLoading, showSkiTrails, updateTrailLayerVisibility]);
-
-  // Update opacity when it changes
-  useEffect(() => {
-    if (!mapRef.current || isLoading || !showSkiTrails) return;
-    const map = mapRef.current.getMap();
-    
-    try {
-      if (map.getLayer('ski-trails-fill')) {
-        map.setPaintProperty('ski-trails-fill', 'line-opacity', trailOpacity);
-      }
-      if (map.getLayer('ski-lifts')) {
-        map.setPaintProperty('ski-lifts', 'line-opacity', trailOpacity);
-      }
-    } catch (error) {
-      console.error('Failed to update trail opacity:', error);
-    }
-  }, [trailOpacity, isLoading, showSkiTrails]);
+  }, [showSkiTrails, isLoading, trailOpacity]);
 
   // Fallback for when hotels.length === 0
   if (hotels.length === 0) {
@@ -523,7 +353,7 @@ export default function LodgingMap({
         {...viewState}
         onMove={(evt: any) => setViewState(evt.viewState)}
         mapboxAccessToken={MAPBOX_TOKEN}
-        mapStyle={MAP_STYLES[mapStyle]}
+        mapStyle={showSkiTrails ? MAP_STYLES.terrain : MAP_STYLES.streets}
         style={{ width: '100%', height: '100%', borderRadius: '0.75rem' }}
         onLoad={handleMapLoad}
         scrollZoom={!isMobile || isMapActive}
@@ -532,143 +362,45 @@ export default function LodgingMap({
         pitchWithRotate={false}
         touchZoomRotate={isMobile && isMapActive}
         doubleClickZoom={true}
-        terrain={{ source: 'mapbox-dem', exaggeration: 1.5 }}
       >
         {/* Navigation Controls */}
         <NavigationControl position="top-right" showCompass={false} />
 
-        {/* Enhanced Ski Trail Controls */}
-        <div className="absolute top-2 left-2 z-[500] flex flex-col gap-2 max-w-[240px]">
+        {/* Simple Ski Trail Controls */}
+        <div className="absolute top-2 left-2 z-[500] flex flex-col gap-2">
           {/* Main Toggle Button */}
           <button
             onClick={() => setShowSkiTrails(!showSkiTrails)}
-            className={`bg-white hover:bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 shadow-lg flex items-center gap-2 transition-all ${showSkiTrails ? 'ring-2 ring-primary-500' : ''}`}
+            className={`bg-white hover:bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 shadow-lg flex items-center gap-2 transition-all ${showSkiTrails ? 'ring-2 ring-primary-500 bg-primary-50' : ''}`}
             title={showSkiTrails ? 'Hide ski trails' : 'Show ski trails'}
           >
-            <svg className="w-4 h-4 text-gray-700 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+            <svg className="w-4 h-4 flex-shrink-0" style={{ color: showSkiTrails ? '#4A7C59' : '#6b7280' }} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
             </svg>
-            <span className="text-xs font-semibold text-gray-700 whitespace-nowrap">
-              {showSkiTrails ? 'Hide Trails' : 'Show Trails'}
+            <span className="text-xs font-semibold whitespace-nowrap" style={{ color: showSkiTrails ? '#4A7C59' : '#374151' }}>
+              {showSkiTrails ? 'Ski Trails ON' : 'Show Ski Trails'}
             </span>
           </button>
 
-          {/* Advanced Controls Panel - Compact */}
+          {/* Opacity Control - Only shows when trails are ON */}
           {showSkiTrails && (
-            <div className="bg-white border border-gray-300 rounded-lg p-2.5 shadow-lg space-y-2.5 max-h-[400px] overflow-y-auto">
-              {/* Difficulty Filters - Compact */}
-              <div>
-                <h4 className="text-[10px] font-bold text-gray-700 mb-1.5 uppercase tracking-wide">Difficulty</h4>
-                <div className="space-y-1">
-                  <label className="flex items-center gap-1.5 cursor-pointer hover:bg-gray-50 p-0.5 rounded text-xs">
-                    <input
-                      type="checkbox"
-                      checked={trailFilters.green}
-                      onChange={(e) => setTrailFilters({...trailFilters, green: e.target.checked})}
-                      className="w-3.5 h-3.5 text-green-600 rounded flex-shrink-0"
-                    />
-                    <div className="w-4 h-1.5 bg-green-500 rounded flex-shrink-0"></div>
-                    <span className="text-[11px] text-gray-700">Easy</span>
-                  </label>
-                  <label className="flex items-center gap-1.5 cursor-pointer hover:bg-gray-50 p-0.5 rounded text-xs">
-                    <input
-                      type="checkbox"
-                      checked={trailFilters.blue}
-                      onChange={(e) => setTrailFilters({...trailFilters, blue: e.target.checked})}
-                      className="w-3.5 h-3.5 text-blue-600 rounded flex-shrink-0"
-                    />
-                    <div className="w-4 h-1.5 bg-blue-500 rounded flex-shrink-0"></div>
-                    <span className="text-[11px] text-gray-700">Intermediate</span>
-                  </label>
-                  <label className="flex items-center gap-1.5 cursor-pointer hover:bg-gray-50 p-0.5 rounded text-xs">
-                    <input
-                      type="checkbox"
-                      checked={trailFilters.black}
-                      onChange={(e) => setTrailFilters({...trailFilters, black: e.target.checked})}
-                      className="w-3.5 h-3.5 text-gray-900 rounded flex-shrink-0"
-                    />
-                    <div className="w-4 h-1.5 bg-black rounded flex-shrink-0"></div>
-                    <span className="text-[11px] text-gray-700">Advanced</span>
-                  </label>
-                  <label className="flex items-center gap-1.5 cursor-pointer hover:bg-gray-50 p-0.5 rounded text-xs">
-                    <input
-                      type="checkbox"
-                      checked={trailFilters.expert}
-                      onChange={(e) => setTrailFilters({...trailFilters, expert: e.target.checked})}
-                      className="w-3.5 h-3.5 text-red-600 rounded flex-shrink-0"
-                    />
-                    <div className="w-4 h-1.5 bg-red-600 rounded flex-shrink-0"></div>
-                    <span className="text-[11px] text-gray-700">Expert</span>
-                  </label>
+            <div className="bg-white border border-gray-300 rounded-lg p-2.5 shadow-lg">
+              <label className="block">
+                <div className="flex justify-between items-center mb-1.5">
+                  <span className="text-[10px] font-bold text-gray-700 uppercase tracking-wide">Trail Visibility</span>
+                  <span className="text-[10px] text-primary-600 font-bold">{Math.round(trailOpacity * 100)}%</span>
                 </div>
-              </div>
-
-              {/* Lift Toggle - Compact */}
-              <div className="border-t border-gray-200 pt-2">
-                <label className="flex items-center gap-1.5 cursor-pointer hover:bg-gray-50 p-0.5 rounded">
-                  <input
-                    type="checkbox"
-                    checked={trailFilters.lifts}
-                    onChange={(e) => setTrailFilters({...trailFilters, lifts: e.target.checked})}
-                    className="w-3.5 h-3.5 text-amber-600 rounded flex-shrink-0"
-                  />
-                  <div className="w-4 h-1.5 bg-amber-500 rounded border border-dashed border-amber-600 flex-shrink-0"></div>
-                  <span className="text-[11px] text-gray-700 font-medium">Lifts</span>
-                </label>
-              </div>
-
-              {/* Opacity Slider - Compact */}
-              <div className="border-t border-gray-200 pt-2">
-                <label className="block">
-                  <div className="flex justify-between items-center mb-1">
-                    <span className="text-[10px] font-bold text-gray-700 uppercase tracking-wide">Opacity</span>
-                    <span className="text-[10px] text-gray-500 font-medium">{Math.round(trailOpacity * 100)}%</span>
-                  </div>
-                  <input
-                    type="range"
-                    min="0"
-                    max="1"
-                    step="0.1"
-                    value={trailOpacity}
-                    onChange={(e) => setTrailOpacity(parseFloat(e.target.value))}
-                    className="w-full h-1.5 bg-gray-200 rounded-lg appearance-none cursor-pointer"
-                  />
-                </label>
-              </div>
-
-              {/* Map Style Selector - Integrated */}
-              <div className="border-t border-gray-200 pt-2">
-                <h4 className="text-[10px] font-bold text-gray-700 mb-1.5 uppercase tracking-wide">Map Style</h4>
-                <div className="flex rounded-md overflow-hidden border border-gray-300">
-                  <button
-                    onClick={() => setMapStyle('streets')}
-                    className={`flex-1 px-2 py-1.5 text-[10px] font-medium transition-colors ${
-                      mapStyle === 'streets' ? 'bg-primary-600 text-white' : 'bg-white text-gray-700 hover:bg-gray-50'
-                    }`}
-                    title="Street Map"
-                  >
-                    Streets
-                  </button>
-                  <button
-                    onClick={() => setMapStyle('terrain')}
-                    className={`flex-1 px-2 py-1.5 text-[10px] font-medium transition-colors border-l border-gray-300 ${
-                      mapStyle === 'terrain' ? 'bg-primary-600 text-white' : 'bg-white text-gray-700 hover:bg-gray-50'
-                    }`}
-                    title="Terrain Map"
-                  >
-                    Terrain
-                  </button>
-                  <button
-                    onClick={() => setMapStyle('satellite')}
-                    className={`flex-1 px-2 py-1.5 text-[10px] font-medium transition-colors border-l border-gray-300 ${
-                      mapStyle === 'satellite' ? 'bg-primary-600 text-white' : 'bg-white text-gray-700 hover:bg-gray-50'
-                    }`}
-                    title="Satellite Map"
-                  >
-                    Satellite
-                  </button>
-                </div>
-              </div>
+                <input
+                  type="range"
+                  min="0.3"
+                  max="1"
+                  step="0.1"
+                  value={trailOpacity}
+                  onChange={(e) => setTrailOpacity(parseFloat(e.target.value))}
+                  className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-primary-600"
+                  style={{ width: '160px' }}
+                />
+              </label>
             </div>
           )}
         </div>
@@ -741,15 +473,6 @@ export default function LodgingMap({
               currency={currency}
               checkInDate={checkInDate}
               onViewDetails={handleViewDetails}
-              nearestTrail={
-                showSkiTrails && trailData.length > 0
-                  ? findClosestTrail(
-                      popupHotel.location.latitude,
-                      popupHotel.location.longitude,
-                      trailData
-                    )
-                  : null
-              }
             />
           </Popup>
         )}
@@ -769,94 +492,6 @@ export default function LodgingMap({
         </div>
       )}
 
-      {/* Trail Detail Popup */}
-      {selectedTrail && (
-        <div className="absolute bottom-4 left-4 bg-white rounded-lg shadow-xl p-4 z-[1001] max-w-sm border-2 border-primary-500">
-          <button
-            onClick={() => setSelectedTrail(null)}
-            className="absolute top-2 right-2 text-gray-400 hover:text-gray-600 transition-colors"
-          >
-            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
-          
-          <div className="space-y-3">
-            {/* Trail Name & Difficulty */}
-            <div>
-              <div className="flex items-center gap-2 mb-1">
-                <div className={`w-8 h-3 rounded ${
-                  selectedTrail.difficulty === 'GREEN' ? 'bg-green-500' :
-                  selectedTrail.difficulty === 'BLUE' ? 'bg-blue-500' :
-                  selectedTrail.difficulty === 'BLACK' ? 'bg-black' :
-                  selectedTrail.difficulty === 'DOUBLE BLACK' ? 'bg-red-600' :
-                  'bg-gray-500'
-                }`}></div>
-                <h3 className="font-bold text-lg text-gray-900">{selectedTrail.name}</h3>
-              </div>
-              {selectedTrail.description && (
-                <p className="text-sm text-gray-600">{selectedTrail.description}</p>
-              )}
-            </div>
-
-            {/* Trail Stats */}
-            {selectedTrail.type === 'trail' && (
-              <div className="grid grid-cols-2 gap-3 pt-2 border-t border-gray-200">
-                {selectedTrail.vertical_drop && (
-                  <div>
-                    <div className="text-xs text-gray-500">Vertical Drop</div>
-                    <div className="text-sm font-semibold text-gray-900">{selectedTrail.vertical_drop.toLocaleString()} ft</div>
-                  </div>
-                )}
-                {selectedTrail.length_miles && (
-                  <div>
-                    <div className="text-xs text-gray-500">Length</div>
-                    <div className="text-sm font-semibold text-gray-900">{selectedTrail.length_miles} mi</div>
-                  </div>
-                )}
-                {selectedTrail.area && (
-                  <div className="col-span-2">
-                    <div className="text-xs text-gray-500">Area</div>
-                    <div className="text-sm font-semibold text-gray-900">{selectedTrail.area}</div>
-                  </div>
-                )}
-                {selectedTrail.status && (
-                  <div className="col-span-2">
-                    <div className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                      <div className="w-2 h-2 rounded-full bg-green-500"></div>
-                      {selectedTrail.status.toUpperCase()}
-                    </div>
-                  </div>
-                )}
-              </div>
-            )}
-
-            {/* Lift Stats */}
-            {selectedTrail.type === 'lift' && (
-              <div className="grid grid-cols-2 gap-3 pt-2 border-t border-gray-200">
-                {selectedTrail.capacity && (
-                  <div>
-                    <div className="text-xs text-gray-500">Capacity</div>
-                    <div className="text-sm font-semibold text-gray-900">{selectedTrail.capacity} passengers</div>
-                  </div>
-                )}
-                {selectedTrail.vertical_rise && (
-                  <div>
-                    <div className="text-xs text-gray-500">Vertical Rise</div>
-                    <div className="text-sm font-semibold text-gray-900">{selectedTrail.vertical_rise.toLocaleString()} ft</div>
-                  </div>
-                )}
-                {selectedTrail.length_miles && (
-                  <div className="col-span-2">
-                    <div className="text-xs text-gray-500">Length</div>
-                    <div className="text-sm font-semibold text-gray-900">{selectedTrail.length_miles} mi</div>
-                  </div>
-                )}
-              </div>
-            )}
-          </div>
-        </div>
-      )}
 
       {/* Done Button - Mobile Only When Active */}
       {isMobile && isMapActive && (

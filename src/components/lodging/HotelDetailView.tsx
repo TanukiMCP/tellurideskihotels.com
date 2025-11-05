@@ -4,7 +4,7 @@ import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { ImageWithLoading } from '@/components/shared/ImageWithLoading';
 import { Star, MapPin } from 'lucide-react';
-import { RoomSelector } from './RoomSelector';
+import { RoomSelectorCard } from './RoomSelectorCard';
 import { AddonsSection } from '@/components/addons/AddonsSection';
 import { HotelReviews } from './HotelReviews';
 import { CheckoutFlow } from '@/components/checkout/CheckoutFlow';
@@ -45,27 +45,30 @@ export function HotelDetailView({ hotel, checkIn, checkOut, adults, children = 0
     );
   }
 
-  const handleRoomSelect = (rateId: string, roomData: LiteAPIRate) => {
-    const price = roomData.total?.amount || roomData.net?.amount || 0;
-    const currency = roomData.total?.currency || roomData.net?.currency || 'USD';
+  const handleBookingReady = (bookingData: {
+    rateId: string;
+    roomData: LiteAPIRate;
+    checkIn: string;
+    checkOut: string;
+    adults: number;
+    children: number;
+  }) => {
+    const price = bookingData.roomData.total?.amount || bookingData.roomData.net?.amount || 0;
+    const currency = bookingData.roomData.total?.currency || bookingData.roomData.net?.currency || 'USD';
 
     setSelectedRoom({
-      rateId,
-      roomId: roomData.room_id,
-      roomName: roomData.room_name,
-      checkIn,
-      checkOut,
-      adults,
-      children,
+      rateId: bookingData.rateId,
+      roomId: bookingData.roomData.room_id,
+      roomName: bookingData.roomData.room_name,
+      checkIn: bookingData.checkIn,
+      checkOut: bookingData.checkOut,
+      adults: bookingData.adults,
+      children: bookingData.children,
       price,
       currency,
     });
-  };
-
-  const handleBookNow = () => {
-    if (selectedRoom) {
-      setShowCheckout(true);
-    }
+    
+    setShowCheckout(true);
   };
 
   const handleBookingComplete = (bookingId: string) => {
@@ -207,51 +210,14 @@ export function HotelDetailView({ hotel, checkIn, checkOut, adults, children = 0
       )}
 
       {/* Room Selection */}
-      <Card>
-        <CardContent className="p-6">
-          <h2 className="text-2xl font-bold mb-6 text-neutral-900">Select Your Room</h2>
-          <RoomSelector
-            hotelId={hotel.hotel_id}
-            checkIn={checkIn}
-            checkOut={checkOut}
-            adults={adults}
-            children={children}
-            onRoomSelect={handleRoomSelect}
-          />
-        </CardContent>
-      </Card>
-
-      {/* Add-ons */}
-      {selectedRoom && (
-        <Card>
-          <CardContent className="p-6">
-            <AddonsSection
-              hotelId={hotel.hotel_id}
-              nights={nights}
-              adults={adults}
-              children={children}
-              onAddonSelect={setSelectedAddons}
-            />
-          </CardContent>
-        </Card>
-      )}
-
-      {/* Book Now Button */}
-      {selectedRoom && (
-        <div className="sticky bottom-0 bg-white border-t border-gray-200 p-4 shadow-lg">
-          <div className="max-w-7xl mx-auto flex items-center justify-between">
-            <div>
-              <p className="text-sm text-gray-600">Total for {nights} night{nights !== 1 ? 's' : ''}</p>
-              <p className="text-2xl font-bold">
-                {formatCurrency(selectedRoom.price + selectedAddons.reduce((sum, a) => sum + a.price, 0), selectedRoom.currency)}
-              </p>
-            </div>
-            <Button onClick={handleBookNow} size="lg">
-              Book Now
-            </Button>
-          </div>
-        </div>
-      )}
+      <RoomSelectorCard
+        hotelId={hotel.hotel_id}
+        initialCheckIn={checkIn}
+        initialCheckOut={checkOut}
+        initialAdults={adults}
+        initialChildren={children}
+        onBookingReady={handleBookingReady}
+      />
 
       {/* Reviews */}
       <Card>
