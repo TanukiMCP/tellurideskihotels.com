@@ -5,7 +5,7 @@
 
 // Mapbox Configuration
 export const MAPBOX_TOKEN = import.meta.env.PUBLIC_MAPBOX_ACCESS_TOKEN;
-export const MAPBOX_STYLE = 'mapbox://styles/mapbox/standard';
+export const MAPBOX_STYLE = 'mapbox://styles/mapbox/streets-v12';
 
 // Telluride center point
 export const TELLURIDE_CENTER: [number, number] = [-107.8123, 37.9375]; // [lng, lat]
