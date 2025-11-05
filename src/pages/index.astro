@@ -26,7 +26,7 @@ try {
   const hotelData = await searchHotels({
     cityName: 'Telluride',
     countryCode: 'US',
-    limit: 100,
+    limit: 500, // Get ALL Telluride hotels
   });
   
   allHotels = hotelData.data || [];
@@ -47,7 +47,7 @@ try {
       checkIn,
       checkOut,
       adults: 2,
-      limit: 100,
+      limit: 500, // Get ALL available hotels
     });
     
     // Get top 6 hotels by review score from those with availability

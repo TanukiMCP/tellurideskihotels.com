@@ -38,7 +38,7 @@ export async function searchHotels(params: LiteAPIHotelSearchParams): Promise<Ho
   });
   
   // Limit to requested number to avoid timeout
-  const limitedIds = hotelIds.slice(0, params.limit || 100);
+  const limitedIds = hotelIds.slice(0, params.limit || 500);
   
   // Fetch details for each hotel to get full info including images
   // Process in batches to avoid overwhelming the API

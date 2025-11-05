@@ -49,7 +49,7 @@ try {
   const hotelData = await searchHotels({
     cityName: location,
     countryCode: DEFAULT_COUNTRY_CODE,
-    limit: 100, // Get all Telluride hotels for full search experience
+    limit: 500, // Get ALL Telluride hotels
   });
   
   hotels = hotelData.data || [];

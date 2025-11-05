@@ -161,7 +161,7 @@ export async function searchHotelsWithRates(params: {
 
   const hotelSearchEndpoint = `/data/hotels?${searchParams.toString()}`;
   const hotelSearchResponse = await liteAPIClient<any>(hotelSearchEndpoint);
-  const hotelIds = (hotelSearchResponse.hotelIds || []).slice(0, params.limit || 100);
+  const hotelIds = (hotelSearchResponse.hotelIds || []).slice(0, params.limit || 500);
 
   console.log('[LiteAPI Rates] Found hotel IDs:', hotelIds.length);
 
