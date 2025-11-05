@@ -65,7 +65,7 @@ export function CheckoutFlow({ hotelId, hotelName, room, addons = [], onComplete
 
       const prebookData = await prebookResponse.json();
 
-      // Confirm booking
+      // Confirm booking with all details for email
       const confirmResponse = await fetch('/api/booking/confirm', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -75,6 +75,18 @@ export function CheckoutFlow({ hotelId, hotelName, room, addons = [], onComplete
             method: 'stripe',
             transaction_id: paymentIntentId,
           },
+          // Pass guest info for email confirmation
+          guest_email: guestInfo.email,
+          guest_first_name: guestInfo.firstName,
+          guest_last_name: guestInfo.lastName,
+          hotel_name: hotelName,
+          room_name: room.roomName,
+          checkin: room.checkIn,
+          checkout: room.checkOut,
+          adults: room.adults,
+          children: room.children,
+          total_price: total,
+          currency: room.currency,
         }),
       });
 
