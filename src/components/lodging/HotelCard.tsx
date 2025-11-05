@@ -23,12 +23,12 @@ export function HotelCard({ hotel, minPrice, currency = 'USD', nights = 1, onSel
   const ratingColor = getRatingColor(rating);
 
   return (
-    <Card className="overflow-hidden hover:shadow-lg transition-shadow cursor-pointer">
-      <div className="relative h-48" onClick={() => onSelect(hotel.hotel_id)}>
+    <Card className="overflow-hidden hover:shadow-strong transition-all duration-300 cursor-pointer hover-lift">
+      <div className="relative h-48 overflow-hidden" onClick={() => onSelect(hotel.hotel_id)}>
         <ImageWithLoading
           src={imageUrl}
           alt={hotel.name || 'Hotel'}
-          className="w-full h-full object-cover"
+          className="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
           onError={() => {}}
         />
         {hotel.star_rating && (
