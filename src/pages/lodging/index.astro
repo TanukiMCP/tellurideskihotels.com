@@ -146,15 +146,9 @@ const nights = checkIn && checkOut
         minPrices={minPrices}
         currency="USD"
         nights={nights}
-        onHotelSelect={(hotelId: string) => {
-          const params = new URLSearchParams({ hotelId });
-          if (checkIn) params.append('checkIn', checkIn);
-          if (checkOut) params.append('checkOut', checkOut);
-          params.append('adults', adults.toString());
-          if (typeof window !== 'undefined') {
-            window.location.href = `/lodging/${hotelId}?${params.toString()}`;
-          }
-        }}
+        checkIn={checkIn}
+        checkOut={checkOut}
+        adults={adults}
       />
     </div>
   </Container>

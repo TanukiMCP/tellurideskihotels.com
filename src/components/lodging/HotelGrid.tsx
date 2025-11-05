@@ -11,7 +11,9 @@ export interface HotelGridProps {
   minPrices?: Record<string, number>;
   currency?: string;
   nights?: number;
-  onHotelSelect: (hotelId: string) => void;
+  checkIn?: string;
+  checkOut?: string;
+  adults?: number;
 }
 
 const ITEMS_PER_PAGE = 12;
@@ -24,7 +26,9 @@ export function HotelGrid({
   minPrices = {},
   currency = 'USD',
   nights = 1,
-  onHotelSelect,
+  checkIn,
+  checkOut,
+  adults = 2,
 }: HotelGridProps) {
   const [currentPage, setCurrentPage] = useState(1);
   const [sortBy, setSortBy] = useState<SortOption>('rating');
@@ -80,7 +84,11 @@ export function HotelGrid({
 
   const handleSelect = (hotelId: string) => {
     if (typeof window !== 'undefined') {
-      onHotelSelect(hotelId);
+      const params = new URLSearchParams();
+      if (checkIn) params.append('checkIn', checkIn);
+      if (checkOut) params.append('checkOut', checkOut);
+      params.append('adults', adults.toString());
+      window.location.href = `/lodging/${hotelId}?${params.toString()}`;
     }
   };
 
