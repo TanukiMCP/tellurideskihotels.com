@@ -30,7 +30,7 @@ export function getHotelImages(hotel: LiteAPIHotel): string[] {
   
   return hotel.images
     .map(img => img.url)
-    .filter((url): url is string => Boolean(url) && url.trim() !== '');
+    .filter((url): url is string => typeof url === 'string' && url.trim() !== '');
 }
 
 export function formatHotelAddress(hotel: LiteAPIHotel): string {
