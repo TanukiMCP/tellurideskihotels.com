@@ -1,7 +1,6 @@
 import { liteAPIClient } from './client';
 import { LITEAPI_MARKUP_PERCENT } from './config';
 import type { LiteAPIRate, LiteAPIRateSearchParams } from './types';
-import { applyMarkup } from '../utils';
 
 export interface RateSearchResponse {
   data: Array<{

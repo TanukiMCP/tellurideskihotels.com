@@ -11,7 +11,9 @@ const heroImage = getHomepageHeroImage();
 const featuredImages = getFeaturedImages();
 
 // Fetch featured hotels server-side (has access to API key)
-let featuredHotelsData = [];
+import type { LiteAPIHotel } from '@/lib/liteapi/types';
+
+let featuredHotelsData: LiteAPIHotel[] = [];
 try {
   const hotelData = await searchHotels({
     cityName: 'Telluride',
@@ -22,7 +24,7 @@ try {
   const allHotels = hotelData.data || [];
   featuredHotelsData = FEATURED_HOTEL_IDS.slice(0, 6)
     .map(id => allHotels.find(h => h.hotel_id === id))
-    .filter(h => h !== null && h !== undefined);
+    .filter((h): h is LiteAPIHotel => h !== null && h !== undefined);
 } catch (error) {
   console.error('[Homepage] Error fetching featured hotels:', error);
 }
