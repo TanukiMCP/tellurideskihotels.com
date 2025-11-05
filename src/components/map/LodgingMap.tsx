@@ -538,101 +538,91 @@ export default function LodgingMap({
         <NavigationControl position="top-right" showCompass={false} />
 
         {/* Enhanced Ski Trail Controls */}
-        <div className="absolute top-2 left-2 z-[1000] flex flex-col gap-2">
+        <div className="absolute top-2 left-2 z-[500] flex flex-col gap-2 max-w-[240px]">
           {/* Main Toggle Button */}
           <button
             onClick={() => setShowSkiTrails(!showSkiTrails)}
-            className={`bg-white hover:bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 shadow-md flex items-center gap-2 transition-all ${showSkiTrails ? 'ring-2 ring-primary-500' : ''}`}
+            className={`bg-white hover:bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 shadow-lg flex items-center gap-2 transition-all ${showSkiTrails ? 'ring-2 ring-primary-500' : ''}`}
             title={showSkiTrails ? 'Hide ski trails' : 'Show ski trails'}
           >
-            <svg className="w-5 h-5 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg className="w-4 h-4 text-gray-700 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
             </svg>
-            <span className="text-sm font-medium text-gray-700">
+            <span className="text-xs font-semibold text-gray-700 whitespace-nowrap">
               {showSkiTrails ? 'Hide Trails' : 'Show Trails'}
             </span>
           </button>
 
-          {/* Advanced Controls Panel */}
+          {/* Advanced Controls Panel - Compact */}
           {showSkiTrails && (
-            <div className="bg-white border border-gray-300 rounded-lg p-3 shadow-md space-y-3 max-w-xs">
-              {/* Difficulty Filters */}
+            <div className="bg-white border border-gray-300 rounded-lg p-2.5 shadow-lg space-y-2.5 max-h-[400px] overflow-y-auto">
+              {/* Difficulty Filters - Compact */}
               <div>
-                <h4 className="text-xs font-semibold text-gray-700 mb-2">Trail Difficulty</h4>
-                <div className="space-y-1.5">
-                  <label className="flex items-center gap-2 cursor-pointer hover:bg-gray-50 p-1 rounded">
+                <h4 className="text-[10px] font-bold text-gray-700 mb-1.5 uppercase tracking-wide">Difficulty</h4>
+                <div className="space-y-1">
+                  <label className="flex items-center gap-1.5 cursor-pointer hover:bg-gray-50 p-0.5 rounded text-xs">
                     <input
                       type="checkbox"
                       checked={trailFilters.green}
                       onChange={(e) => setTrailFilters({...trailFilters, green: e.target.checked})}
-                      className="w-4 h-4 text-green-600 rounded"
+                      className="w-3.5 h-3.5 text-green-600 rounded flex-shrink-0"
                     />
-                    <div className="flex items-center gap-2 flex-1">
-                      <div className="w-6 h-2 bg-green-500 rounded"></div>
-                      <span className="text-xs text-gray-700">Green (Easy)</span>
-                    </div>
+                    <div className="w-4 h-1.5 bg-green-500 rounded flex-shrink-0"></div>
+                    <span className="text-[11px] text-gray-700">Easy</span>
                   </label>
-                  <label className="flex items-center gap-2 cursor-pointer hover:bg-gray-50 p-1 rounded">
+                  <label className="flex items-center gap-1.5 cursor-pointer hover:bg-gray-50 p-0.5 rounded text-xs">
                     <input
                       type="checkbox"
                       checked={trailFilters.blue}
                       onChange={(e) => setTrailFilters({...trailFilters, blue: e.target.checked})}
-                      className="w-4 h-4 text-blue-600 rounded"
+                      className="w-3.5 h-3.5 text-blue-600 rounded flex-shrink-0"
                     />
-                    <div className="flex items-center gap-2 flex-1">
-                      <div className="w-6 h-2 bg-blue-500 rounded"></div>
-                      <span className="text-xs text-gray-700">Blue (Intermediate)</span>
-                    </div>
+                    <div className="w-4 h-1.5 bg-blue-500 rounded flex-shrink-0"></div>
+                    <span className="text-[11px] text-gray-700">Intermediate</span>
                   </label>
-                  <label className="flex items-center gap-2 cursor-pointer hover:bg-gray-50 p-1 rounded">
+                  <label className="flex items-center gap-1.5 cursor-pointer hover:bg-gray-50 p-0.5 rounded text-xs">
                     <input
                       type="checkbox"
                       checked={trailFilters.black}
                       onChange={(e) => setTrailFilters({...trailFilters, black: e.target.checked})}
-                      className="w-4 h-4 text-gray-900 rounded"
+                      className="w-3.5 h-3.5 text-gray-900 rounded flex-shrink-0"
                     />
-                    <div className="flex items-center gap-2 flex-1">
-                      <div className="w-6 h-2 bg-black rounded"></div>
-                      <span className="text-xs text-gray-700">Black (Advanced)</span>
-                    </div>
+                    <div className="w-4 h-1.5 bg-black rounded flex-shrink-0"></div>
+                    <span className="text-[11px] text-gray-700">Advanced</span>
                   </label>
-                  <label className="flex items-center gap-2 cursor-pointer hover:bg-gray-50 p-1 rounded">
+                  <label className="flex items-center gap-1.5 cursor-pointer hover:bg-gray-50 p-0.5 rounded text-xs">
                     <input
                       type="checkbox"
                       checked={trailFilters.expert}
                       onChange={(e) => setTrailFilters({...trailFilters, expert: e.target.checked})}
-                      className="w-4 h-4 text-red-600 rounded"
+                      className="w-3.5 h-3.5 text-red-600 rounded flex-shrink-0"
                     />
-                    <div className="flex items-center gap-2 flex-1">
-                      <div className="w-6 h-2 bg-red-600 rounded"></div>
-                      <span className="text-xs text-gray-700">Double Black (Expert)</span>
-                    </div>
+                    <div className="w-4 h-1.5 bg-red-600 rounded flex-shrink-0"></div>
+                    <span className="text-[11px] text-gray-700">Expert</span>
                   </label>
                 </div>
               </div>
 
-              {/* Lift Toggle */}
+              {/* Lift Toggle - Compact */}
               <div className="border-t border-gray-200 pt-2">
-                <label className="flex items-center gap-2 cursor-pointer hover:bg-gray-50 p-1 rounded">
+                <label className="flex items-center gap-1.5 cursor-pointer hover:bg-gray-50 p-0.5 rounded">
                   <input
                     type="checkbox"
                     checked={trailFilters.lifts}
                     onChange={(e) => setTrailFilters({...trailFilters, lifts: e.target.checked})}
-                    className="w-4 h-4 text-amber-600 rounded"
+                    className="w-3.5 h-3.5 text-amber-600 rounded flex-shrink-0"
                   />
-                  <div className="flex items-center gap-2 flex-1">
-                    <div className="w-6 h-2 bg-amber-500 rounded border-2 border-dashed border-amber-600"></div>
-                    <span className="text-xs text-gray-700 font-medium">Show Lifts</span>
-                  </div>
+                  <div className="w-4 h-1.5 bg-amber-500 rounded border border-dashed border-amber-600 flex-shrink-0"></div>
+                  <span className="text-[11px] text-gray-700 font-medium">Lifts</span>
                 </label>
               </div>
 
-              {/* Opacity Slider */}
+              {/* Opacity Slider - Compact */}
               <div className="border-t border-gray-200 pt-2">
                 <label className="block">
                   <div className="flex justify-between items-center mb-1">
-                    <span className="text-xs font-semibold text-gray-700">Opacity</span>
-                    <span className="text-xs text-gray-500">{Math.round(trailOpacity * 100)}%</span>
+                    <span className="text-[10px] font-bold text-gray-700 uppercase tracking-wide">Opacity</span>
+                    <span className="text-[10px] text-gray-500 font-medium">{Math.round(trailOpacity * 100)}%</span>
                   </div>
                   <input
                     type="range"
@@ -641,45 +631,46 @@ export default function LodgingMap({
                     step="0.1"
                     value={trailOpacity}
                     onChange={(e) => setTrailOpacity(parseFloat(e.target.value))}
-                    className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                    className="w-full h-1.5 bg-gray-200 rounded-lg appearance-none cursor-pointer"
                   />
                 </label>
               </div>
+
+              {/* Map Style Selector - Integrated */}
+              <div className="border-t border-gray-200 pt-2">
+                <h4 className="text-[10px] font-bold text-gray-700 mb-1.5 uppercase tracking-wide">Map Style</h4>
+                <div className="flex rounded-md overflow-hidden border border-gray-300">
+                  <button
+                    onClick={() => setMapStyle('streets')}
+                    className={`flex-1 px-2 py-1.5 text-[10px] font-medium transition-colors ${
+                      mapStyle === 'streets' ? 'bg-primary-600 text-white' : 'bg-white text-gray-700 hover:bg-gray-50'
+                    }`}
+                    title="Street Map"
+                  >
+                    Streets
+                  </button>
+                  <button
+                    onClick={() => setMapStyle('terrain')}
+                    className={`flex-1 px-2 py-1.5 text-[10px] font-medium transition-colors border-l border-gray-300 ${
+                      mapStyle === 'terrain' ? 'bg-primary-600 text-white' : 'bg-white text-gray-700 hover:bg-gray-50'
+                    }`}
+                    title="Terrain Map"
+                  >
+                    Terrain
+                  </button>
+                  <button
+                    onClick={() => setMapStyle('satellite')}
+                    className={`flex-1 px-2 py-1.5 text-[10px] font-medium transition-colors border-l border-gray-300 ${
+                      mapStyle === 'satellite' ? 'bg-primary-600 text-white' : 'bg-white text-gray-700 hover:bg-gray-50'
+                    }`}
+                    title="Satellite Map"
+                  >
+                    Satellite
+                  </button>
+                </div>
+              </div>
             </div>
           )}
-
-          {/* Map Style Selector */}
-          <div className="bg-white border border-gray-300 rounded-lg shadow-md overflow-hidden">
-            <div className="flex">
-              <button
-                onClick={() => setMapStyle('streets')}
-                className={`flex-1 px-3 py-2 text-xs font-medium transition-colors ${
-                  mapStyle === 'streets' ? 'bg-primary-600 text-white' : 'bg-white text-gray-700 hover:bg-gray-50'
-                }`}
-                title="Street Map"
-              >
-                Streets
-              </button>
-              <button
-                onClick={() => setMapStyle('terrain')}
-                className={`flex-1 px-3 py-2 text-xs font-medium transition-colors border-l border-gray-300 ${
-                  mapStyle === 'terrain' ? 'bg-primary-600 text-white' : 'bg-white text-gray-700 hover:bg-gray-50'
-                }`}
-                title="Terrain Map"
-              >
-                Terrain
-              </button>
-              <button
-                onClick={() => setMapStyle('satellite')}
-                className={`flex-1 px-3 py-2 text-xs font-medium transition-colors border-l border-gray-300 ${
-                  mapStyle === 'satellite' ? 'bg-primary-600 text-white' : 'bg-white text-gray-700 hover:bg-gray-50'
-                }`}
-                title="Satellite Map"
-              >
-                Satellite
-              </button>
-            </div>
-          </div>
         </div>
 
         {/* Hotel Markers */}
@@ -764,14 +755,14 @@ export default function LodgingMap({
         )}
       </Map>
 
-      {/* Hotel Count Badge */}
-      {!isLoading && hotels.length > 0 && !isMapActive && (
-        <div className="absolute top-4 left-4 bg-white rounded-lg shadow-md px-3 py-2 z-[1000] pointer-events-none">
-          <div className="flex items-center gap-2">
-            <svg className="w-4 h-4 text-primary-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      {/* Hotel Count Badge - Repositioned to top-right */}
+      {!isLoading && hotels.length > 0 && (
+        <div className="absolute top-2 right-14 bg-white rounded-lg shadow-md px-2.5 py-1.5 z-[500] pointer-events-none">
+          <div className="flex items-center gap-1.5">
+            <svg className="w-3.5 h-3.5 text-primary-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
             </svg>
-            <span className="text-sm font-semibold text-gray-900">
+            <span className="text-xs font-semibold text-gray-900">
               {hotels.length} {hotels.length === 1 ? 'Hotel' : 'Hotels'}
             </span>
           </div>
