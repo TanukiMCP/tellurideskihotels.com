@@ -54,7 +54,7 @@ export function HotelSearchBar() {
         max="10"
         className="w-24 h-12"
       />
-      <Button type="submit" className="h-12 px-6 bg-gradient-accent hover:opacity-90 shadow-cta">
+      <Button type="submit" className="h-12 px-6 bg-gradient-to-r from-primary-600 to-accent-600 text-white hover:opacity-90 shadow-cta">
         <Search className="mr-2 h-4 w-4" />
         Search
       </Button>

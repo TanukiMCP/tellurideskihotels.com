@@ -19,24 +19,31 @@ export function FeaturedHotels({ limit = 6 }: FeaturedHotelsProps) {
       try {
         setLoading(true);
         
-        // Fetch hotels with images (search now fetches full details)
-        const response = await fetch(`/api/hotels/search?cityName=Telluride&countryCode=US&limit=${limit}`);
+        // Fetch specific featured hotels by ID for better performance
+        const hotelDetailsPromises = FEATURED_HOTEL_IDS.slice(0, limit).map(async (hotelId) => {
+          try {
+            const response = await fetch(`/api/hotels/details?hotelId=${hotelId}`);
+            if (!response.ok) {
+              console.warn(`[FeaturedHotels] Failed to fetch hotel ${hotelId}`);
+              return null;
+            }
+            return await response.json();
+          } catch (err) {
+            console.error(`[FeaturedHotels] Error fetching hotel ${hotelId}:`, err);
+            return null;
+          }
+        });
         
-        if (!response.ok) {
-          throw new Error('Failed to fetch hotels');
-        }
+        const hotelResults = await Promise.all(hotelDetailsPromises);
+        const validHotels = hotelResults.filter((h): h is LiteAPIHotel => h !== null);
         
-        const data = await response.json();
-        const allHotels = data.data || [];
+        console.log('[FeaturedHotels] Loaded featured hotels:', validHotels.length);
+        console.log('[FeaturedHotels] Sample:', validHotels[0]);
         
-        console.log('[FeaturedHotels] Fetched hotels:', allHotels.length);
-        console.log('[FeaturedHotels] Sample hotel:', allHotels[0]);
-        console.log('[FeaturedHotels] Sample images:', allHotels[0]?.images);
-        
-        setHotels(allHotels);
+        setHotels(validHotels);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to load hotels');
-        console.error('Error fetching featured hotels:', err);
+        console.error('[FeaturedHotels] Error:', err);
       } finally {
         setLoading(false);
       }

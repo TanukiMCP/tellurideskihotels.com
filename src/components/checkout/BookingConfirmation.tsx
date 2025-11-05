@@ -99,7 +99,7 @@ export function BookingConfirmation({
                   window.location.href = '/lodging';
                 }
               }} 
-              className="flex-1 bg-gradient-accent hover:opacity-90 shadow-cta"
+              className="flex-1 bg-gradient-to-r from-primary-600 to-accent-600 text-white hover:opacity-90 shadow-cta"
             >
               Search More Hotels
             </Button>

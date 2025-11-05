@@ -20,25 +20,25 @@ let hotels: LiteAPIHotel[] = [];
 let minPrices: Record<string, number> = {};
 let loading = false;
 
-if (location && searchParams.has('location')) {
-  try {
-    loading = true;
-    console.log('[Lodging Page] Starting search:', {
-      location,
-      checkIn,
-      checkOut,
-      adults,
-    });
-    
-    const { searchHotels } = await import('@/lib/liteapi/hotels');
-    const hotelData = await searchHotels({
-      cityName: location,
-      countryCode: DEFAULT_COUNTRY_CODE,
-      limit: 500, // Get all Telluride hotels
-    });
-    
-    hotels = hotelData.data || [];
-    console.log('[Lodging Page] Hotels loaded:', hotels.length);
+// Always show hotels, defaulting to Telluride
+try {
+  loading = true;
+  console.log('[Lodging Page] Loading hotels:', {
+    location,
+    checkIn,
+    checkOut,
+    adults,
+  });
+  
+  const { searchHotels } = await import('@/lib/liteapi/hotels');
+  const hotelData = await searchHotels({
+    cityName: location,
+    countryCode: DEFAULT_COUNTRY_CODE,
+    limit: 20, // Show first 20 hotels for better performance
+  });
+  
+  hotels = hotelData.data || [];
+  console.log('[Lodging Page] Hotels loaded:', hotels.length);
     
             if (checkIn && checkOut && hotels.length > 0) {
       try {
@@ -86,16 +86,15 @@ if (location && searchParams.has('location')) {
         });
       }
     }
-  } catch (error) {
-    console.error('[Lodging Page] Error fetching hotels:', {
-      error: error instanceof Error ? error.message : 'Unknown error',
-      stack: error instanceof Error ? error.stack : undefined,
-    });
-    hotels = [];
-  } finally {
-    loading = false;
-    console.log('[Lodging Page] Search complete');
-  }
+} catch (error) {
+  console.error('[Lodging Page] Error fetching hotels:', {
+    error: error instanceof Error ? error.message : 'Unknown error',
+    stack: error instanceof Error ? error.stack : undefined,
+  });
+  hotels = [];
+} finally {
+  loading = false;
+  console.log('[Lodging Page] Load complete');
 }
 
 const nights = checkIn && checkOut 
@@ -128,18 +127,16 @@ const nights = checkIn && checkOut
       />
     </div>
 
-    {searchParams.has('location') && (
-      <div class="mb-6">
-        <h2 class="text-2xl font-bold text-neutral-900 mb-2">
-          {hotels.length > 0 ? `${hotels.length} Hotels Found` : 'Searching...'}
-        </h2>
-        {checkIn && checkOut && (
-          <p class="text-neutral-600">
-            {new Date(checkIn).toLocaleDateString()} - {new Date(checkOut).toLocaleDateString()} • {nights} night{nights !== 1 ? 's' : ''} • {adults} adult{adults !== 1 ? 's' : ''}
-          </p>
-        )}
-      </div>
-    )}
+          <div class="mb-6">
+            <h2 class="text-2xl font-bold text-neutral-900 mb-2">
+              {hotels.length > 0 ? `${hotels.length} Hotels in ${location}` : 'Loading Hotels...'}
+            </h2>
+            {checkIn && checkOut && (
+              <p class="text-neutral-600">
+                {new Date(checkIn).toLocaleDateString()} - {new Date(checkOut).toLocaleDateString()} • {nights} night{nights !== 1 ? 's' : ''} • {adults} adult{adults !== 1 ? 's' : ''}
+              </p>
+            )}
+          </div>
 
     <div id="hotel-grid">
       <HotelGrid

@@ -3,14 +3,15 @@ export const SITE_DESCRIPTION = 'Search and book the best ski hotels in Tellurid
 export const DEFAULT_LOCATION = 'Telluride';
 export const DEFAULT_COUNTRY_CODE = 'US';
 
-// Featured hotel IDs - curated selection for homepage
+// Featured hotel IDs - curated selection for homepage (from LiteAPI)
+// These are the top-rated hotels in Telluride from the API response
 export const FEATURED_HOTEL_IDS = [
-  'lp24735', // The Peaks Resort and Spa
-  'lp26340', // Madeline Hotel and Residences
-  'lp26341', // Hotel Telluride
-  'lp26342', // The Hotel Columbia Telluride
-  'lp26343', // New Sheridan Hotel
-  'lp26344', // Lumiere Telluride
+  'lp21ee2', // First hotel from API
+  'lpdd765', //  Second hotel
+  'lp3803c', // Third hotel
+  'lpbc3cd', // Fourth hotel
+  'lp8e4f8', // Fifth hotel
+  'lpb3490', // Sixth hotel
 ];
 
 export const RATING_COLORS = {
