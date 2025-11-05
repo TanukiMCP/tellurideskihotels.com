@@ -16,7 +16,7 @@ export interface HotelCardProps {
   onSelect: (hotelId: string) => void;
 }
 
-export function HotelCard({ hotel, minPrice, currency = 'USD', nights = 1, onSelect }: HotelCardProps) {
+export function HotelCard({ hotel, minPrice, currency = 'USD', nights: _nights = 1, onSelect }: HotelCardProps) {
   const imageUrl = getHotelMainImage(hotel) || '/images/placeholder-hotel.jpg';
   const address = formatHotelAddress(hotel);
   const rating = hotel.review_score || 0;

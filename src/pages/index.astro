@@ -3,7 +3,6 @@ import PageLayout from '@/components/layout/PageLayout.astro';
 import Container from '@/components/layout/Container.astro';
 import { HotelSearchWidget } from '@/components/lodging/HotelSearchWidget';
 import { FeaturedHotels } from '@/components/lodging/FeaturedHotels';
-import { TrustBadges } from '@/components/shared/TrustBadges';
 import { SITE_DESCRIPTION } from '@/lib/constants';
 import { getHomepageHeroImage, getFeaturedImages } from '@/lib/image-library';
 
@@ -32,12 +31,12 @@ const featuredImages = getFeaturedImages();
             <!-- Hero Content -->
             <div class="text-center text-white mb-16 lg:mb-20 animate-slide-up px-4">
               <h1 class="text-display-md lg:text-display-lg mb-6 drop-shadow-2xl">
-                Find Your Perfect Ski Hotel in Telluride
-              </h1>
+            Find Your Perfect Ski Hotel in Telluride
+          </h1>
               <p class="text-xl lg:text-2xl mb-8 text-white/90 font-medium leading-relaxed max-w-3xl mx-auto">
                 Search and compare 100+ hotels • Real-time availability • Best prices guaranteed
-              </p>
-            </div>
+          </p>
+        </div>
             
             <!-- Integrated Search Widget -->
             <div class="max-w-4xl mx-auto px-4 animate-scale-in">
@@ -99,7 +98,7 @@ const featuredImages = getFeaturedImages();
         </div>
       </div>
     </Container>
-  </div>
+    </div>
 
   <Container class="py-20 lg:py-32">
     <!-- Featured Hotels Section -->
@@ -214,7 +213,7 @@ const featuredImages = getFeaturedImages();
         Browse All Hotels
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-        </svg>
+          </svg>
       </a>
     </section>
   </Container>

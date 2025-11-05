@@ -53,77 +53,77 @@ export function HotelSearchWidget({
             <label className="block text-sm font-semibold text-neutral-900 mb-2">Location</label>
             <div className="relative">
               <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-neutral-400" />
-              <Input
-                type="text"
-                value={location}
-                onChange={(e) => setLocation(e.target.value)}
+          <Input
+            type="text"
+            value={location}
+            onChange={(e) => setLocation(e.target.value)}
                 placeholder="Enter destination"
                 className="pl-12 h-14 text-base border-neutral-300 focus:border-primary-500 focus:ring-primary-500"
-                required
-              />
-            </div>
+            required
+          />
+        </div>
           </div>
           
           <div>
             <label className="block text-sm font-semibold text-neutral-900 mb-2">Check-in</label>
             <div className="relative">
               <Calendar className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-neutral-400" />
-              <Input
-                type="date"
-                value={checkIn}
-                onChange={(e) => setCheckIn(e.target.value)}
-                min={format(new Date(), 'yyyy-MM-dd')}
+            <Input
+              type="date"
+              value={checkIn}
+              onChange={(e) => setCheckIn(e.target.value)}
+              min={format(new Date(), 'yyyy-MM-dd')}
                 className="pl-12 h-14 text-base border-neutral-300 focus:border-primary-500 focus:ring-primary-500"
-                required
-              />
-            </div>
+              required
+            />
+          </div>
           </div>
           
           <div>
             <label className="block text-sm font-semibold text-neutral-900 mb-2">Check-out</label>
             <div className="relative">
               <Calendar className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-neutral-400" />
-              <Input
-                type="date"
-                value={checkOut}
-                onChange={(e) => setCheckOut(e.target.value)}
-                min={checkIn}
+            <Input
+              type="date"
+              value={checkOut}
+              onChange={(e) => setCheckOut(e.target.value)}
+              min={checkIn}
                 className="pl-12 h-14 text-base border-neutral-300 focus:border-primary-500 focus:ring-primary-500"
-                required
-              />
-            </div>
+              required
+            />
           </div>
+        </div>
           
           <div>
             <label className="block text-sm font-semibold text-neutral-900 mb-2">Adults</label>
             <div className="relative">
               <Users className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-neutral-400" />
-              <Input
-                type="number"
-                value={adults}
-                onChange={(e) => setAdults(e.target.value)}
-                min="1"
-                max="10"
+            <Input
+              type="number"
+              value={adults}
+              onChange={(e) => setAdults(e.target.value)}
+              min="1"
+              max="10"
                 className="pl-12 h-14 text-base border-neutral-300 focus:border-primary-500 focus:ring-primary-500"
-                required
-              />
-            </div>
+              required
+            />
+          </div>
           </div>
           
           <div>
             <label className="block text-sm font-semibold text-neutral-900 mb-2">Children</label>
             <div className="relative">
               <Users className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-neutral-400" />
-              <Input
-                type="number"
-                value={children}
-                onChange={(e) => setChildren(e.target.value)}
-                min="0"
-                max="10"
+            <Input
+              type="number"
+              value={children}
+              onChange={(e) => setChildren(e.target.value)}
+              min="0"
+              max="10"
                 className="pl-12 h-14 text-base border-neutral-300 focus:border-primary-500 focus:ring-primary-500"
-              />
-            </div>
+            />
           </div>
+        </div>
         </div>
         
         <Button 
