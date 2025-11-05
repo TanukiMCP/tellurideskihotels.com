@@ -189,7 +189,8 @@ export default function LodgingMap({
     if (showSkiTrails) {
       // Add ski trail source if it doesn't exist
       if (!map.getSource('ski-trails')) {
-        fetch('/data/telluride-ski-trails.json')
+        // Use official Telluride Ski Resort data from ArcGIS
+        fetch('https://services3.arcgis.com/Nefdxa42x2DnAd5Z/arcgis/rest/services/TSG_Ski_Runs/FeatureServer/0/query?where=1%3D1&outFields=*&f=geojson')
           .then(response => response.json())
           .then(data => {
             map.addSource('ski-trails', {
@@ -197,7 +198,7 @@ export default function LodgingMap({
               data: data
             });
 
-            // Add fill layer for trails
+            // Add fill layer for trails - try multiple possible field names
             map.addLayer({
               id: 'ski-trails-fill',
               type: 'line',
@@ -205,19 +206,35 @@ export default function LodgingMap({
               paint: {
                 'line-color': [
                   'match',
-                  ['get', 'piste:difficulty'],
+                  ['coalesce', ['get', 'DIFFICULTY'], ['get', 'piste:difficulty'], ['get', 'difficulty'], ''],
+                  'EASY', '#00FF00',        // Green
+                  'GREEN', '#00FF00',       // Green
                   'easy', '#00FF00',        // Green
+                  'INTERMEDIATE', '#0000FF', // Blue
+                  'BLUE', '#0000FF',        // Blue
                   'intermediate', '#0000FF', // Blue
+                  'ADVANCED', '#000000',     // Black
+                  'BLACK', '#000000',        // Black
                   'advanced', '#000000',     // Black
+                  'EXPERT', '#FF0000',       // Red
+                  'DOUBLE', '#FF0000',       // Red
                   'expert', '#FF0000',       // Red
                   '#808080'                  // Default gray
                 ],
                 'line-width': [
                   'match',
-                  ['get', 'piste:difficulty'],
+                  ['coalesce', ['get', 'DIFFICULTY'], ['get', 'piste:difficulty'], ['get', 'difficulty'], ''],
+                  'EASY', 3,
+                  'GREEN', 3,
                   'easy', 3,
+                  'INTERMEDIATE', 4,
+                  'BLUE', 4,
                   'intermediate', 4,
+                  'ADVANCED', 5,
+                  'BLACK', 5,
                   'advanced', 5,
+                  'EXPERT', 6,
+                  'DOUBLE', 6,
                   'expert', 6,
                   3
                 ],
@@ -225,13 +242,13 @@ export default function LodgingMap({
               }
             });
 
-            // Add trail name labels
+            // Add trail name labels - try multiple possible field names
             map.addLayer({
               id: 'ski-trails-labels',
               type: 'symbol',
               source: 'ski-trails',
               layout: {
-                'text-field': ['get', 'name'],
+                'text-field': ['coalesce', ['get', 'NAME'], ['get', 'name'], ['get', 'trail_name'], ''],
                 'text-size': 12,
                 'text-anchor': 'center',
                 'text-justify': 'center',
