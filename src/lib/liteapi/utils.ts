@@ -4,17 +4,33 @@ export function getHotelImage(hotel: LiteAPIHotel, index: number = 0): string | 
   if (!hotel.images || hotel.images.length === 0) {
     return null;
   }
-  return hotel.images[index]?.url || null;
+  const url = hotel.images[index]?.url;
+  return url && url.trim() !== '' ? url : null;
 }
 
 export function getHotelMainImage(hotel: LiteAPIHotel): string | null {
-  const mainImage = hotel.images?.find(img => img.type === 'main' || img.type === 'featured');
-  return mainImage?.url || getHotelImage(hotel, 0);
+  // Try to find main/featured image first
+  const mainImage = hotel.images?.find(img => 
+    (img.type === 'main' || img.type === 'featured') && img.url && img.url.trim() !== ''
+  );
+  
+  if (mainImage?.url) {
+    return mainImage.url;
+  }
+  
+  // Fall back to first available image with valid URL
+  const firstImage = hotel.images?.find(img => img.url && img.url.trim() !== '');
+  return firstImage?.url || null;
 }
 
 export function getHotelImages(hotel: LiteAPIHotel): string[] {
-  // Only use images from LiteAPI - no fallbacks
-  return hotel.images?.map(img => img.url).filter((url): url is string => Boolean(url)) || [];
+  if (!hotel.images || hotel.images.length === 0) {
+    return [];
+  }
+  
+  return hotel.images
+    .map(img => img.url)
+    .filter((url): url is string => Boolean(url) && url.trim() !== '');
 }
 
 export function formatHotelAddress(hotel: LiteAPIHotel): string {

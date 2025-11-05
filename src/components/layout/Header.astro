@@ -1,7 +1,6 @@
 ---
 import { SITE_NAME } from '@/lib/constants';
 import Container from './Container.astro';
-import { HotelSearchBar } from '@/components/lodging/HotelSearchBar';
 ---
 
 <header class="sticky top-0 z-50 glass-effect border-b border-neutral-200 shadow-card">
@@ -15,7 +14,7 @@ import { HotelSearchBar } from '@/components/lodging/HotelSearchBar';
         </div>
         <h1 class="text-2xl font-bold text-neutral-900 font-display">{SITE_NAME}</h1>
       </a>
-      <nav class="hidden md:flex items-center space-x-8">
+      <nav class="flex items-center space-x-8">
         <a href="/lodging" class="text-neutral-700 hover:text-primary-600 font-semibold relative transition-colors duration-200 group">
           Hotels
           <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-primary-600 group-hover:w-full transition-all duration-300"></span>
@@ -25,9 +24,6 @@ import { HotelSearchBar } from '@/components/lodging/HotelSearchBar';
           <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-primary-600 group-hover:w-full transition-all duration-300"></span>
         </a>
       </nav>
-    </div>
-    <div class="pb-6 pt-4">
-      <HotelSearchBar client:load />
     </div>
   </Container>
 </header>

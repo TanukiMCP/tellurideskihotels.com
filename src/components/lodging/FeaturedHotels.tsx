@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import { HotelCard } from './HotelCard';
 import { LoadingSpinner } from '@/components/shared/LoadingSpinner';
 import type { LiteAPIHotel } from '@/lib/liteapi/types';
+import { FEATURED_HOTEL_IDS } from '@/lib/constants';
+import { format, addDays } from 'date-fns';
 
 interface FeaturedHotelsProps {
   limit?: number;
@@ -16,14 +18,24 @@ export function FeaturedHotels({ limit = 6 }: FeaturedHotelsProps) {
     async function fetchFeaturedHotels() {
       try {
         setLoading(true);
-        const response = await fetch(`/api/hotels/search?cityName=Telluride&countryCode=US&limit=${limit}`);
+        
+        // Fetch all hotels first
+        const response = await fetch(`/api/hotels/search?cityName=Telluride&countryCode=US&limit=100`);
         
         if (!response.ok) {
           throw new Error('Failed to fetch hotels');
         }
         
         const data = await response.json();
-        setHotels(data.data || []);
+        const allHotels = data.data || [];
+        
+        // Filter to only featured hotels, maintaining order
+        const featuredHotels = FEATURED_HOTEL_IDS
+          .map(id => allHotels.find((h: LiteAPIHotel) => h.hotel_id === id))
+          .filter((h): h is LiteAPIHotel => h !== undefined)
+          .slice(0, limit);
+        
+        setHotels(featuredHotels);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to load hotels');
         console.error('Error fetching featured hotels:', err);
@@ -37,7 +49,12 @@ export function FeaturedHotels({ limit = 6 }: FeaturedHotelsProps) {
 
   const handleHotelSelect = (hotelId: string) => {
     if (typeof window !== 'undefined') {
-      window.location.href = `/lodging/${hotelId}`;
+      // Generate default dates (7 days from now for check-in, 14 days for check-out)
+      const checkIn = format(addDays(new Date(), 7), 'yyyy-MM-dd');
+      const checkOut = format(addDays(new Date(), 14), 'yyyy-MM-dd');
+      const adults = 2;
+      
+      window.location.href = `/lodging/${hotelId}?checkIn=${checkIn}&checkOut=${checkOut}&adults=${adults}`;
     }
   };
 
