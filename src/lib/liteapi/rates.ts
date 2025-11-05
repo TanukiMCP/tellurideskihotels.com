@@ -179,9 +179,6 @@ export async function searchHotelsWithRates(params: {
 
   // Calculate min prices and get hotel IDs with availability
   const minPrices: Record<string, number> = {};
-  const checkIn = new Date(params.checkIn);
-  const checkOut = new Date(params.checkOut);
-  const nights = Math.ceil((checkOut.getTime() - checkIn.getTime()) / (1000 * 60 * 60 * 24));
 
   if (ratesResponse.data && ratesResponse.data.length > 0) {
     ratesResponse.data.forEach((hotel: any) => {

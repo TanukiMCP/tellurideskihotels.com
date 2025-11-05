@@ -20,14 +20,14 @@ let hotels: LiteAPIHotel[] = [];
 let minPrices: Record<string, number> = {};
 let loading = false;
 
+// If no dates provided, use defaults (30-37 days out for better availability)
+let effectiveCheckIn = checkIn;
+let effectiveCheckOut = checkOut;
+let usingDefaultDates = false;
+
 // Always show hotels, defaulting to Telluride
 try {
   loading = true;
-  
-  // If no dates provided, use defaults (30-37 days out for better availability)
-  let effectiveCheckIn = checkIn;
-  let effectiveCheckOut = checkOut;
-  let usingDefaultDates = false;
   
   if (!checkIn || !checkOut) {
     const { format, addDays } = await import('date-fns');
