@@ -190,12 +190,41 @@ export default function LodgingMap({
       // Add ski trail source if it doesn't exist
       if (!map.getSource('ski-trails')) {
         // Use official Telluride Ski Resort data from ArcGIS
-        fetch('https://services3.arcgis.com/Nefdxa42x2DnAd5Z/arcgis/rest/services/TSG_Ski_Runs/FeatureServer/0/query?where=1%3D1&outFields=*&f=geojson')
-          .then(response => response.json())
+        fetch('https://services3.arcgis.com/Nefdxa42x2DnAd5Z/arcgis/rest/services/TSG_Ski_Runs/FeatureServer/0/query?where=1%3D1&outFields=*&f=json&returnGeometry=true')
+          .then(response => {
+            if (!response.ok) {
+              throw new Error(`ArcGIS request failed: ${response.status}`);
+            }
+            return response.json();
+          })
           .then(data => {
+            console.log('ArcGIS ski trail data loaded:', data);
+            if (!data || !data.features || data.features.length === 0) {
+              console.warn('No ski trail features found in ArcGIS data');
+              // Fall back to sample data
+              return fetch('/data/telluride-ski-trails.json').then(r => r.json());
+            }
+
+            // Convert Esri JSON to GeoJSON format
+            const geoJsonData = {
+              type: 'FeatureCollection',
+              features: data.features.map((feature: any) => ({
+                type: 'Feature',
+                properties: feature.attributes,
+                geometry: {
+                  type: feature.geometry ? 'LineString' : null,
+                  coordinates: feature.geometry?.paths?.[0] || []
+                }
+              })).filter((f: any) => f.geometry.coordinates.length > 0)
+            };
+
+            console.log('Converted to GeoJSON:', geoJsonData.features.length, 'features');
+            return geoJsonData;
+          })
+          .then(geoJsonData => {
             map.addSource('ski-trails', {
               type: 'geojson',
-              data: data
+              data: geoJsonData
             });
 
             // Add fill layer for trails - try multiple possible field names
@@ -206,9 +235,10 @@ export default function LodgingMap({
               paint: {
                 'line-color': [
                   'match',
-                  ['coalesce', ['get', 'DIFFICULTY'], ['get', 'piste:difficulty'], ['get', 'difficulty'], ''],
+                  ['coalesce', ['get', 'DIFFICULTY'], ['get', 'CLASS'], ['get', 'piste:difficulty'], ['get', 'difficulty'], ''],
                   'EASY', '#00FF00',        // Green
                   'GREEN', '#00FF00',       // Green
+                  'BEGINNER', '#00FF00',    // Green
                   'easy', '#00FF00',        // Green
                   'INTERMEDIATE', '#0000FF', // Blue
                   'BLUE', '#0000FF',        // Blue
@@ -217,15 +247,16 @@ export default function LodgingMap({
                   'BLACK', '#000000',        // Black
                   'advanced', '#000000',     // Black
                   'EXPERT', '#FF0000',       // Red
-                  'DOUBLE', '#FF0000',       // Red
+                  'DOUBLE BLACK', '#FF0000', // Red
                   'expert', '#FF0000',       // Red
                   '#808080'                  // Default gray
                 ],
                 'line-width': [
                   'match',
-                  ['coalesce', ['get', 'DIFFICULTY'], ['get', 'piste:difficulty'], ['get', 'difficulty'], ''],
+                  ['coalesce', ['get', 'DIFFICULTY'], ['get', 'CLASS'], ['get', 'piste:difficulty'], ['get', 'difficulty'], ''],
                   'EASY', 3,
                   'GREEN', 3,
+                  'BEGINNER', 3,
                   'easy', 3,
                   'INTERMEDIATE', 4,
                   'BLUE', 4,
@@ -234,7 +265,7 @@ export default function LodgingMap({
                   'BLACK', 5,
                   'advanced', 5,
                   'EXPERT', 6,
-                  'DOUBLE', 6,
+                  'DOUBLE BLACK', 6,
                   'expert', 6,
                   3
                 ],
@@ -248,7 +279,7 @@ export default function LodgingMap({
               type: 'symbol',
               source: 'ski-trails',
               layout: {
-                'text-field': ['coalesce', ['get', 'NAME'], ['get', 'name'], ['get', 'trail_name'], ''],
+                'text-field': ['coalesce', ['get', 'NAME'], ['get', 'TRAIL_NAME'], ['get', 'name'], ['get', 'trail_name'], ''],
                 'text-size': 12,
                 'text-anchor': 'center',
                 'text-justify': 'center',
