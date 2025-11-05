@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
-import { CheckCircle, Calendar, Hotel, FileText } from 'lucide-react';
+import { CheckCircle, Calendar, Hotel, FileText, Mail } from 'lucide-react';
 
 export interface BookingConfirmationProps {
   bookingId: string;
@@ -76,9 +76,12 @@ export function BookingConfirmation({
           )}
           
           <div className="bg-primary-50 rounded-xl p-6 border border-primary-200">
-            <p className="text-sm text-neutral-700 text-center leading-relaxed">
-              A confirmation email has been sent to your email address with all booking details and check-in information.
-            </p>
+            <div className="flex items-start gap-3">
+              <Mail className="w-5 h-5 text-primary-600 flex-shrink-0 mt-0.5" />
+              <p className="text-sm text-neutral-700 leading-relaxed">
+                A confirmation email has been sent to your email address with all booking details, check-in instructions, and hotel contact information.
+              </p>
+            </div>
           </div>
           
           <div className="flex flex-col sm:flex-row gap-4 pt-4">
