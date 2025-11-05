@@ -16,31 +16,36 @@ export interface RateSearchResponse {
 }
 
 export async function searchRates(params: LiteAPIRateSearchParams): Promise<RateSearchResponse> {
-  const searchParams = new URLSearchParams();
-  
-  const hotelIds = Array.isArray(params.hotelIds) 
-    ? params.hotelIds.join(',') 
-    : params.hotelIds;
+  // Convert hotelIds to array format as per LiteAPI docs
+  const hotelIdsArray = Array.isArray(params.hotelIds) 
+    ? params.hotelIds 
+    : params.hotelIds.split(',').filter(id => id.trim() !== '');
   
   console.log('[LiteAPI Rates] Starting rate search:', {
-    hotelIds: hotelIds.split(',').length + ' hotels',
+    hotelIds: hotelIdsArray.length + ' hotels',
     checkIn: params.checkIn,
     checkOut: params.checkOut,
     adults: params.adults,
     children: params.children,
   });
   
-  searchParams.append('hotelIds', hotelIds);
-  searchParams.append('checkIn', params.checkIn);
-  searchParams.append('checkOut', params.checkOut);
-  searchParams.append('adults', params.adults.toString());
-  if (params.children) searchParams.append('children', params.children.toString());
-  searchParams.append('margin', (params.margin || LITEAPI_MARKUP_PERCENT).toString());
+  // LiteAPI rates endpoint is POST with JSON body
+  const requestBody = {
+    hotelIds: hotelIdsArray,
+    checkIn: params.checkIn,
+    checkOut: params.checkOut,
+    adults: params.adults,
+    ...(params.children && { children: params.children }),
+    margin: params.margin || LITEAPI_MARKUP_PERCENT,
+  };
 
-  const endpoint = `/hotels/rates?${searchParams.toString()}`;
+  const endpoint = `/hotels/rates`;
   
   try {
-    const response = await liteAPIClient<RateSearchResponse>(endpoint);
+    const response = await liteAPIClient<RateSearchResponse>(endpoint, {
+      method: 'POST',
+      body: JSON.stringify(requestBody),
+    });
     
     console.log('[LiteAPI Rates] Response received:', {
       hotelsWithRates: response.data?.length || 0,
@@ -67,7 +72,7 @@ export async function searchRates(params: LiteAPIRateSearchParams): Promise<Rate
       error: error instanceof Error ? error.message : 'Unknown error',
       endpoint,
       params: {
-        hotelIds: hotelIds.split(',').slice(0, 3).join(',') + '...',
+        hotelIds: hotelIdsArray.slice(0, 3).join(',') + '...',
         checkIn: params.checkIn,
         checkOut: params.checkOut,
       }
