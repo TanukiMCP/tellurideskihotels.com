@@ -20,7 +20,7 @@ export function FeaturedHotels({ limit = 6 }: FeaturedHotelsProps) {
         setLoading(true);
         
         // Fetch all hotels first
-        const response = await fetch(`/api/hotels/search?cityName=Telluride&countryCode=US&limit=100`);
+        const response = await fetch(`/api/hotels/search?cityName=Telluride&countryCode=US&limit=500`);
         
         if (!response.ok) {
           throw new Error('Failed to fetch hotels');
@@ -29,12 +29,16 @@ export function FeaturedHotels({ limit = 6 }: FeaturedHotelsProps) {
         const data = await response.json();
         const allHotels = data.data || [];
         
+        console.log('[FeaturedHotels] Fetched hotels:', allHotels.length);
+        console.log('[FeaturedHotels] Sample hotel:', allHotels[0]);
+        
         // Filter to only featured hotels, maintaining order
         const featuredHotels = FEATURED_HOTEL_IDS
           .map(id => allHotels.find((h: LiteAPIHotel) => h.hotel_id === id))
           .filter((h): h is LiteAPIHotel => h !== undefined)
           .slice(0, limit);
         
+        console.log('[FeaturedHotels] Featured hotels found:', featuredHotels.length);
         setHotels(featuredHotels);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to load hotels');

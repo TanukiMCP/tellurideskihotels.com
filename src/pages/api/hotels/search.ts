@@ -6,12 +6,19 @@ export const GET: APIRoute = async ({ request }) => {
     const url = new URL(request.url);
     const cityName = url.searchParams.get('cityName') || 'Telluride';
     const countryCode = url.searchParams.get('countryCode') || 'US';
-    const limit = parseInt(url.searchParams.get('limit') || '100', 10);
+    const limit = parseInt(url.searchParams.get('limit') || '500', 10);
+
+    console.log('[API Hotels Search] Request:', { cityName, countryCode, limit });
 
     const result = await searchHotels({
       cityName,
       countryCode,
       limit,
+    });
+
+    console.log('[API Hotels Search] Response:', { 
+      hotelsFound: result.data?.length || 0,
+      sampleHotelId: result.data?.[0]?.hotel_id 
     });
 
     return new Response(JSON.stringify(result), {
@@ -21,7 +28,10 @@ export const GET: APIRoute = async ({ request }) => {
       },
     });
   } catch (error: any) {
-    console.error('Hotel search error:', error);
+    console.error('[API Hotels Search] Error:', {
+      error: error.message || 'Failed to search hotels',
+      stack: error.stack,
+    });
     return new Response(
       JSON.stringify({
         error: error.message || 'Failed to search hotels',

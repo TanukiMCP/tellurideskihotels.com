@@ -34,7 +34,7 @@ if (location && searchParams.has('location')) {
     const hotelData = await searchHotels({
       cityName: location,
       countryCode: DEFAULT_COUNTRY_CODE,
-      limit: 100,
+      limit: 500, // Get all Telluride hotels
     });
     
     hotels = hotelData.data || [];
@@ -42,9 +42,19 @@ if (location && searchParams.has('location')) {
     
     if (checkIn && checkOut && hotels.length > 0) {
       try {
-        console.log('[Lodging Page] Fetching rates for top 10 hotels');
+        // Get hotel IDs and filter out any undefined/null values
+        const validHotels = hotels.slice(0, 10).filter(h => h && h.hotel_id);
+        const hotelIds = validHotels.map(h => h.hotel_id).join(',');
+        
+        console.log('[Lodging Page] Fetching rates for', validHotels.length, 'hotels');
+        console.log('[Lodging Page] Hotel IDs:', hotelIds.substring(0, 100) + '...');
+        
+        if (!hotelIds) {
+          console.warn('[Lodging Page] No valid hotel IDs found');
+          return;
+        }
+        
         const { searchRates } = await import('@/lib/liteapi/rates');
-        const hotelIds = hotels.slice(0, 10).map(h => h.hotel_id).join(',');
         const ratesData = await searchRates({
           hotelIds,
           checkIn,
