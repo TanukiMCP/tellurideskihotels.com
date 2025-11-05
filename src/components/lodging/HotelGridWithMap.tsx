@@ -72,6 +72,7 @@ export function HotelGridWithMap({
             hotels={hotels}
             minPrices={minPrices}
             currency={currency}
+            checkInDate={checkIn}
             height="600px"
             selectedHotelId={selectedHotelId}
             hoveredHotelId={hoveredHotelId}

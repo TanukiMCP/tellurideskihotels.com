@@ -32,6 +32,7 @@ interface LodgingMapProps {
   className?: string;
   minPrices?: Record<string, number>;
   currency?: string;
+  checkInDate?: string;
 }
 
 export default function LodgingMap({
@@ -45,6 +46,7 @@ export default function LodgingMap({
   className = '',
   minPrices = {},
   currency = 'USD',
+  checkInDate,
 }: LodgingMapProps) {
   const mapRef = useRef<MapRef>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -309,6 +311,7 @@ export default function LodgingMap({
               hotel={popupHotel} 
               minPrice={minPrices[popupHotel.hotel_id]}
               currency={currency}
+              checkInDate={checkInDate}
               onViewDetails={handleViewDetails} 
             />
           </Popup>

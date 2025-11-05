@@ -9,6 +9,7 @@ interface HotelMapPopupProps {
   hotel: LiteAPIHotel;
   minPrice?: number;
   currency?: string;
+  checkInDate?: string;
   onViewDetails: () => void;
 }
 
@@ -16,6 +17,7 @@ export default function HotelMapPopup({
   hotel, 
   minPrice = 0,
   currency = 'USD',
+  checkInDate,
   onViewDetails 
 }: HotelMapPopupProps) {
   // Get primary image from LiteAPI only
@@ -41,8 +43,15 @@ export default function HotelMapPopup({
         />
         
         {/* Price Badge */}
-        <div className="absolute top-2 right-2 bg-white px-2.5 py-1 rounded-md font-semibold text-sm text-primary-600 shadow-md">
-          {priceDisplay}
+        <div className="absolute top-2 right-2 bg-white px-2.5 py-1.5 rounded-md shadow-md">
+          {checkInDate && minPrice > 0 && (
+            <div className="text-[10px] text-gray-600 mb-0.5">
+              Next: {new Date(checkInDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+            </div>
+          )}
+          <div className="font-semibold text-sm text-primary-600">
+            {priceDisplay}
+          </div>
         </div>
         
         {/* Star Rating */}

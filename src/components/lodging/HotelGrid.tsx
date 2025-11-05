@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect, useRef } from 'react';
+import { useState, useMemo } from 'react';
 import { HotelCard } from './HotelCard';
 import { LoadingSpinner } from '@/components/shared/LoadingSpinner';
 import type { LiteAPIHotel } from '@/lib/liteapi/types';
@@ -40,7 +40,6 @@ export function HotelGrid({
 }: HotelGridProps) {
   const [currentPage, setCurrentPage] = useState(1);
   const [sortBy, setSortBy] = useState<SortOption>('rating');
-  const hotelRefs = useRef<Record<string, HTMLDivElement | null>>({});
 
   const sortedHotels = useMemo(() => {
     const sorted = [...hotels];
@@ -74,27 +73,6 @@ export function HotelGrid({
     setCurrentPage(page);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
-
-  // Scroll to selected hotel when marker is clicked
-  useEffect(() => {
-    if (selectedHotelId && hotelRefs.current[selectedHotelId]) {
-      // Find which page the hotel is on
-      const hotelIndex = sortedHotels.findIndex(h => h.hotel_id === selectedHotelId);
-      if (hotelIndex !== -1) {
-        const hotelPage = Math.floor(hotelIndex / ITEMS_PER_PAGE) + 1;
-        if (hotelPage !== currentPage) {
-          setCurrentPage(hotelPage);
-        }
-        // Scroll to the hotel card with a delay to ensure page change completes
-        setTimeout(() => {
-          hotelRefs.current[selectedHotelId]?.scrollIntoView({
-            behavior: 'smooth',
-            block: 'center',
-          });
-        }, hotelPage !== currentPage ? 300 : 0);
-      }
-    }
-  }, [selectedHotelId, sortedHotels, currentPage]);
 
   if (loading) {
     return (
@@ -160,23 +138,19 @@ export function HotelGrid({
       {/* Hotel Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
         {paginatedHotels.map((hotel) => (
-          <div 
+          <HotelCard
             key={hotel.hotel_id}
-            ref={(el) => { hotelRefs.current[hotel.hotel_id] = el; }}
-          >
-            <HotelCard
-              hotel={hotel}
-              minPrice={minPrices[hotel.hotel_id]}
-              currency={currency}
-              nights={nights}
-              checkInDate={checkIn}
-              onSelect={handleSelect}
-              isSelected={hotel.hotel_id === selectedHotelId}
-              isHovered={hotel.hotel_id === hoveredHotelId}
-              onMouseEnter={() => onHotelHover?.(hotel.hotel_id)}
-              onMouseLeave={() => onHotelHover?.(null)}
-            />
-          </div>
+            hotel={hotel}
+            minPrice={minPrices[hotel.hotel_id]}
+            currency={currency}
+            nights={nights}
+            checkInDate={checkIn}
+            onSelect={handleSelect}
+            isSelected={hotel.hotel_id === selectedHotelId}
+            isHovered={hotel.hotel_id === hoveredHotelId}
+            onMouseEnter={() => onHotelHover?.(hotel.hotel_id)}
+            onMouseLeave={() => onHotelHover?.(null)}
+          />
         ))}
       </div>
 
