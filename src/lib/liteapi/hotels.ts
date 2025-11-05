@@ -36,16 +36,27 @@ export async function searchHotels(params: LiteAPIHotelSearchParams): Promise<Ho
     sampleIds: hotelIds.slice(0, 3),
   });
   
-  // Fetch details for each hotel to get full info including images
-  const hotelDetailsPromises = hotelIds.map((id: string) => 
-    getHotelDetails(id).catch(err => {
-      console.error(`[LiteAPI Hotels] Error fetching details for ${id}:`, err);
-      return null;
-    })
-  );
+  // Limit to requested number to avoid timeout
+  const limitedIds = hotelIds.slice(0, params.limit || 100);
   
-  const hotels = await Promise.all(hotelDetailsPromises);
-  const validHotels = hotels.filter((h): h is LiteAPIHotel => h !== null);
+  // Fetch details for each hotel to get full info including images
+  // Process in batches to avoid overwhelming the API
+  const batchSize = 10;
+  const validHotels: LiteAPIHotel[] = [];
+  
+  for (let i = 0; i < limitedIds.length; i += batchSize) {
+    const batch = limitedIds.slice(i, i + batchSize);
+    const batchPromises = batch.map((id: string) => 
+      getHotelDetails(id).catch(err => {
+        console.error(`[LiteAPI Hotels] Error fetching details for ${id}:`, err);
+        return null;
+      })
+    );
+    
+    const batchResults = await Promise.all(batchPromises);
+    const validBatch = batchResults.filter((h): h is LiteAPIHotel => h !== null);
+    validHotels.push(...validBatch);
+  }
   
   console.log('[LiteAPI Hotels] Search complete:', {
     hotelsFound: validHotels.length,
@@ -54,7 +65,7 @@ export async function searchHotels(params: LiteAPIHotelSearchParams): Promise<Ho
   
   return {
     data: validHotels,
-    total: validHotels.length,
+    total: hotelIds.length,
   };
 }
 
