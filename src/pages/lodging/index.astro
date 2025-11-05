@@ -70,13 +70,20 @@ try {
                 minPrices[hotel.hotel_id] = Math.min(...hotelMinPrice);
               }
             });
-            console.log('[Lodging Page] Prices calculated:', {
+            
+            // Filter hotels to only show those with available rates
+            const hotelsWithRates = new Set(Object.keys(minPrices));
+            hotels = hotels.filter(h => hotelsWithRates.has(h.hotel_id));
+            
+            console.log('[Lodging Page] Filtered to hotels with availability:', {
               hotelsWithPrices: Object.keys(minPrices).length,
+              hotelsAfterFilter: hotels.length,
               samplePrice: Object.values(minPrices)[0],
-              allPrices: minPrices,
             });
           } else {
             console.warn('[Lodging Page] No rate data returned');
+            // If dates are selected but no rates returned, show no hotels
+            hotels = [];
           }
         }
       } catch (rateError) {

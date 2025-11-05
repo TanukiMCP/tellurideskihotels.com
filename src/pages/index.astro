@@ -61,7 +61,18 @@ try {
               minPrices[hotel.hotel_id] = Math.min(...hotelMinPrice);
             }
           });
-          console.log('[Homepage] Prices fetched for featured hotels:', Object.keys(minPrices).length);
+          
+          // Only show featured hotels that have rates available
+          const hotelsWithRates = new Set(Object.keys(minPrices));
+          featuredHotelsData = featuredHotelsData.filter(h => hotelsWithRates.has(h.hotel_id));
+          
+          console.log('[Homepage] Prices fetched for featured hotels:', {
+            hotelsWithPrices: Object.keys(minPrices).length,
+            featuredHotelsAfterFilter: featuredHotelsData.length
+          });
+        } else {
+          // If no rates available, don't filter - show hotels without prices
+          console.log('[Homepage] No rates available, showing hotels without prices');
         }
       }
     } catch (error) {
