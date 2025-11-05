@@ -18,7 +18,7 @@ export function FeaturedHotels({ initialHotels }: FeaturedHotelsProps) {
       const adults = 2;
       
       window.location.href = `/lodging/${hotelId}?checkIn=${checkIn}&checkOut=${checkOut}&adults=${adults}`;
-    }
+  }
   };
 
   if (!hotels || hotels.length === 0) {

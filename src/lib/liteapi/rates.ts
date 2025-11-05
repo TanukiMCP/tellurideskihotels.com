@@ -69,11 +69,14 @@ export async function searchRates(params: LiteAPIRateSearchParams): Promise<Rate
         const rates = roomType.rates || [];
         
         rates.forEach((rate: any) => {
-          // Extract TOTAL price (for entire stay, not per night)
-          const totalPrice = 
-            rate.retailRate?.suggestedSellingPrice?.[0]?.amount ||
-            rate.retailRate?.total?.[0]?.amount ||
-            0;
+          // Extract prices:
+          // - suggestedSellingPrice: Our price WITH margin (what we charge customer)
+          // - total: Supplier cost WITHOUT margin (what we pay LiteAPI)
+          const customerPrice = rate.retailRate?.suggestedSellingPrice?.[0]?.amount || 0;
+          const supplierCost = rate.retailRate?.total?.[0]?.amount || 0;
+          
+          // Use customer price (with margin) for all customer-facing displays
+          const totalPrice = customerPrice;
           
           // Calculate per-night price
           const pricePerNight = nights > 0 ? totalPrice / nights : totalPrice;
@@ -84,13 +87,14 @@ export async function searchRates(params: LiteAPIRateSearchParams): Promise<Rate
             rates: [{
               rate_id: rate.rateId,
               net: {
-                amount: pricePerNight,
+                amount: pricePerNight, // Per-night price WITH margin
                 currency: rate.retailRate?.suggestedSellingPrice?.[0]?.currency || 'USD',
               },
               total: {
-                amount: totalPrice,
+                amount: totalPrice, // Total price WITH margin
                 currency: rate.retailRate?.suggestedSellingPrice?.[0]?.currency || 'USD',
               },
+              supplier_cost: supplierCost, // Store for profit tracking (internal only)
               board_type: rate.boardName || 'Room Only',
               cancellation_policy: rate.cancellationPolicies,
             }],

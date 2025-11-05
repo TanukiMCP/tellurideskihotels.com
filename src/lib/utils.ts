@@ -26,7 +26,46 @@ export function calculateNights(checkIn: Date | string, checkOut: Date | string)
   return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 }
 
+/**
+ * Apply markup to a base price
+ * @param price Base price from supplier
+ * @param markupPercent Markup percentage (default 15%)
+ * @returns Price with markup applied
+ */
 export function applyMarkup(price: number, markupPercent: number = 15): number {
   return price * (1 + markupPercent / 100);
+}
+
+/**
+ * Calculate net profit after Stripe fees
+ * Stripe charges 2.9% + $0.30 per transaction
+ * @param totalPrice Total price charged to customer
+ * @returns Net amount after Stripe fees
+ */
+export function calculateNetAfterStripeFees(totalPrice: number): number {
+  // Stripe fee: 2.9% + $0.30
+  const stripeFee = (totalPrice * 0.029) + 0.30;
+  return totalPrice - stripeFee;
+}
+
+/**
+ * Calculate actual profit margin after all fees
+ * @param customerPrice Price charged to customer (with markup)
+ * @param supplierCost Cost from supplier (before markup)
+ * @returns Profit margin details
+ */
+export function calculateProfitMargin(customerPrice: number, supplierCost: number) {
+  const netAfterStripe = calculateNetAfterStripeFees(customerPrice);
+  const profit = netAfterStripe - supplierCost;
+  const profitMarginPercent = (profit / supplierCost) * 100;
+  
+  return {
+    customerPrice,
+    supplierCost,
+    stripeFees: customerPrice - netAfterStripe,
+    netRevenue: netAfterStripe,
+    profit,
+    profitMarginPercent,
+  };
 }
 
