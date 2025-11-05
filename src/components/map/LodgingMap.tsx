@@ -73,7 +73,7 @@ export default function LodgingMap({
 
     const coordinates = hotels
       .filter(h => h.location?.latitude && h.location?.longitude)
-      .map(h => ({ lng: h.location.longitude, lat: h.location.latitude }));
+      .map(h => ({ lng: h.location!.longitude, lat: h.location!.latitude }));
 
     if (coordinates.length === 0) return;
 
