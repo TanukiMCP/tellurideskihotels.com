@@ -26,17 +26,34 @@ export async function searchHotels(params: LiteAPIHotelSearchParams): Promise<Ho
   const queryString = searchParams.toString();
   const endpoint = `/data/hotels${queryString ? `?${queryString}` : ''}`;
 
-  const response = await liteAPIClient<HotelSearchResponse>(endpoint);
+  const response = await liteAPIClient<any>(endpoint);
+  
+  // Transform API response to match our types (API returns 'id', we use 'hotel_id')
+  const transformedData = response.data?.map((hotel: any) => ({
+    ...hotel,
+    hotel_id: hotel.id || hotel.hotel_id,
+  })) || [];
   
   console.log('[LiteAPI Hotels] Search complete:', {
-    hotelsFound: response.data?.length || 0,
+    hotelsFound: transformedData.length,
+    sampleHotelId: transformedData[0]?.hotel_id,
+    sampleImageUrl: transformedData[0]?.images?.[0]?.url,
   });
   
-  return response;
+  return {
+    ...response,
+    data: transformedData,
+  };
 }
 
 export async function getHotelDetails(hotelId: string): Promise<LiteAPIHotel> {
   const endpoint = `/data/hotel?hotelId=${hotelId}`;
-  return liteAPIClient<LiteAPIHotel>(endpoint);
+  const response = await liteAPIClient<any>(endpoint);
+  
+  // Transform API response (API returns 'id', we use 'hotel_id')
+  return {
+    ...response,
+    hotel_id: response.id || response.hotel_id,
+  };
 }
 

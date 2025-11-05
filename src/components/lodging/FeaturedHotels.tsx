@@ -85,12 +85,12 @@ export function FeaturedHotels({ limit = 6 }: FeaturedHotelsProps) {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       {hotels.map((hotel) => (
-        <HotelCard
+          <HotelCard
           key={hotel.hotel_id}
-          hotel={hotel}
-          currency="USD"
-          onSelect={handleHotelSelect}
-        />
+            hotel={hotel}
+            currency="USD"
+            onSelect={handleHotelSelect}
+          />
       ))}
     </div>
   );
