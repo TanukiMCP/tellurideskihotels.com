@@ -16,10 +16,15 @@ export interface HotelCardProps {
 }
 
 export function HotelCard({ hotel, minPrice, currency = 'USD', nights: _nights = 1, onSelect }: HotelCardProps) {
-  const imageUrl = getHotelMainImage(hotel) || '/images/placeholder-hotel.jpg';
+  const imageUrl = getHotelMainImage(hotel);
   const address = formatHotelAddress(hotel);
   const rating = hotel.review_score || 0;
   const ratingColor = getRatingColor(rating);
+
+  // Only render if we have an image
+  if (!imageUrl) {
+    return null;
+  }
 
   return (
     <Card className="overflow-hidden hover:shadow-card-hover transition-all duration-300 group">
@@ -32,10 +37,6 @@ export function HotelCard({ hotel, minPrice, currency = 'USD', nights: _nights =
           alt={hotel.name || 'Hotel'}
           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
           loading="lazy"
-          onError={(e) => {
-            const target = e.target as HTMLImageElement;
-            target.src = '/images/placeholder-hotel.jpg';
-          }}
         />
         
         {/* Star Rating Badge */}
