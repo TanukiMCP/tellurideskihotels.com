@@ -1,5 +1,5 @@
 ---
-export const prerender = false; // Server-rendered to handle dynamic searches
+export const prerender = false;
 
 import PageLayout from '@/components/layout/PageLayout.astro';
 import Container from '@/components/layout/Container.astro';
@@ -20,11 +20,9 @@ let hotels: LiteAPIHotel[] = [];
 let minPrices: Record<string, number> = {};
 let loading = false;
 
-// Only fetch if we have a location parameter (avoids build-time API calls)
 if (location && searchParams.has('location')) {
   try {
     loading = true;
-    // Direct LiteAPI call instead of internal API to avoid build issues
     const { searchHotels } = await import('@/lib/liteapi/hotels');
     const hotelData = await searchHotels({
       cityName: location,
@@ -34,7 +32,6 @@ if (location && searchParams.has('location')) {
     
     hotels = hotelData.data || [];
     
-    // Fetch rates for each hotel if dates are provided
     if (checkIn && checkOut && hotels.length > 0) {
       try {
         const { searchRates } = await import('@/lib/liteapi/rates');
@@ -58,12 +55,10 @@ if (location && searchParams.has('location')) {
           });
         }
       } catch (rateError) {
-        // Rates fetch failed - continue without prices
         console.error('Error fetching rates:', rateError);
       }
     }
   } catch (error) {
-    // Hotel search failed - continue with empty results (client can retry)
     console.error('Error fetching hotels:', error);
     hotels = [];
   } finally {
@@ -80,13 +75,16 @@ const nights = checkIn && checkOut
   title={`Ski Hotels in ${location} - Search & Compare Prices`}
   description={`Search and book ski hotels in ${location}. Compare prices, read reviews, and book directly with instant confirmation.`}
 >
-  <Container class="py-8">
+  <Container class="py-12 lg:py-16">
     <Breadcrumbs items={[
       { label: 'Home', href: '/' },
       { label: 'Hotels', href: '/lodging' },
     ]} />
 
-    <div class="mb-8">
+    <div class="mb-12">
+      <h1 class="text-display-sm lg:text-display-md text-neutral-900 mb-2">Find Your Perfect Hotel</h1>
+      <p class="text-xl text-neutral-600 mb-8">Search and compare hotels in {location}</p>
+      
       <HotelSearchWidget
         client:load
         initialLocation={location}
@@ -97,6 +95,19 @@ const nights = checkIn && checkOut
         initialGuests={{ adults, children: 0 }}
       />
     </div>
+
+    {searchParams.has('location') && (
+      <div class="mb-6">
+        <h2 class="text-2xl font-bold text-neutral-900 mb-2">
+          {hotels.length > 0 ? `${hotels.length} Hotels Found` : 'Searching...'}
+        </h2>
+        {checkIn && checkOut && (
+          <p class="text-neutral-600">
+            {new Date(checkIn).toLocaleDateString()} - {new Date(checkOut).toLocaleDateString()} • {nights} night{nights !== 1 ? 's' : ''} • {adults} adult{adults !== 1 ? 's' : ''}
+          </p>
+        )}
+      </div>
+    )}
 
     <div id="hotel-grid">
       <HotelGrid
@@ -119,4 +130,3 @@ const nights = checkIn && checkOut
     </div>
   </Container>
 </PageLayout>
-

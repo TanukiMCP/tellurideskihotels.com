@@ -8,16 +8,16 @@ export interface BadgeProps {
 
 export function Badge({ children, variant = 'default', className }: BadgeProps) {
   const variants = {
-    default: 'bg-turquoise-500 text-white',
-    secondary: 'bg-gray-200 text-gray-800',
+    default: 'bg-primary-600 text-white',
+    secondary: 'bg-neutral-200 text-neutral-800',
     destructive: 'bg-red-500 text-white',
-    outline: 'border border-gray-300 text-gray-700 bg-white',
+    outline: 'border border-neutral-300 text-neutral-700 bg-white',
   };
 
   return (
     <span
       className={cn(
-        'inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium',
+        'inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold',
         variants[variant],
         className
       )}
@@ -26,4 +26,3 @@ export function Badge({ children, variant = 'default', className }: BadgeProps) 
     </span>
   );
 }
-

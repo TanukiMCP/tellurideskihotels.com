@@ -7,7 +7,7 @@ export const Card = forwardRef<HTMLDivElement, CardProps>(
   ({ className, ...props }, ref) => (
     <div
       ref={ref}
-      className={cn('rounded-xl border border-gray-200 bg-white shadow-soft hover:shadow-medium transition-shadow duration-300', className)}
+      className={cn('rounded-xl border border-neutral-200 bg-white shadow-card transition-shadow duration-300', className)}
       {...props}
     />
   )
@@ -48,4 +48,3 @@ export const CardContent = forwardRef<HTMLDivElement, CardContentProps>(
 );
 
 CardContent.displayName = 'CardContent';
-

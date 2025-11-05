@@ -2,38 +2,44 @@
 import { SITE_NAME } from '@/lib/constants';
 ---
 
-<footer class="bg-gray-900 text-gray-300 mt-auto">
-  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+<footer class="bg-neutral-900 text-neutral-300 mt-auto border-t border-neutral-800">
+  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16 lg:py-20">
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-12">
       <div>
-        <h3 class="text-white font-semibold mb-4">{SITE_NAME}</h3>
-        <p class="text-sm">Find and book the best ski hotels in Telluride, Colorado.</p>
+        <div class="flex items-center space-x-3 mb-4">
+          <div class="w-10 h-10 rounded-xl bg-gradient-primary flex items-center justify-center">
+            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+            </svg>
+          </div>
+          <h3 class="text-white font-bold text-lg">{SITE_NAME}</h3>
+        </div>
+        <p class="text-sm text-neutral-400 leading-relaxed">Find and book the best ski hotels in Telluride, Colorado with real-time availability and instant confirmation.</p>
       </div>
       <div>
-        <h4 class="text-white font-semibold mb-4">Quick Links</h4>
-        <ul class="space-y-2 text-sm">
-          <li><a href="/lodging" class="hover:text-turquoise-400 transition-colors">Search Hotels</a></li>
-          <li><a href="/about" class="hover:text-turquoise-400 transition-colors">About Us</a></li>
+        <h4 class="text-white font-bold mb-4">Quick Links</h4>
+        <ul class="space-y-3 text-sm">
+          <li><a href="/lodging" class="text-neutral-400 hover:text-primary-400 transition-colors">Search Hotels</a></li>
+          <li><a href="/about" class="text-neutral-400 hover:text-primary-400 transition-colors">About Us</a></li>
         </ul>
       </div>
       <div>
-        <h4 class="text-white font-semibold mb-4">Support</h4>
-        <ul class="space-y-2 text-sm">
-          <li><a href="/contact" class="hover:text-turquoise-400 transition-colors">Contact</a></li>
-          <li><a href="/faq" class="hover:text-turquoise-400 transition-colors">FAQ</a></li>
+        <h4 class="text-white font-bold mb-4">Support</h4>
+        <ul class="space-y-3 text-sm">
+          <li><a href="/contact" class="text-neutral-400 hover:text-primary-400 transition-colors">Contact</a></li>
+          <li><a href="/faq" class="text-neutral-400 hover:text-primary-400 transition-colors">FAQ</a></li>
         </ul>
       </div>
       <div>
-        <h4 class="text-white font-semibold mb-4">Legal</h4>
-        <ul class="space-y-2 text-sm">
-          <li><a href="/privacy" class="hover:text-turquoise-400 transition-colors">Privacy Policy</a></li>
-          <li><a href="/terms" class="hover:text-turquoise-400 transition-colors">Terms of Service</a></li>
+        <h4 class="text-white font-bold mb-4">Legal</h4>
+        <ul class="space-y-3 text-sm">
+          <li><a href="/privacy" class="text-neutral-400 hover:text-primary-400 transition-colors">Privacy Policy</a></li>
+          <li><a href="/terms" class="text-neutral-400 hover:text-primary-400 transition-colors">Terms of Service</a></li>
         </ul>
       </div>
     </div>
-    <div class="mt-8 pt-8 border-t border-gray-800 text-center text-sm">
+    <div class="mt-12 pt-8 border-t border-neutral-800 text-center text-sm text-neutral-400">
       <p>&copy; {new Date().getFullYear()} {SITE_NAME}. All rights reserved.</p>
     </div>
   </div>
 </footer>
-

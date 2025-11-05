@@ -3,10 +3,10 @@ import PageLayout from '@/components/layout/PageLayout.astro';
 import Container from '@/components/layout/Container.astro';
 import { HotelSearchWidget } from '@/components/lodging/HotelSearchWidget';
 import { FeaturedHotels } from '@/components/lodging/FeaturedHotels';
+import { TrustBadges } from '@/components/shared/TrustBadges';
 import { SITE_DESCRIPTION } from '@/lib/constants';
 import { getHomepageHeroImage, getFeaturedImages } from '@/lib/image-library';
 
-// Static images for homepage
 const heroImage = getHomepageHeroImage();
 const featuredImages = getFeaturedImages();
 ---
@@ -16,117 +16,183 @@ const featuredImages = getFeaturedImages();
   description={SITE_DESCRIPTION}
   image={heroImage?.url}
 >
+  <!-- Hero Section -->
   {heroImage && (
-    <div class="relative h-[500px] md:h-[600px] lg:h-[700px] overflow-hidden">
-      <img
-        src={heroImage.url}
-        alt="Telluride Ski Resort"
-        class="w-full h-full object-cover scale-105 animate-fade-in"
+    <div class="relative h-[600px] lg:h-[700px] overflow-hidden">
+      <img 
+        src={heroImage.url} 
+        alt="Telluride Ski Resort" 
+        class="w-full h-full object-cover animate-fade-in"
         loading="eager"
       />
       <div class="absolute inset-0 gradient-overlay"></div>
-      <div class="absolute inset-0 flex items-center justify-center">
-        <div class="text-center text-white px-4 max-w-4xl mx-auto animate-slide-up" style="padding-top: 120px; padding-bottom: 120px;">
-          <h1 class="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 drop-shadow-2xl leading-tight" style={{fontSize: '56px', lineHeight: '1.2'}}>
-            Find Your Perfect Ski Hotel in Telluride
-          </h1>
-          <p class="text-xl md:text-2xl lg:text-3xl drop-shadow-lg mb-8 text-gray-100 font-medium leading-relaxed" style={{fontSize: '20px', marginBottom: '32px', lineHeight: '1.6'}}>
-            Search and compare 100+ hotels in Telluride, Colorado
-          </p>
-          <div class="flex flex-col sm:flex-row gap-4 justify-center">
-            <a href="#search" class="inline-block bg-accent-500 text-white px-8 py-4 rounded-xl font-bold text-lg shadow-strong hover:shadow-strong hover:scale-105 transition-all duration-300 hover-lift" style={{height: '56px', padding: '24px 32px'}}>
-              Search Hotels Now
-            </a>
-            <button class="inline-block border-2 border-white text-white hover:bg-white hover:text-gray-900 px-8 py-4 rounded-xl font-bold text-lg transition-all duration-300" style={{height: '56px', padding: '24px 32px'}}>
-              View Map
-            </button>
+      <div class="absolute inset-0 flex items-center">
+        <Container class="w-full">
+          <div class="max-w-5xl mx-auto">
+            <!-- Hero Content -->
+            <div class="text-center text-white mb-16 lg:mb-20 animate-slide-up px-4">
+              <h1 class="text-display-md lg:text-display-lg mb-6 drop-shadow-2xl">
+                Find Your Perfect Ski Hotel in Telluride
+              </h1>
+              <p class="text-xl lg:text-2xl mb-8 text-white/90 font-medium leading-relaxed max-w-3xl mx-auto">
+                Search and compare 100+ hotels • Real-time availability • Best prices guaranteed
+              </p>
+            </div>
+            
+            <!-- Integrated Search Widget -->
+            <div class="max-w-4xl mx-auto px-4 animate-scale-in">
+              <HotelSearchWidget client:load />
+            </div>
           </div>
-        </div>
+        </Container>
       </div>
     </div>
   )}
 
-  <div class="bg-gray-50 py-16 md:py-20">
-    <Container class="max-w-7xl mx-auto">
-      <div id="search" class="max-w-4xl mx-auto mb-20 -mt-12 md:-mt-16 relative z-10 animate-scale-in">
-        <HotelSearchWidget client:load />
+  <!-- Trust Strip -->
+  <div class="bg-neutral-50 border-y border-neutral-200 py-8">
+    <Container>
+      <div class="flex flex-wrap justify-center items-center gap-8 lg:gap-16 text-center">
+        <div class="flex items-center gap-3">
+          <div class="w-12 h-12 rounded-full bg-primary-100 flex items-center justify-center">
+            <svg class="w-6 h-6 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+            </svg>
+          </div>
+          <div class="text-left">
+            <div class="text-sm font-semibold text-neutral-900">Secure Booking</div>
+            <div class="text-xs text-neutral-600">SSL Encrypted</div>
+          </div>
+        </div>
+        <div class="flex items-center gap-3">
+          <div class="w-12 h-12 rounded-full bg-accent-100 flex items-center justify-center">
+            <svg class="w-6 h-6 text-accent-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          <div class="text-left">
+            <div class="text-sm font-semibold text-neutral-900">Instant Confirmation</div>
+            <div class="text-xs text-neutral-600">Immediate booking</div>
+          </div>
+        </div>
+        <div class="flex items-center gap-3">
+          <div class="w-12 h-12 rounded-full bg-secondary-100 flex items-center justify-center">
+            <svg class="w-6 h-6 text-secondary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          <div class="text-left">
+            <div class="text-sm font-semibold text-neutral-900">Best Price</div>
+            <div class="text-xs text-neutral-600">We'll match it</div>
+          </div>
+        </div>
+        <div class="flex items-center gap-3">
+          <div class="w-12 h-12 rounded-full bg-primary-100 flex items-center justify-center">
+            <svg class="w-6 h-6 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          <div class="text-left">
+            <div class="text-sm font-semibold text-neutral-900">24/7 Support</div>
+            <div class="text-xs text-neutral-600">Always here to help</div>
+          </div>
+        </div>
       </div>
     </Container>
   </div>
 
+  <Container class="py-20 lg:py-32">
     <!-- Featured Hotels Section -->
-    <section class="mb-24">
-      <div class="text-center mb-12">
-        <h2 class="text-4xl md:text-5xl font-bold mb-4 text-gray-900 font-display">Featured Hotels</h2>
-        <p class="text-xl text-gray-600 max-w-2xl mx-auto">Discover our handpicked selection of the finest ski hotels in Telluride</p>
+    <section class="mb-32">
+      <div class="text-center mb-16">
+        <h2 class="text-display-sm lg:text-display-md mb-4 text-neutral-900">Featured Hotels in Telluride</h2>
+        <p class="text-xl text-neutral-600 max-w-2xl mx-auto leading-relaxed">
+          Discover our handpicked selection of the finest ski hotels. Real-time availability and competitive pricing.
+        </p>
       </div>
       <FeaturedHotels client:load limit={6} />
-      <div class="text-center mt-12">
-        <a href="/lodging" class="inline-block bg-gradient-accent text-white px-8 py-4 rounded-xl font-bold text-lg shadow-medium hover:shadow-strong transition-all duration-300 hover-lift">
+      <div class="text-center mt-16">
+        <a 
+          href="/lodging" 
+          class="inline-flex items-center gap-2 bg-gradient-accent text-white px-10 py-4 rounded-xl font-semibold text-lg shadow-cta hover:shadow-elevated transition-all duration-300 hover:scale-105"
+        >
           View All Hotels
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+          </svg>
         </a>
       </div>
     </section>
 
-    <!-- Feature Cards Section -->
-    <section class="mb-24">
+    <!-- Why Choose Us Section -->
+    <section class="mb-32">
       <div class="text-center mb-16">
-        <h2 class="text-4xl md:text-5xl font-bold mb-4 text-gray-900" style={{fontSize: '48px', lineHeight: '1.2'}}>Why Choose Us</h2>
-        <p class="text-xl text-gray-600 max-w-2xl mx-auto" style={{fontSize: '20px', lineHeight: '1.6', marginTop: '16px'}}>Everything you need for the perfect ski vacation booking</p>
+        <h2 class="text-display-sm lg:text-display-md mb-4 text-neutral-900">Why Book With Us</h2>
+        <p class="text-xl text-neutral-600 max-w-2xl mx-auto leading-relaxed">
+          Everything you need for the perfect ski vacation in one place
+        </p>
       </div>
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
-        <div class="text-center group hover-lift p-8 rounded-2xl bg-white shadow-soft hover:shadow-medium transition-all duration-300 border border-gray-100">
-          <div class="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-primary-100 shadow-medium group-hover:shadow-strong group-hover:scale-110 transition-all duration-300 mb-6">
-            <svg class="w-10 h-10 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-12">
+        <div class="group text-center p-8 rounded-2xl bg-white border border-neutral-200 shadow-card hover:shadow-card-hover transition-all duration-300 hover:-translate-y-1">
+          <div class="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-gradient-primary shadow-card group-hover:shadow-card-hover group-hover:scale-110 transition-all duration-300 mb-6">
+            <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
             </svg>
           </div>
-          <h3 class="text-2xl font-bold mb-3 text-gray-900" style={{fontSize: '24px', lineHeight: '1.3'}}>Real-Time Availability</h3>
-          <p class="text-gray-600 leading-relaxed" style={{lineHeight: '1.7'}}>See current availability and prices updated in real-time from our hotel partners</p>
+          <h3 class="text-2xl font-bold mb-4 text-neutral-900">Real-Time Availability</h3>
+          <p class="text-neutral-600 leading-relaxed text-lg">
+            See current availability and prices updated in real-time from our verified hotel partners across Telluride
+          </p>
         </div>
-        <div class="text-center group hover-lift p-8 rounded-2xl bg-white shadow-soft hover:shadow-medium transition-all duration-300 border border-gray-100">
-          <div class="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-accent-100 shadow-medium group-hover:shadow-strong group-hover:scale-110 transition-all duration-300 mb-6">
-            <svg class="w-10 h-10 text-accent-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div class="group text-center p-8 rounded-2xl bg-white border border-neutral-200 shadow-card hover:shadow-card-hover transition-all duration-300 hover:-translate-y-1">
+          <div class="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-gradient-accent shadow-card group-hover:shadow-card-hover group-hover:scale-110 transition-all duration-300 mb-6">
+            <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
           </div>
-          <h3 class="text-2xl font-bold mb-3 text-gray-900" style={{fontSize: '24px', lineHeight: '1.3'}}>Best Prices</h3>
-          <p class="text-gray-600 leading-relaxed" style={{lineHeight: '1.7'}}>Compare prices across multiple hotels to find the best deal for your ski vacation</p>
+          <h3 class="text-2xl font-bold mb-4 text-neutral-900">Best Price Guarantee</h3>
+          <p class="text-neutral-600 leading-relaxed text-lg">
+            Compare prices across multiple hotels and book with confidence. Find a lower price? We'll match it
+          </p>
         </div>
-        <div class="text-center group hover-lift p-8 rounded-2xl bg-white shadow-soft hover:shadow-medium transition-all duration-300 border border-gray-100">
-          <div class="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-secondary-100 shadow-medium group-hover:shadow-strong group-hover:scale-110 transition-all duration-300 mb-6">
-            <svg class="w-10 h-10 text-secondary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div class="group text-center p-8 rounded-2xl bg-white border border-neutral-200 shadow-card hover:shadow-card-hover transition-all duration-300 hover:-translate-y-1">
+          <div class="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-gradient-primary shadow-card group-hover:shadow-card-hover group-hover:scale-110 transition-all duration-300 mb-6">
+            <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
           </div>
-          <h3 class="text-2xl font-bold mb-3 text-gray-900" style={{fontSize: '24px', lineHeight: '1.3'}}>Instant Confirmation</h3>
-          <p class="text-gray-600 leading-relaxed" style={{lineHeight: '1.7'}}>Get instant booking confirmation with secure payment processing</p>
+          <h3 class="text-2xl font-bold mb-4 text-neutral-900">Instant Confirmation</h3>
+          <p class="text-neutral-600 leading-relaxed text-lg">
+            Get instant booking confirmation with secure payment processing and 24/7 customer support
+          </p>
         </div>
       </div>
     </section>
 
-    <!-- Featured Images Gallery -->
+    <!-- Image Gallery Section -->
     {featuredImages.length > 0 && (
-      <section class="mb-24 bg-gray-50 py-16 md:py-20 rounded-3xl">
+      <section class="mb-32">
         <div class="text-center mb-16">
-          <h2 class="text-4xl md:text-5xl font-bold mb-4 text-gray-900" style={{fontSize: '48px', lineHeight: '1.2'}}>Discover Telluride's Finest Hotels</h2>
-          <p class="text-xl text-gray-600 max-w-2xl mx-auto" style={{fontSize: '20px', lineHeight: '1.6', marginTop: '16px'}}>Explore our curated collection of stunning ski resort properties</p>
+          <h2 class="text-display-sm lg:text-display-md mb-4 text-neutral-900">Experience Telluride</h2>
+          <p class="text-xl text-neutral-600 max-w-2xl mx-auto leading-relaxed">
+            Explore our curated collection of stunning ski resort properties and mountain views
+          </p>
         </div>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8" style="grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));">
+        <div class="grid grid-cols-2 lg:grid-cols-3 gap-6">
           {featuredImages.map((image, index) => (
-            <div
-              class="relative rounded-2xl overflow-hidden group hover-lift shadow-medium hover:shadow-strong transition-all duration-500 animate-fade-in"
-              style={{animationDelay: `${index * 100}ms`, aspectRatio: '4/3'}}
+            <div 
+              class="relative h-72 lg:h-96 rounded-2xl overflow-hidden group shadow-card hover:shadow-card-hover transition-all duration-500 hover:-translate-y-1"
+              style={`animation-delay: ${index * 100}ms`}
             >
-              <img
-                src={image.url}
+              <img 
+                src={image.url} 
                 alt={`Telluride hotel - ${image.category}`}
                 class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                 loading="lazy"
               />
-              <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+              <div class="absolute inset-0 bg-gradient-to-t from-neutral-900/80 via-neutral-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500">
                 <div class="absolute bottom-6 left-6 right-6">
-                  <p class="text-white text-lg font-bold capitalize drop-shadow-lg">{image.category}</p>
+                  <p class="text-white text-lg font-semibold capitalize drop-shadow-lg">{image.category}</p>
                 </div>
               </div>
             </div>
@@ -135,20 +201,21 @@ const featuredImages = getFeaturedImages();
       </section>
     )}
 
-    <!-- CTA Section -->
-    <section class="mb-24 bg-gradient-primary rounded-3xl p-12 md:p-16 text-white shadow-strong text-center">
-      <h2 class="text-4xl md:text-5xl font-bold mb-6" style={{fontSize: '48px', lineHeight: '1.2'}}>Ready to Plan Your Ski Adventure?</h2>
-      <p class="text-xl md:text-2xl mb-8 text-white/90 max-w-2xl mx-auto" style={{fontSize: '20px', lineHeight: '1.6', marginBottom: '32px'}}>Start exploring Telluride's best ski hotels and find your perfect mountain getaway</p>
-      <div class="flex flex-col sm:flex-row gap-4 justify-center">
-        <a href="/lodging" class="inline-block bg-white text-primary-600 px-8 py-4 rounded-xl font-bold text-lg shadow-strong hover:shadow-strong hover:scale-105 transition-all duration-300 hover-lift" style={{height: '56px', padding: '24px 32px'}}>
-          Browse All Hotels
-        </a>
-        <a href="#search" class="inline-block border-2 border-white text-white hover:bg-white hover:text-primary-600 px-8 py-4 rounded-xl font-bold text-lg transition-all duration-300" style={{height: '56px', padding: '24px 32px'}}>
-          Search Now
-        </a>
-      </div>
+    <!-- Final CTA Section -->
+    <section class="bg-gradient-primary rounded-3xl p-12 lg:p-20 text-white shadow-elevated text-center">
+      <h2 class="text-display-sm lg:text-display-md mb-6">Ready to Plan Your Ski Adventure?</h2>
+      <p class="text-xl lg:text-2xl mb-10 text-white/90 max-w-2xl mx-auto leading-relaxed">
+        Start exploring Telluride's best ski hotels and find your perfect mountain getaway today
+      </p>
+      <a 
+        href="/lodging" 
+        class="inline-flex items-center gap-2 bg-white text-primary-600 px-12 py-5 rounded-xl font-bold text-lg shadow-elevated hover:scale-105 transition-all duration-300"
+      >
+        Browse All Hotels
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+        </svg>
+      </a>
     </section>
   </Container>
-
 </PageLayout>
-

@@ -1,5 +1,5 @@
 ---
-export const prerender = false; // Dynamic route - render at runtime
+export const prerender = false;
 
 import PageLayout from '@/components/layout/PageLayout.astro';
 import Container from '@/components/layout/Container.astro';
@@ -7,9 +7,6 @@ import { BookingConfirmation } from '@/components/checkout/BookingConfirmation';
 import Breadcrumbs from '@/components/seo/Breadcrumbs.astro';
 
 const { bookingId } = Astro.params;
-
-// In a real implementation, you would fetch booking details from your database
-// For now, we'll just show the confirmation page with the booking ID
 ---
 
 <PageLayout
@@ -17,7 +14,7 @@ const { bookingId } = Astro.params;
   description="Your booking has been confirmed"
   noindex={true}
 >
-  <Container class="py-12">
+  <Container class="py-16 lg:py-20">
     <Breadcrumbs items={[
       { label: 'Home', href: '/' },
       { label: 'Booking Confirmation', href: undefined },
@@ -29,4 +26,3 @@ const { bookingId } = Astro.params;
     />
   </Container>
 </PageLayout>
-

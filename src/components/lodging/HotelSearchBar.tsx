@@ -24,42 +24,40 @@ export function HotelSearchBar() {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-2">
+    <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-2 items-end">
       <Input
         type="text"
         value={location}
         onChange={(e) => setLocation(e.target.value)}
         placeholder="Location"
-        className="flex-1"
+        className="flex-1 h-12"
       />
       <Input
         type="date"
         value={checkIn}
         onChange={(e) => setCheckIn(e.target.value)}
-        label="Check-in"
         min={format(new Date(), 'yyyy-MM-dd')}
+        className="h-12"
       />
       <Input
         type="date"
         value={checkOut}
         onChange={(e) => setCheckOut(e.target.value)}
-        label="Check-out"
         min={checkIn}
+        className="h-12"
       />
       <Input
         type="number"
         value={adults}
         onChange={(e) => setAdults(e.target.value)}
-        label="Adults"
         min="1"
         max="10"
-        className="w-24"
+        className="w-24 h-12"
       />
-      <Button type="submit" className="sm:mt-6">
+      <Button type="submit" className="h-12 px-6 bg-gradient-accent hover:opacity-90 shadow-cta">
         <Search className="mr-2 h-4 w-4" />
         Search
       </Button>
     </form>
   );
 }
-

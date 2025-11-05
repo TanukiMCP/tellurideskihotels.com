@@ -23,52 +23,52 @@ export function HotelCard({ hotel, minPrice, currency = 'USD', nights = 1, onSel
   const ratingColor = getRatingColor(rating);
 
   return (
-    <Card className="overflow-hidden hover:shadow-strong transition-all duration-300 cursor-pointer hover-lift group shadow-soft">
-      <div className="relative h-48 overflow-hidden" onClick={() => onSelect(hotel.hotel_id)}>
+    <Card className="overflow-hidden hover:shadow-card-hover transition-all duration-300 cursor-pointer hover:-translate-y-1">
+      <div className="relative h-56 overflow-hidden group" onClick={() => onSelect(hotel.hotel_id)}>
         <ImageWithLoading
           src={imageUrl}
           alt={hotel.name || 'Hotel'}
-          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
           onError={() => {}}
         />
         {hotel.star_rating && (
-          <div className="absolute top-2 left-2">
-            <Badge variant="secondary" className="bg-white/90 text-gray-800">
-              <Star className="h-3 w-3 mr-1 fill-yellow-400 text-yellow-400" />
-              {hotel.star_rating}
+          <div className="absolute top-3 left-3">
+            <Badge variant="secondary" className="bg-white/95 backdrop-blur-sm text-neutral-800 border-0 shadow-card">
+              <Star className="h-3 w-3 mr-1 fill-accent-400 text-accent-400" />
+              <span className="font-semibold">{hotel.star_rating}</span>
             </Badge>
           </div>
         )}
         {rating > 0 && (
-          <div className={`absolute top-2 right-2 ${ratingColor.bg} ${ratingColor.text} ${ratingColor.border} border rounded-full px-2 py-1 text-xs font-semibold`}>
+          <div className={`absolute top-3 right-3 ${ratingColor.bg} ${ratingColor.text} backdrop-blur-sm rounded-lg px-3 py-1.5 text-sm font-bold shadow-card`}>
             {rating.toFixed(1)}
           </div>
         )}
       </div>
-      <CardContent className="p-4">
-        <h3 className="font-semibold text-lg mb-1 line-clamp-1">{hotel.name}</h3>
+      <CardContent className="p-5">
+        <h3 className="font-bold text-xl mb-2 line-clamp-1 text-neutral-900">{hotel.name}</h3>
         {address && (
-          <div className="flex items-center text-sm text-gray-600 mb-2">
-            <MapPin className="h-4 w-4 mr-1" />
+          <div className="flex items-center text-sm text-neutral-600 mb-3">
+            <MapPin className="h-4 w-4 mr-1 flex-shrink-0" />
             <span className="line-clamp-1">{address}</span>
           </div>
         )}
         {hotel.review_count && rating > 0 && (
-          <p className="text-sm text-gray-600 mb-3">
-            {hotel.review_count} review{hotel.review_count !== 1 ? 's' : ''}
+          <p className="text-sm text-neutral-600 mb-4">
+            <span className="font-semibold">{hotel.review_count}</span> review{hotel.review_count !== 1 ? 's' : ''}
           </p>
         )}
         {minPrice !== undefined && (
-          <div className="flex items-center justify-between mb-3">
+          <div className="flex items-baseline justify-between mb-4">
             <div>
-              <p className="text-2xl font-bold text-gray-900">{formatCurrency(minPrice, currency)}</p>
-              <p className="text-sm text-gray-600">per {nights} night{nights !== 1 ? 's' : ''}</p>
+              <span className="text-3xl font-bold text-neutral-900">{formatCurrency(minPrice, currency)}</span>
+              <span className="text-sm text-neutral-600 ml-1">/ night</span>
             </div>
           </div>
         )}
         <Button
           onClick={() => onSelect(hotel.hotel_id)}
-          className="w-full"
+          className="w-full bg-primary-600 hover:bg-primary-700 text-white font-semibold"
         >
           View Details
         </Button>
@@ -76,4 +76,3 @@ export function HotelCard({ hotel, minPrice, currency = 'USD', nights = 1, onSel
     </Card>
   );
 }
-

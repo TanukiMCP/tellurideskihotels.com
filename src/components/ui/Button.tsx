@@ -10,24 +10,24 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant = 'primary', size = 'md', isLoading, children, disabled, ...props }, ref) => {
     const variants = {
-      primary: 'bg-primary-500 text-white hover:bg-primary-600 active:bg-primary-700',
-      secondary: 'bg-gray-200 text-gray-800 hover:bg-gray-300 active:bg-gray-400',
-      outline: 'border border-gray-300 text-gray-700 bg-white hover:bg-gray-50',
-      ghost: 'text-gray-700 hover:bg-gray-100',
+      primary: 'bg-primary-600 text-white hover:bg-primary-700 active:bg-primary-800 shadow-card hover:shadow-card-hover',
+      secondary: 'bg-neutral-200 text-neutral-900 hover:bg-neutral-300 active:bg-neutral-400',
+      outline: 'border-2 border-neutral-300 text-neutral-700 bg-white hover:bg-neutral-50',
+      ghost: 'text-neutral-700 hover:bg-neutral-100',
     };
 
     const sizes = {
-      sm: 'px-3 py-1.5 text-sm',
-      md: 'px-4 py-2 text-base',
-      lg: 'px-6 py-3 text-lg',
+      sm: 'px-4 py-2 text-sm',
+      md: 'px-6 py-2.5 text-base',
+      lg: 'px-8 py-3 text-lg',
     };
 
     return (
       <button
         ref={ref}
         className={cn(
-          'inline-flex items-center justify-center rounded-lg font-medium transition-colors',
-          'focus:outline-none focus:ring-2 focus:ring-turquoise-500 focus:ring-offset-2',
+          'inline-flex items-center justify-center rounded-xl font-semibold transition-all duration-300',
+          'focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2',
           'disabled:opacity-50 disabled:cursor-not-allowed',
           variants[variant],
           sizes[size],
@@ -69,4 +69,3 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 );
 
 Button.displayName = 'Button';
-
