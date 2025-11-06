@@ -74,11 +74,18 @@ export function RoomSelectorCard({
 
         const response = await fetch(`/api/hotels/rates?${params.toString()}`);
         if (!response.ok) {
-          throw new Error('Failed to fetch rates');
+          const errorData = await response.json().catch(() => ({}));
+          throw new Error(errorData.error || 'Failed to fetch rates');
         }
 
         const data = await response.json();
         const roomOptions: RoomOption[] = [];
+        
+        console.log('[RoomSelector] Rate response:', {
+          hasData: !!data.data,
+          hotelsCount: data.data?.length || 0,
+          sampleHotel: data.data?.[0],
+        });
         
         if (data.data && data.data.length > 0) {
           data.data.forEach((hotel: any) => {
@@ -94,6 +101,11 @@ export function RoomSelectorCard({
           });
         }
 
+        console.log('[RoomSelector] Processed rooms:', {
+          totalRooms: roomOptions.length,
+          sampleRoom: roomOptions[0],
+        });
+
         setRooms(roomOptions);
         
         // Auto-select first room and rate if available
@@ -104,13 +116,16 @@ export function RoomSelectorCard({
           }
         }
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'An error occurred');
+        console.error('[RoomSelector] Error fetching rates:', err);
+        setError(err instanceof Error ? err.message : 'Unable to load room availability');
       } finally {
         setLoading(false);
       }
     }
 
-    fetchRates();
+    if (hotelId && checkIn && checkOut) {
+      fetchRates();
+    }
   }, [hotelId, checkIn, checkOut, adults, children]);
 
   // Get available room types

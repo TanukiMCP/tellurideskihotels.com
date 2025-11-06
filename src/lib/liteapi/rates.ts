@@ -62,6 +62,13 @@ export async function searchRates(params: LiteAPIRateSearchParams): Promise<Rate
     // Transform response structure: data[] → roomTypes[] → rates[]
     const rawData = Array.isArray(response.data) ? response.data : [];
     
+    console.log('[LiteAPI Rates] Raw response:', {
+      hotelsCount: rawData.length,
+      sampleHotel: rawData[0],
+      sampleRoomType: rawData[0]?.roomTypes?.[0],
+      sampleRate: rawData[0]?.roomTypes?.[0]?.rates?.[0],
+    });
+    
     const transformedData = rawData.map((hotelData: any) => {
       const roomTypes = hotelData.roomTypes || [];
       const rooms: any[] = [];
@@ -70,36 +77,48 @@ export async function searchRates(params: LiteAPIRateSearchParams): Promise<Rate
         const rates = roomType.rates || [];
         
         rates.forEach((rate: any) => {
-          // Extract prices:
-          // - suggestedSellingPrice: Our price WITH margin (what we charge customer)
-          // - total: Supplier cost WITHOUT margin (what we pay LiteAPI)
+          // Extract prices from LiteAPI response structure
+          // According to docs: rate.retailRate.suggestedSellingPrice = price WITH margin
           const customerPrice = rate.retailRate?.suggestedSellingPrice?.[0]?.amount || 0;
           const supplierCost = rate.retailRate?.total?.[0]?.amount || 0;
+          const currency = rate.retailRate?.suggestedSellingPrice?.[0]?.currency || 'USD';
           
           // Use customer price (with margin) for all customer-facing displays
-          const totalPrice = customerPrice;
+          const totalPrice = customerPrice || supplierCost; // Fallback to supplier cost if no customer price
           
           // Calculate per-night price
           const pricePerNight = nights > 0 ? totalPrice / nights : totalPrice;
 
-          rooms.push({
-            room_id: roomType.roomTypeId,
-            room_name: rate.name || roomType.name,
-            rates: [{
-              rate_id: rate.rateId,
-              net: {
-                amount: pricePerNight, // Per-night price WITH margin
-                currency: rate.retailRate?.suggestedSellingPrice?.[0]?.currency || 'USD',
-              },
-              total: {
-                amount: totalPrice, // Total price WITH margin
-                currency: rate.retailRate?.suggestedSellingPrice?.[0]?.currency || 'USD',
-              },
-              supplier_cost: supplierCost, // Store for profit tracking (internal only)
-              board_type: rate.boardName || 'Room Only',
-              cancellation_policy: rate.cancellationPolicies,
-            }],
-          });
+          // Only add rates with valid pricing
+          if (totalPrice > 0) {
+            rooms.push({
+              room_id: roomType.roomTypeId,
+              room_name: rate.name || roomType.name || 'Standard Room',
+              rates: [{
+                rate_id: rate.rateId,
+                room_id: roomType.roomTypeId,
+                room_name: rate.name || roomType.name || 'Standard Room',
+                net: {
+                  amount: pricePerNight, // Per-night price WITH margin
+                  currency,
+                },
+                total: {
+                  amount: totalPrice, // Total price WITH margin
+                  currency,
+                },
+                supplier_cost: supplierCost, // Store for profit tracking (internal only)
+                board_type: rate.boardName || 'Room Only',
+                cancellation_policy: rate.cancellationPolicies,
+                cancellation_policies: rate.cancellationPolicies?.map((policy: any) => ({
+                  type: policy.refundType || 'NON_REFUNDABLE',
+                  description: policy.text,
+                })),
+                bed_types: roomType.bedTypes || [],
+                max_occupancy: roomType.maxOccupancy,
+                amenities: roomType.amenities || [],
+              }],
+            });
+          }
         });
       });
 
