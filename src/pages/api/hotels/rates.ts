@@ -39,13 +39,19 @@ export const GET: APIRoute = async ({ request }) => {
       rooms,
     });
 
+    console.log('[API /hotels/rates] searchRates returned:', {
+      hasData: !!result.data,
+      dataLength: result.data?.length || 0,
+      sampleHotel: result.data?.[0],
+      sampleRooms: result.data?.[0]?.rooms,
+    });
+
     // Transform to TheKeys.com format: flat array of rates
     const rates = result.data?.flatMap(hotel => 
       hotel.rooms?.flatMap(room => room.rates || []) || []
     ) || [];
 
-    console.log('[API /hotels/rates] Response:', {
-      hotelCount: result.data?.length || 0,
+    console.log('[API /hotels/rates] After transformation:', {
       totalRates: rates.length,
       sampleRate: rates[0],
     });
