@@ -32,9 +32,10 @@ try {
   allHotels = hotelData.data || [];
   
   // For featured section, get hotels WITH availability and rates
-  // Use dates 30-37 days out for better availability during ski season
-  const checkIn = format(addDays(new Date(), 30), 'yyyy-MM-dd');
-  const checkOut = format(addDays(new Date(), 37), 'yyyy-MM-dd');
+  // Use realistic upcoming dates: 7 days from now for 7-night stay (industry standard)
+  const now = new Date();
+  const checkIn = format(addDays(now, 7), 'yyyy-MM-dd');
+  const checkOut = format(addDays(now, 14), 'yyyy-MM-dd');
   featuredCheckInDate = checkIn;
   
   console.log('[Homepage] Searching for hotels with availability:', { checkIn, checkOut });
