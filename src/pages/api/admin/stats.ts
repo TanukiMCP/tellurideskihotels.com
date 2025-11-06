@@ -2,6 +2,8 @@ import type { APIRoute } from 'astro';
 import { liteAPIClient } from '@/lib/liteapi/client';
 import { auth } from '@/lib/auth';
 
+export const prerender = false;
+
 export const GET: APIRoute = async ({ request, url }) => {
   // Verify admin session
   const session = await auth.api.getSession({
