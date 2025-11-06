@@ -1,6 +1,8 @@
 import type { APIRoute } from 'astro';
 import { searchRates } from '@/lib/liteapi/rates';
 
+export const prerender = false;
+
 export const GET: APIRoute = async ({ request }) => {
   try {
     const url = new URL(request.url);
