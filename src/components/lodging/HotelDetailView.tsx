@@ -19,9 +19,10 @@ export interface HotelDetailViewProps {
   checkOut: string;
   adults: number;
   children?: number;
+  rooms?: number;
 }
 
-export function HotelDetailView({ hotel, checkIn, checkOut, adults, children = 0 }: HotelDetailViewProps) {
+export function HotelDetailView({ hotel, checkIn, checkOut, adults, children = 0, rooms = 1 }: HotelDetailViewProps) {
   const [selectedRoom, setSelectedRoom] = useState<SelectedRoom | null>(null);
   const [showCheckout, setShowCheckout] = useState(false);
 
@@ -234,6 +235,7 @@ export function HotelDetailView({ hotel, checkIn, checkOut, adults, children = 0
         initialCheckOut={checkOut}
         initialAdults={adults}
         initialChildren={children}
+        initialRooms={rooms}
         onBookingReady={handleBookingReady}
       />
 

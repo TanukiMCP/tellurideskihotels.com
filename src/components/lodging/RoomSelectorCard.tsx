@@ -14,6 +14,7 @@ export interface RoomSelectorCardProps {
   initialCheckOut: string;
   initialAdults: number;
   initialChildren?: number;
+  initialRooms?: number;
   onBookingReady: (bookingData: {
     rateId: string;
     roomData: LiteAPIRate;
@@ -36,6 +37,7 @@ export function RoomSelectorCard({
   initialCheckOut,
   initialAdults,
   initialChildren = 0,
+  initialRooms = 1,
   onBookingReady,
 }: RoomSelectorCardProps) {
   // User selections
@@ -43,6 +45,7 @@ export function RoomSelectorCard({
   const [checkOut, setCheckOut] = useState(initialCheckOut);
   const [adults, setAdults] = useState(initialAdults);
   const [children, setChildren] = useState(initialChildren);
+  const [roomCount, setRoomCount] = useState(initialRooms);
   const [selectedRoomId, setSelectedRoomId] = useState<string>('');
   const [selectedRateId, setSelectedRateId] = useState<string>('');
 
@@ -79,11 +82,9 @@ export function RoomSelectorCard({
           checkIn,
           checkOut,
           adults: adults.toString(),
-          rooms: '1', // Default to 1 room
+          children: children.toString(),
+          rooms: roomCount.toString(),
         });
-        if (children > 0) {
-          params.append('children', children.toString());
-        }
 
         console.log('[RoomSelector] Fetching rates from:', `/api/hotels/rates?${params.toString()}`);
         console.log('[RoomSelector] Request params:', { hotelId, checkIn, checkOut, adults, children });
@@ -175,7 +176,7 @@ export function RoomSelectorCard({
     if (hotelId && checkIn && checkOut) {
       fetchRates();
     }
-  }, [hotelId, checkIn, checkOut, adults, children]);
+  }, [hotelId, checkIn, checkOut, adults, children, roomCount]);
 
   // Get available room types
   const roomOptions = useMemo(() => {
@@ -459,7 +460,7 @@ export function RoomSelectorCard({
               {selectedRate && (
                 <div className="bg-neutral-50 rounded-lg p-4 border border-neutral-200">
                   <h4 className="font-semibold text-neutral-900 mb-3">Room Details</h4>
-                  {(selectedRate.bed_types?.length > 0 || selectedRate.max_occupancy) && (
+                  {((selectedRate.bed_types?.length ?? 0) > 0 || selectedRate.max_occupancy) && (
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
                     {selectedRate.bed_types && selectedRate.bed_types.length > 0 && (
                       <div className="flex items-center gap-2">
