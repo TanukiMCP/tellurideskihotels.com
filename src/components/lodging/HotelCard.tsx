@@ -38,11 +38,6 @@ export function HotelCard({
   const rating = hotel.review_score || 0;
   const ratingColor = getRatingColor(rating);
 
-  // Only render if we have an image
-  if (!imageUrl) {
-    return null;
-  }
-
   return (
     <Card 
       className={`overflow-hidden hover:shadow-card-hover transition-all duration-300 group ${
@@ -55,12 +50,18 @@ export function HotelCard({
         className="relative h-56 overflow-hidden cursor-pointer" 
         onClick={() => onSelect(hotel.hotel_id)}
       >
-        <img
-          src={imageUrl}
-          alt={hotel.name || 'Hotel'}
-          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-          loading="lazy"
-        />
+        {imageUrl ? (
+          <img
+            src={imageUrl}
+            alt={hotel.name || 'Hotel'}
+            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+            loading="lazy"
+          />
+        ) : (
+          <div className="w-full h-full bg-gray-100 flex items-center justify-center">
+            <p className="text-gray-500 text-sm font-medium">This hotel has no images provided</p>
+          </div>
+        )}
         
         {/* Star Rating Badge */}
         {hotel.star_rating && (
