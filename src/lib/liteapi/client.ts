@@ -18,11 +18,12 @@ export async function liteAPIClient<T>(
   const url = `${LITEAPI_BASE_URL}${endpoint}`;
   const startTime = Date.now();
   
-  console.log('[LiteAPI Client] Request:', {
-    endpoint: endpoint.split('?')[0],
-    method: options.method || 'GET',
-    hasParams: endpoint.includes('?'),
-  });
+  // Disabled verbose logging to reduce log noise
+  // console.log('[LiteAPI Client] Request:', {
+  //   endpoint: endpoint.split('?')[0],
+  //   method: options.method || 'GET',
+  //   hasParams: endpoint.includes('?'),
+  // });
   
   const headers = new Headers(options.headers);
   headers.set('X-API-Key', LITEAPI_PRIVATE_KEY);
@@ -68,11 +69,12 @@ export async function liteAPIClient<T>(
 
     const data = await response.json();
     
-    console.log('[LiteAPI Client] Success:', {
-      endpoint: endpoint.split('?')[0],
-      duration: `${duration}ms`,
-      dataSize: JSON.stringify(data).length + ' bytes',
-    });
+    // Disabled verbose logging to reduce log noise
+    // console.log('[LiteAPI Client] Success:', {
+    //   endpoint: endpoint.split('?')[0],
+    //   duration: `${duration}ms`,
+    //   dataSize: JSON.stringify(data).length + ' bytes',
+    // });
 
     return data;
   } catch (error) {
