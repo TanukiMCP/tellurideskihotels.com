@@ -2,6 +2,8 @@ import type { APIRoute } from 'astro';
 import { cancelBooking } from '@/lib/liteapi/booking';
 import { auth } from '@/lib/auth';
 
+export const prerender = false;
+
 export const POST: APIRoute = async ({ params, request }) => {
   // Verify admin session
   const session = await auth.api.getSession({
