@@ -5,6 +5,7 @@ import { ImageWithLoading } from '@/components/shared/ImageWithLoading';
 import { Star, MapPin } from 'lucide-react';
 import * as LucideIcons from 'lucide-react';
 import { RoomSelectorCard } from './RoomSelectorCard';
+import { HotelReviewsList } from './HotelReviewsList';
 import { CheckoutFlow } from '@/components/checkout/CheckoutFlow';
 import type { LiteAPIHotel, LiteAPIRate } from '@/lib/liteapi/types';
 import { formatHotelAddress, getHotelImages } from '@/lib/liteapi/utils';
@@ -234,6 +235,13 @@ export function HotelDetailView({ hotel, checkIn, checkOut, adults, children = 0
         initialAdults={adults}
         initialChildren={children}
         onBookingReady={handleBookingReady}
+      />
+
+      {/* Guest Reviews */}
+      <HotelReviewsList
+        hotelId={hotel.hotel_id}
+        averageRating={rating}
+        reviewCount={hotel.review_count}
       />
     </div>
   );
