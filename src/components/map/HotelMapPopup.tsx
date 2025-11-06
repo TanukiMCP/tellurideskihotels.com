@@ -4,6 +4,7 @@
  */
 import type { LiteAPIHotel } from '@/lib/liteapi/types';
 import { formatMapPrice } from '@/lib/mapbox-utils';
+import { formatHotelAddress } from '@/lib/liteapi/utils';
 
 interface HotelMapPopupProps {
   hotel: LiteAPIHotel;
@@ -23,9 +24,22 @@ export default function HotelMapPopup({
   // Get primary image from LiteAPI only
   const primaryImage = hotel.images?.[0]?.url;
   
-  // Don't render popup if no image available
+  // Don't render popup if no image available - this prevents empty popups
   if (!primaryImage) {
-    return null;
+    return (
+      <div className="min-w-[200px] p-3">
+        <h3 className="font-semibold text-neutral-900 mb-2">{hotel.name}</h3>
+        {formatHotelAddress(hotel) && (
+          <p className="text-sm text-neutral-600 mb-3">{formatHotelAddress(hotel)}</p>
+        )}
+        <button
+          onClick={onViewDetails}
+          className="w-full bg-primary-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-primary-700 transition-colors"
+        >
+          View Details
+        </button>
+      </div>
+    );
   }
   
   // Format price

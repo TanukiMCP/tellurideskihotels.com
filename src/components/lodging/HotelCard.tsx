@@ -6,6 +6,7 @@ import type { LiteAPIHotel } from '@/lib/liteapi/types';
 import { getHotelMainImage, formatHotelAddress } from '@/lib/liteapi/utils';
 import { formatCurrency } from '@/lib/utils';
 import { getRatingColor } from '@/lib/constants';
+import { format } from 'date-fns';
 
 export interface HotelCardProps {
   hotel: LiteAPIHotel;
@@ -103,7 +104,7 @@ export function HotelCard({
               <div className="flex flex-col">
                 {checkInDate && (
                   <span className="text-xs text-neutral-500 mb-1">
-                    Next available: {new Date(checkInDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                    Next available: {format(new Date(checkInDate), 'MMM d')}
                   </span>
                 )}
                 <span className="text-xs text-neutral-500 uppercase tracking-wide mb-1">From</span>
