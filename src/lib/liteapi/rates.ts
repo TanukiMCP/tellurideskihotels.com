@@ -71,7 +71,6 @@ export async function searchRates(params: LiteAPIRateSearchParams): Promise<Rate
       sampleHotel: rawData[0],
       sampleRoomType: rawData[0]?.roomTypes?.[0],
       sampleRate: rawData[0]?.roomTypes?.[0]?.rates?.[0],
-      fullSampleRate: JSON.stringify(rawData[0]?.roomTypes?.[0]?.rates?.[0], null, 2),
     });
     
     const transformedData = rawData.map((hotelData: any) => {
@@ -104,18 +103,6 @@ export async function searchRates(params: LiteAPIRateSearchParams): Promise<Rate
           
           // Calculate per-night price
           const pricePerNight = nights > 0 ? totalPrice / nights : totalPrice;
-
-          // DEBUG: Log pricing details
-          if (rooms.length === 0) {
-            console.log('[LiteAPI Rates] First rate pricing check:', {
-              hotelId: hotelData.hotelId,
-              suggestedAmount: suggestedData?.amount,
-              totalAmount: totalData?.amount,
-              finalTotalPrice: totalPrice,
-              willInclude: totalPrice > 0,
-              retailRate: rate.retailRate,
-            });
-          }
 
           // Only filter if price is 0 (don't check basePrice - that was the bug!)
           if (totalPrice > 0) {

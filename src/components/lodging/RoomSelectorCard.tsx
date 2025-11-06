@@ -73,9 +73,15 @@ export function RoomSelectorCard({
           params.append('children', children.toString());
         }
 
+        console.log('[RoomSelector] Fetching rates from:', `/api/hotels/rates?${params.toString()}`);
+        
         const response = await fetch(`/api/hotels/rates?${params.toString()}`);
+        
+        console.log('[RoomSelector] Response status:', response.status, response.statusText);
+        
         if (!response.ok) {
           const errorData = await response.json().catch(() => ({}));
+          console.error('[RoomSelector] Error response:', errorData);
           throw new Error(errorData.error || 'Failed to fetch rates');
         }
 
@@ -85,6 +91,7 @@ export function RoomSelectorCard({
           hasRates: !!data.rates,
           ratesCount: data.rates?.length || 0,
           sampleRate: data.rates?.[0],
+          fullData: data,
         });
         
         // TheKeys.com format: flat array of rates
