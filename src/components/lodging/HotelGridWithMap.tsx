@@ -60,7 +60,6 @@ export function HotelGridWithMap({
           adults={adults}
           selectedHotelId={selectedHotelId}
           hoveredHotelId={hoveredHotelId}
-          onHotelSelect={handleHotelClick}
           onHotelHover={setHoveredHotelId}
         />
       </div>

@@ -8,7 +8,6 @@ import { HotelReviews } from './HotelReviews';
 import { CheckoutFlow } from '@/components/checkout/CheckoutFlow';
 import type { LiteAPIHotel, LiteAPIRate } from '@/lib/liteapi/types';
 import { formatHotelAddress, getHotelImages } from '@/lib/liteapi/utils';
-import { calculateNights } from '@/lib/utils';
 import { getRatingColor } from '@/lib/constants';
 import type { SelectedRoom } from '@/lib/types';
 
