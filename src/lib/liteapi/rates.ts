@@ -112,17 +112,6 @@ export async function searchRates(params: LiteAPIRateSearchParams): Promise<Rate
           // Calculate per-night price
           const pricePerNight = nights > 0 ? totalPrice / nights : totalPrice;
 
-          console.log('[LiteAPI Rates] Rate pricing:', {
-            hotelId: hotelData.hotelId,
-            roomTypeId: roomType.roomTypeId,
-            rateId: rate.rateId,
-            basePrice,
-            suggestedPrice,
-            customerPrice,
-            totalPrice,
-            valid: totalPrice > 0 && basePrice > 0,
-          });
-
           // Only add rates with valid pricing
           if (totalPrice > 0 && basePrice > 0) {
             rooms.push({

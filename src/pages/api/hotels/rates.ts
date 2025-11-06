@@ -20,12 +20,27 @@ export const GET: APIRoute = async ({ request }) => {
       );
     }
 
+    console.log('[API /hotels/rates] Request:', {
+      hotelId,
+      checkIn,
+      checkOut,
+      adults,
+      children,
+    });
+
     const result = await searchRates({
       hotelIds: hotelId,
       checkIn,
       checkOut,
       adults,
       children,
+    });
+
+    console.log('[API /hotels/rates] Response:', {
+      hasData: !!result.data,
+      hotelCount: result.data?.length || 0,
+      roomCount: result.data?.[0]?.rooms?.length || 0,
+      sampleRoom: result.data?.[0]?.rooms?.[0],
     });
 
     return new Response(JSON.stringify(result), {

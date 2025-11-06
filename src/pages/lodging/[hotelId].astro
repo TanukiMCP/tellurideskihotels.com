@@ -12,16 +12,16 @@ const { hotelId } = Astro.params;
 const url = Astro.url;
 const searchParams = url.searchParams;
 
-// Use provided dates or generate defaults
-const defaultCheckIn = new Date();
-defaultCheckIn.setDate(defaultCheckIn.getDate() + 7);
-const defaultCheckOut = new Date(defaultCheckIn);
-defaultCheckOut.setDate(defaultCheckOut.getDate() + 7);
-
-const checkIn = searchParams.get('checkIn') || defaultCheckIn.toISOString().split('T')[0];
-const checkOut = searchParams.get('checkOut') || defaultCheckOut.toISOString().split('T')[0];
+// Get dates from URL - these should ALWAYS be present when coming from search
+const checkIn = searchParams.get('checkIn');
+const checkOut = searchParams.get('checkOut');
 const adults = parseInt(searchParams.get('adults') || '2', 10);
 const children = parseInt(searchParams.get('children') || '0', 10);
+
+// Redirect to search if no dates provided
+if (!checkIn || !checkOut) {
+  return Astro.redirect(`/lodging?location=Telluride&adults=${adults}`);
+}
 
 let hotel: LiteAPIHotel | null = null;
 let error: string | null = null;
