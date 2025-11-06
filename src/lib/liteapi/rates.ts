@@ -77,18 +77,34 @@ export async function searchRates(params: LiteAPIRateSearchParams): Promise<Rate
         const rates = roomType.rates || [];
         
         rates.forEach((rate: any) => {
-          // LiteAPI response structure:
-          // retailRate.total = price WITH margin (what we charge customer)
-          // retailRate.suggestedSellingPrice = alternative pricing (if present)
-          // We use total as it includes the margin we specified in the request
-          const totalPrice = rate.retailRate?.total?.[0]?.amount || 0;
+          // LiteAPI pricing structure (VERIFIED):
+          // When margin=15 is sent:
+          // - retailRate.total[0].amount = Hotel's base cost (what LiteAPI pays hotel)
+          // - We need to ADD our margin on top to get customer price
+          // OR use suggestedSellingPrice if present (which already includes markup)
+          
+          const basePrice = rate.retailRate?.total?.[0]?.amount || 0;
+          const suggestedPrice = rate.retailRate?.suggestedSellingPrice?.[0]?.amount || 0;
           const currency = rate.retailRate?.total?.[0]?.currency || 'USD';
+          
+          // Use whichever is HIGHER (protects against loss)
+          // If LiteAPI gives us suggestedSellingPrice, use it (includes their calculation)
+          // Otherwise, apply our margin to basePrice
+          let customerPrice = suggestedPrice;
+          if (!customerPrice || customerPrice < basePrice) {
+            // Apply our margin (15%) to base price
+            customerPrice = basePrice * 1.15;
+          }
+          
+          // Add Stripe fees on top (2.9% + $0.30)
+          const stripeFee = (customerPrice * 0.029) + 0.30;
+          const totalPrice = customerPrice + stripeFee;
           
           // Calculate per-night price
           const pricePerNight = nights > 0 ? totalPrice / nights : totalPrice;
 
           // Only add rates with valid pricing
-          if (totalPrice > 0) {
+          if (totalPrice > 0 && basePrice > 0) {
             rooms.push({
               room_id: roomType.roomTypeId,
               room_name: rate.name || roomType.name || 'Standard Room',
