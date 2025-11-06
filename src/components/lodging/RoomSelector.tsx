@@ -47,7 +47,7 @@ export function RoomSelector({
           rooms: '1', // Default to 1 room (can be made configurable later)
         });
 
-        console.log('🔍 [RoomSelector] Fetching rates:', params.toString());
+        console.log('[RoomSelector] Fetching rates:', params.toString());
 
         const response = await fetch(`/api/hotels/rates?${params.toString()}`);
         if (!response.ok) {
@@ -56,23 +56,21 @@ export function RoomSelector({
 
         const data = await response.json();
         
-        console.log('📥 [RoomSelector] Response received:', {
+        console.log('[RoomSelector] Response received:', {
           hasRates: !!data.rates,
           ratesLength: data.rates?.length || 0,
           sampleRate: data.rates?.[0],
         });
         
-        // ═══════════════════════════════════════════════════════════
-        // ⚠️ CRITICAL: API returns { rates: [...] } - flat array!
+        // CRITICAL: API returns { rates: [...] } - flat array!
         // NOT { data: [{ rooms: [{ rates: [...] }] }] }
-        // ═══════════════════════════════════════════════════════════
         const fetchedRates = data.rates || [];
         
-        console.log(`✅ [RoomSelector] Loaded ${fetchedRates.length} rate(s)`);
+        console.log(`[RoomSelector] Loaded ${fetchedRates.length} rate(s)`);
 
         setRooms(fetchedRates);
       } catch (err) {
-        console.error('❌ [RoomSelector] Error fetching rates:', err);
+        console.error('[RoomSelector] Error fetching rates:', err);
         setError(err instanceof Error ? err.message : 'An error occurred');
       } finally {
         setLoading(false);
