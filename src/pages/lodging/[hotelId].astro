@@ -6,6 +6,7 @@ import Container from '@/components/layout/Container.astro';
 import { HotelDetailView } from '@/components/lodging/HotelDetailView';
 import Breadcrumbs from '@/components/seo/Breadcrumbs.astro';
 import type { LiteAPIHotel } from '@/lib/liteapi/types';
+import { getHotelDetails } from '@/lib/liteapi/hotels';
 
 const { hotelId } = Astro.params;
 const url = Astro.url;
@@ -27,13 +28,9 @@ let error: string | null = null;
 
 if (hotelId) {
   try {
-    const response = await fetch(`${url.origin}/api/hotels/details?hotelId=${hotelId}`);
-    if (response.ok) {
-      hotel = await response.json();
-    } else {
-      error = 'Hotel not found';
-    }
+    hotel = await getHotelDetails(hotelId);
   } catch (err) {
+    console.error('[Hotel Detail] Error fetching hotel:', err);
     error = 'Failed to load hotel details';
   }
 }
