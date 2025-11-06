@@ -1,21 +1,19 @@
 import { defineMiddleware } from 'astro:middleware';
-import { auth } from './lib/auth';
+import { getSessionFromRequest } from './lib/auth';
 
 export const onRequest = defineMiddleware(async (context, next) => {
   const { pathname } = context.url;
 
-  // Admin routes require authentication
-  if (pathname.startsWith('/admin')) {
-    const session = await auth.api.getSession({
-      headers: context.request.headers,
-    });
+  // Admin routes require authentication (except login page)
+  if (pathname.startsWith('/admin') && pathname !== '/admin/login') {
+    const session = await getSessionFromRequest(context.request);
 
     if (!session) {
       return context.redirect('/admin/login');
     }
 
     // Store session in locals for use in pages
-    context.locals.session = session;
+    context.locals.session = { user: session.user, session: { token: '', expiresAt: new Date(session.expiresAt) } };
     context.locals.user = session.user;
   }
 

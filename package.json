@@ -7,8 +7,7 @@
     "start": "astro dev",
     "build": "NODE_OPTIONS=--max_old_space_size=4096 astro check && astro build && npx pagefind --site dist",
     "preview": "astro preview",
-    "init-db": "tsx scripts/init-db.ts",
-    "setup-admin": "npm run init-db && tsx scripts/setup-admin.ts",
+    "setup-admin": "tsx scripts/setup-admin.ts",
     "create-admin": "tsx scripts/create-admin.ts"
   },
   "dependencies": {
@@ -17,6 +16,7 @@
     "@astrojs/react": "^3.6.2",
     "@astrojs/sitemap": "^3.1.6",
     "@astrojs/tailwind": "^5.1.1",
+    "@netlify/blobs": "^10.3.3",
     "@stripe/react-stripe-js": "^5.3.0",
     "@stripe/stripe-js": "^8.2.0",
     "@tremor/react": "^3.18.7",
@@ -29,6 +29,7 @@
     "date-fns": "^4.1.0",
     "drizzle-kit": "^0.31.6",
     "drizzle-orm": "^0.44.7",
+    "jose": "^6.1.0",
     "lucide-react": "^0.451.0",
     "mapbox-gl": "^3.16.0",
     "pagefind": "^1.4.0",
