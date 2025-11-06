@@ -56,6 +56,18 @@ export function RoomSelectorCard({
 
   // Fetch rates when dates/guests change
   useEffect(() => {
+    // Guard: Don't fetch if required params are missing
+    if (!hotelId || !checkIn || !checkOut) {
+      console.warn('[RoomSelector] Missing required params:', {
+        hotelId: !!hotelId,
+        checkIn: !!checkIn,
+        checkOut: !!checkOut,
+      });
+      setLoading(false);
+      setError('Missing required booking information');
+      return;
+    }
+
     async function fetchRates() {
       setLoading(true);
       setError(null);
@@ -74,6 +86,7 @@ export function RoomSelectorCard({
         }
 
         console.log('[RoomSelector] Fetching rates from:', `/api/hotels/rates?${params.toString()}`);
+        console.log('[RoomSelector] Request params:', { hotelId, checkIn, checkOut, adults, children });
         
         const response = await fetch(`/api/hotels/rates?${params.toString()}`);
         
