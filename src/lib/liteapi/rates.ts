@@ -57,18 +57,23 @@ export async function searchRates(params: LiteAPIRateSearchParams): Promise<Rate
 
   const endpoint = `/hotels/rates`;
 
+  console.log('[LiteAPI Rates] Request body:', JSON.stringify(requestBody, null, 2));
+
   try {
     const response = await liteAPIClient<any>(endpoint, {
       method: 'POST',
       body: JSON.stringify(requestBody),
     });
 
+    console.log('[LiteAPI Rates] Full API response:', JSON.stringify(response, null, 2));
+
     // Transform response structure: data[] → roomTypes[] → rates[]
     const rawData = Array.isArray(response.data) ? response.data : [];
     
-    console.log('[LiteAPI Rates] Raw response:', {
+    console.log('[LiteAPI Rates] Raw data extraction:', {
       hotelsCount: rawData.length,
-      sampleHotel: rawData[0],
+      firstHotelId: rawData[0]?.hotelId,
+      firstHotelRoomTypesCount: rawData[0]?.roomTypes?.length || 0,
       sampleRoomType: rawData[0]?.roomTypes?.[0],
       sampleRate: rawData[0]?.roomTypes?.[0]?.rates?.[0],
     });
@@ -106,6 +111,13 @@ export async function searchRates(params: LiteAPIRateSearchParams): Promise<Rate
 
           // Only filter if price is 0 (don't check basePrice - that was the bug!)
           if (totalPrice > 0) {
+            console.log('[LiteAPI Rates] Adding rate:', {
+              hotelId: hotelData.hotelId,
+              roomTypeId: roomType.roomTypeId,
+              rateName: rate.name,
+              totalPrice,
+              pricePerNight,
+            });
             rooms.push({
               room_id: roomType.roomTypeId,
               room_name: rate.name || roomType.name || 'Standard Room',
@@ -159,6 +171,15 @@ export async function searchRates(params: LiteAPIRateSearchParams): Promise<Rate
                 max_occupancy: roomType.maxOccupancy,
                 amenities: roomType.amenities || [],
               }],
+            });
+          } else {
+            console.warn('[LiteAPI Rates] Skipping rate with zero price:', {
+              hotelId: hotelData.hotelId,
+              roomTypeId: roomType.roomTypeId,
+              rateName: rate.name,
+              suggestedPrice: suggestedData?.amount,
+              totalPrice: totalData?.amount,
+              retailRate: rate.retailRate,
             });
           }
           } catch (error) {
