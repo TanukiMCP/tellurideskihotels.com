@@ -84,9 +84,17 @@ export async function searchRates(params: LiteAPIRateSearchParams): Promise<Rate
           // - We need to ADD our margin on top to get customer price
           // OR use suggestedSellingPrice if present (which already includes markup)
           
-          const basePrice = rate.retailRate?.total?.[0]?.amount || 0;
-          const suggestedPrice = rate.retailRate?.suggestedSellingPrice?.[0]?.amount || 0;
-          const currency = rate.retailRate?.total?.[0]?.currency || 'USD';
+          // Handle both array and object format for retailRate
+          const totalData = Array.isArray(rate.retailRate?.total) 
+            ? rate.retailRate.total[0] 
+            : rate.retailRate?.total;
+          const suggestedData = Array.isArray(rate.retailRate?.suggestedSellingPrice)
+            ? rate.retailRate.suggestedSellingPrice[0]
+            : rate.retailRate?.suggestedSellingPrice;
+            
+          const basePrice = totalData?.amount || 0;
+          const suggestedPrice = suggestedData?.amount || 0;
+          const currency = totalData?.currency || 'USD';
           
           // Use whichever is HIGHER (protects against loss)
           // If LiteAPI gives us suggestedSellingPrice, use it (includes their calculation)
@@ -103,6 +111,17 @@ export async function searchRates(params: LiteAPIRateSearchParams): Promise<Rate
           
           // Calculate per-night price
           const pricePerNight = nights > 0 ? totalPrice / nights : totalPrice;
+
+          console.log('[LiteAPI Rates] Rate pricing:', {
+            hotelId: hotelData.hotelId,
+            roomTypeId: roomType.roomTypeId,
+            rateId: rate.rateId,
+            basePrice,
+            suggestedPrice,
+            customerPrice,
+            totalPrice,
+            valid: totalPrice > 0 && basePrice > 0,
+          });
 
           // Only add rates with valid pricing
           if (totalPrice > 0 && basePrice > 0) {
@@ -181,6 +200,8 @@ export async function searchRates(params: LiteAPIRateSearchParams): Promise<Rate
     console.log('[LiteAPI Rates] Response received:', {
       hotelsWithRates: transformedData.length,
       totalRooms: transformedData.reduce((sum: number, h: any) => sum + (h.rooms?.length || 0), 0),
+      sampleHotel: transformedData[0],
+      sampleRoom: transformedData[0]?.rooms?.[0],
       sampleRate: transformedData[0]?.rooms?.[0]?.rates?.[0],
     });
 

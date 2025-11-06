@@ -25,7 +25,7 @@ let effectiveCheckIn = checkIn;
 let effectiveCheckOut = checkOut;
 let usingDefaultDates = false;
 
-// Always show hotels, defaulting to Telluride
+// INDUSTRY STANDARD: Search for hotels WITH availability for the selected dates
 try {
   loading = true;
   
@@ -37,7 +37,7 @@ try {
     console.log('[Lodging Page] No dates provided, using defaults:', { effectiveCheckIn, effectiveCheckOut });
   }
   
-  console.log('[Lodging Page] Loading hotels:', {
+  console.log('[Lodging Page] Searching for hotels WITH availability:', {
     location,
     checkIn: effectiveCheckIn,
     checkOut: effectiveCheckOut,
@@ -45,77 +45,29 @@ try {
     usingDefaultDates,
   });
   
-  const { searchHotels } = await import('@/lib/liteapi/hotels');
-  const hotelData = await searchHotels({
+  // Use the correct function that ONLY returns hotels with actual availability
+  const { searchHotelsWithRates } = await import('@/lib/liteapi/rates');
+  const result = await searchHotelsWithRates({
     cityName: location,
     countryCode: DEFAULT_COUNTRY_CODE,
-    limit: 500, // Get ALL Telluride hotels
+    checkIn: effectiveCheckIn,
+    checkOut: effectiveCheckOut,
+    adults,
+    limit: 100, // Reasonable limit for hotels with actual availability
   });
   
-  hotels = hotelData.data || [];
-  console.log('[Lodging Page] Hotels loaded:', hotels.length);
-    
-            if (effectiveCheckIn && effectiveCheckOut && hotels.length > 0) {
-      try {
-        console.log('[Lodging Page] Fetching rates for', hotels.length, 'hotels');
-        
-        // Get hotel IDs
-        const hotelIds = hotels.map(h => h.hotel_id).filter(Boolean);
-        
-        if (hotelIds.length === 0) {
-          console.warn('[Lodging Page] No valid hotel IDs found');
-        } else {
-          const { searchRates } = await import('@/lib/liteapi/rates');
-          const ratesData = await searchRates({
-            hotelIds: hotelIds.join(','),
-            checkIn: effectiveCheckIn,
-            checkOut: effectiveCheckOut,
-            adults,
-          });
-        
-          if (ratesData.data && ratesData.data.length > 0) {
-            console.log('[Lodging Page] Processing rates for', ratesData.data.length, 'hotels');
-            ratesData.data.forEach((hotel: any) => {
-              // Get minimum price from all rooms (already per-night from rates.ts)
-              const hotelMinPrice = hotel.rooms?.flatMap((r: any) =>
-                r.rates?.map((rate: any) => rate.net?.amount || Infinity)
-              ).filter((p: number) => p !== Infinity);
-
-              if (hotelMinPrice && hotelMinPrice.length > 0) {
-                minPrices[hotel.hotel_id] = Math.min(...hotelMinPrice);
-              }
-            });
-            
-            // Only filter hotels if user explicitly selected dates
-            if (!usingDefaultDates) {
-              const hotelsWithRates = new Set(Object.keys(minPrices));
-              hotels = hotels.filter(h => hotelsWithRates.has(h.hotel_id));
-              console.log('[Lodging Page] User selected dates - filtered to hotels with availability');
-            }
-            
-            console.log('[Lodging Page] Hotels with prices:', {
-              hotelsWithPrices: Object.keys(minPrices).length,
-              totalHotels: hotels.length,
-              samplePrice: Object.values(minPrices)[0],
-              usingDefaultDates,
-            });
-          } else {
-            console.warn('[Lodging Page] No rate data returned');
-            // If user explicitly selected dates but no rates, show no hotels
-            if (!usingDefaultDates) {
-              hotels = [];
-            }
-          }
-        }
-      } catch (rateError) {
-        console.error('[Lodging Page] Error fetching rates:', {
-          error: rateError instanceof Error ? rateError.message : 'Unknown error',
-          stack: rateError instanceof Error ? rateError.stack : undefined,
-        });
-      }
-    }
+  hotels = result.hotels || [];
+  minPrices = result.minPrices || {};
+  
+  console.log('[Lodging Page] Search complete:', {
+    hotelsFound: hotels.length,
+    hotelsWithPrices: Object.keys(minPrices).length,
+    sampleHotel: hotels[0]?.name,
+    samplePrice: Object.values(minPrices)[0],
+  });
+  
 } catch (error) {
-  console.error('[Lodging Page] Error fetching hotels:', {
+  console.error('[Lodging Page] Error searching hotels:', {
     error: error instanceof Error ? error.message : 'Unknown error',
     stack: error instanceof Error ? error.stack : undefined,
   });
