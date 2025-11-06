@@ -77,6 +77,7 @@ export async function searchRates(params: LiteAPIRateSearchParams): Promise<Rate
         const rates = roomType.rates || [];
         
         rates.forEach((rate: any) => {
+          try {
           // LiteAPI pricing structure (VERIFIED):
           // When margin=15 is sent:
           // - retailRate.total[0].amount = Hotel's base cost (what LiteAPI pays hotel)
@@ -122,14 +123,50 @@ export async function searchRates(params: LiteAPIRateSearchParams): Promise<Rate
                 },
                 board_type: rate.boardName || 'Room Only',
                 cancellation_policy: rate.cancellationPolicies,
-                cancellation_policies: rate.cancellationPolicies?.map((policy: any) => ({
-                  type: policy.refundType || 'NON_REFUNDABLE',
-                  description: policy.text,
-                })),
+                cancellation_policies: (() => {
+                  // Handle cancellationPolicies - it can be an object or array
+                  const cp = rate.cancellationPolicies;
+                  if (!cp) return [];
+                  
+                  // If it's an array, map it directly
+                  if (Array.isArray(cp)) {
+                    return cp.map((policy: any) => ({
+                      type: policy.refundType || 'NON_REFUNDABLE',
+                      description: policy.text,
+                    }));
+                  }
+                  
+                  // If it's an object, extract from cancelPolicyInfos
+                  if (cp.cancelPolicyInfos && Array.isArray(cp.cancelPolicyInfos)) {
+                    return cp.cancelPolicyInfos.map((policy: any) => ({
+                      type: policy.refundType || cp.refundableTag || 'NON_REFUNDABLE',
+                      description: policy.text || policy.description || '',
+                    }));
+                  }
+                  
+                  // Fallback: create a policy from refundableTag
+                  if (cp.refundableTag) {
+                    const isRefundable = cp.refundableTag === 'REF' || cp.refundableTag === 'FREF';
+                    return [{
+                      type: isRefundable ? 'FREE_CANCELLATION' : 'NON_REFUNDABLE',
+                      description: cp.hotelRemarks?.[0] || '',
+                    }];
+                  }
+                  
+                  return [];
+                })(),
                 bed_types: roomType.bedTypes || [],
                 max_occupancy: roomType.maxOccupancy,
                 amenities: roomType.amenities || [],
               }],
+            });
+          }
+          } catch (error) {
+            console.error('[LiteAPI Rates] Error processing rate:', {
+              error: error instanceof Error ? error.message : 'Unknown error',
+              hotelId: hotelData.hotelId,
+              roomTypeId: roomType.roomTypeId,
+              rateId: rate.rateId,
             });
           }
         });
