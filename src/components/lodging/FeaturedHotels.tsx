@@ -28,7 +28,7 @@ export function FeaturedHotels({
       const rooms = 1;
       
       window.location.href = `/lodging/${hotelId}?checkIn=${checkIn}&checkOut=${checkOut}&adults=${adults}&rooms=${rooms}`;
-    }
+  }
   };
 
   if (!hotels || hotels.length === 0) {
