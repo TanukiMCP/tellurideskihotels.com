@@ -119,7 +119,7 @@ export async function searchRates(params: LiteAPIRateSearchParams): Promise<Rate
                 total: {
                   amount: totalPrice, // Total price WITH margin
                   currency,
-                }
+                },
                 board_type: rate.boardName || 'Room Only',
                 cancellation_policy: rate.cancellationPolicies,
                 cancellation_policies: rate.cancellationPolicies?.map((policy: any) => ({
