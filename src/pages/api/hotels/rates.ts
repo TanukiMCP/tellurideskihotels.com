@@ -1,5 +1,6 @@
 import type { APIRoute } from 'astro';
 import { searchRates } from '@/lib/liteapi/rates';
+import type { LiteAPIRate } from '@/lib/liteapi/types';
 
 export const prerender = false;
 
@@ -66,14 +67,31 @@ export const GET: APIRoute = async ({ request }) => {
       sampleRooms: result.data?.[0]?.rooms,
     });
 
+    // ═══════════════════════════════════════════════════════════
     // Transform to TheKeys.com format: flat array of rates
-    const rates = result.data?.flatMap(hotel => 
-      hotel.rooms?.flatMap(room => room.rates || []) || []
-    ) || [];
+    // ═══════════════════════════════════════════════════════════
+    // Structure from searchRates: { data: [{ hotel_id, rooms: [{ room_id, rates: [...] }] }] }
+    // Need to flatten to: { rates: [rate, rate, rate, ...] }
+    
+    const rates: LiteAPIRate[] = [];
+    
+    if (result.data && Array.isArray(result.data)) {
+      for (const hotel of result.data) {
+        if (hotel.rooms && Array.isArray(hotel.rooms)) {
+          for (const room of hotel.rooms) {
+            if (room.rates && Array.isArray(room.rates)) {
+              // Add all rates from this room to the flat array
+              rates.push(...room.rates);
+            }
+          }
+        }
+      }
+    }
 
     console.log('[API /hotels/rates] After transformation:', {
       totalRates: rates.length,
       sampleRate: rates[0],
+      sampleRateKeys: rates[0] ? Object.keys(rates[0]) : [],
     });
 
     return new Response(JSON.stringify({ rates }), {

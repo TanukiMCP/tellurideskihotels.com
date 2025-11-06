@@ -35,15 +35,19 @@ export function RoomSelector({
       setLoading(true);
       setError(null);
       try {
+        // ═══════════════════════════════════════════════════════════
+        // Build query parameters (include rooms parameter!)
+        // ═══════════════════════════════════════════════════════════
         const params = new URLSearchParams({
           hotelId,
           checkIn,
           checkOut,
           adults: adults.toString(),
+          children: children.toString(), // Always include, even if 0
+          rooms: '1', // Default to 1 room (can be made configurable later)
         });
-        if (children > 0) {
-          params.append('children', children.toString());
-        }
+
+        console.log('🔍 [RoomSelector] Fetching rates:', params.toString());
 
         const response = await fetch(`/api/hotels/rates?${params.toString()}`);
         if (!response.ok) {
@@ -51,20 +55,24 @@ export function RoomSelector({
         }
 
         const data = await response.json();
-        const allRates: LiteAPIRate[] = [];
         
-        if (data.data && data.data.length > 0) {
-          data.data.forEach((hotel: any) => {
-            hotel.rooms?.forEach((room: any) => {
-              room.rates?.forEach((rate: LiteAPIRate) => {
-                allRates.push(rate);
-              });
-            });
-          });
-        }
+        console.log('📥 [RoomSelector] Response received:', {
+          hasRates: !!data.rates,
+          ratesLength: data.rates?.length || 0,
+          sampleRate: data.rates?.[0],
+        });
+        
+        // ═══════════════════════════════════════════════════════════
+        // ⚠️ CRITICAL: API returns { rates: [...] } - flat array!
+        // NOT { data: [{ rooms: [{ rates: [...] }] }] }
+        // ═══════════════════════════════════════════════════════════
+        const fetchedRates = data.rates || [];
+        
+        console.log(`✅ [RoomSelector] Loaded ${fetchedRates.length} rate(s)`);
 
-        setRooms(allRates);
+        setRooms(fetchedRates);
       } catch (err) {
+        console.error('❌ [RoomSelector] Error fetching rates:', err);
         setError(err instanceof Error ? err.message : 'An error occurred');
       } finally {
         setLoading(false);
@@ -141,13 +149,26 @@ export function RoomSelector({
                   </Badge>
                 )}
               </div>
+              {/* ═══════════════════════════════════════════════════════════
+                  Cancellation Policy Display
+                  ═══════════════════════════════════════════════════════════
+                  cancellation_policies is an ARRAY of policy objects
+                  (already transformed in rates.ts from LiteAPI's object format)
+              */}
               {rate.cancellation_policies && rate.cancellation_policies.length > 0 && (
                 <div className="mb-4">
                   <p className="text-sm text-gray-600">
                     {rate.cancellation_policies[0].type === 'FREE_CANCELLATION'
-                      ? 'Free cancellation available'
-                      : 'Cancellation policy applies'}
+                      ? '✅ Free cancellation available'
+                      : rate.cancellation_policies[0].type === 'NON_REFUNDABLE'
+                      ? '⚠️ Non-refundable'
+                      : '📋 Cancellation policy applies'}
                   </p>
+                  {rate.cancellation_policies[0].description && (
+                    <p className="text-xs text-gray-500 mt-1">
+                      {rate.cancellation_policies[0].description}
+                    </p>
+                  )}
                 </div>
               )}
               <Button
