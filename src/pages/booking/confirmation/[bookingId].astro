@@ -5,7 +5,7 @@ import PageLayout from '@/components/layout/PageLayout.astro';
 import Container from '@/components/layout/Container.astro';
 import { BookingConfirmation } from '@/components/checkout/BookingConfirmation';
 import Breadcrumbs from '@/components/seo/Breadcrumbs.astro';
-import { liteAPIClient } from '@/lib/liteapi/client';
+import { getBooking } from '@/lib/liteapi/booking';
 
 const { bookingId } = Astro.params;
 
@@ -14,7 +14,7 @@ let error: string | null = null;
 
 if (bookingId) {
   try {
-    bookingDetails = await liteAPIClient(`/bookings/${bookingId}`, { method: 'GET' });
+    bookingDetails = await getBooking(bookingId);
   } catch (err) {
     console.error('[Confirmation] Error fetching booking:', err);
     error = 'Could not load booking details';

@@ -1,5 +1,5 @@
 import type { APIRoute } from 'astro';
-import { liteAPIClient } from '@/lib/liteapi/client';
+import { listBookings } from '@/lib/liteapi/booking';
 import { getSessionFromRequest } from '@/lib/auth';
 
 export const prerender = false;
@@ -25,10 +25,7 @@ export const GET: APIRoute = async ({ request, url }) => {
     startDate.setDate(startDate.getDate() - days);
 
     // Fetch all bookings from LiteAPI
-    const bookingsResponse = await liteAPIClient<any>('/bookings', {
-      method: 'GET',
-    });
-
+    const bookingsResponse = await listBookings();
     const allBookings = bookingsResponse.data || [];
 
     // Filter bookings by date range

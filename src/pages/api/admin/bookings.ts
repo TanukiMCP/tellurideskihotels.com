@@ -1,5 +1,5 @@
 import type { APIRoute } from 'astro';
-import { liteAPIClient } from '@/lib/liteapi/client';
+import { listBookings } from '@/lib/liteapi/booking';
 import { getSessionFromRequest } from '@/lib/auth';
 
 export const prerender = false;
@@ -17,10 +17,7 @@ export const GET: APIRoute = async ({ request }) => {
 
   try {
     // Fetch all bookings from LiteAPI
-    const response = await liteAPIClient<any>('/bookings', {
-      method: 'GET',
-    });
-
+    const response = await listBookings();
     const bookings = response.data || [];
 
     return new Response(
