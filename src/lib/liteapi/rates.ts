@@ -246,6 +246,7 @@ export async function searchHotelsWithRates(params: {
     checkIn: params.checkIn,
     checkOut: params.checkOut,
     adults: params.adults,
+    rooms: 1, // Default to 1 room
   });
 
   // Calculate min prices and get hotel IDs with availability

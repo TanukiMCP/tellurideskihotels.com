@@ -67,6 +67,7 @@ export function RoomSelectorCard({
           checkIn,
           checkOut,
           adults: adults.toString(),
+          rooms: '1', // Default to 1 room
         });
         if (children > 0) {
           params.append('children', children.toString());
