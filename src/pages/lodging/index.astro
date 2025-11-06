@@ -20,29 +20,21 @@ let hotels: LiteAPIHotel[] = [];
 let minPrices: Record<string, number> = {};
 let loading = false;
 
-// If no dates provided, use defaults (30-37 days out for better availability)
-let effectiveCheckIn = checkIn;
-let effectiveCheckOut = checkOut;
-let usingDefaultDates = false;
+// INDUSTRY STANDARD: Dates are REQUIRED for availability search
+// If no dates provided, redirect to homepage where user can select dates
+if (!checkIn || !checkOut) {
+  return Astro.redirect('/?message=Please select check-in and check-out dates');
+}
 
 // INDUSTRY STANDARD: Search for hotels WITH availability for the selected dates
 try {
   loading = true;
   
-  if (!checkIn || !checkOut) {
-    const { format, addDays } = await import('date-fns');
-    effectiveCheckIn = format(addDays(new Date(), 30), 'yyyy-MM-dd');
-    effectiveCheckOut = format(addDays(new Date(), 37), 'yyyy-MM-dd');
-    usingDefaultDates = true;
-    console.log('[Lodging Page] No dates provided, using defaults:', { effectiveCheckIn, effectiveCheckOut });
-  }
-  
   console.log('[Lodging Page] Searching for hotels WITH availability:', {
     location,
-    checkIn: effectiveCheckIn,
-    checkOut: effectiveCheckOut,
+    checkIn,
+    checkOut,
     adults,
-    usingDefaultDates,
   });
   
   // Use the correct function that ONLY returns hotels with actual availability
@@ -50,8 +42,8 @@ try {
   const result = await searchHotelsWithRates({
     cityName: location,
     countryCode: DEFAULT_COUNTRY_CODE,
-    checkIn: effectiveCheckIn,
-    checkOut: effectiveCheckOut,
+    checkIn,
+    checkOut,
     adults,
     limit: 100, // Reasonable limit for hotels with actual availability
   });
@@ -77,8 +69,8 @@ try {
   console.log('[Lodging Page] Load complete');
 }
 
-const nights = effectiveCheckIn && effectiveCheckOut 
-  ? Math.ceil((new Date(effectiveCheckOut).getTime() - new Date(effectiveCheckIn).getTime()) / (1000 * 60 * 60 * 24))
+const nights = checkIn && checkOut 
+  ? Math.ceil((new Date(checkOut).getTime() - new Date(checkIn).getTime()) / (1000 * 60 * 60 * 24))
   : 1;
 ---
 
@@ -126,8 +118,8 @@ const nights = effectiveCheckIn && effectiveCheckOut
       minPrices={minPrices}
       currency="USD"
       nights={nights}
-      checkIn={effectiveCheckIn}
-      checkOut={effectiveCheckOut}
+      checkIn={checkIn}
+      checkOut={checkOut}
       adults={adults}
     />
   </Container>
