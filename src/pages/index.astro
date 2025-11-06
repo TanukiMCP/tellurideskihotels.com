@@ -22,17 +22,18 @@ let minPrices: Record<string, number> = {};
 let featuredCheckInDate: string | undefined;
 
 try {
-  // Get all hotels for the map (without rates)
+  // OPTIMIZATION: Only fetch what we need for initial page load
+  // Get limited hotels for the map (50 is plenty for visual display)
   const hotelData = await searchHotels({
     cityName: 'Telluride',
     countryCode: 'US',
-    limit: 500, // Get ALL Telluride hotels
+    limit: 50, // Reduced from 500 - map doesn't need all hotels
   });
   
   allHotels = hotelData.data || [];
   
   // For featured section, get hotels WITH availability and rates
-  // Use realistic upcoming dates: 7 days from now for 7-night stay (industry standard)
+  // Use realistic upcoming dates: 7 days from now for 7-night stay
   const now = new Date();
   const checkIn = format(addDays(now, 7), 'yyyy-MM-dd');
   const checkOut = format(addDays(now, 14), 'yyyy-MM-dd');
@@ -48,7 +49,7 @@ try {
       checkIn,
       checkOut,
       adults: 2,
-      limit: 500, // Get ALL available hotels
+      limit: 20, // Reduced from 500 - we only show 6, so 20 gives us buffer
     });
     
     // Get top 6 hotels by review score from those with availability
@@ -67,10 +68,10 @@ try {
   } catch (error) {
     console.error('[Homepage] Error fetching hotels with availability:', error);
     // Fallback to showing top-rated hotels without availability check
-  featuredHotelsData = allHotels
-    .filter(h => h.review_score && h.review_count && h.review_count > 50)
-    .sort((a, b) => (b.review_score || 0) - (a.review_score || 0))
-    .slice(0, 6);
+    featuredHotelsData = allHotels
+      .filter(h => h.review_score && h.review_count && h.review_count > 50)
+      .sort((a, b) => (b.review_score || 0) - (a.review_score || 0))
+      .slice(0, 6);
     console.log('[Homepage] Fallback: Showing top-rated hotels without availability');
   }
 } catch (error) {
@@ -178,7 +179,7 @@ try {
         </p>
       </div>
       <div class="h-[400px] lg:h-[500px]">
-        <LodgingMap client:load hotels={allHotels} checkInDate={featuredCheckInDate} />
+        <LodgingMap client:visible hotels={allHotels} checkInDate={featuredCheckInDate} />
       </div>
     </Container>
     </div>
@@ -192,7 +193,7 @@ try {
           Discover our handpicked selection of the finest ski hotels. Real-time availability and competitive pricing.
         </p>
       </div>
-      <FeaturedHotels client:load limit={6} initialHotels={featuredHotelsData} minPrices={minPrices} currency="USD" checkInDate={featuredCheckInDate} />
+      <FeaturedHotels client:visible limit={6} initialHotels={featuredHotelsData} minPrices={minPrices} currency="USD" checkInDate={featuredCheckInDate} />
       <div class="text-center mt-16">
         <a 
           href="/lodging" 

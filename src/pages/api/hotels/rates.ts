@@ -98,6 +98,7 @@ export const GET: APIRoute = async ({ request }) => {
       status: 200,
       headers: {
         'Content-Type': 'application/json',
+        'Cache-Control': 'public, max-age=300, s-maxage=600', // Cache 5min client, 10min CDN
       },
     });
   } catch (error: any) {

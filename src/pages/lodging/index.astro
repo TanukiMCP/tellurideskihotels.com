@@ -45,7 +45,7 @@ try {
     checkIn,
     checkOut,
     adults,
-    limit: 100, // Reasonable limit for hotels with actual availability
+    limit: 50, // Reduced from 100 - most users won't scroll past 50 results
   });
   
   hotels = result.hotels || [];
@@ -112,7 +112,7 @@ const nights = checkIn && checkOut
 
     <!-- Split-screen Layout with Map Sync -->
     <HotelGridWithMap
-      client:load
+      client:idle
       hotels={hotels}
       loading={loading}
       minPrices={minPrices}
