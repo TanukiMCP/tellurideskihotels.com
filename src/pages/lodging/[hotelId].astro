@@ -17,6 +17,7 @@ const checkIn = searchParams.get('checkIn');
 const checkOut = searchParams.get('checkOut');
 const adults = parseInt(searchParams.get('adults') || '2', 10);
 const children = parseInt(searchParams.get('children') || '0', 10);
+const rooms = parseInt(searchParams.get('rooms') || '1', 10);
 
 // Redirect to search if no dates provided
 if (!checkIn || !checkOut) {

@@ -79,27 +79,31 @@ export function RoomSelectorCard({
         }
 
         const data = await response.json();
-        const roomOptions: RoomOption[] = [];
         
         console.log('[RoomSelector] Rate response:', {
-          hasData: !!data.data,
-          hotelsCount: data.data?.length || 0,
-          sampleHotel: data.data?.[0],
+          hasRates: !!data.rates,
+          ratesCount: data.rates?.length || 0,
+          sampleRate: data.rates?.[0],
         });
         
-        if (data.data && data.data.length > 0) {
-          data.data.forEach((hotel: any) => {
-            hotel.rooms?.forEach((room: any) => {
-              if (room.rates && room.rates.length > 0) {
-                roomOptions.push({
-                  roomId: room.room_id,
-                  roomName: room.room_name || 'Standard Room',
-                  rates: room.rates,
-                });
-              }
+        // TheKeys.com format: flat array of rates
+        const rates = data.rates || [];
+        
+        // Group rates by room
+        const roomMap = new Map<string, RoomOption>();
+        rates.forEach((rate: any) => {
+          const roomId = rate.room_id;
+          if (!roomMap.has(roomId)) {
+            roomMap.set(roomId, {
+              roomId: roomId,
+              roomName: rate.room_name || 'Standard Room',
+              rates: [],
             });
-          });
-        }
+          }
+          roomMap.get(roomId)!.rates.push(rate);
+        });
+        
+        const roomOptions = Array.from(roomMap.values());
 
         console.log('[RoomSelector] Processed rooms:', {
           totalRooms: roomOptions.length,
@@ -305,7 +309,21 @@ export function RoomSelectorCard({
           <div className="text-center py-12 bg-neutral-50 rounded-lg border border-neutral-200">
             <Bed className="w-12 h-12 text-neutral-400 mx-auto mb-3" />
             <p className="text-neutral-600 font-medium mb-2">No rooms available</p>
-            <p className="text-sm text-neutral-500">Try different dates or guest counts</p>
+            <p className="text-sm text-neutral-500 mb-4">
+              This hotel doesn't have availability for the selected dates and guest count.
+              Try adjusting your dates or number of guests above, or search for other hotels.
+            </p>
+            <Button
+              onClick={() => {
+                if (typeof window !== 'undefined') {
+                  window.location.href = `/lodging?checkIn=${checkIn}&checkOut=${checkOut}&adults=${adults}`;
+                }
+              }}
+              variant="outline"
+              size="sm"
+            >
+              ← Back to Search Results
+            </Button>
           </div>
         ) : (
           <>

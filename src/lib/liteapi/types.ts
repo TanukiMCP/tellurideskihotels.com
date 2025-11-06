@@ -168,6 +168,7 @@ export interface LiteAPIRateSearchParams {
   checkOut: string;
   adults: number;
   children?: number;
+  rooms?: number;
   margin?: number;
 }
 

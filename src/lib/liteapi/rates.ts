@@ -34,11 +34,15 @@ export async function searchRates(params: LiteAPIRateSearchParams): Promise<Rate
     adults: params.adults,
   });
 
-  // Build occupancies array (children is array of ages, not count)
-  const occupancies = [{
-    adults: params.adults,
-    children: [], // Array of ages
-  }];
+  // Build occupancies array - CRITICAL: one object per room!
+  const roomCount = params.rooms || 1;
+  const occupancies = [];
+  for (let i = 0; i < roomCount; i++) {
+    occupancies.push({
+      adults: params.adults,
+      children: [], // Array of ages, NOT count
+    });
+  }
 
   // LiteAPI rates endpoint is POST with JSON body
   const requestBody = {
@@ -84,36 +88,24 @@ export async function searchRates(params: LiteAPIRateSearchParams): Promise<Rate
           // - We need to ADD our margin on top to get customer price
           // OR use suggestedSellingPrice if present (which already includes markup)
           
-          // Handle both array and object format for retailRate
-          const totalData = Array.isArray(rate.retailRate?.total) 
-            ? rate.retailRate.total[0] 
-            : rate.retailRate?.total;
+          // CORRECT: Use suggestedSellingPrice FIRST (already includes margin)
+          // Handle both array and object format
           const suggestedData = Array.isArray(rate.retailRate?.suggestedSellingPrice)
             ? rate.retailRate.suggestedSellingPrice[0]
             : rate.retailRate?.suggestedSellingPrice;
+          const totalData = Array.isArray(rate.retailRate?.total) 
+            ? rate.retailRate.total[0] 
+            : rate.retailRate?.total;
             
-          const basePrice = totalData?.amount || 0;
-          const suggestedPrice = suggestedData?.amount || 0;
-          const currency = totalData?.currency || 'USD';
-          
-          // Use whichever is HIGHER (protects against loss)
-          // If LiteAPI gives us suggestedSellingPrice, use it (includes their calculation)
-          // Otherwise, apply our margin to basePrice
-          let customerPrice = suggestedPrice;
-          if (!customerPrice || customerPrice < basePrice) {
-            // Apply our margin (15%) to base price
-            customerPrice = basePrice * 1.15;
-          }
-          
-          // Add Stripe fees on top (2.9% + $0.30)
-          const stripeFee = (customerPrice * 0.029) + 0.30;
-          const totalPrice = customerPrice + stripeFee;
+          // Priority: suggestedSellingPrice > total
+          const totalPrice = suggestedData?.amount || totalData?.amount || 0;
+          const currency = suggestedData?.currency || totalData?.currency || 'USD';
           
           // Calculate per-night price
           const pricePerNight = nights > 0 ? totalPrice / nights : totalPrice;
 
-          // Only add rates with valid pricing
-          if (totalPrice > 0 && basePrice > 0) {
+          // Only filter if price is 0 (don't check basePrice - that was the bug!)
+          if (totalPrice > 0) {
             rooms.push({
               room_id: roomType.roomTypeId,
               room_name: rate.name || roomType.name || 'Standard Room',

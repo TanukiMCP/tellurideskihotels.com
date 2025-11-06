@@ -9,6 +9,7 @@ export const GET: APIRoute = async ({ request }) => {
     const checkOut = url.searchParams.get('checkOut');
     const adults = parseInt(url.searchParams.get('adults') || '2', 10);
     const children = parseInt(url.searchParams.get('children') || '0', 10);
+    const rooms = parseInt(url.searchParams.get('rooms') || '1', 10);
 
     if (!hotelId || !checkIn || !checkOut) {
       return new Response(
@@ -26,6 +27,7 @@ export const GET: APIRoute = async ({ request }) => {
       checkOut,
       adults,
       children,
+      rooms,
     });
 
     const result = await searchRates({
@@ -34,16 +36,21 @@ export const GET: APIRoute = async ({ request }) => {
       checkOut,
       adults,
       children,
+      rooms,
     });
+
+    // Transform to TheKeys.com format: flat array of rates
+    const rates = result.data?.flatMap(hotel => 
+      hotel.rooms?.flatMap(room => room.rates || []) || []
+    ) || [];
 
     console.log('[API /hotels/rates] Response:', {
-      hasData: !!result.data,
       hotelCount: result.data?.length || 0,
-      roomCount: result.data?.[0]?.rooms?.length || 0,
-      sampleRoom: result.data?.[0]?.rooms?.[0],
+      totalRates: rates.length,
+      sampleRate: rates[0],
     });
 
-    return new Response(JSON.stringify(result), {
+    return new Response(JSON.stringify({ rates }), {
       status: 200,
       headers: {
         'Content-Type': 'application/json',
