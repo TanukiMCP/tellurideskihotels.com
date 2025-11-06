@@ -20,13 +20,15 @@ export function FeaturedHotels({
 
   const handleHotelSelect = (hotelId: string) => {
     if (typeof window !== 'undefined') {
-      // Generate default dates (7 days from now for check-in, 14 days for check-out)
-      const checkIn = format(addDays(new Date(), 7), 'yyyy-MM-dd');
-      const checkOut = format(addDays(new Date(), 14), 'yyyy-MM-dd');
+      // Use the SAME dates that were used to fetch these featured hotels
+      // This ensures availability matches what was shown
+      const checkIn = checkInDate || format(addDays(new Date(), 7), 'yyyy-MM-dd');
+      const checkOut = format(addDays(new Date(checkIn), 7), 'yyyy-MM-dd');
       const adults = 2;
+      const rooms = 1;
       
-      window.location.href = `/lodging/${hotelId}?checkIn=${checkIn}&checkOut=${checkOut}&adults=${adults}`;
-  }
+      window.location.href = `/lodging/${hotelId}?checkIn=${checkIn}&checkOut=${checkOut}&adults=${adults}&rooms=${rooms}`;
+    }
   };
 
   if (!hotels || hotels.length === 0) {

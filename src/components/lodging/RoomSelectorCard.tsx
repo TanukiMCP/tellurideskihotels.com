@@ -87,12 +87,11 @@ export function RoomSelectorCard({
 
         const data = await response.json();
         
-        console.log('[RoomSelector] Rate response:', {
-          hasRates: !!data.rates,
-          ratesCount: data.rates?.length || 0,
-          sampleRate: data.rates?.[0],
-          fullData: data,
-        });
+        console.log('[RoomSelector] Rate response:');
+        console.log('  - hasRates:', !!data.rates);
+        console.log('  - ratesCount:', data.rates?.length || 0);
+        console.log('  - sampleRate:', JSON.stringify(data.rates?.[0], null, 2));
+        console.log('  - fullData:', JSON.stringify(data, null, 2));
         
         // TheKeys.com format: flat array of rates
         const rates = data.rates || [];
