@@ -111,12 +111,37 @@ export function RoomSelectorCard({
         
         // Group rates by room
         const roomMap = new Map<string, RoomOption>();
+        const roomNameCounts = new Map<string, number>();
+        const seenRoomIds = new Set<string>();
+        
+        // First pass: count how many unique room IDs have each room name
+        rates.forEach((rate: any) => {
+          const roomId = rate.room_id;
+          if (!seenRoomIds.has(roomId)) {
+            seenRoomIds.add(roomId);
+            const baseRoomName = rate.room_name || 'Standard Room';
+            roomNameCounts.set(baseRoomName, (roomNameCounts.get(baseRoomName) || 0) + 1);
+          }
+        });
+        
+        // Second pass: assign unique names
+        const roomNameUsage = new Map<string, number>();
         rates.forEach((rate: any) => {
           const roomId = rate.room_id;
           if (!roomMap.has(roomId)) {
+            const baseRoomName = rate.room_name || 'Standard Room';
+            const totalCount = roomNameCounts.get(baseRoomName) || 1;
+            const currentUsage = roomNameUsage.get(baseRoomName) || 0;
+            roomNameUsage.set(baseRoomName, currentUsage + 1);
+            
+            // If this room name appears multiple times, append a number to make it unique
+            const uniqueRoomName = totalCount > 1 
+              ? `${baseRoomName} (${currentUsage + 1})`
+              : baseRoomName;
+            
             roomMap.set(roomId, {
               roomId: roomId,
-              roomName: rate.room_name || 'Standard Room',
+              roomName: uniqueRoomName,
               rates: [],
             });
           }
@@ -434,24 +459,26 @@ export function RoomSelectorCard({
               {selectedRate && (
                 <div className="bg-neutral-50 rounded-lg p-4 border border-neutral-200">
                   <h4 className="font-semibold text-neutral-900 mb-3">Room Details</h4>
-                  <div className="grid grid-cols-2 gap-4 text-sm">
-                    {selectedRate.bed_types && selectedRate.bed_types.length > 0 && (
-                      <div className="flex items-center gap-2">
-                        <Badge variant="outline" className="bg-white">
-                          <Bed className="h-3 w-3 mr-1" />
-                          {selectedRate.bed_types.map(b => `${b.count || 1} ${b.type || 'bed'}`).join(', ')}
-                        </Badge>
-                      </div>
-                    )}
-                    {selectedRate.max_occupancy && (
-                      <div className="flex items-center gap-2">
-                        <Badge variant="outline" className="bg-white">
-                          <Users className="h-3 w-3 mr-1" />
-                          Max {selectedRate.max_occupancy} guests
-                        </Badge>
-                      </div>
-                    )}
-                  </div>
+                  {(selectedRate.bed_types?.length > 0 || selectedRate.max_occupancy) && (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
+                      {selectedRate.bed_types && selectedRate.bed_types.length > 0 && (
+                        <div className="flex items-center gap-2">
+                          <Badge variant="outline" className="bg-white">
+                            <Bed className="h-3 w-3 mr-1" />
+                            {selectedRate.bed_types.map(b => `${b.count || 1} ${b.type || 'bed'}`).join(', ')}
+                          </Badge>
+                        </div>
+                      )}
+                      {selectedRate.max_occupancy && (
+                        <div className="flex items-center gap-2">
+                          <Badge variant="outline" className="bg-white">
+                            <Users className="h-3 w-3 mr-1" />
+                            Max {selectedRate.max_occupancy} guests
+                          </Badge>
+                        </div>
+                      )}
+                    </div>
+                  )}
                   {selectedRate.amenities && selectedRate.amenities.length > 0 && (
                     <div className="mt-3 pt-3 border-t border-neutral-200">
                       <div className="flex flex-wrap gap-2">
@@ -466,6 +493,9 @@ export function RoomSelectorCard({
                         )}
                       </div>
                     </div>
+                  )}
+                  {!selectedRate.bed_types?.length && !selectedRate.max_occupancy && !selectedRate.amenities?.length && (
+                    <p className="text-sm text-neutral-600">Room details will be confirmed upon booking.</p>
                   )}
                 </div>
               )}
@@ -489,23 +519,25 @@ export function RoomSelectorCard({
                     {children > 0 && `, ${children} ${children === 1 ? 'Child' : 'Children'}`}
                   </div>
                   <div className="text-sm opacity-90">
-                    {format(new Date(checkIn), 'MMM d')} - {format(new Date(checkOut), 'MMM d, yyyy')}
+                    {format(new Date(checkIn + 'T00:00:00'), 'MMM d')} - {format(new Date(checkOut + 'T00:00:00'), 'MMM d, yyyy')}
                   </div>
                 </div>
               </div>
               
-              <Button
-                onClick={handleBookNow}
-                disabled={!selectedRate || !selectedRoomId}
-                size="lg"
-                className="w-full bg-white text-primary-700 hover:bg-neutral-50 font-bold text-lg py-6 shadow-lg"
-              >
-                Continue to Checkout
-              </Button>
-              
-              <p className="text-xs text-center mt-3 opacity-75">
-                You won't be charged yet. Review your booking on the next page.
-              </p>
+              <div className="mt-4">
+                <Button
+                  onClick={handleBookNow}
+                  disabled={!selectedRate || !selectedRoomId}
+                  size="lg"
+                  className="w-full bg-white text-primary-700 hover:bg-neutral-50 disabled:bg-neutral-300 disabled:text-neutral-500 font-bold text-lg py-6 shadow-lg transition-all"
+                >
+                  {!selectedRate || !selectedRoomId ? 'Please select a room' : 'Continue to Checkout'}
+                </Button>
+                
+                <p className="text-xs text-center mt-3 opacity-75">
+                  You won't be charged yet. Review your booking on the next page.
+                </p>
+              </div>
             </div>
           </>
         )}
