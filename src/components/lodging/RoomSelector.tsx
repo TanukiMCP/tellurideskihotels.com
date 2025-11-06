@@ -149,20 +149,14 @@ export function RoomSelector({
                   </Badge>
                 )}
               </div>
-              {/* ═══════════════════════════════════════════════════════════
-                  Cancellation Policy Display
-                  ═══════════════════════════════════════════════════════════
-                  cancellation_policies is an ARRAY of policy objects
-                  (already transformed in rates.ts from LiteAPI's object format)
-              */}
               {rate.cancellation_policies && rate.cancellation_policies.length > 0 && (
                 <div className="mb-4">
                   <p className="text-sm text-gray-600">
                     {rate.cancellation_policies[0].type === 'FREE_CANCELLATION'
-                      ? '✅ Free cancellation available'
+                      ? 'Free cancellation available'
                       : rate.cancellation_policies[0].type === 'NON_REFUNDABLE'
-                      ? '⚠️ Non-refundable'
-                      : '📋 Cancellation policy applies'}
+                      ? 'Non-refundable'
+                      : 'Cancellation policy applies'}
                   </p>
                   {rate.cancellation_policies[0].description && (
                     <p className="text-xs text-gray-500 mt-1">
