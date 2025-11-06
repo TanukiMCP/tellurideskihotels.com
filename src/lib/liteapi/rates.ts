@@ -39,7 +39,7 @@ export async function searchRates(params: LiteAPIRateSearchParams): Promise<Rate
   const occupancies = [];
   for (let i = 0; i < roomCount; i++) {
     occupancies.push({
-      adults: params.adults,
+    adults: params.adults,
       children: [], // Array of ages, NOT count
     });
   }
@@ -57,25 +57,21 @@ export async function searchRates(params: LiteAPIRateSearchParams): Promise<Rate
 
   const endpoint = `/hotels/rates`;
 
-  console.log('[LiteAPI Rates] Request body:', JSON.stringify(requestBody, null, 2));
-
   try {
     const response = await liteAPIClient<any>(endpoint, {
       method: 'POST',
       body: JSON.stringify(requestBody),
     });
 
-    console.log('[LiteAPI Rates] Full API response:', JSON.stringify(response, null, 2));
-
     // Transform response structure: data[] → roomTypes[] → rates[]
     const rawData = Array.isArray(response.data) ? response.data : [];
     
-    console.log('[LiteAPI Rates] Raw data extraction:', {
+    console.log('[LiteAPI Rates] Raw response:', {
       hotelsCount: rawData.length,
-      firstHotelId: rawData[0]?.hotelId,
-      firstHotelRoomTypesCount: rawData[0]?.roomTypes?.length || 0,
+      sampleHotel: rawData[0],
       sampleRoomType: rawData[0]?.roomTypes?.[0],
       sampleRate: rawData[0]?.roomTypes?.[0]?.rates?.[0],
+      fullSampleRate: JSON.stringify(rawData[0]?.roomTypes?.[0]?.rates?.[0], null, 2),
     });
     
     const transformedData = rawData.map((hotelData: any) => {
@@ -109,15 +105,20 @@ export async function searchRates(params: LiteAPIRateSearchParams): Promise<Rate
           // Calculate per-night price
           const pricePerNight = nights > 0 ? totalPrice / nights : totalPrice;
 
+          // DEBUG: Log pricing details
+          if (rooms.length === 0) {
+            console.log('[LiteAPI Rates] First rate pricing check:', {
+              hotelId: hotelData.hotelId,
+              suggestedAmount: suggestedData?.amount,
+              totalAmount: totalData?.amount,
+              finalTotalPrice: totalPrice,
+              willInclude: totalPrice > 0,
+              retailRate: rate.retailRate,
+            });
+          }
+
           // Only filter if price is 0 (don't check basePrice - that was the bug!)
           if (totalPrice > 0) {
-            console.log('[LiteAPI Rates] Adding rate:', {
-              hotelId: hotelData.hotelId,
-              roomTypeId: roomType.roomTypeId,
-              rateName: rate.name,
-              totalPrice,
-              pricePerNight,
-            });
             rooms.push({
               room_id: roomType.roomTypeId,
               room_name: rate.name || roomType.name || 'Standard Room',
@@ -143,8 +144,8 @@ export async function searchRates(params: LiteAPIRateSearchParams): Promise<Rate
                   // If it's an array, map it directly
                   if (Array.isArray(cp)) {
                     return cp.map((policy: any) => ({
-                      type: policy.refundType || 'NON_REFUNDABLE',
-                      description: policy.text,
+                  type: policy.refundType || 'NON_REFUNDABLE',
+                  description: policy.text,
                     }));
                   }
                   
@@ -171,15 +172,6 @@ export async function searchRates(params: LiteAPIRateSearchParams): Promise<Rate
                 max_occupancy: roomType.maxOccupancy,
                 amenities: roomType.amenities || [],
               }],
-            });
-          } else {
-            console.warn('[LiteAPI Rates] Skipping rate with zero price:', {
-              hotelId: hotelData.hotelId,
-              roomTypeId: roomType.roomTypeId,
-              rateName: rate.name,
-              suggestedPrice: suggestedData?.amount,
-              totalPrice: totalData?.amount,
-              retailRate: rate.retailRate,
             });
           }
           } catch (error) {
