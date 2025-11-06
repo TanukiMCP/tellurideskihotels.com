@@ -10,7 +10,6 @@ import type { LiteAPIHotel } from '@/lib/liteapi/types';
 import HotelMapPopup from './HotelMapPopup';
 import {
   MAPBOX_TOKEN,
-  MAPBOX_STYLE,
   TELLURIDE_CENTER,
   calculateBounds,
   getHotelMarkerColor,

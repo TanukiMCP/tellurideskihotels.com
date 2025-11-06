@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Card } from '@tremor/react';
-import { AreaChart, BarChart, DonutChart } from '@tremor/react';
+import { Card, AreaChart, BarChart } from '@tremor/react';
 import { Button } from '@/components/ui/Button';
 import { 
   DollarSign, 
@@ -8,10 +7,7 @@ import {
   Hotel, 
   Users, 
   Calendar,
-  LogOut,
-  Banknote,
-  Star,
-  MapPin
+  LogOut
 } from 'lucide-react';
 import { authClient } from '@/lib/auth-client';
 import { formatCurrency } from '@/lib/utils';

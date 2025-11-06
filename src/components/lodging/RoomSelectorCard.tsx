@@ -6,7 +6,7 @@ import { Badge } from '@/components/ui/Badge';
 import { Calendar, Users, Bed, Check, AlertCircle } from 'lucide-react';
 import type { LiteAPIRate } from '@/lib/liteapi/types';
 import { formatCurrency, calculateNights } from '@/lib/utils';
-import { format, addDays } from 'date-fns';
+import { format } from 'date-fns';
 
 export interface RoomSelectorCardProps {
   hotelId: string;
@@ -329,47 +329,50 @@ export function RoomSelectorCard({
                     Rate Options
                   </label>
                   <div className="space-y-2">
-                    {rateOptions.map(option => (
-                      <label
-                        key={option.value}
-                        className={`flex items-center justify-between p-4 border-2 rounded-lg cursor-pointer transition-all ${
-                          selectedRateId === option.value
-                            ? 'border-primary-600 bg-primary-50'
-                            : 'border-neutral-200 hover:border-primary-300 bg-white'
-                        }`}
-                      >
-                        <div className="flex items-center gap-3">
-                          <input
-                            type="radio"
-                            name="rate"
-                            value={option.value}
-                            checked={selectedRateId === option.value}
-                            onChange={(e) => setSelectedRateId(e.target.value)}
-                            className="w-5 h-5 text-primary-600 focus:ring-primary-500"
-                          />
-                          <div>
-                            <div className="font-semibold text-neutral-900">{option.label}</div>
-                            {option.rate.cancellation_policies && option.rate.cancellation_policies.length > 0 && (
-                              <div className="text-sm text-neutral-600 mt-1">
-                                {option.rate.cancellation_policies[0].type === 'FREE_CANCELLATION' ? (
-                                  <span className="text-green-600 font-medium">Free cancellation</span>
-                                ) : (
-                                  <span>Cancellation policy applies</span>
-                                )}
-                              </div>
-                            )}
+                    {rateOptions.map(option => {
+                      const rateTotal = option.rate.total?.amount || 0;
+                      return (
+                        <label
+                          key={option.value}
+                          className={`flex items-center justify-between p-4 border-2 rounded-lg cursor-pointer transition-all ${
+                            selectedRateId === option.value
+                              ? 'border-primary-600 bg-primary-50'
+                              : 'border-neutral-200 hover:border-primary-300 bg-white'
+                          }`}
+                        >
+                          <div className="flex items-center gap-3">
+                            <input
+                              type="radio"
+                              name="rate"
+                              value={option.value}
+                              checked={selectedRateId === option.value}
+                              onChange={(e) => setSelectedRateId(e.target.value)}
+                              className="w-5 h-5 text-primary-600 focus:ring-primary-500"
+                            />
+                            <div>
+                              <div className="font-semibold text-neutral-900">{option.label}</div>
+                              {option.rate.cancellation_policies && option.rate.cancellation_policies.length > 0 && (
+                                <div className="text-sm text-neutral-600 mt-1">
+                                  {option.rate.cancellation_policies[0].type === 'FREE_CANCELLATION' ? (
+                                    <span className="text-green-600 font-medium">Free cancellation</span>
+                                  ) : (
+                                    <span>Cancellation policy applies</span>
+                                  )}
+                                </div>
+                              )}
+                            </div>
                           </div>
-                        </div>
-                        <div className="text-right">
-                          <div className="text-2xl font-bold text-primary-600">
-                            {formatCurrency(option.rate.total?.amount || 0, currency)}
+                          <div className="text-right">
+                            <div className="text-2xl font-bold text-primary-600">
+                              {formatCurrency(rateTotal, currency)}
+                            </div>
+                            <div className="text-sm text-neutral-600">
+                              {formatCurrency(rateTotal / nights, currency)} / night
+                            </div>
                           </div>
-                          <div className="text-sm text-neutral-600">
-                            {formatCurrency((option.rate.total?.amount || 0) / nights, currency)} / night
-                          </div>
-                        </div>
-                      </label>
-                    ))}
+                        </label>
+                      );
+                    })}
                   </div>
                 </div>
               )}

@@ -64,6 +64,8 @@ export interface LiteAPIRate {
     amount?: number;
     currency?: string;
   };
+  board_type?: string;
+  cancellation_policy?: any;
   cancellation_policies?: Array<{
     type?: string;
     description?: string;
@@ -81,6 +83,7 @@ export interface LiteAPIRate {
     count?: number;
   }>;
   max_occupancy?: number;
+  supplier_cost?: number;
 }
 
 export interface LiteAPIAddon {

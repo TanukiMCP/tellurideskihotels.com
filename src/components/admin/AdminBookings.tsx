@@ -6,10 +6,7 @@ import {
   Search,
   Hotel, 
   LogOut,
-  Calendar,
   Mail,
-  Phone,
-  MapPin,
   DollarSign,
   X,
   Download

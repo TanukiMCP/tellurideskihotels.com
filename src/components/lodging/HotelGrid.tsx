@@ -16,7 +16,6 @@ export interface HotelGridProps {
   adults?: number;
   selectedHotelId?: string | null;
   hoveredHotelId?: string | null;
-  onHotelSelect?: (hotelId: string) => void;
   onHotelHover?: (hotelId: string | null) => void;
 }
 
@@ -35,7 +34,6 @@ export function HotelGrid({
   adults = 2,
   selectedHotelId,
   hoveredHotelId,
-  onHotelSelect,
   onHotelHover,
 }: HotelGridProps) {
   const [currentPage, setCurrentPage] = useState(1);

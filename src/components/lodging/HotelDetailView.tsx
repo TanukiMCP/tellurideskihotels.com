@@ -1,18 +1,16 @@
 import { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
-import { Button } from '@/components/ui/Button';
 import { ImageWithLoading } from '@/components/shared/ImageWithLoading';
 import { Star, MapPin } from 'lucide-react';
 import { RoomSelectorCard } from './RoomSelectorCard';
-import { AddonsSection } from '@/components/addons/AddonsSection';
 import { HotelReviews } from './HotelReviews';
 import { CheckoutFlow } from '@/components/checkout/CheckoutFlow';
 import type { LiteAPIHotel, LiteAPIRate } from '@/lib/liteapi/types';
 import { formatHotelAddress, getHotelImages } from '@/lib/liteapi/utils';
-import { formatCurrency, calculateNights } from '@/lib/utils';
+import { calculateNights } from '@/lib/utils';
 import { getRatingColor } from '@/lib/constants';
-import type { SelectedRoom, SelectedAddon } from '@/lib/types';
+import type { SelectedRoom } from '@/lib/types';
 
 export interface HotelDetailViewProps {
   hotel: LiteAPIHotel;
@@ -24,10 +22,8 @@ export interface HotelDetailViewProps {
 
 export function HotelDetailView({ hotel, checkIn, checkOut, adults, children = 0 }: HotelDetailViewProps) {
   const [selectedRoom, setSelectedRoom] = useState<SelectedRoom | null>(null);
-  const [selectedAddons, setSelectedAddons] = useState<SelectedAddon[]>([]);
   const [showCheckout, setShowCheckout] = useState(false);
 
-  const nights = calculateNights(checkIn, checkOut);
   const rating = hotel.review_score || 0;
   const ratingColor = getRatingColor(rating);
   
@@ -84,7 +80,7 @@ export function HotelDetailView({ hotel, checkIn, checkOut, adults, children = 0
         hotelId={hotel.hotel_id}
         hotelName={hotel.name || ''}
         room={selectedRoom}
-        addons={selectedAddons}
+        addons={[]}
         onComplete={handleBookingComplete}
       />
     );
