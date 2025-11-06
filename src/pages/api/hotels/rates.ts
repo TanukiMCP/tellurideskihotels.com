@@ -4,6 +4,19 @@ import { searchRates } from '@/lib/liteapi/rates';
 export const GET: APIRoute = async ({ request }) => {
   try {
     const url = new URL(request.url);
+    
+    console.log('[API /hotels/rates] Raw URL:', request.url);
+    console.log('[API /hotels/rates] Parsed URL:', url.toString());
+    console.log('[API /hotels/rates] Search params:', {
+      hotelId: url.searchParams.get('hotelId'),
+      checkIn: url.searchParams.get('checkIn'),
+      checkOut: url.searchParams.get('checkOut'),
+      adults: url.searchParams.get('adults'),
+      children: url.searchParams.get('children'),
+      rooms: url.searchParams.get('rooms'),
+      allParams: Object.fromEntries(url.searchParams.entries()),
+    });
+    
     const hotelId = url.searchParams.get('hotelId');
     const checkIn = url.searchParams.get('checkIn');
     const checkOut = url.searchParams.get('checkOut');
@@ -12,6 +25,11 @@ export const GET: APIRoute = async ({ request }) => {
     const rooms = parseInt(url.searchParams.get('rooms') || '1', 10);
 
     if (!hotelId || !checkIn || !checkOut) {
+      console.error('[API /hotels/rates] Missing required params:', {
+        hotelId: !!hotelId,
+        checkIn: !!checkIn,
+        checkOut: !!checkOut,
+      });
       return new Response(
         JSON.stringify({ error: 'hotelId, checkIn, and checkOut are required' }),
         {
