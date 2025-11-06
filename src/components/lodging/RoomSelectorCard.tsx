@@ -461,23 +461,23 @@ export function RoomSelectorCard({
                   <h4 className="font-semibold text-neutral-900 mb-3">Room Details</h4>
                   {(selectedRate.bed_types?.length > 0 || selectedRate.max_occupancy) && (
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
-                      {selectedRate.bed_types && selectedRate.bed_types.length > 0 && (
-                        <div className="flex items-center gap-2">
-                          <Badge variant="outline" className="bg-white">
-                            <Bed className="h-3 w-3 mr-1" />
-                            {selectedRate.bed_types.map(b => `${b.count || 1} ${b.type || 'bed'}`).join(', ')}
-                          </Badge>
-                        </div>
-                      )}
-                      {selectedRate.max_occupancy && (
-                        <div className="flex items-center gap-2">
-                          <Badge variant="outline" className="bg-white">
-                            <Users className="h-3 w-3 mr-1" />
-                            Max {selectedRate.max_occupancy} guests
-                          </Badge>
-                        </div>
-                      )}
-                    </div>
+                    {selectedRate.bed_types && selectedRate.bed_types.length > 0 && (
+                      <div className="flex items-center gap-2">
+                        <Badge variant="outline" className="bg-white">
+                          <Bed className="h-3 w-3 mr-1" />
+                          {selectedRate.bed_types.map(b => `${b.count || 1} ${b.type || 'bed'}`).join(', ')}
+                        </Badge>
+                      </div>
+                    )}
+                    {selectedRate.max_occupancy && (
+                      <div className="flex items-center gap-2">
+                        <Badge variant="outline" className="bg-white">
+                          <Users className="h-3 w-3 mr-1" />
+                          Max {selectedRate.max_occupancy} guests
+                        </Badge>
+                      </div>
+                    )}
+                  </div>
                   )}
                   {selectedRate.amenities && selectedRate.amenities.length > 0 && (
                     <div className="mt-3 pt-3 border-t border-neutral-200">
@@ -525,18 +525,18 @@ export function RoomSelectorCard({
               </div>
               
               <div className="mt-4">
-                <Button
-                  onClick={handleBookNow}
-                  disabled={!selectedRate || !selectedRoomId}
-                  size="lg"
+              <Button
+                onClick={handleBookNow}
+                disabled={!selectedRate || !selectedRoomId}
+                size="lg"
                   className="w-full bg-white text-primary-700 hover:bg-neutral-50 disabled:bg-neutral-300 disabled:text-neutral-500 font-bold text-lg py-6 shadow-lg transition-all"
-                >
+              >
                   {!selectedRate || !selectedRoomId ? 'Please select a room' : 'Continue to Checkout'}
-                </Button>
-                
-                <p className="text-xs text-center mt-3 opacity-75">
-                  You won't be charged yet. Review your booking on the next page.
-                </p>
+              </Button>
+              
+              <p className="text-xs text-center mt-3 opacity-75">
+                You won't be charged yet. Review your booking on the next page.
+              </p>
               </div>
             </div>
           </>
