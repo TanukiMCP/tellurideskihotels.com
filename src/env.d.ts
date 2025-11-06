@@ -1,6 +1,27 @@
 /// <reference path="../.astro/types.d.ts" />
 /// <reference types="astro/client" />
 
+declare namespace App {
+  interface Locals {
+    session?: {
+      user: {
+        id: string;
+        email: string;
+        name?: string;
+      };
+      session: {
+        token: string;
+        expiresAt: Date;
+      };
+    };
+    user?: {
+      id: string;
+      email: string;
+      name?: string;
+    };
+  }
+}
+
 interface ImportMetaEnv {
   readonly LITEAPI_BASE_URL: string;
   readonly LITEAPI_PUBLIC_KEY: string;

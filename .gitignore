@@ -2,6 +2,11 @@
 dist/
 .output/
 
+# auth database
+auth.db
+auth.db-shm
+auth.db-wal
+
 # dependencies
 node_modules/
 
