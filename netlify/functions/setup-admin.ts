@@ -37,8 +37,11 @@ export const handler: Handler = async (event) => {
       };
     }
 
-    // Get the user store
-    const userStore = getStore('users');
+    // Get the user store - in Netlify Functions, context is automatically available
+    const userStore = getStore({
+      name: 'users',
+      consistency: 'strong',
+    });
     const userKey = `user:${ADMIN_EMAIL}`;
 
     // Check if user already exists
