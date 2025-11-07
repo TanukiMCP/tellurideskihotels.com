@@ -44,6 +44,25 @@ export function HotelReviewsList({ hotelId, averageRating = 0, reviewCount = 0 }
     fetchReviews();
   }, [hotelId]);
 
+  // Format traveler type for display
+  const formatTravelerType = (type?: string): string | null => {
+    if (!type) return null;
+    
+    const typeMap: Record<string, string> = {
+      'Couples': 'Couple',
+      'Family': 'Family',
+      'family_with_children': 'Family',
+      'Solo': 'Solo Traveler',
+      'solo_traveler': 'Solo Traveler',
+      'Business': 'Business',
+      'business_traveler': 'Business',
+      'Friends': 'Friends',
+      'Group': 'Group',
+    };
+    
+    return typeMap[type] || null;
+  };
+
   const displayedReviews = showAll ? reviews : reviews.slice(0, 3);
 
   return (
@@ -112,9 +131,9 @@ export function HotelReviewsList({ hotelId, averageRating = 0, reviewCount = 0 }
                         {review.name && (
                           <span className="text-sm font-medium text-neutral-700">{review.name}</span>
                         )}
-                        {review.type && (
-                          <span className="text-xs text-neutral-500 bg-neutral-200 px-2 py-1 rounded">
-                            {review.type}
+                        {formatTravelerType(review.type) && (
+                          <span className="text-xs text-neutral-600 bg-blue-50 px-2 py-1 rounded border border-blue-200">
+                            {formatTravelerType(review.type)}
                           </span>
                         )}
                       </div>
