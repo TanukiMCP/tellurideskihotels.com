@@ -62,9 +62,12 @@ export async function liteAPIClient<T>(
       
       console.error('[LiteAPI Client] API Error:', {
         endpoint: endpoint.split('?')[0],
+        fullEndpoint: endpoint,
         status: response.status,
         duration: `${duration}ms`,
         error: errorData.error?.message,
+        errorData: errorData,
+        responseText: errorText.substring(0, 500),
       });
       
       throw new LiteAPIError(

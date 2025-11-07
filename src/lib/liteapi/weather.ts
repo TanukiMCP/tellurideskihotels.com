@@ -67,12 +67,12 @@ export async function getWeather(params: WeatherParams): Promise<WeatherResponse
     units,
   });
 
-  // liteAPI weather endpoint uses checkin/checkout instead of startDate/endDate
+  // liteAPI weather API expects startDate/endDate in YYYY-MM-DD format
   const searchParams = new URLSearchParams({
     latitude: latitude.toString(),
     longitude: longitude.toString(),
-    checkin: startDate,
-    checkout: endDate,
+    startDate,
+    endDate,
     units,
   });
 
