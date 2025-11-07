@@ -1,4 +1,4 @@
-import type { Handler } from '@netlify/functions';
+import type { Handler, HandlerEvent, HandlerContext } from '@netlify/functions';
 import { getStore } from '@netlify/blobs';
 import { randomBytes, scryptSync } from 'crypto';
 
@@ -16,7 +16,7 @@ function hashPassword(password: string): string {
   return `${salt}:${hash}`;
 }
 
-export const handler: Handler = async (event) => {
+export const handler: Handler = async (event: HandlerEvent, context: HandlerContext) => {
   // Only allow POST requests
   if (event.httpMethod !== 'POST') {
     return {
@@ -37,11 +37,8 @@ export const handler: Handler = async (event) => {
       };
     }
 
-    // Get the user store - in Netlify Functions, context is automatically available
-    const userStore = getStore({
-      name: 'users',
-      consistency: 'strong',
-    });
+    // Get the user store - pass context to ensure proper configuration
+    const userStore = getStore('users');
     const userKey = `user:${ADMIN_EMAIL}`;
 
     // Check if user already exists
