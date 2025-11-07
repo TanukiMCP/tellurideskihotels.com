@@ -30,9 +30,7 @@ export function CurrentConditions() {
           hasWeatherData: !!data.weatherData,
           weatherDataLength: data.weatherData?.length,
           firstItem: data.weatherData?.[0],
-          hasDetailedWeatherData: !!data.weatherData?.[0]?.detailedWeatherData,
-          hasDaily: !!data.weatherData?.[0]?.detailedWeatherData?.daily,
-          dailyLength: data.weatherData?.[0]?.detailedWeatherData?.daily?.length,
+          hasDailyWeather: !!data.weatherData?.[0]?.dailyWeather,
         });
         setWeatherData(data.weatherData || []);
       } catch (err) {
@@ -45,29 +43,47 @@ export function CurrentConditions() {
     fetchWeather();
   }, []);
 
+  // TEMPORARY: Show loading state instead of hiding
   if (loading) {
     console.log('[CurrentConditions] Still loading...');
-    return null;
+    return (
+      <div className="bg-sky-50 border border-sky-200 rounded-2xl p-6">
+        <div className="flex items-center gap-3">
+          <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-sky-600"></div>
+          <span className="text-sky-900 font-semibold">Loading Telluride weather...</span>
+        </div>
+      </div>
+    );
   }
 
+  // TEMPORARY: Show error instead of hiding
   if (!weatherData.length) {
     console.warn('[CurrentConditions] No weather data available');
-    return null;
+    return (
+      <div className="bg-yellow-50 border border-yellow-200 rounded-2xl p-6">
+        <p className="text-yellow-900">Weather data unavailable</p>
+      </div>
+    );
   }
 
-  if (!weatherData[0]?.detailedWeatherData?.daily) {
+  // TEMPORARY: Show detailed error
+  if (!weatherData[0]?.dailyWeather) {
     console.warn('[CurrentConditions] Weather data structure invalid:', {
       hasWeatherData: !!weatherData[0],
-      hasDetailedWeatherData: !!weatherData[0]?.detailedWeatherData,
-      hasDaily: !!weatherData[0]?.detailedWeatherData?.daily,
+      hasDailyWeather: !!weatherData[0]?.dailyWeather,
       weatherData: weatherData[0],
     });
-    return null;
+    return (
+      <div className="bg-red-50 border border-red-200 rounded-2xl p-6">
+        <p className="text-red-900 font-semibold mb-2">Weather Data Structure Error</p>
+        <pre className="text-xs text-red-700 overflow-auto">{JSON.stringify(weatherData[0], null, 2)}</pre>
+      </div>
+    );
   }
 
-  const dailyData = weatherData[0].detailedWeatherData.daily;
-  const today = dailyData[0];
-  const upcoming = dailyData.slice(1, 4);
+  // Get today and next 3 days from the array
+  const today = weatherData[0].dailyWeather;
+  const upcoming = weatherData.slice(1, 4).map(w => w.dailyWeather);
   
   if (!today) return null;
 
@@ -80,7 +96,7 @@ export function CurrentConditions() {
       <div className="flex items-start justify-between mb-4">
         <div>
           <h3 className="text-sm font-semibold text-white/90 mb-1">Current Telluride Conditions</h3>
-          <p className="text-3xl font-bold">{Math.round(today.temp.day)}°F</p>
+          <p className="text-3xl font-bold">{Math.round(today.temperature.afternoon)}°F</p>
         </div>
         <div className="text-6xl">{icon}</div>
       </div>
@@ -102,7 +118,7 @@ export function CurrentConditions() {
             <div key={weather.date} className="flex-1 text-center">
               <div className="text-xs text-white/80 mb-1">{format(date, 'EEE')}</div>
               <div className="text-2xl mb-1">{weatherIcon}</div>
-              <div className="text-sm font-semibold">{Math.round(weather.temp.max)}°</div>
+              <div className="text-sm font-semibold">{Math.round(weather.temperature.max)}°</div>
             </div>
           );
         })}

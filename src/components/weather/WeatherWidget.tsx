@@ -36,9 +36,7 @@ export function WeatherWidget({ startDate, endDate, title = 'Weather Forecast', 
           hasWeatherData: !!data.weatherData,
           weatherDataLength: data.weatherData?.length,
           firstItem: data.weatherData?.[0],
-          hasDetailedWeatherData: !!data.weatherData?.[0]?.detailedWeatherData,
-          hasDaily: !!data.weatherData?.[0]?.detailedWeatherData?.daily,
-          dailyLength: data.weatherData?.[0]?.detailedWeatherData?.daily?.length,
+          hasDailyWeather: !!data.weatherData?.[0]?.dailyWeather,
         });
         setWeatherData(data.weatherData || []);
       } catch (err) {
@@ -78,17 +76,8 @@ export function WeatherWidget({ startDate, endDate, title = 'Weather Forecast', 
     return null;
   }
 
-  if (!weatherData[0]?.detailedWeatherData?.daily) {
-    console.warn('[WeatherWidget] Weather data structure invalid:', {
-      hasWeatherData: !!weatherData[0],
-      hasDetailedWeatherData: !!weatherData[0]?.detailedWeatherData,
-      hasDaily: !!weatherData[0]?.detailedWeatherData?.daily,
-      weatherData: weatherData[0],
-    });
-    return null;
-  }
-
-  const dailyData = weatherData[0].detailedWeatherData.daily;
+  // Extract daily weather data from each item
+  const dailyData = weatherData.map(w => w.dailyWeather).filter(Boolean);
 
   if (compact) {
     return (
@@ -106,10 +95,10 @@ export function WeatherWidget({ startDate, endDate, title = 'Weather Forecast', 
                 </div>
                 <div className="text-2xl mb-1">{icon}</div>
                 <div className="text-sm font-semibold text-sky-900">
-                  {Math.round(weather.temp.max)}°
+                  {Math.round(weather.temperature.max)}°
                 </div>
                 <div className="text-xs text-sky-600">
-                  {Math.round(weather.temp.min)}°
+                  {Math.round(weather.temperature.min)}°
                 </div>
               </div>
             );
@@ -137,20 +126,20 @@ export function WeatherWidget({ startDate, endDate, title = 'Weather Forecast', 
               <div className="text-xs text-neutral-600 mb-2">{description}</div>
               <div className="flex justify-center items-center gap-2 mb-2">
                 <span className="text-lg font-bold text-neutral-900">
-                  {Math.round(weather.temp.max)}°
+                  {Math.round(weather.temperature.max)}°
                 </span>
                 <span className="text-sm text-neutral-500">
-                  {Math.round(weather.temp.min)}°
+                  {Math.round(weather.temperature.min)}°
                 </span>
               </div>
-              {weather.pop >= 0.3 && (
+              {weather.precipitation.total >= 0.3 && (
                 <div className="text-xs text-sky-600">
-                  {Math.round(weather.pop * 100)}% precip
+                  {Math.round(weather.precipitation.total * 100)}% precip
                 </div>
               )}
-              {weather.wind_speed >= 15 && (
+              {weather.wind.max.speed >= 15 && (
                 <div className="text-xs text-neutral-500">
-                  Wind {Math.round(weather.wind_speed)} mph
+                  Wind {Math.round(weather.wind.max.speed)} mph
                 </div>
               )}
             </div>
