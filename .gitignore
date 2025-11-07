@@ -2,10 +2,8 @@
 dist/
 .output/
 
-# auth database
-auth.db
-auth.db-shm
-auth.db-wal
+# generated types
+.astro/
 
 # dependencies
 node_modules/
@@ -18,8 +16,9 @@ pnpm-debug.log*
 
 # environment variables
 .env
-.env.local
 .env.production
+.env.local
+.env.test
 
 # macOS-specific files
 .DS_Store
@@ -27,14 +26,16 @@ pnpm-debug.log*
 # IDE
 .vscode/
 .idea/
-*.swp
-*.swo
-*~
 
-# testing
-coverage/
+# Database
+*.db
+*.db-shm
+*.db-wal
 
-# temp files
-*.tmp
-*.temp
+# Netlify
+.netlify/
 
+# Playwright
+test-results/
+playwright-report/
+playwright/.cache/

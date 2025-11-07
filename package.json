@@ -8,7 +8,12 @@
     "build": "NODE_OPTIONS=--max_old_space_size=4096 astro check && astro build && npx pagefind --site dist",
     "preview": "astro preview",
     "setup-admin": "tsx scripts/setup-admin.ts",
-    "create-admin": "tsx scripts/create-admin.ts"
+    "create-admin": "tsx scripts/create-admin.ts",
+    "test": "playwright test",
+    "test:ui": "playwright test --ui",
+    "test:headed": "playwright test --headed",
+    "test:debug": "playwright test --debug",
+    "test:report": "playwright show-report"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.5",
