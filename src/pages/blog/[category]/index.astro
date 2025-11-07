@@ -57,7 +57,7 @@ const categoryDescriptions = {
 
 <BaseLayout
   title={`${categoryTitle} - Telluride Ski Hotels Blog`}
-  description={categoryDescriptions[category] || `Browse ${categoryTitle} articles on Telluride Ski Hotels.`}
+  description={categoryDescriptions[category as keyof typeof categoryDescriptions] || `Browse ${categoryTitle} articles on Telluride Ski Hotels.`}
 >
   <div class="bg-gradient-to-b from-blue-50 to-white py-12">
     <Container>
@@ -76,7 +76,7 @@ const categoryDescriptions = {
           {categoryName}
         </h1>
         <p class="mx-auto max-w-2xl text-xl text-gray-600">
-          {categoryDescriptions[category]}
+          {categoryDescriptions[category as keyof typeof categoryDescriptions]}
         </p>
       </div>
     </Container>
