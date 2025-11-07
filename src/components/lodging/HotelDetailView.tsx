@@ -185,31 +185,32 @@ export function HotelDetailView({ hotel, checkIn, checkOut, adults, children = 0
         )}
         
         {(() => {
-          // Check for ski-in/ski-out amenities - more comprehensive matching
+          // Check for ski-in/ski-out amenities - comprehensive matching for Telluride ski hotels
           const amenityStrings = hotel.amenities?.map(a => 
             `${a.name || ''} ${a.code || ''}`.toLowerCase()
           ) || [];
           
-          const skiKeywords = ['ski', 'slope', 'mountain', 'gondola', 'lift'];
-          const accessKeywords = ['in', 'out', 'access', 'direct', 'walk'];
+          // Expanded keywords to catch ski/snow-related amenities
+          const skiKeywords = ['ski', 'snow', 'slope', 'mountain', 'gondola', 'lift', 'winter', 'alpine'];
+          const accessKeywords = ['in', 'out', 'access', 'direct', 'walk', 'gear', 'equipment'];
           
+          // Check if any amenity contains ski/snow keywords
           const hasSkiKeyword = amenityStrings.some(str => 
             skiKeywords.some(keyword => str.includes(keyword))
           );
           
-          const hasAccessKeyword = amenityStrings.some(str => 
-            accessKeywords.some(keyword => str.includes(keyword))
-          );
-          
-          // Also check for common ski-in/ski-out patterns
-          const skiInSkiOut = amenityStrings.some(str => 
+          // Check for explicit ski-in/ski-out patterns
+          const hasExplicitSkiAccess = amenityStrings.some(str => 
             (str.includes('ski') && (str.includes('in') || str.includes('out'))) ||
             str.includes('ski-in') ||
             str.includes('ski-out') ||
             str.includes('ski access') ||
-            str.includes('slope access') ||
-            (hasSkiKeyword && hasAccessKeyword)
+            str.includes('slope access')
           );
+          
+          // If hotel has ski/snow amenities OR explicit ski access, show the card
+          // For Telluride hotels, most will have ski-related amenities
+          const skiInSkiOut = hasExplicitSkiAccess || hasSkiKeyword;
           
           return skiInSkiOut ? (
             <Card>
@@ -219,8 +220,12 @@ export function HotelDetailView({ hotel, checkIn, checkOut, adults, children = 0
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                   </svg>
                 </div>
-                <div className="text-sm font-semibold text-neutral-900">Ski In/Ski Out</div>
-                <div className="text-xs text-neutral-600">Direct Slope Access</div>
+                <div className="text-sm font-semibold text-neutral-900">
+                  {hasExplicitSkiAccess ? 'Ski In/Ski Out' : 'Ski Resort Location'}
+                </div>
+                <div className="text-xs text-neutral-600">
+                  {hasExplicitSkiAccess ? 'Direct Slope Access' : 'Ski Amenities Available'}
+                </div>
               </CardContent>
             </Card>
           ) : null;
