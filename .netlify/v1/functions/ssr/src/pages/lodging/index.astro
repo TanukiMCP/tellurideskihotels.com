@@ -1,0 +1,126 @@
+---
+export const prerender = false;
+
+import PageLayout from '@/components/layout/PageLayout.astro';
+import Container from '@/components/layout/Container.astro';
+import { HotelGridWithMap } from '@/components/lodging/HotelGridWithMap';
+import { HotelSearchWidget } from '@/components/lodging/HotelSearchWidget';
+import Breadcrumbs from '@/components/seo/Breadcrumbs.astro';
+import type { LiteAPIHotel } from '@/lib/liteapi/types';
+import { DEFAULT_LOCATION, DEFAULT_COUNTRY_CODE } from '@/lib/constants';
+
+const url = Astro.url;
+const searchParams = url.searchParams;
+const location = searchParams.get('location') || DEFAULT_LOCATION;
+const checkIn = searchParams.get('checkIn') || '';
+const checkOut = searchParams.get('checkOut') || '';
+const adults = parseInt(searchParams.get('adults') || '2', 10);
+
+let hotels: LiteAPIHotel[] = [];
+let minPrices: Record<string, number> = {};
+let loading = false;
+
+// INDUSTRY STANDARD: Dates are REQUIRED for availability search
+// If no dates provided, redirect to homepage where user can select dates
+if (!checkIn || !checkOut) {
+  return Astro.redirect('/?message=Please select check-in and check-out dates');
+}
+
+// INDUSTRY STANDARD: Search for hotels WITH availability for the selected dates
+try {
+  loading = true;
+  
+  console.log('[Lodging Page] Searching for hotels WITH availability:', {
+    location,
+    checkIn,
+    checkOut,
+    adults,
+  });
+  
+  // Use the correct function that ONLY returns hotels with actual availability
+  const { searchHotelsWithRates } = await import('@/lib/liteapi/rates');
+  const result = await searchHotelsWithRates({
+    cityName: location,
+    countryCode: DEFAULT_COUNTRY_CODE,
+    checkIn,
+    checkOut,
+    adults,
+    limit: 50, // Reduced from 100 - most users won't scroll past 50 results
+  });
+  
+  hotels = result.hotels || [];
+  minPrices = result.minPrices || {};
+  
+  console.log('[Lodging Page] Search complete:', {
+    hotelsFound: hotels.length,
+    hotelsWithPrices: Object.keys(minPrices).length,
+    sampleHotel: hotels[0]?.name,
+    samplePrice: Object.values(minPrices)[0],
+  });
+  
+} catch (error) {
+  console.error('[Lodging Page] Error searching hotels:', {
+    error: error instanceof Error ? error.message : 'Unknown error',
+    stack: error instanceof Error ? error.stack : undefined,
+  });
+  hotels = [];
+} finally {
+  loading = false;
+  console.log('[Lodging Page] Load complete');
+}
+
+const nights = checkIn && checkOut 
+  ? Math.ceil((new Date(checkOut).getTime() - new Date(checkIn).getTime()) / (1000 * 60 * 60 * 24))
+  : 1;
+---
+
+<PageLayout
+  title={`Ski Hotels in ${location} - Search & Compare Prices`}
+  description={`Search and book ski hotels in ${location}. Compare prices, read reviews, and book directly with instant confirmation.`}
+>
+  <Container class="py-12 lg:py-16">
+    <Breadcrumbs items={[
+      { label: 'Home', href: '/' },
+      { label: 'Hotels', href: '/lodging' },
+    ]} />
+
+    <div class="mb-12">
+      <h1 class="text-display-sm lg:text-display-md text-neutral-900 mb-2">Find Your Perfect Hotel</h1>
+      <p class="text-xl text-neutral-600 mb-8">Search and compare hotels in {location}</p>
+      
+      <HotelSearchWidget
+        client:load
+        initialLocation={location}
+        initialDates={checkIn && checkOut ? {
+          checkIn: new Date(checkIn),
+          checkOut: new Date(checkOut),
+        } : undefined}
+        initialGuests={{ adults, children: 0 }}
+      />
+    </div>
+
+    <div class="mb-6">
+      <h2 class="text-2xl font-bold text-neutral-900 mb-2">
+        {hotels.length > 0 ? `${hotels.length} Hotels in ${location}` : 'Loading Hotels...'}
+      </h2>
+      {checkIn && checkOut && (
+        <p class="text-neutral-600">
+          {new Date(checkIn).toLocaleDateString()} - {new Date(checkOut).toLocaleDateString()} • {nights} night{nights !== 1 ? 's' : ''} • {adults} adult{adults !== 1 ? 's' : ''}
+        </p>
+      )}
+    </div>
+
+    <!-- Split-screen Layout with Map Sync -->
+    <HotelGridWithMap
+      client:idle
+      hotels={hotels}
+      loading={loading}
+      minPrices={minPrices}
+      currency="USD"
+      nights={nights}
+      checkIn={checkIn}
+      checkOut={checkOut}
+      adults={adults}
+    />
+  </Container>
+</PageLayout>

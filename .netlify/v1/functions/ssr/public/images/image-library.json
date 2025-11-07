@@ -1,0 +1,966 @@
+{
+  "generated": "2025-11-04T09:32:18.918Z",
+  "total": 120,
+  "images": [
+    {
+      "id": "pexels-29991568",
+      "url": "https://images.pexels.com/photos/29991568/pexels-photo-29991568.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "thumbnail": "https://images.pexels.com/photos/29991568/pexels-photo-29991568.jpeg?auto=compress&cs=tinysrgb&h=350",
+      "photographer": "kenyi Amores",
+      "query": "telluride ski resort hotel",
+      "category": "resort"
+    },
+    {
+      "id": "pexels-10804099",
+      "url": "https://images.pexels.com/photos/10804099/pexels-photo-10804099.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "thumbnail": "https://images.pexels.com/photos/10804099/pexels-photo-10804099.jpeg?auto=compress&cs=tinysrgb&h=350",
+      "photographer": "Irina Demyanovskikh",
+      "query": "telluride ski resort hotel",
+      "category": "resort"
+    },
+    {
+      "id": "pexels-10969016",
+      "url": "https://images.pexels.com/photos/10969016/pexels-photo-10969016.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "thumbnail": "https://images.pexels.com/photos/10969016/pexels-photo-10969016.jpeg?auto=compress&cs=tinysrgb&h=350",
+      "photographer": "Egor Komarov",
+      "query": "telluride ski resort hotel",
+      "category": "resort"
+    },
+    {
+      "id": "pexels-17441633",
+      "url": "https://images.pexels.com/photos/17441633/pexels-photo-17441633.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "thumbnail": "https://images.pexels.com/photos/17441633/pexels-photo-17441633.jpeg?auto=compress&cs=tinysrgb&h=350",
+      "photographer": "Kiril Gruev",
+      "query": "telluride ski resort hotel",
+      "category": "resort"
+    },
+    {
+      "id": "pexels-15232505",
+      "url": "https://images.pexels.com/photos/15232505/pexels-photo-15232505.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "thumbnail": "https://images.pexels.com/photos/15232505/pexels-photo-15232505.jpeg?auto=compress&cs=tinysrgb&h=350",
+      "photographer": "Imad Clicks",
+      "query": "telluride ski resort hotel",
+      "category": "resort"
+    },
+    {
+      "id": "pexels-16178910",
+      "url": "https://images.pexels.com/photos/16178910/pexels-photo-16178910.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "thumbnail": "https://images.pexels.com/photos/16178910/pexels-photo-16178910.jpeg?auto=compress&cs=tinysrgb&h=350",
+      "photographer": "Surja Sen Das Raj",
+      "query": "telluride ski resort hotel",
+      "category": "resort"
+    },
+    {
+      "id": "pexels-4118259",
+      "url": "https://images.pexels.com/photos/4118259/pexels-photo-4118259.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "thumbnail": "https://images.pexels.com/photos/4118259/pexels-photo-4118259.jpeg?auto=compress&cs=tinysrgb&h=350",
+      "photographer": "Firushan Numaam",
+      "query": "telluride ski resort hotel",
+      "category": "resort"
+    },
+    {
+      "id": "pexels-20112952",
+      "url": "https://images.pexels.com/photos/20112952/pexels-photo-20112952.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "thumbnail": "https://images.pexels.com/photos/20112952/pexels-photo-20112952.jpeg?auto=compress&cs=tinysrgb&h=350",
+      "photographer": "Nathanael Schmer",
+      "query": "telluride ski resort hotel",
+      "category": "resort"
+    },
+    {
+      "id": "pexels-2852349",
+      "url": "https://images.pexels.com/photos/2852349/pexels-photo-2852349.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "thumbnail": "https://images.pexels.com/photos/2852349/pexels-photo-2852349.jpeg?auto=compress&cs=tinysrgb&h=350",
+      "photographer": "Prateek Katyal",
+      "query": "telluride ski resort hotel",
+      "category": "resort"
+    },
+    {
+      "id": "pexels-10969022",
+      "url": "https://images.pexels.com/photos/10969022/pexels-photo-10969022.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "thumbnail": "https://images.pexels.com/photos/10969022/pexels-photo-10969022.jpeg?auto=compress&cs=tinysrgb&h=350",
+      "photographer": "Egor Komarov",
+      "query": "telluride ski resort hotel",
+      "category": "resort"
+    },
+    {
+      "id": "pexels-18146827",
+      "url": "https://images.pexels.com/photos/18146827/pexels-photo-18146827.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "thumbnail": "https://images.pexels.com/photos/18146827/pexels-photo-18146827.jpeg?auto=compress&cs=tinysrgb&h=350",
+      "photographer": "Nino Souza",
+      "query": "telluride ski resort hotel",
+      "category": "resort"
+    },
+    {
+      "id": "pexels-30131132",
+      "url": "https://images.pexels.com/photos/30131132/pexels-photo-30131132.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "thumbnail": "https://images.pexels.com/photos/30131132/pexels-photo-30131132.jpeg?auto=compress&cs=tinysrgb&h=350",
+      "photographer": "Ollie Craig",
+      "query": "telluride ski resort hotel",
+      "category": "resort"
+    },
+    {
+      "id": "pexels-17806908",
+      "url": "https://images.pexels.com/photos/17806908/pexels-photo-17806908.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "thumbnail": "https://images.pexels.com/photos/17806908/pexels-photo-17806908.jpeg?auto=compress&cs=tinysrgb&h=350",
+      "photographer": "CARLOSCRUZ ARTEGRAFIA",
+      "query": "telluride ski resort hotel",
+      "category": "resort"
+    },
+    {
+      "id": "pexels-18146825",
+      "url": "https://images.pexels.com/photos/18146825/pexels-photo-18146825.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "thumbnail": "https://images.pexels.com/photos/18146825/pexels-photo-18146825.jpeg?auto=compress&cs=tinysrgb&h=350",
+      "photographer": "Nino Souza",
+      "query": "telluride ski resort hotel",
+      "category": "resort"
+    },
+    {
+      "id": "pexels-18269735",
+      "url": "https://images.pexels.com/photos/18269735/pexels-photo-18269735.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "thumbnail": "https://images.pexels.com/photos/18269735/pexels-photo-18269735.jpeg?auto=compress&cs=tinysrgb&h=350",
+      "photographer": "Giuliano Giudici",
+      "query": "telluride ski resort hotel",
+      "category": "resort"
+    },
+    {
+      "id": "pexels-1417647",
+      "url": "https://images.pexels.com/photos/1417647/pexels-photo-1417647.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "thumbnail": "https://images.pexels.com/photos/1417647/pexels-photo-1417647.jpeg?auto=compress&cs=tinysrgb&h=350",
+      "photographer": "eberhard grossgasteiger",
+      "query": "telluride mountain lodge",
+      "category": "resort"
+    },
+    {
+      "id": "pexels-5480716",
+      "url": "https://images.pexels.com/photos/5480716/pexels-photo-5480716.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "thumbnail": "https://images.pexels.com/photos/5480716/pexels-photo-5480716.jpeg?auto=compress&cs=tinysrgb&h=350",
+      "photographer": "Dziana Hasanbekava",
+      "query": "telluride mountain lodge",
+      "category": "resort"
+    },
+    {
+      "id": "pexels-1592459",
+      "url": "https://images.pexels.com/photos/1592459/pexels-photo-1592459.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "thumbnail": "https://images.pexels.com/photos/1592459/pexels-photo-1592459.jpeg?auto=compress&cs=tinysrgb&h=350",
+      "photographer": "James Wheeler",
+      "query": "telluride mountain lodge",
+      "category": "resort"
+    },
+    {
+      "id": "pexels-18870105",
+      "url": "https://images.pexels.com/photos/18870105/pexels-photo-18870105.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "thumbnail": "https://images.pexels.com/photos/18870105/pexels-photo-18870105.jpeg?auto=compress&cs=tinysrgb&h=350",
+      "photographer": "Ali Kazal",
+      "query": "telluride mountain lodge",
+      "category": "resort"
+    },
+    {
+      "id": "pexels-376697",
+      "url": "https://images.pexels.com/photos/376697/pexels-photo-376697.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "thumbnail": "https://images.pexels.com/photos/376697/pexels-photo-376697.jpeg?auto=compress&cs=tinysrgb&h=350",
+      "photographer": "Atlantic Ambience",
+      "query": "telluride mountain lodge",
+      "category": "resort"
+    },
+    {
+      "id": "pexels-1004682",
+      "url": "https://images.pexels.com/photos/1004682/pexels-photo-1004682.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "thumbnail": "https://images.pexels.com/photos/1004682/pexels-photo-1004682.jpeg?auto=compress&cs=tinysrgb&h=350",
+      "photographer": "eberhard grossgasteiger",
+      "query": "telluride mountain lodge",
+      "category": "resort"
+    },
+    {
+      "id": "pexels-3188667",
+      "url": "https://images.pexels.com/photos/3188667/pexels-photo-3188667.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "thumbnail": "https://images.pexels.com/photos/3188667/pexels-photo-3188667.jpeg?auto=compress&cs=tinysrgb&h=350",
+      "photographer": "Iqx Azmi",
+      "query": "telluride mountain lodge",
+      "category": "resort"
+    },
+    {
+      "id": "pexels-16035627",
+      "url": "https://images.pexels.com/photos/16035627/pexels-photo-16035627.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "thumbnail": "https://images.pexels.com/photos/16035627/pexels-photo-16035627.jpeg?auto=compress&cs=tinysrgb&h=350",
+      "photographer": "Clément Proust",
+      "query": "telluride mountain lodge",
+      "category": "resort"
+    },
+    {
+      "id": "pexels-462014",
+      "url": "https://images.pexels.com/photos/462014/pexels-photo-462014.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "thumbnail": "https://images.pexels.com/photos/462014/pexels-photo-462014.jpeg?auto=compress&cs=tinysrgb&h=350",
+      "photographer": "Pixabay",
+      "query": "telluride mountain lodge",
+      "category": "resort"
+    },
+    {
+      "id": "pexels-5619177",
+      "url": "https://images.pexels.com/photos/5619177/pexels-photo-5619177.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "thumbnail": "https://images.pexels.com/photos/5619177/pexels-photo-5619177.jpeg?auto=compress&cs=tinysrgb&h=350",
+      "photographer": "Leeloo The First",
+      "query": "telluride mountain lodge",
+      "category": "resort"
+    },
+    {
+      "id": "pexels-5232501",
+      "url": "https://images.pexels.com/photos/5232501/pexels-photo-5232501.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "thumbnail": "https://images.pexels.com/photos/5232501/pexels-photo-5232501.jpeg?auto=compress&cs=tinysrgb&h=350",
+      "photographer": "Jess Loiterton",
+      "query": "telluride mountain lodge",
+      "category": "resort"
+    },
+    {
+      "id": "pexels-2931910",
+      "url": "https://images.pexels.com/photos/2931910/pexels-photo-2931910.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "thumbnail": "https://images.pexels.com/photos/2931910/pexels-photo-2931910.jpeg?auto=compress&cs=tinysrgb&h=350",
+      "photographer": "Diana ✨",
+      "query": "telluride mountain lodge",
+      "category": "resort"
+    },
+    {
+      "id": "pexels-4450412",
+      "url": "https://images.pexels.com/photos/4450412/pexels-photo-4450412.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "thumbnail": "https://images.pexels.com/photos/4450412/pexels-photo-4450412.jpeg?auto=compress&cs=tinysrgb&h=350",
+      "photographer": "Vlada Karpovich",
+      "query": "telluride mountain lodge",
+      "category": "resort"
+    },
+    {
+      "id": "pexels-774281",
+      "url": "https://images.pexels.com/photos/774281/pexels-photo-774281.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "thumbnail": "https://images.pexels.com/photos/774281/pexels-photo-774281.jpeg?auto=compress&cs=tinysrgb&h=350",
+      "photographer": "Nina Rath",
+      "query": "telluride mountain lodge",
+      "category": "resort"
+    },
+    {
+      "id": "pexels-12489137",
+      "url": "https://images.pexels.com/photos/12489137/pexels-photo-12489137.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "thumbnail": "https://images.pexels.com/photos/12489137/pexels-photo-12489137.jpeg?auto=compress&cs=tinysrgb&h=350",
+      "photographer": "Marek Piwnicki",
+      "query": "telluride mountain lodge",
+      "category": "resort"
+    },
+    {
+      "id": "pexels-34569483",
+      "url": "https://images.pexels.com/photos/34569483/pexels-photo-34569483.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "thumbnail": "https://images.pexels.com/photos/34569483/pexels-photo-34569483.jpeg?auto=compress&cs=tinysrgb&h=350",
+      "photographer": "Alef Morais",
+      "query": "telluride luxury hotel",
+      "category": "luxury"
+    },
+    {
+      "id": "pexels-34557006",
+      "url": "https://images.pexels.com/photos/34557006/pexels-photo-34557006.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "thumbnail": "https://images.pexels.com/photos/34557006/pexels-photo-34557006.jpeg?auto=compress&cs=tinysrgb&h=350",
+      "photographer": "Wes Guild",
+      "query": "telluride luxury hotel",
+      "category": "luxury"
+    },
+    {
+      "id": "pexels-34516518",
+      "url": "https://images.pexels.com/photos/34516518/pexels-photo-34516518.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "thumbnail": "https://images.pexels.com/photos/34516518/pexels-photo-34516518.jpeg?auto=compress&cs=tinysrgb&h=350",
+      "photographer": "Kevin Williams",
+      "query": "telluride luxury hotel",
+      "category": "luxury"
+    },
+    {
+      "id": "pexels-2373201",
+      "url": "https://images.pexels.com/photos/2373201/pexels-photo-2373201.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "thumbnail": "https://images.pexels.com/photos/2373201/pexels-photo-2373201.jpeg?auto=compress&cs=tinysrgb&h=350",
+      "photographer": "Colon Freld",
+      "query": "telluride luxury hotel",
+      "category": "luxury"
+    },
+    {
+      "id": "pexels-271639",
+      "url": "https://images.pexels.com/photos/271639/pexels-photo-271639.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "thumbnail": "https://images.pexels.com/photos/271639/pexels-photo-271639.jpeg?auto=compress&cs=tinysrgb&h=350",
+      "photographer": "Pixabay",
+      "query": "telluride luxury hotel",
+      "category": "luxury"
+    },
+    {
+      "id": "pexels-338504",
+      "url": "https://images.pexels.com/photos/338504/pexels-photo-338504.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "thumbnail": "https://images.pexels.com/photos/338504/pexels-photo-338504.jpeg?auto=compress&cs=tinysrgb&h=350",
+      "photographer": "Thorsten technoman",
+      "query": "telluride luxury hotel",
+      "category": "luxury"
+    },
+    {
+      "id": "pexels-260922",
+      "url": "https://images.pexels.com/photos/260922/pexels-photo-260922.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "thumbnail": "https://images.pexels.com/photos/260922/pexels-photo-260922.jpeg?auto=compress&cs=tinysrgb&h=350",
+      "photographer": "Pixabay",
+      "query": "telluride luxury hotel",
+      "category": "luxury"
+    },
+    {
+      "id": "pexels-1268871",
+      "url": "https://images.pexels.com/photos/1268871/pexels-photo-1268871.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "thumbnail": "https://images.pexels.com/photos/1268871/pexels-photo-1268871.jpeg?auto=compress&cs=tinysrgb&h=350",
+      "photographer": "Asad Photo Maldives",
+      "query": "telluride luxury hotel",
+      "category": "luxury"
+    },
+    {
+      "id": "pexels-7609119",
+      "url": "https://images.pexels.com/photos/7609119/pexels-photo-7609119.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "thumbnail": "https://images.pexels.com/photos/7609119/pexels-photo-7609119.jpeg?auto=compress&cs=tinysrgb&h=350",
+      "photographer": "cottonbro studio",
+      "query": "telluride luxury hotel",
+      "category": "luxury"
+    },
+    {
+      "id": "pexels-1001965",
+      "url": "https://images.pexels.com/photos/1001965/pexels-photo-1001965.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "thumbnail": "https://images.pexels.com/photos/1001965/pexels-photo-1001965.jpeg?auto=compress&cs=tinysrgb&h=350",
+      "photographer": "Iván Rivero",
+      "query": "telluride luxury hotel",
+      "category": "luxury"
+    },
+    {
+      "id": "pexels-189295",
+      "url": "https://images.pexels.com/photos/189295/pexels-photo-189295.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "thumbnail": "https://images.pexels.com/photos/189295/pexels-photo-189295.jpeg?auto=compress&cs=tinysrgb&h=350",
+      "photographer": "Donald Tong",
+      "query": "telluride luxury hotel",
+      "category": "luxury"
+    },
+    {
+      "id": "pexels-161758",
+      "url": "https://images.pexels.com/photos/161758/governor-s-mansion-montgomery-alabama-grand-staircase-161758.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "thumbnail": "https://images.pexels.com/photos/161758/governor-s-mansion-montgomery-alabama-grand-staircase-161758.jpeg?auto=compress&cs=tinysrgb&h=350",
+      "photographer": "Pixabay",
+      "query": "telluride luxury hotel",
+      "category": "luxury"
+    },
+    {
+      "id": "pexels-3201921",
+      "url": "https://images.pexels.com/photos/3201921/pexels-photo-3201921.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "thumbnail": "https://images.pexels.com/photos/3201921/pexels-photo-3201921.jpeg?auto=compress&cs=tinysrgb&h=350",
+      "photographer": "Quark Studio",
+      "query": "telluride luxury hotel",
+      "category": "luxury"
+    },
+    {
+      "id": "pexels-2507014",
+      "url": "https://images.pexels.com/photos/2507014/pexels-photo-2507014.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "thumbnail": "https://images.pexels.com/photos/2507014/pexels-photo-2507014.jpeg?auto=compress&cs=tinysrgb&h=350",
+      "photographer": "Quark Studio",
+      "query": "telluride luxury hotel",
+      "category": "luxury"
+    },
+    {
+      "id": "pexels-2507007",
+      "url": "https://images.pexels.com/photos/2507007/pexels-photo-2507007.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "thumbnail": "https://images.pexels.com/photos/2507007/pexels-photo-2507007.jpeg?auto=compress&cs=tinysrgb&h=350",
+      "photographer": "Quark Studio",
+      "query": "telluride luxury hotel",
+      "category": "luxury"
+    },
+    {
+      "id": "pexels-271639",
+      "url": "https://images.pexels.com/photos/271639/pexels-photo-271639.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "thumbnail": "https://images.pexels.com/photos/271639/pexels-photo-271639.jpeg?auto=compress&cs=tinysrgb&h=350",
+      "photographer": "Pixabay",
+      "query": "telluride ski hotel room",
+      "category": "rooms"
+    },
+    {
+      "id": "pexels-164595",
+      "url": "https://images.pexels.com/photos/164595/pexels-photo-164595.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "thumbnail": "https://images.pexels.com/photos/164595/pexels-photo-164595.jpeg?auto=compress&cs=tinysrgb&h=350",
+      "photographer": "Pixabay",
+      "query": "telluride ski hotel room",
+      "category": "rooms"
+    },
+    {
+      "id": "pexels-260922",
+      "url": "https://images.pexels.com/photos/260922/pexels-photo-260922.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "thumbnail": "https://images.pexels.com/photos/260922/pexels-photo-260922.jpeg?auto=compress&cs=tinysrgb&h=350",
+      "photographer": "Pixabay",
+      "query": "telluride ski hotel room",
+      "category": "rooms"
+    },
+    {
+      "id": "pexels-1001965",
+      "url": "https://images.pexels.com/photos/1001965/pexels-photo-1001965.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "thumbnail": "https://images.pexels.com/photos/1001965/pexels-photo-1001965.jpeg?auto=compress&cs=tinysrgb&h=350",
+      "photographer": "Iván Rivero",
+      "query": "telluride ski hotel room",
+      "category": "rooms"
+    },
+    {
+      "id": "pexels-3201921",
+      "url": "https://images.pexels.com/photos/3201921/pexels-photo-3201921.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "thumbnail": "https://images.pexels.com/photos/3201921/pexels-photo-3201921.jpeg?auto=compress&cs=tinysrgb&h=350",
+      "photographer": "Quark Studio",
+      "query": "telluride ski hotel room",
+      "category": "rooms"
+    },
+    {
+      "id": "pexels-2598638",
+      "url": "https://images.pexels.com/photos/2598638/pexels-photo-2598638.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "thumbnail": "https://images.pexels.com/photos/2598638/pexels-photo-2598638.jpeg?auto=compress&cs=tinysrgb&h=350",
+      "photographer": "Leonardo Rossatti",
+      "query": "telluride ski hotel room",
+      "category": "rooms"
+    },
+    {
+      "id": "pexels-271624",
+      "url": "https://images.pexels.com/photos/271624/pexels-photo-271624.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "thumbnail": "https://images.pexels.com/photos/271624/pexels-photo-271624.jpeg?auto=compress&cs=tinysrgb&h=350",
+      "photographer": "Pixabay",
+      "query": "telluride ski hotel room",
+      "category": "rooms"
+    },
+    {
+      "id": "pexels-1838554",
+      "url": "https://images.pexels.com/photos/1838554/pexels-photo-1838554.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "thumbnail": "https://images.pexels.com/photos/1838554/pexels-photo-1838554.jpeg?auto=compress&cs=tinysrgb&h=350",
+      "photographer": "Elina Sazonova",
+      "query": "telluride ski hotel room",
+      "category": "rooms"
+    },
+    {
+      "id": "pexels-2506990",
+      "url": "https://images.pexels.com/photos/2506990/pexels-photo-2506990.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "thumbnail": "https://images.pexels.com/photos/2506990/pexels-photo-2506990.jpeg?auto=compress&cs=tinysrgb&h=350",
+      "photographer": "Quark Studio",
+      "query": "telluride ski hotel room",
+      "category": "rooms"
+    },
+    {
+      "id": "pexels-189333",
+      "url": "https://images.pexels.com/photos/189333/pexels-photo-189333.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "thumbnail": "https://images.pexels.com/photos/189333/pexels-photo-189333.jpeg?auto=compress&cs=tinysrgb&h=350",
+      "photographer": "Donald Tong",
+      "query": "telluride ski hotel room",
+      "category": "rooms"
+    },
+    {
+      "id": "pexels-2725675",
+      "url": "https://images.pexels.com/photos/2725675/pexels-photo-2725675.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "thumbnail": "https://images.pexels.com/photos/2725675/pexels-photo-2725675.jpeg?auto=compress&cs=tinysrgb&h=350",
+      "photographer": "Engin Akyurt",
+      "query": "telluride ski hotel room",
+      "category": "rooms"
+    },
+    {
+      "id": "pexels-635041",
+      "url": "https://images.pexels.com/photos/635041/pexels-photo-635041.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "thumbnail": "https://images.pexels.com/photos/635041/pexels-photo-635041.jpeg?auto=compress&cs=tinysrgb&h=350",
+      "photographer": "Kendall Hoopes",
+      "query": "telluride ski hotel room",
+      "category": "rooms"
+    },
+    {
+      "id": "pexels-271897",
+      "url": "https://images.pexels.com/photos/271897/pexels-photo-271897.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "thumbnail": "https://images.pexels.com/photos/271897/pexels-photo-271897.jpeg?auto=compress&cs=tinysrgb&h=350",
+      "photographer": "Pixabay",
+      "query": "telluride ski hotel room",
+      "category": "rooms"
+    },
+    {
+      "id": "pexels-4825701",
+      "url": "https://images.pexels.com/photos/4825701/pexels-photo-4825701.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "thumbnail": "https://images.pexels.com/photos/4825701/pexels-photo-4825701.jpeg?auto=compress&cs=tinysrgb&h=350",
+      "photographer": "Rachel Claire",
+      "query": "telluride ski hotel room",
+      "category": "rooms"
+    },
+    {
+      "id": "pexels-2684260",
+      "url": "https://images.pexels.com/photos/2684260/pexels-photo-2684260.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "thumbnail": "https://images.pexels.com/photos/2684260/pexels-photo-2684260.jpeg?auto=compress&cs=tinysrgb&h=350",
+      "photographer": "Engin Akyurt",
+      "query": "telluride ski hotel room",
+      "category": "rooms"
+    },
+    {
+      "id": "pexels-1637112",
+      "url": "https://images.pexels.com/photos/1637112/pexels-photo-1637112.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "thumbnail": "https://images.pexels.com/photos/1637112/pexels-photo-1637112.jpeg?auto=compress&cs=tinysrgb&h=350",
+      "photographer": "Yuting Gao",
+      "query": "telluride hotel exterior",
+      "category": "exterior"
+    },
+    {
+      "id": "pexels-2901215",
+      "url": "https://images.pexels.com/photos/2901215/pexels-photo-2901215.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "thumbnail": "https://images.pexels.com/photos/2901215/pexels-photo-2901215.jpeg?auto=compress&cs=tinysrgb&h=350",
+      "photographer": "Pierre Blaché",
+      "query": "telluride hotel exterior",
+      "category": "exterior"
+    },
+    {
+      "id": "pexels-2481603",
+      "url": "https://images.pexels.com/photos/2481603/pexels-photo-2481603.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "thumbnail": "https://images.pexels.com/photos/2481603/pexels-photo-2481603.jpeg?auto=compress&cs=tinysrgb&h=350",
+      "photographer": "Aleksandar Pasaric",
+      "query": "telluride hotel exterior",
+      "category": "exterior"
+    },
+    {
+      "id": "pexels-1755288",
+      "url": "https://images.pexels.com/photos/1755288/pexels-photo-1755288.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "thumbnail": "https://images.pexels.com/photos/1755288/pexels-photo-1755288.jpeg?auto=compress&cs=tinysrgb&h=350",
+      "photographer": "Gustavo Rodrigues",
+      "query": "telluride hotel exterior",
+      "category": "exterior"
+    },
+    {
+      "id": "pexels-453201",
+      "url": "https://images.pexels.com/photos/453201/pexels-photo-453201.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "thumbnail": "https://images.pexels.com/photos/453201/pexels-photo-453201.jpeg?auto=compress&cs=tinysrgb&h=350",
+      "photographer": "Arabic Logos",
+      "query": "telluride hotel exterior",
+      "category": "exterior"
+    },
+    {
+      "id": "pexels-59924",
+      "url": "https://images.pexels.com/photos/59924/pexels-photo-59924.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "thumbnail": "https://images.pexels.com/photos/59924/pexels-photo-59924.jpeg?auto=compress&cs=tinysrgb&h=350",
+      "photographer": "Josh Sorenson",
+      "query": "telluride hotel exterior",
+      "category": "exterior"
+    },
+    {
+      "id": "pexels-3687922",
+      "url": "https://images.pexels.com/photos/3687922/pexels-photo-3687922.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "thumbnail": "https://images.pexels.com/photos/3687922/pexels-photo-3687922.jpeg?auto=compress&cs=tinysrgb&h=350",
+      "photographer": "Matthias Oben",
+      "query": "telluride hotel exterior",
+      "category": "exterior"
+    },
+    {
+      "id": "pexels-440152",
+      "url": "https://images.pexels.com/photos/440152/pexels-photo-440152.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "thumbnail": "https://images.pexels.com/photos/440152/pexels-photo-440152.jpeg?auto=compress&cs=tinysrgb&h=350",
+      "photographer": "Henk Mohabier",
+      "query": "telluride hotel exterior",
+      "category": "exterior"
+    },
+    {
+      "id": "pexels-6010421",
+      "url": "https://images.pexels.com/photos/6010421/pexels-photo-6010421.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "thumbnail": "https://images.pexels.com/photos/6010421/pexels-photo-6010421.jpeg?auto=compress&cs=tinysrgb&h=350",
+      "photographer": "Tima Miroshnichenko",
+      "query": "telluride hotel exterior",
+      "category": "exterior"
+    },
+    {
+      "id": "pexels-1004122",
+      "url": "https://images.pexels.com/photos/1004122/pexels-photo-1004122.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "thumbnail": "https://images.pexels.com/photos/1004122/pexels-photo-1004122.jpeg?auto=compress&cs=tinysrgb&h=350",
+      "photographer": "Arnie Chou",
+      "query": "telluride hotel exterior",
+      "category": "exterior"
+    },
+    {
+      "id": "pexels-2149421",
+      "url": "https://images.pexels.com/photos/2149421/pexels-photo-2149421.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "thumbnail": "https://images.pexels.com/photos/2149421/pexels-photo-2149421.jpeg?auto=compress&cs=tinysrgb&h=350",
+      "photographer": "Matheus Natan",
+      "query": "telluride hotel exterior",
+      "category": "exterior"
+    },
+    {
+      "id": "pexels-2873639",
+      "url": "https://images.pexels.com/photos/2873639/pexels-photo-2873639.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "thumbnail": "https://images.pexels.com/photos/2873639/pexels-photo-2873639.jpeg?auto=compress&cs=tinysrgb&h=350",
+      "photographer": "Joanne  Adela",
+      "query": "telluride hotel exterior",
+      "category": "exterior"
+    },
+    {
+      "id": "pexels-591383",
+      "url": "https://images.pexels.com/photos/591383/pexels-photo-591383.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "thumbnail": "https://images.pexels.com/photos/591383/pexels-photo-591383.jpeg?auto=compress&cs=tinysrgb&h=350",
+      "photographer": "Kai Pilger",
+      "query": "telluride hotel exterior",
+      "category": "exterior"
+    },
+    {
+      "id": "pexels-3635805",
+      "url": "https://images.pexels.com/photos/3635805/pexels-photo-3635805.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "thumbnail": "https://images.pexels.com/photos/3635805/pexels-photo-3635805.jpeg?auto=compress&cs=tinysrgb&h=350",
+      "photographer": "Engin Akyurt",
+      "query": "telluride hotel exterior",
+      "category": "exterior"
+    },
+    {
+      "id": "pexels-164179",
+      "url": "https://images.pexels.com/photos/164179/pexels-photo-164179.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "thumbnail": "https://images.pexels.com/photos/164179/pexels-photo-164179.jpeg?auto=compress&cs=tinysrgb&h=350",
+      "photographer": "Pixabay",
+      "query": "telluride hotel exterior",
+      "category": "exterior"
+    },
+    {
+      "id": "pexels-34516518",
+      "url": "https://images.pexels.com/photos/34516518/pexels-photo-34516518.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "thumbnail": "https://images.pexels.com/photos/34516518/pexels-photo-34516518.jpeg?auto=compress&cs=tinysrgb&h=350",
+      "photographer": "Kevin Williams",
+      "query": "telluride hotel interior",
+      "category": "interior"
+    },
+    {
+      "id": "pexels-271639",
+      "url": "https://images.pexels.com/photos/271639/pexels-photo-271639.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "thumbnail": "https://images.pexels.com/photos/271639/pexels-photo-271639.jpeg?auto=compress&cs=tinysrgb&h=350",
+      "photographer": "Pixabay",
+      "query": "telluride hotel interior",
+      "category": "interior"
+    },
+    {
+      "id": "pexels-7609119",
+      "url": "https://images.pexels.com/photos/7609119/pexels-photo-7609119.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "thumbnail": "https://images.pexels.com/photos/7609119/pexels-photo-7609119.jpeg?auto=compress&cs=tinysrgb&h=350",
+      "photographer": "cottonbro studio",
+      "query": "telluride hotel interior",
+      "category": "interior"
+    },
+    {
+      "id": "pexels-189295",
+      "url": "https://images.pexels.com/photos/189295/pexels-photo-189295.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "thumbnail": "https://images.pexels.com/photos/189295/pexels-photo-189295.jpeg?auto=compress&cs=tinysrgb&h=350",
+      "photographer": "Donald Tong",
+      "query": "telluride hotel interior",
+      "category": "interior"
+    },
+    {
+      "id": "pexels-2598638",
+      "url": "https://images.pexels.com/photos/2598638/pexels-photo-2598638.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "thumbnail": "https://images.pexels.com/photos/2598638/pexels-photo-2598638.jpeg?auto=compress&cs=tinysrgb&h=350",
+      "photographer": "Leonardo Rossatti",
+      "query": "telluride hotel interior",
+      "category": "interior"
+    },
+    {
+      "id": "pexels-3771110",
+      "url": "https://images.pexels.com/photos/3771110/pexels-photo-3771110.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "thumbnail": "https://images.pexels.com/photos/3771110/pexels-photo-3771110.jpeg?auto=compress&cs=tinysrgb&h=350",
+      "photographer": "Andrea Piacquadio",
+      "query": "telluride hotel interior",
+      "category": "interior"
+    },
+    {
+      "id": "pexels-2506990",
+      "url": "https://images.pexels.com/photos/2506990/pexels-photo-2506990.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "thumbnail": "https://images.pexels.com/photos/2506990/pexels-photo-2506990.jpeg?auto=compress&cs=tinysrgb&h=350",
+      "photographer": "Quark Studio",
+      "query": "telluride hotel interior",
+      "category": "interior"
+    },
+    {
+      "id": "pexels-189333",
+      "url": "https://images.pexels.com/photos/189333/pexels-photo-189333.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "thumbnail": "https://images.pexels.com/photos/189333/pexels-photo-189333.jpeg?auto=compress&cs=tinysrgb&h=350",
+      "photographer": "Donald Tong",
+      "query": "telluride hotel interior",
+      "category": "interior"
+    },
+    {
+      "id": "pexels-1416530",
+      "url": "https://images.pexels.com/photos/1416530/pexels-photo-1416530.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "thumbnail": "https://images.pexels.com/photos/1416530/pexels-photo-1416530.jpeg?auto=compress&cs=tinysrgb&h=350",
+      "photographer": "chepté cormani",
+      "query": "telluride hotel interior",
+      "category": "interior"
+    },
+    {
+      "id": "pexels-2725675",
+      "url": "https://images.pexels.com/photos/2725675/pexels-photo-2725675.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "thumbnail": "https://images.pexels.com/photos/2725675/pexels-photo-2725675.jpeg?auto=compress&cs=tinysrgb&h=350",
+      "photographer": "Engin Akyurt",
+      "query": "telluride hotel interior",
+      "category": "interior"
+    },
+    {
+      "id": "pexels-635041",
+      "url": "https://images.pexels.com/photos/635041/pexels-photo-635041.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "thumbnail": "https://images.pexels.com/photos/635041/pexels-photo-635041.jpeg?auto=compress&cs=tinysrgb&h=350",
+      "photographer": "Kendall Hoopes",
+      "query": "telluride hotel interior",
+      "category": "interior"
+    },
+    {
+      "id": "pexels-3682240",
+      "url": "https://images.pexels.com/photos/3682240/pexels-photo-3682240.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "thumbnail": "https://images.pexels.com/photos/3682240/pexels-photo-3682240.jpeg?auto=compress&cs=tinysrgb&h=350",
+      "photographer": "Castorly Stock",
+      "query": "telluride hotel interior",
+      "category": "interior"
+    },
+    {
+      "id": "pexels-15792555",
+      "url": "https://images.pexels.com/photos/15792555/pexels-photo-15792555.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "thumbnail": "https://images.pexels.com/photos/15792555/pexels-photo-15792555.jpeg?auto=compress&cs=tinysrgb&h=350",
+      "photographer": "Yelena from Pexels",
+      "query": "telluride hotel interior",
+      "category": "interior"
+    },
+    {
+      "id": "pexels-2134224",
+      "url": "https://images.pexels.com/photos/2134224/pexels-photo-2134224.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "thumbnail": "https://images.pexels.com/photos/2134224/pexels-photo-2134224.jpeg?auto=compress&cs=tinysrgb&h=350",
+      "photographer": "Quang Nguyen Vinh",
+      "query": "telluride hotel interior",
+      "category": "interior"
+    },
+    {
+      "id": "pexels-6466482",
+      "url": "https://images.pexels.com/photos/6466482/pexels-photo-6466482.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "thumbnail": "https://images.pexels.com/photos/6466482/pexels-photo-6466482.jpeg?auto=compress&cs=tinysrgb&h=350",
+      "photographer": "cottonbro studio",
+      "query": "telluride hotel interior",
+      "category": "interior"
+    },
+    {
+      "id": "pexels-31459309",
+      "url": "https://images.pexels.com/photos/31459309/pexels-photo-31459309.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "thumbnail": "https://images.pexels.com/photos/31459309/pexels-photo-31459309.jpeg?auto=compress&cs=tinysrgb&h=350",
+      "photographer": "Chris F",
+      "query": "colorado ski hotel",
+      "category": "resort"
+    },
+    {
+      "id": "pexels-29991568",
+      "url": "https://images.pexels.com/photos/29991568/pexels-photo-29991568.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "thumbnail": "https://images.pexels.com/photos/29991568/pexels-photo-29991568.jpeg?auto=compress&cs=tinysrgb&h=350",
+      "photographer": "kenyi Amores",
+      "query": "colorado ski hotel",
+      "category": "resort"
+    },
+    {
+      "id": "pexels-4580976",
+      "url": "https://images.pexels.com/photos/4580976/pexels-photo-4580976.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "thumbnail": "https://images.pexels.com/photos/4580976/pexels-photo-4580976.jpeg?auto=compress&cs=tinysrgb&h=350",
+      "photographer": "Ryan Leeper",
+      "query": "colorado ski hotel",
+      "category": "resort"
+    },
+    {
+      "id": "pexels-7054196",
+      "url": "https://images.pexels.com/photos/7054196/pexels-photo-7054196.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "thumbnail": "https://images.pexels.com/photos/7054196/pexels-photo-7054196.jpeg?auto=compress&cs=tinysrgb&h=350",
+      "photographer": "Abdullah Almutairi",
+      "query": "colorado ski hotel",
+      "category": "resort"
+    },
+    {
+      "id": "pexels-11616144",
+      "url": "https://images.pexels.com/photos/11616144/pexels-photo-11616144.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "thumbnail": "https://images.pexels.com/photos/11616144/pexels-photo-11616144.jpeg?auto=compress&cs=tinysrgb&h=350",
+      "photographer": "Chris F",
+      "query": "colorado ski hotel",
+      "category": "resort"
+    },
+    {
+      "id": "pexels-20042214",
+      "url": "https://images.pexels.com/photos/20042214/pexels-photo-20042214.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "thumbnail": "https://images.pexels.com/photos/20042214/pexels-photo-20042214.jpeg?auto=compress&cs=tinysrgb&h=350",
+      "photographer": "Ryan Klaus",
+      "query": "colorado ski hotel",
+      "category": "resort"
+    },
+    {
+      "id": "pexels-20042223",
+      "url": "https://images.pexels.com/photos/20042223/pexels-photo-20042223.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "thumbnail": "https://images.pexels.com/photos/20042223/pexels-photo-20042223.jpeg?auto=compress&cs=tinysrgb&h=350",
+      "photographer": "Ryan Klaus",
+      "query": "colorado ski hotel",
+      "category": "resort"
+    },
+    {
+      "id": "pexels-13356970",
+      "url": "https://images.pexels.com/photos/13356970/pexels-photo-13356970.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "thumbnail": "https://images.pexels.com/photos/13356970/pexels-photo-13356970.jpeg?auto=compress&cs=tinysrgb&h=350",
+      "photographer": "David Iglesias",
+      "query": "colorado ski hotel",
+      "category": "resort"
+    },
+    {
+      "id": "pexels-10804099",
+      "url": "https://images.pexels.com/photos/10804099/pexels-photo-10804099.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "thumbnail": "https://images.pexels.com/photos/10804099/pexels-photo-10804099.jpeg?auto=compress&cs=tinysrgb&h=350",
+      "photographer": "Irina Demyanovskikh",
+      "query": "colorado ski hotel",
+      "category": "resort"
+    },
+    {
+      "id": "pexels-10969016",
+      "url": "https://images.pexels.com/photos/10969016/pexels-photo-10969016.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "thumbnail": "https://images.pexels.com/photos/10969016/pexels-photo-10969016.jpeg?auto=compress&cs=tinysrgb&h=350",
+      "photographer": "Egor Komarov",
+      "query": "colorado ski hotel",
+      "category": "resort"
+    },
+    {
+      "id": "pexels-17441633",
+      "url": "https://images.pexels.com/photos/17441633/pexels-photo-17441633.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "thumbnail": "https://images.pexels.com/photos/17441633/pexels-photo-17441633.jpeg?auto=compress&cs=tinysrgb&h=350",
+      "photographer": "Kiril Gruev",
+      "query": "colorado ski hotel",
+      "category": "resort"
+    },
+    {
+      "id": "pexels-15232505",
+      "url": "https://images.pexels.com/photos/15232505/pexels-photo-15232505.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "thumbnail": "https://images.pexels.com/photos/15232505/pexels-photo-15232505.jpeg?auto=compress&cs=tinysrgb&h=350",
+      "photographer": "Imad Clicks",
+      "query": "colorado ski hotel",
+      "category": "resort"
+    },
+    {
+      "id": "pexels-7054198",
+      "url": "https://images.pexels.com/photos/7054198/pexels-photo-7054198.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "thumbnail": "https://images.pexels.com/photos/7054198/pexels-photo-7054198.jpeg?auto=compress&cs=tinysrgb&h=350",
+      "photographer": "Abdullah Almutairi",
+      "query": "colorado ski hotel",
+      "category": "resort"
+    },
+    {
+      "id": "pexels-31718580",
+      "url": "https://images.pexels.com/photos/31718580/pexels-photo-31718580.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "thumbnail": "https://images.pexels.com/photos/31718580/pexels-photo-31718580.jpeg?auto=compress&cs=tinysrgb&h=350",
+      "photographer": "Chris F",
+      "query": "colorado ski hotel",
+      "category": "resort"
+    },
+    {
+      "id": "pexels-32187447",
+      "url": "https://images.pexels.com/photos/32187447/pexels-photo-32187447.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "thumbnail": "https://images.pexels.com/photos/32187447/pexels-photo-32187447.jpeg?auto=compress&cs=tinysrgb&h=350",
+      "photographer": "Alan Kabeš",
+      "query": "colorado ski hotel",
+      "category": "resort"
+    },
+    {
+      "id": "pexels-1001965",
+      "url": "https://images.pexels.com/photos/1001965/pexels-photo-1001965.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "thumbnail": "https://images.pexels.com/photos/1001965/pexels-photo-1001965.jpeg?auto=compress&cs=tinysrgb&h=350",
+      "photographer": "Iván Rivero",
+      "query": "telluride hotel lobby",
+      "category": "interior"
+    },
+    {
+      "id": "pexels-189295",
+      "url": "https://images.pexels.com/photos/189295/pexels-photo-189295.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "thumbnail": "https://images.pexels.com/photos/189295/pexels-photo-189295.jpeg?auto=compress&cs=tinysrgb&h=350",
+      "photographer": "Donald Tong",
+      "query": "telluride hotel lobby",
+      "category": "interior"
+    },
+    {
+      "id": "pexels-161758",
+      "url": "https://images.pexels.com/photos/161758/governor-s-mansion-montgomery-alabama-grand-staircase-161758.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "thumbnail": "https://images.pexels.com/photos/161758/governor-s-mansion-montgomery-alabama-grand-staircase-161758.jpeg?auto=compress&cs=tinysrgb&h=350",
+      "photographer": "Pixabay",
+      "query": "telluride hotel lobby",
+      "category": "interior"
+    },
+    {
+      "id": "pexels-2507010",
+      "url": "https://images.pexels.com/photos/2507010/pexels-photo-2507010.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "thumbnail": "https://images.pexels.com/photos/2507010/pexels-photo-2507010.jpeg?auto=compress&cs=tinysrgb&h=350",
+      "photographer": "Quark Studio",
+      "query": "telluride hotel lobby",
+      "category": "interior"
+    },
+    {
+      "id": "pexels-3771110",
+      "url": "https://images.pexels.com/photos/3771110/pexels-photo-3771110.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "thumbnail": "https://images.pexels.com/photos/3771110/pexels-photo-3771110.jpeg?auto=compress&cs=tinysrgb&h=350",
+      "photographer": "Andrea Piacquadio",
+      "query": "telluride hotel lobby",
+      "category": "interior"
+    },
+    {
+      "id": "pexels-2869215",
+      "url": "https://images.pexels.com/photos/2869215/pexels-photo-2869215.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "thumbnail": "https://images.pexels.com/photos/2869215/pexels-photo-2869215.jpeg?auto=compress&cs=tinysrgb&h=350",
+      "photographer": "Kelly",
+      "query": "telluride hotel lobby",
+      "category": "interior"
+    },
+    {
+      "id": "pexels-205342",
+      "url": "https://images.pexels.com/photos/205342/pexels-photo-205342.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "thumbnail": "https://images.pexels.com/photos/205342/pexels-photo-205342.jpeg?auto=compress&cs=tinysrgb&h=350",
+      "photographer": "Justin Hamilton",
+      "query": "telluride hotel lobby",
+      "category": "interior"
+    },
+    {
+      "id": "pexels-1755288",
+      "url": "https://images.pexels.com/photos/1755288/pexels-photo-1755288.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "thumbnail": "https://images.pexels.com/photos/1755288/pexels-photo-1755288.jpeg?auto=compress&cs=tinysrgb&h=350",
+      "photographer": "Gustavo Rodrigues",
+      "query": "telluride hotel lobby",
+      "category": "interior"
+    },
+    {
+      "id": "pexels-3215519",
+      "url": "https://images.pexels.com/photos/3215519/pexels-photo-3215519.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "thumbnail": "https://images.pexels.com/photos/3215519/pexels-photo-3215519.jpeg?auto=compress&cs=tinysrgb&h=350",
+      "photographer": "Helena Lopes",
+      "query": "telluride hotel lobby",
+      "category": "interior"
+    },
+    {
+      "id": "pexels-322719",
+      "url": "https://images.pexels.com/photos/322719/pexels-photo-322719.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "thumbnail": "https://images.pexels.com/photos/322719/pexels-photo-322719.jpeg?auto=compress&cs=tinysrgb&h=350",
+      "photographer": "Thuyen Vu",
+      "query": "telluride hotel lobby",
+      "category": "interior"
+    },
+    {
+      "id": "pexels-6474586",
+      "url": "https://images.pexels.com/photos/6474586/pexels-photo-6474586.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "thumbnail": "https://images.pexels.com/photos/6474586/pexels-photo-6474586.jpeg?auto=compress&cs=tinysrgb&h=350",
+      "photographer": "cottonbro studio",
+      "query": "telluride hotel lobby",
+      "category": "interior"
+    },
+    {
+      "id": "pexels-6474588",
+      "url": "https://images.pexels.com/photos/6474588/pexels-photo-6474588.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "thumbnail": "https://images.pexels.com/photos/6474588/pexels-photo-6474588.jpeg?auto=compress&cs=tinysrgb&h=350",
+      "photographer": "cottonbro studio",
+      "query": "telluride hotel lobby",
+      "category": "interior"
+    },
+    {
+      "id": "pexels-53577",
+      "url": "https://images.pexels.com/photos/53577/hotel-architectural-tourism-travel-53577.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "thumbnail": "https://images.pexels.com/photos/53577/hotel-architectural-tourism-travel-53577.jpeg?auto=compress&cs=tinysrgb&h=350",
+      "photographer": "Pixabay",
+      "query": "telluride hotel lobby",
+      "category": "interior"
+    },
+    {
+      "id": "pexels-6474521",
+      "url": "https://images.pexels.com/photos/6474521/pexels-photo-6474521.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "thumbnail": "https://images.pexels.com/photos/6474521/pexels-photo-6474521.jpeg?auto=compress&cs=tinysrgb&h=350",
+      "photographer": "cottonbro studio",
+      "query": "telluride hotel lobby",
+      "category": "interior"
+    },
+    {
+      "id": "pexels-5371673",
+      "url": "https://images.pexels.com/photos/5371673/pexels-photo-5371673.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "thumbnail": "https://images.pexels.com/photos/5371673/pexels-photo-5371673.jpeg?auto=compress&cs=tinysrgb&h=350",
+      "photographer": "cottonbro studio",
+      "query": "telluride hotel lobby",
+      "category": "interior"
+    }
+  ]
+}

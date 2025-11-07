@@ -1,0 +1,273 @@
+---
+export const prerender = false;
+
+import PageLayout from '@/components/layout/PageLayout.astro';
+import Container from '@/components/layout/Container.astro';
+import { HotelSearchWidget } from '@/components/lodging/HotelSearchWidget';
+import { FeaturedHotels } from '@/components/lodging/FeaturedHotels';
+import LodgingMap from '@/components/map/LodgingMap';
+import { SITE_DESCRIPTION } from '@/lib/constants';
+import { getHomepageHeroImage } from '@/lib/image-library';
+import { searchHotels } from '@/lib/liteapi/hotels';
+
+const heroImage = getHomepageHeroImage();
+
+// Fetch featured hotels server-side (has access to API key)
+import type { LiteAPIHotel } from '@/lib/liteapi/types';
+import { format, addDays } from 'date-fns';
+
+let featuredHotelsData: LiteAPIHotel[] = [];
+let allHotels: LiteAPIHotel[] = [];
+let minPrices: Record<string, number> = {};
+let featuredCheckInDate: string | undefined;
+
+try {
+  // OPTIMIZATION: Only fetch what we need for initial page load
+  // Get limited hotels for the map (50 is plenty for visual display)
+  const hotelData = await searchHotels({
+    cityName: 'Telluride',
+    countryCode: 'US',
+    limit: 50, // Reduced from 500 - map doesn't need all hotels
+  });
+  
+  allHotels = hotelData.data || [];
+  
+  // For featured section, get hotels WITH availability and rates
+  // Use realistic upcoming dates: 7 days from now for 7-night stay
+  const now = new Date();
+  const checkIn = format(addDays(now, 7), 'yyyy-MM-dd');
+  const checkOut = format(addDays(now, 14), 'yyyy-MM-dd');
+  featuredCheckInDate = checkIn;
+  
+  console.log('[Homepage] Searching for hotels with availability:', { checkIn, checkOut });
+  
+  try {
+    const { searchHotelsWithRates } = await import('@/lib/liteapi/rates');
+    const availableHotels = await searchHotelsWithRates({
+      cityName: 'Telluride',
+      countryCode: 'US',
+      checkIn,
+      checkOut,
+      adults: 2,
+      limit: 20, // Reduced from 500 - we only show 6, so 20 gives us buffer
+    });
+    
+    // Get top 6 hotels by review score from those with availability
+    featuredHotelsData = availableHotels.hotels
+      .filter(h => h.review_score && h.review_count && h.review_count > 20)
+      .sort((a, b) => (b.review_score || 0) - (a.review_score || 0))
+      .slice(0, 6);
+    
+    minPrices = availableHotels.minPrices;
+    
+    console.log('[Homepage] Featured hotels with availability:', {
+      totalAvailable: availableHotels.hotels.length,
+      featured: featuredHotelsData.length,
+      withPrices: Object.keys(minPrices).length,
+    });
+  } catch (error) {
+    console.error('[Homepage] Error fetching hotels with availability:', error);
+    // Fallback to showing top-rated hotels without availability check
+    featuredHotelsData = allHotels
+      .filter(h => h.review_score && h.review_count && h.review_count > 50)
+      .sort((a, b) => (b.review_score || 0) - (a.review_score || 0))
+      .slice(0, 6);
+    console.log('[Homepage] Fallback: Showing top-rated hotels without availability');
+  }
+} catch (error) {
+  console.error('[Homepage] Error fetching featured hotels:', error);
+}
+---
+
+<PageLayout
+  title={`Best Ski Hotels in Telluride, Colorado | Compare & Book Direct`}
+  description={SITE_DESCRIPTION}
+  image={heroImage?.url}
+>
+  <!-- Hero Section -->
+  {heroImage && (
+    <div class="relative h-[600px] lg:h-[700px] overflow-hidden">
+      <img 
+        src={heroImage.url} 
+        alt="Telluride Ski Resort" 
+        class="w-full h-full object-cover animate-fade-in"
+        loading="eager"
+      />
+      <div class="absolute inset-0 gradient-overlay"></div>
+      <div class="absolute inset-0 flex items-center">
+        <Container class="w-full">
+          <div class="max-w-5xl mx-auto">
+            <!-- Hero Content -->
+            <div class="text-center text-white mb-16 lg:mb-20 animate-slide-up px-4">
+              <h1 class="text-display-md lg:text-display-lg mb-6 drop-shadow-2xl font-extrabold">
+            Find Your Perfect Ski Hotel in Telluride
+          </h1>
+              <p class="text-xl lg:text-2xl mb-8 text-white/90 font-medium leading-relaxed max-w-3xl mx-auto">
+                Search and compare 100+ hotels • Real-time availability • Best prices guaranteed
+          </p>
+        </div>
+            
+            <!-- Integrated Search Widget -->
+            <div class="max-w-4xl mx-auto px-4 animate-scale-in">
+              <HotelSearchWidget client:load />
+            </div>
+          </div>
+        </Container>
+      </div>
+    </div>
+  )}
+
+  <!-- Trust Strip -->
+  <div class="bg-neutral-50 border-y border-neutral-200 py-8">
+    <Container>
+      <div class="flex flex-wrap justify-center items-center gap-8 lg:gap-16 text-center">
+        <div class="flex items-center gap-3">
+          <div class="w-12 h-12 rounded-full bg-primary-100 flex items-center justify-center">
+            <svg class="w-6 h-6 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+            </svg>
+          </div>
+          <div class="text-left">
+            <div class="text-sm font-semibold text-neutral-900">Secure Booking</div>
+            <div class="text-xs text-neutral-600">SSL Encrypted</div>
+          </div>
+        </div>
+        <div class="flex items-center gap-3">
+          <div class="w-12 h-12 rounded-full bg-sky-100 flex items-center justify-center">
+            <svg class="w-6 h-6 text-sky-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          <div class="text-left">
+            <div class="text-sm font-semibold text-neutral-900">Instant Confirmation</div>
+            <div class="text-xs text-neutral-600">Immediate booking</div>
+          </div>
+        </div>
+        <div class="flex items-center gap-3">
+          <div class="w-12 h-12 rounded-full bg-accent-100 flex items-center justify-center">
+            <svg class="w-6 h-6 text-accent-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          <div class="text-left">
+            <div class="text-sm font-semibold text-neutral-900">Best Price</div>
+            <div class="text-xs text-neutral-600">We'll match it</div>
+          </div>
+        </div>
+        <div class="flex items-center gap-3">
+          <div class="w-12 h-12 rounded-full bg-secondary-100 flex items-center justify-center">
+            <svg class="w-6 h-6 text-secondary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          <div class="text-left">
+            <div class="text-sm font-semibold text-neutral-900">24/7 Support</div>
+            <div class="text-xs text-neutral-600">Always here to help</div>
+          </div>
+        </div>
+      </div>
+    </Container>
+    </div>
+
+  <!-- Explore Map Section -->
+  <div class="bg-neutral-50 py-16 lg:py-20">
+    <Container>
+      <div class="text-center mb-10">
+        <h2 class="text-display-sm lg:text-display-md mb-4 text-neutral-900">Explore Telluride Hotels</h2>
+        <p class="text-lg text-neutral-600 max-w-2xl mx-auto">
+          Browse all available hotels on the map and find the perfect location for your ski adventure
+        </p>
+      </div>
+      <div class="h-[400px] lg:h-[500px]">
+        <LodgingMap client:visible hotels={allHotels} checkInDate={featuredCheckInDate} />
+      </div>
+    </Container>
+    </div>
+
+  <Container class="py-20 lg:py-32">
+    <!-- Featured Hotels Section -->
+    <section class="mb-32">
+      <div class="text-center mb-16">
+        <h2 class="text-display-sm lg:text-display-md mb-4 text-neutral-900 font-bold">Featured Hotels in Telluride</h2>
+        <p class="text-xl text-neutral-600 max-w-2xl mx-auto leading-relaxed font-normal">
+          Discover our handpicked selection of the finest ski hotels. Real-time availability and competitive pricing.
+        </p>
+      </div>
+      <FeaturedHotels client:visible limit={6} initialHotels={featuredHotelsData} minPrices={minPrices} currency="USD" checkInDate={featuredCheckInDate} />
+      <div class="text-center mt-16">
+        <a 
+          href="/lodging" 
+          class="inline-flex items-center gap-2 bg-primary-600 text-white px-10 py-4 rounded-xl font-semibold text-lg shadow-card hover:shadow-card-hover hover:bg-primary-700 transition-all duration-300"
+        >
+          View All Hotels
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+          </svg>
+        </a>
+      </div>
+    </section>
+
+    <!-- Why Choose Us Section -->
+    <section class="mb-32">
+      <div class="text-center mb-16">
+        <h2 class="text-display-sm lg:text-display-md mb-4 text-neutral-900 font-bold">Why Book With Us</h2>
+        <p class="text-xl text-neutral-600 max-w-2xl mx-auto leading-relaxed font-normal">
+          Everything you need for the perfect ski vacation in one place
+        </p>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-12">
+        <div class="group text-center p-8 rounded-2xl bg-white border border-neutral-200 shadow-card hover:shadow-card-hover transition-all duration-300 hover:-translate-y-1">
+          <div class="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-primary-600 shadow-card group-hover:shadow-card-hover group-hover:scale-110 transition-all duration-300 mb-6">
+            <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+            </svg>
+          </div>
+          <h3 class="text-2xl font-bold mb-4 text-neutral-900">Real-Time Availability</h3>
+          <p class="text-neutral-600 leading-relaxed text-lg">
+            See current availability and prices updated in real-time from our verified hotel partners across Telluride
+          </p>
+        </div>
+        <div class="group text-center p-8 rounded-2xl bg-white border border-neutral-200 shadow-card hover:shadow-card-hover transition-all duration-300 hover:-translate-y-1">
+          <div class="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-primary-600 shadow-card group-hover:shadow-card-hover group-hover:scale-110 transition-all duration-300 mb-6">
+            <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          <h3 class="text-2xl font-bold mb-4 text-neutral-900">Best Price Guarantee</h3>
+          <p class="text-neutral-600 leading-relaxed text-lg">
+            Compare prices across multiple hotels and book with confidence. Find a lower price? We'll match it
+          </p>
+        </div>
+        <div class="group text-center p-8 rounded-2xl bg-white border border-neutral-200 shadow-card hover:shadow-card-hover transition-all duration-300 hover:-translate-y-1">
+          <div class="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-primary-600 shadow-card group-hover:shadow-card-hover group-hover:scale-110 transition-all duration-300 mb-6">
+            <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          <h3 class="text-2xl font-bold mb-4 text-neutral-900">Instant Confirmation</h3>
+          <p class="text-neutral-600 leading-relaxed text-lg">
+            Get instant booking confirmation with secure payment processing and 24/7 customer support
+          </p>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- Final CTA Section -->
+    <section class="bg-primary-600 rounded-3xl p-12 lg:p-20 text-white shadow-card text-center">
+      <h2 class="text-display-sm lg:text-display-md mb-6 font-extrabold">Ready to Plan Your Ski Adventure?</h2>
+      <p class="text-xl lg:text-2xl mb-10 max-w-2xl mx-auto leading-relaxed font-medium">
+        Start exploring Telluride's best ski hotels and find your perfect mountain getaway today
+      </p>
+      <a 
+        href="/lodging" 
+        class="inline-flex items-center gap-2 bg-white text-primary-600 px-12 py-5 rounded-xl font-bold text-lg shadow-card hover:shadow-card-hover hover:scale-105 transition-all duration-300"
+      >
+        Browse All Hotels
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+          </svg>
+      </a>
+    </section>
+  </Container>
+</PageLayout>

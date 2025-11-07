@@ -1,0 +1,17 @@
+---
+export const prerender = false;
+
+import PageLayout from '@/components/layout/PageLayout.astro';
+import { AdminLogin } from '@/components/admin/AdminLogin';
+---
+
+<PageLayout
+  title="Admin Login - Telluride Ski Hotels"
+  description="Admin dashboard login"
+  noindex={true}
+>
+  <div class="min-h-screen bg-gradient-to-br from-neutral-50 to-neutral-100 flex items-center justify-center p-4">
+    <AdminLogin client:load />
+  </div>
+</PageLayout>
+
