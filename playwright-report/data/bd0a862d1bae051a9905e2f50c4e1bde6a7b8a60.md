@@ -1,0 +1,229 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e4]:
+      - link "Telluride Ski Hotels Icon TELLURIDESKI HOTELS.COM" [ref=e5] [cursor=pointer]:
+        - /url: /
+        - img "Telluride Ski Hotels Icon" [ref=e6]
+        - generic [ref=e7]:
+          - generic [ref=e8]: TELLURIDESKI
+          - generic [ref=e9]: HOTELS.COM
+      - navigation [ref=e10]:
+        - link "Hotels" [ref=e11] [cursor=pointer]:
+          - /url: /lodging
+          - text: Hotels
+        - link "About" [ref=e12] [cursor=pointer]:
+          - /url: /about
+          - text: About
+  - main [ref=e13]:
+    - generic [ref=e14]:
+      - navigation "Breadcrumb" [ref=e15]:
+        - link [ref=e16] [cursor=pointer]:
+          - /url: /
+          - img [ref=e17]
+        - img [ref=e19]
+        - link "Home" [ref=e21] [cursor=pointer]:
+          - /url: /
+        - img [ref=e22]
+        - link "Hotels" [ref=e24] [cursor=pointer]:
+          - /url: /lodging
+      - generic [ref=e25]:
+        - heading "Find Your Perfect Hotel" [level=1] [ref=e26]
+        - paragraph [ref=e27]: Search and compare hotels in Telluride
+        - generic [ref=e30]:
+          - generic [ref=e31]:
+            - generic [ref=e32]:
+              - generic [ref=e33]: Check-in
+              - generic [ref=e34]:
+                - img
+                - textbox "Check-in" [ref=e36]: 2025-11-07
+            - generic [ref=e37]:
+              - generic [ref=e38]: Check-out
+              - generic [ref=e39]:
+                - img
+                - textbox "Check-out" [ref=e41]: 2025-11-10
+            - generic [ref=e42]:
+              - generic [ref=e43]: Guests
+              - generic [ref=e44]:
+                - img
+                - spinbutton "Guests" [ref=e46]: "2"
+          - button "Search Hotels" [ref=e47] [cursor=pointer]:
+            - img [ref=e48]
+            - text: Search Hotels
+      - generic [ref=e51]:
+        - heading "4 Hotels in Telluride" [level=2] [ref=e52]
+        - paragraph [ref=e53]: 11/7/2025 - 11/10/2025 • 3 nights • 2 adults
+      - generic [ref=e55]:
+        - generic [ref=e57]:
+          - generic [ref=e58]:
+            - paragraph [ref=e59]: Showing 1-4 of 4 hotels
+            - generic [ref=e60]:
+              - img [ref=e61]
+              - combobox [ref=e64]:
+                - option "Highest Rated" [selected]
+                - 'option "Price: Low to High"'
+                - 'option "Price: High to Low"'
+                - 'option "Name: A to Z"'
+          - generic [ref=e65]:
+            - generic [ref=e66]:
+              - generic [ref=e67] [cursor=pointer]:
+                - img "The Auberge Residences at Element 52" [ref=e68]
+                - generic [ref=e70]:
+                  - img [ref=e71]
+                  - generic [ref=e73]: "5"
+                - generic [ref=e74]: "9.8"
+              - generic [ref=e75]:
+                - heading "The Auberge Residences at Element 52" [level=3] [ref=e76]
+                - generic [ref=e77]:
+                  - img [ref=e78]
+                  - generic [ref=e81]: 398 South Davis Street, Telluride
+                - paragraph [ref=e82]: 34 reviews
+                - generic [ref=e84]:
+                  - generic [ref=e85]: "Next available: Nov 7"
+                  - generic [ref=e86]: From
+                  - generic [ref=e87]:
+                    - generic [ref=e88]: $879.64
+                    - generic [ref=e89]: / night
+                - button "View Details & Book" [ref=e90] [cursor=pointer]
+            - generic [ref=e91]:
+              - generic [ref=e92] [cursor=pointer]:
+                - img "The Hotel Telluride" [ref=e93]
+                - generic [ref=e95]:
+                  - img [ref=e96]
+                  - generic [ref=e98]: "4"
+                - generic [ref=e99]: "9.0"
+              - generic [ref=e100]:
+                - heading "The Hotel Telluride" [level=3] [ref=e101]
+                - generic [ref=e102]:
+                  - img [ref=e103]
+                  - generic [ref=e106]: 199 North Cornet Street, Telluride
+                - paragraph [ref=e107]: 456 reviews
+                - generic [ref=e109]:
+                  - generic [ref=e110]: "Next available: Nov 7"
+                  - generic [ref=e111]: From
+                  - generic [ref=e112]:
+                    - generic [ref=e113]: $288.52
+                    - generic [ref=e114]: / night
+                - button "View Details & Book" [ref=e115] [cursor=pointer]
+            - generic [ref=e116]:
+              - generic [ref=e117] [cursor=pointer]:
+                - img "Camel's Garden Hotel" [ref=e118]
+                - generic [ref=e120]:
+                  - img [ref=e121]
+                  - generic [ref=e123]: "3"
+                - generic [ref=e124]: "9.0"
+              - generic [ref=e125]:
+                - heading "Camel's Garden Hotel" [level=3] [ref=e126]
+                - generic [ref=e127]:
+                  - img [ref=e128]
+                  - generic [ref=e131]: 250 W. San Juan Ave., Telluride
+                - paragraph [ref=e132]: 128 reviews
+                - generic [ref=e134]:
+                  - generic [ref=e135]: "Next available: Nov 7"
+                  - generic [ref=e136]: From
+                  - generic [ref=e137]:
+                    - generic [ref=e138]: $286.7
+                    - generic [ref=e139]: / night
+                - button "View Details & Book" [ref=e140] [cursor=pointer]
+            - generic [ref=e141]:
+              - generic [ref=e142] [cursor=pointer]:
+                - img "The Victorian Inn" [ref=e143]
+                - generic [ref=e145]:
+                  - img [ref=e146]
+                  - generic [ref=e148]: "3"
+                - generic [ref=e149]: "7.5"
+              - generic [ref=e150]:
+                - heading "The Victorian Inn" [level=3] [ref=e151]
+                - generic [ref=e152]:
+                  - img [ref=e153]
+                  - generic [ref=e156]: 401 West Pacific Avenue, Telluride
+                - paragraph [ref=e157]: 518 reviews
+                - generic [ref=e159]:
+                  - generic [ref=e160]: "Next available: Nov 7"
+                  - generic [ref=e161]: From
+                  - generic [ref=e162]:
+                    - generic [ref=e163]: $184.18
+                    - generic [ref=e164]: / night
+                - button "View Details & Book" [ref=e165] [cursor=pointer]
+        - generic [ref=e168]:
+          - generic [ref=e169]:
+            - generic:
+              - region "Map" [ref=e170]
+              - img "Map marker" [ref=e171]:
+                - img [ref=e173] [cursor=pointer]
+              - img "Map marker" [ref=e175]:
+                - img [ref=e177] [cursor=pointer]
+              - img "Map marker" [ref=e179]:
+                - img [ref=e181] [cursor=pointer]
+              - img "Map marker" [ref=e183]:
+                - img [ref=e185] [cursor=pointer]
+            - generic:
+              - generic [ref=e187]:
+                - button "Zoom in" [ref=e188] [cursor=pointer]
+                - button "Zoom out" [ref=e190] [cursor=pointer]
+              - button "Toggle attribution" [ref=e193] [cursor=pointer]
+              - link "Mapbox homepage" [ref=e196] [cursor=pointer]:
+                - /url: https://www.mapbox.com/
+            - button "Show Ski Trails" [ref=e199] [cursor=pointer]:
+              - img [ref=e200]
+              - generic [ref=e202]: Show Ski Trails
+          - generic:
+            - generic:
+              - img
+              - generic: 4 Hotels
+  - contentinfo [ref=e203]:
+    - generic [ref=e204]:
+      - generic [ref=e205]:
+        - generic [ref=e206]:
+          - generic [ref=e207]:
+            - img "Telluride Ski Hotels" [ref=e208]
+            - generic [ref=e209]:
+              - generic [ref=e210]: TELLURIDESKI
+              - generic [ref=e211]: HOTELS.COM
+          - paragraph [ref=e212]: Find and book the best ski hotels in Telluride, Colorado with real-time availability and instant confirmation.
+        - generic [ref=e213]:
+          - heading "Quick Links" [level=4] [ref=e214]
+          - list [ref=e215]:
+            - listitem [ref=e216]:
+              - link "Search Hotels" [ref=e217] [cursor=pointer]:
+                - /url: /lodging
+            - listitem [ref=e218]:
+              - link "About Us" [ref=e219] [cursor=pointer]:
+                - /url: /about
+        - generic [ref=e220]:
+          - heading "Support" [level=4] [ref=e221]
+          - list [ref=e222]:
+            - listitem [ref=e223]:
+              - link "Contact" [ref=e224] [cursor=pointer]:
+                - /url: /contact
+            - listitem [ref=e225]:
+              - link "FAQ" [ref=e226] [cursor=pointer]:
+                - /url: /faq
+        - generic [ref=e227]:
+          - heading "Legal" [level=4] [ref=e228]
+          - list [ref=e229]:
+            - listitem [ref=e230]:
+              - link "Privacy Policy" [ref=e231] [cursor=pointer]:
+                - /url: /privacy
+            - listitem [ref=e232]:
+              - link "Terms of Service" [ref=e233] [cursor=pointer]:
+                - /url: /terms
+      - paragraph [ref=e235]: © 2025 Telluride Ski Hotels. All rights reserved.
+  - generic [ref=e238]:
+    - button "Menu" [ref=e239]:
+      - img [ref=e241]
+      - generic: Menu
+    - button "Inspect" [ref=e245]:
+      - img [ref=e247]
+      - generic: Inspect
+    - button "Audit" [ref=e249]:
+      - generic [ref=e250]:
+        - img [ref=e251]
+        - img [ref=e254]
+      - generic: Audit
+    - button "Settings" [ref=e257]:
+      - img [ref=e259]
+      - generic: Settings
+```

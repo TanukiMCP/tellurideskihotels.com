@@ -11,6 +11,7 @@ export interface SelectedRoom {
   rateId: string;
   roomId: string;
   roomName: string;
+  offerId?: string;
   checkIn: string;
   checkOut: string;
   adults: number;

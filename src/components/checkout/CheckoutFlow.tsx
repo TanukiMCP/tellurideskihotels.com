@@ -45,6 +45,7 @@ export function CheckoutFlow({ hotelId, hotelName, room, addons = [], onComplete
         body: JSON.stringify({
           hotel_id: hotelId,
           rate_id: room.rateId,
+          offerId: room.offerId,
           checkin: room.checkIn,
           checkout: room.checkOut,
           adults: room.adults,

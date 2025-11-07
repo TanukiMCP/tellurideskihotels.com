@@ -52,6 +52,7 @@ export interface LiteAPIRate {
   room_id: string;
   room_name: string;
   room_description?: string;
+  offer_id?: string;
   checkin?: string;
   checkout?: string;
   adults?: number;
@@ -102,6 +103,8 @@ export interface LiteAPIAddon {
 export interface LiteAPIPrebookRequest {
   hotel_id: string;
   rate_id: string;
+  offerId?: string;
+  offer_id?: string;
   checkin: string;
   checkout: string;
   adults: number;
@@ -132,10 +135,12 @@ export interface LiteAPIPrebookResponse {
 }
 
 export interface LiteAPIConfirmRequest {
-  prebook_id: string;
+  prebook_id?: string;
+  prebookId?: string;
   payment?: {
     method: string;
     transaction_id?: string;
+    transactionId?: string;
   };
 }
 

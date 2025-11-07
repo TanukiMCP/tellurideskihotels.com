@@ -53,6 +53,7 @@ export function HotelDetailView({ hotel, checkIn, checkOut, adults, children = 0
       rateId: bookingData.rateId,
       roomId: bookingData.roomData.room_id,
       roomName: bookingData.roomData.room_name,
+      offerId: bookingData.roomData.offer_id,
       checkIn: bookingData.checkIn,
       checkOut: bookingData.checkOut,
       adults: bookingData.adults,

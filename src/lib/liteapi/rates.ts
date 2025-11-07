@@ -113,6 +113,7 @@ export async function searchRates(params: LiteAPIRateSearchParams): Promise<Rate
                 rate_id: rate.rateId,
                 room_id: roomType.roomTypeId,
                 room_name: rate.name || roomType.name || 'Standard Room',
+                offer_id: roomType.offerId, // Required for prebook
                 net: {
                   amount: pricePerNight, // Per-night price WITH margin
                   currency,
