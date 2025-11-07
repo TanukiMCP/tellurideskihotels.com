@@ -1,5 +1,79 @@
-import { liteAPIClient } from './client';
+import { LITEAPI_BASE_URL, LITEAPI_PUBLIC_KEY } from './config';
 import { TELLURIDE_CENTER } from '@/lib/mapbox-utils';
+
+// Weather API Error class
+class WeatherAPIError extends Error {
+  constructor(
+    public status: number,
+    public code?: string,
+    message?: string
+  ) {
+    super(message || `Weather API error: ${status}`);
+    this.name = 'WeatherAPIError';
+  }
+}
+
+// Dedicated weather API client that uses PUBLIC key
+async function weatherAPIClient<T>(endpoint: string): Promise<T> {
+  const url = `${LITEAPI_BASE_URL}${endpoint}`;
+  const startTime = Date.now();
+  
+  console.log('[Weather API Client] Request:', {
+    url,
+    usingPublicKey: true,
+  });
+  
+  const headers = new Headers();
+  headers.set('X-API-Key', LITEAPI_PUBLIC_KEY); // Use PUBLIC key for data endpoints
+  headers.set('Accept', 'application/json');
+
+  try {
+    const response = await fetch(url, { headers });
+    const duration = Date.now() - startTime;
+
+    if (!response.ok) {
+      let errorData;
+      let errorText = '';
+      try {
+        errorText = await response.text();
+        errorData = errorText ? JSON.parse(errorText) : { error: { message: response.statusText } };
+      } catch (parseError) {
+        errorData = { error: { message: response.statusText } };
+      }
+      
+      console.error('[Weather API Client] Error:', {
+        endpoint,
+        status: response.status,
+        duration: `${duration}ms`,
+        errorData,
+        responseText: errorText.substring(0, 500),
+      });
+      
+      throw new WeatherAPIError(
+        response.status,
+        errorData.error?.code,
+        errorData.error?.message || response.statusText
+      );
+    }
+
+    const data = await response.json();
+    console.log('[Weather API Client] Success:', {
+      endpoint: endpoint.split('?')[0],
+      duration: `${duration}ms`,
+    });
+
+    return data;
+  } catch (error) {
+    if (error instanceof WeatherAPIError) {
+      throw error;
+    }
+    throw new WeatherAPIError(
+      500,
+      'NETWORK_ERROR',
+      error instanceof Error ? error.message : 'Network request failed'
+    );
+  }
+}
 
 // Actual liteAPI weather response structure from documentation
 // https://docs.liteapi.travel/docs/weather-data-api-endpoint
@@ -79,7 +153,7 @@ export async function getWeather(params: WeatherParams): Promise<WeatherResponse
   const endpoint = `/data/weather?${searchParams.toString()}`;
   console.log('[Weather API] Full endpoint:', endpoint);
   
-  const response = await liteAPIClient<WeatherResponse>(endpoint);
+  const response = await weatherAPIClient<WeatherResponse>(endpoint);
   console.log('[Weather API] Response received:', JSON.stringify(response, null, 2));
   console.log('[Weather API] Response structure check:', {
     hasWeatherData: !!response.weatherData,
