@@ -28,15 +28,11 @@ export const GET: APIRoute = async ({ request }) => {
       method: 'GET',
     });
 
-    // Debug: Log the structure of the first review
-    if (reviews.data && reviews.data.length > 0) {
-      console.log('[Reviews API] First review structure:', JSON.stringify(reviews.data[0], null, 2));
-    }
-
     return new Response(JSON.stringify(reviews), {
       status: 200,
       headers: {
         'Content-Type': 'application/json',
+        'Cache-Control': 'public, max-age=3600, s-maxage=7200', // Cache 1hr client, 2hr CDN
       },
     });
   } catch (error: any) {

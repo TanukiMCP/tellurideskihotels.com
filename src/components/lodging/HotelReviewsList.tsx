@@ -3,14 +3,16 @@ import { Card, CardContent } from '@/components/ui/Card';
 import { Star, ThumbsUp, ThumbsDown, User } from 'lucide-react';
 
 interface Review {
-  rating: number;
-  title?: string;
-  text?: string;
+  averageScore: number;
+  headline?: string;
   pros?: string;
   cons?: string;
   date?: string;
-  author?: string;
-  helpful?: number;
+  name?: string;
+  country?: string;
+  type?: string;
+  language?: string;
+  source?: string;
 }
 
 interface HotelReviewsListProps {
@@ -30,8 +32,6 @@ export function HotelReviewsList({ hotelId, averageRating = 0, reviewCount = 0 }
         const response = await fetch(`/api/hotels/reviews?hotelId=${hotelId}&limit=20`);
         if (response.ok) {
           const data = await response.json();
-          console.log('[HotelReviewsList] Full API response:', data);
-          console.log('[HotelReviewsList] First review:', data.data?.[0]);
           setReviews(data.data || []);
         }
       } catch (error) {
@@ -96,7 +96,7 @@ export function HotelReviewsList({ hotelId, averageRating = 0, reviewCount = 0 }
           <>
             <div className="space-y-4">
               {displayedReviews.map((review, index) => {
-                const hasTextContent = review.text || review.title || review.pros || review.cons;
+                const hasTextContent = review.headline || review.pros || review.cons;
                 
                 return (
                   <div
@@ -107,10 +107,15 @@ export function HotelReviewsList({ hotelId, averageRating = 0, reviewCount = 0 }
                     <div className="flex items-center justify-between mb-3">
                       <div className="flex items-center gap-2">
                         <div className="bg-primary-600 text-white px-3 py-1 rounded-lg font-bold text-sm">
-                          {review.rating ? `${review.rating}/10` : 'N/A'}
+                          {review.averageScore ? `${review.averageScore}/10` : 'N/A'}
                         </div>
-                        {review.author && (
-                          <span className="text-sm font-medium text-neutral-700">{review.author}</span>
+                        {review.name && (
+                          <span className="text-sm font-medium text-neutral-700">{review.name}</span>
+                        )}
+                        {review.type && (
+                          <span className="text-xs text-neutral-500 bg-neutral-200 px-2 py-1 rounded">
+                            {review.type}
+                          </span>
                         )}
                       </div>
                       {review.date && (
@@ -124,13 +129,8 @@ export function HotelReviewsList({ hotelId, averageRating = 0, reviewCount = 0 }
                     </div>
 
                     {/* Title */}
-                    {review.title && (
-                      <h4 className="font-semibold text-neutral-900 mb-3 text-base">{review.title}</h4>
-                    )}
-
-                    {/* Review Text */}
-                    {review.text && (
-                      <p className="text-neutral-700 leading-loose text-sm mb-4 whitespace-pre-line">{review.text}</p>
+                    {review.headline && (
+                      <h4 className="font-semibold text-neutral-900 mb-3 text-base">{review.headline}</h4>
                     )}
 
                     {/* Rating-only state */}
@@ -150,7 +150,7 @@ export function HotelReviewsList({ hotelId, averageRating = 0, reviewCount = 0 }
                             <p className="text-sm text-neutral-700 leading-loose whitespace-pre-line">{review.pros}</p>
                           </div>
                         )}
-                        {review.cons && (
+                        {review.cons && review.cons.trim() && (
                           <div>
                             <div className="flex items-center gap-2 mb-2">
                               <ThumbsDown className="w-4 h-4 text-red-600" />
