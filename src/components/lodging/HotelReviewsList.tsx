@@ -30,7 +30,7 @@ export function HotelReviewsList({ hotelId, averageRating = 0, reviewCount = 0 }
         const response = await fetch(`/api/hotels/reviews?hotelId=${hotelId}&limit=20`);
         if (response.ok) {
           const data = await response.json();
-          console.log('[HotelReviewsList] Raw API response:', data);
+          console.log('[HotelReviewsList] Full API response:', data);
           console.log('[HotelReviewsList] First review:', data.data?.[0]);
           setReviews(data.data || []);
         }
@@ -107,7 +107,7 @@ export function HotelReviewsList({ hotelId, averageRating = 0, reviewCount = 0 }
                     <div className="flex items-center justify-between mb-3">
                       <div className="flex items-center gap-2">
                         <div className="bg-primary-600 text-white px-3 py-1 rounded-lg font-bold text-sm">
-                          {review.rating != null && review.rating !== 0 ? `${review.rating}/10` : 'N/A'}
+                          {review.rating ? `${review.rating}/10` : 'N/A'}
                         </div>
                         {review.author && (
                           <span className="text-sm font-medium text-neutral-700">{review.author}</span>
