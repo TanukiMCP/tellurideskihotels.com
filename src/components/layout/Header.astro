@@ -6,13 +6,12 @@ import Container from './Container.astro';
 <header class="sticky top-0 z-50 glass-effect border-b border-neutral-200 shadow-card">
   <Container>
     <div class="flex items-center justify-between h-20">
-      <a href="/" class="flex items-center space-x-3 group">
-        <div class="w-11 h-11 rounded-xl bg-gradient-primary flex items-center justify-center shadow-card group-hover:shadow-card-hover transition-all duration-300 group-hover:scale-105">
-          <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-          </svg>
-        </div>
-        <h1 class="text-2xl font-bold text-neutral-900 font-display">{SITE_NAME}</h1>
+      <a href="/" class="flex items-center group">
+        <img 
+          src="/android-chrome-192x192.png" 
+          alt="Telluride Ski Hotels" 
+          class="h-12 w-auto transition-all duration-300 group-hover:scale-105"
+        />
       </a>
       <nav class="flex items-center space-x-8">
         <a href="/lodging" class="text-neutral-700 hover:text-primary-600 font-semibold relative transition-colors duration-200 group">
