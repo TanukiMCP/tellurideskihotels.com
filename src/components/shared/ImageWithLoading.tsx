@@ -18,7 +18,7 @@ export function ImageWithLoading({ src, alt, className, onError }: ImageWithLoad
     setError(false);
   }, [src]);
 
-  // Timeout fallback: if image doesn't load within 10 seconds, show error
+  // Timeout fallback: if image doesn't load within 30 seconds, show error
   useEffect(() => {
     const timeout = setTimeout(() => {
       if (loading) {
@@ -27,7 +27,7 @@ export function ImageWithLoading({ src, alt, className, onError }: ImageWithLoad
         setError(true);
         onError?.();
       }
-    }, 10000);
+    }, 30000);
 
     return () => clearTimeout(timeout);
   }, [loading, src, onError]);

@@ -93,66 +93,75 @@ export function HotelReviewsList({ hotelId, averageRating = 0, reviewCount = 0 }
         ) : (
           <>
             <div className="space-y-4">
-              {displayedReviews.map((review, index) => (
-                <div
-                  key={index}
-                  className="bg-neutral-50 rounded-lg p-5 border border-neutral-200 hover:border-primary-300 transition-colors"
-                >
-                  {/* Rating & Date */}
-                  <div className="flex items-center justify-between mb-3">
-                    <div className="flex items-center gap-2">
-                      <div className="bg-primary-600 text-white px-3 py-1 rounded-lg font-bold text-sm">
-                        {review.rating}/10
+              {displayedReviews.map((review, index) => {
+                const hasTextContent = review.text || review.title || review.pros || review.cons;
+                
+                return (
+                  <div
+                    key={index}
+                    className="bg-neutral-50 rounded-lg p-5 border border-neutral-200 hover:border-primary-300 transition-colors"
+                  >
+                    {/* Rating & Date */}
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="flex items-center gap-2">
+                        <div className="bg-primary-600 text-white px-3 py-1 rounded-lg font-bold text-sm">
+                          {review.rating ? `${review.rating}/10` : 'N/A'}
+                        </div>
+                        {review.author && (
+                          <span className="text-sm font-medium text-neutral-700">{review.author}</span>
+                        )}
                       </div>
-                      {review.author && (
-                        <span className="text-sm font-medium text-neutral-700">{review.author}</span>
+                      {review.date && (
+                        <span className="text-xs text-neutral-500">
+                          {new Date(review.date).toLocaleDateString('en-US', {
+                            month: 'long',
+                            year: 'numeric',
+                          })}
+                        </span>
                       )}
                     </div>
-                    {review.date && (
-                      <span className="text-xs text-neutral-500">
-                        {new Date(review.date).toLocaleDateString('en-US', {
-                          month: 'long',
-                          year: 'numeric',
-                        })}
-                      </span>
+
+                    {/* Title */}
+                    {review.title && (
+                      <h4 className="font-semibold text-neutral-900 mb-3 text-base">{review.title}</h4>
+                    )}
+
+                    {/* Review Text */}
+                    {review.text && (
+                      <p className="text-neutral-700 leading-loose text-sm mb-4 whitespace-pre-line">{review.text}</p>
+                    )}
+
+                    {/* Rating-only state */}
+                    {!hasTextContent && (
+                      <p className="text-neutral-500 text-sm italic">Guest provided a rating without written feedback.</p>
+                    )}
+
+                    {/* Pros & Cons */}
+                    {(review.pros || review.cons) && (
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4 pt-4 border-t border-neutral-200">
+                        {review.pros && (
+                          <div>
+                            <div className="flex items-center gap-2 mb-2">
+                              <ThumbsUp className="w-4 h-4 text-green-600" />
+                              <span className="text-sm font-semibold text-neutral-900">Pros</span>
+                            </div>
+                            <p className="text-sm text-neutral-700 leading-loose whitespace-pre-line">{review.pros}</p>
+                          </div>
+                        )}
+                        {review.cons && (
+                          <div>
+                            <div className="flex items-center gap-2 mb-2">
+                              <ThumbsDown className="w-4 h-4 text-red-600" />
+                              <span className="text-sm font-semibold text-neutral-900">Cons</span>
+                            </div>
+                            <p className="text-sm text-neutral-700 leading-loose whitespace-pre-line">{review.cons}</p>
+                          </div>
+                        )}
+                      </div>
                     )}
                   </div>
-
-                  {/* Title */}
-                  {review.title && (
-                    <h4 className="font-semibold text-neutral-900 mb-2">{review.title}</h4>
-                  )}
-
-                  {/* Review Text */}
-                  {review.text && (
-                    <p className="text-neutral-700 leading-relaxed mb-3">{review.text}</p>
-                  )}
-
-                  {/* Pros & Cons */}
-                  {(review.pros || review.cons) && (
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4 pt-4 border-t border-neutral-200">
-                      {review.pros && (
-                        <div>
-                          <div className="flex items-center gap-2 mb-2">
-                            <ThumbsUp className="w-4 h-4 text-green-600" />
-                            <span className="text-sm font-semibold text-neutral-900">Pros</span>
-                          </div>
-                          <p className="text-sm text-neutral-700 leading-relaxed">{review.pros}</p>
-                        </div>
-                      )}
-                      {review.cons && (
-                        <div>
-                          <div className="flex items-center gap-2 mb-2">
-                            <ThumbsDown className="w-4 h-4 text-red-600" />
-                            <span className="text-sm font-semibold text-neutral-900">Cons</span>
-                          </div>
-                          <p className="text-sm text-neutral-700 leading-relaxed">{review.cons}</p>
-                        </div>
-                      )}
-                    </div>
-                  )}
-                </div>
-              ))}
+                );
+              })}
             </div>
 
             {/* Show More Button */}

@@ -530,7 +530,7 @@ export function RoomSelectorCard({
                 onClick={handleBookNow}
                 disabled={!selectedRate || !selectedRoomId}
                 size="lg"
-                  className="w-full bg-white text-primary-700 hover:bg-neutral-50 disabled:bg-neutral-300 disabled:text-neutral-500 font-bold text-lg py-6 shadow-lg transition-all"
+                  className="w-full !bg-white !text-primary-700 hover:!bg-neutral-50 disabled:!bg-white/60 disabled:!text-neutral-500 font-bold text-lg py-6 shadow-lg transition-all"
               >
                   {!selectedRate || !selectedRoomId ? 'Please select a room' : 'Continue to Checkout'}
               </Button>
