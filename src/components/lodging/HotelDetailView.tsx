@@ -30,7 +30,12 @@ export function HotelDetailView({ hotel, checkIn, checkOut, adults, children = 0
   const ratingColor = getRatingColor(rating);
   
   // Get images from LiteAPI only - no fallbacks
-  const allImages = getHotelImages(hotel);
+  const allImages = getHotelImages(hotel).filter(url => {
+    // Filter out invalid URLs
+    if (!url || url.trim() === '') return false;
+    // Ensure URL is valid (starts with http:// or https://)
+    return url.startsWith('http://') || url.startsWith('https://');
+  });
   const hasImages = allImages.length > 0;
 
   const handleBookingReady = (bookingData: {
@@ -180,46 +185,159 @@ export function HotelDetailView({ hotel, checkIn, checkOut, adults, children = 0
         )}
         
         {(() => {
-          const skiInSkiOut = hotel.amenities?.some(a => 
-            (a.name?.toLowerCase() || a.code?.toLowerCase() || '').includes('ski') && 
-            ((a.name?.toLowerCase() || a.code?.toLowerCase() || '').includes('in') || 
-             (a.name?.toLowerCase() || a.code?.toLowerCase() || '').includes('out') ||
-             (a.name?.toLowerCase() || a.code?.toLowerCase() || '').includes('access'))
+          // Check for ski-in/ski-out amenities - more comprehensive matching
+          const amenityStrings = hotel.amenities?.map(a => 
+            `${a.name || ''} ${a.code || ''}`.toLowerCase()
+          ) || [];
+          
+          const skiKeywords = ['ski', 'slope', 'mountain', 'gondola', 'lift'];
+          const accessKeywords = ['in', 'out', 'access', 'direct', 'walk'];
+          
+          const hasSkiKeyword = amenityStrings.some(str => 
+            skiKeywords.some(keyword => str.includes(keyword))
           );
           
-          return skiInSkiOut && (
+          const hasAccessKeyword = amenityStrings.some(str => 
+            accessKeywords.some(keyword => str.includes(keyword))
+          );
+          
+          // Also check for common ski-in/ski-out patterns
+          const skiInSkiOut = amenityStrings.some(str => 
+            (str.includes('ski') && (str.includes('in') || str.includes('out'))) ||
+            str.includes('ski-in') ||
+            str.includes('ski-out') ||
+            str.includes('ski access') ||
+            str.includes('slope access') ||
+            (hasSkiKeyword && hasAccessKeyword)
+          );
+          
+          return skiInSkiOut ? (
             <Card>
               <CardContent className="p-4 text-center">
                 <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-blue-100 mb-2">
                   <svg className="w-8 h-8 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                   </svg>
                 </div>
                 <div className="text-sm font-semibold text-neutral-900">Ski In/Ski Out</div>
                 <div className="text-xs text-neutral-600">Direct Slope Access</div>
               </CardContent>
             </Card>
-          );
+          ) : null;
         })()}
       </div>
 
       {/* Description */}
-      {hotel.description?.text && (
-        <Card className="border-neutral-200 shadow-sm">
-          <CardContent className="p-8">
-            <h2 className="text-3xl font-bold mb-6 text-neutral-900 border-b border-neutral-200 pb-4">About This Hotel</h2>
-            <div 
-              className="text-neutral-700 text-base leading-relaxed space-y-4"
-              dangerouslySetInnerHTML={{ 
-                __html: hotel.description.text
-                  .replace(/<p><strong>(.*?)<\/strong><\/p>/g, '<h3 class="text-xl font-bold text-neutral-900 mt-6 mb-3">$1</h3>')
-                  .replace(/<p>/g, '<p class="mb-4">')
-                  .replace(/<br\s*\/?>/g, '')
-              }}
-            />
-          </CardContent>
-        </Card>
-      )}
+      {hotel.description?.text && (() => {
+        const descriptionText = hotel.description.text;
+        
+        // Parse description into structured sections (SSR-safe)
+        const parseDescription = (text: string) => {
+          // Check if HTML
+          const isHTML = /<[a-z][\s\S]*>/i.test(text);
+          
+          if (isHTML) {
+            // Extract headings and paragraphs from HTML using regex
+            const sections: Array<{ title?: string; content: string }> = [];
+            
+            // Match headings: <h1>, <h2>, <h3>, or <p><strong>...</strong></p>
+            const headingPattern = /<(h[1-3]|p)>(.*?)<\/\1>/gi;
+            const strongPattern = /<p><strong>(.*?)<\/strong><\/p>/gi;
+            
+            // First, extract strong paragraphs as headings
+            let processedText = text;
+            const strongMatches = [...text.matchAll(strongPattern)];
+            strongMatches.forEach(match => {
+              const title = match[1].replace(/<[^>]*>/g, '').trim();
+              if (title) {
+                sections.push({ title, content: '' });
+                processedText = processedText.replace(match[0], '');
+              }
+            });
+            
+            // Then process remaining content
+            const paragraphs = processedText
+              .split(/<\/?p[^>]*>/i)
+              .map(p => p.replace(/<[^>]*>/g, '').trim())
+              .filter(p => p.length > 0);
+            
+            if (sections.length === 0) {
+              // No headings found, create sections from paragraphs
+              paragraphs.forEach((para, idx) => {
+                if (idx === 0 && para.length > 100) {
+                  // First long paragraph might be intro
+                  sections.push({ content: para });
+                } else {
+                  sections.push({ content: para });
+                }
+              });
+            } else {
+              // Add paragraphs to last section or create new ones
+              let currentSectionIdx = sections.length - 1;
+              paragraphs.forEach(para => {
+                if (currentSectionIdx >= 0 && !sections[currentSectionIdx].content) {
+                  sections[currentSectionIdx].content = para;
+                } else {
+                  sections.push({ content: para });
+                  currentSectionIdx = sections.length - 1;
+                }
+              });
+            }
+            
+            return sections.length > 0 ? sections : [{ content: text.replace(/<[^>]*>/g, '') }];
+          } else {
+            // Plain text - split by double newlines or common patterns
+            const paragraphs = text
+              .split(/\n\s*\n/)
+              .map(p => p.trim())
+              .filter(p => p.length > 0);
+            
+            // Try to identify section headers (short lines, often ending with colon)
+            const sections: Array<{ title?: string; content: string }> = [];
+            paragraphs.forEach(para => {
+              if (para.length < 80 && (para.endsWith(':') || /^[A-Z][^.!?]*:$/.test(para))) {
+                sections.push({ title: para.replace(':', ''), content: '' });
+              } else {
+                if (sections.length > 0 && !sections[sections.length - 1].content) {
+                  sections[sections.length - 1].content = para;
+                } else {
+                  sections.push({ content: para });
+                }
+              }
+            });
+            
+            return sections.length > 0 ? sections : [{ content: text }];
+          }
+        };
+        
+        const sections = parseDescription(descriptionText);
+        
+        return (
+          <Card className="border-neutral-200 shadow-lg bg-white">
+            <CardContent className="p-10">
+              <h2 className="text-4xl font-bold mb-8 text-neutral-900 border-b-2 border-neutral-200 pb-6">About This Hotel</h2>
+              <div className="space-y-8">
+                {sections.map((section, idx) => (
+                  <div key={idx} className="space-y-4">
+                    {section.title && (
+                      <h3 className="text-2xl font-bold text-neutral-900 mb-4">{section.title}</h3>
+                    )}
+                    <div className="text-neutral-700 text-lg leading-relaxed">
+                      {section.content.split('\n').map((para, pIdx) => (
+                        para.trim() && (
+                          <p key={pIdx} className="mb-4">
+                            {para.trim()}
+                          </p>
+                        )
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        );
+      })()}
 
       {/* Amenities */}
       {hotel.amenities && hotel.amenities.length > 0 && (

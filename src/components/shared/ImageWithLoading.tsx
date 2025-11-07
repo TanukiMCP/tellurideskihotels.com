@@ -75,6 +75,8 @@ export function ImageWithLoading({ src, alt, className, onError }: ImageWithLoad
         onLoad={handleLoad}
         onError={handleError}
         loading="lazy"
+        crossOrigin="anonymous"
+        referrerPolicy="no-referrer"
       />
     </div>
   );
