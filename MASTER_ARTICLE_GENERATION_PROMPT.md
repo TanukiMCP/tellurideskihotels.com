@@ -1288,3 +1288,146 @@ seasonalRelevance: ["winter"]
 
 **This prompt is your guide to creating world-class content that ranks, converts, and genuinely helps readers plan their Telluride ski vacation.**
 
+---
+
+## Completion & Scheduling Workflow
+
+### After Completing an Article
+
+Once you've finished writing an article and it's ready for publishing, follow these steps:
+
+**Step 1: Save the Article**
+- Save to `src/content/drafts/[article-slug].md`
+- Ensure frontmatter is complete with all required fields
+- Set `status: "scheduled"`
+- Set `publishDate` to the scheduled date from `CONTENT_PUBLISHING_SCHEDULE.md`
+
+**Step 2: Mark as Complete in Schedule**
+
+Open `CONTENT_PUBLISHING_SCHEDULE.md` and update the corresponding entry:
+
+❌ **Before (Incomplete):**
+```markdown
+**Day 4: "Best Hotels in Telluride: Top 15 Places to Stay"**
+- Keyword: best hotels in telluride (1,900/mo)
+- Word Count: 2,800
+- Type: Listicle
+- Category: hotel-reviews
+- Tags: hotels, rankings, recommendations
+```
+
+✅ **After (Complete):**
+```markdown
+**Day 4: "Best Hotels in Telluride: Top 15 Places to Stay"** ✅ COMPLETE
+- Keyword: best hotels in telluride (1,900/mo)
+- Word Count: 2,800
+- Type: Listicle
+- Category: hotel-reviews
+- Tags: hotels, rankings, recommendations
+- **Status:** Draft saved at `src/content/drafts/best-hotels-telluride.md`
+- **Publish Date:** 2025-11-18T14:00:00Z
+- **Completed:** 2025-11-07
+```
+
+**Step 3: Commit Changes**
+
+```bash
+# Add the draft article and updated schedule
+git add src/content/drafts/[article-slug].md
+git add CONTENT_PUBLISHING_SCHEDULE.md
+
+# Commit with descriptive message
+git commit -m "content: add [Article Title] - scheduled for [date]"
+
+# Push to GitHub
+git push origin main
+```
+
+**Step 4: Verify in Schedule**
+
+The article will now:
+- Appear in `src/content/drafts/` with `status: "scheduled"`
+- Be marked complete in `CONTENT_PUBLISHING_SCHEDULE.md`
+- Automatically publish on the scheduled date at 9 AM EST via GitHub Actions
+- Trigger a Netlify rebuild via the build hook
+
+### Tracking Progress
+
+**Weekly Review:**
+- Count completed articles in `CONTENT_PUBLISHING_SCHEDULE.md` (search for `✅ COMPLETE`)
+- Verify all completed articles exist in `src/content/drafts/`
+- Check upcoming week's articles and prioritize by importance
+- Update schedule if priorities change
+
+**Monthly Review:**
+- Total articles completed vs. target
+- Category distribution balance
+- Keyword coverage gaps
+- Performance of published articles
+
+### Schedule Format Reference
+
+Each article entry should include:
+
+```markdown
+**Day [N]: "[Article Title]"** ✅ COMPLETE
+- Keyword: [primary keyword] ([volume]/mo)
+- Word Count: [target count]
+- Type: [content type]
+- Category: [category-slug]
+- Tags: [tag1, tag2, tag3]
+- **Status:** Draft saved at `src/content/drafts/[slug].md`
+- **Publish Date:** [ISO 8601 date]
+- **Completed:** [completion date]
+```
+
+### Example Complete Entry
+
+```markdown
+**Day 1: "Complete Guide to Telluride: Everything You Need to Know"** ✅ COMPLETE
+- Keyword: telluride colorado (49,500/mo)
+- Word Count: 3,500
+- Type: Pillar
+- Category: destination-guides
+- Tags: telluride, overview, planning, guide
+- **Status:** Draft saved at `src/content/drafts/complete-guide-telluride.md`
+- **Publish Date:** 2025-11-15T14:00:00Z
+- **Completed:** 2025-11-07
+```
+
+---
+
+### Important Notes
+
+**Scheduling Dates:**
+- All publishDate times should be in UTC (14:00:00Z = 9 AM EST)
+- Follow the schedule order in `CONTENT_PUBLISHING_SCHEDULE.md`
+- Daily articles: one per day at 9 AM EST
+- Spacing: Maintain consistent publishing rhythm
+
+**Status Values:**
+- `"draft"` - Work in progress, not ready
+- `"scheduled"` - Complete, waiting for publish date
+- `"published"` - Live on site (automatically set by publishing script)
+
+**Quality Control:**
+- Run through complete Quality Checklist before marking complete
+- Verify all SEO elements are optimized
+- Test all internal/external links
+- Confirm images are compressed and have alt text
+- Proofread for spelling/grammar
+
+**Emergency Changes:**
+- If you need to update a scheduled article before it publishes:
+  - Edit the file in `src/content/drafts/`
+  - Commit and push changes
+  - Article will publish with latest version
+- If you need to delay publishing:
+  - Change the `publishDate` in frontmatter
+  - Update the date in `CONTENT_PUBLISHING_SCHEDULE.md`
+  - Commit and push
+
+---
+
+**Remember:** Marking articles complete in the schedule provides visibility into content progress, helps maintain publishing cadence, and ensures accountability for the content strategy.
+
