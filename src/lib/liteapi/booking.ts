@@ -19,8 +19,9 @@ export async function prebook(request: LiteAPIPrebookRequest): Promise<LiteAPIPr
     body: JSON.stringify(requestBody),
   });
   
-  // LiteAPI returns data in response.data with camelCase, normalize to snake_case
-  const data = response.data || response;
+  // LiteAPI returns data in response.data.data or response.data with camelCase, normalize to snake_case
+  // Handle nested data structure: { data: { data: {...} } } or { data: {...} } or {...}
+  const data = response.data?.data || response.data || response;
   return {
     prebook_id: data.prebookId || data.prebook_id,
     hotel_id: data.hotelId || data.hotel_id,
@@ -52,8 +53,9 @@ export async function confirmBooking(request: LiteAPIConfirmRequest): Promise<Li
     body: JSON.stringify(requestBody),
   });
   
-  // LiteAPI returns data in response.data with camelCase, normalize to snake_case
-  const data = response.data || response;
+  // LiteAPI returns data in response.data.data or response.data with camelCase, normalize to snake_case
+  // Handle nested data structure: { data: { data: {...} } } or { data: {...} } or {...}
+  const data = response.data?.data || response.data || response;
   return {
     booking_id: data.bookingId || data.booking_id,
     confirmation_number: data.confirmationNumber || data.confirmation_number,
