@@ -83,9 +83,8 @@ export async function getWeather(params: WeatherParams): Promise<WeatherResponse
   console.log('[Weather API] Response structure check:', {
     hasWeatherData: !!response.weatherData,
     weatherDataLength: response.weatherData?.length,
-    hasDetailedWeatherData: !!response.weatherData?.[0]?.detailedWeatherData,
-    hasDaily: !!response.weatherData?.[0]?.detailedWeatherData?.daily,
-    dailyLength: response.weatherData?.[0]?.detailedWeatherData?.daily?.length,
+    hasDailyWeather: !!response.weatherData?.[0]?.dailyWeather,
+    firstItem: response.weatherData?.[0],
   });
   
   return response;

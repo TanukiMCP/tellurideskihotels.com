@@ -28,8 +28,9 @@ export function SnowAlertBadge({ checkIn, checkOut }: SnowAlertBadgeProps) {
         const data = await response.json();
         const weatherData: WeatherData[] = data.weatherData || [];
         
+        // Check if any day in the weather data has snow conditions
         const snowExpected = weatherData.length > 0 && 
-          weatherData[0]?.detailedWeatherData?.daily?.some(w => isSnowConditions(w));
+          weatherData.some((w) => w.dailyWeather && isSnowConditions(w.dailyWeather));
         console.log('[SnowAlertBadge] Snow check result:', { snowExpected, weatherDataCount: weatherData.length });
         setHasSnow(snowExpected);
       } catch (err) {
