@@ -1,7 +1,6 @@
 {
   "name": "Telluride Ski Hotels",
   "short_name": "Telluride Hotels",
-  "description": "Search and book ski hotels in Telluride, Colorado",
   "icons": [
     {
       "src": "/android-chrome-192x192.png",
@@ -14,9 +13,7 @@
       "type": "image/png"
     }
   ],
-  "theme_color": "#14B8A6",
+  "theme_color": "#1e40af",
   "background_color": "#ffffff",
-  "display": "standalone",
-  "start_url": "/"
+  "display": "standalone"
 }
-
