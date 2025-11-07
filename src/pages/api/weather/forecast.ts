@@ -38,7 +38,7 @@ export const GET: APIRoute = async ({ request }) => {
       units: units || 'imperial',
     });
 
-    console.log('[Weather API Route] Success, returning data');
+    console.log('[Weather API Route] Success, returning data:', JSON.stringify(weatherData, null, 2));
     return new Response(JSON.stringify(weatherData), {
       status: 200,
       headers: {

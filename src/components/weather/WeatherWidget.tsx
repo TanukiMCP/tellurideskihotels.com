@@ -32,6 +32,14 @@ export function WeatherWidget({ startDate, endDate, title = 'Weather Forecast', 
         
         const data = await response.json();
         console.log('[WeatherWidget] Weather data received:', data);
+        console.log('[WeatherWidget] Data structure:', {
+          hasWeatherData: !!data.weatherData,
+          weatherDataLength: data.weatherData?.length,
+          firstItem: data.weatherData?.[0],
+          hasDetailedWeatherData: !!data.weatherData?.[0]?.detailedWeatherData,
+          hasDaily: !!data.weatherData?.[0]?.detailedWeatherData?.daily,
+          dailyLength: data.weatherData?.[0]?.detailedWeatherData?.daily?.length,
+        });
         setWeatherData(data.weatherData || []);
       } catch (err) {
         console.error('[WeatherWidget] Error fetching weather:', err);
@@ -60,7 +68,23 @@ export function WeatherWidget({ startDate, endDate, title = 'Weather Forecast', 
     );
   }
 
-  if (error || !weatherData.length || !weatherData[0]?.detailedWeatherData?.daily) {
+  if (error) {
+    console.error('[WeatherWidget] Error state:', error);
+    return null;
+  }
+
+  if (!weatherData.length) {
+    console.warn('[WeatherWidget] No weather data available');
+    return null;
+  }
+
+  if (!weatherData[0]?.detailedWeatherData?.daily) {
+    console.warn('[WeatherWidget] Weather data structure invalid:', {
+      hasWeatherData: !!weatherData[0],
+      hasDetailedWeatherData: !!weatherData[0]?.detailedWeatherData,
+      hasDaily: !!weatherData[0]?.detailedWeatherData?.daily,
+      weatherData: weatherData[0],
+    });
     return null;
   }
 

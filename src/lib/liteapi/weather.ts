@@ -87,7 +87,14 @@ export async function getWeather(params: WeatherParams): Promise<WeatherResponse
   console.log('[Weather API] Full endpoint:', endpoint);
   
   const response = await liteAPIClient<WeatherResponse>(endpoint);
-  console.log('[Weather API] Response received:', response);
+  console.log('[Weather API] Response received:', JSON.stringify(response, null, 2));
+  console.log('[Weather API] Response structure check:', {
+    hasWeatherData: !!response.weatherData,
+    weatherDataLength: response.weatherData?.length,
+    hasDetailedWeatherData: !!response.weatherData?.[0]?.detailedWeatherData,
+    hasDaily: !!response.weatherData?.[0]?.detailedWeatherData?.daily,
+    dailyLength: response.weatherData?.[0]?.detailedWeatherData?.daily?.length,
+  });
   
   return response;
 }

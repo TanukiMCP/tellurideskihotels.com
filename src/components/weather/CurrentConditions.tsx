@@ -26,6 +26,14 @@ export function CurrentConditions() {
         
         const data = await response.json();
         console.log('[CurrentConditions] Weather data received:', data);
+        console.log('[CurrentConditions] Data structure:', {
+          hasWeatherData: !!data.weatherData,
+          weatherDataLength: data.weatherData?.length,
+          firstItem: data.weatherData?.[0],
+          hasDetailedWeatherData: !!data.weatherData?.[0]?.detailedWeatherData,
+          hasDaily: !!data.weatherData?.[0]?.detailedWeatherData?.daily,
+          dailyLength: data.weatherData?.[0]?.detailedWeatherData?.daily?.length,
+        });
         setWeatherData(data.weatherData || []);
       } catch (err) {
         console.error('[CurrentConditions] Error fetching current conditions:', err);
@@ -37,7 +45,23 @@ export function CurrentConditions() {
     fetchWeather();
   }, []);
 
-  if (loading || !weatherData.length || !weatherData[0]?.detailedWeatherData?.daily) {
+  if (loading) {
+    console.log('[CurrentConditions] Still loading...');
+    return null;
+  }
+
+  if (!weatherData.length) {
+    console.warn('[CurrentConditions] No weather data available');
+    return null;
+  }
+
+  if (!weatherData[0]?.detailedWeatherData?.daily) {
+    console.warn('[CurrentConditions] Weather data structure invalid:', {
+      hasWeatherData: !!weatherData[0],
+      hasDetailedWeatherData: !!weatherData[0]?.detailedWeatherData,
+      hasDaily: !!weatherData[0]?.detailedWeatherData?.daily,
+      weatherData: weatherData[0],
+    });
     return null;
   }
 
