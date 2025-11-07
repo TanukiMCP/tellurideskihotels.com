@@ -1,0 +1,108 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Container from '@/components/layout/Container.astro';
+import BlogCard from '@/components/blog/BlogCard';
+
+export async function getStaticPaths() {
+  const allArticles = await getCollection('blog', ({ data }) => {
+    return data.status === 'published';
+  });
+
+  const categories = [
+    'destination-guides',
+    'ski-guides',
+    'hotel-reviews',
+    'planning-tips',
+    'seasonal-guides',
+    'activity-guides',
+    'dining-nightlife',
+    'family-travel',
+    'luxury-travel',
+    'budget-travel',
+  ];
+
+  return categories.map(category => ({
+    params: { category },
+    props: {
+      articles: allArticles.filter(article => article.data.category === category),
+      category,
+    },
+  }));
+}
+
+const { articles, category } = Astro.props;
+
+// Sort by publish date (newest first)
+const sortedArticles = articles.sort((a, b) => {
+  return b.data.publishDate.getTime() - a.data.publishDate.getTime();
+});
+
+const categoryName = category.replace(/-/g, ' ');
+const categoryTitle = categoryName.charAt(0).toUpperCase() + categoryName.slice(1);
+
+const categoryDescriptions = {
+  'destination-guides': 'Comprehensive guides to Telluride destinations, neighborhoods, and areas.',
+  'ski-guides': 'Expert skiing and snowboarding guides for Telluride Ski Resort.',
+  'hotel-reviews': 'In-depth reviews of Telluride hotels, resorts, and lodging options.',
+  'planning-tips': 'Essential planning tips and logistics for your Telluride trip.',
+  'seasonal-guides': 'Seasonal travel guides for visiting Telluride year-round.',
+  'activity-guides': 'Guides to activities, attractions, and experiences in Telluride.',
+  'dining-nightlife': 'Restaurant reviews and nightlife guides for Telluride.',
+  'family-travel': 'Family-friendly travel guides and tips for Telluride.',
+  'luxury-travel': 'Luxury travel guides and high-end experiences in Telluride.',
+  'budget-travel': 'Budget travel tips and affordable options in Telluride.',
+};
+---
+
+<BaseLayout
+  title={`${categoryTitle} - Telluride Ski Hotels Blog`}
+  description={categoryDescriptions[category] || `Browse ${categoryTitle} articles on Telluride Ski Hotels.`}
+>
+  <div class="bg-gradient-to-b from-blue-50 to-white py-12">
+    <Container>
+      <nav class="mb-4 text-sm text-gray-600" aria-label="Breadcrumb">
+        <ol class="flex items-center gap-2">
+          <li><a href="/" class="hover:text-blue-600">Home</a></li>
+          <li>/</li>
+          <li><a href="/blog" class="hover:text-blue-600">Blog</a></li>
+          <li>/</li>
+          <li class="text-gray-900 capitalize">{categoryName}</li>
+        </ol>
+      </nav>
+
+      <div class="text-center">
+        <h1 class="mb-4 text-4xl font-bold text-gray-900 lg:text-5xl capitalize">
+          {categoryName}
+        </h1>
+        <p class="mx-auto max-w-2xl text-xl text-gray-600">
+          {categoryDescriptions[category]}
+        </p>
+      </div>
+    </Container>
+  </div>
+
+  <Container>
+    <div class="py-12">
+      <!-- Articles Grid -->
+      {sortedArticles.length > 0 ? (
+        <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {sortedArticles.map(article => (
+            <BlogCard client:load article={article} />
+          ))}
+        </div>
+      ) : (
+        <div class="py-12 text-center">
+          <p class="text-gray-600">No articles in this category yet. Check back soon!</p>
+          <a
+            href="/blog"
+            class="mt-4 inline-block text-blue-600 hover:underline"
+          >
+            ← Back to all articles
+          </a>
+        </div>
+      )}
+    </div>
+  </Container>
+</BaseLayout>
+

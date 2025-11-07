@@ -13,16 +13,22 @@ export function CurrentConditions() {
         const today = format(new Date(), 'yyyy-MM-dd');
         const threeDaysOut = format(addDays(new Date(), 3), 'yyyy-MM-dd');
         
+        console.log('[CurrentConditions] Fetching weather:', { today, threeDaysOut });
         const response = await fetch(
           `/api/weather/forecast?startDate=${today}&endDate=${threeDaysOut}&units=imperial`
         );
         
-        if (!response.ok) throw new Error('Failed to fetch weather');
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({}));
+          console.error('[CurrentConditions] API error:', response.status, errorData);
+          throw new Error(`Weather API error: ${response.status}`);
+        }
         
         const data = await response.json();
+        console.log('[CurrentConditions] Weather data received:', data);
         setWeatherData(data.weatherData || []);
       } catch (err) {
-        console.error('Error fetching current conditions:', err);
+        console.error('[CurrentConditions] Error fetching current conditions:', err);
       } finally {
         setLoading(false);
       }
@@ -31,12 +37,13 @@ export function CurrentConditions() {
     fetchWeather();
   }, []);
 
-  if (loading || !weatherData.length) {
+  if (loading || !weatherData.length || !weatherData[0]?.detailedWeatherData?.daily) {
     return null;
   }
 
-  const today = weatherData[0]?.dailyWeather;
-  const upcoming = weatherData.slice(1, 4);
+  const dailyData = weatherData[0].detailedWeatherData.daily;
+  const today = dailyData[0];
+  const upcoming = dailyData.slice(1, 4);
   
   if (!today) return null;
 
@@ -49,7 +56,7 @@ export function CurrentConditions() {
       <div className="flex items-start justify-between mb-4">
         <div>
           <h3 className="text-sm font-semibold text-white/90 mb-1">Current Telluride Conditions</h3>
-          <p className="text-3xl font-bold">{Math.round(today.temperature.afternoon)}°F</p>
+          <p className="text-3xl font-bold">{Math.round(today.temp.day)}°F</p>
         </div>
         <div className="text-6xl">{icon}</div>
       </div>
@@ -63,8 +70,7 @@ export function CurrentConditions() {
       )}
       
       <div className="flex gap-3 pt-4 border-t border-white/20">
-        {upcoming.map((data) => {
-          const weather = data.dailyWeather;
+        {upcoming.map((weather) => {
           const weatherIcon = getWeatherIcon(weather);
           const date = new Date(weather.date);
           
@@ -72,7 +78,7 @@ export function CurrentConditions() {
             <div key={weather.date} className="flex-1 text-center">
               <div className="text-xs text-white/80 mb-1">{format(date, 'EEE')}</div>
               <div className="text-2xl mb-1">{weatherIcon}</div>
-              <div className="text-sm font-semibold">{Math.round(weather.temperature.max)}°</div>
+              <div className="text-sm font-semibold">{Math.round(weather.temp.max)}°</div>
             </div>
           );
         })}

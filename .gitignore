@@ -2,10 +2,8 @@
 dist/
 .output/
 
-# auth database
-auth.db
-auth.db-shm
-auth.db-wal
+# generated types
+.astro/
 
 # dependencies
 node_modules/
@@ -18,13 +16,21 @@ pnpm-debug.log*
 
 # environment variables
 .env
-.env.local
 .env.production
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
 
 # macOS-specific files
 .DS_Store
 
-# IDE
+# database
+*.db
+*.db-shm
+*.db-wal
+
+# IDEs
 .vscode/
 .idea/
 *.swp
@@ -33,11 +39,11 @@ pnpm-debug.log*
 
 # testing
 coverage/
+.nyc_output/
+playwright-report/
+test-results/
 
-# temp files
-*.tmp
-*.temp
-
-
-# Local Netlify folder
-.netlify
+# misc
+.netlify/
+.vercel/
+.cache/

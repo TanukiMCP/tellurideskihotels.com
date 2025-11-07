@@ -1,0 +1,93 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Container from '@/components/layout/Container.astro';
+import BlogCard from '@/components/blog/BlogCard';
+
+// Get all published blog articles
+const allArticles = await getCollection('blog', ({ data }) => {
+  return data.status === 'published';
+});
+
+// Sort by publish date (newest first)
+const sortedArticles = allArticles.sort((a, b) => {
+  return b.data.publishDate.getTime() - a.data.publishDate.getTime();
+});
+
+// Get featured article (most recent featured or first article)
+const featuredArticle = sortedArticles.find(article => article.data.featured) || sortedArticles[0];
+
+// Get remaining articles
+const regularArticles = sortedArticles.filter(article => article.data.slug !== featuredArticle?.data.slug);
+
+// Categories for filter
+const categories = [
+  { slug: 'all', name: 'All Articles' },
+  { slug: 'destination-guides', name: 'Destination Guides' },
+  { slug: 'ski-guides', name: 'Ski Guides' },
+  { slug: 'hotel-reviews', name: 'Hotel Reviews' },
+  { slug: 'planning-tips', name: 'Planning Tips' },
+  { slug: 'activity-guides', name: 'Activity Guides' },
+  { slug: 'seasonal-guides', name: 'Seasonal Guides' },
+];
+---
+
+<BaseLayout
+  title="Telluride Ski Hotels Blog - Travel Guides & Tips"
+  description="Expert guides on Telluride hotels, skiing, activities, and travel planning. Find the best places to stay and things to do in Telluride, Colorado."
+>
+  <div class="bg-gradient-to-b from-blue-50 to-white py-12">
+    <Container>
+      <div class="text-center">
+        <h1 class="mb-4 text-4xl font-bold text-gray-900 lg:text-5xl">
+          Telluride Travel Blog
+        </h1>
+        <p class="mx-auto max-w-2xl text-xl text-gray-600">
+          Expert guides, insider tips, and comprehensive reviews to help you plan the perfect Telluride ski vacation.
+        </p>
+      </div>
+    </Container>
+  </div>
+
+  <Container>
+    <div class="py-12">
+      <!-- Category Filter -->
+      <div class="mb-8 flex flex-wrap gap-3">
+        {categories.map(category => (
+          <a
+            href={category.slug === 'all' ? '/blog' : `/blog/${category.slug}`}
+            class="rounded-full border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:border-blue-500 hover:bg-blue-50 hover:text-blue-700"
+          >
+            {category.name}
+          </a>
+        ))}
+      </div>
+
+      <!-- Featured Article -->
+      {featuredArticle && (
+        <div class="mb-12">
+          <h2 class="mb-6 text-2xl font-bold text-gray-900">Featured Article</h2>
+          <BlogCard client:load article={featuredArticle} featured={true} />
+        </div>
+      )}
+
+      <!-- All Articles Grid -->
+      <div class="mb-8">
+        <h2 class="mb-6 text-2xl font-bold text-gray-900">Latest Articles</h2>
+        <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {regularArticles.map(article => (
+            <BlogCard client:load article={article} />
+          ))}
+        </div>
+      </div>
+
+      <!-- Empty State -->
+      {sortedArticles.length === 0 && (
+        <div class="py-12 text-center">
+          <p class="text-gray-600">No articles published yet. Check back soon!</p>
+        </div>
+      )}
+    </div>
+  </Container>
+</BaseLayout>
+

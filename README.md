@@ -1,95 +1,211 @@
 # Telluride Ski Hotels
 
-A complete, production-ready hotel booking website for Telluride, Colorado ski hotels. Built with Astro, React, TypeScript, and Tailwind CSS.
+A comprehensive hotel booking and content platform for Telluride, Colorado ski resorts.
 
 ## Features
 
-- **Hotel Search & Discovery**: Search hotels in Telluride with real-time availability
-- **Hotel Details**: Comprehensive hotel information with images, amenities, and reviews
-- **Room Selection**: Browse available rooms with pricing and details
-- **Add-ons**: Select additional services (breakfast, parking, etc.)
-- **Booking Flow**: Complete booking process with Stripe payment integration
-- **Responsive Design**: Mobile-first, fully responsive UI
-- **SEO Optimized**: Meta tags, structured data, and sitemap generation
+- **Hotel Search & Booking**: Real-time hotel availability and booking through LiteAPI
+- **Content Management System**: AI-driven content generation and automated publishing
+- **SEO Optimization**: Comprehensive keyword strategy and on-page optimization
+- **Image Library**: Automated Pexels integration for high-quality imagery
+- **Admin Dashboard**: Booking management and analytics
+- **Weather Integration**: Real-time weather and snow conditions
 
-## Tech Stack
+## Content Generation System
 
-- **Astro 4.16.1** - Static site generation with SSR support
-- **React 18.3.1** - Interactive components
-- **TypeScript 5.9.3** - Type safety
-- **Tailwind CSS 3.4.14** - Styling
-- **Stripe** - Payment processing
-- **LiteAPI** - Hotel inventory and booking
+This project includes a sophisticated content generation and publishing system:
 
-## Getting Started
+### Key Components
 
-### Prerequisites
+1. **Content Schema** (`src/content/config.ts`)
+   - Structured content collections with validation
+   - SEO metadata and frontmatter
+   - Category and tag taxonomy
 
-- Node.js 20+
-- npm or yarn
+2. **SEO Keywords Masterlist** (`SEO_KEYWORDS_MASTERLIST.md`)
+   - 300+ researched keywords
+   - Organized by search volume and intent
+   - Content cluster strategy
 
-### Installation
+3. **Publishing Schedule** (`CONTENT_PUBLISHING_SCHEDULE.md`)
+   - 270 articles planned for Year 1
+   - Daily publishing (Months 1-6)
+   - Every other day (Months 7-12)
 
-1. Clone the repository:
+4. **Master Prompt** (`MASTER_ARTICLE_GENERATION_PROMPT.md`)
+   - Comprehensive AI writing guidelines
+   - Brand voice and style guide
+   - SEO optimization checklist
+   - Content templates
+
+### Automation
+
+#### GitHub Actions Workflows
+
+**Article Publishing** (`.github/workflows/publish-articles.yml`)
+- Runs daily at 9 AM EST
+- Moves scheduled articles from drafts to published
+- Triggers Netlify rebuild
+
+**Image Library Refresh** (`.github/workflows/refresh-image-library.yml`)
+- Runs bi-weekly (1st and 15th)
+- Fetches fresh images from Pexels API
+- Updates image library automatically
+
+### Scripts
+
 ```bash
-git clone https://github.com/tanukimcp/tellurideskihotels.com.git
-cd tellurideskihotels.com
+# Generate new article template
+npm run generate-article
+
+# Manually publish scheduled articles
+npm run publish-articles
+
+# Refresh image library
+npm run refresh-images
 ```
 
-2. Install dependencies:
-```bash
-npm install
-```
+## Content Workflow
 
-3. Set up environment variables:
-```bash
-cp .env.example .env
-# Edit .env with your API keys
-```
+### 1. Planning (Days 1-2)
+- Review publishing schedule
+- Research competitors
+- Gather data and sources
+- Identify linking opportunities
 
-4. Run the development server:
-```bash
-npm run dev
-```
+### 2. Content Generation (Days 3-4)
+- Use Master Prompt with AI assistant
+- Generate content section by section
+- Review and refine
+- Ensure keyword integration
 
-5. Build for production:
-```bash
-npm run build
-```
+### 3. SEO Optimization (Day 5)
+- Optimize metadata
+- Check keyword density
+- Add internal/external links
+- Verify readability
 
-## Environment Variables
+### 4. Images & Formatting (Day 6)
+- Select images from library
+- Write alt text
+- Format content
+- Add CTAs
 
-See `.env.example` for required environment variables. Key variables include:
-
-- `LITEAPI_PUBLIC_KEY` - LiteAPI public key
-- `LITEAPI_PRIVATE_KEY` - LiteAPI private key
-- `STRIPE_SECRET_KEY` - Stripe secret key
-- `PUBLIC_STRIPE_PUBLISHABLE_KEY` - Stripe publishable key
+### 5. Schedule & Publish (Day 7)
+- Final quality check
+- Create markdown file
+- Set publish date
+- Commit to drafts folder
+- Auto-publish via GitHub Actions
 
 ## Project Structure
 
 ```
-src/
-├── components/        # React and Astro components
-│   ├── ui/           # Base UI components
-│   ├── layout/        # Layout components
-│   ├── lodging/      # Hotel-related components
-│   ├── checkout/     # Checkout flow components
-│   └── addons/       # Add-ons components
-├── lib/              # Utilities and API clients
-│   ├── liteapi/      # LiteAPI integration
-│   └── stripe/       # Stripe integration
-└── pages/            # Astro pages and API routes
+tellurideskihotels.com/
+├── src/
+│   ├── content/
+│   │   ├── blog/          # Published articles
+│   │   ├── drafts/        # Scheduled articles
+│   │   └── config.ts      # Content schema
+│   ├── components/
+│   │   ├── blog/          # Blog components
+│   │   ├── lodging/       # Hotel components
+│   │   └── ...
+│   ├── layouts/
+│   │   ├── BlogLayout.astro
+│   │   └── BaseLayout.astro
+│   ├── pages/
+│   │   ├── blog/          # Blog routes
+│   │   ├── lodging/       # Hotel routes
+│   │   └── ...
+│   └── lib/               # Utilities
+├── scripts/
+│   ├── generate-article.js
+│   ├── publish-scheduled-articles.js
+│   └── refresh-image-library.js
+├── .github/
+│   └── workflows/         # GitHub Actions
+├── public/
+│   └── images/
+│       └── image-library.json
+├── SEO_KEYWORDS_MASTERLIST.md
+├── CONTENT_PUBLISHING_SCHEDULE.md
+└── MASTER_ARTICLE_GENERATION_PROMPT.md
 ```
 
-## Deployment
+## Environment Variables
 
-The site is configured for Netlify deployment. The build process includes:
+Required for content system:
 
-1. Type checking with Astro
-2. Building the site
-3. Generating search index with Pagefind
+```env
+PEXELS_API_KEY=your_pexels_api_key
+NETLIFY_BUILD_HOOK=your_netlify_build_hook_url
+```
+
+## Development
+
+```bash
+# Install dependencies
+npm install
+
+# Start dev server
+npm run dev
+
+# Build for production
+npm run build
+
+# Preview production build
+npm run preview
+```
+
+## Content Guidelines
+
+### SEO Best Practices
+- Primary keyword in title, H1, first 100 words
+- Meta description 150-160 characters
+- 5-10 internal links per article
+- 2-4 authoritative external links
+- Images with descriptive alt text
+
+### Writing Style
+- Conversational but professional
+- Specific details and examples
+- Honest pros and cons
+- Actionable advice
+- Mobile-friendly formatting
+
+### Quality Checklist
+- [ ] Meets word count target
+- [ ] Original, valuable content
+- [ ] Facts verified
+- [ ] No spelling/grammar errors
+- [ ] Natural keyword usage
+- [ ] Proper heading hierarchy
+- [ ] Images optimized
+- [ ] Internal links added
+- [ ] CTA included
+
+## Performance Tracking
+
+### Metrics Monitored
+- Organic traffic by article
+- Keyword rankings (top 10, 20, 50)
+- Click-through rate from SERPs
+- Time on page
+- Conversion rate (hotel bookings)
+- Bounce rate
+
+### Goals
+- 100,000+ organic sessions (Year 1)
+- 50+ keywords in top 10
+- 200+ keywords in top 50
+- 500+ hotel bookings from content
+- 5,000+ newsletter subscribers
 
 ## License
 
 Proprietary - All rights reserved
+
+## Support
+
+For questions or issues, contact the development team.

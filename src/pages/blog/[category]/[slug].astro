@@ -1,0 +1,73 @@
+---
+import { getCollection } from 'astro:content';
+import type { CollectionEntry } from 'astro:content';
+import BlogLayout from '@/layouts/BlogLayout.astro';
+
+export async function getStaticPaths() {
+  const allArticles = await getCollection('blog', ({ data }) => {
+    return data.status === 'published';
+  });
+
+  return allArticles.map(article => ({
+    params: {
+      category: article.data.category,
+      slug: article.data.slug,
+    },
+    props: { article },
+  }));
+}
+
+interface Props {
+  article: CollectionEntry<'blog'>;
+}
+
+const { article } = Astro.props;
+
+// Get related articles
+const allArticles = await getCollection('blog', ({ data }) => {
+  return data.status === 'published';
+});
+
+let relatedArticles: CollectionEntry<'blog'>[] = [];
+
+// First, try to get articles specified in relatedArticles array
+if (article.data.relatedArticles && article.data.relatedArticles.length > 0) {
+  relatedArticles = allArticles.filter(a =>
+    article.data.relatedArticles?.includes(a.data.slug)
+  );
+}
+
+// If not enough related articles, get from same category
+if (relatedArticles.length < 3) {
+  const sameCategoryArticles = allArticles
+    .filter(a =>
+      a.data.category === article.data.category &&
+      a.data.slug !== article.data.slug &&
+      !relatedArticles.find(r => r.data.slug === a.data.slug)
+    )
+    .sort((a, b) => b.data.publishDate.getTime() - a.data.publishDate.getTime())
+    .slice(0, 3 - relatedArticles.length);
+
+  relatedArticles = [...relatedArticles, ...sameCategoryArticles];
+}
+
+// Extract headings from content for table of contents
+const { render } = article;
+const { Content, headings } = await render();
+
+// Filter to only H2 and H3 headings
+const tocHeadings = headings
+  .filter(h => h.depth === 2 || h.depth === 3)
+  .map(h => ({
+    id: h.slug,
+    text: h.text,
+    level: h.depth,
+  }));
+---
+
+<BlogLayout
+  article={article}
+  relatedArticles={relatedArticles}
+  headings={tocHeadings}
+/>
+

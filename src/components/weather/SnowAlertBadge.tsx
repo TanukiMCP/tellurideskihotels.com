@@ -14,19 +14,26 @@ export function SnowAlertBadge({ checkIn, checkOut }: SnowAlertBadgeProps) {
   useEffect(() => {
     const fetchWeather = async () => {
       try {
+        console.log('[SnowAlertBadge] Checking snow conditions:', { checkIn, checkOut });
         const response = await fetch(
           `/api/weather/forecast?startDate=${checkIn}&endDate=${checkOut}&units=imperial`
         );
         
-        if (!response.ok) throw new Error('Failed to fetch weather');
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({}));
+          console.error('[SnowAlertBadge] API error:', response.status, errorData);
+          throw new Error(`Weather API error: ${response.status}`);
+        }
         
         const data = await response.json();
         const weatherData: WeatherData[] = data.weatherData || [];
         
-        const snowExpected = weatherData.some(w => isSnowConditions(w.dailyWeather));
+        const snowExpected = weatherData.length > 0 && 
+          weatherData[0]?.detailedWeatherData?.daily?.some(w => isSnowConditions(w));
+        console.log('[SnowAlertBadge] Snow check result:', { snowExpected, weatherDataCount: weatherData.length });
         setHasSnow(snowExpected);
       } catch (err) {
-        console.error('Error checking snow conditions:', err);
+        console.error('[SnowAlertBadge] Error checking snow conditions:', err);
       } finally {
         setLoading(false);
       }
@@ -34,6 +41,9 @@ export function SnowAlertBadge({ checkIn, checkOut }: SnowAlertBadgeProps) {
 
     if (checkIn && checkOut) {
       fetchWeather();
+    } else {
+      console.warn('[SnowAlertBadge] Missing dates:', { checkIn, checkOut });
+      setLoading(false);
     }
   }, [checkIn, checkOut]);
 

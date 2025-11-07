@@ -1,0 +1,233 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import BaseLayout from './BaseLayout.astro';
+import Container from '@/components/layout/Container.astro';
+import ShareButtons from '@/components/blog/ShareButtons';
+import TableOfContents from '@/components/blog/TableOfContents';
+import RelatedArticles from '@/components/blog/RelatedArticles';
+import BlogCTA from '@/components/blog/BlogCTA';
+import { formatDate } from '@/lib/utils';
+
+interface Props {
+  article: CollectionEntry<'blog'>;
+  relatedArticles?: CollectionEntry<'blog'>[];
+  headings?: Array<{ id: string; text: string; level: number }>;
+}
+
+const { article, relatedArticles = [], headings = [] } = Astro.props;
+const { data, render } = article;
+const { Content } = await render();
+
+const fullUrl = `${Astro.site}blog/${data.category}/${data.slug}`;
+const categoryName = data.category.replace(/-/g, ' ');
+---
+
+<BaseLayout
+  title={data.seo.metaTitle}
+  description={data.seo.metaDescription}
+  image={data.featuredImage}
+  article={true}
+>
+  <article class="py-12">
+    <Container>
+      <!-- Breadcrumbs -->
+      <nav class="mb-6 text-sm text-gray-600" aria-label="Breadcrumb">
+        <ol class="flex items-center gap-2">
+          <li><a href="/" class="hover:text-blue-600">Home</a></li>
+          <li>/</li>
+          <li><a href="/blog" class="hover:text-blue-600">Blog</a></li>
+          <li>/</li>
+          <li><a href={`/blog/${data.category}`} class="hover:text-blue-600 capitalize">{categoryName}</a></li>
+          <li>/</li>
+          <li class="text-gray-900">{data.title}</li>
+        </ol>
+      </nav>
+
+      <div class="grid gap-8 lg:grid-cols-[1fr_280px]">
+        <!-- Main Content -->
+        <div>
+          <!-- Article Header -->
+          <header class="mb-8">
+            <div class="mb-4 flex flex-wrap items-center gap-3 text-sm text-gray-600">
+              <span class="rounded-full bg-blue-100 px-3 py-1 font-medium text-blue-800 capitalize">
+                {categoryName}
+              </span>
+              <time datetime={data.publishDate.toISOString()}>
+                {formatDate(data.publishDate)}
+              </time>
+              <span>•</span>
+              <span>{data.readingTime} min read</span>
+              <span>•</span>
+              <span>{data.wordCount.toLocaleString()} words</span>
+            </div>
+
+            <h1 class="mb-4 text-4xl font-bold text-gray-900 lg:text-5xl">
+              {data.title}
+            </h1>
+
+            <p class="mb-6 text-xl text-gray-600">
+              {data.excerpt}
+            </p>
+
+            <div class="flex items-center justify-between border-y border-gray-200 py-4">
+              <div class="flex items-center gap-3">
+                <div class="flex h-10 w-10 items-center justify-center rounded-full bg-blue-600 text-white font-semibold">
+                  T
+                </div>
+                <div>
+                  <div class="font-medium text-gray-900">{data.author}</div>
+                  <div class="text-sm text-gray-600">Travel Expert</div>
+                </div>
+              </div>
+              <ShareButtons client:load url={fullUrl} title={data.title} />
+            </div>
+          </header>
+
+          <!-- Featured Image -->
+          <div class="mb-8 overflow-hidden rounded-xl">
+            <img
+              src={data.featuredImage}
+              alt={data.featuredImageAlt}
+              class="h-auto w-full"
+              loading="eager"
+            />
+          </div>
+
+          <!-- Article Content -->
+          <div class="prose prose-lg max-w-none prose-headings:font-bold prose-headings:text-gray-900 prose-h2:mt-8 prose-h2:mb-4 prose-h2:text-3xl prose-h3:mt-6 prose-h3:mb-3 prose-h3:text-2xl prose-p:text-gray-700 prose-a:text-blue-600 prose-a:no-underline hover:prose-a:underline prose-strong:text-gray-900 prose-ul:text-gray-700 prose-ol:text-gray-700 prose-li:marker:text-blue-600 prose-img:rounded-lg">
+            <Content />
+          </div>
+
+          <!-- CTA Section -->
+          <div class="mt-12">
+            <BlogCTA client:load />
+          </div>
+
+          <!-- Tags -->
+          {data.tags && data.tags.length > 0 && (
+            <div class="mt-8 border-t border-gray-200 pt-8">
+              <h3 class="mb-3 text-sm font-semibold uppercase tracking-wide text-gray-700">
+                Tags
+              </h3>
+              <div class="flex flex-wrap gap-2">
+                {data.tags.map(tag => (
+                  <a
+                    href={`/blog/tag/${tag}`}
+                    class="rounded-full bg-gray-100 px-4 py-2 text-sm text-gray-700 transition-colors hover:bg-blue-100 hover:text-blue-800"
+                  >
+                    {tag}
+                  </a>
+                ))}
+              </div>
+            </div>
+          )}
+
+          <!-- Share Again -->
+          <div class="mt-8 flex items-center justify-between border-t border-gray-200 pt-8">
+            <div class="text-sm font-medium text-gray-700">
+              Found this helpful? Share it:
+            </div>
+            <ShareButtons client:load url={fullUrl} title={data.title} />
+          </div>
+
+          <!-- Related Articles -->
+          {relatedArticles.length > 0 && (
+            <RelatedArticles
+              client:load
+              articles={relatedArticles}
+              currentSlug={data.slug}
+              maxArticles={3}
+            />
+          )}
+        </div>
+
+        <!-- Sidebar -->
+        <aside class="space-y-6">
+          <!-- Table of Contents -->
+          {headings.length > 0 && (
+            <TableOfContents client:load headings={headings} />
+          )}
+
+          <!-- Newsletter Signup -->
+          <div class="rounded-lg border border-gray-200 bg-white p-6">
+            <h3 class="mb-3 text-lg font-bold text-gray-900">
+              Get Travel Tips
+            </h3>
+            <p class="mb-4 text-sm text-gray-600">
+              Subscribe to our newsletter for the latest Telluride travel guides and hotel deals.
+            </p>
+            <form class="space-y-3">
+              <input
+                type="email"
+                placeholder="Your email"
+                class="w-full rounded-lg border border-gray-300 px-4 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                required
+              />
+              <button
+                type="submit"
+                class="w-full rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-blue-700"
+              >
+                Subscribe
+              </button>
+            </form>
+          </div>
+
+          <!-- Popular Articles -->
+          <div class="rounded-lg border border-gray-200 bg-white p-6">
+            <h3 class="mb-4 text-lg font-bold text-gray-900">
+              Popular Articles
+            </h3>
+            <ul class="space-y-3">
+              <li>
+                <a href="/blog" class="text-sm text-blue-600 hover:underline">
+                  Best Hotels in Telluride
+                </a>
+              </li>
+              <li>
+                <a href="/blog" class="text-sm text-blue-600 hover:underline">
+                  Telluride Ski Resort Guide
+                </a>
+              </li>
+              <li>
+                <a href="/blog" class="text-sm text-blue-600 hover:underline">
+                  Where to Stay in Telluride
+                </a>
+              </li>
+            </ul>
+          </div>
+        </aside>
+      </div>
+    </Container>
+  </article>
+
+  <!-- Schema.org JSON-LD -->
+  <script type="application/ld+json" set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": data.title,
+    "description": data.excerpt,
+    "image": data.featuredImage,
+    "datePublished": data.publishDate.toISOString(),
+    "dateModified": data.updatedDate?.toISOString() || data.publishDate.toISOString(),
+    "author": {
+      "@type": "Organization",
+      "name": data.author
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Telluride Ski Hotels",
+      "logo": {
+        "@type": "ImageObject",
+        "url": `${Astro.site}favicon-icon.png`
+      }
+    },
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": fullUrl
+    },
+    "keywords": data.seo.keywords.join(", "),
+    "wordCount": data.wordCount,
+    "articleSection": categoryName
+  })} />
+</BaseLayout>
+
