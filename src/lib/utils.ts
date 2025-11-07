@@ -69,11 +69,4 @@ export function calculateNights(checkIn: string, checkOut: string): number {
   return Math.max(1, diffDays);
 }
 
-export function calculateNetAfterStripeFees(amount: number): number {
-  // Stripe fees: 2.9% + $0.30 per transaction
-  const stripePercentage = 0.029;
-  const stripeFixed = 0.30;
-
-  const fee = (amount * stripePercentage) + stripeFixed;
-  return Math.max(0, amount - fee);
-}
+// Removed Stripe fee calculation - now using liteAPI payment SDK (no additional fees!)

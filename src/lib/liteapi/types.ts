@@ -132,6 +132,9 @@ export interface LiteAPIPrebookResponse {
     currency?: string;
   };
   expires_at?: string;
+  // liteAPI payment SDK fields (returned when usePaymentSdk: true)
+  secret_key?: string;
+  transaction_id?: string;
 }
 
 export interface LiteAPIConfirmRequest {

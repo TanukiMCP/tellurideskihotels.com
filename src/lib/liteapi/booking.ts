@@ -14,6 +14,9 @@ export async function prebook(request: LiteAPIPrebookRequest): Promise<LiteAPIPr
     delete requestBody.offer_id;
   }
   
+  // Enable liteAPI payment SDK to avoid Stripe fees!
+  requestBody.usePaymentSdk = true;
+  
   const response = await liteAPIBookingClient<any>('/rates/prebook', {
     method: 'POST',
     body: JSON.stringify(requestBody),
@@ -22,6 +25,12 @@ export async function prebook(request: LiteAPIPrebookRequest): Promise<LiteAPIPr
   // LiteAPI returns data in response.data.data or response.data with camelCase, normalize to snake_case
   // Handle nested data structure: { data: { data: {...} } } or { data: {...} } or {...}
   const data = response.data?.data || response.data || response;
+  
+  console.log('[Prebook] Response with payment SDK:', {
+    hasSecretKey: !!data.secretKey,
+    hasTransactionId: !!data.transactionId,
+  });
+  
   return {
     prebook_id: data.prebookId || data.prebook_id,
     hotel_id: data.hotelId || data.hotel_id,
@@ -30,6 +39,9 @@ export async function prebook(request: LiteAPIPrebookRequest): Promise<LiteAPIPr
     checkout: data.checkout,
     total: data.total,
     expires_at: data.expiresAt || data.expires_at,
+    // liteAPI payment SDK keys (only returned when usePaymentSdk: true)
+    secret_key: data.secretKey || data.secret_key,
+    transaction_id: data.transactionId || data.transaction_id,
   };
 }
 

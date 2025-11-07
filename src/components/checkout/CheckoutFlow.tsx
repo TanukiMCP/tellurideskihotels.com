@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
-import { CheckoutPayment } from './CheckoutPayment';
+import { LiteAPIPayment } from './LiteAPIPayment';
 import { formatCurrency, calculateNights } from '@/lib/utils';
 import type { SelectedRoom, SelectedAddon, GuestInfo } from '@/lib/types';
 
@@ -28,17 +28,16 @@ export function CheckoutFlow({ hotelId, hotelName, room, addons = [], onComplete
   const addonsTotal = addons.reduce((sum, addon) => sum + addon.price, 0);
   const total = room.price + addonsTotal;
 
-  const handleGuestInfoSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setStep(2);
-  };
-
   const [isProcessing, setIsProcessing] = useState(false);
+  const [prebookData, setPrebookData] = useState<any>(null);
   
-  const handlePaymentComplete = async (paymentIntentId: string) => {
+  // First, do prebook when moving to payment step
+  const handleGuestInfoSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
     setIsProcessing(true);
+    
     try {
-      // Prebook
+      // Prebook to get payment SDK keys
       const prebookResponse = await fetch('/api/booking/prebook', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -68,17 +67,33 @@ export function CheckoutFlow({ hotelId, hotelName, room, addons = [], onComplete
         throw new Error(errorData.error || 'Failed to reserve room. Please try again.');
       }
 
-      const prebookData = await prebookResponse.json();
-
-      // Confirm booking with all details for email
+      const data = await prebookResponse.json();
+      console.log('[Checkout] Prebook response:', data);
+      
+      setPrebookData(data);
+      setStep(2);
+      setIsProcessing(false);
+    } catch (error) {
+      console.error('Prebook error:', error);
+      alert(error instanceof Error ? error.message : 'Failed to reserve room. Please try again.');
+      setIsProcessing(false);
+    }
+  };
+  
+  const handlePaymentComplete = async (transactionId: string) => {
+    setIsProcessing(true);
+    try {
+      console.log('[Checkout] Payment completed, confirming booking...');
+      
+      // Confirm booking with transaction ID
       const confirmResponse = await fetch('/api/booking/confirm', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           prebook_id: prebookData.prebook_id,
           payment: {
-            method: 'stripe',
-            transaction_id: paymentIntentId,
+            method: 'TRANSACTION_ID',
+            transaction_id: transactionId,
           },
           // Pass guest info for email confirmation
           guest_email: guestInfo.email,
@@ -103,7 +118,7 @@ export function CheckoutFlow({ hotelId, hotelName, room, addons = [], onComplete
       const bookingData = await confirmResponse.json();
       onComplete(bookingData.booking_id);
     } catch (error) {
-      console.error('Booking error:', error);
+      console.error('Booking confirmation error:', error);
       alert(error instanceof Error ? error.message : 'Booking failed. Please try again.');
       setIsProcessing(false);
     }
@@ -189,11 +204,14 @@ export function CheckoutFlow({ hotelId, hotelName, room, addons = [], onComplete
             </Card>
           )}
 
-          {step === 2 && (
-            <CheckoutPayment
+          {step === 2 && prebookData && (
+            <LiteAPIPayment
+              secretKey={prebookData.secret_key}
+              transactionId={prebookData.transaction_id}
               amount={total}
               currency={room.currency}
-              onComplete={handlePaymentComplete}
+              returnUrl={typeof window !== 'undefined' ? `${window.location.origin}/booking/checkout?returnFromPayment=true` : '/booking/checkout?returnFromPayment=true'}
+              onPaymentSuccess={handlePaymentComplete}
             />
           )}
         </div>

@@ -7,8 +7,5 @@ export const LITEAPI_PRIVATE_KEY = import.meta.env.LITEAPI_PRIVATE_KEY || '';
 // Industry standard: 10-20% for OTAs, we use 15%
 export const LITEAPI_MARKUP_PERCENT = parseInt(import.meta.env.LITEAPI_MARKUP_PERCENT || '15', 10);
 
-// Stripe fees: 2.9% + $0.30 per transaction
-// We absorb these fees (included in our 15% margin)
-export const STRIPE_PERCENTAGE_FEE = 0.029;
-export const STRIPE_FIXED_FEE = 0.30;
+// Using liteAPI payment SDK - no payment processor fees!
 
