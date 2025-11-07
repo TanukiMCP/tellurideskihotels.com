@@ -5,6 +5,7 @@ import PageLayout from '@/components/layout/PageLayout.astro';
 import Container from '@/components/layout/Container.astro';
 import { HotelSearchWidget } from '@/components/lodging/HotelSearchWidget';
 import { FeaturedHotels } from '@/components/lodging/FeaturedHotels';
+import { CurrentConditions } from '@/components/weather/CurrentConditions';
 import LodgingMap from '@/components/map/LodgingMap';
 import { SITE_DESCRIPTION } from '@/lib/constants';
 import { getHomepageHeroImage } from '@/lib/image-library';
@@ -168,6 +169,15 @@ try {
       </div>
     </Container>
     </div>
+
+  <!-- Current Conditions Section -->
+  <div class="bg-white py-12 lg:py-16">
+    <Container>
+      <div class="max-w-2xl mx-auto">
+        <CurrentConditions client:visible />
+      </div>
+    </Container>
+  </div>
 
   <!-- Explore Map Section -->
   <div class="bg-neutral-50 py-16 lg:py-20">

@@ -137,19 +137,20 @@ export function HotelGrid({
       {/* Hotel Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
         {paginatedHotels.map((hotel) => (
-          <HotelCard
-            key={hotel.hotel_id}
-            hotel={hotel}
-            minPrice={minPrices[hotel.hotel_id]}
-            currency={currency}
-            nights={nights}
-            checkInDate={checkIn}
-            onSelect={handleSelect}
-            isSelected={hotel.hotel_id === selectedHotelId}
-            isHovered={hotel.hotel_id === hoveredHotelId}
-            onMouseEnter={() => onHotelHover?.(hotel.hotel_id)}
-            onMouseLeave={() => onHotelHover?.(null)}
-          />
+            <HotelCard
+              key={hotel.hotel_id}
+              hotel={hotel}
+              minPrice={minPrices[hotel.hotel_id]}
+              currency={currency}
+              nights={nights}
+              checkInDate={checkIn}
+              checkOutDate={checkOut}
+              onSelect={handleSelect}
+              isSelected={hotel.hotel_id === selectedHotelId}
+              isHovered={hotel.hotel_id === hoveredHotelId}
+              onMouseEnter={() => onHotelHover?.(hotel.hotel_id)}
+              onMouseLeave={() => onHotelHover?.(null)}
+            />
         ))}
       </div>
 

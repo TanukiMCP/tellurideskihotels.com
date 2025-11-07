@@ -7,6 +7,7 @@ import { getHotelMainImage, formatHotelAddress } from '@/lib/liteapi/utils';
 import { formatCurrency } from '@/lib/utils';
 import { getRatingColor } from '@/lib/constants';
 import { format } from 'date-fns';
+import { SnowAlertBadge } from '@/components/weather/SnowAlertBadge';
 
 export interface HotelCardProps {
   hotel: LiteAPIHotel;
@@ -14,6 +15,7 @@ export interface HotelCardProps {
   currency?: string;
   nights?: number;
   checkInDate?: string;
+  checkOutDate?: string;
   onSelect: (hotelId: string) => void;
   isSelected?: boolean;
   isHovered?: boolean;
@@ -27,6 +29,7 @@ export function HotelCard({
   currency = 'USD', 
   nights: _nights = 1, 
   checkInDate,
+  checkOutDate,
   onSelect,
   isSelected = false,
   isHovered = false,
@@ -94,9 +97,15 @@ export function HotelCard({
         )}
         
         {hotel.review_count && rating > 0 && (
-          <p className="text-sm text-neutral-600 mb-4">
+          <p className="text-sm text-neutral-600 mb-3">
             <span className="font-semibold">{hotel.review_count.toLocaleString()}</span> review{hotel.review_count !== 1 ? 's' : ''}
           </p>
+        )}
+        
+        {checkInDate && checkOutDate && (
+          <div className="mb-4">
+            <SnowAlertBadge checkIn={checkInDate} checkOut={checkOutDate} />
+          </div>
         )}
         
         {minPrice !== undefined && minPrice > 0 ? (

@@ -1,6 +1,8 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { CheckCircle, Calendar, Hotel, FileText, Mail } from 'lucide-react';
+import { WeatherWidget } from '@/components/weather/WeatherWidget';
+import { PackingList } from '@/components/weather/PackingList';
 
 export interface BookingConfirmationProps {
   bookingId: string;
@@ -73,6 +75,13 @@ export function BookingConfirmation({
                 </p>
               </div>
             </div>
+          )}
+          
+          {checkIn && checkOut && (
+            <>
+              <WeatherWidget startDate={checkIn} endDate={checkOut} title="Weather Forecast for Your Stay" compact={true} />
+              <PackingList checkIn={checkIn} checkOut={checkOut} />
+            </>
           )}
           
           <div className="bg-primary-50 rounded-xl p-6 border border-primary-200">

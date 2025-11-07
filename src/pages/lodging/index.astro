@@ -5,6 +5,7 @@ import PageLayout from '@/components/layout/PageLayout.astro';
 import Container from '@/components/layout/Container.astro';
 import { HotelGridWithMap } from '@/components/lodging/HotelGridWithMap';
 import { HotelSearchWidget } from '@/components/lodging/HotelSearchWidget';
+import { WeatherWidget } from '@/components/weather/WeatherWidget';
 import Breadcrumbs from '@/components/seo/Breadcrumbs.astro';
 import type { LiteAPIHotel } from '@/lib/liteapi/types';
 import { DEFAULT_LOCATION, DEFAULT_COUNTRY_CODE } from '@/lib/constants';
@@ -109,6 +110,12 @@ const nights = checkIn && checkOut
         </p>
       )}
     </div>
+
+    {checkIn && checkOut && (
+      <div class="mb-8">
+        <WeatherWidget client:visible startDate={checkIn} endDate={checkOut} title="Weather for Your Stay" compact={true} />
+      </div>
+    )}
 
     <!-- Split-screen Layout with Map Sync -->
     <HotelGridWithMap

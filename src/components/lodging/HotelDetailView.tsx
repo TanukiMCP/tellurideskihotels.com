@@ -12,6 +12,8 @@ import { formatHotelAddress, getHotelImages } from '@/lib/liteapi/utils';
 import { getRatingColor } from '@/lib/constants';
 import { getAmenityIcon } from '@/lib/amenity-icons';
 import type { SelectedRoom } from '@/lib/types';
+import { WeatherWidget } from '@/components/weather/WeatherWidget';
+import { WeatherAwareAmenities } from './WeatherAwareAmenities';
 
 export interface HotelDetailViewProps {
   hotel: LiteAPIHotel;
@@ -159,6 +161,9 @@ export function HotelDetailView({ hotel, checkIn, checkOut, adults, children = 0
           </div>
         </div>
       )}
+
+      {/* Weather Widget */}
+      <WeatherWidget startDate={checkIn} endDate={checkOut} title="Weather During Your Stay" />
 
       {/* Hotel Info Cards Row */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -345,29 +350,13 @@ export function HotelDetailView({ hotel, checkIn, checkOut, adults, children = 0
         );
       })()}
 
-      {/* Amenities */}
+      {/* Amenities - Weather Aware */}
       {hotel.amenities && hotel.amenities.length > 0 && (
-        <Card>
-          <CardContent className="p-6">
-            <h2 className="text-2xl font-bold mb-6 text-neutral-900">Hotel Amenities</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-              {hotel.amenities.map((amenity, index) => {
-                const amenityName = amenity.name || amenity.code || '';
-                const { icon: iconName, color } = getAmenityIcon(amenityName);
-                const IconComponent = (LucideIcons as any)[iconName] || LucideIcons.Check;
-                
-                return (
-                  <div key={index} className="flex items-center text-sm bg-neutral-50 rounded-lg p-3 border border-neutral-200 hover:border-primary-300 hover:bg-primary-50/50 transition-all">
-                    <div className={`mr-3 flex-shrink-0 ${color}`}>
-                      <IconComponent className="w-5 h-5" />
-                    </div>
-                    <span className="text-neutral-700 font-medium">{amenityName}</span>
-                  </div>
-                );
-              })}
-            </div>
-          </CardContent>
-        </Card>
+        <WeatherAwareAmenities 
+          amenities={hotel.amenities} 
+          checkIn={checkIn} 
+          checkOut={checkOut}
+        />
       )}
 
       {/* Room Selection */}
