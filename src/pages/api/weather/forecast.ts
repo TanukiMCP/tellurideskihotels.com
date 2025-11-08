@@ -30,37 +30,6 @@ export const GET: APIRoute = async ({ request }) => {
       );
     }
 
-    // Validate dates are in YYYY-MM-DD format and ensure startDate is today or later (UTC)
-    const todayUTC = new Date();
-    todayUTC.setUTCHours(0, 0, 0, 0);
-    const todayStr = todayUTC.toISOString().split('T')[0];
-    
-    const startDateObj = new Date(startDate + 'T00:00:00Z');
-    const endDateObj = new Date(endDate + 'T00:00:00Z');
-    
-    if (startDateObj < todayUTC) {
-      console.warn('[Weather API Route] Start date is in the past, using today:', { 
-        requested: startDate, 
-        using: todayStr 
-      });
-      // Use today instead of the requested past date
-      const weatherData = await getWeather({
-        startDate: todayStr,
-        endDate: endDate > todayStr ? endDate : todayStr,
-        latitude: latitude ? parseFloat(latitude) : undefined,
-        longitude: longitude ? parseFloat(longitude) : undefined,
-        units: units || 'imperial',
-      });
-      
-      return new Response(JSON.stringify(weatherData), {
-        status: 200,
-        headers: {
-          'Content-Type': 'application/json',
-          'Cache-Control': 'public, s-maxage=21600, stale-while-revalidate=43200',
-        },
-      });
-    }
-
     const weatherData = await getWeather({
       startDate,
       endDate,
