@@ -6,6 +6,7 @@ import Container from '@/components/layout/Container.astro';
 import { HotelSearchWidget } from '@/components/lodging/HotelSearchWidget';
 import { FeaturedHotels } from '@/components/lodging/FeaturedHotels';
 import { CurrentConditions } from '@/components/weather/CurrentConditions';
+import { FeaturedActivities } from '@/components/activities/FeaturedActivities';
 import LodgingMap from '@/components/map/LodgingMap';
 import { SITE_DESCRIPTION } from '@/lib/constants';
 import { getHomepageHeroImage } from '@/lib/image-library';
@@ -216,6 +217,28 @@ try {
           class="inline-flex items-center gap-2 bg-primary-600 text-white px-10 py-4 rounded-xl font-semibold text-lg shadow-card hover:shadow-card-hover hover:bg-primary-700 transition-all duration-300"
         >
           View All Hotels
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+          </svg>
+        </a>
+      </div>
+    </section>
+
+    <!-- Things to Do Section -->
+    <section class="mb-32">
+      <div class="text-center mb-16">
+        <h2 class="text-display-sm lg:text-display-md mb-4 text-neutral-900 font-bold">Things to Do in Telluride</h2>
+        <p class="text-xl text-neutral-600 max-w-2xl mx-auto leading-relaxed font-normal">
+          Explore unforgettable activities, tours, and experiences. From thrilling adventures to cultural tours.
+        </p>
+      </div>
+      <FeaturedActivities client:visible limit={6} />
+      <div class="text-center mt-16">
+        <a 
+          href="/things-to-do" 
+          class="inline-flex items-center gap-2 bg-secondary-600 text-white px-10 py-4 rounded-xl font-semibold text-lg shadow-card hover:shadow-card-hover hover:bg-secondary-700 transition-all duration-300"
+        >
+          View All Activities
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
           </svg>

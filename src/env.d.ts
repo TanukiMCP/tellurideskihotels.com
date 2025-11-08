@@ -30,6 +30,8 @@ interface ImportMetaEnv {
   readonly PUBLIC_SITE_URL: string;
   readonly PEXELS_API_KEY: string;
   readonly PUBLIC_MAPBOX_ACCESS_TOKEN: string;
+  readonly VIATOR_API_KEY: string;
+  readonly VIATOR_BASE_URL: string;
 }
 
 interface ImportMeta {
