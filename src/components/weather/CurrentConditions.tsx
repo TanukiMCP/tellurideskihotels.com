@@ -88,20 +88,19 @@ export function CurrentConditions({ checkIn, checkOut }: CurrentConditionsProps 
     );
   }
 
-  // Get all available daily forecasts (up to 10 days)
+  // Get all available daily forecasts
   const dailyForecasts = weatherData[0].detailedWeatherData.daily;
-  const today = dailyForecasts[0];
-  const upcoming = dailyForecasts.slice(1, 10); // Show up to 10 days total
+  const allDays = dailyForecasts.slice(0, 10);
   
-  if (!today) return null;
+  if (!allDays.length) return null;
 
-  const icon = getWeatherIcon(today);
-  const description = getWeatherDescription(today);
-  const hasSnow = isSnowConditions(today);
+  const firstDay = allDays[0];
+  const icon = getWeatherIcon(firstDay);
+  const description = getWeatherDescription(firstDay);
   
-  // Check if any upcoming days have snow
-  const hasUpcomingSnow = upcoming.some(w => isSnowConditions(w));
-  const snowDays = upcoming.filter(w => isSnowConditions(w)).length;
+  // Check for snow conditions
+  const snowDays = allDays.filter(w => isSnowConditions(w));
+  const hasSnow = snowDays.length > 0;
 
   const handleSearchHotels = () => {
     if (selectedDateRange) {
@@ -118,126 +117,123 @@ export function CurrentConditions({ checkIn, checkOut }: CurrentConditionsProps 
   };
 
   return (
-    <div className="space-y-6">
-      {/* Main Weather Card */}
-      <div className={`${hasSnow ? 'bg-gradient-to-br from-blue-600 via-blue-500 to-sky-500' : 'bg-gradient-to-br from-sky-500 via-blue-400 to-blue-500'} rounded-3xl p-8 lg:p-12 text-white shadow-elevated`}>
-        <div className="flex items-start justify-between mb-6">
-          <div className="flex-1">
-            <div className="flex items-center gap-2 mb-2">
-              <MapPin className="w-5 h-5 text-white/80" />
-              <h2 className="text-xl font-bold text-white">Telluride Weather Forecast</h2>
-            </div>
-            {selectedDateRange && (
-              <div className="flex items-center gap-2 text-white/80 text-sm mb-4">
-                <Calendar className="w-4 h-4" />
-                <span>
+    <div className="space-y-8">
+      {/* Main Hero Card */}
+      <div className={`relative overflow-hidden rounded-2xl shadow-xl ${hasSnow ? 'bg-gradient-to-br from-blue-600 to-blue-400' : 'bg-gradient-to-br from-sky-500 to-blue-500'}`}>
+        <div className="relative z-10 p-6 lg:p-8">
+          {/* Header */}
+          <div className="flex items-center justify-between mb-8">
+            <div>
+              <div className="flex items-center gap-2 text-white/90 mb-1">
+                <MapPin className="w-4 h-4" />
+                <span className="text-sm font-medium">Telluride, Colorado</span>
+              </div>
+              {selectedDateRange && (
+                <div className="text-white/80 text-xs">
                   {format(new Date(selectedDateRange.start), 'MMM d')} - {format(new Date(selectedDateRange.end), 'MMM d, yyyy')}
-                </span>
+                </div>
+              )}
+            </div>
+            {hasSnow && (
+              <div className="bg-white/20 backdrop-blur-sm rounded-lg px-3 py-1.5 flex items-center gap-1.5">
+                <span className="text-lg">❄️</span>
+                <span className="text-white text-sm font-semibold">{snowDays.length} Snow Days</span>
               </div>
             )}
-            <div className="flex items-baseline gap-3 mb-2">
-              <p className="text-5xl lg:text-6xl font-bold">{Math.round(today.temp.day)}°F</p>
-              <div className="text-7xl lg:text-8xl">{icon}</div>
-            </div>
-            <p className="text-xl text-white/90 mb-4">{description}</p>
-            
-            {/* Weather Stats */}
-            <div className="flex flex-wrap gap-4 text-sm text-white/80 mb-6">
-              <div className="flex items-center gap-1.5">
-                <Droplets className="w-4 h-4" />
-                <span>High: {Math.round(today.temp.max)}°</span>
-              </div>
-              <div className="flex items-center gap-1.5">
-                <span>Low: {Math.round(today.temp.min)}°</span>
-              </div>
-              {today.pop && today.pop > 0 && (
-                <div className="flex items-center gap-1.5">
-                  <Cloud className="w-4 h-4" />
-                  <span>{Math.round(today.pop * 100)}% precip</span>
-                </div>
-              )}
-              {today.wind_speed && (
-                <div className="flex items-center gap-1.5">
-                  <Wind className="w-4 h-4" />
-                  <span>{Math.round(today.wind_speed)} mph</span>
-                </div>
-              )}
-            </div>
           </div>
-        </div>
-        
-        {/* Snow Alert */}
-        {(hasSnow || hasUpcomingSnow) && (
-          <div className="bg-white/20 backdrop-blur-sm rounded-xl px-4 py-3 mb-6">
-            <div className="flex items-center gap-2">
-              <span className="text-2xl">❄️</span>
-              <div>
-                <span className="font-semibold block">Fresh Snow Expected!</span>
-                {snowDays > 0 && (
-                  <span className="text-sm text-white/90">{snowDays} day{snowDays !== 1 ? 's' : ''} with snow in forecast</span>
+
+          {/* Current Conditions */}
+          <div className="flex items-center justify-between mb-8">
+            <div>
+              <div className="flex items-baseline gap-2 mb-2">
+                <span className="text-6xl lg:text-7xl font-bold text-white">{Math.round(firstDay.temp.day)}°</span>
+                <span className="text-3xl text-white/70">F</span>
+              </div>
+              <p className="text-lg text-white/90 mb-3">{description}</p>
+              <div className="flex items-center gap-4 text-sm text-white/80">
+                <span>H: {Math.round(firstDay.temp.max)}°</span>
+                <span>L: {Math.round(firstDay.temp.min)}°</span>
+                {firstDay.wind_speed && firstDay.wind_speed > 5 && (
+                  <span className="flex items-center gap-1">
+                    <Wind className="w-3 h-3" />
+                    {Math.round(firstDay.wind_speed)} mph
+                  </span>
+                )}
+                {firstDay.pop && firstDay.pop >= 0.3 && (
+                  <span className="flex items-center gap-1">
+                    <Droplets className="w-3 h-3" />
+                    {Math.round(firstDay.pop * 100)}%
+                  </span>
                 )}
               </div>
             </div>
+            <div className="text-8xl lg:text-9xl">{icon}</div>
           </div>
-        )}
-        
-        {/* Call to Action */}
-        <button
-          onClick={handleSearchHotels}
-          className="w-full bg-white text-sky-600 font-bold py-4 px-6 rounded-xl hover:bg-white/90 transition-all duration-300 shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
-        >
-          <Calendar className="w-5 h-5" />
-          {selectedDateRange ? 'Book Hotels for These Dates' : 'Search Hotels'}
-        </button>
+        </div>
+
+        {/* Decorative gradient overlay */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent pointer-events-none"></div>
       </div>
 
-      {/* Extended Forecast */}
-      <div className="bg-white rounded-3xl p-8 lg:p-12 shadow-card border border-neutral-200">
-        <h3 className="text-2xl font-bold text-neutral-900 mb-6">10-Day Forecast</h3>
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-10 gap-4">
-          {[today, ...upcoming].slice(0, 10).map((weather) => {
+      {/* 10-Day Forecast */}
+      <div>
+        <h3 className="text-xl font-bold text-neutral-900 mb-4">10-Day Forecast</h3>
+        <div className="grid grid-cols-5 lg:grid-cols-10 gap-2 lg:gap-3">
+          {allDays.map((weather, index) => {
             const weatherIcon = getWeatherIcon(weather);
             const date = new Date(weather.date);
             const isSnowDay = isSnowConditions(weather);
-            const isToday = weather === today;
+            const showPrecip = weather.pop && weather.pop >= 0.3;
             
             return (
               <div 
                 key={weather.date} 
-                className={`text-center p-4 rounded-xl border-2 transition-all ${
-                  isToday 
-                    ? 'bg-sky-50 border-sky-300 shadow-md' 
+                className={`relative p-3 lg:p-4 rounded-xl text-center transition-all ${
+                  index === 0
+                    ? 'bg-sky-500 text-white ring-2 ring-sky-400 shadow-lg' 
                     : isSnowDay 
-                    ? 'bg-blue-50 border-blue-200' 
-                    : 'bg-neutral-50 border-neutral-200 hover:border-neutral-300'
+                    ? 'bg-blue-50 hover:bg-blue-100 border border-blue-200' 
+                    : 'bg-neutral-50 hover:bg-neutral-100 border border-neutral-200'
                 }`}
               >
-                <div className={`text-xs font-semibold mb-2 ${isToday ? 'text-sky-700' : 'text-neutral-600'}`}>
-                  {isToday ? 'Today' : format(date, 'EEE')}
+                <div className={`text-xs font-semibold mb-1 ${index === 0 ? 'text-white' : 'text-neutral-600'}`}>
+                  {format(date, 'EEE')}
                 </div>
-                <div className="text-xs text-neutral-500 mb-2">{format(date, 'MMM d')}</div>
-                <div className="text-4xl mb-2">{weatherIcon}</div>
-                {isSnowDay && (
-                  <div className="text-xs text-blue-600 font-semibold mb-1">❄️ Snow</div>
-                )}
-                <div className="space-y-1">
-                  <div className="text-lg font-bold text-neutral-900">
+                <div className={`text-xs mb-2 ${index === 0 ? 'text-white/80' : 'text-neutral-500'}`}>
+                  {format(date, 'MMM d')}
+                </div>
+                <div className="text-3xl lg:text-4xl mb-2">{weatherIcon}</div>
+                <div className="space-y-0.5">
+                  <div className={`text-base lg:text-lg font-bold ${index === 0 ? 'text-white' : 'text-neutral-900'}`}>
                     {Math.round(weather.temp.max)}°
                   </div>
-                  <div className="text-sm text-neutral-500">
+                  <div className={`text-xs ${index === 0 ? 'text-white/70' : 'text-neutral-500'}`}>
                     {Math.round(weather.temp.min)}°
                   </div>
                 </div>
-                {weather.pop && weather.pop >= 0.3 && (
-                  <div className="text-xs text-sky-600 mt-1">
-                    {Math.round(weather.pop * 100)}%
+                {showPrecip && (
+                  <div className={`text-xs mt-1 flex items-center justify-center gap-0.5 ${index === 0 ? 'text-white/80' : 'text-sky-600'}`}>
+                    <Droplets className="w-3 h-3" />
+                    <span>{Math.round(weather.pop * 100)}%</span>
                   </div>
+                )}
+                {isSnowDay && index !== 0 && (
+                  <div className="absolute -top-1 -right-1 text-sm">❄️</div>
                 )}
               </div>
             );
           })}
         </div>
       </div>
+
+      {/* Call to Action */}
+      <button
+        onClick={handleSearchHotels}
+        className="w-full bg-sky-600 hover:bg-sky-700 text-white font-semibold py-4 px-6 rounded-xl transition-all duration-200 shadow-md hover:shadow-lg flex items-center justify-center gap-2"
+      >
+        <Calendar className="w-5 h-5" />
+        {selectedDateRange ? 'Book Hotels for These Dates' : 'Search Available Hotels'}
+      </button>
     </div>
   );
 }
