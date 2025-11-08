@@ -10,9 +10,10 @@ export function CurrentConditions() {
   useEffect(() => {
     const fetchWeather = async () => {
       try {
-        // Get today's date in local timezone (what the user sees)
-        const today = format(new Date(), 'yyyy-MM-dd');
-        const threeDaysOut = format(addDays(new Date(), 3), 'yyyy-MM-dd');
+        // Use UTC date (what liteAPI server sees as "today")
+        const nowUTC = new Date();
+        const today = format(new Date(Date.UTC(nowUTC.getUTCFullYear(), nowUTC.getUTCMonth(), nowUTC.getUTCDate())), 'yyyy-MM-dd');
+        const threeDaysOut = format(addDays(new Date(Date.UTC(nowUTC.getUTCFullYear(), nowUTC.getUTCMonth(), nowUTC.getUTCDate())), 3), 'yyyy-MM-dd');
         
         console.log('[CurrentConditions] Fetching weather:', { today, threeDaysOut });
         const response = await fetch(
