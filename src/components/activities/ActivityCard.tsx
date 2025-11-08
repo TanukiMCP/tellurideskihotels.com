@@ -70,7 +70,7 @@ export function ActivityCard({ activity, className = '' }: ActivityCardProps) {
               ))}
             </div>
             <span className="text-sm text-neutral-600">
-              {activity.reviews.combinedAverageRating.toFixed(1)} ({activity.reviews.totalReviews.toLocaleString()})
+              {activity.reviews!.combinedAverageRating.toFixed(1)} ({activity.reviews!.totalReviews.toLocaleString()})
             </span>
           </div>
         )}
