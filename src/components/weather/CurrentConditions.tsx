@@ -10,14 +10,14 @@ export function CurrentConditions() {
   useEffect(() => {
     const fetchWeather = async () => {
       try {
-        // Use UTC date (what liteAPI server sees as "today")
-        const nowUTC = new Date();
-        const today = format(new Date(Date.UTC(nowUTC.getUTCFullYear(), nowUTC.getUTCMonth(), nowUTC.getUTCDate())), 'yyyy-MM-dd');
-        const threeDaysOut = format(addDays(new Date(Date.UTC(nowUTC.getUTCFullYear(), nowUTC.getUTCMonth(), nowUTC.getUTCDate())), 3), 'yyyy-MM-dd');
+        // DEBUG: Use a hardcoded future date from the liteAPI docs to test
+        // This confirms if the API call is working and the issue is the date value
+        const startDate = '2025-01-10';
+        const endDate = '2025-01-13';
         
-        console.log('[CurrentConditions] Fetching weather:', { today, threeDaysOut });
+        console.log('[CurrentConditions] Fetching weather with hardcoded test dates:', { startDate, endDate });
         const response = await fetch(
-          `/api/weather/forecast?startDate=${today}&endDate=${threeDaysOut}&units=imperial`
+          `/api/weather/forecast?startDate=${startDate}&endDate=${endDate}&units=imperial`
         );
         
         if (!response.ok) {
