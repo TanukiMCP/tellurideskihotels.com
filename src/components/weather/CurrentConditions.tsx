@@ -11,14 +11,14 @@ export function CurrentConditions() {
     const fetchWeather = async () => {
       try {
         // Use UTC dates to match server timezone (liteAPI server is in UTC)
-        // This ensures "today" from the server's perspective
+        // Start from tomorrow to avoid timezone edge cases where "today" might be rejected
         const now = new Date();
-        const todayUTC = format(new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate())), 'yyyy-MM-dd');
-        const threeDaysOutUTC = format(addDays(new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate())), 3), 'yyyy-MM-dd');
+        const tomorrowUTC = format(addDays(new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate())), 1), 'yyyy-MM-dd');
+        const fourDaysOutUTC = format(addDays(new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate())), 4), 'yyyy-MM-dd');
         
-        console.log('[CurrentConditions] Fetching weather:', { today: todayUTC, threeDaysOut: threeDaysOutUTC });
+        console.log('[CurrentConditions] Fetching weather:', { tomorrow: tomorrowUTC, fourDaysOut: fourDaysOutUTC });
         const response = await fetch(
-          `/api/weather/forecast?startDate=${todayUTC}&endDate=${threeDaysOutUTC}&units=imperial`
+          `/api/weather/forecast?startDate=${tomorrowUTC}&endDate=${fourDaysOutUTC}&units=imperial`
         );
         
         if (!response.ok) {
