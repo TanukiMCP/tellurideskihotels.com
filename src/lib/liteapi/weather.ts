@@ -110,8 +110,48 @@ export interface DailyWeatherData {
   };
 }
 
+// Actual API response structure (different from documentation!)
+export interface DetailedDaily {
+  date: string;
+  temp: {
+    day: number;
+    min: number;
+    max: number;
+    night: number;
+    eve: number;
+    morn: number;
+  };
+  feels_like: {
+    day: number;
+    night: number;
+    eve: number;
+    morn: number;
+  };
+  pressure: number;
+  humidity: number;
+  wind_speed: number;
+  wind_deg: number;
+  weather: Array<{
+    id: number;
+    main: string;
+    description: string;
+    icon: string;
+  }>;
+  clouds: number;
+  pop: number; // Probability of precipitation
+  summary: string;
+}
+
+export interface DetailedWeatherData {
+  lat: number;
+  lon: number;
+  timezone: string;
+  timezone_offset: number;
+  daily: DetailedDaily[];
+}
+
 export interface WeatherData {
-  dailyWeather: DailyWeatherData;
+  detailedWeatherData: DetailedWeatherData;
 }
 
 export interface WeatherResponse {

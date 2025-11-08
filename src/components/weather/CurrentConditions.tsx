@@ -10,8 +10,8 @@ export function CurrentConditions() {
   useEffect(() => {
     const fetchWeather = async () => {
       try {
-        // liteAPI requires forecast dates (future), not historical
-        // Add 1 day to ensure we're always in the future
+        // liteAPI weather requires dates in the future (tomorrow or later)
+        // Use UTC+1 to ensure we're always requesting future dates
         const nowUTC = new Date();
         const tomorrow = format(addDays(new Date(Date.UTC(nowUTC.getUTCFullYear(), nowUTC.getUTCMonth(), nowUTC.getUTCDate())), 1), 'yyyy-MM-dd');
         const fourDaysOut = format(addDays(new Date(Date.UTC(nowUTC.getUTCFullYear(), nowUTC.getUTCMonth(), nowUTC.getUTCDate())), 4), 'yyyy-MM-dd');
