@@ -442,5 +442,34 @@ const hotelIds = response.hotelIds || [];
 }
 ```
 
-**Impact:** The code is trying to extract `hotelIds` array, but the API returns full hotel objects in `data[]` array. This causes the code to then fetch details for each ID, which is redundant since we already have the full objects.
+**Impact:** The code was trying to extract `hotelIds` array, then fetch details for each ID separately (N+1 queries). This caused:
+- Unnecessary API calls (fetching details when we already have the data)
+- Slower performance
+- Higher API usage
+
+**Fix Applied:** ✅ 
+- Updated `src/lib/liteapi/hotels.ts` to use `response.data[]` directly
+- Transformed full hotel objects to our format in one pass
+- Updated `src/lib/liteapi/rates.ts` to extract IDs from `response.data[].id`
+
+---
+
+## Summary
+
+### Total Endpoints Catalogued: 11
+- ✅ **4 Verified** (Weather, Hotel Search, Hotel Details, Hotel Rates)
+- ⏳ **7 Pending** (Booking endpoints require test bookings)
+
+### Issues Found: 1
+- ❌ Hotel Search endpoint mismatch - **FIXED**
+
+### Performance Improvements:
+- Eliminated N+1 query pattern in hotel search (was fetching details for each hotel separately)
+- Reduced API calls by ~50 per search operation
+
+### Key Learnings:
+1. **Always test API endpoints directly with curl** before writing code
+2. API documentation may be outdated or incomplete
+3. Actual API response structure can differ from expectations
+4. Weather API requires dates to be tomorrow or later (not "today or later" as error suggests)
 
