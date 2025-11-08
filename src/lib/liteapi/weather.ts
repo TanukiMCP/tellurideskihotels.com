@@ -43,10 +43,12 @@ async function weatherAPIClient<T>(endpoint: string): Promise<T> {
       
       console.error('[Weather API Client] Error:', {
         endpoint,
+        fullUrl: url,
         status: response.status,
         duration: `${duration}ms`,
         errorData,
-        responseText: errorText.substring(0, 500),
+        responseText: errorText,
+        headers: Object.fromEntries(response.headers.entries()),
       });
       
       throw new WeatherAPIError(
