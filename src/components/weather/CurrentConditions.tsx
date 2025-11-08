@@ -69,11 +69,12 @@ export function CurrentConditions() {
     );
   }
 
-  // TEMPORARY: Show detailed error
-  if (!weatherData[0]?.dailyWeather) {
+  // Check for detailed weather data structure
+  if (!weatherData[0]?.detailedWeatherData?.daily) {
     console.warn('[CurrentConditions] Weather data structure invalid:', {
       hasWeatherData: !!weatherData[0],
-      hasDailyWeather: !!weatherData[0]?.dailyWeather,
+      hasDetailedWeatherData: !!weatherData[0]?.detailedWeatherData,
+      hasDaily: !!weatherData[0]?.detailedWeatherData?.daily,
       weatherData: weatherData[0],
     });
     return (
@@ -84,9 +85,10 @@ export function CurrentConditions() {
     );
   }
 
-  // Get today and next 3 days from the array
-  const today = weatherData[0].dailyWeather;
-  const upcoming = weatherData.slice(1, 4).map(w => w.dailyWeather);
+  // Get first day and next 3 days from the array
+  const dailyForecasts = weatherData[0].detailedWeatherData.daily;
+  const today = dailyForecasts[0];
+  const upcoming = dailyForecasts.slice(1, 4);
   
   if (!today) return null;
 
