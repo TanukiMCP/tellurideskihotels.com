@@ -79,12 +79,14 @@ export async function getWeather(days: number = 10): Promise<WeatherDay[]> {
   url.searchParams.set('latitude', TELLURIDE_COORDS.latitude.toString());
   url.searchParams.set('longitude', TELLURIDE_COORDS.longitude.toString());
   url.searchParams.set('daily', 'temperature_2m_max,temperature_2m_min,weathercode,precipitation_probability_max,windspeed_10m_max,precipitation_sum');
+  url.searchParams.set('current_weather', 'true');
   url.searchParams.set('temperature_unit', 'fahrenheit');
   url.searchParams.set('windspeed_unit', 'mph');
   url.searchParams.set('precipitation_unit', 'inch');
   url.searchParams.set('timezone', 'America/Denver');
   url.searchParams.set('forecast_days', Math.min(days, 16).toString()); // Max 16 days
 
+  console.log('[Open-Meteo] Fetching weather for Telluride:', url.toString());
   const response = await fetch(url.toString());
   
   if (!response.ok) {
@@ -92,15 +94,38 @@ export async function getWeather(days: number = 10): Promise<WeatherDay[]> {
   }
 
   const data: OpenMeteoResponse = await response.json();
+  
+  // Get today's date in Denver timezone
+  const now = new Date();
+  const denverDate = new Intl.DateTimeFormat('en-US', {
+    timeZone: 'America/Denver',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit'
+  }).format(now);
+  const [month, day, year] = denverDate.split('/');
+  const todayString = `${year}-${month}-${day}`;
+  
+  console.log('[Open-Meteo] Today in Denver:', todayString);
+  console.log('[Open-Meteo] First forecast date:', data.daily.time[0]);
+  console.log('[Open-Meteo] Current weather time:', data.current_weather?.time);
 
   // Transform to our format
   const weatherDays: WeatherDay[] = [];
   for (let i = 0; i < data.daily.time.length; i++) {
+    const forecastDate = data.daily.time[i];
+    
+    // Skip dates before today
+    if (forecastDate < todayString) {
+      console.log('[Open-Meteo] Skipping past date:', forecastDate);
+      continue;
+    }
+    
     const maxTemp = data.daily.temperature_2m_max[i];
     const minTemp = data.daily.temperature_2m_min[i];
     
     weatherDays.push({
-      date: data.daily.time[i],
+      date: forecastDate,
       temp: {
         max: maxTemp,
         min: minTemp,
@@ -113,6 +138,7 @@ export async function getWeather(days: number = 10): Promise<WeatherDay[]> {
     });
   }
 
+  console.log('[Open-Meteo] Returning', weatherDays.length, 'days starting from', weatherDays[0]?.date);
   return weatherDays;
 }
 
