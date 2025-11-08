@@ -100,8 +100,8 @@ export function CurrentConditions() {
     <div className={`${hasSnow ? 'bg-gradient-to-br from-blue-600 to-sky-500' : 'bg-gradient-to-br from-sky-500 to-blue-400'} rounded-2xl p-6 text-white shadow-card`}>
       <div className="flex items-start justify-between mb-4">
         <div>
-          <h3 className="text-sm font-semibold text-white/90 mb-1">Current Telluride Conditions</h3>
-          <p className="text-3xl font-bold">{Math.round(today.temperature.afternoon)}°F</p>
+          <h3 className="text-sm font-semibold text-white/90 mb-1">Telluride Forecast</h3>
+          <p className="text-3xl font-bold">{Math.round(today.temp.day)}°F</p>
         </div>
         <div className="text-6xl">{icon}</div>
       </div>
@@ -123,7 +123,7 @@ export function CurrentConditions() {
             <div key={weather.date} className="flex-1 text-center">
               <div className="text-xs text-white/80 mb-1">{format(date, 'EEE')}</div>
               <div className="text-2xl mb-1">{weatherIcon}</div>
-              <div className="text-sm font-semibold">{Math.round(weather.temperature.max)}°</div>
+              <div className="text-sm font-semibold">{Math.round(weather.temp.max)}°</div>
             </div>
           );
         })}
