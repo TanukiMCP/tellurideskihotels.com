@@ -22,30 +22,6 @@ export const GET: APIRoute = async ({ request }) => {
       units,
     });
 
-import type { APIRoute } from 'astro';
-import { getWeather } from '@/lib/liteapi/weather';
-
-export const prerender = false;
-
-export const GET: APIRoute = async ({ request }) => {
-  try {
-    // Parse URL from request object (more reliable in Astro hybrid mode)
-    const url = new URL(request.url);
-    const startDate = url.searchParams.get('startDate');
-    const endDate = url.searchParams.get('endDate');
-    const latitude = url.searchParams.get('latitude');
-    const longitude = url.searchParams.get('longitude');
-    const units = url.searchParams.get('units') as 'metric' | 'imperial' | null;
-
-    console.log('[Weather API Route] Request URL:', request.url);
-    console.log('[Weather API Route] Parsed params:', {
-      startDate,
-      endDate,
-      latitude,
-      longitude,
-      units,
-    });
-
     if (!startDate || !endDate) {
       console.error('[Weather API Route] Missing required params');
       return new Response(
