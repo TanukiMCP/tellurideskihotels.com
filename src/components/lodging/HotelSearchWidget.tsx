@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from 'react';
+import { useState, type FormEvent, useEffect } from 'react';
 import { Search, Calendar, Users } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
@@ -8,12 +8,14 @@ export interface HotelSearchWidgetProps {
   initialLocation?: string;
   initialDates?: { checkIn: Date; checkOut: Date };
   initialGuests?: { adults: number; children: number };
+  onDatesChange?: (checkIn: string, checkOut: string) => void;
 }
 
 export function HotelSearchWidget({
   initialLocation = 'Telluride',
   initialDates,
   initialGuests = { adults: 2, children: 0 },
+  onDatesChange,
 }: HotelSearchWidgetProps) {
   const [checkIn, setCheckIn] = useState(
     initialDates?.checkIn
@@ -26,6 +28,13 @@ export function HotelSearchWidget({
       : format(addDays(new Date(), 14), 'yyyy-MM-dd')
   );
   const [adults, setAdults] = useState(initialGuests.adults.toString());
+
+  // Notify parent when dates change
+  useEffect(() => {
+    if (onDatesChange) {
+      onDatesChange(checkIn, checkOut);
+    }
+  }, [checkIn, checkOut, onDatesChange]);
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
