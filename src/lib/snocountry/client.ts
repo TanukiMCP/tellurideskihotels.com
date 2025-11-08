@@ -6,16 +6,19 @@
 
 import type { SkiConditions, SnoCountryApiResponse } from './types';
 
-const SNOCOUNTRY_API_URL = 'https://feeds.snocountry.net/conditions.php';
+const SNOCOUNTRY_API_URL = 'https://feeds.snocountry.net/getSnowReport.php';
+const TELLURIDE_RESORT_ID = '303022'; // Telluride Ski Resort ID in SnoCountry database
 
 /**
  * Fetch ski conditions for Telluride
- * SnoCountry provides free RSS/JSON feeds for ski resort conditions
+ * SnoCountry provides free API access for single resort requests
+ * Using the example key which has no limitation on single ski area requests
+ * Source: https://feeds.snocountry.net/
  */
 export async function getTellurideSkiConditions(): Promise<SkiConditions | null> {
   try {
-    // SnoCountry free API - no authentication required
-    const response = await fetch(`${SNOCOUNTRY_API_URL}?apiKey=demo&ids=304016`, {
+    // SnoCountry free example API key - unlimited for single resort requests
+    const response = await fetch(`${SNOCOUNTRY_API_URL}?apiKey=SnoCountry.example&ids=${TELLURIDE_RESORT_ID}`, {
       headers: {
         'Accept': 'application/json',
       },
