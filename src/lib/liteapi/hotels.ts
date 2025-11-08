@@ -29,35 +29,42 @@ export async function searchHotels(params: LiteAPIHotelSearchParams): Promise<Ho
 
   const response = await liteAPIClient<any>(endpoint);
   
-  // LiteAPI returns hotelIds at ROOT level (not nested in data)
-  const hotelIds = response.hotelIds || [];
+  // ACTUAL API RESPONSE: Returns full hotel objects in data[] array
+  const hotelsData = Array.isArray(response.data) ? response.data : [];
   
-  console.log('[LiteAPI Hotels] Search returned hotel IDs:', {
-    count: hotelIds.length,
-    sampleIds: hotelIds.slice(0, 3),
+  console.log('[LiteAPI Hotels] Search returned hotels:', {
+    count: hotelsData.length,
+    sampleIds: hotelsData.slice(0, 3).map((h: any) => h.id),
   });
   
-  // Limit to requested number to avoid timeout
-  const limitedIds = hotelIds.slice(0, params.limit || 500);
-  
-  // Fetch details for each hotel to get full info including images
-  // Process in batches to avoid overwhelming the API
-  const batchSize = 10;
-  const validHotels: LiteAPIHotel[] = [];
-  
-  for (let i = 0; i < limitedIds.length; i += batchSize) {
-    const batch = limitedIds.slice(i, i + batchSize);
-    const batchPromises = batch.map((id: string) => 
-      getHotelDetails(id).catch(err => {
-        console.error(`[LiteAPI Hotels] Error fetching details for ${id}:`, err);
-        return null;
-      })
-    );
-    
-    const batchResults = await Promise.all(batchPromises);
-    const validBatch = batchResults.filter((h): h is LiteAPIHotel => h !== null);
-    validHotels.push(...validBatch);
-  }
+  // Transform API response to our format
+  const validHotels: LiteAPIHotel[] = hotelsData.map((hotel: any) => ({
+    hotel_id: hotel.id,
+    name: hotel.name,
+    star_rating: hotel.stars,
+    review_score: hotel.rating,
+    review_count: hotel.reviewCount,
+    address: {
+      line1: hotel.address,
+      city: hotel.city,
+      state: hotel.state,
+      postal_code: hotel.zip,
+      country: hotel.country,
+    },
+    location: {
+      latitude: hotel.latitude,
+      longitude: hotel.longitude,
+    },
+    images: hotel.main_photo ? [{
+      type: 'main' as const,
+      url: hotel.main_photo,
+      description: '',
+    }] : [],
+    amenities: [], // Not included in search results, need full details for amenities
+    description: hotel.hotelDescription ? {
+      text: hotel.hotelDescription,
+    } : undefined,
+  }));
   
   // Filter out hotels that are too far from Telluride (e.g., Sawpit)
   const nearbyHotels = validHotels.filter(hotel => {
