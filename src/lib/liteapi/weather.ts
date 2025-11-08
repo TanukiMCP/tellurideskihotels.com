@@ -207,55 +207,40 @@ export async function getWeather(params: WeatherParams): Promise<WeatherResponse
   return response;
 }
 
-export function isSnowConditions(weather: DailyWeatherData): boolean {
-  // Precipitation > 0.5 and temp below freezing
-  return weather.temperature.max <= 32 && weather.precipitation.total >= 0.5;
+// Utility functions updated for DetailedDaily structure
+export function isSnowConditions(weather: DetailedDaily): boolean {
+  const hasSnow = weather.weather.some(w => w.main === 'Snow' || w.description.includes('snow'));
+  return hasSnow || (weather.pop >= 0.5 && weather.temp.max <= 32);
 }
 
-export function getWeatherIcon(weather: DailyWeatherData): string {
-  const precipitation = weather.precipitation.total;
-  const cloudCover = weather.cloud_cover.afternoon;
-  const temp = weather.temperature.max;
+export function getWeatherIcon(weather: DetailedDaily): string {
+  const mainWeather = weather.weather[0]?.main;
   
-  // High precipitation
-  if (precipitation >= 0.5) {
-    return temp <= 32 ? '❄️' : '🌧️';
+  switch (mainWeather) {
+    case 'Snow':
+      return '❄️';
+    case 'Rain':
+    case 'Drizzle':
+      return '🌧️';
+    case 'Clouds':
+      return weather.clouds >= 70 ? '☁️' : '⛅';
+    case 'Clear':
+      return '☀️';
+    case 'Thunderstorm':
+      return '⛈️';
+    case 'Mist':
+    case 'Fog':
+      return '🌫️';
+    default:
+      return weather.clouds >= 50 ? '☁️' : '☀️';
   }
-  
-  // Cloud cover based
-  if (cloudCover >= 70) {
-    return '☁️';
-  }
-  
-  if (cloudCover >= 30) {
-    return '⛅';
-  }
-  
-  return '☀️';
 }
 
-export function getWeatherDescription(weather: DailyWeatherData): string {
-  const precipitation = weather.precipitation.total;
-  const cloudCover = weather.cloud_cover.afternoon;
-  const temp = weather.temperature.max;
-  
-  if (precipitation >= 0.5 && temp <= 32) {
-    return 'Snow expected';
+export function getWeatherDescription(weather: DetailedDaily): string {
+  if (weather.summary) {
+    return weather.summary.replace(/^Date: \d{4}-\d{2}-\d{2}, Summary: /, '');
   }
-  
-  if (precipitation >= 0.5) {
-    return 'Rain expected';
-  }
-  
-  if (cloudCover >= 70) {
-    return 'Cloudy';
-  }
-  
-  if (cloudCover >= 30) {
-    return 'Partly cloudy';
-  }
-  
-  return 'Clear';
+  return weather.weather[0]?.description || 'Weather unavailable';
 }
 
 export function shouldHighlightIndoorAmenities(weatherData: WeatherData[]): boolean {
