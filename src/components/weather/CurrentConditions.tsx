@@ -10,12 +10,15 @@ export function CurrentConditions() {
   useEffect(() => {
     const fetchWeather = async () => {
       try {
-        const today = format(new Date(), 'yyyy-MM-dd');
-        const threeDaysOut = format(addDays(new Date(), 3), 'yyyy-MM-dd');
+        // Use UTC dates to match server timezone (liteAPI server is in UTC)
+        // This ensures "today" from the server's perspective
+        const now = new Date();
+        const todayUTC = format(new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate())), 'yyyy-MM-dd');
+        const threeDaysOutUTC = format(addDays(new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate())), 3), 'yyyy-MM-dd');
         
-        console.log('[CurrentConditions] Fetching weather:', { today, threeDaysOut });
+        console.log('[CurrentConditions] Fetching weather:', { today: todayUTC, threeDaysOut: threeDaysOutUTC });
         const response = await fetch(
-          `/api/weather/forecast?startDate=${today}&endDate=${threeDaysOut}&units=imperial`
+          `/api/weather/forecast?startDate=${todayUTC}&endDate=${threeDaysOutUTC}&units=imperial`
         );
         
         if (!response.ok) {
