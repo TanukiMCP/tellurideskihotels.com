@@ -91,7 +91,7 @@ export async function searchHotels(params: LiteAPIHotelSearchParams): Promise<Ho
   
   return {
     data: nearbyHotels,
-    total: hotelIds.length,
+    total: nearbyHotels.length,
   };
 }
 

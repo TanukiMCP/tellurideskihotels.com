@@ -29,9 +29,10 @@ export function SnowAlertBadge({ checkIn, checkOut }: SnowAlertBadgeProps) {
         const weatherData: WeatherData[] = data.weatherData || [];
         
         // Check if any day in the weather data has snow conditions
-        const snowExpected = weatherData.length > 0 && 
-          weatherData.some((w) => w.dailyWeather && isSnowConditions(w.dailyWeather));
-        console.log('[SnowAlertBadge] Snow check result:', { snowExpected, weatherDataCount: weatherData.length });
+        // Flatten all daily forecasts from all weather data items
+        const allDaily = weatherData.flatMap(w => w.detailedWeatherData?.daily || []);
+        const snowExpected = allDaily.length > 0 && allDaily.some(d => isSnowConditions(d));
+        console.log('[SnowAlertBadge] Snow check result:', { snowExpected, weatherDataCount: weatherData.length, dailyCount: allDaily.length });
         setHasSnow(snowExpected);
       } catch (err) {
         console.error('[SnowAlertBadge] Error checking snow conditions:', err);

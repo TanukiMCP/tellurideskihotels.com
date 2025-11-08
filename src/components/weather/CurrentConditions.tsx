@@ -33,7 +33,8 @@ export function CurrentConditions() {
           hasWeatherData: !!data.weatherData,
           weatherDataLength: data.weatherData?.length,
           firstItem: data.weatherData?.[0],
-          hasDailyWeather: !!data.weatherData?.[0]?.dailyWeather,
+          hasDetailedWeatherData: !!data.weatherData?.[0]?.detailedWeatherData,
+          hasDaily: !!data.weatherData?.[0]?.detailedWeatherData?.daily,
         });
         setWeatherData(data.weatherData || []);
       } catch (err) {

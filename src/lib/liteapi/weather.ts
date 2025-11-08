@@ -200,7 +200,8 @@ export async function getWeather(params: WeatherParams): Promise<WeatherResponse
   console.log('[Weather API] Response structure check:', {
     hasWeatherData: !!response.weatherData,
     weatherDataLength: response.weatherData?.length,
-    hasDailyWeather: !!response.weatherData?.[0]?.dailyWeather,
+    hasDetailedWeatherData: !!response.weatherData?.[0]?.detailedWeatherData,
+    hasDaily: !!response.weatherData?.[0]?.detailedWeatherData?.daily,
     firstItem: response.weatherData?.[0],
   });
   
@@ -246,8 +247,12 @@ export function getWeatherDescription(weather: DetailedDaily): string {
 export function shouldHighlightIndoorAmenities(weatherData: WeatherData[]): boolean {
   if (!weatherData.length) return false;
   
-  const avgPrecipitation = weatherData.reduce((sum, w) => sum + w.dailyWeather.precipitation.total, 0) / weatherData.length;
-  const avgCloudCover = weatherData.reduce((sum, w) => sum + w.dailyWeather.cloud_cover.afternoon, 0) / weatherData.length;
+  // Flatten all daily forecasts from all weather data items
+  const allDaily = weatherData.flatMap(w => w.detailedWeatherData?.daily || []);
+  if (!allDaily.length) return false;
+  
+  const avgPrecipitation = allDaily.reduce((sum, d) => sum + (d.pop || 0), 0) / allDaily.length;
+  const avgCloudCover = allDaily.reduce((sum, d) => sum + (d.clouds || 0), 0) / allDaily.length;
   
   return avgPrecipitation >= 0.4 || avgCloudCover >= 70;
 }
@@ -255,8 +260,12 @@ export function shouldHighlightIndoorAmenities(weatherData: WeatherData[]): bool
 export function shouldHighlightOutdoorAmenities(weatherData: WeatherData[]): boolean {
   if (!weatherData.length) return false;
   
-  const avgPrecipitation = weatherData.reduce((sum, w) => sum + w.dailyWeather.precipitation.total, 0) / weatherData.length;
-  const avgCloudCover = weatherData.reduce((sum, w) => sum + w.dailyWeather.cloud_cover.afternoon, 0) / weatherData.length;
+  // Flatten all daily forecasts from all weather data items
+  const allDaily = weatherData.flatMap(w => w.detailedWeatherData?.daily || []);
+  if (!allDaily.length) return false;
+  
+  const avgPrecipitation = allDaily.reduce((sum, d) => sum + (d.pop || 0), 0) / allDaily.length;
+  const avgCloudCover = allDaily.reduce((sum, d) => sum + (d.clouds || 0), 0) / allDaily.length;
   
   return avgPrecipitation < 0.3 && avgCloudCover < 50;
 }
@@ -264,7 +273,11 @@ export function shouldHighlightOutdoorAmenities(weatherData: WeatherData[]): boo
 export function shouldHighlightHeatedAmenities(weatherData: WeatherData[]): boolean {
   if (!weatherData.length) return false;
   
-  const avgMinTemp = weatherData.reduce((sum, w) => sum + w.dailyWeather.temperature.min, 0) / weatherData.length;
+  // Flatten all daily forecasts from all weather data items
+  const allDaily = weatherData.flatMap(w => w.detailedWeatherData?.daily || []);
+  if (!allDaily.length) return false;
+  
+  const avgMinTemp = allDaily.reduce((sum, d) => sum + d.temp.min, 0) / allDaily.length;
   
   return avgMinTemp <= 15;
 }
@@ -272,12 +285,16 @@ export function shouldHighlightHeatedAmenities(weatherData: WeatherData[]): bool
 export function getPackingRecommendations(weatherData: WeatherData[]): string[] {
   if (!weatherData.length) return [];
   
+  // Flatten all daily forecasts from all weather data items
+  const allDaily = weatherData.flatMap(w => w.detailedWeatherData?.daily || []);
+  if (!allDaily.length) return [];
+  
   const recommendations: string[] = [];
-  const avgMinTemp = weatherData.reduce((sum, w) => sum + w.dailyWeather.temperature.min, 0) / weatherData.length;
-  const avgMaxTemp = weatherData.reduce((sum, w) => sum + w.dailyWeather.temperature.max, 0) / weatherData.length;
-  const maxPrecipitation = Math.max(...weatherData.map(w => w.dailyWeather.precipitation.total));
-  const maxWindSpeed = Math.max(...weatherData.map(w => w.dailyWeather.wind.max.speed));
-  const hasSnow = weatherData.some(w => isSnowConditions(w.dailyWeather));
+  const avgMinTemp = allDaily.reduce((sum, d) => sum + d.temp.min, 0) / allDaily.length;
+  const avgMaxTemp = allDaily.reduce((sum, d) => sum + d.temp.max, 0) / allDaily.length;
+  const maxPrecipitation = Math.max(...allDaily.map(d => d.pop || 0));
+  const maxWindSpeed = Math.max(...allDaily.map(d => d.wind_speed || 0));
+  const hasSnow = allDaily.some(d => isSnowConditions(d));
   
   if (avgMinTemp <= 10) {
     recommendations.push('Pack heavy thermal layers and insulated gear');
