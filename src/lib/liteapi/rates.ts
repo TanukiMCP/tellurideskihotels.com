@@ -327,7 +327,7 @@ export async function searchHotelsWithRates(params: {
     adults: params.adults,
   });
 
-  // First, get hotel IDs for the city
+  // First, get hotels for the city (API returns full objects, not just IDs)
   const searchParams = new URLSearchParams();
   searchParams.append('cityName', params.cityName);
   searchParams.append('countryCode', params.countryCode);
@@ -335,7 +335,8 @@ export async function searchHotelsWithRates(params: {
 
   const hotelSearchEndpoint = `/data/hotels?${searchParams.toString()}`;
   const hotelSearchResponse = await liteAPIClient<any>(hotelSearchEndpoint);
-  const hotelIds = (hotelSearchResponse.hotelIds || []).slice(0, params.limit || 500);
+  const hotelsData = Array.isArray(hotelSearchResponse.data) ? hotelSearchResponse.data : [];
+  const hotelIds = hotelsData.map((h: any) => h.id).slice(0, params.limit || 500);
 
   console.log('[LiteAPI Rates] Found hotel IDs:', hotelIds.length);
 
