@@ -1,4 +1,4 @@
-import { LITEAPI_BASE_URL, LITEAPI_PUBLIC_KEY } from './config';
+import { LITEAPI_BASE_URL, LITEAPI_PRIVATE_KEY } from './config';
 import { TELLURIDE_CENTER } from '@/lib/mapbox-utils';
 
 // Weather API Error class
@@ -20,11 +20,11 @@ async function weatherAPIClient<T>(endpoint: string): Promise<T> {
   
   console.log('[Weather API Client] Request:', {
     url,
-    usingPublicKey: true,
+    usingPrivateKey: true,
   });
   
   const headers = new Headers();
-  headers.set('X-API-Key', LITEAPI_PUBLIC_KEY); // Use PUBLIC key for data endpoints
+  headers.set('X-API-Key', LITEAPI_PRIVATE_KEY); // Weather endpoint requires PRIVATE key despite being a data endpoint
   headers.set('Accept', 'application/json');
 
   try {
