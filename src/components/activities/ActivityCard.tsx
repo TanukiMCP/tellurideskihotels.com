@@ -12,7 +12,11 @@ interface ActivityCardProps {
 }
 
 export function ActivityCard({ activity, className = '' }: ActivityCardProps) {
-  const detailsUrl = `/things-to-do/${activity.productCode}`;
+  // Pass pricing data as URL params as fallback since detail endpoint may not return it
+  const priceParam = activity.pricing?.summary?.fromPrice 
+    ? `&price=${activity.pricing.summary.fromPrice}&currency=${activity.pricing.currency}` 
+    : '';
+  const detailsUrl = `/things-to-do/${activity.productCode}?ref=search${priceParam}`;
   const images = activity.images || [];
   const mainImage = images.find(img => img.isCover) || images[0];
   const imageUrl = mainImage?.variants?.find(v => v.width >= 400)?.url || mainImage?.variants?.[0]?.url;
