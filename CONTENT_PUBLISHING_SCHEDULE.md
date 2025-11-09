@@ -79,21 +79,25 @@
 
 ### Week 2: High-Volume Keywords + Colorado Local Guides
 
-**Day 8: "Driving to Telluride from Denver: Complete I-70 Guide"**
+**Day 8: "Driving to Telluride from Denver: Complete I-70 Guide"** ✅ COMPLETE
 - Keyword: denver to telluride drive (1,600/mo)
 - Word Count: 2,800
 - Type: Comprehensive Guide
 - Category: planning-tips
 - Tags: driving, denver, i70, road-trip, locals
-- **Local Focus:** I-70 conditions, mountain passes, winter driving, gas stops, scenic routes
+- **Status:** Draft saved at `src/content/drafts/denver-to-telluride-drive-guide.md`
+- **Publish Date:** 2025-11-13T15:00:00Z
+- **Completed:** 2025-11-09
 
-**Day 9: "Telluride from Colorado Springs: Drive Guide & Tips"**
+**Day 9: "Telluride from Colorado Springs: Drive Guide & Tips"** ✅ COMPLETE
 - Keyword: colorado springs to telluride (720/mo)
 - Word Count: 2,400
 - Type: Comprehensive Guide
 - Category: planning-tips
 - Tags: driving, colorado-springs, road-trip, locals
-- **Local Focus:** Best routes, avoiding I-70, weather considerations, drive time
+- **Status:** Draft saved at `src/content/drafts/colorado-springs-to-telluride-drive.md`
+- **Publish Date:** 2025-11-14T15:00:00Z
+- **Completed:** 2025-11-09
 
 **Day 10: "Telluride Skiing: Complete Guide for All Levels"**
 - Keyword: telluride skiing (4,400/mo)
