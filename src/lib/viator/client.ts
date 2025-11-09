@@ -218,13 +218,33 @@ export async function getProductDetails(
   productCode: string,
   currencyCode: string = 'USD'
 ): Promise<ViatorProduct | null> {
-  const endpoint = `/products/${productCode}?currencyCode=${currencyCode}`;
+  const endpoint = `/products/${productCode}`;
   
   try {
-    const product = await viatorRequest<ViatorProduct>(endpoint);
+    console.log(`[Viator] Fetching product details for: ${productCode} with currency: ${currencyCode}`);
+    const product = await viatorRequest<ViatorProduct>(endpoint, {
+      method: 'GET',
+      headers: {
+        'Accept-Language': 'en-US',
+        'Accept-Currency': currencyCode,
+      },
+    });
+    console.log(`[Viator] Product details response:`, {
+      productCode: product?.productCode,
+      title: product?.title,
+      hasPricing: !!product?.pricing,
+      pricing: product?.pricing,
+    });
     return product;
   } catch (error) {
     console.error(`[Viator] Failed to get product details for ${productCode}:`, error);
+    if (error instanceof ViatorAPIError) {
+      console.error(`[Viator] API Error details:`, {
+        status: error.status,
+        code: error.code,
+        message: error.message,
+      });
+    }
     return null;
   }
 }
