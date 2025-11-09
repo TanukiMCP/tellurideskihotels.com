@@ -4,7 +4,7 @@
  */
 
 import type { ViatorProductSummary } from '@/lib/viator/types';
-import { buildViatorBookingUrl, formatDuration, formatPrice } from '@/lib/viator/client';
+import { formatDuration, formatPrice } from '@/lib/viator/client';
 
 interface ActivityCardProps {
   activity: ViatorProductSummary;
@@ -56,14 +56,14 @@ export function ActivityCard({ activity, className = '' }: ActivityCardProps) {
         </h3>
 
         {/* Reviews */}
-        {hasReviews && (
+        {hasReviews && activity.reviews && (
           <div className="flex items-center gap-2 mb-3">
             <div className="flex items-center">
               {[...Array(5)].map((_, i) => (
                 <svg
                   key={i}
                   className={`w-4 h-4 ${
-                    i < Math.round(activity.reviews.combinedAverageRating)
+                    i < Math.round(activity.reviews!.combinedAverageRating)
                       ? 'text-accent-500'
                       : 'text-neutral-300'
                   }`}
