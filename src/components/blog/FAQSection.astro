@@ -1,0 +1,103 @@
+---
+// FAQ Section component for blog articles
+// Wraps FAQ content in an accordion-style UI
+interface Props {
+  title?: string;
+}
+
+const { title = "FAQ" } = Astro.props;
+---
+
+<div class="faq-section my-12">
+  <h2 class="text-3xl font-bold text-neutral-900 mb-6">{title}</h2>
+  <div class="faq-accordion space-y-3">
+    <slot />
+  </div>
+</div>
+
+<script>
+  // Initialize FAQ accordion functionality
+  document.addEventListener('DOMContentLoaded', () => {
+    const faqSection = document.querySelector('.faq-accordion');
+    if (!faqSection) return;
+
+    // Find all h3 elements (questions) within the FAQ section
+    const questions = faqSection.querySelectorAll('h3');
+    
+    questions.forEach((question) => {
+      // Get the answer (next sibling elements until next h3)
+      const answer = question.nextElementSibling;
+      if (!answer) return;
+
+      // Create accordion wrapper
+      const wrapper = document.createElement('div');
+      wrapper.className = 'faq-item border border-neutral-200 rounded-xl overflow-hidden bg-white shadow-sm hover:shadow-md transition-shadow duration-200';
+      
+      // Create button wrapper for question
+      const button = document.createElement('button');
+      button.className = 'faq-question w-full px-6 py-4 text-left flex items-center justify-between hover:bg-neutral-50 transition-colors duration-150';
+      button.setAttribute('aria-expanded', 'false');
+      
+      // Create question text container
+      const questionText = document.createElement('span');
+      questionText.className = 'text-lg font-semibold text-neutral-900 pr-4';
+      questionText.textContent = question.textContent;
+      
+      // Create chevron icon
+      const icon = document.createElement('svg');
+      icon.className = 'faq-icon w-5 h-5 text-neutral-600 flex-shrink-0 transition-transform duration-200';
+      icon.setAttribute('fill', 'none');
+      icon.setAttribute('stroke', 'currentColor');
+      icon.setAttribute('viewBox', '0 0 24 24');
+      icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />';
+      
+      button.appendChild(questionText);
+      button.appendChild(icon);
+      
+      // Create answer wrapper
+      const answerWrapper = document.createElement('div');
+      answerWrapper.className = 'faq-answer max-h-0 overflow-hidden transition-all duration-200';
+      
+      const answerContent = document.createElement('div');
+      answerContent.className = 'px-6 pb-4 text-neutral-700 leading-relaxed';
+      answerContent.innerHTML = answer.innerHTML;
+      
+      answerWrapper.appendChild(answerContent);
+      
+      // Insert before original elements
+      question.parentNode?.insertBefore(wrapper, question);
+      wrapper.appendChild(button);
+      wrapper.appendChild(answerWrapper);
+      
+      // Remove original elements
+      question.remove();
+      answer.remove();
+      
+      // Add click handler
+      button.addEventListener('click', () => {
+        const isOpen = button.getAttribute('aria-expanded') === 'true';
+        
+        if (isOpen) {
+          button.setAttribute('aria-expanded', 'false');
+          answerWrapper.style.maxHeight = '0';
+          icon.style.transform = 'rotate(0deg)';
+        } else {
+          button.setAttribute('aria-expanded', 'true');
+          answerWrapper.style.maxHeight = answerWrapper.scrollHeight + 'px';
+          icon.style.transform = 'rotate(180deg)';
+        }
+      });
+    });
+  });
+</script>
+
+<style>
+  .faq-accordion :global(h3) {
+    margin: 0;
+  }
+  
+  .faq-accordion :global(p) {
+    margin: 0;
+  }
+</style>
+

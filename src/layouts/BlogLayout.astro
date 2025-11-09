@@ -229,5 +229,103 @@ const categoryName = data.category.replace(/-/g, ' ');
     "wordCount": data.wordCount,
     "articleSection": categoryName
   })} />
+
+  <!-- FAQ Accordion Script -->
+  <script is:inline>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Find FAQ section (h2 with text containing "FAQ")
+      const allH2s = document.querySelectorAll('.prose h2');
+      let faqH2 = null;
+      
+      allH2s.forEach(h2 => {
+        if (h2.textContent.toLowerCase().includes('faq')) {
+          faqH2 = h2;
+        }
+      });
+      
+      if (!faqH2) return;
+      
+      // Get all h3 elements after the FAQ h2 until the next h2
+      const faqItems = [];
+      let currentElement = faqH2.nextElementSibling;
+      
+      while (currentElement && currentElement.tagName !== 'H2') {
+        if (currentElement.tagName === 'H3') {
+          const question = currentElement;
+          const answer = question.nextElementSibling;
+          if (answer && answer.tagName === 'P') {
+            faqItems.push({ question, answer });
+          }
+        }
+        currentElement = currentElement.nextElementSibling;
+      }
+      
+      // Create accordion for each FAQ item
+      faqItems.forEach(({ question, answer }) => {
+        // Create accordion wrapper
+        const wrapper = document.createElement('div');
+        wrapper.className = 'border border-neutral-200 rounded-xl overflow-hidden bg-white shadow-sm hover:shadow-md transition-shadow duration-200 my-3';
+        
+        // Create button wrapper for question
+        const button = document.createElement('button');
+        button.className = 'w-full px-6 py-4 text-left flex items-center justify-between hover:bg-neutral-50 transition-colors duration-150';
+        button.setAttribute('aria-expanded', 'false');
+        button.type = 'button';
+        
+        // Create question text
+        const questionText = document.createElement('h3');
+        questionText.className = 'text-lg font-semibold text-neutral-900 pr-4 m-0';
+        questionText.textContent = question.textContent;
+        
+        // Create chevron icon
+        const icon = document.createElement('svg');
+        icon.className = 'w-5 h-5 text-neutral-600 flex-shrink-0 transition-transform duration-200';
+        icon.setAttribute('fill', 'none');
+        icon.setAttribute('stroke', 'currentColor');
+        icon.setAttribute('viewBox', '0 0 24 24');
+        icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />';
+        
+        button.appendChild(questionText);
+        button.appendChild(icon);
+        
+        // Create answer wrapper
+        const answerWrapper = document.createElement('div');
+        answerWrapper.className = 'max-h-0 overflow-hidden transition-all duration-300';
+        answerWrapper.style.maxHeight = '0';
+        
+        const answerContent = document.createElement('div');
+        answerContent.className = 'px-6 pb-4 text-neutral-700 leading-relaxed';
+        answerContent.innerHTML = answer.innerHTML;
+        
+        answerWrapper.appendChild(answerContent);
+        
+        // Build structure
+        wrapper.appendChild(button);
+        wrapper.appendChild(answerWrapper);
+        
+        // Insert before question
+        question.parentNode.insertBefore(wrapper, question);
+        
+        // Remove original elements
+        question.remove();
+        answer.remove();
+        
+        // Add click handler
+        button.addEventListener('click', () => {
+          const isOpen = button.getAttribute('aria-expanded') === 'true';
+          
+          if (isOpen) {
+            button.setAttribute('aria-expanded', 'false');
+            answerWrapper.style.maxHeight = '0';
+            icon.style.transform = 'rotate(0deg)';
+          } else {
+            button.setAttribute('aria-expanded', 'true');
+            answerWrapper.style.maxHeight = (answerContent.scrollHeight + 32) + 'px';
+            icon.style.transform = 'rotate(180deg)';
+          }
+        });
+      });
+    });
+  </script>
 </BaseLayout>
 
