@@ -251,7 +251,7 @@ export async function searchTellurideActivities(
 ): Promise<ViatorSearchResponse> {
   const requestBody: Partial<ViatorSearchRequestBody> = {
     filtering: {
-      destination: VIATOR_TELLURIDE_DESTINATION_ID,
+      destination: VIATOR_CONFIG.telluride.destinationId,
       text: options.text,
       tags: options.tags,
       flags: options.flags,
