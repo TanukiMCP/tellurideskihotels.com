@@ -34,6 +34,8 @@ This guide is specifically for Denver and Colorado Springs residents planning a 
 
 **TL;DR:** Leave Friday afternoon (3-4 PM), arrive by 10 PM, enjoy Saturday + Sunday, drive home Sunday evening or Monday. Book hotels early, pack for weather extremes, and plan activities in advance.
 
+For detailed drive directions, see our [Denver to Telluride drive guide](/blog/planning-tips/denver-to-telluride-drive-guide) or [Colorado Springs to Telluride drive guide](/blog/planning-tips/colorado-springs-to-telluride-drive). Winter travelers should review our [winter driving safety guide](/blog/planning-tips/winter-driving-telluride-safety).
+
 ## Drive Times from Front Range
 
 ### From Denver
@@ -59,7 +61,7 @@ This guide is specifically for Denver and Colorado Springs residents planning a 
 - Buena Vista (1.5 hrs): Gas, food
 - Montrose (5.5 hrs): Last major services
 
-**Pro Tip:** The drive itself is stunning, especially the final hour approaching Telluride through the San Juan Mountains. Budget time to actually enjoy it rather than white-knuckling the whole way.
+**Pro Tip:** The drive itself is stunning, especially the final hour approaching Telluride through the San Juan Mountains. Budget time to actually enjoy it rather than white-knuckling the whole way. Check [COtrip.org](https://www.cotrip.org) for real-time road conditions before departure.
 
 ## Weekend Departure Strategies
 
@@ -427,6 +429,8 @@ Telluride is one of Colorado's crown jewels, but at 6-7 hours from the Front Ran
 ✅ **Accept imperfection** - You won't see everything, and that's okay  
 
 Weekend warriors from Denver and Colorado Springs make the Telluride drive regularly because what you get—uncrowded skiing, stunning hikes, incredible dining, authentic mountain town vibes—is worth every minute behind the wheel.
+
+To plan your timing and understand what to expect each month, check our [Telluride weather guide](/blog/planning-tips/telluride-weather-guide) and [best time to visit guide](/blog/planning-tips/best-time-visit-telluride). For skiing details, see our [complete Telluride skiing guide](/blog/ski-guides/telluride-skiing-guide).
 
 **[Find your perfect Telluride hotel for your weekend escape](/lodging)**
 

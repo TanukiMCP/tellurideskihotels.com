@@ -32,7 +32,7 @@ Driving from Colorado Springs to Telluride offers a unique advantage over the De
 
 This guide breaks down your route options, compares the pros and cons of each path, provides realistic drive times, and shares local strategies from Colorado Springs residents who make this drive regularly.
 
-**Note:** Drive times and conditions vary significantly by season, weather, and route choice. Always check [COtrip.org](https://www.cotrip.org) before departure.
+**Note:** Drive times and conditions vary significantly by season, weather, and route choice. Always check [COtrip.org](https://www.cotrip.org) before departure. For winter safety essentials including chain laws and emergency prep, see our [winter driving to Telluride safety guide](/blog/planning-tips/winter-driving-telluride-safety).
 
 ## Quick Summary: Colorado Springs to Telluride
 
@@ -69,7 +69,7 @@ This guide breaks down your route options, compares the pros and cons of each pa
 
 **Cons:**
 - Two-lane highway (slower speeds)
-- Monarch Pass (11,312 ft) can close in severe winter weather
+- Monarch Pass (11,312 ft) can close in severe winter weather (check [CDOT Monarch Pass status](https://www.codot.gov/travel/mountain-passes/monarch-pass))
 - Fewer services between towns
 - Can't use HOV/express lanes
 - Longer distance than some alternatives
@@ -474,6 +474,8 @@ Despite I-70's traffic reputation, it's sometimes the better choice:
 The Colorado Springs to Telluride drive offers an advantage many Denver residents don't have: you can completely avoid I-70 traffic while actually shortening your drive distance. The Pueblo/US-50 route delivers consistent timing, beautiful scenery, and a more relaxed driving experience.
 
 Check [COtrip.org](https://www.cotrip.org) for current conditions, gas up in Colorado Springs or Pueblo, and give yourself 6-7 hours total travel time. Whether you're heading up for a weekend or a week, the drive through Colorado's high country is part of the adventure.
+
+Also compare our [Denver to Telluride drive guide](/blog/planning-tips/denver-to-telluride-drive-guide) to see the differences, or read our [Front Range weekend getaway guide](/blog/planning-tips/front-range-telluride-weekend) for complete weekend trip planning. Check the [Telluride weather guide](/blog/planning-tips/telluride-weather-guide) to plan what to pack.
 
 **[Find your perfect Telluride hotel for your Colorado Springs escape](/lodging)**
 

@@ -32,7 +32,7 @@ Winter driving to Telluride requires preparation, caution, and knowledge of Colo
 
 This comprehensive guide covers everything you need for safe winter travel to Telluride: Colorado traction laws, vehicle preparation, emergency supplies, I-70 conditions, Red Mountain Pass considerations, and local driving strategies that Coloradans use every day.
 
-**Note:** Road conditions change rapidly in the mountains. Always check [COtrip.org](https://www.cotrip.org) and weather forecasts before departing, and be prepared to delay travel during severe storms.
+**Note:** Road conditions change rapidly in the mountains. Always check [COtrip.org](https://www.cotrip.org) and weather forecasts before departing, and be prepared to delay travel during severe storms. For route-specific advice, see our [Denver to Telluride](/blog/planning-tips/denver-to-telluride-drive-guide) and [Colorado Springs to Telluride](/blog/planning-tips/colorado-springs-to-telluride-drive) drive guides.
 
 ## Understanding Colorado Traction Laws
 
@@ -485,16 +485,18 @@ Even experienced drivers can struggle with chains. Practice at home before your 
 
 ### Real-Time Road Conditions
 
-- **COtrip.org**: Live cameras, road status, incidents
+- **[COtrip.org](https://www.cotrip.org)**: Live cameras, road status, incidents
 - **511**: Colorado road conditions phone line
-- **CDOT Twitter**: @ColoradoDOT (quick updates)
-- **CDOT Alerts**: Sign up for text/email alerts
+- **[CDOT Twitter](https://twitter.com/ColoradoDOT)**: @ColoradoDOT (quick updates)
+- **[CDOT Alerts](https://www.codot.gov/travel/travel-info/alerts)**: Sign up for text/email alerts
 
 ### Weather Resources
 
-- **Weather.gov/gjt**: National Weather Service Grand Junction (western slope)
-- **OpenSnow.com**: Detailed mountain forecasts
-- **Mountain-Forecast.com**: High-elevation specific
+- **[Weather.gov/gjt](https://www.weather.gov/gjt)**: National Weather Service Grand Junction (western slope)
+- **[OpenSnow.com](https://opensnow.com/location/telluride)**: Detailed mountain forecasts
+- **[Mountain-Forecast.com](https://www.mountain-forecast.com/peaks/Sunshine-Peak-Colorado)**: High-elevation specific
+
+For detailed monthly weather patterns, see our [Telluride weather guide](/blog/planning-tips/telluride-weather-guide).
 
 ### Emergency Contacts
 

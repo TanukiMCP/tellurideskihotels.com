@@ -32,7 +32,7 @@ The drive from Denver to Telluride is one of Colorado's most scenic road trips, 
 
 This comprehensive guide covers everything Denver-area residents need to know: route options, realistic drive times, I-70 traffic patterns, winter driving considerations, best stops, and local strategies for making this drive as smooth as possible.
 
-**Note:** Drive times, road conditions, and traffic patterns vary significantly by season, weather, and time of departure. Always check current conditions at [COtrip.org](https://www.cotrip.org) before leaving.
+**Note:** Drive times, road conditions, and traffic patterns vary significantly by season, weather, and time of departure. Always check current conditions at [COtrip.org](https://www.cotrip.org) before leaving. For winter-specific safety tips, see our [winter driving to Telluride guide](/blog/planning-tips/winter-driving-telluride-safety).
 
 ## Quick Summary: Denver to Telluride Drive
 
@@ -113,7 +113,7 @@ This comprehensive guide covers everything Denver-area residents need to know: r
 
 **Best For:** Summer road trips, scenic photography, experienced mountain drivers only in winter
 
-**[See our complete Red Mountain Pass winter driving guide](/blog/planning-tips/red-mountain-pass-telluride)**
+**Note:** Red Mountain Pass is notorious for winter danger. Only attempt if you're an experienced mountain driver with proper vehicle and conditions. See our [winter driving safety guide](/blog/planning-tips/winter-driving-telluride-safety) for detailed tips.
 
 ## I-70 Traffic Patterns: When to Leave Denver
 
@@ -159,7 +159,7 @@ Understanding I-70 traffic is crucial for Front Range residents. Here's the real
 - Light traffic both directions
 - Better hotel rates
 
-**Local Strategy:** Many Denverites leave Thursday night, stay overnight in Frisco/Silverthorne (90 minutes from Denver), then drive to Telluride Friday morning, avoiding the worst I-70 traffic.
+**Local Strategy:** Many Denverites leave Thursday night, stay overnight in Frisco/Silverthorne (90 minutes from Denver), then drive to Telluride Friday morning, avoiding the worst I-70 traffic. Check [CDOT's official travel info](https://www.codot.gov/travel) for real-time updates.
 
 ## Mile-by-Mile Route Breakdown
 
@@ -188,8 +188,8 @@ Understanding I-70 traffic is crucial for Front Range residents. Here's the real
 
 **Winter Considerations:**
 - Worst section for accidents and delays
-- Traction law enforcement checkpoints common
-- Always check tunnel wait times on COtrip
+- [Colorado traction laws](/blog/planning-tips/winter-driving-telluride-safety#understanding-colorado-traction-laws) (Code 15) often enforced here
+- Always check tunnel wait times on [COtrip](https://www.cotrip.org)
 
 ### Segment 2: Eisenhower Tunnel to Glenwood Springs (90 miles, 1.5-2 hours)
 
@@ -526,7 +526,7 @@ For some Denver residents, the hassle of the drive isn't worth it. Consider:
 - No driving stress, can sleep/work
 - Schedules limited
 
-**[Compare transportation options in our complete guide](/blog/planning-tips/how-to-get-to-telluride)**
+For more transportation details, see our [complete Telluride planning guide](/blog/destination-guides/complete-guide-telluride).
 
 ## FAQ: Denver to Telluride Drive
 
@@ -553,6 +553,8 @@ Essential gas stops: Idaho Springs (Mile 25 - last affordable gas before mountai
 The Denver to Telluride drive is one of Colorado's classic road trips, offering stunning mountain scenery and access to one of the state's most charming ski towns. With proper planning, realistic timing, and awareness of I-70's traffic patterns, Front Range residents can make this journey efficiently and safely.
 
 Check [COtrip.org](https://www.cotrip.org) for current conditions, gas up in Denver or Idaho Springs, and give yourself plenty of time - especially during ski season. The drive might be long, but arriving in Telluride's spectacular box canyon makes it all worthwhile.
+
+For planning your weekend trip timing and itinerary, see our [Front Range to Telluride weekend getaway guide](/blog/planning-tips/front-range-telluride-weekend). To understand seasonal weather and what to pack, check our [Telluride weather guide](/blog/planning-tips/telluride-weather-guide).
 
 **[Find your perfect Telluride hotel for your weekend getaway](/lodging)**
 
