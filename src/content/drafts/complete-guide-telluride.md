@@ -43,11 +43,11 @@ Whether you're planning your first visit or your fiftieth, this complete guide c
 **Ski Resort Stats:**
 - 2,000 acres of skiable terrain
 - 127 named trails
-- 18 lifts (including free gondola)
+- 19 lifts (including free gondola)
 - 4,425 feet of vertical drop
 - Summit elevation: 13,150 feet
 - Base elevation: 8,725 feet
-- Average annual snowfall: 309 inches
+- Average annual snowfall: Approximately 131 inches
 
 **Town Layout:**
 - Historic downtown Telluride (box canyon floor)
@@ -216,7 +216,7 @@ Telluride's reputation for expert terrain is well-deserved, but there's more var
 
 **What to Expect:**
 - Average temps: 10-30°F
-- 309 inches average snowfall
+- 131 inches average snowfall (quality over quantity)
 - Consistent snow November-March
 - Sunny days (300+ annually)
 - Low humidity (powder stays light)

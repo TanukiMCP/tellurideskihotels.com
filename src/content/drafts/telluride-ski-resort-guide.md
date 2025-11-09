@@ -39,10 +39,10 @@ This complete guide covers everything you need to know about skiing and snowboar
 - **Vertical Drop:** 4,425 feet (8th highest in North America)
 - **Summit Elevation:** 13,150 feet (Gold Hill)
 - **Base Elevation:** 8,725 feet
-- **Lifts:** 18 total (4 high-speed quads, 1 gondola, 13 other lifts/carpets)
+- **Lifts:** 19 total (including gondola and high-speed quads)
 - **Trails:** 127 named runs
 - **Terrain Parks:** 4 parks, 1 superpipe
-- **Average Annual Snowfall:** 309 inches
+- **Average Annual Snowfall:** Approximately 131 inches
 - **Season:** Late November to early April
 
 **Terrain Breakdown:**
@@ -375,7 +375,7 @@ The only free gondola in North America connecting a town to a ski resort. This t
 
 ### Powder Days: Strategy
 
-Telluride receives 309 inches of annual snowfall, though not as much as resorts north (Steamboat, Winter Park). When it does snow, here's how to maximize:
+Telluride receives approximately 131 inches of annual snowfall. While this is moderate by Colorado standards, the dry "champagne powder" quality is exceptional. When it does snow, here's how to maximize:
 
 **1. Hit Revelation Bowl Early**
 - Northeast facing holds powder longer

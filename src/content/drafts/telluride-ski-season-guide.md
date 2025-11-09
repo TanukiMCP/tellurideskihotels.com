@@ -32,6 +32,8 @@ Telluride Ski Resort typically operates from late November through early April, 
 
 This complete season guide helps you choose the optimal time to visit Telluride based on your priorities: deep powder, uncrowded slopes, budget considerations, or family-friendly conditions.
 
+**Note:** Prices, dates, and conditions mentioned are estimates based on historical patterns. Always verify current information with official sources at [telluride.com](https://www.telluride.com) before booking.
+
 ## 2024-2025 Season Key Dates
 
 **Opening Day:** November 27, 2024 (Wednesday before Thanksgiving)  
@@ -55,7 +57,7 @@ This complete season guide helps you choose the optimal time to visit Telluride 
 
 ## Average Snowfall & Conditions
 
-**Annual Snowfall:** 309 inches (25.75 feet)
+**Annual Snowfall:** 131 inches (approximately 11 feet)
 
 **Monthly Averages:**
 - November: 20 inches
@@ -70,14 +72,8 @@ This complete season guide helps you choose the optimal time to visit Telluride 
 - **Average Year:** 280-320 inches
 - **Low Snow Year:** 220-260 inches
 
-**Comparison to Other Resorts:**
-- Telluride: 309 inches
-- Steamboat: 349 inches
-- Wolf Creek: 465 inches
-- Vail: 354 inches
-- Aspen Highlands: 300 inches
-
-Telluride receives moderate snowfall by Colorado standards—less than northern resorts but benefiting from drier, lighter snow due to southwest location.
+**Note on Snowfall:**
+Telluride receives moderate snowfall by Colorado standards—less than some northern resorts—but benefits from drier, lighter "champagne powder" due to its southwest location in the San Juan Mountains. Quality often trumps quantity here.
 
 ## Month-by-Month Breakdown
 
@@ -493,5 +489,5 @@ Understanding Telluride's ski season patterns helps you choose the perfect time 
 
 [Find hotels for your chosen dates](/lodging) and start planning your Telluride ski adventure. Book early for peak periods (Christmas-February) and consider shoulder seasons for the best value and uncrowded slopes.
 
-The box canyon's 309 inches of annual snowfall await—choose your timing wisely.
+The box canyon's legendary powder and diverse terrain await—choose your timing wisely to make the most of your Telluride ski adventure.
 

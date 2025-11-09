@@ -280,33 +280,84 @@ Every article should follow this structure (adjust based on content type):
 
 ### Research Requirements
 
-**Before Writing:**
-1. Analyze top 5 ranking articles for keyword
-   - Note word count (aim to exceed by 10-20%)
-   - Identify content structure
-   - Find gaps in coverage
-   - Note unique angles
+**⚠️ CRITICAL: RESEARCH BEFORE WRITING - NOT AFTER!**
 
-2. Verify current information
-   - Check official websites for updates
-   - Confirm prices and hours
-   - Verify seasonal dates
-   - Check for recent changes
+**You MUST perform thorough research BEFORE writing any article. DO NOT generate content from memory or assumptions.**
 
-3. Gather supporting data
-   - Statistics from authoritative sources
-   - Reviews and ratings
-   - Expert opinions
-   - Local knowledge and tips
+**Step 1: Web Research (REQUIRED)**
+
+Use web search tools to verify ALL factual claims before writing:
+
+1. **Official Statistics & Data**
+   - Telluride Ski Resort official website for current stats
+   - Verify: acreage, lifts count, trails count, vertical drop, elevation
+   - Verify: snowfall averages, season dates, operating hours
+   - ❌ NEVER guess or use outdated data
+   - ✅ ALWAYS cite current official sources
+
+2. **Current Pricing & Availability**
+   - Check hotel booking sites for actual price ranges
+   - Verify lift ticket prices from official resort
+   - Restaurant pricing from menus or recent reviews
+   - ❌ NEVER make up price ranges
+   - ✅ ALWAYS provide price ranges or state "prices vary, check official site"
+
+3. **Verify Names & Existence**
+   - Confirm hotel names, restaurants, and businesses actually exist
+   - Check if properties are still operating (not closed/rebranded)
+   - Verify trail names, lift names from official trail maps
+   - ❌ NEVER invent hotel or restaurant names
+   - ✅ ALWAYS verify via official sources or recent reviews
+
+4. **Current Events & Dates**
+   - Festival dates from official festival websites
+   - Season opening/closing dates from resort
+   - Special events and timing
+   - ❌ NEVER assume dates from previous years
+   - ✅ ALWAYS check current year schedules
+
+**Step 2: Analyze Top 5 Ranking Articles**
+1. Search for primary keyword
+2. Review top 5 ranking articles
+3. Note word count (aim to exceed by 10-20%)
+4. Identify content structure and gaps
+5. Find unique angles to differentiate
+
+**Step 3: Document Sources**
+- Keep a list of sources used during research
+- Include authoritative external links in article
+- Be prepared to verify any challenged facts
+- If you can't verify something, don't include it or add disclaimer
+
+**RESEARCH CHECKLIST (Complete BEFORE writing):**
+- [ ] Verified ski resort statistics from official website
+- [ ] Checked current season dates and pricing
+- [ ] Confirmed hotel/restaurant names still exist
+- [ ] Researched price ranges from booking sites
+- [ ] Verified trail names and lift information
+- [ ] Checked festival/event dates for current year
+- [ ] Gathered authoritative sources for statistics
+- [ ] Reviewed recent reviews and visitor feedback
+- [ ] Analyzed competitor articles
+- [ ] Noted any information that couldn't be verified
+
+**When Information Cannot Be Verified:**
+- Add disclaimers: "Prices subject to change, check official website"
+- Use ranges: "typically ranges from $X-Y, verify with property"
+- Be honest: "At the time of publication..." or "Historically..."
+- Provide links to official sources for readers to verify
+- Don't present guesses as facts
 
 **Sources to Consult:**
-- Official Telluride Ski Resort website
-- Colorado tourism board
-- Hotel official websites
-- TripAdvisor and Google Reviews
-- Local news sources
-- Weather and snow report sites
-- Government sites (.gov) for parks/regulations
+- Official Telluride Ski Resort website (telluride.com)
+- Telluride Tourism Board
+- Colorado tourism (.gov sites)
+- Hotel official websites (for each property mentioned)
+- Booking.com, Expedia (for price verification)
+- TripAdvisor and Google Reviews (recent reviews only)
+- OpenSnow or OnTheSnow (snow/weather data)
+- Official festival websites
+- Local news sources (Telluride Daily Planet, etc.)
 
 ---
 
@@ -1125,15 +1176,16 @@ seasonalRelevance: ["winter"]
 - 125 miles from Grand Junction
 - 330 miles from Denver
 
-**Ski Resort Stats:**
-- 2,000 acres of skiable terrain
+**Ski Resort Stats (VERIFY BEFORE EACH ARTICLE):**
+- 2,000+ acres of skiable terrain
 - 127 named trails
-- 18 lifts (including free gondola)
+- 19 lifts (including free gondola)
 - 4,425 feet vertical drop
-- Summit elevation: 13,150 feet
-- Base elevation: 8,725 feet
-- Average snowfall: 309 inches annually
+- Summit elevation: 13,150 feet (Palmyra Peak)
+- Base elevation: 8,725 feet (Telluride town)
+- Average snowfall: Approximately 131 inches annually
 - Terrain: 23% beginner, 36% intermediate, 41% advanced/expert
+- **⚠️ NOTE:** Always verify current statistics at telluride.com before writing
 
 **Town Layout:**
 - Historic downtown Telluride (box canyon floor)
