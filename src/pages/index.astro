@@ -8,7 +8,6 @@ import { FeaturedHotels } from '@/components/lodging/FeaturedHotels';
 import { CurrentConditions } from '@/components/weather/CurrentConditions';
 import { FeaturedActivities } from '@/components/activities/FeaturedActivities';
 import { SkiConditionsWidget } from '@/components/ski/SkiConditionsWidget';
-import { WebcamsGrid } from '@/components/webcams/WebcamsGrid';
 import { GondolaWidget } from '@/components/info/GondolaWidget';
 import { EventsWidget } from '@/components/info/EventsWidget';
 import { AirQualityWidget } from '@/components/info/AirQualityWidget';
@@ -203,20 +202,9 @@ try {
         </div>
 
         <!-- Weather Forecast -->
-        <div class="mb-12">
+        <div>
           <h3 class="text-2xl font-bold text-neutral-900 mb-6 text-center">10-Day Weather Forecast</h3>
           <CurrentConditions client:visible />
-        </div>
-
-        <!-- Live Webcams -->
-        <div>
-          <div class="text-center mb-8">
-            <h3 class="text-2xl font-bold text-neutral-900 mb-3">Live Mountain Views</h3>
-            <p class="text-neutral-600 max-w-2xl mx-auto">
-              See current conditions on the mountain with live webcam feeds
-            </p>
-          </div>
-          <WebcamsGrid client:visible />
         </div>
       </div>
     </Container>

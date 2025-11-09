@@ -4,7 +4,6 @@ export const prerender = false;
 import PageLayout from '@/components/layout/PageLayout.astro';
 import Container from '@/components/layout/Container.astro';
 import { SkiConditionsWidget } from '@/components/ski/SkiConditionsWidget';
-import { WebcamsGrid } from '@/components/webcams/WebcamsGrid';
 import { CurrentConditions } from '@/components/weather/CurrentConditions';
 import { getTellurideSkiConditions } from '@/lib/snocountry/client';
 
@@ -43,12 +42,6 @@ try {
               <path d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" />
             </svg>
             <span class="font-semibold">Updated Hourly</span>
-          </div>
-          <div class="flex items-center gap-2">
-            <svg class="w-6 h-6 text-sky-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
-            </svg>
-            <span class="font-semibold">Live Webcams</span>
           </div>
           <div class="flex items-center gap-2">
             <svg class="w-6 h-6 text-sky-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -99,17 +92,6 @@ try {
           </p>
         </div>
         <SkiConditionsWidget client:load initialConditions={skiConditions} />
-      </section>
-
-      <!-- Live Webcams -->
-      <section class="mb-16">
-        <div class="text-center mb-10">
-          <h2 class="text-display-sm lg:text-display-md mb-4 text-neutral-900 font-bold">Live Mountain Webcams</h2>
-          <p class="text-lg text-neutral-600 max-w-2xl mx-auto">
-            See real-time conditions from multiple vantage points on the mountain
-          </p>
-        </div>
-        <WebcamsGrid client:load />
       </section>
 
       <!-- Weather Forecast -->
