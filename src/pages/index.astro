@@ -62,11 +62,21 @@ try {
     });
     
     // Get top 6 hotels by review score from those with availability
-    // Lower threshold to show more hotels (many hotels have < 20 reviews)
+    // Very low threshold to show more hotels - prioritize availability
     featuredHotelsData = availableHotels.hotels
-      .filter(h => h.review_score && h.review_count && h.review_count > 5)
+      .filter(h => h.review_score && h.review_score >= 7.0) // Just need decent rating
       .sort((a, b) => (b.review_score || 0) - (a.review_score || 0))
       .slice(0, 6);
+    
+    // If still not enough hotels, add more without strict review count requirement
+    if (featuredHotelsData.length < 6) {
+      const additionalHotels = availableHotels.hotels
+        .filter(h => !featuredHotelsData.find(fh => fh.hotel_id === h.hotel_id))
+        .filter(h => h.review_score && h.review_score >= 6.5)
+        .sort((a, b) => (b.review_score || 0) - (a.review_score || 0))
+        .slice(0, 6 - featuredHotelsData.length);
+      featuredHotelsData = [...featuredHotelsData, ...additionalHotels];
+    }
     
     minPrices = availableHotels.minPrices;
     
@@ -116,11 +126,11 @@ try {
         <Container class="w-full">
           <div class="max-w-5xl mx-auto">
             <!-- Hero Content -->
-            <div class="text-center text-white mb-16 lg:mb-20 animate-slide-up px-4">
-              <h1 class="text-display-md lg:text-display-lg mb-6 drop-shadow-2xl font-extrabold">
-            Book Your Perfect Telluride Ski Hotel
+            <div class="text-center text-white mb-12 lg:mb-16 animate-slide-up px-4">
+              <h1 class="text-4xl md:text-5xl lg:text-6xl xl:text-7xl mb-6 drop-shadow-2xl font-extrabold leading-tight">
+            Book Your Perfect<br class="hidden sm:block" /> Telluride Ski Hotel
           </h1>
-              <p class="text-xl lg:text-2xl mb-8 text-white/90 font-medium leading-relaxed max-w-3xl mx-auto">
+              <p class="text-lg md:text-xl lg:text-2xl mb-8 text-white/95 font-semibold leading-relaxed max-w-3xl mx-auto drop-shadow-lg">
                 Compare 100+ hotels • Best rates guaranteed • Instant confirmation
           </p>
         </div>
@@ -136,51 +146,51 @@ try {
   )}
 
   <!-- Trust Strip -->
-  <div class="bg-neutral-50 border-y border-neutral-200 py-8">
+  <div class="bg-white border-y border-neutral-200 py-10 lg:py-12 shadow-sm">
     <Container>
-      <div class="grid grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8 max-w-5xl mx-auto">
-        <div class="flex items-center gap-3">
-          <div class="w-12 h-12 rounded-full bg-primary-100 flex items-center justify-center flex-shrink-0">
-            <svg class="w-6 h-6 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-10 max-w-6xl mx-auto">
+        <div class="flex flex-col items-center text-center gap-4 group">
+          <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary-500 to-primary-600 flex items-center justify-center flex-shrink-0 shadow-lg group-hover:shadow-xl group-hover:scale-105 transition-all duration-300">
+            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
             </svg>
           </div>
-          <div class="text-left">
-            <div class="text-sm font-semibold text-neutral-900">Secure Booking</div>
-            <div class="text-xs text-neutral-600">SSL Encrypted</div>
+          <div>
+            <div class="text-base lg:text-lg font-bold text-neutral-900 mb-1">Secure Booking</div>
+            <div class="text-sm text-neutral-600">SSL Encrypted</div>
           </div>
         </div>
-        <div class="flex items-center gap-3">
-          <div class="w-12 h-12 rounded-full bg-primary-100 flex items-center justify-center flex-shrink-0">
-            <svg class="w-6 h-6 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div class="flex flex-col items-center text-center gap-4 group">
+          <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary-500 to-primary-600 flex items-center justify-center flex-shrink-0 shadow-lg group-hover:shadow-xl group-hover:scale-105 transition-all duration-300">
+            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
           </div>
-          <div class="text-left">
-            <div class="text-sm font-semibold text-neutral-900">Instant Confirmation</div>
-            <div class="text-xs text-neutral-600">Immediate booking</div>
+          <div>
+            <div class="text-base lg:text-lg font-bold text-neutral-900 mb-1">Instant Confirmation</div>
+            <div class="text-sm text-neutral-600">Immediate booking</div>
           </div>
         </div>
-        <div class="flex items-center gap-3">
-          <div class="w-12 h-12 rounded-full bg-primary-100 flex items-center justify-center flex-shrink-0">
-            <svg class="w-6 h-6 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div class="flex flex-col items-center text-center gap-4 group">
+          <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary-500 to-primary-600 flex items-center justify-center flex-shrink-0 shadow-lg group-hover:shadow-xl group-hover:scale-105 transition-all duration-300">
+            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
           </div>
-          <div class="text-left">
-            <div class="text-sm font-semibold text-neutral-900">Best Price Guarantee</div>
-            <div class="text-xs text-neutral-600">Lowest rates</div>
+          <div>
+            <div class="text-base lg:text-lg font-bold text-neutral-900 mb-1">Best Price Guarantee</div>
+            <div class="text-sm text-neutral-600">Lowest rates</div>
           </div>
         </div>
-        <div class="flex items-center gap-3">
-          <div class="w-12 h-12 rounded-full bg-primary-100 flex items-center justify-center flex-shrink-0">
-            <svg class="w-6 h-6 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div class="flex flex-col items-center text-center gap-4 group">
+          <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary-500 to-primary-600 flex items-center justify-center flex-shrink-0 shadow-lg group-hover:shadow-xl group-hover:scale-105 transition-all duration-300">
+            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z" />
             </svg>
           </div>
-          <div class="text-left">
-            <div class="text-sm font-semibold text-neutral-900">24/7 Support</div>
-            <div class="text-xs text-neutral-600">Always available</div>
+          <div>
+            <div class="text-base lg:text-lg font-bold text-neutral-900 mb-1">24/7 Support</div>
+            <div class="text-sm text-neutral-600">Always available</div>
           </div>
         </div>
       </div>
@@ -188,12 +198,12 @@ try {
     </div>
 
   <!-- Ski Conditions & Weather Section -->
-  <div class="bg-gradient-to-b from-white to-neutral-50 py-16 lg:py-24">
+  <div class="bg-gradient-to-b from-white via-neutral-50 to-white py-20 lg:py-28">
     <Container>
       <div class="max-w-7xl mx-auto">
-        <div class="text-center mb-12">
-          <h2 class="text-display-sm lg:text-display-md mb-4 text-neutral-900 font-extrabold">Current Mountain Conditions</h2>
-          <p class="text-lg text-neutral-600 max-w-2xl mx-auto">
+        <div class="text-center mb-16">
+          <h2 class="text-display-sm lg:text-display-md mb-6 text-neutral-900 font-extrabold">Current Mountain Conditions</h2>
+          <p class="text-lg lg:text-xl text-neutral-600 max-w-2xl mx-auto leading-relaxed">
             Live ski conditions, weather forecast, and everything you need to plan your perfect ski day
           </p>
         </div>
@@ -221,15 +231,15 @@ try {
     </div>
 
   <!-- Explore Map Section -->
-  <div class="bg-neutral-50 py-16 lg:py-20">
+  <div class="bg-gradient-to-b from-neutral-50 to-white py-20 lg:py-28">
     <Container>
-      <div class="text-center mb-10">
-        <h2 class="text-display-sm lg:text-display-md mb-4 text-neutral-900 font-extrabold">Explore Telluride Hotels</h2>
-        <p class="text-lg text-neutral-600 max-w-2xl mx-auto">
-          Browse all available hotels on the map and find the perfect location for your ski adventure
+      <div class="text-center mb-12">
+        <h2 class="text-display-sm lg:text-display-md mb-6 text-neutral-900 font-extrabold">Explore Telluride Hotels</h2>
+        <p class="text-lg lg:text-xl text-neutral-600 max-w-2xl mx-auto leading-relaxed">
+          Browse all 49 available hotels on the map and find the perfect location for your ski adventure
         </p>
       </div>
-      <div class="h-[350px] lg:h-[450px] rounded-xl overflow-hidden shadow-lg">
+      <div class="h-[400px] lg:h-[500px] rounded-2xl overflow-hidden shadow-2xl border border-neutral-200">
         <LodgingMap client:visible hotels={allHotels} checkInDate={featuredCheckInDate} />
       </div>
     </Container>
@@ -238,7 +248,13 @@ try {
   <Container class="py-20 lg:py-32">
     <!-- Featured Hotels Section -->
     <section class="mb-32">
-      <div class="text-center mb-16">
+      <div class="text-center mb-12">
+        <div class="inline-flex items-center gap-2 bg-red-50 border border-red-200 text-red-700 px-4 py-2 rounded-full text-sm font-semibold mb-6">
+          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd" />
+          </svg>
+          Limited Availability - Book Now for Best Selection
+        </div>
         <h2 class="text-display-sm lg:text-display-md mb-4 text-neutral-900 font-extrabold">Featured Hotels in Telluride</h2>
         <p class="text-xl text-neutral-600 max-w-2xl mx-auto leading-relaxed">
           Top-rated ski hotels with real-time availability and best rates guaranteed
@@ -248,7 +264,7 @@ try {
       <div class="text-center mt-16">
         <a 
           href="/lodging" 
-          class="inline-flex items-center gap-2 bg-primary-600 text-white px-10 py-4 rounded-xl font-semibold text-lg shadow-card hover:shadow-card-hover hover:bg-primary-700 transition-all duration-300"
+          class="inline-flex items-center gap-2 bg-primary-600 text-white px-12 py-5 rounded-xl font-bold text-lg shadow-card hover:shadow-card-hover hover:bg-primary-700 hover:scale-105 transition-all duration-300 min-h-[60px]"
         >
           View All Hotels
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -260,9 +276,9 @@ try {
 
     <!-- Things to Do Section -->
     <section class="mb-32">
-      <div class="text-center mb-16">
-        <h2 class="text-display-sm lg:text-display-md mb-4 text-neutral-900 font-extrabold">Things to Do in Telluride</h2>
-        <p class="text-xl text-neutral-600 max-w-2xl mx-auto leading-relaxed">
+      <div class="text-center mb-12">
+        <h2 class="text-display-sm lg:text-display-md mb-6 text-neutral-900 font-extrabold">Things to Do in Telluride</h2>
+        <p class="text-lg lg:text-xl text-neutral-600 max-w-2xl mx-auto leading-relaxed">
           Explore unforgettable activities, tours, and experiences. From thrilling adventures to cultural tours.
         </p>
       </div>
@@ -270,7 +286,7 @@ try {
       <div class="text-center mt-16">
         <a 
           href="/things-to-do" 
-          class="inline-flex items-center gap-2 bg-secondary-600 text-white px-10 py-4 rounded-xl font-semibold text-lg shadow-card hover:shadow-card-hover hover:bg-secondary-700 transition-all duration-300"
+          class="inline-flex items-center gap-2 bg-primary-600 text-white px-12 py-5 rounded-xl font-bold text-lg shadow-card hover:shadow-card-hover hover:bg-primary-700 hover:scale-105 transition-all duration-300 min-h-[60px]"
         >
           View All Activities
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -282,9 +298,9 @@ try {
 
     <!-- Local Information Widgets -->
     <section class="mb-32">
-      <div class="text-center mb-16">
-        <h2 class="text-display-sm lg:text-display-md mb-4 text-neutral-900 font-extrabold">Plan Your Visit</h2>
-        <p class="text-xl text-neutral-600 max-w-2xl mx-auto leading-relaxed">
+      <div class="text-center mb-12">
+        <h2 class="text-display-sm lg:text-display-md mb-6 text-neutral-900 font-extrabold">Plan Your Visit</h2>
+        <p class="text-lg lg:text-xl text-neutral-600 max-w-2xl mx-auto leading-relaxed">
           Everything you need to know about visiting Telluride
         </p>
       </div>
@@ -297,9 +313,9 @@ try {
 
     <!-- Why Choose Us Section -->
     <section class="mb-32">
-      <div class="text-center mb-16">
-        <h2 class="text-display-sm lg:text-display-md mb-4 text-neutral-900 font-extrabold">Why Book With Us</h2>
-        <p class="text-xl text-neutral-600 max-w-2xl mx-auto leading-relaxed">
+      <div class="text-center mb-12">
+        <h2 class="text-display-sm lg:text-display-md mb-6 text-neutral-900 font-extrabold">Why Book With Us</h2>
+        <p class="text-lg lg:text-xl text-neutral-600 max-w-2xl mx-auto leading-relaxed">
           Everything you need for the perfect ski vacation in one place
         </p>
       </div>
@@ -342,20 +358,23 @@ try {
 
 
     <!-- Final CTA Section -->
-    <section class="bg-primary-600 rounded-3xl p-12 lg:p-20 text-white shadow-card text-center">
-      <h2 class="text-display-sm lg:text-display-md mb-6 font-extrabold">Ready to Plan Your Ski Adventure?</h2>
-      <p class="text-xl lg:text-2xl mb-10 max-w-2xl mx-auto leading-relaxed font-medium">
-        Start exploring Telluride's best ski hotels and find your perfect mountain getaway today
-      </p>
-      <a 
-        href="/lodging" 
-        class="inline-flex items-center gap-2 bg-white text-primary-600 px-12 py-5 rounded-xl font-bold text-lg shadow-card hover:shadow-card-hover hover:scale-105 transition-all duration-300"
-      >
-        Browse All Hotels
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+    <section class="bg-gradient-to-br from-primary-600 to-primary-700 rounded-3xl p-12 lg:p-20 text-white shadow-2xl text-center overflow-hidden relative">
+      <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_rgba(255,255,255,0.1),transparent_50%)]"></div>
+      <div class="relative z-10">
+        <h2 class="text-3xl md:text-4xl lg:text-5xl mb-6 font-extrabold">Ready to Plan Your Ski Adventure?</h2>
+        <p class="text-lg md:text-xl lg:text-2xl mb-10 max-w-2xl mx-auto leading-relaxed font-medium text-white/95">
+          Start exploring Telluride's best ski hotels and find your perfect mountain getaway today
+        </p>
+        <a 
+          href="/lodging" 
+          class="inline-flex items-center justify-center gap-3 bg-white text-primary-600 px-14 py-6 rounded-xl font-bold text-xl shadow-2xl hover:shadow-2xl hover:scale-105 transition-all duration-300 min-h-[70px] w-full sm:w-auto"
+        >
+          Browse All Hotels
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
           </svg>
-      </a>
+        </a>
+      </div>
     </section>
   </Container>
 </PageLayout>

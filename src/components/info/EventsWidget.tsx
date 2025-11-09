@@ -90,10 +90,10 @@ export function EventsWidget() {
   };
 
   return (
-    <div className="bg-gradient-to-br from-purple-50 via-white to-purple-50 rounded-2xl p-6 border border-purple-200 shadow-card hover:shadow-card-hover transition-all duration-300">
+    <div className="bg-gradient-to-br from-primary-50 via-white to-primary-50 rounded-2xl p-6 border border-primary-200 shadow-card hover:shadow-card-hover transition-all duration-300">
       {/* Header */}
       <div className="flex items-center gap-3 mb-6">
-        <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500 to-purple-600 flex items-center justify-center shadow-card">
+        <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary-500 to-primary-600 flex items-center justify-center shadow-card">
           <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
           </svg>
@@ -109,7 +109,7 @@ export function EventsWidget() {
         {upcomingEvents.map((event) => (
           <div
             key={event.id}
-            className="group p-4 bg-white rounded-xl border border-neutral-100 hover:border-purple-200 hover:shadow-card transition-all duration-300 cursor-pointer"
+            className="group p-4 bg-white rounded-xl border border-neutral-100 hover:border-primary-200 hover:shadow-card transition-all duration-300 cursor-pointer"
           >
             <div className="flex items-start gap-3">
               {/* Date Badge */}
@@ -125,7 +125,7 @@ export function EventsWidget() {
               {/* Event Info */}
               <div className="flex-1 min-w-0">
                 <div className="flex items-start justify-between gap-2 mb-1">
-                  <h4 className="font-bold text-neutral-900 group-hover:text-purple-600 transition-colors line-clamp-1">
+                  <h4 className="font-bold text-neutral-900 group-hover:text-primary-600 transition-colors line-clamp-1">
                     {event.name}
                   </h4>
                   <span className="text-2xl flex-shrink-0">{event.icon}</span>
@@ -142,7 +142,7 @@ export function EventsWidget() {
         href="https://www.telluride.com/events"
         target="_blank"
         rel="noopener noreferrer"
-        className="block w-full text-center bg-purple-600 text-white px-6 py-3 rounded-xl font-semibold hover:bg-purple-700 transition-colors shadow-card hover:shadow-card-hover"
+        className="block w-full text-center bg-primary-600 text-white px-6 py-3 rounded-xl font-semibold hover:bg-primary-700 transition-colors shadow-card hover:shadow-card-hover"
       >
         View Full Events Calendar
       </a>

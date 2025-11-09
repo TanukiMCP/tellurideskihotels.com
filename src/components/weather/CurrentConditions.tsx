@@ -195,7 +195,7 @@ export function CurrentConditions({ checkIn, checkOut }: CurrentConditionsProps 
         <div className="mt-8 pt-6 border-t border-white/20">
           <button
             onClick={handleSearchHotels}
-            className="w-full bg-white text-sky-600 font-semibold py-4 px-6 rounded-xl hover:bg-white/95 transition-all duration-200 shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
+            className="w-full bg-white text-primary-600 font-bold py-4 px-6 rounded-xl hover:bg-white/95 transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-[1.02] flex items-center justify-center gap-2"
           >
             <Calendar className="w-5 h-5" />
             {selectedDateRange ? 'Book Hotels for These Dates' : 'Search Available Hotels'}
