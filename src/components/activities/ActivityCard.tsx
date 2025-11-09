@@ -13,7 +13,8 @@ interface ActivityCardProps {
 
 export function ActivityCard({ activity, className = '' }: ActivityCardProps) {
   const detailsUrl = `/things-to-do/${activity.productCode}`;
-  const mainImage = activity.images.find(img => img.isCover) || activity.images[0];
+  const images = activity.images || [];
+  const mainImage = images.find(img => img.isCover) || images[0];
   const imageUrl = mainImage?.variants?.find(v => v.width >= 400)?.url || mainImage?.variants?.[0]?.url;
   const hasReviews = activity.reviews && activity.reviews.totalReviews > 0;
   const durationText = formatDuration(activity.duration);

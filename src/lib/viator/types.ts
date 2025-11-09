@@ -62,17 +62,17 @@ export interface ViatorProductSummary {
   productCode: string;
   title: string;
   description: string;
-  images: ViatorImage[];
-  reviews: ViatorReviews;
+  images?: ViatorImage[];
+  reviews?: ViatorReviews;
   duration?: ViatorDuration | null;
-  confirmationType: string;
-  itineraryType: string;
-  pricing: ViatorPricing;
+  confirmationType?: string;
+  itineraryType?: string;
+  pricing?: ViatorPricing | null;
   productUrl: string;
-  destinations: ViatorDestinationRef[];
-  tags: number[];
-  flags: string[];
-  translationInfo: ViatorTranslationInfo;
+  destinations?: ViatorDestinationRef[];
+  tags?: number[];
+  flags?: string[];
+  translationInfo?: ViatorTranslationInfo;
 }
 
 /**

@@ -75,8 +75,9 @@ export function ProductDetails({ productCode }: ProductDetailsProps) {
     );
   }
 
-  const mainImage = product.images.find(img => img.isCover) || product.images[0];
-  const selectedImage = product.images[selectedImageIndex] || mainImage;
+  const images = product.images || [];
+  const mainImage = images.find(img => img.isCover) || images[0];
+  const selectedImage = images[selectedImageIndex] || mainImage;
   const imageUrl = selectedImage?.variants?.find(v => v.width >= 800)?.url || selectedImage?.variants?.[0]?.url;
   const hasReviews = product.reviews && product.reviews.totalReviews > 0;
   const durationText = formatDuration(product.duration);
@@ -118,10 +119,10 @@ export function ProductDetails({ productCode }: ProductDetailsProps) {
             </div>
 
             {/* Thumbnail Gallery */}
-            {product.images.length > 1 && (
+            {images.length > 1 && (
               <div className="p-4 bg-neutral-50">
                 <div className="flex gap-3 overflow-x-auto pb-2">
-                  {product.images.map((image, index) => {
+                  {images.map((image, index) => {
                     const thumbUrl = image.variants?.find(v => v.width >= 200)?.url || image.variants?.[0]?.url;
                     return (
                       <button

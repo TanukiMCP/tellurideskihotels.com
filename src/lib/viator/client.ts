@@ -145,13 +145,17 @@ export function formatDuration(duration?: ViatorDuration | null): string {
 /**
  * Format price from pricing object
  */
-export function formatPrice(pricing: { summary: { fromPrice: number }; currency: string }): string {
+export function formatPrice(pricing?: { summary: { fromPrice: number }; currency: string } | null): string {
+  if (!pricing?.summary?.fromPrice) {
+    return 'Price unavailable';
+  }
+  
   const { fromPrice } = pricing.summary;
   const { currency } = pricing;
   
   const formatted = new Intl.NumberFormat('en-US', {
     style: 'currency',
-    currency,
+    currency: currency || 'USD',
     minimumFractionDigits: fromPrice % 1 === 0 ? 0 : 2,
     maximumFractionDigits: 2,
   }).format(fromPrice);
