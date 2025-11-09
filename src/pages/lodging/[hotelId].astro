@@ -42,8 +42,8 @@ if (!hotel && !error) {
 ---
 
 <PageLayout
-  title={hotel ? `${hotel.name} - Telluride Ski Hotel | Book Now` : 'Hotel Not Found'}
-  description={hotel ? `Book ${hotel.name} in Telluride. ${hotel.star_rating ? `${hotel.star_rating} stars, ` : ''}${hotel.review_score ? `${hotel.review_score}/10 guest rating. ` : ''}Best rates, instant confirmation.` : 'Hotel not found'}
+  title={hotel ? `${hotel.name} - Telluride Lodging | Book Now` : 'Property Not Found'}
+  description={hotel ? `Book ${hotel.name} in Telluride. ${hotel.star_rating ? `${hotel.star_rating} stars, ` : ''}${hotel.review_score ? `${hotel.review_score}/10 guest rating. ` : ''}Best rates, instant confirmation.` : 'Property not found'}
 >
   <Container class="py-12 lg:py-16">
     {error ? (
@@ -54,13 +54,13 @@ if (!hotel && !error) {
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
             </svg>
           </div>
-          <h1 class="text-display-sm text-neutral-900 mb-4">Hotel Not Found</h1>
+          <h1 class="text-display-sm text-neutral-900 mb-4">Property Not Found</h1>
           <p class="text-lg text-neutral-600 mb-8">{error}</p>
         <a href="/lodging" class="inline-flex items-center gap-2 bg-primary-600 text-white px-8 py-4 rounded-xl font-semibold text-lg shadow-card hover:shadow-card-hover hover:bg-primary-700 transition-all duration-300">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
           </svg>
-          Search Hotels
+          Search Places to Stay
         </a>
         </div>
       </div>
@@ -68,8 +68,8 @@ if (!hotel && !error) {
       <>
         <Breadcrumbs items={[
           { label: 'Home', href: '/' },
-          { label: 'Hotels', href: '/lodging' },
-          { label: hotel.name || 'Hotel', href: undefined },
+          { label: 'Places to Stay', href: '/lodging' },
+          { label: hotel.name || 'Property', href: undefined },
         ]} />
         <HotelDetailView
           client:load

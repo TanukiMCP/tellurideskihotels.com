@@ -48,35 +48,35 @@ export function ArticleBookingWidget({
     if (hotelName) return `Book ${hotelName}`;
     if (filter) {
       const filterLabels: Record<string, string> = {
-        'ski-in-ski-out': 'Ski-In/Ski-Out Hotels',
-        'luxury': 'Luxury Hotels',
-        'budget': 'Budget-Friendly Hotels',
-        'family-friendly': 'Family-Friendly Hotels',
+        'ski-in-ski-out': 'Ski-In/Ski-Out Lodging',
+        'luxury': 'Luxury Accommodations',
+        'budget': 'Budget-Friendly Options',
+        'family-friendly': 'Family-Friendly Lodging',
       };
-      return `Browse ${filterLabels[filter] || 'Hotels'}`;
+      return `Browse ${filterLabels[filter] || 'Places to Stay'}`;
     }
     if (location) {
       const locationLabels: Record<string, string> = {
-        'mountain-village': 'Mountain Village Hotels',
-        'downtown': 'Downtown Telluride Hotels',
+        'mountain-village': 'Mountain Village Lodging',
+        'downtown': 'Downtown Telluride Lodging',
       };
-      return `Browse ${locationLabels[location] || 'Hotels'}`;
+      return `Browse ${locationLabels[location] || 'Places to Stay'}`;
     }
-    return 'Find Your Perfect Telluride Hotel';
+    return 'Find Your Perfect Place to Stay in Telluride';
   };
 
   // Generate appropriate description
   const getDescription = () => {
     if (description) return description;
     if (hotelName) return 'Check availability and compare rates from top booking sites';
-    return 'Search and compare hundreds of hotels with real-time availability';
+    return 'Search and compare hundreds of properties with real-time availability';
   };
 
   // Generate appropriate CTA text
   const getCtaText = () => {
     if (hotelName) return 'Check Availability & Rates';
-    if (filter || location) return 'Browse Hotels';
-    return 'Search Hotels';
+    if (filter || location) return 'Browse Places to Stay';
+    return 'Search Places to Stay';
   };
 
   const link = buildLink();

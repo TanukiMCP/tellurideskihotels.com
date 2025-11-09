@@ -7,9 +7,9 @@ interface BlogCTAProps {
 }
 
 export default function BlogCTA({
-  title = 'Find Your Perfect Telluride Hotel',
-  description = 'Browse our curated selection of ski-in/ski-out hotels, luxury resorts, and budget-friendly lodging options.',
-  buttonText = 'Browse Hotels',
+  title = 'Find Your Perfect Place to Stay',
+  description = 'Browse our curated selection of ski-in/ski-out lodging, luxury resorts, and budget-friendly options.',
+  buttonText = 'Browse Places to Stay',
   buttonUrl = '/lodging',
   variant = 'primary',
 }: BlogCTAProps) {

@@ -83,7 +83,7 @@ export function HotelGrid({
   if (hotels.length === 0) {
     return (
       <div className="text-center py-12">
-        <p className="text-gray-600 text-lg">No hotels found. Try adjusting your search criteria.</p>
+        <p className="text-gray-600 text-lg">No places to stay found. Try adjusting your search criteria.</p>
       </div>
     );
   }
@@ -114,7 +114,7 @@ export function HotelGrid({
       {/* Sort Controls */}
       <div className="flex items-center justify-between mb-6 pb-4 border-b border-neutral-200">
         <p className="text-neutral-600">
-          Showing {startIndex + 1}-{Math.min(startIndex + ITEMS_PER_PAGE, sortedHotels.length)} of {sortedHotels.length} hotels
+          Showing {startIndex + 1}-{Math.min(startIndex + ITEMS_PER_PAGE, sortedHotels.length)} of {sortedHotels.length} places
         </p>
         <div className="flex items-center gap-2">
           <ArrowUpDown className="w-4 h-4 text-neutral-500" />

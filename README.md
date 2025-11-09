@@ -1,10 +1,10 @@
 # Telluride Ski Hotels
 
-A comprehensive hotel booking and content platform for Telluride, Colorado ski resorts.
+A comprehensive lodging search and content platform for Telluride, Colorado ski resorts.
 
 ## Features
 
-- **Hotel Search & Booking**: Real-time hotel availability and booking through LiteAPI
+- **Lodging Search & Booking**: Real-time availability and booking for places to stay through LiteAPI
 - **Content Management System**: AI-driven content generation and automated publishing
 - **SEO Optimization**: Comprehensive keyword strategy and on-page optimization
 - **Image Library**: Automated Pexels integration for high-quality imagery
@@ -109,14 +109,14 @@ tellurideskihotels.com/
 │   │   └── config.ts      # Content schema
 │   ├── components/
 │   │   ├── blog/          # Blog components
-│   │   ├── lodging/       # Hotel components
+│   │   ├── lodging/       # Lodging components
 │   │   └── ...
 │   ├── layouts/
 │   │   ├── BlogLayout.astro
 │   │   └── BaseLayout.astro
 │   ├── pages/
 │   │   ├── blog/          # Blog routes
-│   │   ├── lodging/       # Hotel routes
+│   │   ├── lodging/       # Lodging routes
 │   │   └── ...
 │   └── lib/               # Utilities
 ├── scripts/
@@ -192,14 +192,14 @@ npm run preview
 - Keyword rankings (top 10, 20, 50)
 - Click-through rate from SERPs
 - Time on page
-- Conversion rate (hotel bookings)
+- Conversion rate (bookings)
 - Bounce rate
 
 ### Goals
 - 100,000+ organic sessions (Year 1)
 - 50+ keywords in top 10
 - 200+ keywords in top 50
-- 500+ hotel bookings from content
+- 500+ bookings from content
 - 5,000+ newsletter subscribers
 
 ## License

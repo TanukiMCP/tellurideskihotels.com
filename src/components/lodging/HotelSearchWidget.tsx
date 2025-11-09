@@ -115,7 +115,7 @@ export function HotelSearchWidget({
           className="w-full"
         >
           <Search className="mr-2 h-5 w-5" />
-          Search Hotels
+          Search Places to Stay
         </Button>
       </form>
     </div>

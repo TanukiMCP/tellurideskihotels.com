@@ -56,13 +56,13 @@ export function HotelCard({
         {imageUrl ? (
           <img
             src={imageUrl}
-            alt={hotel.name || 'Hotel'}
+            alt={hotel.name || 'Property'}
             className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
             loading="lazy"
           />
         ) : (
           <div className="w-full h-full bg-gray-100 flex items-center justify-center">
-            <p className="text-gray-500 text-sm font-medium">This hotel has no images provided</p>
+            <p className="text-gray-500 text-sm font-medium">No images available</p>
           </div>
         )}
         
