@@ -84,22 +84,59 @@ async function viatorRequest<T>(
 /**
  * Format duration object to display string
  */
-export function formatDuration(duration: ViatorDuration): string {
-  if (duration.fixedDurationInMinutes) {
-    const hours = Math.floor(duration.fixedDurationInMinutes / 60);
-    const mins = duration.fixedDurationInMinutes % 60;
+export function formatDuration(duration?: ViatorDuration | null): string {
+  if (!duration) {
+    return 'Duration varies';
+  }
+
+  const {
+    fixedDurationInMinutes,
+    variableDurationFromMinutes,
+    variableDurationToMinutes,
+  } = duration;
+
+  if (typeof fixedDurationInMinutes === 'number' && fixedDurationInMinutes > 0) {
+    const hours = Math.floor(fixedDurationInMinutes / 60);
+    const mins = fixedDurationInMinutes % 60;
     if (hours > 0 && mins > 0) return `${hours}h ${mins}m`;
     if (hours > 0) return `${hours} hour${hours > 1 ? 's' : ''}`;
     return `${mins} min`;
   }
   
-  if (duration.variableDurationFromMinutes && duration.variableDurationToMinutes) {
-    const fromHours = Math.floor(duration.variableDurationFromMinutes / 60);
-    const toHours = Math.floor(duration.variableDurationToMinutes / 60);
+  if (
+    typeof variableDurationFromMinutes === 'number' &&
+    typeof variableDurationToMinutes === 'number'
+  ) {
+    const fromHours = Math.floor(variableDurationFromMinutes / 60);
+    const toHours = Math.floor(variableDurationToMinutes / 60);
     if (fromHours === toHours) {
       return `${fromHours} hour${fromHours > 1 ? 's' : ''}`;
     }
     return `${fromHours}-${toHours} hours`;
+  }
+
+  if (typeof variableDurationFromMinutes === 'number' && variableDurationFromMinutes > 0) {
+    if (variableDurationFromMinutes >= 60) {
+      const hours = Math.floor(variableDurationFromMinutes / 60);
+      const mins = variableDurationFromMinutes % 60;
+      if (mins > 0) {
+        return `From ${hours}h ${mins}m`;
+      }
+      return `From ${hours} hour${hours > 1 ? 's' : ''}`;
+    }
+    return `From ${variableDurationFromMinutes} min`;
+  }
+
+  if (typeof variableDurationToMinutes === 'number' && variableDurationToMinutes > 0) {
+    if (variableDurationToMinutes >= 60) {
+      const hours = Math.floor(variableDurationToMinutes / 60);
+      const mins = variableDurationToMinutes % 60;
+      if (mins > 0) {
+        return `Up to ${hours}h ${mins}m`;
+      }
+      return `Up to ${hours} hour${hours > 1 ? 's' : ''}`;
+    }
+    return `Up to ${variableDurationToMinutes} min`;
   }
   
   return 'Duration varies';

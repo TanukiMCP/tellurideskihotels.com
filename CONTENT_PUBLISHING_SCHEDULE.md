@@ -80,26 +80,28 @@
 - Category: ski-guides
 - Tags: skiing, resort, terrain, lifts
 
-**Day 4: "Best Hotels in Telluride: Top 15 Places to Stay"**
-- Keyword: best hotels in telluride (1,900/mo)
+**Day 4: "Where to Stay in Telluride: Complete Lodging Guide"** ⚠️ UPDATED
+- Keyword: telluride where to stay (5,400/mo, $5.17 CPC)
 - Word Count: 2,800
-- Type: Listicle
-- Category: hotel-reviews
-- Tags: hotels, rankings, recommendations
+- Type: Pillar
+- Category: lodging
+- Tags: places-to-stay, lodging, accommodations
+- **Note:** Replaces declining "best hotels" keyword with higher-CPC alternative
 
 **Day 5: "Things to Do in Telluride: Ultimate Activity Guide"**
-- Keyword: things to do in telluride (9,900/mo)
+- Keyword: things to do in telluride (6,600/mo)
 - Word Count: 3,000
 - Type: Pillar
 - Category: activity-guides
 - Tags: activities, attractions, experiences
 
-**Day 6: "Telluride Hotels: Complete Accommodation Guide"**
-- Keyword: telluride hotels (8,100/mo)
+**Day 6: "Telluride Gondola Guide: Free Transportation & Views"** 🆕
+- Keyword: telluride gondola (5,400/mo, +125% growth)
 - Word Count: 2,600
 - Type: Comprehensive Guide
-- Category: hotel-reviews
-- Tags: hotels, lodging, booking
+- Category: planning-tips
+- Tags: gondola, transportation, free, views
+- **Priority:** P1 - Fast growing, low competition
 
 **Day 7: "Telluride Ski Season: When to Visit & What to Expect"**
 - Keyword: telluride ski season (2,400/mo)
@@ -180,19 +182,19 @@
 - Category: planning-tips
 - Tags: timing, seasons, crowds, prices
 
-**Day 15: "Telluride Lodging: Hotels, Condos & Vacation Rentals"**
-- Keyword: telluride lodging (2,900/mo)
+**Day 15: "Telluride Breakfast Restaurants: Best Morning Spots"** 🆕
+- Keyword: telluride breakfast (1,200/mo)
 - Word Count: 2,500
-- Type: Comprehensive Guide
-- Category: hotel-reviews
-- Tags: lodging, accommodations, options
+- Type: Listicle
+- Category: dining-nightlife
+- Tags: breakfast, restaurants, morning, dining
 
-**Day 16: "Telluride Gondola: Free Transportation Guide"**
-- Keyword: telluride gondola (2,900/mo)
+**Day 16: "Telluride Lunch Spots: Best Mid-Day Restaurants"** 🆕
+- Keyword: telluride lunch (800/mo)
 - Word Count: 2,000
-- Type: Comprehensive Guide
-- Category: planning-tips
-- Tags: gondola, transportation, free
+- Type: Listicle
+- Category: dining-nightlife
+- Tags: lunch, restaurants, casual-dining
 
 **Day 17: "Telluride Airport & Getting There: Complete Guide"**
 - Keyword: telluride airport (3,600/mo)
@@ -203,19 +205,20 @@
 
 ### Week 3: Accommodation Focus + More Local Guides
 
-**Day 18: "Ski-In/Ski-Out Hotels in Telluride: Top 10"**
+**Day 18: "Ski-In/Ski-Out Lodging in Telluride: Top Options"** ⚠️ UPDATED
 - Keyword: ski in ski out telluride (1,600/mo)
 - Word Count: 2,400
 - Type: Listicle
-- Category: hotel-reviews
-- Tags: ski-in-ski-out, convenience, hotels
+- Category: lodging
+- Tags: ski-in-ski-out, convenience, lodging
 
-**Day 19: "Luxury Hotels in Telluride: 8 Best High-End Options"**
-- Keyword: telluride luxury hotels (880/mo)
+**Day 19: "Telluride Vacation Rentals: Complete Guide"** 🆕 
+- Keyword: telluride vacation rentals (2,400/mo, $11.60 CPC!)
 - Word Count: 2,600
-- Type: Listicle
-- Category: hotel-reviews
-- Tags: luxury, high-end, premium
+- Type: Comprehensive Guide
+- Category: lodging
+- Tags: vacation-rentals, airbnb-alternatives, condos
+- **Priority:** HIGHEST CPC keyword on entire site
 
 **Day 20: "I-70 to Telluride: Avoiding Traffic & Finding Scenic Routes"**
 - Keyword: i70 to telluride (590/mo)
@@ -225,19 +228,19 @@
 - Tags: i70, driving, locals, scenic-routes, traffic
 - **Local Focus:** Eisenhower Tunnel backups, alternate routes, Glenwood Springs vs Ouray route
 
-**Day 21: "Telluride Vacation Rentals vs Hotels: Which is Better?"**
-- Keyword: telluride vacation rentals (3,600/mo)
+**Day 21: "Fine Dining in Telluride: Upscale Restaurants"** 🆕
+- Keyword: fine dining telluride (600/mo)
 - Word Count: 2,200
-- Type: Comparison
-- Category: hotel-reviews
-- Tags: vacation-rentals, hotels, comparison
+- Type: Listicle
+- Category: dining-nightlife
+- Tags: fine-dining, upscale, romantic, special-occasions
 
-**Day 22: "Telluride Mountain Village Hotels: Where to Stay"**
-- Keyword: telluride mountain village hotels (720/mo)
+**Day 22: "Telluride Coffee Shops & Cafes: Best Local Spots"** 🆕
+- Keyword: telluride coffee shops (500/mo)
 - Word Count: 2,300
-- Type: Comprehensive Guide
-- Category: hotel-reviews
-- Tags: mountain-village, hotels, location
+- Type: Listicle
+- Category: dining-nightlife
+- Tags: coffee, cafes, breakfast, wifi
 
 **Day 23: "Red Mountain Pass to Telluride: Winter Driving Guide"**
 - Keyword: red mountain pass telluride (390/mo)
@@ -247,19 +250,19 @@
 - Tags: red-mountain-pass, winter-driving, safety, locals
 - **Local Focus:** The infamous "Million Dollar Highway", weather concerns, when to avoid, tips from locals
 
-**Day 24: "Telluride Condos: Best Condo Rentals & Hotels"**
-- Keyword: telluride condos (2,400/mo)
+**Day 24: "Telluride Trail Running: Best Summer Routes"** 🆕
+- Keyword: telluride trail running (400/mo)
 - Word Count: 2,400
-- Type: Listicle
-- Category: hotel-reviews
-- Tags: condos, rentals, accommodations
+- Type: Comprehensive Guide
+- Category: activity-guides
+- Tags: trail-running, hiking, summer, fitness
 
-**Day 25: "Telluride Resorts: Top Resort Hotels & Properties"**
-- Keyword: telluride resorts (1,900/mo)
+**Day 25: "Telluride Mountain Biking: Trail Guide & Rentals"** 🆕
+- Keyword: telluride mountain biking (880/mo)
 - Word Count: 2,500
-- Type: Listicle
-- Category: hotel-reviews
-- Tags: resorts, hotels, properties
+- Type: Comprehensive Guide
+- Category: activity-guides
+- Tags: mountain-biking, trails, summer
 
 **Day 26: "Telluride Day Trip from Denver: Is It Worth It?"**
 - Keyword: denver to telluride day trip (260/mo)
@@ -271,12 +274,12 @@
 
 ### Week 4: Skiing Deep Dives + Local Tips
 
-**Day 27: "Boutique Hotels in Telluride: 6 Unique Stays"**
-- Keyword: boutique hotels telluride (320/mo)
+**Day 27: "Telluride Apres Ski: Best Bars & Hangouts"** 🆕
+- Keyword: telluride apres ski (800/mo)
 - Word Count: 2,100
 - Type: Listicle
-- Category: hotel-reviews
-- Tags: boutique, unique, character
+- Category: dining-nightlife
+- Tags: apres-ski, bars, socializing, drinks
 
 **Day 28: "Telluride Lift Tickets & Ski Passes: Complete Guide"**
 - Keyword: telluride lift tickets (1,100/mo)
@@ -397,12 +400,12 @@
 - Category: destination-guides
 - Tags: comparison, crested-butte, decision
 
-**Day 37: "Telluride Colorado Hotels: Complete Guide"**
-- Keyword: telluride colorado hotels (5,400/mo)
+**Day 37: "Telluride Nightlife Guide: Bars, Live Music & Events"** 🆕
+- Keyword: telluride nightlife (480/mo)
 - Word Count: 2,600
 - Type: Comprehensive Guide
-- Category: hotel-reviews
-- Tags: hotels, colorado, lodging
+- Category: dining-nightlife
+- Tags: nightlife, bars, live-music, entertainment
 
 ### Week 6: 🍴 RESTAURANTS & DINING (PRIORITY CONTENT)
 
@@ -458,56 +461,56 @@
 - Category: activity-guides
 - Tags: activities, attractions, things-to-do
 
-### Week 7: Specific Hotels
+### Week 7: Mix of Lodging & Activities
 
 **Day 45: "The Madeline Hotel Telluride: Complete Review"**
 - Keyword: madeline hotel telluride (1,900/mo)
 - Word Count: 2,400
-- Type: Hotel Review
-- Category: hotel-reviews
+- Type: Property Review
+- Category: lodging
 - Tags: madeline-hotel, luxury, review
 
-**Day 46: "The Peaks Resort & Spa Telluride: Review & Guide"**
-- Keyword: peaks resort telluride (1,300/mo)
+**Day 46: "Budget Restaurants in Telluride: Best Affordable Eats"** 🆕
+- Keyword: cheap eats telluride (400/mo)
 - Word Count: 2,300
-- Type: Hotel Review
-- Category: hotel-reviews
-- Tags: peaks-resort, spa, review
+- Type: Listicle
+- Category: dining-nightlife
+- Tags: budget, affordable, casual-dining
 
-**Day 47: "Hotel Telluride: Boutique Hotel Review"**
-- Keyword: hotel telluride (880/mo)
+**Day 47: "Telluride Pizza Restaurants: Best Pizza Spots"** 🆕
+- Keyword: telluride pizza (350/mo)
 - Word Count: 2,100
-- Type: Hotel Review
-- Category: hotel-reviews
-- Tags: hotel-telluride, boutique, review
+- Type: Listicle
+- Category: dining-nightlife
+- Tags: pizza, casual, family-friendly
 
-**Day 48: "New Sheridan Hotel Telluride: Historic Hotel Review"**
-- Keyword: new sheridan hotel telluride (590/mo)
+**Day 48: "Telluride Romantic Restaurants: Best Date Night Spots"** 🆕
+- Keyword: romantic dinner telluride (300/mo)
 - Word Count: 2,000
-- Type: Hotel Review
-- Category: hotel-reviews
-- Tags: new-sheridan, historic, review
+- Type: Listicle
+- Category: dining-nightlife
+- Tags: romantic, date-night, fine-dining
 
-**Day 49: "Lumiere Telluride: Luxury Condo Hotel Review"**
-- Keyword: lumiere telluride (720/mo)
+**Day 49: "Telluride Fishing Guide: Where to Fish & Licenses"** 🆕
+- Keyword: telluride fishing (600/mo)
 - Word Count: 2,200
-- Type: Hotel Review
-- Category: hotel-reviews
-- Tags: lumiere, luxury, condos
+- Type: Comprehensive Guide
+- Category: activity-guides
+- Tags: fishing, summer, outdoor
 
-**Day 50: "Capella Telluride: Ultra-Luxury Resort Review"**
-- Keyword: capella telluride (480/mo)
+**Day 50: "Telluride Waterfalls: Hiking to Bridal Veil & More"** 🆕
+- Keyword: telluride waterfalls (800/mo)
 - Word Count: 2,300
-- Type: Hotel Review
-- Category: hotel-reviews
-- Tags: capella, ultra-luxury, review
+- Type: Comprehensive Guide
+- Category: activity-guides
+- Tags: waterfalls, hiking, photography
 
-**Day 51: "Inn at Lost Creek Telluride: Ski-In/Ski-Out Review"**
-- Keyword: inn at lost creek telluride (320/mo)
+**Day 51: "The Peaks Resort & Spa Telluride: Review & Guide"**
+- Keyword: peaks resort telluride (1,300/mo)
 - Word Count: 2,000
-- Type: Hotel Review
-- Category: hotel-reviews
-- Tags: inn-lost-creek, ski-in-ski-out, review
+- Type: Property Review
+- Category: lodging
+- Tags: peaks-resort, spa, review
 
 ### Week 8: Planning & Logistics
 
@@ -525,12 +528,12 @@
 - Category: planning-tips
 - Tags: shuttle, transportation, logistics
 
-**Day 54: "Telluride Hotel Deals: How to Save on Lodging"**
-- Keyword: telluride hotel deals (590/mo)
+**Day 54: "Telluride Mexican Restaurants: Best Mexican Food"** 🆕
+- Keyword: telluride mexican food (350/mo)
 - Word Count: 2,100
-- Type: Comprehensive Guide
-- Category: hotel-reviews
-- Tags: deals, savings, budget
+- Type: Listicle
+- Category: dining-nightlife
+- Tags: mexican, restaurants, casual
 
 **Day 55: "Telluride on a Budget: Money-Saving Tips"**
 - Keyword: telluride on a budget (260/mo)
@@ -539,12 +542,12 @@
 - Category: planning-tips
 - Tags: budget, savings, tips
 
-**Day 56: "Cheap Hotels in Telluride: 10 Best Budget Options"**
-- Keyword: cheap hotels telluride (590/mo)
+**Day 56: "Telluride Sushi & Asian Restaurants Guide"** 🆕
+- Keyword: telluride sushi (250/mo)
 - Word Count: 2,200
 - Type: Listicle
-- Category: hotel-reviews
-- Tags: budget, cheap, affordable
+- Category: dining-nightlife
+- Tags: sushi, asian, restaurants
 
 **Day 57: "Telluride Ski Deals: Lift Ticket & Package Savings"**
 - Keyword: telluride ski deals (320/mo)
@@ -553,19 +556,19 @@
 - Category: ski-guides
 - Tags: deals, savings, packages
 
-**Day 58: "Telluride Lift Ticket Deals: How to Save Money"**
-- Keyword: telluride lift ticket deals (210/mo)
+**Day 58: "Telluride Steakhouse & BBQ Guide"** 🆕
+- Keyword: telluride steakhouse (200/mo)
 - Word Count: 1,900
-- Type: Comprehensive Guide
-- Category: ski-guides
-- Tags: lift-tickets, deals, savings
-
-**Day 59: "Affordable Telluride Hotels: Budget-Friendly Stays"**
-- Keyword: affordable telluride hotels (170/mo)
-- Word Count: 2,100
 - Type: Listicle
-- Category: hotel-reviews
-- Tags: affordable, budget, value
+- Category: dining-nightlife
+- Tags: steakhouse, bbq, meat
+
+**Day 59: "Telluride Ice Climbing: Winter Adventure Guide"** 🆕
+- Keyword: telluride ice climbing (300/mo)
+- Word Count: 2,100
+- Type: Comprehensive Guide
+- Category: activity-guides
+- Tags: ice-climbing, winter, adventure
 
 **Day 60: "First Time in Telluride: Complete Guide"**
 - Keyword: first time telluride (210/mo)
@@ -631,12 +634,12 @@
 
 ### Week 10: Family & Groups
 
-**Day 68: "Family-Friendly Hotels in Telluride: Top 10"**
-- Keyword: family friendly hotels telluride (170/mo)
+**Day 68: "Family-Friendly Restaurants in Telluride"** 🆕
+- Keyword: family restaurants telluride (400/mo)
 - Word Count: 2,300
 - Type: Listicle
-- Category: hotel-reviews
-- Tags: family, kids, family-friendly
+- Category: dining-nightlife
+- Tags: family, kids, restaurants
 
 **Day 69: "Telluride with Kids: Family Vacation Guide"**
 - Keyword: telluride with kids (390/mo)
@@ -659,12 +662,12 @@
 - Category: planning-tips
 - Tags: childcare, kids, services
 
-**Day 72: "Telluride Group Lodging: Hotels for Large Groups"**
-- Keyword: telluride group lodging (140/mo)
+**Day 72: "Telluride Wine Bars & Wine Tasting Guide"** 🆕
+- Keyword: telluride wine (250/mo)
 - Word Count: 2,000
-- Type: Listicle
-- Category: hotel-reviews
-- Tags: groups, large-parties, accommodations
+- Type: Comprehensive Guide
+- Category: dining-nightlife
+- Tags: wine, wine-bars, tasting
 
 **Day 73: "Telluride Corporate Retreat: Venues & Planning"**
 - Keyword: telluride corporate retreat (90/mo)
@@ -782,12 +785,12 @@
 - Category: planning-tips
 - Tags: luxury, high-end, premium
 
-**Day 89: "Five Star Hotels Telluride: Top Luxury Properties"**
-- Keyword: five star hotels telluride (210/mo)
+**Day 89: "Telluride Vegetarian & Vegan Restaurants"** 🆕
+- Keyword: telluride vegan (200/mo)
 - Word Count: 2,300
 - Type: Listicle
-- Category: hotel-reviews
-- Tags: five-star, luxury, premium
+- Category: dining-nightlife
+- Tags: vegan, vegetarian, healthy
 
 **Day 90: "Weekend in Telluride: Perfect Itinerary"**
 - Keyword: telluride weekend trip (320/mo)
@@ -946,4 +949,39 @@ Before scheduling each article:
 **Timeline:** 12 months
 **Average Word Count:** 2,300 words
 **Total Content:** 621,000+ words
+
+---
+
+## 📊 Updated Content Balance (Months 1-3 Sample)
+
+### Category Count (First 90 Days):
+- **Dining & Restaurants: 18 articles (20%)** ✅ Target: 20%
+  - Restaurant guides, breakfast/lunch spots, cuisine types, bars, breweries
+- **Activity Guides & Hiking: 16 articles (18%)** ✅ Target: 18%
+  - Hiking trails, via ferrata, fishing, waterfalls, mountain biking, ice climbing
+- **Ski Guides: 20 articles (22%)** ✅ Target: 22%
+  - Skiing, trails, passes, lessons, terrain
+- **Lodging (Places to Stay): 14 articles (16%)** ✅ Target: 15%
+  - Vacation rentals, specific properties, lodging types
+- **Planning & Transportation: 13 articles (14%)** ✅ Target: 15%
+  - Driving guides, weather, parking, airport, budget tips
+- **Seasonal & Comparisons: 9 articles (10%)** ✅ Target: 10%
+  - Holiday guides, resort comparisons
+
+### ✅ Completed & Scheduled Articles (DO NOT MODIFY):
+- Day 8: Denver to Telluride Drive Guide
+- Day 9: Colorado Springs to Telluride Drive  
+- Day 10: Telluride Skiing Guide
+- Day 11: Winter Driving Safety
+- Day 12: Telluride Weather Guide
+- Day 13: Front Range Weekend Guide
+
+### 🎯 Key Strategy Notes:
+1. **Restaurant content TRIPLED** from original plan
+2. **"Hotels" replaced with "Places to Stay"** throughout
+3. **Vacation rentals prioritized** ($11.60 CPC!)
+4. **Hiking/activities doubled** to capture growth trends
+5. **Property-specific reviews reduced** to ~5% (quality over quantity)
+
+**Months 4-12:** Continue this same balance with 180 additional articles following the updated proportions.
 

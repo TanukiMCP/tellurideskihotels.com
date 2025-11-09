@@ -64,7 +64,7 @@ export interface ViatorProductSummary {
   description: string;
   images: ViatorImage[];
   reviews: ViatorReviews;
-  duration: ViatorDuration;
+  duration?: ViatorDuration | null;
   confirmationType: string;
   itineraryType: string;
   pricing: ViatorPricing;
