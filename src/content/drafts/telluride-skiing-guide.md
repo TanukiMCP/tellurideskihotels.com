@@ -32,7 +32,7 @@ Skiing Telluride means experiencing 2,000+ acres of diverse terrain draped acros
 
 This comprehensive guide covers everything you need to ski Telluride: terrain breakdown by ability level, ski school options, equipment rentals, best runs, lift strategies, and insider tips to maximize your experience on the mountain.
 
-**Note:** Terrain access, lift operations, and conditions vary by season and weather. Always check current conditions at [telluride.com](https://www.telluride.com) before your visit.
+**Note:** Terrain access, lift operations, and conditions vary by season and weather. Always check current conditions at [telluride.com](https://www.telluride.com) before your visit. For detailed resort information, see our [Telluride Ski Resort guide](/blog/ski-guides/telluride-ski-resort-guide), and for season timing, check our [ski season guide](/blog/ski-guides/telluride-ski-season-guide).
 
 ## Quick Summary: Telluride Skiing
 
@@ -201,7 +201,7 @@ This is where Telluride truly earns its reputation. With 41% advanced/expert ter
 - **Beginner Progression:** Multi-day packages available
 
 **Booking Recommendations:**
-- Book 3-7 days in advance (especially peak season)
+- Book 3-7 days in advance (especially peak season) at [Telluride Ski School](https://www.telluride.com/ski-and-snowboard/ski-lessons)
 - Morning lessons recommended (better snow)
 - Private lessons worth it for faster progression
 - Multi-day packages offer better value
@@ -379,6 +379,8 @@ Yes, but it requires intermediate to advanced ability. The run down to town (via
 Telluride offers a skiing experience that balances world-class terrain with an uncrowded, authentic mountain town atmosphere. Whether you're learning to ski for the first time on the Meadows, carving groomers in Prospect Bowl, or hiking Palmyra Peak for fresh powder, the mountain delivers for every ability level.
 
 Book your ski lessons and equipment rentals in advance, arrive early for first tracks, and remember: skiing Telluride is as much about the stunning scenery and relaxed vibe as it is about the terrain.
+
+For lodging recommendations near the slopes, see our [where to stay in Telluride guide](/blog/hotel-reviews/where-to-stay-telluride) and [best hotels in Telluride](/blog/hotel-reviews/best-hotels-telluride). To plan your trip timing, check our [best time to visit guide](/blog/planning-tips/best-time-visit-telluride) and [weather guide](/blog/planning-tips/telluride-weather-guide). If driving, review our [winter driving safety tips](/blog/planning-tips/winter-driving-telluride-safety).
 
 **[Find your perfect ski-in/ski-out hotel in Telluride](/lodging?filter=ski-in-ski-out)**
 

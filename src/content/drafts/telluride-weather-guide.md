@@ -489,13 +489,13 @@ Weather systems move fast through the mountains. Blue skies can turn to whiteout
 ## Weather Resources & Apps
 
 **Daily Forecasts:**
-- **Weather.gov/gjt** - National Weather Service (most accurate)
-- **OpenSnow.com** - Mountain-specific forecasts and snow reports
-- **Mountain-Forecast.com** - High-elevation forecasts
+- **[Weather.gov/gjt](https://www.weather.gov/gjt)** - National Weather Service (most accurate)
+- **[OpenSnow.com](https://opensnow.com/location/telluride)** - Mountain-specific forecasts and snow reports
+- **[Mountain-Forecast.com](https://www.mountain-forecast.com/peaks/Sunshine-Peak-Colorado)** - High-elevation forecasts
 
 **Current Conditions:**
-- **Telluride.com** - Resort conditions, webcams
-- **COtrip.org** - Road conditions, weather
+- **[Telluride.com](https://www.telluride.com)** - Resort conditions, webcams
+- **[COtrip.org](https://www.cotrip.org)** - Road conditions, weather
 - **Local weather stations** - Real-time mountain weather
 
 **Radar & Storms:**
@@ -536,6 +536,8 @@ Telluride's high-elevation mountain climate creates dramatic weather with cold w
 ✅ **Pack for extremes** - Prepare for 40°F temperature swings  
 
 Every season in Telluride offers something special. Whether you're skiing powder in January, hiking wildflowers in July, or photographing aspens in September, understanding the weather helps you pack right, time activities well, and stay safe in the mountains.
+
+For help choosing the best time to visit based on your priorities, see our [best time to visit Telluride guide](/blog/planning-tips/best-time-visit-telluride). Winter visitors should review our [winter driving safety tips](/blog/planning-tips/winter-driving-telluride-safety), and skiers can check our [skiing guide](/blog/ski-guides/telluride-skiing-guide) for terrain details.
 
 **[Find your perfect Telluride hotel for any season](/lodging)**
 

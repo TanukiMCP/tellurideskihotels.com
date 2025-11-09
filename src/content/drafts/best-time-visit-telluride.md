@@ -216,6 +216,7 @@ This guide breaks down every season—and specific months—to help you choose t
 **Crowd Level:** VERY HIGH  
 **Prices:** HIGHEST of year  
 **Book:** 6-12 months in advance  
+**Official Site:** [bluegrass.com/telluride](https://www.bluegrass.com/telluride)  
 
 **What to Know:**
 - Town population triples
@@ -230,6 +231,7 @@ This guide breaks down every season—and specific months—to help you choose t
 **Crowd Level:** HIGH  
 **Prices:** HIGH  
 **Book:** 3-6 months ahead  
+**Official Site:** [telluridefilmfestival.org](https://www.telluridefilmfestival.org)  
 
 **What to Know:**
 - Celebrity sightings common
@@ -483,6 +485,8 @@ Telluride offers something special in every season:
 **Solitude seekers** get an empty mountain town to explore.
 
 The "best" time is simply the time that matches your priorities. Whether you're chasing powder in January, hiking Blue Lakes in July, or photographing aspens in September, Telluride delivers an unforgettable mountain experience.
+
+For detailed weather patterns by month, see our [Telluride weather guide](/blog/planning-tips/telluride-weather-guide). Skiers should check our [skiing guide](/blog/ski-guides/telluride-skiing-guide) and [ski season guide](/blog/ski-guides/telluride-ski-season-guide). Planning a weekend trip? Read our [Front Range weekend getaway guide](/blog/planning-tips/front-range-telluride-weekend). For lodging recommendations, see [where to stay in Telluride](/blog/hotel-reviews/where-to-stay-telluride).
 
 **[Find your perfect Telluride hotel for any season](/lodging)**
 
