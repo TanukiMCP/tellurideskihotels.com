@@ -289,6 +289,6 @@ export async function getFeaturedActivities(limit: number = 6): Promise<ViatorPr
  */
 export function buildViatorBookingUrl(product: ViatorProductSummary | ViatorProduct): string {
   // Use productUrl from API response which includes affiliate tracking
-  return product.productUrl;
+    return product.productUrl;
 }
 
