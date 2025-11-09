@@ -362,7 +362,7 @@ export function RoomSelectorCard({
             <Button
               onClick={() => {
                 if (typeof window !== 'undefined') {
-                  window.location.href = `/lodging?checkIn=${checkIn}&checkOut=${checkOut}&adults=${adults}`;
+                  window.location.href = `/places-to-stay?checkIn=${checkIn}&checkOut=${checkOut}&adults=${adults}`;
                 }
               }}
               variant="outline"

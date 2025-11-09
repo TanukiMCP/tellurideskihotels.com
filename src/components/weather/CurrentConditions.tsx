@@ -84,9 +84,9 @@ export function CurrentConditions({ checkIn, checkOut }: CurrentConditionsProps 
         checkOut: selectedDateRange.end,
         adults: '2',
       });
-      window.location.href = `/lodging?${params.toString()}`;
+      window.location.href = `/places-to-stay?${params.toString()}`;
     } else {
-      window.location.href = '/lodging';
+      window.location.href = '/places-to-stay';
     }
   };
 

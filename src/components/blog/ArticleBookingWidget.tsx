@@ -31,7 +31,7 @@ export function ArticleBookingWidget({
   // Build the link based on props
   const buildLink = () => {
     if (hotelId) {
-      return `/lodging/${hotelId}`;
+      return `/places-to-stay/${hotelId}`;
     }
     
     const params = new URLSearchParams();
@@ -39,7 +39,7 @@ export function ArticleBookingWidget({
     if (filter) params.set('filter', filter);
     
     const queryString = params.toString();
-    return queryString ? `/lodging?${queryString}` : '/lodging';
+    return queryString ? `/places-to-stay?${queryString}` : '/places-to-stay';
   };
 
   // Generate appropriate title based on context

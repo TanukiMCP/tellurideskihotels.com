@@ -1,0 +1,87 @@
+---
+export const prerender = false;
+
+import PageLayout from '@/components/layout/PageLayout.astro';
+import Container from '@/components/layout/Container.astro';
+import { HotelDetailView } from '@/components/lodging/HotelDetailView';
+import Breadcrumbs from '@/components/seo/Breadcrumbs.astro';
+import type { LiteAPIHotel } from '@/lib/liteapi/types';
+import { getHotelDetails } from '@/lib/liteapi/hotels';
+
+const { hotelId } = Astro.params;
+const url = Astro.url;
+const searchParams = url.searchParams;
+
+// Get dates from URL - these should ALWAYS be present when coming from search
+const checkIn = searchParams.get('checkIn');
+const checkOut = searchParams.get('checkOut');
+const adults = parseInt(searchParams.get('adults') || '2', 10);
+const children = parseInt(searchParams.get('children') || '0', 10);
+const rooms = parseInt(searchParams.get('rooms') || '1', 10);
+
+// Redirect to search if no dates provided
+if (!checkIn || !checkOut) {
+  return Astro.redirect(`/places-to-stay?location=Telluride&adults=${adults}`);
+}
+
+let hotel: LiteAPIHotel | null = null;
+let error: string | null = null;
+
+if (hotelId) {
+  try {
+    hotel = await getHotelDetails(hotelId);
+  } catch (err) {
+    console.error('[Hotel Detail] Error fetching hotel:', err);
+    error = 'Failed to load hotel details';
+  }
+}
+
+if (!hotel && !error) {
+  error = 'Hotel not found';
+}
+---
+
+<PageLayout
+  title={hotel ? `${hotel.name} - Telluride Lodging | Book Now` : 'Property Not Found'}
+  description={hotel ? `Book ${hotel.name} in Telluride. ${hotel.star_rating ? `${hotel.star_rating} stars, ` : ''}${hotel.review_score ? `${hotel.review_score}/10 guest rating. ` : ''}Best rates, instant confirmation.` : 'Property not found'}
+>
+  <Container class="py-12 lg:py-16">
+    {error ? (
+      <div class="max-w-2xl mx-auto text-center py-20">
+        <div class="bg-white rounded-2xl shadow-card p-12 border border-neutral-200">
+          <div class="w-20 h-20 bg-neutral-100 rounded-full flex items-center justify-center mx-auto mb-6">
+            <svg class="w-10 h-10 text-neutral-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+            </svg>
+          </div>
+          <h1 class="text-display-sm text-neutral-900 mb-4">Property Not Found</h1>
+          <p class="text-lg text-neutral-600 mb-8">{error}</p>
+        <a href="/places-to-stay" class="inline-flex items-center gap-2 bg-primary-600 text-white px-8 py-4 rounded-xl font-semibold text-lg shadow-card hover:shadow-card-hover hover:bg-primary-700 transition-all duration-300">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+          Search Places to Stay
+        </a>
+        </div>
+      </div>
+    ) : hotel ? (
+      <>
+        <Breadcrumbs items={[
+          { label: 'Home', href: '/' },
+          { label: 'Places to Stay', href: '/places-to-stay' },
+          { label: hotel.name || 'Property', href: undefined },
+        ]} />
+        <HotelDetailView
+          client:load
+          hotel={hotel}
+          checkIn={checkIn}
+          checkOut={checkOut}
+          adults={adults}
+          children={children}
+          rooms={rooms}
+        />
+      </>
+    ) : null}
+  </Container>
+</PageLayout>
+

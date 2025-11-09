@@ -105,7 +105,7 @@ export function HotelGrid({
       params.append('checkOut', finalCheckOut);
       params.append('adults', adults.toString());
       params.append('rooms', '1'); // Default to 1 room
-      window.location.href = `/lodging/${hotelId}?${params.toString()}`;
+      window.location.href = `/places-to-stay/${hotelId}?${params.toString()}`;
     }
   };
 

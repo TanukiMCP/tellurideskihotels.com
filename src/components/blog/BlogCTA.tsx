@@ -10,7 +10,7 @@ export default function BlogCTA({
   title = 'Find Your Perfect Place to Stay',
   description = 'Browse our curated selection of ski-in/ski-out lodging, luxury resorts, and budget-friendly options.',
   buttonText = 'Browse Places to Stay',
-  buttonUrl = '/lodging',
+  buttonUrl = '/places-to-stay',
   variant = 'primary',
 }: BlogCTAProps) {
   const bgColor = variant === 'primary' ? 'bg-blue-600' : 'bg-gray-900';

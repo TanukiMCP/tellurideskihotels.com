@@ -41,7 +41,7 @@ export function HotelGridWithMap({
       if (checkIn) params.append('checkIn', checkIn);
       if (checkOut) params.append('checkOut', checkOut);
       if (adults) params.append('adults', adults.toString());
-      window.location.href = `/lodging/${hotelId}?${params.toString()}`;
+      window.location.href = `/places-to-stay/${hotelId}?${params.toString()}`;
     }
   };
 

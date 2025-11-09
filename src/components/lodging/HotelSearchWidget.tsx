@@ -45,7 +45,7 @@ export function HotelSearchWidget({
       adults,
     });
     if (typeof window !== 'undefined') {
-      window.location.href = `/lodging?${params.toString()}`;
+      window.location.href = `/places-to-stay?${params.toString()}`;
     }
   };
 

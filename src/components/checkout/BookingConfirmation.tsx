@@ -108,7 +108,7 @@ export function BookingConfirmation({
             <Button 
               onClick={() => {
                 if (typeof window !== 'undefined') {
-                  window.location.href = '/lodging';
+                  window.location.href = '/places-to-stay';
                 }
               }} 
               className="flex-1"
