@@ -90,10 +90,15 @@ import Container from './Container.astro';
   </Container>
 </header>
 
-<script>
-  import Alpine from 'alpinejs';
-  if (typeof window !== 'undefined' && !(window as any).Alpine) {
-    (window as any).Alpine = Alpine;
-    Alpine.start();
+<script is:inline>
+  if (typeof window !== 'undefined') {
+    // Alpine.js will be loaded from CDN if needed
+    import('https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js')
+      .then(() => {
+        console.log('Alpine.js loaded');
+      })
+      .catch(() => {
+        // Fallback: already loaded or not needed
+      });
   }
 </script>
