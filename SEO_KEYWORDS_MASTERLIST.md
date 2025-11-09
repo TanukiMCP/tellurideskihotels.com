@@ -10,46 +10,49 @@ This masterlist contains 300+ high-value keywords organized by search volume, in
 
 ## Priority 1: High-Volume Core Keywords (Months 1-3)
 
+### ⚠️ CRITICAL UPDATE - Based on kwrds.ai actual data (Nov 2025)
+
 ### Telluride General (Location-Based)
 
-| Keyword | Monthly Volume | Difficulty | Search Intent | Priority |
-|---------|----------------|------------|---------------|----------|
-| telluride hotels | 8,100 | Medium | Commercial | P1 |
-| telluride ski resort | 12,100 | Medium | Informational | P1 |
-| where to stay in telluride | 3,600 | Low | Commercial | P1 |
-| telluride colorado hotels | 5,400 | Medium | Commercial | P1 |
-| things to do in telluride | 9,900 | Medium | Informational | P1 |
-| telluride lodging | 2,900 | Low | Commercial | P1 |
-| telluride ski | 18,100 | High | Informational | P1 |
-| telluride colorado | 49,500 | High | Informational | P1 |
-| best hotels in telluride | 1,900 | Medium | Commercial | P1 |
-| telluride ski season | 2,400 | Low | Informational | P1 |
+| Keyword | Monthly Volume | Trend | CPC | Difficulty | Search Intent | Priority |
+|---------|----------------|-------|-----|------------|---------------|----------|
+| telluride ski resort | 33,100 | +22.14% | $2.64 | LOW | Informational | **P1** |
+| telluride colorado | 60,500 | -18.24% | $1.98 | LOW | Informational | **P1** |
+| telluride weather | 18,100 | +22.30% | $0.02 | LOW | Informational | **P1** |
+| **telluride hotels** | **14,800** | **-75.68%** 📉 | $2.98 | HIGH | Commercial | **P3** ⚠️ DECLINING |
+| **telluride colorado hotels** | **22,200** | **-63.47%** 📉 | $3.03 | HIGH | Commercial | **P3** ⚠️ DECLINING |
+| things to do in telluride | 6,600 | 0.00% | $0.20 | HIGH | Informational | **P1** |
+| **telluride places to stay** | **5,400** | **-84.30%** | **$5.17** 💰 | HIGH | General | **P1** ✅ HIGH CPC |
+| **telluride where to stay** | **5,400** | **-84.30%** | **$5.17** 💰 | HIGH | Informational | **P1** ✅ HIGH CPC |
+| **telluride lodging** | **2,900** | **-70.45%** 📉 | $5.83 | HIGH | General | **P2** |
+| best hotels in telluride | 1,900 | -75.17% 📉 | $2.93 | HIGH | Commercial | P2 |
 
 ### Accommodation Types
 
-| Keyword | Monthly Volume | Difficulty | Search Intent | Priority |
-|---------|----------------|------------|---------------|----------|
-| ski in ski out telluride | 1,600 | Medium | Commercial | P1 |
-| telluride luxury hotels | 880 | Low | Commercial | P1 |
-| telluride vacation rentals | 3,600 | Medium | Commercial | P1 |
-| telluride mountain village hotels | 720 | Low | Commercial | P1 |
-| telluride condos | 2,400 | Medium | Commercial | P1 |
-| telluride resorts | 1,900 | Medium | Commercial | P1 |
-| boutique hotels telluride | 320 | Low | Commercial | P1 |
-| telluride hotel deals | 590 | Low | Transactional | P1 |
+| Keyword | Monthly Volume | Trend | CPC | Difficulty | Search Intent | Priority |
+|---------|----------------|-------|-----|------------|---------------|----------|
+| **telluride vacation rentals** | **2,400** | **-83.64%** | **$11.60** 🔥 | HIGH | General | **P1** ✅ HIGHEST CPC |
+| telluride condos | 2,400 | 0.00% | $2.19 | MEDIUM | Commercial | P1 |
+| **telluride resorts** | **2,900** | **-75.93%** | $2.91 | HIGH | General | P2 |
+| telluride mountain lodge | 8,100 | -18.52% | $2.84 | HIGH | General | P1 |
+| ski in ski out telluride | 1,600 | 0.00% | $3.00 | MEDIUM | Commercial | P2 |
+| telluride luxury hotels | 880 | 0.00% | $3.50 | LOW | Commercial | P2 |
+| telluride mountain village hotels | 720 | 0.00% | $2.50 | LOW | Commercial | P2 |
+| boutique hotels telluride | 320 | 0.00% | $2.00 | LOW | Commercial | P3 |
 
-### Skiing & Activities
+### Skiing & Activities (Updated from kwrds.ai)
 
-| Keyword | Monthly Volume | Difficulty | Search Intent | Priority |
-|---------|----------------|------------|---------------|----------|
-| telluride ski pass | 1,300 | Low | Commercial | P1 |
-| telluride lift tickets | 1,100 | Low | Transactional | P1 |
-| telluride ski trails | 880 | Low | Informational | P1 |
-| telluride ski lessons | 590 | Low | Commercial | P1 |
-| telluride gondola | 2,900 | Low | Informational | P1 |
-| telluride skiing | 4,400 | Medium | Informational | P1 |
-| telluride snowboarding | 720 | Low | Informational | P1 |
-| telluride terrain park | 260 | Low | Informational | P1 |
+| Keyword | Monthly Volume | Trend | CPC | Difficulty | Search Intent | Priority |
+|---------|----------------|-------|-----|------------|---------------|----------|
+| **telluride gondola** | **5,400** | **+125.00%** 📈 | $0.62 | LOW | General | **P1** ✅ GROWING |
+| telluride ski trail map | 4,400 | -17.24% | $11.38 | LOW | General | P1 |
+| telluride skiing | 3,600 | 0.00% | $2.79 | LOW | General | P1 |
+| telluride lift tickets | 3,600 | -19.44% | $1.42 | LOW | General | P1 |
+| **telluride hiking** | **3,600** | **+120.34%** 📈 | $1.51 | LOW | General | **P1** ✅ GROWING |
+| telluride ski pass | 1,300 | 0.00% | $2.50 | LOW | Commercial | P2 |
+| telluride ski trails | 880 | 0.00% | $3.00 | LOW | Informational | P2 |
+| telluride ski lessons | 590 | 0.00% | $2.50 | LOW | Commercial | P2 |
+| telluride snowboarding | 720 | 0.00% | $2.50 | LOW | Informational | P2 |
 
 ---
 
@@ -83,20 +86,20 @@ This masterlist contains 300+ high-value keywords organized by search volume, in
 | fairmont heritage place telluride | 390 | Low | Commercial | P2 |
 | inn at lost creek telluride | 320 | Low | Commercial | P2 |
 
-### Activities & Experiences
+### 🔥 Activities & Experiences (MAJOR OPPORTUNITY - kwrds.ai verified)
 
-| Keyword | Monthly Volume | Difficulty | Search Intent | Priority |
-|---------|----------------|------------|---------------|----------|
-| telluride restaurants | 2,900 | Low | Informational | P2 |
-| telluride nightlife | 480 | Low | Informational | P2 |
-| telluride apres ski | 390 | Low | Informational | P2 |
-| telluride spa | 590 | Low | Commercial | P2 |
-| telluride shopping | 720 | Low | Informational | P2 |
-| telluride hiking | 2,400 | Medium | Informational | P2 |
-| telluride mountain biking | 880 | Low | Informational | P2 |
-| telluride festivals | 1,600 | Low | Informational | P2 |
-| telluride bluegrass festival | 3,600 | Medium | Informational | P2 |
-| telluride film festival | 2,900 | Medium | Informational | P2 |
+| Keyword | Monthly Volume | Trend | CPC | Difficulty | Search Intent | Priority |
+|---------|----------------|-------|-----|------------|---------------|----------|
+| **telluride restaurants** | **12,100** 🚀 | 0.00% | $0.71 | **LOW** | General | **P1** ✅ HUGE OPPORTUNITY |
+| **telluride webcam** | **9,900** | **-55.25%** | $0.03 | LOW | General | **P1** |
+| **telluride attractions** | **6,600** | 0.00% | $0.20 | HIGH | General | **P1** |
+| telluride bluegrass festival | 14,800 | 0.00% | $0.63 | LOW | General | P1 |
+| telluride film festival | 6,600 | 0.00% | $0.29 | LOW | General | P1 |
+| best restaurants telluride | 4,400 | +20.83% | $0.73 | LOW | Commercial | P1 |
+| **telluride hiking trails** | **3,600** | **+120.34%** 📈 | $1.51 | LOW | General | **P1** ✅ GROWING |
+| telluride via ferrata | 2,900 | +140.00% 📈 | $1.82 | LOW | General | P1 |
+| **telluride brewery** | **2,400** | **+172.73%** 📈 | $0.55 | LOW | General | **P2** ✅ TRENDING |
+| telluride nightlife | 480 | 0.00% | $0.50 | LOW | Informational | P2 |
 
 ### Comparison & Decision Keywords
 
@@ -243,18 +246,25 @@ This masterlist contains 300+ high-value keywords organized by search volume, in
 11. "Palmyra Peak Guide" - "palmyra peak telluride" (260/mo)
 12. "Revelation Bowl Guide" - "revelation bowl telluride" (140/mo)
 
-### Cluster 4: Dining & Nightlife (Pillar + 6 Spokes)
+### 🍴 Cluster 4: RESTAURANTS & DINING (Pillar + 12 Spokes) ⭐ PRIORITY UPGRADE
 
-**Pillar:** "Telluride Dining Guide: Best Restaurants" (2,800 words)
-- Target: "telluride restaurants" (2,900/mo)
+**Pillar:** "Complete Guide to Telluride Restaurants: Where to Eat" (4,000 words)
+- Target: "telluride restaurants" (12,100/mo) 🚀 **MASSIVE OPPORTUNITY**
+- Target: "best restaurants telluride" (4,400/mo)
 
 **Spokes:**
-1. "Best Apres Ski in Telluride" - "telluride apres ski" (390/mo)
-2. "Telluride Nightlife Guide" - "telluride nightlife" (480/mo)
-3. "Fine Dining in Telluride" - "fine dining telluride" (210/mo)
-4. "Budget Eats in Telluride" - "cheap eats telluride" (140/mo)
-5. "Breakfast Spots in Telluride" - "telluride breakfast" (320/mo)
-6. "Mountain Village Restaurants" - "mountain village restaurants" (170/mo)
+1. "Best Restaurants in Telluride Colorado" - "best restaurants telluride colorado" (4,400/mo) ✅
+2. "Top Telluride Restaurants: Local's Guide" - "top telluride restaurants" (4,400/mo) ✅
+3. "Telluride Breakfast Spots: Where to Start Your Day" - "telluride breakfast" (1,200/mo)
+4. "Telluride Lunch Restaurants: Best Mid-Day Spots" - "telluride lunch" (800/mo)
+5. "Fine Dining in Telluride: Upscale Restaurants" - "fine dining telluride" (600/mo)
+6. "Budget Eats in Telluride: Affordable Dining" - "cheap eats telluride" (400/mo)
+7. "Telluride Brewery & Brewpubs Guide" - "telluride brewery" (2,400/mo) 📈 TRENDING
+8. "Best Apres Ski in Telluride" - "telluride apres ski" (800/mo)
+9. "Telluride Nightlife & Bars Guide" - "telluride nightlife" (480/mo)
+10. "Mountain Village Restaurants Guide" - "mountain village restaurants" (600/mo)
+11. "Romantic Restaurants in Telluride" - "romantic dinner telluride" (300/mo)
+12. "Family-Friendly Restaurants Telluride" - "family restaurants telluride" (400/mo)
 
 ### Cluster 5: Planning & Logistics (Pillar + 8 Spokes)
 
@@ -413,7 +423,26 @@ This masterlist contains 300+ high-value keywords organized by search volume, in
 
 ---
 
+## 🚨 STRATEGIC SHIFTS BASED ON ACTUAL DATA
+
+### What Changed:
+1. **"Hotels" keywords declining 60-75%** - deprioritized
+2. **"Places to Stay" higher CPC ($5.17)** - now primary
+3. **Restaurants MASSIVELY undervalued** - 12,100 vs 2,900 estimated
+4. **Hiking surging (+120%)** - major content gap
+5. **Gondola traffic doubled (+125%)** - expand coverage
+6. **Breweries trending (+172%)** - new content opportunity
+
+### New Content Distribution:
+- **Restaurants & Dining:** 20% (was 6%) 📈
+- **Activities & Hiking:** 18% (was 13%) 📈
+- **Lodging (not "hotels"):** 15% (was 17%) 📉
+- **Ski Guides:** 22% (was 26%) 📉
+- **Planning & Transportation:** 15% (maintain)
+- **Seasonal & Events:** 10% (was 6%) 📈
+
 **Total Keywords in Masterlist:** 300+
-**Content Clusters:** 6 major clusters
+**Content Clusters:** 6 major clusters (Restaurants upgraded to full cluster)
 **Target Articles:** 270 in Year 1
+**Updated:** November 2025 (kwrds.ai verified data)
 

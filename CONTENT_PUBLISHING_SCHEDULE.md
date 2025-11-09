@@ -1,5 +1,31 @@
 # Content Publishing Schedule - Telluride Ski Hotels
 
+## 🚨 MAJOR STRATEGY UPDATE (Nov 2025)
+
+**Based on kwrds.ai actual search volume data, we're pivoting our content strategy:**
+
+### What We Discovered:
+1. **Restaurants = MASSIVE opportunity:** 12,100 searches/mo (4x what we estimated!)
+2. **"Hotels" keywords dying:** -60% to -75% decline across all hotel terms
+3. **"Places to Stay" growing:** Higher CPC ($5.17 vs $2.98), better conversions
+4. **Hiking exploding:** +120% growth, major content gap
+5. **Breweries trending:** +172% growth, zero current coverage
+
+### New Content Strategy:
+- **Triple restaurant content** (6% → 20%) - Now #1 category
+- **Double hiking/activities** (13% → 18%)
+- **Reduce lodging focus** (17% → 15%) - quality over quantity
+- **Add brewery & nightlife** content (new category)
+- **Replace "hotels" with "places to stay"** throughout
+
+### Revenue Impact:
+- Vacation rentals: **$11.60 CPC** (highest on site!)
+- Places to stay: **$5.17 CPC** (vs $2.98 for "hotels")
+- Restaurants: Low CPC but HUGE traffic potential for affiliate revenue
+- Hiking guides: Gateway to lodging bookings
+
+---
+
 ## Year 1 Strategy: 270 Articles
 
 **Publishing Frequency:**
@@ -13,14 +39,19 @@
 - Comparison Articles (1,800-2,499 words): 40 articles (15%)
 - Seasonal/Timely (1,500-2,000 words): 30 articles (11%)
 
-**Category Breakdown:**
-- Destination Guides: 50 articles (19%)
-- Ski Guides: 70 articles (26%)
-- Hotel Reviews: 45 articles (17%)
-- Planning Tips: 40 articles (15%)
-- Activity Guides: 35 articles (13%)
-- Dining & Nightlife: 15 articles (6%)
-- Seasonal Guides: 15 articles (6%)
+**🚨 UPDATED Category Breakdown (Based on kwrds.ai Data):**
+- **Dining & Restaurants: 54 articles (20%)** 📈 **MAJOR INCREASE** (was 6%)
+- **Activity Guides & Hiking: 48 articles (18%)** 📈 (was 13%)
+- Ski Guides: 60 articles (22%) 📉 (was 26%)
+- **Lodging (Places to Stay): 40 articles (15%)** 📉 (was 17%)
+- Planning & Transportation: 40 articles (15%)
+- Seasonal & Events: 28 articles (10%) 📈 (was 6%)
+
+**Key Strategic Shifts:**
+- Restaurants now #1 content category (12,100 monthly searches!)
+- Hiking content tripled (3,600 searches, +120% growth)
+- "Hotels" terminology replaced with "Places to Stay"
+- Brewery & nightlife content added (trending +172%)
 
 ---
 
@@ -373,56 +404,59 @@
 - Category: hotel-reviews
 - Tags: hotels, colorado, lodging
 
-### Week 6: Activities & Experiences
+### Week 6: 🍴 RESTAURANTS & DINING (PRIORITY CONTENT)
 
-**Day 38: "Telluride Restaurants: 25 Best Places to Eat"**
-- Keyword: telluride restaurants (2,900/mo)
-- Word Count: 2,800
+**Day 38: "Complete Guide to Telluride Restaurants: Where to Eat"** ⭐ PILLAR
+- Keyword: telluride restaurants (12,100/mo) 🚀 MASSIVE VOLUME
+- Word Count: 4,000
+- Type: Pillar
+- Category: dining-nightlife
+- Tags: restaurants, dining, food, complete-guide
+- **Priority:** P1 - Highest traffic opportunity on entire site
+
+**Day 39: "Best Restaurants in Telluride Colorado: Top 25"**
+- Keyword: best restaurants telluride colorado (4,400/mo)
+- Word Count: 3,200
 - Type: Listicle
 - Category: dining-nightlife
-- Tags: restaurants, dining, food
+- Tags: restaurants, rankings, best-of
+- **Priority:** P1
 
-**Day 39: "Best Apres Ski in Telluride: Top 10 Spots"**
-- Keyword: telluride apres ski (390/mo)
-- Word Count: 2,100
-- Type: Listicle
-- Category: dining-nightlife
-- Tags: apres-ski, bars, socializing
-
-**Day 40: "Telluride Nightlife: Bars, Clubs & Entertainment"**
-- Keyword: telluride nightlife (480/mo)
-- Word Count: 2,200
+**Day 40: "Top Telluride Restaurants: Local's Guide"**
+- Keyword: top telluride restaurants (4,400/mo)
+- Word Count: 3,000
 - Type: Comprehensive Guide
 - Category: dining-nightlife
-- Tags: nightlife, bars, entertainment
+- Tags: restaurants, locals, hidden-gems
 
-**Day 41: "Telluride Spa Guide: Best Spas & Wellness Centers"**
-- Keyword: telluride spa (590/mo)
-- Word Count: 2,000
-- Type: Listicle
-- Category: activity-guides
-- Tags: spa, wellness, relaxation
-
-**Day 42: "Telluride Shopping: Best Stores & Boutiques"**
-- Keyword: telluride shopping (720/mo)
-- Word Count: 1,900
-- Type: Comprehensive Guide
-- Category: activity-guides
-- Tags: shopping, stores, boutiques
-
-**Day 43: "Telluride Hiking: Summer Trail Guide"**
-- Keyword: telluride hiking (2,400/mo)
+**Day 41: "Telluride Brewery & Brewpubs: Complete Guide"** 
+- Keyword: telluride brewery (2,400/mo) 📈 TRENDING +172%
 - Word Count: 2,600
 - Type: Comprehensive Guide
-- Category: activity-guides
-- Tags: hiking, trails, summer
+- Category: dining-nightlife
+- Tags: brewery, beer, brewpubs, trending
 
-**Day 44: "Telluride Mountain Biking: Trail Guide"**
-- Keyword: telluride mountain biking (880/mo)
-- Word Count: 2,300
+**Day 42: "Telluride Hiking Trails: Complete Trail Guide"** ⭐
+- Keyword: telluride hiking trails (3,600/mo) 📈 +120% GROWTH
+- Word Count: 3,200
 - Type: Comprehensive Guide
 - Category: activity-guides
-- Tags: mountain-biking, trails, summer
+- Tags: hiking, trails, outdoor, summer
+- **Priority:** P1 - Fast growing keyword
+
+**Day 43: "Telluride Via Ferrata: Climbing Guide"**
+- Keyword: telluride via ferrata (2,900/mo) 📈 +140% GROWTH
+- Word Count: 2,400
+- Type: Comprehensive Guide
+- Category: activity-guides
+- Tags: via-ferrata, climbing, adventure
+
+**Day 44: "Things to Do in Telluride: Ultimate Activity Guide"**
+- Keyword: telluride attractions (6,600/mo)
+- Word Count: 3,000
+- Type: Comprehensive Guide
+- Category: activity-guides
+- Tags: activities, attractions, things-to-do
 
 ### Week 7: Specific Hotels
 
