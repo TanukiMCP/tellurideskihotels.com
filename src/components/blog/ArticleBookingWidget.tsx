@@ -154,13 +154,12 @@ export function ArticleBookingWidget({
               </div>
             </div>
             <div className="flex-shrink-0">
-              <Button
-                asChild
-                size="lg"
-                className="bg-primary-600 hover:bg-primary-700 text-white font-bold px-8 py-4 text-lg shadow-lg hover:shadow-xl transition-all duration-300"
+              <a 
+                href={link}
+                className="inline-flex items-center justify-center bg-primary-600 hover:bg-primary-700 text-white font-bold px-8 py-4 text-lg shadow-lg hover:shadow-xl transition-all duration-300 rounded-lg"
               >
-                <a href={link}>{ctaText}</a>
-              </Button>
+                {ctaText}
+              </a>
             </div>
           </div>
         </CardContent>
@@ -191,13 +190,12 @@ export function ArticleBookingWidget({
             </p>
           </div>
           <div className="flex-shrink-0 w-full sm:w-auto">
-            <Button
-              asChild
-              size="lg"
-              className="w-full sm:w-auto bg-primary-600 hover:bg-primary-700 text-white font-semibold"
+            <a
+              href={link}
+              className="inline-flex items-center justify-center w-full sm:w-auto bg-primary-600 hover:bg-primary-700 text-white font-semibold px-6 py-3 rounded-lg transition-colors"
             >
-              <a href={link}>{ctaText}</a>
-            </Button>
+              {ctaText}
+            </a>
           </div>
         </div>
       </CardContent>
