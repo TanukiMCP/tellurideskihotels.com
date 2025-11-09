@@ -327,18 +327,58 @@ export async function searchHotelsWithRates(params: {
     adults: params.adults,
   });
 
-  // First, get hotels for the city (API returns full objects, not just IDs)
+  // For Telluride, also search Mountain Village (connected by gondola)
+  const shouldIncludeMountainVillage = params.cityName.toLowerCase() === 'telluride';
+  let allHotelsData: any[] = [];
+
+  // Search Telluride
   const searchParams = new URLSearchParams();
   searchParams.append('cityName', params.cityName);
   searchParams.append('countryCode', params.countryCode);
   if (params.limit) searchParams.append('limit', params.limit.toString());
 
   const hotelSearchEndpoint = `/data/hotels?${searchParams.toString()}`;
-  const hotelSearchResponse = await liteAPIClient<any>(hotelSearchEndpoint);
-  const hotelsData = Array.isArray(hotelSearchResponse.data) ? hotelSearchResponse.data : [];
+  const tellurideResponse = await liteAPIClient<any>(hotelSearchEndpoint);
+  const tellurideHotels = Array.isArray(tellurideResponse.data) ? tellurideResponse.data : [];
+  allHotelsData.push(...tellurideHotels);
+
+  console.log('[LiteAPI Rates] Telluride hotels found:', tellurideHotels.length);
+
+  // Also search Mountain Village if this is a Telluride search
+  if (shouldIncludeMountainVillage) {
+    try {
+      const mvSearchParams = new URLSearchParams();
+      mvSearchParams.append('cityName', 'Mountain Village');
+      mvSearchParams.append('countryCode', params.countryCode);
+      if (params.limit) mvSearchParams.append('limit', params.limit.toString());
+
+      const mvEndpoint = `/data/hotels?${mvSearchParams.toString()}`;
+      const mvResponse = await liteAPIClient<any>(mvEndpoint);
+      const mvHotels = Array.isArray(mvResponse.data) ? mvResponse.data : [];
+      
+      console.log('[LiteAPI Rates] Mountain Village hotels found:', mvHotels.length);
+      allHotelsData.push(...mvHotels);
+    } catch (error) {
+      console.warn('[LiteAPI Rates] Mountain Village search failed:', error);
+      // Continue with just Telluride results
+    }
+  }
+
+  // Remove duplicates
+  const uniqueHotelsMap = new Map();
+  allHotelsData.forEach(hotel => {
+    if (hotel.id && !uniqueHotelsMap.has(hotel.id)) {
+      uniqueHotelsMap.set(hotel.id, hotel);
+    }
+  });
+  const hotelsData = Array.from(uniqueHotelsMap.values());
   const hotelIds = hotelsData.map((h: any) => h.id).slice(0, params.limit || 500);
 
-  console.log('[LiteAPI Rates] Found hotel IDs:', hotelIds.length);
+  console.log('[LiteAPI Rates] Combined search - Total unique hotel IDs:', {
+    total: hotelIds.length,
+    telluride: tellurideHotels.length,
+    mountainVillage: allHotelsData.length - tellurideHotels.length,
+  });
 
   if (hotelIds.length === 0) {
     return { hotels: [], minPrices: {} };
