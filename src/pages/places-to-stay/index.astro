@@ -70,11 +70,12 @@ if (checkIn && checkOut) {
   try {
     console.log('[Places to Stay Page] Browsing all hotels (no dates)');
     const { searchHotels } = await import('@/lib/liteapi/hotels');
-    hotels = await searchHotels({
+    const result = await searchHotels({
       cityName: location,
       countryCode: DEFAULT_COUNTRY_CODE,
       limit: 50,
     });
+    hotels = result.data || [];
     console.log('[Places to Stay Page] Browse complete:', { hotelsFound: hotels.length });
   } catch (error) {
     console.error('[Places to Stay Page] Error fetching hotels:', error);
