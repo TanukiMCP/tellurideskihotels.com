@@ -32,13 +32,22 @@ export function ProductDetails({ productCode }: ProductDetailsProps) {
         }
         
         const data = await response.json();
-        console.log('[ProductDetails] Received product:', {
-          title: data.product?.title,
-          hasPricing: !!data.product?.pricing,
-          pricing: data.product?.pricing,
-          fullProduct: data.product
-        });
-        setProduct(data.product);
+        const productData = data.product;
+        
+        // If API didn't return pricing, try to get from cache (search results)
+        if (!productData.pricing) {
+          try {
+            const cached = sessionStorage.getItem(`viator-pricing-${productCode}`);
+            if (cached) {
+              productData.pricing = JSON.parse(cached);
+              console.log('[ProductDetails] Merged cached pricing from search results');
+            }
+          } catch (err) {
+            console.warn('[ProductDetails] Failed to retrieve cached pricing:', err);
+          }
+        }
+        
+        setProduct(productData);
       } catch (err) {
         console.error('Error fetching product:', err);
         setError(err instanceof Error ? err.message : 'Failed to load product details');

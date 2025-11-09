@@ -20,9 +20,21 @@ export function ActivityCard({ activity, className = '' }: ActivityCardProps) {
   const durationText = formatDuration(activity.duration);
   const priceText = formatPrice(activity.pricing);
 
+  const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    // Cache pricing data for details page
+    if (activity.pricing) {
+      try {
+        sessionStorage.setItem(`viator-pricing-${activity.productCode}`, JSON.stringify(activity.pricing));
+      } catch (err) {
+        console.warn('Failed to cache pricing:', err);
+      }
+    }
+  };
+
   return (
     <a 
       href={detailsUrl}
+      onClick={handleClick}
       className={`group bg-white rounded-2xl overflow-hidden border border-neutral-200 shadow-card hover:shadow-card-hover transition-all duration-300 hover:-translate-y-1 block ${className}`}
     >
       {/* Image */}
