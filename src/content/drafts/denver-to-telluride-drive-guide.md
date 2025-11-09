@@ -107,9 +107,9 @@ This comprehensive guide covers everything Denver-area residents need to know: r
 
 **Challenges:**
 - Adds 50-70 miles
-- Red Mountain Pass (11,018 ft) - challenging in winter (see our [winter driving safety guide](/blog/planning-tips/winter-driving-telluride-safety) for Red Mountain Pass tips)
+- Red Mountain Pass (11,018 ft) - challenging in winter
 - Not recommended for inexperienced winter drivers
-- US-550 can close during severe weather (check [CDOT alerts](https://www.codot.gov/travel/road-conditions))
+- US-550 can close during severe weather
 
 **Best For:** Summer road trips, scenic photography, experienced mountain drivers only in winter
 
