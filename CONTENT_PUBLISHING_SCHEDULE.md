@@ -77,167 +77,224 @@
 - Category: planning-tips
 - Tags: season, timing, snow, conditions
 
-### Week 2: High-Volume Keywords
+### Week 2: High-Volume Keywords + Colorado Local Guides
 
-**Day 8: "Telluride Skiing: Complete Guide for All Levels"**
+**Day 8: "Driving to Telluride from Denver: Complete I-70 Guide"**
+- Keyword: denver to telluride drive (1,600/mo)
+- Word Count: 2,800
+- Type: Comprehensive Guide
+- Category: planning-tips
+- Tags: driving, denver, i70, road-trip, locals
+- **Local Focus:** I-70 conditions, mountain passes, winter driving, gas stops, scenic routes
+
+**Day 9: "Telluride from Colorado Springs: Drive Guide & Tips"**
+- Keyword: colorado springs to telluride (720/mo)
+- Word Count: 2,400
+- Type: Comprehensive Guide
+- Category: planning-tips
+- Tags: driving, colorado-springs, road-trip, locals
+- **Local Focus:** Best routes, avoiding I-70, weather considerations, drive time
+
+**Day 10: "Telluride Skiing: Complete Guide for All Levels"**
 - Keyword: telluride skiing (4,400/mo)
 - Word Count: 2,700
 - Type: Comprehensive Guide
 - Category: ski-guides
 - Tags: skiing, terrain, lessons, tips
 
-**Day 9: "How to Get to Telluride: Transportation Guide"**
-- Keyword: how to get to telluride (1,300/mo)
-- Word Count: 2,200
+**Day 11: "Winter Driving to Telluride: Safety Tips & Road Conditions"**
+- Keyword: telluride winter driving (480/mo)
+- Word Count: 2,500
 - Type: Comprehensive Guide
 - Category: planning-tips
-- Tags: transportation, airport, driving
+- Tags: winter-driving, safety, i70, locals, weather
+- **Local Focus:** Chain laws, I-70 closures, Eisenhower Tunnel, Red Mountain Pass, emergency prep
 
-**Day 10: "Telluride Weather Guide: What to Expect Year-Round"**
+**Day 12: "Telluride Weather Guide: What to Expect Year-Round"**
 - Keyword: telluride weather (8,100/mo)
 - Word Count: 2,400
 - Type: Comprehensive Guide
 - Category: planning-tips
 - Tags: weather, climate, conditions
 
-**Day 11: "Best Time to Visit Telluride: Seasonal Guide"**
+**Day 13: "Front Range to Telluride: Weekend Getaway Guide"**
+- Keyword: weekend trip telluride (320/mo)
+- Word Count: 2,300
+- Type: Comprehensive Guide
+- Category: planning-tips
+- Tags: weekend, front-range, locals, itinerary
+- **Local Focus:** Leave Friday after work, return Sunday night, time-saving tips, where to stop
+
+**Day 14: "Best Time to Visit Telluride: Seasonal Guide"**
 - Keyword: when to visit telluride (880/mo)
 - Word Count: 2,300
 - Type: Comprehensive Guide
 - Category: planning-tips
 - Tags: timing, seasons, crowds, prices
 
-**Day 12: "Telluride Lodging: Hotels, Condos & Vacation Rentals"**
+**Day 15: "Telluride Lodging: Hotels, Condos & Vacation Rentals"**
 - Keyword: telluride lodging (2,900/mo)
 - Word Count: 2,500
 - Type: Comprehensive Guide
 - Category: hotel-reviews
 - Tags: lodging, accommodations, options
 
-**Day 13: "Telluride Gondola: Free Transportation Guide"**
+**Day 16: "Telluride Gondola: Free Transportation Guide"**
 - Keyword: telluride gondola (2,900/mo)
 - Word Count: 2,000
 - Type: Comprehensive Guide
 - Category: planning-tips
 - Tags: gondola, transportation, free
 
-**Day 14: "Telluride Airport & Getting There: Complete Guide"**
+**Day 17: "Telluride Airport & Getting There: Complete Guide"**
 - Keyword: telluride airport (3,600/mo)
 - Word Count: 2,300
 - Type: Comprehensive Guide
 - Category: planning-tips
 - Tags: airport, transportation, travel
 
-### Week 3: Accommodation Focus
+### Week 3: Accommodation Focus + More Local Guides
 
-**Day 15: "Ski-In/Ski-Out Hotels in Telluride: Top 10"**
+**Day 18: "Ski-In/Ski-Out Hotels in Telluride: Top 10"**
 - Keyword: ski in ski out telluride (1,600/mo)
 - Word Count: 2,400
 - Type: Listicle
 - Category: hotel-reviews
 - Tags: ski-in-ski-out, convenience, hotels
 
-**Day 16: "Luxury Hotels in Telluride: 8 Best High-End Options"**
+**Day 19: "Luxury Hotels in Telluride: 8 Best High-End Options"**
 - Keyword: telluride luxury hotels (880/mo)
 - Word Count: 2,600
 - Type: Listicle
 - Category: hotel-reviews
 - Tags: luxury, high-end, premium
 
-**Day 17: "Telluride Vacation Rentals vs Hotels: Which is Better?"**
+**Day 20: "I-70 to Telluride: Avoiding Traffic & Finding Scenic Routes"**
+- Keyword: i70 to telluride (590/mo)
+- Word Count: 2,400
+- Type: Comprehensive Guide
+- Category: planning-tips
+- Tags: i70, driving, locals, scenic-routes, traffic
+- **Local Focus:** Eisenhower Tunnel backups, alternate routes, Glenwood Springs vs Ouray route
+
+**Day 21: "Telluride Vacation Rentals vs Hotels: Which is Better?"**
 - Keyword: telluride vacation rentals (3,600/mo)
 - Word Count: 2,200
 - Type: Comparison
 - Category: hotel-reviews
 - Tags: vacation-rentals, hotels, comparison
 
-**Day 18: "Telluride Mountain Village Hotels: Where to Stay"**
+**Day 22: "Telluride Mountain Village Hotels: Where to Stay"**
 - Keyword: telluride mountain village hotels (720/mo)
 - Word Count: 2,300
 - Type: Comprehensive Guide
 - Category: hotel-reviews
 - Tags: mountain-village, hotels, location
 
-**Day 19: "Telluride Condos: Best Condo Rentals & Hotels"**
+**Day 23: "Red Mountain Pass to Telluride: Winter Driving Guide"**
+- Keyword: red mountain pass telluride (390/mo)
+- Word Count: 2,200
+- Type: Comprehensive Guide
+- Category: planning-tips
+- Tags: red-mountain-pass, winter-driving, safety, locals
+- **Local Focus:** The infamous "Million Dollar Highway", weather concerns, when to avoid, tips from locals
+
+**Day 24: "Telluride Condos: Best Condo Rentals & Hotels"**
 - Keyword: telluride condos (2,400/mo)
 - Word Count: 2,400
 - Type: Listicle
 - Category: hotel-reviews
 - Tags: condos, rentals, accommodations
 
-**Day 20: "Telluride Resorts: Top Resort Hotels & Properties"**
+**Day 25: "Telluride Resorts: Top Resort Hotels & Properties"**
 - Keyword: telluride resorts (1,900/mo)
 - Word Count: 2,500
 - Type: Listicle
 - Category: hotel-reviews
 - Tags: resorts, hotels, properties
 
-**Day 21: "Boutique Hotels in Telluride: 6 Unique Stays"**
+**Day 26: "Telluride Day Trip from Denver: Is It Worth It?"**
+- Keyword: denver to telluride day trip (260/mo)
+- Word Count: 2,100
+- Type: Comprehensive Guide
+- Category: planning-tips
+- Tags: day-trip, denver, locals, realistic
+- **Local Focus:** Honest assessment, 6+ hour drive each way, better alternatives, overnight recommendations
+
+### Week 4: Skiing Deep Dives + Local Tips
+
+**Day 27: "Boutique Hotels in Telluride: 6 Unique Stays"**
 - Keyword: boutique hotels telluride (320/mo)
 - Word Count: 2,100
 - Type: Listicle
 - Category: hotel-reviews
 - Tags: boutique, unique, character
 
-### Week 4: Skiing Deep Dives
-
-**Day 22: "Telluride Lift Tickets & Ski Passes: Complete Guide"**
+**Day 28: "Telluride Lift Tickets & Ski Passes: Complete Guide"**
 - Keyword: telluride lift tickets (1,100/mo)
 - Word Count: 2,400
 - Type: Comprehensive Guide
 - Category: ski-guides
 - Tags: lift-tickets, passes, pricing
 
-**Day 23: "Telluride Ski Pass: Ikon vs Epic vs Local"**
+**Day 29: "Telluride Ski Pass: Ikon vs Epic vs Local"**
 - Keyword: telluride ski pass (1,300/mo)
 - Word Count: 2,300
 - Type: Comparison
 - Category: ski-guides
 - Tags: ski-pass, ikon, pricing
 
-**Day 24: "Telluride Ski Map & Trail Guide"**
+**Day 30: "Where to Stop Between Denver and Telluride"**
+- Keyword: stops between denver and telluride (180/mo)
+- Word Count: 2,400
+- Type: Comprehensive Guide
+- Category: planning-tips
+- Tags: road-trip, stops, locals, dining, gas
+- **Local Focus:** Frisco, Silverthorne, Glenwood Springs, Montrose - best food, gas, bathrooms, timing
+
+**Day 31: "Telluride Ski Map & Trail Guide"**
 - Keyword: telluride ski map (1,600/mo)
 - Word Count: 2,600
 - Type: Comprehensive Guide
 - Category: ski-guides
 - Tags: ski-map, trails, terrain
 
-**Day 25: "Best Ski Runs in Telluride: Top 20 Trails"**
+**Day 32: "Best Ski Runs in Telluride: Top 20 Trails"**
 - Keyword: telluride ski trails (880/mo)
 - Word Count: 2,700
 - Type: Listicle
 - Category: ski-guides
 - Tags: runs, trails, terrain
 
-**Day 26: "Telluride Ski Lessons: Schools, Prices & Tips"**
+**Day 33: "Telluride Ski Lessons: Schools, Prices & Tips"**
 - Keyword: telluride ski lessons (590/mo)
 - Word Count: 2,200
 - Type: Comprehensive Guide
 - Category: ski-guides
 - Tags: lessons, instruction, learning
 
-**Day 27: "Telluride Snowboarding: Complete Guide"**
+**Day 34: "Telluride Snowboarding: Complete Guide"**
 - Keyword: telluride snowboarding (720/mo)
 - Word Count: 2,400
 - Type: Comprehensive Guide
 - Category: ski-guides
 - Tags: snowboarding, terrain-park, freestyle
 
-**Day 28: "Telluride Terrain Park: Guide for Freestylers"**
+**Day 35: "Telluride Terrain Park: Guide for Freestylers"**
 - Keyword: telluride terrain park (260/mo)
 - Word Count: 1,900
 - Type: Comprehensive Guide
 - Category: ski-guides
 - Tags: terrain-park, freestyle, jumps
 
-**Day 29: "Telluride Snow Report: Where to Check Conditions"**
+**Day 36: "Telluride Snow Report: Where to Check Conditions"**
 - Keyword: telluride snow report (2,400/mo)
 - Word Count: 1,800
 - Type: Comprehensive Guide
 - Category: ski-guides
 - Tags: snow-report, conditions, weather
 
-**Day 30: "How to Plan the Perfect Telluride Ski Trip"**
+**Day 37: "How to Plan the Perfect Telluride Ski Trip"**
 - Keyword: telluride ski trip (880/mo)
 - Word Count: 3,000
 - Type: Pillar
