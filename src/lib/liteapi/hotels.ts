@@ -11,7 +11,6 @@ export async function searchHotels(params: LiteAPIHotelSearchParams): Promise<Ho
   console.log('[LiteAPI Hotels] Starting hotel search:', {
     cityName: params.cityName,
     countryCode: params.countryCode,
-    limit: params.limit,
   });
   
   // For Telluride searches, also search Mountain Village (connected by gondola)
@@ -19,15 +18,14 @@ export async function searchHotels(params: LiteAPIHotelSearchParams): Promise<Ho
   
   let allHotelsData: any[] = [];
   
-  // Search Telluride
+  // Search Telluride - no limit, get all results
   const searchParams = new URLSearchParams();
   if (params.cityName) searchParams.append('cityName', params.cityName);
   if (params.countryCode) searchParams.append('countryCode', params.countryCode);
   if (params.latitude) searchParams.append('latitude', params.latitude.toString());
   if (params.longitude) searchParams.append('longitude', params.longitude.toString());
   if (params.radius) searchParams.append('radius', params.radius.toString());
-  if (params.limit) searchParams.append('limit', params.limit.toString());
-  if (params.offset) searchParams.append('offset', params.offset.toString());
+  // Don't set limit or offset - let API return all results
 
   const queryString = searchParams.toString();
   const endpoint = `/data/hotels${queryString ? `?${queryString}` : ''}`;
@@ -47,7 +45,7 @@ export async function searchHotels(params: LiteAPIHotelSearchParams): Promise<Ho
       const mvSearchParams = new URLSearchParams();
       mvSearchParams.append('cityName', 'Mountain Village');
       mvSearchParams.append('countryCode', params.countryCode);
-      if (params.limit) mvSearchParams.append('limit', params.limit.toString());
+      // No limit - get all Mountain Village hotels too
       
       const mvEndpoint = `/data/hotels?${mvSearchParams.toString()}`;
       const mvResponse = await liteAPIClient<any>(mvEndpoint);

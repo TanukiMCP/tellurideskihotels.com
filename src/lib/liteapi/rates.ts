@@ -331,11 +331,11 @@ export async function searchHotelsWithRates(params: {
   const shouldIncludeMountainVillage = params.cityName.toLowerCase() === 'telluride';
   let allHotelsData: any[] = [];
 
-  // Search Telluride
+  // Search Telluride - no limit, get all results
   const searchParams = new URLSearchParams();
   searchParams.append('cityName', params.cityName);
   searchParams.append('countryCode', params.countryCode);
-  if (params.limit) searchParams.append('limit', params.limit.toString());
+  // Don't set limit - let API return all results
 
   const hotelSearchEndpoint = `/data/hotels?${searchParams.toString()}`;
   const tellurideResponse = await liteAPIClient<any>(hotelSearchEndpoint);
@@ -350,7 +350,7 @@ export async function searchHotelsWithRates(params: {
       const mvSearchParams = new URLSearchParams();
       mvSearchParams.append('cityName', 'Mountain Village');
       mvSearchParams.append('countryCode', params.countryCode);
-      if (params.limit) mvSearchParams.append('limit', params.limit.toString());
+      // No limit - get all Mountain Village hotels too
 
       const mvEndpoint = `/data/hotels?${mvSearchParams.toString()}`;
       const mvResponse = await liteAPIClient<any>(mvEndpoint);
@@ -372,7 +372,7 @@ export async function searchHotelsWithRates(params: {
     }
   });
   const hotelsData = Array.from(uniqueHotelsMap.values());
-  const hotelIds = hotelsData.map((h: any) => h.id).slice(0, params.limit || 500);
+  const hotelIds = hotelsData.map((h: any) => h.id); // No more arbitrary limit!
 
   console.log('[LiteAPI Rates] Combined search - Total unique hotel IDs:', {
     total: hotelIds.length,

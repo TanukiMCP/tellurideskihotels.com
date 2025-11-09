@@ -42,7 +42,7 @@ if (checkIn && checkOut) {
       checkIn,
       checkOut,
       adults,
-      limit: 50,
+      // No limit - get all available hotels
     });
     
     hotels = result.hotels || [];
@@ -68,13 +68,13 @@ if (checkIn && checkOut) {
 } else {
   // No dates provided - fetch all hotels for browsing
   try {
-    console.log('[Places to Stay Page] Browsing all hotels (no dates)');
-    const { searchHotels } = await import('@/lib/liteapi/hotels');
-    const result = await searchHotels({
-      cityName: location,
-      countryCode: DEFAULT_COUNTRY_CODE,
-      limit: 50,
-    });
+      console.log('[Places to Stay Page] Browsing all hotels (no dates)');
+      const { searchHotels } = await import('@/lib/liteapi/hotels');
+      const result = await searchHotels({
+        cityName: location,
+        countryCode: DEFAULT_COUNTRY_CODE,
+        // No limit - show all available properties
+      });
     hotels = result.data || [];
     console.log('[Places to Stay Page] Browse complete:', { hotelsFound: hotels.length });
   } catch (error) {
