@@ -1,35 +1,47 @@
 /**
  * Viator API Configuration
  * For Basic Access Affiliate API
+ * https://docs.viator.com/partner-api/technical/
  */
 
 export const VIATOR_CONFIG = {
   baseUrl: import.meta.env.VIATOR_BASE_URL || 'https://api.viator.com/partner',
   apiKey: import.meta.env.VIATOR_API_KEY || '',
   
-  // Telluride destination ID (will be determined from API)
-  // Using search by location name initially
-  destination: {
-    city: 'Telluride',
+  // Telluride destination ID from /destinations API
+  // destinationId: 26378, name: "Telluride", type: "CITY", parentDestinationId: 273 (Colorado)
+  telluride: {
+    destinationId: '26378',
+    name: 'Telluride',
     state: 'Colorado',
     country: 'United States',
   },
   
   // Default search parameters
   defaults: {
-    currencyCode: 'USD',
+    currency: 'USD',
     pageSize: 20,
-    sortOrder: 'TOP_SELLERS' as const,
+    sort: 'DEFAULT' as const,
   },
   
-  // Activity categories mapped to Viator tags
-  categoryTags: {
-    winter: ['Winter Sports', 'Skiing', 'Snowboarding', 'Snow'],
-    summer: ['Hiking', 'Mountain Biking', 'Nature', 'Outdoor'],
-    adventure: ['Adventure', 'Extreme Sports', 'Adrenaline'],
-    family: ['Family Friendly', 'Kids', 'Children'],
-    tours: ['Tours', 'Sightseeing', 'Cultural'],
-    experiences: ['Food & Wine', 'Nightlife', 'Entertainment'],
+  // Valid sort options per API spec
+  sortOptions: {
+    DEFAULT: 'DEFAULT',
+    PRICE_LOW: 'PRICE',
+    PRICE_HIGH: 'PRICE',
+    RATING: 'TRAVELER_RATING',
+    DURATION: 'ITINERARY_DURATION',
+    NEWEST: 'DATE_ADDED',
+  } as const,
+  
+  // Activity category search terms
+  categorySearchTerms: {
+    winter: 'skiing snowboarding winter sports',
+    summer: 'hiking biking outdoor summer',
+    adventure: 'adventure climbing rafting',
+    family: 'family friendly kids',
+    tours: 'tours sightseeing guided',
+    experiences: 'food wine cultural',
   },
 } as const;
 

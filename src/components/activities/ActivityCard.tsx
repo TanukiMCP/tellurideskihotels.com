@@ -3,27 +3,30 @@
  * Displays a single Viator activity/tour
  */
 
-import type { ViatorProduct } from '@/lib/viator/types';
-import { buildViatorBookingUrl } from '@/lib/viator/client';
+import type { ViatorProductSummary } from '@/lib/viator/types';
+import { buildViatorBookingUrl, formatDuration, formatPrice } from '@/lib/viator/client';
 
 interface ActivityCardProps {
-  activity: ViatorProduct;
+  activity: ViatorProductSummary;
   className?: string;
 }
 
 export function ActivityCard({ activity, className = '' }: ActivityCardProps) {
   const bookingUrl = buildViatorBookingUrl(activity);
   const mainImage = activity.images.find(img => img.isCover) || activity.images[0];
+  const imageUrl = mainImage?.variants?.find(v => v.width >= 400)?.url || mainImage?.variants?.[0]?.url;
   const hasReviews = activity.reviews && activity.reviews.totalReviews > 0;
+  const durationText = formatDuration(activity.duration);
+  const priceText = formatPrice(activity.pricing);
 
   return (
     <div className={`group bg-white rounded-2xl overflow-hidden border border-neutral-200 shadow-card hover:shadow-card-hover transition-all duration-300 hover:-translate-y-1 ${className}`}>
       {/* Image */}
       <div className="relative h-56 overflow-hidden bg-neutral-100">
-        {mainImage ? (
+        {imageUrl ? (
           <img
-            src={mainImage.url}
-            alt={activity.productTitle}
+            src={imageUrl}
+            alt={activity.title}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
             loading="lazy"
           />
@@ -36,18 +39,16 @@ export function ActivityCard({ activity, className = '' }: ActivityCardProps) {
         )}
         
         {/* Duration Badge */}
-        {activity.duration && (
-          <div className="absolute top-4 left-4 bg-white/95 backdrop-blur-sm px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-900 shadow-card">
-            {activity.duration}
-          </div>
-        )}
+        <div className="absolute top-4 left-4 bg-white/95 backdrop-blur-sm px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-900 shadow-card">
+          {durationText}
+        </div>
       </div>
 
       {/* Content */}
       <div className="p-6">
         {/* Title */}
         <h3 className="text-lg font-bold text-neutral-900 mb-2 line-clamp-2 group-hover:text-primary-600 transition-colors">
-          {activity.productTitle}
+          {activity.title}
         </h3>
 
         {/* Reviews */}
@@ -58,7 +59,7 @@ export function ActivityCard({ activity, className = '' }: ActivityCardProps) {
                 <svg
                   key={i}
                   className={`w-4 h-4 ${
-                    i < Math.round(activity.reviews!.combinedAverageRating)
+                    i < Math.round(activity.reviews.combinedAverageRating)
                       ? 'text-accent-500'
                       : 'text-neutral-300'
                   }`}
@@ -70,27 +71,27 @@ export function ActivityCard({ activity, className = '' }: ActivityCardProps) {
               ))}
             </div>
             <span className="text-sm text-neutral-600">
-              {activity.reviews!.combinedAverageRating.toFixed(1)} ({activity.reviews!.totalReviews.toLocaleString()})
+              {activity.reviews.combinedAverageRating.toFixed(1)} ({activity.reviews.totalReviews.toLocaleString()})
             </span>
           </div>
         )}
 
         {/* Description */}
-        {activity.shortDescription && (
+        {activity.description && (
           <p className="text-neutral-600 text-sm mb-4 line-clamp-3 leading-relaxed">
-            {activity.shortDescription}
+            {activity.description}
           </p>
         )}
 
-        {/* Tags */}
-        {activity.tags && activity.tags.length > 0 && (
+        {/* Flags */}
+        {activity.flags && activity.flags.length > 0 && (
           <div className="flex flex-wrap gap-2 mb-4">
-            {activity.tags.slice(0, 3).map((tag) => (
+            {activity.flags.slice(0, 2).map((flag) => (
               <span
-                key={tag.tagId}
-                className="px-2.5 py-1 bg-neutral-100 text-neutral-700 text-xs font-medium rounded-lg"
+                key={flag}
+                className="px-2.5 py-1 bg-primary-50 text-primary-700 text-xs font-medium rounded-lg"
               >
-                {tag.tag}
+                {flag.replace(/_/g, ' ')}
               </span>
             ))}
           </div>
@@ -101,7 +102,7 @@ export function ActivityCard({ activity, className = '' }: ActivityCardProps) {
           <div>
             <div className="text-xs text-neutral-600 mb-0.5">From</div>
             <div className="text-2xl font-bold text-primary-600">
-              {activity.price.priceFormatted}
+              {priceText}
             </div>
           </div>
           <a

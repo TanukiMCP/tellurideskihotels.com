@@ -5,13 +5,13 @@ import PageLayout from '@/components/layout/PageLayout.astro';
 import Container from '@/components/layout/Container.astro';
 import { ActivitiesGrid } from '@/components/activities/ActivitiesGrid';
 import { getFeaturedActivities } from '@/lib/viator/client';
-import type { ViatorProduct } from '@/lib/viator/types';
+import type { ViatorProductSummary } from '@/lib/viator/types';
 
 const pageTitle = 'Things to Do in Telluride | Tours, Activities & Experiences';
 const pageDescription = 'Discover the best activities, tours, and experiences in Telluride, Colorado. From skiing and snowboarding to hiking and mountain biking, find your perfect adventure.';
 
 // Fetch initial activities server-side
-let initialActivities: ViatorProduct[] = [];
+let initialActivities: ViatorProductSummary[] = [];
 
 try {
   initialActivities = await getFeaturedActivities(20);

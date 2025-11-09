@@ -1,101 +1,204 @@
 /**
  * Viator API Type Definitions
  * Based on Viator Partner API Basic Access documentation
+ * https://docs.viator.com/partner-api/technical/
  */
 
-export interface ViatorImage {
+export interface ViatorImageVariant {
+  height: number;
+  width: number;
   url: string;
-  caption?: string;
-  isCover?: boolean;
-  variants?: {
-    url: string;
-    width: number;
-    height: number;
-  }[];
 }
 
-export interface ViatorPrice {
-  price: number;
-  currency: string;
-  priceFormatted: string;
+export interface ViatorImage {
+  imageSource: string;
+  caption: string;
+  isCover: boolean;
+  variants: ViatorImageVariant[];
+}
+
+export interface ViatorReviewSource {
+  provider: string;
+  totalCount: number;
+  averageRating: number;
 }
 
 export interface ViatorReviews {
+  sources: ViatorReviewSource[];
   totalReviews: number;
   combinedAverageRating: number;
 }
 
-export interface ViatorTag {
-  tag: string;
-  tagId: number;
+export interface ViatorDuration {
+  fixedDurationInMinutes?: number;
+  variableDurationFromMinutes?: number;
+  variableDurationToMinutes?: number;
 }
 
-export interface ViatorDestination {
-  destinationId: number;
-  destinationName: string;
-  defaultCurrencyCode: string;
-  lookupId: string;
-  parentId?: number;
-  timeZone: string;
-  iataCode?: string;
+export interface ViatorPricingSummary {
+  fromPrice: number;
+  fromPriceBeforeDiscount?: number;
 }
 
-export interface ViatorProduct {
+export interface ViatorPricing {
+  summary: ViatorPricingSummary;
+  currency: string;
+}
+
+export interface ViatorDestinationRef {
+  ref: string;
+  primary: boolean;
+}
+
+export interface ViatorTranslationInfo {
+  containsMachineTranslatedText: boolean;
+  translationSource: string;
+}
+
+/**
+ * Product summary returned from /products/search
+ */
+export interface ViatorProductSummary {
   productCode: string;
-  productTitle: string;
+  title: string;
+  description: string;
+  images: ViatorImage[];
+  reviews: ViatorReviews;
+  duration: ViatorDuration;
+  confirmationType: string;
+  itineraryType: string;
+  pricing: ViatorPricing;
   productUrl: string;
-  productUrlName: string;
-  duration?: string;
-  description?: string;
+  destinations: ViatorDestinationRef[];
+  tags: number[];
+  flags: string[];
+  translationInfo: ViatorTranslationInfo;
+}
+
+/**
+ * Full product details from /products/{product-code}
+ */
+export interface ViatorProduct extends ViatorProductSummary {
+  status?: string;
+  language?: string;
+  createdAt?: string;
+  lastUpdatedAt?: string;
   shortDescription?: string;
   supplierName?: string;
-  images: ViatorImage[];
-  price: ViatorPrice;
-  reviews?: ViatorReviews;
-  tags?: ViatorTag[];
-  flags?: string[];
-  cancellationPolicy?: string;
+  supplier?: {
+    name: string;
+    reference: string;
+  };
+  cancellationPolicy?: {
+    type: string;
+    description: string;
+    cancelIfBadWeather?: boolean;
+    cancelIfInsufficientTravelers?: boolean;
+  };
   productOptions?: {
     productOptionCode: string;
     description: string;
     title: string;
   }[];
-  destinationId?: number;
 }
 
-export interface ViatorSearchParams {
-  destId?: number;
-  searchTerm?: string;
-  topX?: string;
-  startDate?: string;
-  endDate?: string;
-  tags?: string;
-  sortOrder?: 'PRICE_FROM_LOW' | 'PRICE_FROM_HIGH' | 'TOP_SELLERS' | 'REVIEW_AVG_RATING_D';
-  currencyCode?: string;
-  page?: number;
-  pageSize?: number;
+/**
+ * Destination from /destinations
+ */
+export interface ViatorDestination {
+  destinationId: number;
+  name: string;
+  type: string;
+  parentDestinationId?: number;
+  lookupId: string;
+  destinationUrl?: string;
+  defaultCurrencyCode: string;
+  timeZone: string;
+  iataCodes?: string[];
+  countryCallingCode?: string;
+  languages?: string[];
+  center?: {
+    latitude: number;
+    longitude: number;
+  };
 }
 
+/**
+ * Tag from /products/tags
+ */
+export interface ViatorTag {
+  tagId: number;
+  parentTagIds?: number[];
+  allNamesByLocale: {
+    en: string;
+    [locale: string]: string;
+  };
+}
+
+/**
+ * Search request body for POST /products/search
+ */
+export interface ViatorSearchRequestBody {
+  currency: string;
+  filtering: {
+    destination: string;
+    text?: string;
+    tags?: number[];
+    flags?: string[];
+    lowestPrice?: number;
+    highestPrice?: number;
+    startDate?: string;
+    endDate?: string;
+    confirmationType?: string;
+    rating?: {
+      min?: number;
+      max?: number;
+    };
+    durationInMinutes?: {
+      from?: number;
+      to?: number;
+    };
+    includeAutomaticTranslations?: boolean;
+    attractionId?: number;
+  };
+  sorting?: {
+    sort: 'DEFAULT' | 'PRICE' | 'TRAVELER_RATING' | 'ITINERARY_DURATION' | 'DATE_ADDED';
+    order?: 'ASCENDING' | 'DESCENDING';
+  };
+  pagination: {
+    start: number;
+    count: number;
+  };
+}
+
+/**
+ * Search response from POST /products/search
+ */
 export interface ViatorSearchResponse {
-  products: ViatorProduct[];
+  products: ViatorProductSummary[];
   totalCount: number;
-  page: number;
-  pageSize: number;
 }
 
-export interface ViatorProductDetailsResponse {
-  product: ViatorProduct;
-}
-
+/**
+ * Destinations response from GET /destinations
+ */
 export interface ViatorDestinationsResponse {
   destinations: ViatorDestination[];
+  totalCount: number;
+}
+
+/**
+ * Tags response from GET /products/tags
+ */
+export interface ViatorTagsResponse {
+  tags: ViatorTag[];
 }
 
 export interface ViatorErrorResponse {
-  error: {
-    message: string;
-    code?: string;
-  };
+  code: string;
+  message: string;
+  timestamp?: string;
+  trackingId?: string;
 }
 
 // Telluride-specific activity categories
@@ -113,6 +216,6 @@ export interface ActivityFilter {
   minPrice?: number;
   maxPrice?: number;
   duration?: string;
-  sortBy?: ViatorSearchParams['sortOrder'];
+  sortBy?: ViatorSearchRequestBody['sorting'];
 }
 

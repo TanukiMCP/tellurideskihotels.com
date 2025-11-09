@@ -149,7 +149,7 @@ export function AirQualityWidget() {
       {/* Telluride Note */}
       <div className="mt-4 p-3 bg-green-50 border border-green-200 rounded-lg">
         <p className="text-xs text-green-800">
-          <span className="font-semibold">✨ Fun Fact:</span> Telluride enjoys some of the cleanest air in Colorado year-round!
+          <span className="font-semibold">Did You Know:</span> Telluride enjoys some of the cleanest air in Colorado year-round!
         </p>
       </div>
     </div>

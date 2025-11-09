@@ -91,7 +91,7 @@ export function SkiConditionsWidget({ initialConditions }: SkiConditionsWidgetPr
         </div>
         {hasNewSnow && (
           <div className="bg-accent-500 text-white px-3 py-1.5 rounded-lg font-bold text-sm shadow-card animate-pulse">
-            Fresh Snow! ❄️
+            Fresh Snow!
           </div>
         )}
       </div>

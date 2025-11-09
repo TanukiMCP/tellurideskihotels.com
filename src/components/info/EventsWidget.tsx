@@ -9,7 +9,6 @@ interface Event {
   date: string;
   type: 'festival' | 'concert' | 'sports' | 'art' | 'community';
   description: string;
-  icon: string;
 }
 
 // Curated Telluride events
@@ -20,7 +19,6 @@ const TELLURIDE_EVENTS: Event[] = [
     date: '2024-12-31',
     type: 'festival',
     description: 'Skiers descend the mountain with torches, followed by fireworks',
-    icon: '🎆',
   },
   {
     id: '2',
@@ -28,7 +26,6 @@ const TELLURIDE_EVENTS: Event[] = [
     date: '2025-08-29',
     type: 'festival',
     description: 'Premier film festival showcasing independent cinema',
-    icon: '🎬',
   },
   {
     id: '3',
@@ -36,7 +33,6 @@ const TELLURIDE_EVENTS: Event[] = [
     date: '2025-06-19',
     type: 'concert',
     description: 'Annual bluegrass music festival in the mountains',
-    icon: '🎸',
   },
   {
     id: '4',
@@ -44,7 +40,6 @@ const TELLURIDE_EVENTS: Event[] = [
     date: '2025-01-15',
     type: 'sports',
     description: 'Celebrate ice climbing with clinics and competitions',
-    icon: '🧗',
   },
   {
     id: '5',
@@ -52,7 +47,6 @@ const TELLURIDE_EVENTS: Event[] = [
     date: '2025-02-28',
     type: 'festival',
     description: 'Mardi Gras celebration in the mountains',
-    icon: '🎭',
   },
   {
     id: '6',
@@ -60,7 +54,6 @@ const TELLURIDE_EVENTS: Event[] = [
     date: '2025-08-01',
     type: 'concert',
     description: 'World-class jazz in an intimate mountain setting',
-    icon: '🎺',
   },
 ];
 
@@ -124,12 +117,9 @@ export function EventsWidget() {
 
               {/* Event Info */}
               <div className="flex-1 min-w-0">
-                <div className="flex items-start justify-between gap-2 mb-1">
-                  <h4 className="font-bold text-neutral-900 group-hover:text-primary-600 transition-colors line-clamp-1">
-                    {event.name}
-                  </h4>
-                  <span className="text-2xl flex-shrink-0">{event.icon}</span>
-                </div>
+                <h4 className="font-bold text-neutral-900 group-hover:text-primary-600 transition-colors line-clamp-1 mb-1">
+                  {event.name}
+                </h4>
                 <p className="text-sm text-neutral-600 line-clamp-2">{event.description}</p>
               </div>
             </div>

@@ -1,9 +1,6 @@
 import { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
-import { Button } from '@/components/ui/Button';
 import { LoadingSpinner } from '@/components/shared/LoadingSpinner';
-import { Badge } from '@/components/ui/Badge';
-import { Bed, Users } from 'lucide-react';
+import { EmptyState } from '@/components/shared/EmptyState';
 import type { LiteAPIRate } from '@/lib/liteapi/types';
 import { formatCurrency, calculateNights } from '@/lib/utils';
 
@@ -92,85 +89,130 @@ export function RoomSelector({
 
   if (error) {
     return (
-      <div className="text-center py-8">
-        <p className="text-red-600">{error}</p>
-      </div>
+      <EmptyState
+        title="Unable to Load Rooms"
+        description={error}
+        icon={
+          <svg className="w-8 h-8 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+        }
+      />
     );
   }
 
   if (rooms.length === 0) {
     return (
-      <div className="text-center py-8">
-        <p className="text-gray-600">No rooms available for the selected dates.</p>
-      </div>
+      <EmptyState
+        title="No Rooms Available"
+        description="There are no available rooms for the selected dates. Try different dates or check back later."
+        action={{
+          label: "Search Other Hotels",
+          href: "/search"
+        }}
+      />
     );
   }
 
   return (
     <div className="space-y-4">
-      <h3 className="text-xl font-semibold mb-4">Available Rooms</h3>
+      <h3 className="text-2xl font-bold text-neutral-900 mb-6">Select Your Room</h3>
       {rooms.map((rate) => {
         const price = rate.total?.amount || rate.net?.amount || 0;
         const currency = rate.total?.currency || rate.net?.currency || 'USD';
         const pricePerNight = nights > 0 ? price / nights : price;
+        const isRefundable = rate.cancellation_policies?.some(p => p.type === 'FREE_CANCELLATION');
 
         return (
-          <Card key={rate.rate_id} className="hover:shadow-md transition-shadow">
-            <CardHeader>
-              <div className="flex items-start justify-between">
-                <div className="flex-1">
-                  <CardTitle className="text-lg">{rate.room_name}</CardTitle>
-                  {rate.room_description && (
-                    <p className="text-sm text-gray-600 mt-1">{rate.room_description}</p>
-                  )}
-                </div>
-                <div className="text-right ml-4">
-                  <p className="text-2xl font-bold">{formatCurrency(price, currency)}</p>
-                  <p className="text-sm text-gray-600">
-                    {formatCurrency(pricePerNight, currency)} per night
-                  </p>
-                </div>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="flex flex-wrap gap-2 mb-4">
-                {rate.bed_types && rate.bed_types.length > 0 && (
-                  <Badge variant="outline">
-                    <Bed className="h-3 w-3 mr-1" />
-                    {rate.bed_types.map(b => `${b.count || 1} ${b.type || 'bed'}`).join(', ')}
-                  </Badge>
-                )}
-                {rate.max_occupancy && (
-                  <Badge variant="outline">
-                    <Users className="h-3 w-3 mr-1" />
-                    Up to {rate.max_occupancy} guests
-                  </Badge>
-                )}
-              </div>
-              {rate.cancellation_policies && rate.cancellation_policies.length > 0 && (
+          <div 
+            key={rate.rate_id} 
+            className="group bg-white rounded-2xl border border-neutral-200 shadow-card hover:shadow-card-hover transition-all duration-300 overflow-hidden"
+          >
+            <div className="flex flex-col lg:flex-row">
+              {/* Left: Room Info */}
+              <div className="flex-1 p-6">
+                {/* Room Name & Board Type */}
                 <div className="mb-4">
-                  <p className="text-sm text-gray-600">
-                    {rate.cancellation_policies[0].type === 'FREE_CANCELLATION'
-                      ? 'Free cancellation available'
-                      : rate.cancellation_policies[0].type === 'NON_REFUNDABLE'
-                      ? 'Non-refundable'
-                      : 'Cancellation policy applies'}
-                  </p>
-                  {rate.cancellation_policies[0].description && (
-                    <p className="text-xs text-gray-500 mt-1">
-                      {rate.cancellation_policies[0].description}
-                    </p>
+                  <h4 className="text-lg lg:text-xl font-bold text-neutral-900 mb-2">
+                    {rate.room_name}
+                  </h4>
+                  {rate.board_type && (
+                    <span className="inline-block px-3 py-1 bg-primary-50 text-primary-700 text-sm font-medium rounded-lg">
+                      {rate.board_type}
+                    </span>
                   )}
                 </div>
-              )}
-              <Button
-                onClick={() => onRoomSelect(rate.rate_id, rate)}
-                className="w-full"
-              >
-                Select Room
-              </Button>
-            </CardContent>
-          </Card>
+
+                {/* Bed Types */}
+                {rate.bed_types && rate.bed_types.length > 0 && (
+                  <div className="flex items-center gap-2 text-neutral-700 mb-3">
+                    <svg className="w-5 h-5 text-neutral-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                    </svg>
+                    <span className="text-sm font-medium">
+                      {rate.bed_types.map(b => `${b.count || 1} ${b.type || 'bed'}`).join(', ')}
+                    </span>
+                  </div>
+                )}
+
+                {/* Max Occupancy */}
+                {rate.max_occupancy && (
+                  <div className="flex items-center gap-2 text-neutral-700 mb-4">
+                    <svg className="w-5 h-5 text-neutral-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                    </svg>
+                    <span className="text-sm font-medium">Up to {rate.max_occupancy} guests</span>
+                  </div>
+                )}
+
+                {/* Cancellation Policy Badges */}
+                <div className="flex flex-wrap gap-2">
+                  {isRefundable ? (
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-green-50 text-green-700 text-sm font-semibold rounded-lg">
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                      Free Cancellation
+                    </span>
+                  ) : (
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-amber-50 text-amber-700 text-sm font-semibold rounded-lg">
+                      Non-Refundable
+                    </span>
+                  )}
+                </div>
+
+                {/* Cancellation Description */}
+                {rate.cancellation_policies?.[0]?.description && (
+                  <p className="text-sm text-neutral-600 mt-3 leading-relaxed">
+                    {rate.cancellation_policies[0].description}
+                  </p>
+                )}
+              </div>
+
+              {/* Right: Pricing & CTA */}
+              <div className="lg:w-72 bg-neutral-50 p-6 flex flex-col justify-between border-t lg:border-t-0 lg:border-l border-neutral-200">
+                <div className="mb-4">
+                  <div className="text-sm text-neutral-600 mb-1">Total for {nights} {nights === 1 ? 'night' : 'nights'}</div>
+                  <div className="text-3xl lg:text-4xl font-bold text-primary-600 mb-2">
+                    {formatCurrency(price, currency)}
+                  </div>
+                  <div className="text-sm text-neutral-600">
+                    {formatCurrency(pricePerNight, currency)} per night
+                  </div>
+                </div>
+
+                <button
+                  onClick={() => onRoomSelect(rate.rate_id, rate)}
+                  className="w-full bg-primary-600 text-white px-6 py-4 rounded-xl font-bold text-lg shadow-card hover:shadow-card-hover hover:bg-primary-700 transition-all duration-300 flex items-center justify-center gap-2"
+                >
+                  Select Room
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
         );
       })}
     </div>

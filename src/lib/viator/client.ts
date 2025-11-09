@@ -6,13 +6,16 @@
 
 import { VIATOR_CONFIG } from './config';
 import type {
-  ViatorSearchParams,
+  ViatorSearchRequestBody,
   ViatorSearchResponse,
-  ViatorProductDetailsResponse,
   ViatorDestinationsResponse,
+  ViatorTagsResponse,
   ViatorErrorResponse,
   ViatorProduct,
+  ViatorProductSummary,
   ViatorDestination,
+  ViatorTag,
+  ViatorDuration,
 } from './types';
 
 class ViatorAPIError extends Error {
@@ -28,6 +31,7 @@ class ViatorAPIError extends Error {
 
 /**
  * Make authenticated request to Viator API
+ * All requests require exp-api-key header per docs
  */
 async function viatorRequest<T>(
   endpoint: string,
@@ -36,9 +40,10 @@ async function viatorRequest<T>(
   const url = `${VIATOR_CONFIG.baseUrl}${endpoint}`;
   
   const headers = {
-    'Accept': 'application/json',
-    'Content-Type': 'application/json',
     'exp-api-key': VIATOR_CONFIG.apiKey,
+    'Accept': 'application/json;version=2.0',
+    'Accept-Language': 'en-US',
+    'Content-Type': 'application/json;version=2.0',
     ...options.headers,
   };
 
@@ -56,10 +61,9 @@ async function viatorRequest<T>(
       
       try {
         const errorData: ViatorErrorResponse = await response.json();
-        errorMessage = errorData.error?.message || errorMessage;
-        errorCode = errorData.error?.code;
+        errorMessage = errorData.message || errorMessage;
+        errorCode = errorData.code;
       } catch {
-        // If error response is not JSON, use status text
         errorMessage = response.statusText || errorMessage;
       }
       
@@ -78,54 +82,96 @@ async function viatorRequest<T>(
 }
 
 /**
+ * Format duration object to display string
+ */
+export function formatDuration(duration: ViatorDuration): string {
+  if (duration.fixedDurationInMinutes) {
+    const hours = Math.floor(duration.fixedDurationInMinutes / 60);
+    const mins = duration.fixedDurationInMinutes % 60;
+    if (hours > 0 && mins > 0) return `${hours}h ${mins}m`;
+    if (hours > 0) return `${hours} hour${hours > 1 ? 's' : ''}`;
+    return `${mins} min`;
+  }
+  
+  if (duration.variableDurationFromMinutes && duration.variableDurationToMinutes) {
+    const fromHours = Math.floor(duration.variableDurationFromMinutes / 60);
+    const toHours = Math.floor(duration.variableDurationToMinutes / 60);
+    if (fromHours === toHours) {
+      return `${fromHours} hour${fromHours > 1 ? 's' : ''}`;
+    }
+    return `${fromHours}-${toHours} hours`;
+  }
+  
+  return 'Duration varies';
+}
+
+/**
+ * Format price from pricing object
+ */
+export function formatPrice(pricing: { summary: { fromPrice: number }; currency: string }): string {
+  const { fromPrice } = pricing.summary;
+  const { currency } = pricing;
+  
+  const formatted = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency,
+    minimumFractionDigits: fromPrice % 1 === 0 ? 0 : 2,
+    maximumFractionDigits: 2,
+  }).format(fromPrice);
+  
+  return formatted;
+}
+
+/**
  * Search for products/activities
- * GET /products/search
+ * POST /products/search (per Basic Access documentation)
  */
 export async function searchProducts(
-  params: ViatorSearchParams = {}
+  requestBody: Partial<ViatorSearchRequestBody>
 ): Promise<ViatorSearchResponse> {
-  const queryParams = new URLSearchParams();
+  const endpoint = '/products/search';
   
-  // Add search parameters
-  if (params.destId) queryParams.append('destId', params.destId.toString());
-  if (params.searchTerm) queryParams.append('searchTerm', params.searchTerm);
-  if (params.topX) queryParams.append('topX', params.topX);
-  if (params.startDate) queryParams.append('startDate', params.startDate);
-  if (params.endDate) queryParams.append('endDate', params.endDate);
-  if (params.tags) queryParams.append('tags', params.tags);
-  if (params.sortOrder) queryParams.append('sortOrder', params.sortOrder);
+  // Build request body per API spec
+  const body: ViatorSearchRequestBody = {
+    currency: requestBody.currency || VIATOR_CONFIG.defaults.currency,
+    filtering: {
+      destination: VIATOR_CONFIG.telluride.destinationId,
+      ...requestBody.filtering,
+    },
+    pagination: requestBody.pagination || {
+      start: 0,
+      count: VIATOR_CONFIG.defaults.pageSize,
+    },
+  };
   
-  // Default parameters
-  queryParams.append('currencyCode', params.currencyCode || VIATOR_CONFIG.defaults.currencyCode);
-  queryParams.append('page', (params.page || 1).toString());
-  queryParams.append('pageSize', (params.pageSize || VIATOR_CONFIG.defaults.pageSize).toString());
-
-  const endpoint = `/products/search?${queryParams.toString()}`;
+  // Add sorting if provided
+  if (requestBody.sorting) {
+    body.sorting = requestBody.sorting;
+  }
   
   try {
-    const response = await viatorRequest<{ data: ViatorProduct[]; totalCount: number }>(endpoint);
+    const response = await viatorRequest<ViatorSearchResponse>(endpoint, {
+      method: 'POST',
+      body: JSON.stringify(body),
+    });
     
     return {
-      products: response.data || [],
+      products: response.products || [],
       totalCount: response.totalCount || 0,
-      page: params.page || 1,
-      pageSize: params.pageSize || VIATOR_CONFIG.defaults.pageSize,
     };
   } catch (error) {
     console.error('[Viator] Product search failed:', error);
-    // Return empty results on error to prevent page breakage
     return {
       products: [],
       totalCount: 0,
-      page: params.page || 1,
-      pageSize: params.pageSize || VIATOR_CONFIG.defaults.pageSize,
     };
   }
 }
 
 /**
  * Get product details
- * GET /products/{productCode}
+ * GET /products/{product-code}
+ * Returns product object directly (not wrapped in data)
  */
 export async function getProductDetails(
   productCode: string,
@@ -134,8 +180,8 @@ export async function getProductDetails(
   const endpoint = `/products/${productCode}?currencyCode=${currencyCode}`;
   
   try {
-    const response = await viatorRequest<{ data: ViatorProduct }>(endpoint);
-    return response.data || null;
+    const product = await viatorRequest<ViatorProduct>(endpoint);
+    return product;
   } catch (error) {
     console.error(`[Viator] Failed to get product details for ${productCode}:`, error);
     return null;
@@ -144,14 +190,15 @@ export async function getProductDetails(
 
 /**
  * Get all destinations
- * GET /v1/taxonomy/destinations
+ * GET /destinations
+ * Returns { destinations[], totalCount }
  */
 export async function getDestinations(): Promise<ViatorDestination[]> {
-  const endpoint = '/v1/taxonomy/destinations';
+  const endpoint = '/destinations';
   
   try {
-    const response = await viatorRequest<{ data: ViatorDestination[] }>(endpoint);
-    return response.data || [];
+    const response = await viatorRequest<ViatorDestinationsResponse>(endpoint);
+    return response.destinations || [];
   } catch (error) {
     console.error('[Viator] Failed to get destinations:', error);
     return [];
@@ -160,35 +207,31 @@ export async function getDestinations(): Promise<ViatorDestination[]> {
 
 /**
  * Find Telluride destination ID
+ * Returns cached ID from config, validates against API if needed
  */
-export async function getTellurideDestinationId(): Promise<number | null> {
+export async function getTellurideDestinationId(): Promise<string | null> {
   try {
-    const destinations = await getDestinations();
-    
-    // Search for Telluride in destinations
-    const telluride = destinations.find(d => 
-      d.destinationName.toLowerCase().includes('telluride')
-    );
-    
-    if (telluride) {
-      console.log('[Viator] Found Telluride destination:', telluride);
-      return telluride.destinationId;
-    }
-    
-    // If not found, search for Colorado destinations
-    const colorado = destinations.find(d => 
-      d.destinationName.toLowerCase().includes('colorado')
-    );
-    
-    if (colorado) {
-      console.log('[Viator] Using Colorado destination as fallback:', colorado);
-      return colorado.destinationId;
-    }
-    
-    return null;
+    // Use cached destination ID from config (26378)
+    return VIATOR_CONFIG.telluride.destinationId;
   } catch (error) {
-    console.error('[Viator] Failed to find Telluride destination:', error);
+    console.error('[Viator] Failed to get Telluride destination:', error);
     return null;
+  }
+}
+
+/**
+ * Get all product tags with localized names
+ * GET /products/tags
+ */
+export async function getProductTags(): Promise<ViatorTag[]> {
+  const endpoint = '/products/tags';
+  
+  try {
+    const response = await viatorRequest<ViatorTagsResponse>(endpoint);
+    return response.tags || [];
+  } catch (error) {
+    console.error('[Viator] Failed to get product tags:', error);
+    return [];
   }
 }
 
@@ -196,25 +239,45 @@ export async function getTellurideDestinationId(): Promise<number | null> {
  * Search for Telluride activities
  */
 export async function searchTellurideActivities(
-  params: Omit<ViatorSearchParams, 'destId'> = {}
+  options: {
+    text?: string;
+    tags?: number[];
+    flags?: string[];
+    sorting?: ViatorSearchRequestBody['sorting'];
+    pagination?: ViatorSearchRequestBody['pagination'];
+    priceRange?: { min?: number; max?: number };
+    dateRange?: { start?: string; end?: string };
+  } = {}
 ): Promise<ViatorSearchResponse> {
-  // First try with destination search
-  const searchTerm = params.searchTerm || 'Telluride Colorado';
+  const requestBody: Partial<ViatorSearchRequestBody> = {
+    filtering: {
+      text: options.text,
+      tags: options.tags,
+      flags: options.flags,
+      lowestPrice: options.priceRange?.min,
+      highestPrice: options.priceRange?.max,
+      startDate: options.dateRange?.start,
+      endDate: options.dateRange?.end,
+    },
+    sorting: options.sorting,
+    pagination: options.pagination,
+  };
   
-  return searchProducts({
-    ...params,
-    searchTerm,
-    sortOrder: params.sortOrder || 'TOP_SELLERS',
-  });
+  return searchProducts(requestBody);
 }
 
 /**
  * Get featured activities for homepage
  */
-export async function getFeaturedActivities(limit: number = 6): Promise<ViatorProduct[]> {
+export async function getFeaturedActivities(limit: number = 6): Promise<ViatorProductSummary[]> {
   const response = await searchTellurideActivities({
-    pageSize: limit,
-    sortOrder: 'TOP_SELLERS',
+    pagination: {
+      start: 0,
+      count: limit,
+    },
+    sorting: {
+      sort: 'DEFAULT',
+    },
   });
   
   return response.products.slice(0, limit);
@@ -223,15 +286,8 @@ export async function getFeaturedActivities(limit: number = 6): Promise<ViatorPr
 /**
  * Build Viator booking URL with affiliate tracking
  */
-export function buildViatorBookingUrl(product: ViatorProduct): string {
+export function buildViatorBookingUrl(product: ViatorProductSummary | ViatorProduct): string {
   // Use productUrl from API response which includes affiliate tracking
-  if (product.productUrl) {
-    return product.productUrl;
-  }
-  
-  // Fallback: construct URL
-  const baseUrl = 'https://www.viator.com';
-  const urlName = product.productUrlName || product.productCode;
-  return `${baseUrl}/tours/${urlName}/${product.productCode}`;
+  return product.productUrl;
 }
 

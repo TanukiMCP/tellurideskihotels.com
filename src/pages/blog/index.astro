@@ -36,13 +36,13 @@ const categories = [
   title="Telluride Ski Hotels Blog - Travel Guides & Tips"
   description="Expert guides on Telluride hotels, skiing, activities, and travel planning. Find the best places to stay and things to do in Telluride, Colorado."
 >
-  <div class="bg-gradient-to-b from-blue-50 to-white py-12">
+  <div class="bg-gradient-to-b from-primary-50 via-white to-white py-16 lg:py-24">
     <Container>
       <div class="text-center">
-        <h1 class="mb-4 text-4xl font-bold text-gray-900 lg:text-5xl">
+        <h1 class="mb-4 text-4xl font-bold text-neutral-900 lg:text-5xl lg:text-6xl">
           Telluride Travel Blog
         </h1>
-        <p class="mx-auto max-w-2xl text-xl text-gray-600">
+        <p class="mx-auto max-w-2xl text-lg lg:text-xl text-neutral-600 leading-relaxed">
           Expert guides, insider tips, and comprehensive reviews to help you plan the perfect Telluride ski vacation.
         </p>
       </div>
@@ -50,13 +50,13 @@ const categories = [
   </div>
 
   <Container>
-    <div class="py-12">
-      <!-- Category Filter -->
-      <div class="mb-8 flex flex-wrap gap-3">
+    <div class="py-12 lg:py-16">
+      <!-- Category Filter -->}
+      <div class="mb-12 flex flex-wrap gap-3 justify-center">
         {categories.map(category => (
           <a
-            href={category.slug === 'all' ? '/blog' : `/blog/${category.slug}`}
-            class="rounded-full border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:border-blue-500 hover:bg-blue-50 hover:text-blue-700"
+            href={category.slug === 'all' ? '/blog' : `/blog/category/${category.slug}`}
+            class="rounded-xl border border-neutral-200 bg-white px-5 py-2.5 text-sm font-semibold text-neutral-700 shadow-card hover:shadow-card-hover hover:border-primary-300 hover:bg-primary-50 hover:text-primary-700 transition-all duration-300"
           >
             {category.name}
           </a>
@@ -65,15 +65,15 @@ const categories = [
 
       <!-- Featured Article -->
       {featuredArticle && (
-        <div class="mb-12">
-          <h2 class="mb-6 text-2xl font-bold text-gray-900">Featured Article</h2>
+        <div class="mb-16">
+          <h2 class="mb-8 text-3xl font-bold text-neutral-900">Featured Article</h2>
           <BlogCard client:load article={featuredArticle} featured={true} />
         </div>
       )}
 
       <!-- All Articles Grid -->
       <div class="mb-8">
-        <h2 class="mb-6 text-2xl font-bold text-gray-900">Latest Articles</h2>
+        <h2 class="mb-8 text-3xl font-bold text-neutral-900">Latest Articles</h2>
         <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {regularArticles.map(article => (
             <BlogCard client:load article={article} />
@@ -83,8 +83,14 @@ const categories = [
 
       <!-- Empty State -->
       {sortedArticles.length === 0 && (
-        <div class="py-12 text-center">
-          <p class="text-gray-600">No articles published yet. Check back soon!</p>
+        <div class="py-20 text-center">
+          <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-neutral-100 mb-4">
+            <svg className="w-8 h-8 text-neutral-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+            </svg>
+          </div>
+          <h3 class="text-2xl font-bold text-neutral-900 mb-2">No Articles Yet</h3>
+          <p class="text-neutral-600">Check back soon for expert Telluride travel guides!</p>
         </div>
       )}
     </div>

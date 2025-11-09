@@ -4,20 +4,20 @@
  */
 
 import { useEffect, useState } from 'react';
-import type { ViatorProduct } from '@/lib/viator/types';
+import type { ViatorProductSummary } from '@/lib/viator/types';
 import { ActivityCard } from './ActivityCard';
 import { LoadingSpinner } from '@/components/shared/LoadingSpinner';
 
 interface FeaturedActivitiesProps {
   limit?: number;
-  initialActivities?: ViatorProduct[];
+  initialActivities?: ViatorProductSummary[];
 }
 
 export function FeaturedActivities({ 
   limit = 6,
   initialActivities = []
 }: FeaturedActivitiesProps) {
-  const [activities, setActivities] = useState<ViatorProduct[]>(initialActivities);
+  const [activities, setActivities] = useState<ViatorProductSummary[]>(initialActivities);
   const [loading, setLoading] = useState(initialActivities.length === 0);
   const [error, setError] = useState<string | null>(null);
 
