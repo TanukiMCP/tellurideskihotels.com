@@ -22,15 +22,6 @@ const {
 <!doctype html>
 <html lang="en">
   <head>
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-6ZGTV4ZPZK"></script>
-    <script is:inline>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-6ZGTV4ZPZK');
-    </script>
-    
     <SEOHead
       title={title}
       description={description}
@@ -38,6 +29,29 @@ const {
       noindex={noindex}
     />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <!-- Preconnect to external domains -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://www.googletagmanager.com">
+    <link rel="dns-prefetch" href="https://images.pexels.com">
+    
+    <!-- Google Analytics - Deferred to not block rendering -->
+    <script is:inline>
+      window.addEventListener('load', function() {
+        var script = document.createElement('script');
+        script.async = true;
+        script.src = 'https://www.googletagmanager.com/gtag/js?id=G-6ZGTV4ZPZK';
+        document.head.appendChild(script);
+        
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-6ZGTV4ZPZK', {
+          page_path: window.location.pathname,
+        });
+      });
+    </script>
   </head>
   <body class="min-h-screen flex flex-col">
     <Header />

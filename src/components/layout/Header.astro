@@ -7,11 +7,17 @@ import Container from './Container.astro';
   <Container>
     <div class="flex items-center justify-between h-20">
       <a href="/" class="flex items-center gap-3 group">
-        <img 
-          src="/favicon-icon.png" 
-          alt="Telluride Ski Hotels Icon" 
-          class="h-12 w-auto transition-all duration-300 group-hover:scale-105"
-        />
+        <picture>
+          <source srcset="/favicon-icon-small.webp" type="image/webp">
+          <img 
+            src="/favicon-icon.png" 
+            alt="Telluride Ski Hotels Icon" 
+            class="h-12 w-auto transition-all duration-300 group-hover:scale-105"
+            width="48"
+            height="48"
+            loading="eager"
+          />
+        </picture>
         <div class="flex flex-col gap-0.5">
           <span class="text-xl font-bold text-neutral-900 tracking-tight leading-none">TELLURIDESKI</span>
           <span class="text-xl font-bold text-neutral-900 tracking-tight leading-none">HOTELS.COM</span>
@@ -91,14 +97,13 @@ import Container from './Container.astro';
 </header>
 
 <script is:inline>
-  if (typeof window !== 'undefined') {
-    // Alpine.js will be loaded from CDN if needed
-    import('https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js')
-      .then(() => {
-        console.log('Alpine.js loaded');
-      })
-      .catch(() => {
-        // Fallback: already loaded or not needed
-      });
-  }
+  // Defer Alpine.js loading until after page load to not block rendering
+  window.addEventListener('load', function() {
+    if (typeof window.Alpine === 'undefined') {
+      var script = document.createElement('script');
+      script.defer = true;
+      script.src = 'https://unpkg.com/alpinejs@3.14.1/dist/cdn.min.js';
+      document.head.appendChild(script);
+    }
+  });
 </script>

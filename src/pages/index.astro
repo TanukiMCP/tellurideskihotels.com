@@ -17,8 +17,11 @@ import { SITE_DESCRIPTION } from '@/lib/constants';
 import { getHomepageHeroImage } from '@/lib/image-library';
 import { searchHotels } from '@/lib/liteapi/hotels';
 import { getTellurideSkiConditions } from '@/lib/snocountry/client';
+import { optimizePexelsImage, generateSrcSet } from '@/lib/image-optimizer';
 
 const heroImage = getHomepageHeroImage();
+const optimizedHeroUrl = heroImage ? optimizePexelsImage(heroImage.url, { width: 1920, quality: 85 }) : null;
+const heroSrcSet = heroImage ? generateSrcSet(heroImage.url, [640, 768, 1024, 1280, 1536, 1920]) : null;
 
 // Fetch featured hotels server-side (has access to API key)
 import type { LiteAPIHotel } from '@/lib/liteapi/types';
@@ -30,80 +33,59 @@ let minPrices: Record<string, number> = {};
 let featuredCheckInDate: string | undefined;
 let skiConditions = null;
 
+// PERFORMANCE OPTIMIZATION: Parallel fetches with timeout and caching
+// Move expensive API calls to client-side or use static data
 try {
-  // OPTIMIZATION: Only fetch what we need for initial page load
-  // Get limited hotels for the map (50 is plenty for visual display)
-  const hotelData = await searchHotels({
-    cityName: 'Telluride',
-    countryCode: 'US',
-    limit: 50, // Reduced from 500 - map doesn't need all hotels
-  });
-  
-  allHotels = hotelData.data || [];
-  
-  // For featured section, get hotels WITH availability and rates
-  // Use realistic upcoming dates: 7 days from now for 7-night stay
-  const now = new Date();
-  const checkIn = format(addDays(now, 7), 'yyyy-MM-dd');
-  const checkOut = format(addDays(now, 14), 'yyyy-MM-dd');
-  featuredCheckInDate = checkIn;
-  
-  console.log('[Homepage] Searching for hotels with availability:', { checkIn, checkOut });
-  
-  try {
-    const { searchHotelsWithRates } = await import('@/lib/liteapi/rates');
-    const availableHotels = await searchHotelsWithRates({
-      cityName: 'Telluride',
-      countryCode: 'US',
-      checkIn,
-      checkOut,
-      adults: 2,
-      limit: 20, // Reduced from 500 - we only show 6, so 20 gives us buffer
-    });
+  // Use Promise.allSettled to fetch in parallel with timeouts
+  const fetchWithTimeout = (promise: Promise<any>, ms: number) => {
+    return Promise.race([
+      promise,
+      new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout')), ms))
+    ]);
+  };
+
+  const [hotelsResult, skiResult] = await Promise.allSettled([
+    // Fetch basic hotels list (no rates) - fast
+    fetchWithTimeout(
+      searchHotels({
+        cityName: 'Telluride',
+        countryCode: 'US',
+        limit: 30, // Further reduced for speed
+      }),
+      3000 // 3 second timeout
+    ),
+    // Fetch ski conditions in parallel
+    fetchWithTimeout(getTellurideSkiConditions(), 2000)
+  ]);
+
+  // Process hotels result
+  if (hotelsResult.status === 'fulfilled') {
+    allHotels = hotelsResult.value.data || [];
     
-    // Get top 6 hotels by review score from those with availability
-    // Very low threshold to show more hotels - prioritize availability
-    featuredHotelsData = availableHotels.hotels
-      .filter(h => h.review_score && h.review_score >= 7.0) // Just need decent rating
-      .sort((a, b) => (b.review_score || 0) - (a.review_score || 0))
-      .slice(0, 6);
-    
-    // If still not enough hotels, add more without strict review count requirement
-    if (featuredHotelsData.length < 6) {
-      const additionalHotels = availableHotels.hotels
-        .filter(h => !featuredHotelsData.find(fh => fh.hotel_id === h.hotel_id))
-        .filter(h => h.review_score && h.review_score >= 6.5)
-        .sort((a, b) => (b.review_score || 0) - (a.review_score || 0))
-        .slice(0, 6 - featuredHotelsData.length);
-      featuredHotelsData = [...featuredHotelsData, ...additionalHotels];
-    }
-    
-    minPrices = availableHotels.minPrices;
-    
-    console.log('[Homepage] Featured hotels with availability:', {
-      totalAvailable: availableHotels.hotels.length,
-      featured: featuredHotelsData.length,
-      withPrices: Object.keys(minPrices).length,
-    });
-  } catch (error) {
-    console.error('[Homepage] Error fetching hotels with availability:', error);
-    // Fallback to showing top-rated hotels without availability check
+    // Show top-rated hotels WITHOUT rates for fast initial render
+    // Rates will be fetched client-side
     featuredHotelsData = allHotels
-      .filter(h => h.review_score && h.review_count && h.review_count > 5)
+      .filter(h => h.review_score && h.review_score >= 7.5)
       .sort((a, b) => (b.review_score || 0) - (a.review_score || 0))
       .slice(0, 6);
-    console.log('[Homepage] Fallback: Showing top-rated hotels without availability');
+    
+    // Set check-in date for client-side rate fetching
+    const now = new Date();
+    featuredCheckInDate = format(addDays(now, 7), 'yyyy-MM-dd');
+    
+    console.log('[Homepage] Loaded hotels (fast mode):', {
+      total: allHotels.length,
+      featured: featuredHotelsData.length,
+    });
+  }
+
+  // Process ski conditions result
+  if (skiResult.status === 'fulfilled') {
+    skiConditions = skiResult.value;
+    console.log('[Homepage] Loaded ski conditions');
   }
 } catch (error) {
-  console.error('[Homepage] Error fetching featured hotels:', error);
-}
-
-// Fetch ski conditions server-side
-try {
-  skiConditions = await getTellurideSkiConditions();
-  console.log('[Homepage] Loaded ski conditions');
-} catch (error) {
-  console.error('[Homepage] Error fetching ski conditions:', error);
+  console.error('[Homepage] Error in parallel fetch:', error);
 }
 ---
 
@@ -113,13 +95,18 @@ try {
   image={heroImage?.url}
 >
   <!-- Hero Section -->
-  {heroImage && (
+  {heroImage && optimizedHeroUrl && heroSrcSet && (
     <div class="relative h-[600px] lg:h-[700px] overflow-hidden">
       <img 
-        src={heroImage.url} 
+        src={optimizedHeroUrl}
+        srcset={heroSrcSet}
+        sizes="100vw"
         alt="Telluride Ski Resort" 
         class="w-full h-full object-cover animate-fade-in"
+        width="1920"
+        height="700"
         loading="eager"
+        fetchpriority="high"
       />
       <div class="absolute inset-0 gradient-overlay"></div>
       <div class="absolute inset-0 flex items-center">

@@ -21,11 +21,42 @@ export default defineConfig({
     domains: ['images.pexels.com'],
     service: {
       entrypoint: 'astro/assets/services/sharp',
+      config: {
+        limitInputPixels: false,
+      },
     },
   },
   build: {
     inlineStylesheets: 'auto',
+    assets: '_astro',
   },
   compressHTML: true,
+  vite: {
+    build: {
+      cssCodeSplit: true,
+      rollupOptions: {
+        output: {
+          manualChunks: (id) => {
+            // Split vendor chunks for better caching
+            if (id.includes('node_modules')) {
+              if (id.includes('react') || id.includes('react-dom')) {
+                return 'react-vendor';
+              }
+              if (id.includes('mapbox')) {
+                return 'mapbox-vendor';
+              }
+              if (id.includes('lucide-react')) {
+                return 'icons-vendor';
+              }
+              return 'vendor';
+            }
+          },
+        },
+      },
+    },
+    ssr: {
+      noExternal: ['@tremor/react', 'recharts'],
+    },
+  },
 });
 
