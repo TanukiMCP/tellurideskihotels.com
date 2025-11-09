@@ -5,6 +5,7 @@ import PageLayout from '@/components/layout/PageLayout.astro';
 import Container from '@/components/layout/Container.astro';
 import { SkiConditionsWidget } from '@/components/ski/SkiConditionsWidget';
 import { CurrentConditions } from '@/components/weather/CurrentConditions';
+import { WebcamLinks } from '@/components/info/WebcamLinks';
 import { getTellurideSkiConditions } from '@/lib/snocountry/client';
 
 const pageTitle = 'Telluride Mountain Conditions | Live Ski Report & Weather';
@@ -94,15 +95,26 @@ try {
         <SkiConditionsWidget client:load initialConditions={skiConditions} />
       </section>
 
-      <!-- Weather Forecast -->
+      <!-- Weather Forecast & Webcams -->
       <section class="mb-16">
         <div class="text-center mb-10">
-          <h2 class="text-display-sm lg:text-display-md mb-4 text-neutral-900 font-bold">10-Day Weather Forecast</h2>
+          <h2 class="text-display-sm lg:text-display-md mb-4 text-neutral-900 font-bold">Weather & Live Views</h2>
           <p class="text-lg text-neutral-600 max-w-2xl mx-auto">
-            Detailed weather forecast to help you plan your ski days
+            Detailed forecast and live webcam access to plan your perfect ski day
           </p>
         </div>
-        <CurrentConditions client:load />
+        
+        <div class="grid lg:grid-cols-3 gap-8">
+          <!-- Weather Forecast (takes 2 columns) -->
+          <div class="lg:col-span-2">
+            <CurrentConditions client:load />
+          </div>
+
+          <!-- Webcam Links (takes 1 column) -->
+          <div class="lg:col-span-1">
+            <WebcamLinks client:load />
+          </div>
+        </div>
       </section>
 
       <!-- Trail Map Info -->

@@ -11,6 +11,7 @@ import { SkiConditionsWidget } from '@/components/ski/SkiConditionsWidget';
 import { GondolaWidget } from '@/components/info/GondolaWidget';
 import { EventsWidget } from '@/components/info/EventsWidget';
 import { AirQualityWidget } from '@/components/info/AirQualityWidget';
+import { WebcamLinks } from '@/components/info/WebcamLinks';
 import LodgingMap from '@/components/map/LodgingMap';
 import { SITE_DESCRIPTION } from '@/lib/constants';
 import { getHomepageHeroImage } from '@/lib/image-library';
@@ -201,10 +202,18 @@ try {
           <SkiConditionsWidget client:visible initialConditions={skiConditions} />
         </div>
 
-        <!-- Weather Forecast -->
-        <div>
-          <h3 class="text-2xl font-bold text-neutral-900 mb-6 text-center">10-Day Weather Forecast</h3>
-          <CurrentConditions client:visible />
+        <!-- Two Column Layout: Weather + Webcams -->
+        <div class="grid lg:grid-cols-3 gap-8 mb-12">
+          <!-- Weather Forecast (takes 2 columns) -->
+          <div class="lg:col-span-2">
+            <h3 class="text-2xl font-bold text-neutral-900 mb-6">10-Day Weather Forecast</h3>
+            <CurrentConditions client:visible />
+          </div>
+
+          <!-- Webcam Links (takes 1 column) -->
+          <div class="lg:col-span-1">
+            <WebcamLinks client:visible />
+          </div>
         </div>
       </div>
     </Container>
