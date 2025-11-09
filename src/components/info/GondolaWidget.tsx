@@ -8,10 +8,10 @@ export function GondolaWidget() {
   const isOperating = currentHour >= 7 && currentHour < 24;
 
   return (
-    <div className="bg-gradient-to-br from-accent-50 via-white to-accent-50 rounded-2xl p-6 border border-accent-200 shadow-card hover:shadow-card-hover transition-all duration-300">
+    <div className="bg-gradient-to-br from-primary-50 via-white to-primary-50 rounded-2xl p-6 border border-primary-200 shadow-card hover:shadow-card-hover transition-all duration-300">
       {/* Header */}
       <div className="flex items-center gap-3 mb-6">
-        <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-accent-500 to-accent-600 flex items-center justify-center shadow-card">
+        <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary-500 to-primary-600 flex items-center justify-center shadow-card">
           <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
           </svg>
@@ -30,16 +30,16 @@ export function GondolaWidget() {
 
       {/* Quick Stats */}
       <div className="grid grid-cols-3 gap-4 mb-6">
-        <div className="text-center p-4 bg-white rounded-xl border border-accent-100 shadow-sm">
-          <div className="text-2xl font-bold text-accent-600 mb-1">FREE</div>
+        <div className="text-center p-4 bg-white rounded-xl border border-primary-100 shadow-sm">
+          <div className="text-2xl font-bold text-primary-600 mb-1">FREE</div>
           <div className="text-xs text-neutral-600 font-medium">No Ticket</div>
         </div>
-        <div className="text-center p-4 bg-white rounded-xl border border-accent-100 shadow-sm">
-          <div className="text-2xl font-bold text-accent-600 mb-1">13min</div>
+        <div className="text-center p-4 bg-white rounded-xl border border-primary-100 shadow-sm">
+          <div className="text-2xl font-bold text-primary-600 mb-1">13min</div>
           <div className="text-xs text-neutral-600 font-medium">Ride Time</div>
         </div>
-        <div className="text-center p-4 bg-white rounded-xl border border-accent-100 shadow-sm">
-          <div className="text-2xl font-bold text-accent-600 mb-1">24/7</div>
+        <div className="text-center p-4 bg-white rounded-xl border border-primary-100 shadow-sm">
+          <div className="text-2xl font-bold text-primary-600 mb-1">24/7</div>
           <div className="text-xs text-neutral-600 font-medium">Year-Round</div>
         </div>
       </div>
@@ -48,12 +48,12 @@ export function GondolaWidget() {
       <div className="space-y-3 mb-6">
         <div className="flex items-center justify-between p-3 bg-white rounded-xl border border-neutral-100">
           <div className="flex items-center gap-2">
-            <svg className="w-5 h-5 text-accent-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-5 h-5 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
             <span className="font-semibold text-neutral-900">Operating Hours</span>
           </div>
-          <span className="text-sm font-bold text-accent-600">7:00 AM - 12:00 AM</span>
+          <span className="text-sm font-bold text-primary-600">7:00 AM - 12:00 AM</span>
         </div>
 
         <div className="flex items-center justify-between p-3 bg-white rounded-xl border border-neutral-100">
@@ -111,7 +111,7 @@ export function GondolaWidget() {
         href="https://www.telluride-co.gov/gondola"
         target="_blank"
         rel="noopener noreferrer"
-        className="block w-full text-center bg-accent-600 text-white px-6 py-3 rounded-xl font-semibold hover:bg-accent-700 transition-colors shadow-card hover:shadow-card-hover"
+        className="block w-full text-center bg-primary-600 text-white px-6 py-3 rounded-xl font-semibold hover:bg-primary-700 transition-colors shadow-card hover:shadow-card-hover"
       >
         View Gondola Schedule
       </a>

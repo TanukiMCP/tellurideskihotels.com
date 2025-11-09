@@ -62,8 +62,9 @@ try {
     });
     
     // Get top 6 hotels by review score from those with availability
+    // Lower threshold to show more hotels (many hotels have < 20 reviews)
     featuredHotelsData = availableHotels.hotels
-      .filter(h => h.review_score && h.review_count && h.review_count > 20)
+      .filter(h => h.review_score && h.review_count && h.review_count > 5)
       .sort((a, b) => (b.review_score || 0) - (a.review_score || 0))
       .slice(0, 6);
     
@@ -78,7 +79,7 @@ try {
     console.error('[Homepage] Error fetching hotels with availability:', error);
     // Fallback to showing top-rated hotels without availability check
     featuredHotelsData = allHotels
-      .filter(h => h.review_score && h.review_count && h.review_count > 50)
+      .filter(h => h.review_score && h.review_count && h.review_count > 5)
       .sort((a, b) => (b.review_score || 0) - (a.review_score || 0))
       .slice(0, 6);
     console.log('[Homepage] Fallback: Showing top-rated hotels without availability');
@@ -117,10 +118,10 @@ try {
             <!-- Hero Content -->
             <div class="text-center text-white mb-16 lg:mb-20 animate-slide-up px-4">
               <h1 class="text-display-md lg:text-display-lg mb-6 drop-shadow-2xl font-extrabold">
-            Find Your Perfect Ski Hotel in Telluride
+            Book Your Perfect Telluride Ski Hotel
           </h1>
               <p class="text-xl lg:text-2xl mb-8 text-white/90 font-medium leading-relaxed max-w-3xl mx-auto">
-                Search and compare 100+ hotels • Real-time availability • Instant confirmation
+                Compare 100+ hotels • Best rates guaranteed • Instant confirmation
           </p>
         </div>
             
@@ -137,9 +138,9 @@ try {
   <!-- Trust Strip -->
   <div class="bg-neutral-50 border-y border-neutral-200 py-8">
     <Container>
-      <div class="flex flex-wrap justify-center items-center gap-8 lg:gap-16 text-center">
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8 max-w-5xl mx-auto">
         <div class="flex items-center gap-3">
-          <div class="w-12 h-12 rounded-full bg-primary-100 flex items-center justify-center">
+          <div class="w-12 h-12 rounded-full bg-primary-100 flex items-center justify-center flex-shrink-0">
             <svg class="w-6 h-6 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
             </svg>
@@ -150,8 +151,8 @@ try {
           </div>
         </div>
         <div class="flex items-center gap-3">
-          <div class="w-12 h-12 rounded-full bg-sky-100 flex items-center justify-center">
-            <svg class="w-6 h-6 text-sky-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div class="w-12 h-12 rounded-full bg-primary-100 flex items-center justify-center flex-shrink-0">
+            <svg class="w-6 h-6 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
           </div>
@@ -161,25 +162,25 @@ try {
           </div>
         </div>
         <div class="flex items-center gap-3">
-          <div class="w-12 h-12 rounded-full bg-accent-100 flex items-center justify-center">
-            <svg class="w-6 h-6 text-accent-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+          <div class="w-12 h-12 rounded-full bg-primary-100 flex items-center justify-center flex-shrink-0">
+            <svg class="w-6 h-6 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
           </div>
           <div class="text-left">
-            <div class="text-sm font-semibold text-neutral-900">No Payment Fees</div>
-            <div class="text-xs text-neutral-600">Direct booking</div>
+            <div class="text-sm font-semibold text-neutral-900">Best Price Guarantee</div>
+            <div class="text-xs text-neutral-600">Lowest rates</div>
           </div>
         </div>
         <div class="flex items-center gap-3">
-          <div class="w-12 h-12 rounded-full bg-secondary-100 flex items-center justify-center">
-            <svg class="w-6 h-6 text-secondary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+          <div class="w-12 h-12 rounded-full bg-primary-100 flex items-center justify-center flex-shrink-0">
+            <svg class="w-6 h-6 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z" />
             </svg>
           </div>
           <div class="text-left">
             <div class="text-sm font-semibold text-neutral-900">24/7 Support</div>
-            <div class="text-xs text-neutral-600">Always here to help</div>
+            <div class="text-xs text-neutral-600">Always available</div>
           </div>
         </div>
       </div>
@@ -191,7 +192,7 @@ try {
     <Container>
       <div class="max-w-7xl mx-auto">
         <div class="text-center mb-12">
-          <h2 class="text-display-sm lg:text-display-md mb-4 text-neutral-900 font-bold">Current Mountain Conditions</h2>
+          <h2 class="text-display-sm lg:text-display-md mb-4 text-neutral-900 font-extrabold">Current Mountain Conditions</h2>
           <p class="text-lg text-neutral-600 max-w-2xl mx-auto">
             Live ski conditions, weather forecast, and everything you need to plan your perfect ski day
           </p>
@@ -223,12 +224,12 @@ try {
   <div class="bg-neutral-50 py-16 lg:py-20">
     <Container>
       <div class="text-center mb-10">
-        <h2 class="text-display-sm lg:text-display-md mb-4 text-neutral-900">Explore Telluride Hotels</h2>
+        <h2 class="text-display-sm lg:text-display-md mb-4 text-neutral-900 font-extrabold">Explore Telluride Hotels</h2>
         <p class="text-lg text-neutral-600 max-w-2xl mx-auto">
           Browse all available hotels on the map and find the perfect location for your ski adventure
         </p>
       </div>
-      <div class="h-[400px] lg:h-[500px]">
+      <div class="h-[350px] lg:h-[450px] rounded-xl overflow-hidden shadow-lg">
         <LodgingMap client:visible hotels={allHotels} checkInDate={featuredCheckInDate} />
       </div>
     </Container>
@@ -238,9 +239,9 @@ try {
     <!-- Featured Hotels Section -->
     <section class="mb-32">
       <div class="text-center mb-16">
-        <h2 class="text-display-sm lg:text-display-md mb-4 text-neutral-900 font-bold">Featured Hotels in Telluride</h2>
-        <p class="text-xl text-neutral-600 max-w-2xl mx-auto leading-relaxed font-normal">
-          Discover our handpicked selection of the finest ski hotels. Real-time availability and competitive pricing.
+        <h2 class="text-display-sm lg:text-display-md mb-4 text-neutral-900 font-extrabold">Featured Hotels in Telluride</h2>
+        <p class="text-xl text-neutral-600 max-w-2xl mx-auto leading-relaxed">
+          Top-rated ski hotels with real-time availability and best rates guaranteed
         </p>
       </div>
       <FeaturedHotels client:visible limit={6} initialHotels={featuredHotelsData} minPrices={minPrices} currency="USD" checkInDate={featuredCheckInDate} />
@@ -260,8 +261,8 @@ try {
     <!-- Things to Do Section -->
     <section class="mb-32">
       <div class="text-center mb-16">
-        <h2 class="text-display-sm lg:text-display-md mb-4 text-neutral-900 font-bold">Things to Do in Telluride</h2>
-        <p class="text-xl text-neutral-600 max-w-2xl mx-auto leading-relaxed font-normal">
+        <h2 class="text-display-sm lg:text-display-md mb-4 text-neutral-900 font-extrabold">Things to Do in Telluride</h2>
+        <p class="text-xl text-neutral-600 max-w-2xl mx-auto leading-relaxed">
           Explore unforgettable activities, tours, and experiences. From thrilling adventures to cultural tours.
         </p>
       </div>
@@ -282,8 +283,8 @@ try {
     <!-- Local Information Widgets -->
     <section class="mb-32">
       <div class="text-center mb-16">
-        <h2 class="text-display-sm lg:text-display-md mb-4 text-neutral-900 font-bold">Plan Your Visit</h2>
-        <p class="text-xl text-neutral-600 max-w-2xl mx-auto leading-relaxed font-normal">
+        <h2 class="text-display-sm lg:text-display-md mb-4 text-neutral-900 font-extrabold">Plan Your Visit</h2>
+        <p class="text-xl text-neutral-600 max-w-2xl mx-auto leading-relaxed">
           Everything you need to know about visiting Telluride
         </p>
       </div>
@@ -297,8 +298,8 @@ try {
     <!-- Why Choose Us Section -->
     <section class="mb-32">
       <div class="text-center mb-16">
-        <h2 class="text-display-sm lg:text-display-md mb-4 text-neutral-900 font-bold">Why Book With Us</h2>
-        <p class="text-xl text-neutral-600 max-w-2xl mx-auto leading-relaxed font-normal">
+        <h2 class="text-display-sm lg:text-display-md mb-4 text-neutral-900 font-extrabold">Why Book With Us</h2>
+        <p class="text-xl text-neutral-600 max-w-2xl mx-auto leading-relaxed">
           Everything you need for the perfect ski vacation in one place
         </p>
       </div>
