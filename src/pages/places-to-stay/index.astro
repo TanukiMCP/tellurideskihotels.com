@@ -20,54 +20,66 @@ const adults = parseInt(searchParams.get('adults') || '2', 10);
 let hotels: LiteAPIHotel[] = [];
 let minPrices: Record<string, number> = {};
 let loading = false;
+let hasSearched = false;
 
-// INDUSTRY STANDARD: Dates are REQUIRED for availability search
-// If no dates provided, redirect to homepage where user can select dates
-if (!checkIn || !checkOut) {
-  return Astro.redirect('/?message=Please select check-in and check-out dates');
-}
-
-// INDUSTRY STANDARD: Search for hotels WITH availability for the selected dates
-try {
-  loading = true;
-  
-  console.log('[Places to Stay Page] Searching for hotels WITH availability:', {
-    location,
-    checkIn,
-    checkOut,
-    adults,
-  });
-  
-  // Use the correct function that ONLY returns hotels with actual availability
-  const { searchHotelsWithRates } = await import('@/lib/liteapi/rates');
-  const result = await searchHotelsWithRates({
-    cityName: location,
-    countryCode: DEFAULT_COUNTRY_CODE,
-    checkIn,
-    checkOut,
-    adults,
-    limit: 50, // Reduced from 100 - most users won't scroll past 50 results
-  });
-  
-  hotels = result.hotels || [];
-  minPrices = result.minPrices || {};
-  
-  console.log('[Places to Stay Page] Search complete:', {
-    hotelsFound: hotels.length,
-    hotelsWithPrices: Object.keys(minPrices).length,
-    sampleHotel: hotels[0]?.name,
-    samplePrice: Object.values(minPrices)[0],
-  });
-  
-} catch (error) {
-  console.error('[Places to Stay Page] Error searching hotels:', {
-    error: error instanceof Error ? error.message : 'Unknown error',
-    stack: error instanceof Error ? error.stack : undefined,
-  });
-  hotels = [];
-} finally {
-  loading = false;
-  console.log('[Places to Stay Page] Load complete');
+// Allow browsing without dates - only fetch hotels if dates are provided
+if (checkIn && checkOut) {
+  hasSearched = true;
+  try {
+    loading = true;
+    
+    console.log('[Places to Stay Page] Searching for hotels WITH availability:', {
+      location,
+      checkIn,
+      checkOut,
+      adults,
+    });
+    
+    const { searchHotelsWithRates } = await import('@/lib/liteapi/rates');
+    const result = await searchHotelsWithRates({
+      cityName: location,
+      countryCode: DEFAULT_COUNTRY_CODE,
+      checkIn,
+      checkOut,
+      adults,
+      limit: 50,
+    });
+    
+    hotels = result.hotels || [];
+    minPrices = result.minPrices || {};
+    
+    console.log('[Places to Stay Page] Search complete:', {
+      hotelsFound: hotels.length,
+      hotelsWithPrices: Object.keys(minPrices).length,
+      sampleHotel: hotels[0]?.name,
+      samplePrice: Object.values(minPrices)[0],
+    });
+    
+  } catch (error) {
+    console.error('[Places to Stay Page] Error searching hotels:', {
+      error: error instanceof Error ? error.message : 'Unknown error',
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    hotels = [];
+  } finally {
+    loading = false;
+    console.log('[Places to Stay Page] Load complete');
+  }
+} else {
+  // No dates provided - fetch all hotels for browsing
+  try {
+    console.log('[Places to Stay Page] Browsing all hotels (no dates)');
+    const { searchHotels } = await import('@/lib/liteapi/hotels');
+    hotels = await searchHotels({
+      cityName: location,
+      countryCode: DEFAULT_COUNTRY_CODE,
+      limit: 50,
+    });
+    console.log('[Places to Stay Page] Browse complete:', { hotelsFound: hotels.length });
+  } catch (error) {
+    console.error('[Places to Stay Page] Error fetching hotels:', error);
+    hotels = [];
+  }
 }
 
 const nights = checkIn && checkOut 
@@ -99,6 +111,14 @@ const nights = checkIn && checkOut
         initialGuests={{ adults, children: 0 }}
       />
     </div>
+
+    {!hasSearched && (
+      <div class="mb-8 bg-primary-50 border border-primary-200 rounded-xl p-6 text-center">
+        <p class="text-lg text-neutral-700">
+          Browse all available properties in {location}, or select dates above to see real-time availability and pricing.
+        </p>
+      </div>
+    )}
 
     <div class="mb-6">
       <h2 class="text-2xl font-bold text-neutral-900 mb-2">
