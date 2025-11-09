@@ -32,6 +32,8 @@ Telluride's reputation as an expert skier's mountain intimidates some visitors, 
 
 This complete guide covers skiing at Telluride for all abilities: where to ski, how to progress, lessons worth taking, equipment options, and insider strategies for maximizing your mountain time.
 
+For resort details, see our [Telluride Ski Resort guide](/blog/ski-guides/telluride-ski-resort-guide). For seasonal timing, check our [ski season guide](/blog/ski-guides/telluride-ski-season-guide) and [best time to visit](/blog/planning-tips/best-time-visit-telluride). For lodging, see [where to stay in Telluride](/blog/hotel-reviews/where-to-stay-telluride).
+
 ## Skiing by Ability Level
 
 ### Beginner Skiers (First-Timers to Basic Parallel Turns)
@@ -543,6 +545,8 @@ Weekend crowds (minimal as they are) disappear midweek.
 Telluride skiing rewards skiers who match ability to terrain thoughtfully. Beginners need realistic expectations about limited terrain. Intermediates will find some of Colorado's finest cruising. Advanced and expert skiers discover why Telluride has a cult following—challenging terrain without the lift lines.
 
 Regardless of ability, proper preparation (lessons, equipment, knowledge of mountain layout) dramatically improves your experience. Understanding Telluride's unique character—steep, uncrowded, requiring solid technique—helps you ski the mountain successfully rather than fighting it.
+
+Check current conditions at [Telluride.com snow report](https://www.telluride.com/ski-and-snowboard/snow-report). For winter driving safety, see our [safety guide](/blog/planning-tips/winter-driving-telluride-safety). For comprehensive planning, visit our [complete Telluride guide](/blog/destination-guides/complete-guide-telluride).
 
 [Find your perfect ski-in/ski-out hotel](/lodging) and start planning your Telluride skiing adventure. Whether you're learning on the Meadows, cruising Misty Maiden, or hiking Palmyra Peak, Telluride offers skiing experiences that create lasting memories.
 

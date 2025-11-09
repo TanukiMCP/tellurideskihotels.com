@@ -32,6 +32,8 @@ Telluride Ski Resort spans 2,000 acres across 13,150 vertical feet of the San Ju
 
 This complete guide covers everything you need to know about skiing and snowboarding at Telluride: terrain breakdown, lift system, best runs for every ability level, ticket options, seasonal timing, and insider tips for maximizing your mountain experience.
 
+For detailed skiing techniques and run-by-run breakdowns, see our [Telluride skiing guide](/blog/ski-guides/telluride-skiing-guide). To plan your visit timing, check our [ski season guide](/blog/ski-guides/telluride-ski-season-guide) and [best time to visit](/blog/planning-tips/best-time-visit-telluride). For lodging near the slopes, see our [where to stay guide](/blog/hotel-reviews/where-to-stay-telluride).
+
 ## Telluride Ski Resort At a Glance
 
 **The Numbers:**
@@ -582,6 +584,8 @@ Weekend crowds (such as they are) thin dramatically midweek. You'll lap runs wit
 Telluride Ski Resort rewards skiers who value quality over quantity. While the 2,000 acres can't match Vail's 5,289, the experience of skiing challenging terrain without lift lines creates memories that crowded megasorts can't replicate.
 
 The resort's 41% expert terrain makes this an advanced skier's paradise, though intermediates will find plenty of cruisers. Beginners should consider other resorts unless traveling with advanced skiers who don't mind separating.
+
+Check current conditions and lift status at [Telluride.com](https://www.telluride.com/ski-and-snowboard/snow-report). For winter driving tips, see our [safety guide](/blog/planning-tips/winter-driving-telluride-safety). For complete destination planning, visit our [ultimate Telluride guide](/blog/destination-guides/complete-guide-telluride).
 
 [Find your perfect ski-in/ski-out hotel](/lodging) and experience what makes Telluride special: legitimate steeps, sparse crowds, and authentic mountain town character at the base.
 

@@ -34,6 +34,8 @@ Whether you're seeking slope-side convenience, downtown nightlife access, family
 
 **Important Note:** Hotel ratings, prices, and amenities are subject to change. Price ranges reflect typical rates but vary significantly by season, room type, and availability. Always verify current rates and availability directly with hotels or booking platforms before making reservations.
 
+For help deciding between downtown and Mountain Village, see our [where to stay guide](/blog/hotel-reviews/where-to-stay-telluride). To plan your timing, check our [best time to visit](/blog/planning-tips/best-time-visit-telluride).
+
 ## Quick Picks: Best Hotels by Category
 
 - **Best Overall:** [The Madeline Hotel](/lodging/madeline-hotel) - Luxury ski-in/ski-out with exceptional service
