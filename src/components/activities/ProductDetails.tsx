@@ -32,6 +32,12 @@ export function ProductDetails({ productCode }: ProductDetailsProps) {
         }
         
         const data = await response.json();
+        console.log('[ProductDetails] Received product:', {
+          title: data.product?.title,
+          hasPricing: !!data.product?.pricing,
+          pricing: data.product?.pricing,
+          fullProduct: data.product
+        });
         setProduct(data.product);
       } catch (err) {
         console.error('Error fetching product:', err);
@@ -83,6 +89,13 @@ export function ProductDetails({ productCode }: ProductDetailsProps) {
   const durationText = formatDuration(product.duration);
   const priceText = formatPrice(product.pricing);
   const bookingUrl = buildViatorBookingUrl(product);
+  
+  console.log('[ProductDetails] Rendering with:', {
+    hasProduct: !!product,
+    hasPricing: !!product.pricing,
+    pricing: product.pricing,
+    priceText,
+  });
 
   return (
     <div className="space-y-8">
