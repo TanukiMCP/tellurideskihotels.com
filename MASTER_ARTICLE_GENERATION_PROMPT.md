@@ -121,6 +121,7 @@ Every article should follow this structure (adjust based on content type):
 - Concise answers (50-100 words each)
 - Use question-based keywords
 - Schema markup for rich snippets
+- **Use FAQ accordion component** - See FAQ Component System below
 
 **6. Conclusion (100-150 words)**
 - Summarize key takeaways
@@ -806,10 +807,74 @@ For the ultimate convenience, consider staying at a [ski-in/ski-out hotel](/lodg
 - Professional quality
 
 **Image Sources:**
-- Pexels image library (primary)
+- Pexels media library (primary) - See Media Library System below
 - Hotel-provided photos
 - Official resort images
 - Original photography when available
+
+### Media Library System
+
+**Location:** All images are stored in CSV files in the `media-library/` directory.
+
+**Available Image Categories:**
+
+Each CSV file contains 30 curated images with full metadata. Use these categories based on article content:
+
+| Category File | Use For | Query |
+|---------------|---------|-------|
+| `luxury-ski-hotels.csv` | Luxury hotel articles, high-end accommodations | luxury ski hotel |
+| `ski-slopes.csv` | Skiing guides, terrain articles, slope conditions | ski resort slopes |
+| `hotel-rooms.csv` | Hotel reviews, accommodation details | mountain hotel room |
+| `ski-lifts.csv` | Lift access, resort infrastructure | ski lift chairlift |
+| `powder-skiing.csv` | Skiing action, conditions, expert terrain | skiing powder snow |
+| `mountain-villages.csv` | Town guides, location comparisons | mountain village town |
+| `hotel-spas.csv` | Spa amenities, luxury features | hotel spa luxury |
+| `restaurants.csv` | Dining guides, food articles | mountain restaurant dining |
+| `winter-landscapes.csv` | Scenic shots, weather articles, season guides | winter mountain landscape |
+| `snowboarding.csv` | Snowboarding content, winter sports | snowboarding action |
+| `hotel-pools.csv` | Hotel amenities, pool features | hotel pool mountain |
+| `apres-ski.csv` | Nightlife, bars, après-ski activities | apres ski bar |
+| `ski-equipment.csv` | Gear guides, equipment rentals | ski equipment gear |
+| `family-skiing.csv` | Family content, beginner guides | family skiing |
+| `gondolas.csv` | Gondola articles, transportation | gondola cable car |
+| `mountain-sunsets.csv` | Scenic content, timing articles | mountain sunset sunrise |
+| `hotel-lobbies.csv` | Hotel interiors, check-in experience | hotel lobby luxury |
+| `ski-lessons.csv` | Lesson guides, beginner content | ski lesson instructor |
+| `colorado-mountains.csv` | General Colorado content, location guides | colorado mountains |
+| `hot-tubs.csv` | Hotel amenities, relaxation features | hot tub outdoor |
+| `hotel-bedrooms.csv` | Room reviews, accommodation details | hotel bedroom cozy |
+| `ski-trails.csv` | Trail guides, terrain maps | ski trail map |
+| `mountain-peaks.csv` | Summit content, advanced terrain | mountain peak summit |
+
+**CSV Format:**
+```
+id,original_url,large_url,medium_url,small_url,width,height,photographer,photographer_url,alt,query
+```
+
+**How to Use the Media Library:**
+
+1. **Identify Content Needs:** Based on your article topic, determine which image categories are relevant
+2. **Select Appropriate Images:** Choose 5-8 images from the relevant CSV files
+3. **Use the Medium URL:** For article body images, use the `medium_url` column
+4. **Use the Large URL:** For hero images, use the `large_url` column
+5. **Credit Photographers:** Include photographer name from the CSV when feasible
+6. **Use Provided Alt Text:** The `alt` column contains SEO-optimized descriptions
+7. **Customize Alt Text:** Modify alt text to include article-specific keywords when appropriate
+
+**Example Image Selection for "Best Hotels in Telluride" Article:**
+- Hero Image: From `luxury-ski-hotels.csv` (large_url)
+- Body Image 1: From `hotel-rooms.csv` (luxury room interior)
+- Body Image 2: From `ski-slopes.csv` (slope access view)
+- Body Image 3: From `hotel-spas.csv` (spa amenities)
+- Body Image 4: From `hotel-pools.csv` (outdoor pool with mountain views)
+- Body Image 5: From `mountain-villages.csv` (location context)
+- Body Image 6: From `hotel-lobbies.csv` (entrance/lobby)
+
+**Image Reference Format in Articles:**
+```markdown
+![Alt text from CSV or customized](medium_url_from_csv)
+*Photo by [Photographer Name](photographer_url) via Pexels*
+```
 
 ### Image Specifications
 
@@ -884,6 +949,398 @@ dining-telluride-restaurant-interior.jpg
 
 ---
 
+## FAQ Accordion Component System
+
+### Implementation
+
+All FAQ sections must use the collapsible accordion component for better UX and SEO.
+
+**Component Format:**
+```markdown
+<details>
+<summary>Question goes here?</summary>
+
+Answer goes here. Can be multiple paragraphs if needed.
+
+- Can include bullet points
+- Can include internal links
+- Should be 50-150 words
+
+</details>
+```
+
+**Best Practices:**
+
+1. **Question Format:**
+   - Start with question words (How, What, When, Where, Why, Is, Can, Do)
+   - Use natural language from "People Also Ask"
+   - Include keywords naturally
+   - Make it conversational
+
+2. **Answer Format:**
+   - Start with a direct answer in first sentence
+   - Expand with details in following sentences
+   - Include internal links where relevant
+   - Keep concise but complete (50-150 words)
+
+3. **SEO Benefits:**
+   - Schema markup for featured snippets
+   - Expandable = better mobile UX
+   - Keyword-rich questions
+   - Long-tail keyword targets
+
+**Example FAQ Section:**
+
+```markdown
+## Frequently Asked Questions
+
+<details>
+<summary>What is the best time to visit Telluride for skiing?</summary>
+
+The best time to visit Telluride for skiing is mid-January through early March when snow conditions are most consistent and the resort has excellent coverage. February offers the best combination of snow quality, weather, and fewer crowds compared to the Christmas-New Year peak. For powder skiing, plan your trip within 48 hours of a storm cycle. Check our [Telluride ski season guide](/blog/ski-guides/telluride-ski-season-guide) for month-by-month breakdowns.
+
+</details>
+
+<details>
+<summary>How much do hotels in Telluride cost per night?</summary>
+
+Telluride hotels range from $150-$300/night for budget options, $300-$600/night for mid-range properties, and $600-$1,500+/night for luxury ski-in/ski-out hotels. Prices vary significantly by season, with peak rates during Christmas, New Year's, and February. Budget travelers can find deals in early December and late March. Browse our [best hotels in Telluride](/blog/hotel-reviews/best-hotels-telluride) for specific pricing.
+
+</details>
+
+<details>
+<summary>Do I need a car in Telluride?</summary>
+
+You don't need a car once you're in Telluride. The free gondola connects downtown Telluride to Mountain Village in 13 minutes, and both areas have free shuttle buses. However, you'll need transportation to reach Telluride from Montrose Airport (65 miles). Options include rental cars, shuttles, or private transfers. See our [Denver to Telluride drive guide](/blog/travel-tips/denver-to-telluride-drive-guide) for road trip planning.
+
+</details>
+```
+
+---
+
+## Internal & External Linking System
+
+### Internal Linking Strategy
+
+**REQUIRED:** Every article must include 5-10 internal links.
+
+**Link Types:**
+
+1. **Article-to-Article Links (2-3 per article)**
+   - Link to related blog posts
+   - Use descriptive anchor text with keywords
+   - Reference the `INTERNAL_EXTERNAL_LINKING_PLAN.md` file
+   - First mention of a topic = link opportunity
+
+2. **Article-to-Hotel Links (3-5 per article)**
+   - Link to specific hotel pages via `/lodging/[hotel-slug]`
+   - Link to filtered lodging pages: `/lodging?filter=ski-in-ski-out`
+   - Link to location pages: `/lodging?location=mountain-village`
+   - Natural contextual placement when mentioning accommodations
+
+3. **Article-to-Page Links (1-2 per article)**
+   - Link to main pages: `/lodging`, `/things-to-do`, `/ski-conditions`
+   - Link to About page when mentioning expertise: `/about`
+
+**Internal Linking Best Practices:**
+
+```markdown
+✅ GOOD Examples:
+
+For the ultimate convenience, [ski-in/ski-out hotels](/lodging?filter=ski-in-ski-out) like The Madeline let you access slopes directly from your room.
+
+Learn more about [Telluride's ski terrain and trail breakdown](/blog/ski-guides/telluride-skiing-guide) before your trip.
+
+Compare our [top-rated hotels in Mountain Village](/lodging?location=mountain-village) for slope-side access.
+
+❌ BAD Examples:
+
+Click [here](/blog/skiing) for more info. (Generic anchor text)
+
+Read this article about Telluride skiing. (No link)
+
+[Telluride skiing Telluride skiing Telluride](link) (Keyword stuffing)
+```
+
+**Internal Linking Checklist:**
+- [ ] 2-3 links to related blog articles
+- [ ] 3-5 links to hotel/lodging pages
+- [ ] 1-2 links to main site pages
+- [ ] All links use descriptive, keyword-rich anchor text
+- [ ] Links open in same tab (internal)
+- [ ] First mention of topic includes link
+- [ ] Links distributed naturally throughout content
+
+### External Linking Strategy
+
+**REQUIRED:** Every article must include 2-4 external authoritative links.
+
+**When to Use External Links:**
+
+1. **Statistics & Data** - Always link to source
+   - Snowfall averages → link to official resort or NOAA
+   - Resort statistics → link to Telluride.com
+   - Economic data → link to .gov sources
+
+2. **Official Information**
+   - Resort details → Telluride.com
+   - Road conditions → COtrip.org
+   - Weather forecasts → Weather.gov
+   - National Forest info → USDA Forest Service
+
+3. **Event Information**
+   - Festival dates → Official festival websites
+   - Season dates → Official resort calendars
+
+4. **Reviews & Verification**
+   - Hotel ratings → TripAdvisor, Google Reviews (for verification)
+   - Restaurant info → Official restaurant websites
+
+**Authoritative Sources to Use:**
+
+| Type | Source | URL Pattern |
+|------|--------|-------------|
+| Resort Official | Telluride Ski Resort | telluride.com |
+| Weather | National Weather Service | weather.gov |
+| Roads | Colorado DOT | cotrip.org, codot.gov |
+| Tourism | Colorado Tourism | colorado.com |
+| Snow Data | OpenSnow | opensnow.com |
+| Avalanche | CAIC | avalanche.state.co.us |
+| National Forest | USDA | fs.usda.gov/gmug |
+| Festivals | Official Sites | bluegrass.com, telluridefilmfestival.org |
+
+**External Link Format:**
+
+```markdown
+According to [Telluride Ski Resort's official statistics](https://www.telluride.com), the resort receives an average of 309 inches of snow annually.
+
+Check current [road conditions on COtrip](https://www.cotrip.org) before driving in winter.
+
+The [National Weather Service Grand Junction office](https://www.weather.gov/gjt) provides the most accurate Telluride forecasts.
+```
+
+**External Linking Checklist:**
+- [ ] 2-4 authoritative external links per article
+- [ ] All statistics cite original sources
+- [ ] Official info links to .com or .gov sites
+- [ ] Links use `target="_blank"` (optional)
+- [ ] Links use `rel="noopener noreferrer"` for security
+- [ ] Verify all external links are active before publishing
+
+---
+
+## LiteAPI Hotel Booking Widgets
+
+### ArticleBookingWidget Component
+
+Use the `ArticleBookingWidget` React component for rich, themed booking CTAs that match the site design.
+
+**Component Import:**
+```jsx
+import { ArticleBookingWidget } from '@/components/blog/ArticleBookingWidget';
+```
+
+**Component Props:**
+
+| Prop | Type | Description |
+|------|------|-------------|
+| `title` | string | Optional custom title (auto-generated if not provided) |
+| `description` | string | Optional custom description (auto-generated if not provided) |
+| `hotelId` | string | Specific hotel ID for hotel detail pages |
+| `hotelName` | string | Hotel name for specific hotel widgets |
+| `location` | string | Location filter: `downtown`, `mountain-village` |
+| `filter` | string | Property filter: `ski-in-ski-out`, `luxury`, `budget`, `family-friendly` |
+| `variant` | string | Display style: `default`, `compact`, `featured` |
+
+### Widget Variants
+
+**1. Featured Variant** (Use at end of major sections or articles)
+- Large, prominent design with gradient background
+- Shows features: Real-time pricing, Instant confirmation, Best rate guarantee
+- Best for: End of article, major conversion points
+
+```jsx
+<ArticleBookingWidget 
+  variant="featured"
+  filter="ski-in-ski-out"
+/>
+```
+
+**2. Default Variant** (Use after hotel descriptions)
+- Medium size with clean card design
+- Icon, title, description, and CTA button
+- Best for: After individual hotel sections, mid-article CTAs
+
+```jsx
+<ArticleBookingWidget 
+  hotelId="madeline-hotel"
+  hotelName="The Madeline Hotel"
+  variant="default"
+/>
+```
+
+**3. Compact Variant** (Use inline within content)
+- Minimal, inline-friendly design
+- Best for: Quick CTAs within paragraphs, multiple widgets per article
+
+```jsx
+<ArticleBookingWidget 
+  location="mountain-village"
+  variant="compact"
+/>
+```
+
+### Placement Strategy
+
+**1. After Hotel Mentions (Hotel Reviews/Lists)**
+```jsx
+### 1. The Madeline Hotel & Residences
+
+**Location:** Mountain Village (Ski-In/Ski-Out)  
+**Price Range:** $$$$ ($500-1,200/night)  
+**Rating:** 4.8/5
+
+The Madeline sets the standard for luxury ski hotels in Telluride. Located steps from Lift 10, this AAA Four Diamond property offers true ski-in/ski-out convenience paired with impeccable service and world-class amenities.
+
+**Why It's #1:**
+- Direct slope access (ski to/from your room)
+- 89 elegant rooms and suites with mountain views
+- Full-service spa with 12 treatment rooms
+- Heated outdoor pool and hot tubs
+- Ski concierge and valet service
+
+<ArticleBookingWidget 
+  hotelId="madeline-hotel"
+  hotelName="The Madeline Hotel"
+  variant="default"
+/>
+```
+
+**2. End of Article (All Accommodation Articles)**
+```jsx
+## Conclusion
+
+Telluride offers world-class skiing combined with exceptional lodging options for every budget and style. Whether you choose ski-in/ski-out luxury or a charming downtown boutique hotel, you'll find the perfect base for your mountain adventure.
+
+<ArticleBookingWidget 
+  variant="featured"
+  title="Ready to Book Your Telluride Hotel?"
+  description="Compare rates from hundreds of hotels with real-time availability and instant confirmation"
+/>
+
+For more information, check out our [complete guide to Telluride](/blog/destination-guides/complete-guide-telluride) and [ski season guide](/blog/ski-guides/telluride-ski-season-guide).
+```
+
+**3. Category-Specific Widgets**
+```jsx
+## Best Ski-In/Ski-Out Hotels
+
+For ultimate convenience, ski-in/ski-out hotels eliminate the morning commute and let you maximize your time on the slopes. Here are the top properties with direct slope access:
+
+<ArticleBookingWidget 
+  filter="ski-in-ski-out"
+  variant="featured"
+/>
+
+### 1. The Madeline Hotel & Residences
+[Content continues...]
+```
+
+**4. Location-Specific Widgets**
+```jsx
+## Mountain Village Hotels
+
+Mountain Village sits at the base of the ski resort, offering true ski-in/ski-out convenience and gondola access to downtown Telluride.
+
+<ArticleBookingWidget 
+  location="mountain-village"
+  variant="compact"
+/>
+```
+
+### Widget Usage Examples
+
+**Example 1: Hotel Review Article**
+```jsx
+// After each hotel description
+<ArticleBookingWidget 
+  hotelId="peaks-resort"
+  hotelName="Peaks Resort & Spa"
+  variant="default"
+/>
+
+// At end of article
+<ArticleBookingWidget 
+  variant="featured"
+  title="Find Your Perfect Telluride Hotel"
+/>
+```
+
+**Example 2: Category Guide (Luxury Hotels)**
+```jsx
+// Near top of article
+<ArticleBookingWidget 
+  filter="luxury"
+  variant="compact"
+/>
+
+// At end of article
+<ArticleBookingWidget 
+  filter="luxury"
+  variant="featured"
+  title="Book Your Luxury Telluride Escape"
+/>
+```
+
+**Example 3: Location Comparison Article**
+```jsx
+## Mountain Village vs Downtown: Which is Better?
+
+### Mountain Village
+Mountain Village offers ski-in/ski-out convenience with modern hotels and resort amenities.
+
+<ArticleBookingWidget 
+  location="mountain-village"
+  variant="compact"
+/>
+
+### Downtown Telluride
+Downtown Telluride provides historic charm, walkable Main Street, and vibrant nightlife.
+
+<ArticleBookingWidget 
+  location="downtown"
+  variant="compact"
+/>
+```
+
+### Best Practices
+
+**Frequency:**
+- Maximum 2-3 booking widgets per article
+- Use featured variant once per article (at end)
+- Use compact for multiple inline CTAs
+- Don't place widgets back-to-back
+
+**Placement:**
+- After providing value and building trust
+- Natural breaks in content flow
+- After hotel descriptions or comparisons
+- Before conclusion section
+
+**Customization:**
+- Let auto-generated titles work for most cases
+- Only customize title/description for special contexts
+- Match variant to placement importance
+- Use specific hotelId when mentioning individual properties
+
+**Conversion Optimization:**
+- Place featured widget where readers are most engaged
+- Use compact widgets to remind readers of booking option
+- Ensure widget matches article topic (filter/location)
+- Don't interrupt valuable content with CTAs
+
+---
+
 ## Quality Checklist
 
 ### Before Submitting Content
@@ -907,11 +1364,13 @@ dining-telluride-restaurant-interior.jpg
 - [ ] Meta title 50-60 characters
 - [ ] Meta description 150-160 characters, compelling
 - [ ] URL slug optimized and under 75 chars
-- [ ] 5-10 internal links to hotels
-- [ ] 2-3 internal links to related articles
-- [ ] 2-4 external authoritative links
-- [ ] All images have descriptive alt text
+- [ ] 5-10 internal links total (2-3 articles, 3-5 hotels, 1-2 pages)
+- [ ] Internal links use descriptive, keyword-rich anchor text
+- [ ] 2-4 external authoritative links (.gov, .com official sources)
+- [ ] All statistics cite original sources with external links
+- [ ] All images have descriptive alt text from media library
 - [ ] Hero image alt includes primary keyword
+- [ ] Images selected from appropriate media library CSV files
 
 **Structure & Formatting:**
 - [ ] Clear H2 and H3 hierarchy (no H4s)
@@ -919,9 +1378,13 @@ dining-telluride-restaurant-interior.jpg
 - [ ] Bullet points and numbered lists used
 - [ ] Subheading every 300-400 words
 - [ ] FAQ section included (5-8 questions)
+- [ ] FAQ uses `<details>` accordion component
+- [ ] FAQ questions are conversational and keyword-rich
+- [ ] FAQ answers include internal links where relevant
 - [ ] Proper conclusion with CTA
 - [ ] Related hotels section (3-6 hotels)
 - [ ] Comparison tables where applicable
+- [ ] 5-8 images distributed throughout (every 300-400 words)
 
 **Readability:**
 - [ ] Flesch Reading Ease 60-70
@@ -932,6 +1395,9 @@ dining-telluride-restaurant-interior.jpg
 - [ ] Adequate white space
 
 **Conversion Elements:**
+- [ ] 2-3 ArticleBookingWidget components strategically placed
+- [ ] Featured widget variant at end of article
+- [ ] Booking widgets match article topic (filter/location/hotelId)
 - [ ] Natural CTAs within content (1 per section max)
 - [ ] Hotel links contextually relevant
 - [ ] Strong CTA in conclusion
