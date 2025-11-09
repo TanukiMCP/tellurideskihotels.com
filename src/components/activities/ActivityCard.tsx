@@ -12,7 +12,7 @@ interface ActivityCardProps {
 }
 
 export function ActivityCard({ activity, className = '' }: ActivityCardProps) {
-  const bookingUrl = buildViatorBookingUrl(activity);
+  const detailsUrl = `/things-to-do/${activity.productCode}`;
   const mainImage = activity.images.find(img => img.isCover) || activity.images[0];
   const imageUrl = mainImage?.variants?.find(v => v.width >= 400)?.url || mainImage?.variants?.[0]?.url;
   const hasReviews = activity.reviews && activity.reviews.totalReviews > 0;
@@ -20,7 +20,10 @@ export function ActivityCard({ activity, className = '' }: ActivityCardProps) {
   const priceText = formatPrice(activity.pricing);
 
   return (
-    <div className={`group bg-white rounded-2xl overflow-hidden border border-neutral-200 shadow-card hover:shadow-card-hover transition-all duration-300 hover:-translate-y-1 ${className}`}>
+    <a 
+      href={detailsUrl}
+      className={`group bg-white rounded-2xl overflow-hidden border border-neutral-200 shadow-card hover:shadow-card-hover transition-all duration-300 hover:-translate-y-1 block ${className}`}
+    >
       {/* Image */}
       <div className="relative h-56 overflow-hidden bg-neutral-100">
         {imageUrl ? (
@@ -105,20 +108,15 @@ export function ActivityCard({ activity, className = '' }: ActivityCardProps) {
               {priceText}
             </div>
           </div>
-          <a
-            href={bookingUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 bg-primary-600 text-white px-6 py-3 rounded-xl font-semibold text-sm shadow-card hover:shadow-card-hover hover:bg-primary-700 transition-all duration-300"
-          >
-            Book on Viator
+          <div className="inline-flex items-center gap-2 bg-primary-600 text-white px-6 py-3 rounded-xl font-semibold text-sm shadow-card group-hover:shadow-card-hover group-hover:bg-primary-700 transition-all duration-300">
+            View Details
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
             </svg>
-          </a>
+          </div>
         </div>
       </div>
-    </div>
+    </a>
   );
 }
 

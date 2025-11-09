@@ -61,51 +61,79 @@ try {
   </div>
 
   <!-- Popular Categories Section -->
-  <div class="bg-neutral-50 py-12 border-b border-neutral-200">
+  <div class="bg-neutral-50 py-12 border-b border-neutral-200" id="categories">
     <Container>
       <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4">
-        <div class="text-center group cursor-pointer">
+        <button 
+          class="text-center group cursor-pointer border-0 bg-transparent"
+          data-category="winter"
+          onclick="window.scrollToActivities && window.scrollToActivities('winter')"
+        >
           <div class="w-16 h-16 mx-auto mb-3 rounded-2xl bg-gradient-to-br from-sky-400 to-sky-600 flex items-center justify-center text-3xl shadow-card group-hover:shadow-card-hover group-hover:scale-105 transition-all duration-300">
             ⛷️
           </div>
           <div class="text-sm font-semibold text-neutral-900">Winter Sports</div>
-        </div>
-        <div class="text-center group cursor-pointer">
+        </button>
+        <button 
+          class="text-center group cursor-pointer border-0 bg-transparent"
+          data-category="summer"
+          onclick="window.scrollToActivities && window.scrollToActivities('summer')"
+        >
           <div class="w-16 h-16 mx-auto mb-3 rounded-2xl bg-gradient-to-br from-accent-400 to-accent-600 flex items-center justify-center text-3xl shadow-card group-hover:shadow-card-hover group-hover:scale-105 transition-all duration-300">
             🏔️
           </div>
           <div class="text-sm font-semibold text-neutral-900">Summer Adventures</div>
-        </div>
-        <div class="text-center group cursor-pointer">
+        </button>
+        <button 
+          class="text-center group cursor-pointer border-0 bg-transparent"
+          data-category="adventure"
+          onclick="window.scrollToActivities && window.scrollToActivities('adventure')"
+        >
           <div class="w-16 h-16 mx-auto mb-3 rounded-2xl bg-gradient-to-br from-secondary-400 to-secondary-600 flex items-center justify-center text-3xl shadow-card group-hover:shadow-card-hover group-hover:scale-105 transition-all duration-300">
             🧗
           </div>
           <div class="text-sm font-semibold text-neutral-900">Adventure</div>
-        </div>
-        <div class="text-center group cursor-pointer">
+        </button>
+        <button 
+          class="text-center group cursor-pointer border-0 bg-transparent"
+          data-category="family"
+          onclick="window.scrollToActivities && window.scrollToActivities('family')"
+        >
           <div class="w-16 h-16 mx-auto mb-3 rounded-2xl bg-gradient-to-br from-primary-400 to-primary-600 flex items-center justify-center text-3xl shadow-card group-hover:shadow-card-hover group-hover:scale-105 transition-all duration-300">
             👨‍👩‍👧‍👦
           </div>
           <div class="text-sm font-semibold text-neutral-900">Family Friendly</div>
-        </div>
-        <div class="text-center group cursor-pointer">
+        </button>
+        <button 
+          class="text-center group cursor-pointer border-0 bg-transparent"
+          data-category="tours"
+          onclick="window.scrollToActivities && window.scrollToActivities('tours')"
+        >
           <div class="w-16 h-16 mx-auto mb-3 rounded-2xl bg-gradient-to-br from-purple-400 to-purple-600 flex items-center justify-center text-3xl shadow-card group-hover:shadow-card-hover group-hover:scale-105 transition-all duration-300">
             🎫
           </div>
           <div class="text-sm font-semibold text-neutral-900">Tours</div>
-        </div>
-        <div class="text-center group cursor-pointer">
+        </button>
+        <button 
+          class="text-center group cursor-pointer border-0 bg-transparent"
+          data-category="experiences"
+          onclick="window.scrollToActivities && window.scrollToActivities('experiences')"
+        >
           <div class="w-16 h-16 mx-auto mb-3 rounded-2xl bg-gradient-to-br from-pink-400 to-pink-600 flex items-center justify-center text-3xl shadow-card group-hover:shadow-card-hover group-hover:scale-105 transition-all duration-300">
             🎨
           </div>
           <div class="text-sm font-semibold text-neutral-900">Experiences</div>
-        </div>
-        <div class="text-center group cursor-pointer">
+        </button>
+        <button 
+          class="text-center group cursor-pointer border-0 bg-transparent"
+          data-category="all"
+          onclick="window.scrollToActivities && window.scrollToActivities('all')"
+        >
           <div class="w-16 h-16 mx-auto mb-3 rounded-2xl bg-gradient-to-br from-neutral-400 to-neutral-600 flex items-center justify-center text-3xl shadow-card group-hover:shadow-card-hover group-hover:scale-105 transition-all duration-300">
             🎯
           </div>
           <div class="text-sm font-semibold text-neutral-900">All Activities</div>
-        </div>
+        </button>
       </div>
     </Container>
   </div>

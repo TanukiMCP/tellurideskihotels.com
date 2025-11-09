@@ -40,6 +40,23 @@ export function ActivitiesGrid({ initialActivities = [] }: ActivitiesGridProps) 
   const [totalCount, setTotalCount] = useState(0);
   const pageSize = 20;
 
+  // Expose category setter globally for emoji buttons
+  useEffect(() => {
+    (window as any).scrollToActivities = (cat: ActivityCategory) => {
+      setCategory(cat);
+      setCurrentPage(0);
+      // Scroll to the activities grid
+      const element = document.getElementById('activities-grid');
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    };
+    
+    return () => {
+      delete (window as any).scrollToActivities;
+    };
+  }, []);
+
   const fetchActivities = async () => {
     try {
       setLoading(true);
@@ -108,7 +125,7 @@ export function ActivitiesGrid({ initialActivities = [] }: ActivitiesGridProps) 
   const totalPages = Math.ceil(totalCount / pageSize);
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8" id="activities-grid">
       {/* Search and Filters */}
       <div className="bg-white rounded-2xl border border-neutral-200 p-6 shadow-card">
         {/* Search Bar */}
