@@ -11,11 +11,9 @@ import { LoadingSpinner } from '@/components/shared/LoadingSpinner';
 
 interface ProductDetailsProps {
   productCode: string;
-  fallbackPrice?: number;
-  fallbackCurrency?: string;
 }
 
-export function ProductDetails({ productCode, fallbackPrice, fallbackCurrency }: ProductDetailsProps) {
+export function ProductDetails({ productCode }: ProductDetailsProps) {
   const [product, setProduct] = useState<ViatorProduct | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -89,20 +87,13 @@ export function ProductDetails({ productCode, fallbackPrice, fallbackCurrency }:
   const imageUrl = selectedImage?.variants?.find(v => v.width >= 800)?.url || selectedImage?.variants?.[0]?.url;
   const hasReviews = product.reviews && product.reviews.totalReviews > 0;
   const durationText = formatDuration(product.duration);
-  
-  // Use product pricing if available, otherwise use fallback from search results
-  const pricing = product.pricing || (fallbackPrice && fallbackCurrency ? {
-    summary: { fromPrice: fallbackPrice },
-    currency: fallbackCurrency
-  } : null);
-  const priceText = formatPrice(pricing);
+  const priceText = formatPrice(product.pricing);
   const bookingUrl = buildViatorBookingUrl(product);
   
   console.log('[ProductDetails] Rendering with:', {
     hasProduct: !!product,
-    hasProductPricing: !!product.pricing,
-    hasFallbackPrice: !!fallbackPrice,
-    pricing,
+    hasPricing: !!product.pricing,
+    pricing: product.pricing,
     priceText,
   });
 

@@ -6,15 +6,10 @@ import Container from '@/components/layout/Container.astro';
 import { ProductDetails } from '@/components/activities/ProductDetails';
 
 const { productCode } = Astro.params;
-const url = Astro.url;
 
 if (!productCode) {
   return Astro.redirect('/things-to-do');
 }
-
-// Get fallback pricing from URL params (passed from search results)
-const fallbackPrice = url.searchParams.get('price');
-const fallbackCurrency = url.searchParams.get('currency');
 
 const pageTitle = `Activity Details | Things to Do in Telluride`;
 const pageDescription = 'View details and book your Telluride activity';
@@ -22,12 +17,7 @@ const pageDescription = 'View details and book your Telluride activity';
 
 <PageLayout title={pageTitle} description={pageDescription}>
   <Container class="py-8 lg:py-12">
-    <ProductDetails 
-      client:load 
-      productCode={productCode}
-      fallbackPrice={fallbackPrice ? parseFloat(fallbackPrice) : undefined}
-      fallbackCurrency={fallbackCurrency || undefined}
-    />
+    <ProductDetails client:load productCode={productCode} />
   </Container>
 </PageLayout>
 
