@@ -32,6 +32,8 @@ Choosing where to stay in Telluride significantly impacts your entire vacation e
 
 This complete lodging guide breaks down Telluride's accommodation landscape, helping you choose the perfect base for your mountain getaway based on your priorities, budget, and travel style.
 
+**Note:** General lodging information, locations, and characteristics are accurate. Specific prices, availability, and amenities vary by season and should be verified with properties or booking platforms before reserving.
+
 ## The Central Decision: Downtown vs Mountain Village
 
 Understanding the fundamental difference between these two areas is essential for choosing your ideal location.

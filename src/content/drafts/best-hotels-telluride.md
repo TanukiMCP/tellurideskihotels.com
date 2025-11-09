@@ -32,6 +32,8 @@ Telluride offers accommodations ranging from historic Victorian-era boutique hot
 
 Whether you're seeking slope-side convenience, downtown nightlife access, family-friendly amenities, or budget-conscious value, this guide helps you find your perfect Telluride basecamp.
 
+**Important Note:** Hotel ratings, prices, and amenities are subject to change. Price ranges reflect typical rates but vary significantly by season, room type, and availability. Always verify current rates and availability directly with hotels or booking platforms before making reservations.
+
 ## Quick Picks: Best Hotels by Category
 
 - **Best Overall:** [The Madeline Hotel](/lodging/madeline-hotel) - Luxury ski-in/ski-out with exceptional service

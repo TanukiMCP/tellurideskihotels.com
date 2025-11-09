@@ -32,6 +32,8 @@ Telluride offers far more than world-class skiing. This box canyon town of 2,600
 
 This ultimate guide covers 50+ things to do in Telluride across all seasons, from must-do experiences to hidden gems that locals love.
 
+**Note:** Activity information, trail names, and general descriptions are accurate. Specific prices, hours, and availability should be verified with activity providers or official sources before planning.
+
 ## Top 10 Must-Do Experiences
 
 ### 1. Ride the Free Gondola

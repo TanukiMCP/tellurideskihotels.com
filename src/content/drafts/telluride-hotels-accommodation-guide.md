@@ -32,6 +32,8 @@ Telluride's hotel landscape differs dramatically from typical Colorado ski towns
 
 This comprehensive guide covers hotel types, pricing strategies, amenities, locations, and booking tactics to ensure you find the perfect Telluride accommodation for your needs and budget.
 
+**Note:** Hotel information, locations, and general characteristics are based on current data. Specific prices, availability, amenities, and policies vary by season and should be verified directly with properties or booking platforms before reserving.
+
 ## Understanding Telluride's Hotel Landscape
 
 ### No Chain Hotels in Downtown
