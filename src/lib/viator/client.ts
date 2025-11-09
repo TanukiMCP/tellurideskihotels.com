@@ -222,6 +222,12 @@ export async function getProductDetails(
   
   try {
     const product = await viatorRequest<ViatorProduct>(endpoint);
+    console.log('[Viator] Product details response:', {
+      productCode,
+      hasPricing: !!product.pricing,
+      pricing: product.pricing,
+      fullProduct: JSON.stringify(product, null, 2),
+    });
     return product;
   } catch (error) {
     console.error(`[Viator] Failed to get product details for ${productCode}:`, error);
