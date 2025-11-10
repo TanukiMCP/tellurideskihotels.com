@@ -250,102 +250,105 @@ export default function HeroMapSearch({
       {/* Subtle vignette only */}
       <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-transparent to-black/10 pointer-events-none" />
 
-      {/* Map Controls - Top Bar */}
-      <div className="absolute top-4 left-4 right-4 z-[500] pointer-events-auto">
-        <div className="flex flex-col lg:flex-row gap-3 lg:items-center lg:justify-between">
-          {/* Left Side - Map Style Selector */}
-          <div className="backdrop-blur-xl bg-white/95 border border-white/20 rounded-xl shadow-xl p-2 lg:flex-shrink-0">
-            <div className="flex gap-1.5">
-              <button
-                onClick={() => setMapStyle('streets')}
-                className={`px-3 py-2 rounded-lg text-xs font-semibold transition-all ${
-                  mapStyle === 'streets'
-                    ? 'bg-primary-600 text-white shadow-md'
-                    : 'bg-white/50 text-neutral-700 hover:bg-white'
-                }`}
-                title="Street map view"
-              >
-                Map
-              </button>
-              <button
-                onClick={() => setMapStyle('satellite')}
-                className={`px-3 py-2 rounded-lg text-xs font-semibold transition-all ${
-                  mapStyle === 'satellite'
-                    ? 'bg-primary-600 text-white shadow-md'
-                    : 'bg-white/50 text-neutral-700 hover:bg-white'
-                }`}
-                title="Satellite imagery view"
-              >
-                Satellite
-              </button>
-              <button
-                onClick={() => setMapStyle('skiTrails')}
-                className={`px-3 py-2 rounded-lg text-xs font-semibold transition-all ${
-                  mapStyle === 'skiTrails'
-                    ? 'bg-primary-600 text-white shadow-md'
-                    : 'bg-white/50 text-neutral-700 hover:bg-white'
-                }`}
-                title="Ski trails and terrain"
-              >
-                Ski Trails
-              </button>
+      {/* Map Controls - Top Left Corner */}
+      <div className="absolute top-4 left-4 z-[500] pointer-events-auto">
+        <div className="flex flex-col lg:flex-row gap-2 lg:items-start">
+          {/* Map Style Selector & Search Form - Single Row on Desktop */}
+          <div className="flex flex-col lg:flex-row gap-2">
+            {/* Map Style Selector */}
+            <div className="backdrop-blur-xl bg-white/95 border border-white/20 rounded-xl shadow-xl p-2 flex-shrink-0">
+              <div className="flex gap-1.5">
+                <button
+                  onClick={() => setMapStyle('streets')}
+                  className={`px-3 py-2 rounded-lg text-xs font-semibold transition-all ${
+                    mapStyle === 'streets'
+                      ? 'bg-primary-600 text-white shadow-md'
+                      : 'bg-white/50 text-neutral-700 hover:bg-white'
+                  }`}
+                  title="Street map view"
+                >
+                  Map
+                </button>
+                <button
+                  onClick={() => setMapStyle('satellite')}
+                  className={`px-3 py-2 rounded-lg text-xs font-semibold transition-all ${
+                    mapStyle === 'satellite'
+                      ? 'bg-primary-600 text-white shadow-md'
+                      : 'bg-white/50 text-neutral-700 hover:bg-white'
+                  }`}
+                  title="Satellite imagery view"
+                >
+                  Satellite
+                </button>
+                <button
+                  onClick={() => setMapStyle('skiTrails')}
+                  className={`px-3 py-2 rounded-lg text-xs font-semibold transition-all ${
+                    mapStyle === 'skiTrails'
+                      ? 'bg-primary-600 text-white shadow-md'
+                      : 'bg-white/50 text-neutral-700 hover:bg-white'
+                  }`}
+                  title="Ski trails and terrain"
+                >
+                  Ski Trails
+                </button>
+              </div>
             </div>
-          </div>
 
-          {/* Right Side - Horizontal Search Form - Desktop Only */}
-          <form onSubmit={handleSearch} className="hidden lg:flex backdrop-blur-xl bg-white/95 rounded-xl shadow-xl p-2 border border-white/20 items-center gap-2">
-            <div className="flex items-center gap-1 px-2">
-              <Calendar size={14} className="text-primary-600 flex-shrink-0" />
-              <input
-                type="date"
-                value={checkIn}
-                onChange={(e) => setCheckIn(e.target.value)}
-                min={format(new Date(), 'yyyy-MM-dd')}
-                className="w-[130px] px-2 py-1.5 border border-neutral-300 rounded-lg focus:border-primary-600 focus:ring-2 focus:ring-primary-600/20 outline-none transition-all text-xs bg-white"
-                required
-              />
-            </div>
-            <div className="flex items-center gap-1 px-2">
-              <Calendar size={14} className="text-primary-600 flex-shrink-0" />
-              <input
-                type="date"
-                value={checkOut}
-                onChange={(e) => setCheckOut(e.target.value)}
-                min={checkIn}
-                className="w-[130px] px-2 py-1.5 border border-neutral-300 rounded-lg focus:border-primary-600 focus:ring-2 focus:ring-primary-600/20 outline-none transition-all text-xs bg-white"
-                required
-              />
-            </div>
-            <div className="flex items-center gap-1 px-2">
-              <Users size={14} className="text-primary-600 flex-shrink-0" />
-              <input
-                type="number"
-                value={guests}
-                onChange={(e) => setGuests(parseInt(e.target.value) || 1)}
-                min="1"
-                max="20"
-                className="w-[70px] px-2 py-1.5 border border-neutral-300 rounded-lg focus:border-primary-600 focus:ring-2 focus:ring-primary-600/20 outline-none transition-all text-xs bg-white"
-                required
-              />
-            </div>
-            <button
-              type="submit"
-              disabled={isSearching}
-              className="px-4 py-2 bg-gradient-to-r from-primary-600 to-primary-700 text-white rounded-lg font-bold text-xs shadow-lg hover:shadow-xl hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 flex items-center justify-center gap-2 flex-shrink-0"
-            >
-              {isSearching ? (
-                <>
-                  <div className="animate-spin rounded-full h-3 w-3 border-2 border-white border-t-transparent" />
-                  Searching...
-                </>
-              ) : (
-                <>
-                  <Search size={14} />
-                  Search Hotels
-                </>
-              )}
-            </button>
-          </form>
+            {/* Horizontal Search Form - Desktop Only - Adjacent to View Toggle */}
+            <form onSubmit={handleSearch} className="hidden lg:flex backdrop-blur-xl bg-white/95 rounded-xl shadow-xl p-2 border border-white/20 items-center gap-2 flex-shrink-0">
+              <div className="flex items-center gap-1 px-2">
+                <Calendar size={14} className="text-primary-600 flex-shrink-0" />
+                <input
+                  type="date"
+                  value={checkIn}
+                  onChange={(e) => setCheckIn(e.target.value)}
+                  min={format(new Date(), 'yyyy-MM-dd')}
+                  className="w-[130px] px-2 py-1.5 border border-neutral-300 rounded-lg focus:border-primary-600 focus:ring-2 focus:ring-primary-600/20 outline-none transition-all text-xs bg-white"
+                  required
+                />
+              </div>
+              <div className="flex items-center gap-1 px-2">
+                <Calendar size={14} className="text-primary-600 flex-shrink-0" />
+                <input
+                  type="date"
+                  value={checkOut}
+                  onChange={(e) => setCheckOut(e.target.value)}
+                  min={checkIn}
+                  className="w-[130px] px-2 py-1.5 border border-neutral-300 rounded-lg focus:border-primary-600 focus:ring-2 focus:ring-primary-600/20 outline-none transition-all text-xs bg-white"
+                  required
+                />
+              </div>
+              <div className="flex items-center gap-1 px-2">
+                <Users size={14} className="text-primary-600 flex-shrink-0" />
+                <input
+                  type="number"
+                  value={guests}
+                  onChange={(e) => setGuests(parseInt(e.target.value) || 1)}
+                  min="1"
+                  max="20"
+                  className="w-[70px] px-2 py-1.5 border border-neutral-300 rounded-lg focus:border-primary-600 focus:ring-2 focus:ring-primary-600/20 outline-none transition-all text-xs bg-white"
+                  required
+                />
+              </div>
+              <button
+                type="submit"
+                disabled={isSearching}
+                className="px-4 py-2 bg-gradient-to-r from-primary-600 to-primary-700 text-white rounded-lg font-bold text-xs shadow-lg hover:shadow-xl hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 flex items-center justify-center gap-2 flex-shrink-0"
+              >
+                {isSearching ? (
+                  <>
+                    <div className="animate-spin rounded-full h-3 w-3 border-2 border-white border-t-transparent" />
+                    Searching...
+                  </>
+                ) : (
+                  <>
+                    <Search size={14} />
+                    Search
+                  </>
+                )}
+              </button>
+            </form>
+          </div>
 
           {/* Mobile Search Button */}
           <button
