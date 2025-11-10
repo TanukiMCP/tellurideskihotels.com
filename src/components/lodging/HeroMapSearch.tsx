@@ -32,7 +32,7 @@ interface HeroMapSearchProps {
 const MAP_STYLES = {
   streets: 'mapbox://styles/mapbox/streets-v12',
   satellite: 'mapbox://styles/mapbox/satellite-streets-v12',
-  terrain: 'mapbox://styles/mapbox/outdoors-v12',
+  skiTrails: 'mapbox://styles/mapbox/outdoors-v12',
 };
 
 export default function HeroMapSearch({
@@ -51,7 +51,7 @@ export default function HeroMapSearch({
   
   // Map state
   const [hotels, setHotels] = useState<LiteAPIHotel[]>(initialHotels);
-  const [mapStyle, setMapStyle] = useState<keyof typeof MAP_STYLES>('terrain');
+  const [mapStyle, setMapStyle] = useState<keyof typeof MAP_STYLES>('skiTrails');
   const [isMapLoaded, setIsMapLoaded] = useState(false);
   const [popupHotel, setPopupHotel] = useState<LiteAPIHotel | null>(null);
   const [hoveredHotelId, setHoveredHotelId] = useState<string | null>(null);
@@ -146,7 +146,7 @@ export default function HeroMapSearch({
     }
   }, [popupHotel, checkIn, checkOut, guests]);
 
-  // Get marker styling
+  // Get marker styling - Using theme colors (emerald/teal greens)
   const getMarkerStyle = (hotelId: string) => {
     const isSelected = hotelId === selectedHotelId;
     const isHovered = hotelId === hoveredHotelId;
@@ -154,7 +154,7 @@ export default function HeroMapSearch({
     
     return {
       size: isSelected ? 44 : isHovered ? 38 : isFeatured ? 36 : 34,
-      color: isSelected ? '#dc2626' : isHovered ? '#ea580c' : isFeatured ? '#f59e0b' : '#1e40af',
+      color: isSelected ? '#059669' : isHovered ? '#14b8a6' : isFeatured ? '#10b981' : '#1e40af',
       zIndex: isSelected ? 1000 : isHovered ? 900 : isFeatured ? 600 : 500,
       glow: isFeatured && !isSelected && !isHovered,
     };
@@ -204,7 +204,7 @@ export default function HeroMapSearch({
                   borderRadius: '50%',
                   border: '3px solid white',
                   boxShadow: style.glow 
-                    ? '0 4px 20px rgba(245, 158, 11, 0.6), 0 0 0 0 rgba(245, 158, 11, 0.4)'
+                    ? '0 4px 20px rgba(16, 185, 129, 0.6), 0 0 0 0 rgba(16, 185, 129, 0.4)'
                     : '0 4px 12px rgba(0,0,0,0.3)',
                   display: 'flex',
                   alignItems: 'center',
@@ -248,17 +248,7 @@ export default function HeroMapSearch({
       </Map>
 
       {/* Subtle vignette only */}
-      <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/20 pointer-events-none" />
-
-      {/* Hero Title - Bottom */}
-      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-center pointer-events-none z-10 px-4">
-        <h1 className="text-3xl md:text-4xl lg:text-5xl mb-2 lg:mb-3 text-white drop-shadow-2xl font-extrabold leading-tight">
-          Find Your Perfect Telluride Getaway
-        </h1>
-        <p className="text-sm md:text-base lg:text-lg text-white/95 font-semibold drop-shadow-lg">
-          {hotels.length}+ places to stay • Interactive map • Best rates guaranteed
-        </p>
-      </div>
+      <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-transparent to-black/10 pointer-events-none" />
 
       {/* Compact Search Panel - Top Left */}
       <div className="absolute top-4 left-4 z-[500] pointer-events-auto">
@@ -273,7 +263,7 @@ export default function HeroMapSearch({
                     ? 'bg-primary-600 text-white shadow-md'
                     : 'bg-white/50 text-neutral-700 hover:bg-white'
                 }`}
-                title="Street map"
+                title="Street map view"
               >
                 Map
               </button>
@@ -284,20 +274,20 @@ export default function HeroMapSearch({
                     ? 'bg-primary-600 text-white shadow-md'
                     : 'bg-white/50 text-neutral-700 hover:bg-white'
                 }`}
-                title="Satellite view"
+                title="Satellite imagery view"
               >
                 Satellite
               </button>
               <button
-                onClick={() => setMapStyle('terrain')}
+                onClick={() => setMapStyle('skiTrails')}
                 className={`px-3 py-2 rounded-lg text-xs font-semibold transition-all ${
-                  mapStyle === 'terrain'
+                  mapStyle === 'skiTrails'
                     ? 'bg-primary-600 text-white shadow-md'
                     : 'bg-white/50 text-neutral-700 hover:bg-white'
                 }`}
-                title="Terrain view"
+                title="Ski trails and terrain"
               >
-                Terrain
+                Ski Trails
               </button>
             </div>
           </div>
