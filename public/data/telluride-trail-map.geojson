@@ -1,0 +1,591 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "type": "zone",
+        "name": "Mountain Village",
+        "elevation": "9545 ft",
+        "description": "Main base area with gondola access"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [-107.8565, 37.9310],
+          [-107.8545, 37.9310],
+          [-107.8545, 37.9290],
+          [-107.8565, 37.9290],
+          [-107.8565, 37.9310]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "type": "zone",
+        "name": "Telluride Base",
+        "elevation": "8725 ft",
+        "description": "Historic town base area"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [-107.8125, 37.9370],
+          [-107.8105, 37.9370],
+          [-107.8105, 37.9350],
+          [-107.8125, 37.9350],
+          [-107.8125, 37.9370]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "type": "lift",
+        "name": "Gondola",
+        "lift_type": "gondola",
+        "capacity": "8 passengers",
+        "vertical": "3165 ft",
+        "status": "operating"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-107.8115, 37.9360],
+          [-107.8200, 37.9350],
+          [-107.8300, 37.9330],
+          [-107.8400, 37.9310],
+          [-107.8500, 37.9300],
+          [-107.8555, 37.9300]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "type": "lift",
+        "name": "Lift 4 - Coonskin",
+        "lift_type": "quad",
+        "capacity": "4 passengers",
+        "vertical": "1615 ft",
+        "status": "operating"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-107.8115, 37.9365],
+          [-107.8130, 37.9380],
+          [-107.8150, 37.9395],
+          [-107.8170, 37.9410]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "type": "lift",
+        "name": "Lift 5 - Telluride Express",
+        "lift_type": "high-speed quad",
+        "capacity": "4 passengers",
+        "vertical": "1968 ft",
+        "status": "operating"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-107.8120, 37.9358],
+          [-107.8160, 37.9385],
+          [-107.8200, 37.9415]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "type": "lift",
+        "name": "Lift 6 - See Forever",
+        "lift_type": "triple",
+        "capacity": "3 passengers",
+        "vertical": "1543 ft",
+        "status": "operating"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-107.8555, 37.9302],
+          [-107.8520, 37.9330],
+          [-107.8490, 37.9360],
+          [-107.8460, 37.9390]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "type": "lift",
+        "name": "Lift 7 - Prospect",
+        "lift_type": "quad",
+        "capacity": "4 passengers",
+        "vertical": "1200 ft",
+        "status": "operating"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-107.8460, 37.9300],
+          [-107.8445, 37.9330],
+          [-107.8430, 37.9360]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "type": "lift",
+        "name": "Lift 8 - Misty Maiden",
+        "lift_type": "quad",
+        "capacity": "4 passengers",
+        "vertical": "1240 ft",
+        "status": "operating"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-107.8550, 37.9305],
+          [-107.8565, 37.9335],
+          [-107.8580, 37.9365]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "type": "lift",
+        "name": "Lift 9 - Plunge",
+        "lift_type": "high-speed six",
+        "capacity": "6 passengers",
+        "vertical": "2197 ft",
+        "status": "operating"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-107.8555, 37.9302],
+          [-107.8530, 37.9340],
+          [-107.8505, 37.9380],
+          [-107.8480, 37.9420]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "type": "lift",
+        "name": "Lift 10 - Revelation Bowl",
+        "lift_type": "high-speed quad",
+        "capacity": "4 passengers",
+        "vertical": "1584 ft",
+        "status": "operating"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-107.8480, 37.9420],
+          [-107.8460, 37.9450],
+          [-107.8440, 37.9480]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "type": "trail",
+        "name": "Telluride Trail",
+        "difficulty": "easy",
+        "grooming": "groomed",
+        "length": "4.6 miles",
+        "vertical": "3165 ft"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-107.8555, 37.9300],
+          [-107.8540, 37.9295],
+          [-107.8510, 37.9285],
+          [-107.8480, 37.9280],
+          [-107.8450, 37.9275],
+          [-107.8420, 37.9270],
+          [-107.8390, 37.9265],
+          [-107.8360, 37.9260],
+          [-107.8330, 37.9255],
+          [-107.8300, 37.9250],
+          [-107.8270, 37.9255],
+          [-107.8240, 37.9260],
+          [-107.8210, 37.9270],
+          [-107.8180, 37.9285],
+          [-107.8150, 37.9305],
+          [-107.8125, 37.9330],
+          [-107.8115, 37.9360]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "type": "trail",
+        "name": "See Forever",
+        "difficulty": "intermediate",
+        "grooming": "groomed",
+        "length": "2.8 miles",
+        "vertical": "1543 ft"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-107.8460, 37.9390],
+          [-107.8475, 37.9375],
+          [-107.8490, 37.9360],
+          [-107.8505, 37.9345],
+          [-107.8520, 37.9330],
+          [-107.8535, 37.9315],
+          [-107.8555, 37.9302]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "type": "trail",
+        "name": "Plunge",
+        "difficulty": "easy",
+        "grooming": "groomed",
+        "length": "1.9 miles",
+        "vertical": "2197 ft"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-107.8480, 37.9420],
+          [-107.8495, 37.9395],
+          [-107.8510, 37.9370],
+          [-107.8525, 37.9345],
+          [-107.8540, 37.9320],
+          [-107.8555, 37.9302]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "type": "trail",
+        "name": "Bushwacker",
+        "difficulty": "intermediate",
+        "grooming": "groomed",
+        "length": "1.5 miles",
+        "vertical": "1650 ft"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-107.8200, 37.9415],
+          [-107.8210, 37.9400],
+          [-107.8220, 37.9385],
+          [-107.8230, 37.9370],
+          [-107.8240, 37.9355],
+          [-107.8250, 37.9340],
+          [-107.8260, 37.9325],
+          [-107.8270, 37.9310]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "type": "trail",
+        "name": "Peek-a-Boo",
+        "difficulty": "intermediate",
+        "grooming": "groomed",
+        "length": "1.2 miles",
+        "vertical": "1200 ft"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-107.8430, 37.9360],
+          [-107.8440, 37.9345],
+          [-107.8450, 37.9330],
+          [-107.8460, 37.9315],
+          [-107.8470, 37.9300]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "type": "trail",
+        "name": "Misty Maiden",
+        "difficulty": "intermediate",
+        "grooming": "groomed",
+        "length": "1.3 miles",
+        "vertical": "1240 ft"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-107.8580, 37.9365],
+          [-107.8575, 37.9350],
+          [-107.8570, 37.9335],
+          [-107.8565, 37.9320],
+          [-107.8560, 37.9305]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "type": "trail",
+        "name": "Kant-Mak-M",
+        "difficulty": "advanced",
+        "grooming": "ungroomed",
+        "length": "0.9 miles",
+        "vertical": "1400 ft"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-107.8200, 37.9415],
+          [-107.8195, 37.9405],
+          [-107.8190, 37.9395],
+          [-107.8185, 37.9385],
+          [-107.8180, 37.9375],
+          [-107.8175, 37.9365]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "type": "trail",
+        "name": "Spiral Stairs",
+        "difficulty": "advanced",
+        "grooming": "moguls",
+        "length": "0.8 miles",
+        "vertical": "1350 ft"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-107.8170, 37.9410],
+          [-107.8165, 37.9398],
+          [-107.8160, 37.9386],
+          [-107.8155, 37.9374],
+          [-107.8150, 37.9362]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "type": "trail",
+        "name": "The Plunge",
+        "difficulty": "advanced",
+        "grooming": "moguls",
+        "length": "1.1 miles",
+        "vertical": "1800 ft"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-107.8480, 37.9420],
+          [-107.8473, 37.9405],
+          [-107.8466, 37.9390],
+          [-107.8459, 37.9375],
+          [-107.8452, 37.9360],
+          [-107.8445, 37.9345],
+          [-107.8438, 37.9330]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "type": "trail",
+        "name": "Gold Hill Chutes",
+        "difficulty": "expert",
+        "grooming": "ungroomed",
+        "length": "0.6 miles",
+        "vertical": "1200 ft",
+        "terrain": "steep chutes"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-107.8440, 37.9480],
+          [-107.8435, 37.9470],
+          [-107.8430, 37.9460],
+          [-107.8425, 37.9450],
+          [-107.8420, 37.9440]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "type": "trail",
+        "name": "Black Iron Bowl",
+        "difficulty": "expert",
+        "grooming": "ungroomed",
+        "length": "0.8 miles",
+        "vertical": "1400 ft",
+        "terrain": "bowl skiing"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-107.8440, 37.9480],
+          [-107.8450, 37.9470],
+          [-107.8460, 37.9460],
+          [-107.8470, 37.9450],
+          [-107.8480, 37.9440],
+          [-107.8490, 37.9430]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "type": "trail",
+        "name": "Palmyra Peak Access",
+        "difficulty": "expert",
+        "grooming": "ungroomed",
+        "length": "0.4 miles",
+        "vertical": "800 ft",
+        "terrain": "hike-to terrain",
+        "elevation": "13320 ft"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-107.8440, 37.9480],
+          [-107.8438, 37.9488],
+          [-107.8436, 37.9496],
+          [-107.8434, 37.9504]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "type": "poi",
+        "name": "Gorrono Ranch",
+        "category": "restaurant",
+        "elevation": "11000 ft",
+        "amenities": ["dining", "bar", "restrooms", "wifi"]
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-107.8460, 37.9390]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "type": "poi",
+        "name": "Allred's Restaurant",
+        "category": "restaurant",
+        "elevation": "10540 ft",
+        "amenities": ["fine dining", "bar", "reservations"]
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-107.8555, 37.9302]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "type": "poi",
+        "name": "Giuseppe's",
+        "category": "restaurant",
+        "elevation": "12000 ft",
+        "amenities": ["pizza", "pasta", "bar", "outdoor seating"]
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-107.8480, 37.9420]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "type": "poi",
+        "name": "Bon Vivant",
+        "category": "restaurant",
+        "elevation": "11200 ft",
+        "amenities": ["lunch", "snacks", "coffee"]
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-107.8430, 37.9360]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "type": "poi",
+        "name": "San Sophia Station",
+        "category": "restaurant",
+        "elevation": "10950 ft",
+        "amenities": ["lunch", "grab-and-go", "restrooms"]
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-107.8200, 37.9415]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "type": "poi",
+        "name": "Market Plaza",
+        "category": "services",
+        "elevation": "9545 ft",
+        "amenities": ["rentals", "retail", "lessons", "tickets"]
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-107.8555, 37.9300]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "type": "poi",
+        "name": "Telluride Base",
+        "category": "services",
+        "elevation": "8725 ft",
+        "amenities": ["rentals", "retail", "lessons", "tickets", "parking"]
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-107.8115, 37.9360]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "type": "poi",
+        "name": "Ski Patrol Headquarters",
+        "category": "safety",
+        "elevation": "10540 ft",
+        "amenities": ["medical", "emergency"]
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-107.8555, 37.9305]
+      }
+    }
+  ]
+}
+
