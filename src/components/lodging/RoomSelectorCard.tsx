@@ -34,6 +34,7 @@ interface RoomOption {
   roomId: string;
   roomName: string;
   rates: LiteAPIRate[];
+  images?: string[]; // Room photos from hotel details
 }
 
 export function RoomSelectorCard({
@@ -162,6 +163,44 @@ export function RoomSelectorCard({
           sampleRoom: roomOptions[0],
         });
 
+        // Fetch hotel details to get room photos
+        try {
+          const detailsResponse = await fetch(`/api/hotels/details?hotelId=${hotelId}`);
+          if (detailsResponse.ok) {
+            const detailsData = await detailsResponse.json();
+            const hotelData = detailsData.data || detailsData;
+            
+            console.log('[RoomSelector] Hotel details received, rooms:', hotelData.rooms?.length || 0);
+            
+            // Create a map of room ID to photos
+            const roomPhotosMap = new Map<string, string[]>();
+            if (hotelData.rooms && Array.isArray(hotelData.rooms)) {
+              for (const room of hotelData.rooms) {
+                const photos = room.photos?.map((p: any) => p.url || p.hd_url).filter(Boolean) || [];
+                if (photos.length > 0) {
+                  roomPhotosMap.set(room.id?.toString(), photos);
+                }
+              }
+            }
+            
+            console.log('[RoomSelector] Room photos map size:', roomPhotosMap.size);
+            
+            // Merge photos with room options
+            for (const roomOption of roomOptions) {
+              const photos = roomPhotosMap.get(roomOption.roomId);
+              if (photos && photos.length > 0) {
+                roomOption.images = photos;
+                console.log('[RoomSelector] Added', photos.length, 'images to room:', roomOption.roomName);
+              }
+            }
+          } else {
+            console.warn('[RoomSelector] Failed to fetch hotel details for photos');
+          }
+        } catch (err) {
+          console.warn('[RoomSelector] Error fetching hotel details for photos:', err);
+          // Continue without photos - not a critical error
+        }
+
         setRooms(roomOptions);
       } catch (err) {
         console.error('[RoomSelector] Error fetching rates:', err);
@@ -197,9 +236,14 @@ export function RoomSelectorCard({
     });
   }, [rooms, bedFilter]);
 
-  // Get all rates from all filtered rooms
+  // Get all rates from all filtered rooms with their associated images
   const allRates = useMemo(() => {
-    return filteredRooms.flatMap(room => room.rates);
+    return filteredRooms.flatMap(room => 
+      room.rates.map(rate => ({
+        ...rate,
+        images: room.images, // Attach room images to each rate
+      }))
+    );
   }, [filteredRooms]);
 
   return (

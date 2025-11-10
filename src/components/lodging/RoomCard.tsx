@@ -34,7 +34,8 @@ export function RoomCard({ rate, nights, onReserve, available, hotel, booking }:
   
   // Extract room details
   const roomName = rate.room_name || 'Standard Room';
-  const images: string[] = [];
+  // Extract room images from rate data (if available)
+  const images: string[] = (rate as any).images?.map((img: any) => img.url || img).filter(Boolean) || [];
   const totalPrice = rate.total?.amount || 0;
   const currency = rate.total?.currency || 'USD';
   const pricePerNight = nights > 0 ? totalPrice / nights : totalPrice;
