@@ -151,14 +151,22 @@ export function WeatherWidget({ startDate, endDate, title = 'Weather Forecast', 
     dailyDates: w.detailedWeatherData?.daily?.map(d => d.date) || [],
   })));
   
-  // The API returns ONE weatherData item that contains ALL days in its daily array
-  const dailyData = weatherData.flatMap(w => w.detailedWeatherData?.daily || []);
+  // LiteAPI bug: Returns 7 weatherData items but only the first has data
+  // Use only the first item which contains the actual weather data
+  const firstWeatherData = weatherData.find(w => w.detailedWeatherData?.daily?.length > 0);
+  const dailyData = firstWeatherData?.detailedWeatherData?.daily || [];
   
   console.log('[WeatherWidget] Extracted daily data:', {
     weatherDataCount: weatherData.length,
+    foundValidData: !!firstWeatherData,
     dailyDataCount: dailyData.length,
     allDates: dailyData.map(d => d.date),
   });
+  
+  // If we still don't have enough days, log the issue
+  if (dailyData.length < 7) {
+    console.warn('[WeatherWidget] Expected 7+ days of weather data but got:', dailyData.length);
+  }
 
   // Handle short stays (1-3 days) differently
   const isShortStay = dailyData.length <= 3;

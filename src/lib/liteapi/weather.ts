@@ -202,7 +202,13 @@ export async function getWeather(params: WeatherParams): Promise<WeatherResponse
     weatherDataLength: response.weatherData?.length,
     hasDetailedWeatherData: !!response.weatherData?.[0]?.detailedWeatherData,
     hasDaily: !!response.weatherData?.[0]?.detailedWeatherData?.daily,
-    firstItem: response.weatherData?.[0],
+    dailyLength: response.weatherData?.[0]?.detailedWeatherData?.daily?.length,
+    allItemsStructure: response.weatherData?.map((w, idx) => ({
+      index: idx,
+      hasDetailed: !!w.detailedWeatherData,
+      dailyLength: w.detailedWeatherData?.daily?.length || 0,
+      dailyDates: w.detailedWeatherData?.daily?.map(d => d.date) || [],
+    })),
   });
   
   return response;
