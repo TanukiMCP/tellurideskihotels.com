@@ -46,9 +46,9 @@ export default function HotelMapPopup({
   const priceDisplay = minPrice > 0 ? formatMapPrice(minPrice, currency) : 'View Rates';
   
   return (
-    <div className="min-w-[280px] max-w-[320px]">
+    <div className="w-[280px]">
       {/* Hero Image */}
-      <div className="relative w-full h-[160px] -mx-5 -mt-3 mb-3 overflow-hidden">
+      <div className="relative w-full h-[140px] mb-3 rounded-lg overflow-hidden">
         <img 
           src={primaryImage}
           alt={hotel.name}
@@ -87,7 +87,7 @@ export default function HotelMapPopup({
       </div>
 
       {/* Hotel Name */}
-      <h3 className="text-base font-semibold text-neutral-900 mb-2 line-clamp-2">
+      <h3 className="text-sm font-bold text-neutral-900 mb-2 line-clamp-2 leading-tight">
         {hotel.name}
       </h3>
 
@@ -115,17 +115,15 @@ export default function HotelMapPopup({
       )}
 
       {/* CTA Button */}
-      <div className="pt-3 border-t border-gray-200">
-        <button
-          onClick={onViewDetails}
-          className="w-full inline-flex items-center justify-center gap-1.5 bg-primary-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-primary-700 transition-colors"
-        >
-          View Hotel Details
-          <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-          </svg>
-        </button>
-      </div>
+      <button
+        onClick={onViewDetails}
+        className="w-full inline-flex items-center justify-center gap-1.5 bg-primary-600 text-white px-4 py-2.5 rounded-lg text-sm font-bold hover:bg-primary-700 transition-colors mt-3"
+      >
+        View Details
+        <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+        </svg>
+      </button>
     </div>
   );
 }

@@ -478,22 +478,22 @@ export default function HeroMapSearch({
         }
         
         .hero-map-popup .mapboxgl-popup-content {
-          padding: 0;
-          border-radius: 16px;
-          box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-          overflow: hidden;
+          padding: 16px;
+          border-radius: 12px;
+          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
         }
         .hero-map-popup .mapboxgl-popup-close-button {
-          font-size: 20px;
-          padding: 8px;
+          font-size: 18px;
+          padding: 4px;
           color: #64748b;
-          right: 8px;
-          top: 8px;
+          right: 12px;
+          top: 12px;
           z-index: 10;
           background: white;
-          border-radius: 8px;
-          width: 32px;
-          height: 32px;
+          border-radius: 6px;
+          width: 28px;
+          height: 28px;
+          line-height: 1;
         }
         .hero-map-popup .mapboxgl-popup-close-button:hover {
           background-color: #f1f5f9;
