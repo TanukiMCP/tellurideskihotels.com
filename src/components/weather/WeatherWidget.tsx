@@ -45,7 +45,12 @@ export function WeatherWidget({ startDate, endDate, title = 'Weather Forecast', 
       try {
         console.log('[WeatherWidget] Fetching weather from Open-Meteo:', { startDate, endDate });
         
-        const response = await fetch('/api/weather/open-meteo');
+        // Pass date parameters to API
+        const url = new URL('/api/weather/open-meteo', window.location.origin);
+        url.searchParams.set('startDate', startDate);
+        url.searchParams.set('endDate', endDate);
+        
+        const response = await fetch(url.toString());
         
         if (!response.ok) {
           throw new Error(`Weather API error: ${response.status}`);
@@ -54,12 +59,12 @@ export function WeatherWidget({ startDate, endDate, title = 'Weather Forecast', 
         const data = await response.json();
         console.log('[WeatherWidget] Weather data received:', data);
         
-        // Filter weather data to only show dates in the range
+        // Filter weather data to only show dates in the user's stay range
         const filteredData = (data.weatherData || []).filter((day: WeatherDay) => {
           return day.date >= startDate && day.date <= endDate;
         });
         
-        console.log('[WeatherWidget] Filtered weather data:', {
+        console.log('[WeatherWidget] Filtered weather for stay dates:', {
           startDate,
           endDate,
           totalDays: data.weatherData?.length || 0,
