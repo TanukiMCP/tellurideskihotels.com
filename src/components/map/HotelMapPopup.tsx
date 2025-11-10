@@ -57,16 +57,15 @@ export default function HotelMapPopup({
         />
         
         {/* Price Badge */}
-        <div className="absolute top-2 right-2 bg-white px-2.5 py-1.5 rounded-md shadow-md">
-          {checkInDate && minPrice > 0 && (
-            <div className="text-[10px] text-gray-600 mb-0.5">
-              Next: {new Date(checkInDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+        {minPrice > 0 && (
+          <div className="absolute top-2 right-2 bg-white px-2.5 py-1.5 rounded-md shadow-md">
+            <div className="text-[10px] text-gray-500 uppercase tracking-wide">From</div>
+            <div className="font-bold text-sm text-primary-600">
+              {priceDisplay}
             </div>
-          )}
-          <div className="font-semibold text-sm text-primary-600">
-            {priceDisplay}
+            <div className="text-[9px] text-gray-600">per night</div>
           </div>
-        </div>
+        )}
         
         {/* Star Rating */}
         {hotel.star_rating && hotel.star_rating > 0 && (

@@ -331,11 +331,16 @@ export default function HeroMapSearch({
                   />
                 </div>
                 
-                {/* Price Label - shows on hover for featured hotels */}
-                {hasPrice && isHovered && (
+                {/* Price Label - always shows for featured hotels with prices */}
+                {hasPrice && (
                   <div 
-                    className="absolute -top-10 left-1/2 transform -translate-x-1/2 bg-white px-2.5 py-1.5 rounded-lg shadow-xl border border-neutral-200 whitespace-nowrap animate-fade-in-up"
+                    className="absolute -top-10 left-1/2 transform -translate-x-1/2 bg-white px-2.5 py-1.5 rounded-lg shadow-xl border border-neutral-200 whitespace-nowrap"
+                    style={{
+                      transform: isHovered ? 'translateX(-50%) scale(1.1)' : 'translateX(-50%) scale(1)',
+                      transition: 'transform 0.2s ease-in-out',
+                    }}
                   >
+                    <div className="text-[10px] text-neutral-500 uppercase tracking-wide">From</div>
                     <div className="text-xs font-bold text-primary-600">
                       ${Math.round(minPrice)}
                     </div>
