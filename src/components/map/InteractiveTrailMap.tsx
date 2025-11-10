@@ -3,9 +3,9 @@
  * Uses Mapbox outdoors style with custom layer styling for ski terrain
  * Leverages OpenStreetMap ski piste data already in Mapbox
  */
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import Map, { NavigationControl, Popup } from 'react-map-gl/mapbox';
-import type { MapRef, MapLayerMouseEvent } from 'react-map-gl/mapbox';
+import type { MapRef, MapMouseEvent } from 'react-map-gl/mapbox';
 import { MAPBOX_TOKEN, TELLURIDE_CENTER } from '@/lib/mapbox-utils';
 import 'mapbox-gl/dist/mapbox-gl.css';
 
@@ -63,7 +63,7 @@ export default function InteractiveTrailMap() {
   };
 
   // Handle map clicks to show feature info
-  const handleMapClick = (event: MapLayerMouseEvent) => {
+  const handleMapClick = (event: MapMouseEvent) => {
     const map = mapRef.current?.getMap();
     if (!map) return;
 
