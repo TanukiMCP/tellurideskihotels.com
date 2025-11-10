@@ -13,12 +13,14 @@ import { EventsWidget } from '@/components/info/EventsWidget';
 import { AirQualityWidget } from '@/components/info/AirQualityWidget';
 import { WebcamLinks } from '@/components/info/WebcamLinks';
 import { SITE_DESCRIPTION } from '@/lib/constants';
-import { getHomepageHeroImage } from '@/lib/image-library';
+import { getHomepageHeroImage, getImagesByCategory } from '@/lib/image-library';
+import { optimizePexelsImage, generateSrcSet } from '@/lib/image-optimizer';
 import { searchHotels } from '@/lib/liteapi/hotels';
 import { getTellurideSkiConditions } from '@/lib/snocountry/client';
 import { getTopHotels } from '@/lib/top-hotels';
 
 const heroImage = getHomepageHeroImage();
+const heroImages = getImagesByCategory('hero') || getImagesByCategory('resort') || [];
 
 // Fetch featured hotels server-side (has access to API key)
 import type { LiteAPIHotel } from '@/lib/liteapi/types';
