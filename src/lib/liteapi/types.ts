@@ -19,6 +19,8 @@ export interface LiteAPIHotel {
     type?: string;
     url?: string;
     description?: string;
+    order?: number;
+    defaultImage?: boolean;
   }>;
   amenities?: Array<{
     code?: string;
@@ -33,6 +35,13 @@ export interface LiteAPIHotel {
     description?: string;
     photos: string[];
   }>;
+  // Additional fields from API that we should include
+  hotelImportantInformation?: string;
+  checkinCheckoutTimes?: {
+    checkin?: string;
+    checkout?: string;
+    checkinStart?: string;
+  };
 }
 
 export interface LiteAPIRoom {

@@ -150,14 +150,22 @@ export async function getHotelDetails(hotelId: string): Promise<LiteAPIHotel> {
     roomsCount: hotel.rooms?.length || 0,
   });
   
-  // Transform hotelImages correctly - use url or urlHd
+  // Transform hotelImages correctly per docs: url, urlHd, caption, order, defaultImage
   const hotelImages = (hotel.hotelImages || [])
     .map((img: any) => ({
       type: img.defaultImage ? 'main' : 'gallery',
-      url: img.urlHd || img.url, // Prefer HD version
+      url: img.url || '', // Standard URL
       description: img.caption || '',
+      order: img.order || 0,
+      defaultImage: img.defaultImage || false,
     }))
-    .filter((img: any) => img.url && img.url.trim() !== '');
+    .filter((img: any) => img.url && img.url.trim() !== '')
+    // Sort by: defaultImage first, then by order
+    .sort((a, b) => {
+      if (a.defaultImage && !b.defaultImage) return -1;
+      if (!a.defaultImage && b.defaultImage) return 1;
+      return a.order - b.order;
+    });
   
   console.log('[LiteAPI Hotels] Processed hotel images:', {
     count: hotelImages.length,
@@ -187,18 +195,18 @@ export async function getHotelDetails(hotelId: string): Promise<LiteAPIHotel> {
     } : null,
   });
   
-  // Transform API response to match our types
+  // Transform API response to match our types - per LiteAPI docs
   return {
     hotel_id: hotel.id || hotelId,
     name: hotel.name,
-    star_rating: hotel.starRating,
-    review_score: hotel.rating,  // Guest rating (0-10 scale)
+    star_rating: hotel.starRating, // Hotel classification (1-5 stars based on amenities)
+    review_score: hotel.rating,  // Guest rating (0-10 scale from reviews)
     review_count: hotel.reviewCount,
     address: {
       line1: hotel.address,  // Full address as single string
       city: hotel.city,
       state: hotel.state,
-      postal_code: hotel.zip, // Changed from postalCode to zip
+      postal_code: hotel.zip,
       country: hotel.country,
     },
     location: hotel.location ? {
@@ -213,6 +221,13 @@ export async function getHotelDetails(hotelId: string): Promise<LiteAPIHotel> {
       text: hotel.hotelDescription,
     } : undefined,
     rooms: rooms,
+    // Additional fields per docs
+    hotelImportantInformation: hotel.hotelImportantInformation,
+    checkinCheckoutTimes: hotel.checkinCheckoutTimes ? {
+      checkin: hotel.checkinCheckoutTimes.checkin,
+      checkout: hotel.checkinCheckoutTimes.checkout,
+      checkinStart: hotel.checkinCheckoutTimes.checkinStart,
+    } : undefined,
   };
 }
 
