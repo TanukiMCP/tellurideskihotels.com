@@ -1,199 +1,119 @@
 /**
  * InteractiveTrailMap Component
- * Full-featured ski trail map for Telluride with offline PWA support
- * Displays trails, lifts, restaurants, and terrain zones
+ * Uses Mapbox outdoors style with custom layer styling for ski terrain
+ * Leverages OpenStreetMap ski piste data already in Mapbox
  */
 import { useEffect, useRef, useState } from 'react';
-import Map, { Source, Layer, NavigationControl, Popup } from 'react-map-gl/mapbox';
-import type { MapRef } from 'react-map-gl/mapbox';
+import Map, { NavigationControl, Popup } from 'react-map-gl/mapbox';
+import type { MapRef, MapLayerMouseEvent } from 'react-map-gl/mapbox';
 import { MAPBOX_TOKEN, TELLURIDE_CENTER } from '@/lib/mapbox-utils';
 import 'mapbox-gl/dist/mapbox-gl.css';
 
 const TRAIL_MAP_STYLE = 'mapbox://styles/mapbox/outdoors-v12';
 
-// Trail difficulty colors matching ski industry standards
-const TRAIL_COLORS = {
-  easy: '#22c55e',       // Green circle
-  intermediate: '#2563eb', // Blue square  
-  advanced: '#000000',   // Black diamond
-  expert: '#000000',     // Double black diamond (also black)
-};
-
-// Lift type colors
-const LIFT_COLORS = {
-  gondola: '#f59e0b',    // Orange
-  'high-speed quad': '#f59e0b',
-  'high-speed six': '#f59e0b',
-  quad: '#d97706',
-  triple: '#92400e',
-  double: '#78350f',
-};
-
-interface POIFeature {
-  type: string;
-  name: string;
-  category: string;
-  elevation?: string;
-  amenities?: string[];
-}
-
-interface TrailFeature {
-  type: string;
-  name: string;
-  difficulty: string;
-  grooming: string;
-  length?: string;
-  vertical?: string;
-}
-
-interface LiftFeature {
-  type: string;
-  name: string;
-  lift_type: string;
-  capacity?: string;
-  vertical?: string;
-  status?: string;
-}
+// Telluride Ski Resort bounds for better framing
+const TELLURIDE_BOUNDS: [[number, number], [number, number]] = [
+  [-107.85, 37.925], // Southwest coordinates
+  [-107.80, 37.95]   // Northeast coordinates
+];
 
 export default function InteractiveTrailMap() {
   const mapRef = useRef<MapRef>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [trailData, setTrailData] = useState<any>(null);
-  const [selectedFeature, setSelectedFeature] = useState<any>(null);
   const [popupInfo, setPopupInfo] = useState<any>(null);
-  const [showLabels, setShowLabels] = useState(true);
-  const [showPOI, setShowPOI] = useState(true);
+  const [terrainEnabled, setTerrainEnabled] = useState(true);
   const [viewState, setViewState] = useState({
     longitude: TELLURIDE_CENTER[0],
     latitude: TELLURIDE_CENTER[1],
-    zoom: 13,
+    zoom: 13.5,
+    pitch: 45,
+    bearing: 0
   });
 
-  // Load trail map data
-  useEffect(() => {
-    fetch('/data/telluride-trail-map.geojson')
-      .then(res => res.json())
-      .then(data => {
-        setTrailData(data);
-        setIsLoading(false);
-      })
-      .catch(err => {
-        console.error('Failed to load trail map data:', err);
-        setIsLoading(false);
-      });
-  }, []);
-
-  // Handle map load
+  // Handle map load and apply custom styling
   const handleMapLoad = () => {
-    setIsLoading(false);
-  };
-
-  // Handle feature click
-  const handleMapClick = (event: any) => {
     const map = mapRef.current?.getMap();
     if (!map) return;
 
-    const features = map.queryRenderedFeatures(event.point, {
-      layers: ['trails-layer', 'lifts-layer', 'poi-layer']
-    });
+    // Add 3D terrain
+    if (terrainEnabled) {
+      map.addSource('mapbox-dem', {
+        type: 'raster-dem',
+        url: 'mapbox://mapbox.mapbox-terrain-dem-v1',
+        tileSize: 512,
+        maxzoom: 14
+      });
+      map.setTerrain({ source: 'mapbox-dem', exaggeration: 1.5 });
+    }
 
-    if (features.length > 0) {
-      const feature = features[0];
-      setSelectedFeature(feature);
+    // Style ski pistes (trails) if they exist in the outdoors layer
+    // The outdoors-v12 style includes OSM piste data
+    const layers = map.getStyle().layers;
+    if (layers) {
+      // Find and enhance existing piste layers or add custom ones
+      layers.forEach((layer: any) => {
+        // Enhance any existing ski trail rendering
+        if (layer.id.includes('piste') || layer.id.includes('path')) {
+          map.setPaintProperty(layer.id, 'line-opacity', 0.9);
+        }
+      });
+    }
+
+    setIsLoading(false);
+  };
+
+  // Handle map clicks to show feature info
+  const handleMapClick = (event: MapLayerMouseEvent) => {
+    const map = mapRef.current?.getMap();
+    if (!map) return;
+
+    // Query all features at the clicked point
+    const features = map.queryRenderedFeatures(event.point);
+    
+    // Filter for interesting features (POIs, natural features, etc.)
+    const relevantFeature = features.find((f: any) => 
+      f.properties?.name || 
+      f.layer?.id?.includes('poi') ||
+      f.layer?.id?.includes('place') ||
+      f.properties?.ele
+    );
+
+    if (relevantFeature && relevantFeature.properties) {
       setPopupInfo({
         longitude: event.lngLat.lng,
         latitude: event.lngLat.lat,
-        properties: feature.properties
+        properties: relevantFeature.properties,
+        layer: relevantFeature.layer?.id
       });
     }
   };
 
-  // Layer styles
-  const trailsLayerStyle: any = {
-    id: 'trails-layer',
-    type: 'line',
-    paint: {
-      'line-color': [
-        'match',
-        ['get', 'difficulty'],
-        'easy', TRAIL_COLORS.easy,
-        'intermediate', TRAIL_COLORS.intermediate,
-        'advanced', TRAIL_COLORS.advanced,
-        'expert', TRAIL_COLORS.expert,
-        TRAIL_COLORS.intermediate // default
-      ],
-      'line-width': [
-        'interpolate',
-        ['linear'],
-        ['zoom'],
-        12, 4,
-        14, 7,
-        16, 12
-      ],
-      'line-opacity': 0.95
+  const toggle3D = () => {
+    const map = mapRef.current?.getMap();
+    if (!map) return;
+
+    if (terrainEnabled) {
+      // Disable 3D
+      map.setTerrain(null);
+      map.setPitch(0);
+      setViewState(prev => ({ ...prev, pitch: 0 }));
+    } else {
+      // Enable 3D
+      map.setTerrain({ source: 'mapbox-dem', exaggeration: 1.5 });
+      map.setPitch(45);
+      setViewState(prev => ({ ...prev, pitch: 45 }));
     }
+    setTerrainEnabled(!terrainEnabled);
   };
 
-  const liftsLayerStyle: any = {
-    id: 'lifts-layer',
-    type: 'line',
-    paint: {
-      'line-color': '#f59e0b',
-      'line-width': [
-        'interpolate',
-        ['linear'],
-        ['zoom'],
-        12, 2,
-        14, 4,
-        16, 6
-      ],
-      'line-dasharray': [2, 2],
-      'line-opacity': 0.9
-    }
-  };
-
-  const zonesLayerStyle: any = {
-    id: 'zones-layer',
-    type: 'fill',
-    paint: {
-      'fill-color': '#3b82f6',
-      'fill-opacity': 0.1,
-      'fill-outline-color': '#3b82f6'
-    }
-  };
-
-  const poiLayerStyle: any = {
-    id: 'poi-layer',
-    type: 'circle',
-    paint: {
-      'circle-radius': [
-        'interpolate',
-        ['linear'],
-        ['zoom'],
-        12, 6,
-        16, 12
-      ],
-      'circle-color': [
-        'match',
-        ['get', 'category'],
-        'restaurant', '#ef4444',
-        'services', '#3b82f6',
-        'safety', '#eab308',
-        '#6b7280' // default
-      ],
-      'circle-stroke-width': 2,
-      'circle-stroke-color': '#ffffff',
-      'circle-opacity': showPOI ? 1 : 0
-    }
-  };
-
-  // Get filtered GeoJSON by feature type
-  const getFeaturesByType = (type: string): GeoJSON.FeatureCollection => {
-    if (!trailData) return { type: 'FeatureCollection', features: [] } as GeoJSON.FeatureCollection;
-    return {
-      type: 'FeatureCollection',
-      features: trailData.features.filter((f: any) => f.properties.type === type)
-    } as GeoJSON.FeatureCollection;
+  const resetView = () => {
+    const map = mapRef.current?.getMap();
+    if (!map) return;
+    
+    map.fitBounds(TELLURIDE_BOUNDS, {
+      padding: 40,
+      duration: 1000
+    });
   };
 
   if (isLoading) {
@@ -202,6 +122,7 @@ export default function InteractiveTrailMap() {
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 mx-auto mb-3"></div>
           <p className="text-sm text-neutral-600">Loading Trail Map...</p>
+          <p className="text-xs text-neutral-500 mt-1">Powered by Mapbox & OpenStreetMap</p>
         </div>
       </div>
     );
@@ -218,195 +139,103 @@ export default function InteractiveTrailMap() {
         style={{ width: '100%', height: '100%' }}
         onLoad={handleMapLoad}
         onClick={handleMapClick}
-        interactiveLayerIds={['trails-layer', 'lifts-layer', 'poi-layer']}
+        maxBounds={[
+          [-107.90, 37.90],
+          [-107.75, 37.97]
+        ]}
+        minZoom={11}
+        maxZoom={18}
       >
-        <NavigationControl position="top-right" showCompass={true} />
+        <NavigationControl position="top-right" showCompass={true} visualizePitch={true} />
 
         {/* Map Controls */}
-        <div className="absolute top-4 left-4 z-10 bg-white rounded-xl shadow-xl p-4 space-y-3 max-w-xs">
-          <h3 className="font-bold text-neutral-900 text-lg mb-3">Telluride Trail Map</h3>
+        <div className="absolute top-4 left-4 z-10 bg-white/95 backdrop-blur-sm rounded-xl shadow-xl p-4 space-y-3 max-w-xs">
+          <h3 className="font-bold text-neutral-900 text-lg">Telluride Ski Resort</h3>
           
-          {/* Legend */}
-          <div className="space-y-2">
-            <h4 className="text-xs font-semibold text-neutral-700 uppercase tracking-wide">Trail Difficulty</h4>
-            <div className="space-y-2">
-              <div className="flex items-center gap-3">
-                <div className="w-6 h-6 rounded-full flex items-center justify-center" style={{ backgroundColor: TRAIL_COLORS.easy }}>
-                  <span className="text-white font-bold text-xs">●</span>
-                </div>
-                <div className="flex flex-col">
-                  <span className="text-xs font-semibold text-neutral-900">Green Circle</span>
-                  <span className="text-[10px] text-neutral-600">Easiest</span>
-                </div>
-              </div>
-              <div className="flex items-center gap-3">
-                <div className="w-6 h-6 rounded-sm flex items-center justify-center" style={{ backgroundColor: TRAIL_COLORS.intermediate }}>
-                  <span className="text-white font-bold text-sm">■</span>
-                </div>
-                <div className="flex flex-col">
-                  <span className="text-xs font-semibold text-neutral-900">Blue Square</span>
-                  <span className="text-[10px] text-neutral-600">More Difficult</span>
-                </div>
-              </div>
-              <div className="flex items-center gap-3">
-                <div className="w-6 h-6 rotate-45 flex items-center justify-center" style={{ backgroundColor: TRAIL_COLORS.advanced }}>
-                  <span className="text-white font-bold -rotate-45 text-lg leading-none">◆</span>
-                </div>
-                <div className="flex flex-col">
-                  <span className="text-xs font-semibold text-neutral-900">Black Diamond</span>
-                  <span className="text-[10px] text-neutral-600">Most Difficult</span>
-                </div>
-              </div>
-              <div className="flex items-center gap-3">
-                <div className="flex gap-0.5">
-                  <div className="w-5 h-5 rotate-45 flex items-center justify-center" style={{ backgroundColor: TRAIL_COLORS.expert }}>
-                    <span className="text-white font-bold -rotate-45 text-sm leading-none">◆</span>
-                  </div>
-                  <div className="w-5 h-5 rotate-45 flex items-center justify-center" style={{ backgroundColor: TRAIL_COLORS.expert }}>
-                    <span className="text-white font-bold -rotate-45 text-sm leading-none">◆</span>
-                  </div>
-                </div>
-                <div className="flex flex-col">
-                  <span className="text-xs font-semibold text-neutral-900">Double Black</span>
-                  <span className="text-[10px] text-neutral-600">Experts Only</span>
-                </div>
-              </div>
+          {/* Quick Stats */}
+          <div className="space-y-2 text-xs border-t border-neutral-200 pt-3">
+            <div className="flex justify-between">
+              <span className="text-neutral-600">Vertical Drop:</span>
+              <span className="font-bold text-neutral-900">4,425 ft</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-neutral-600">Summit:</span>
+              <span className="font-bold text-neutral-900">13,320 ft</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-neutral-600">Base:</span>
+              <span className="font-bold text-neutral-900">8,725 ft</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-neutral-600">Skiable Acres:</span>
+              <span className="font-bold text-neutral-900">2,000+</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-neutral-600">Lifts:</span>
+              <span className="font-bold text-neutral-900">19</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-neutral-600">Trails:</span>
+              <span className="font-bold text-neutral-900">148</span>
             </div>
           </div>
 
+          {/* Trail Difficulty Legend */}
           <div className="border-t border-neutral-200 pt-3">
-            <h4 className="text-xs font-semibold text-neutral-700 uppercase tracking-wide mb-2">Features</h4>
+            <h4 className="text-xs font-semibold text-neutral-700 uppercase tracking-wide mb-2">Trail Difficulty</h4>
             <div className="space-y-1.5">
               <div className="flex items-center gap-2">
-                <div className="w-8 h-1 rounded border-t-2 border-dashed" style={{ borderColor: '#f59e0b' }}></div>
-                <span className="text-xs text-neutral-600">Lifts & Gondolas</span>
+                <div className="w-4 h-4 rounded-full bg-green-500"></div>
+                <span className="text-xs text-neutral-600">23% Beginner</span>
               </div>
               <div className="flex items-center gap-2">
-                <div className="w-3 h-3 rounded-full" style={{ backgroundColor: '#ef4444' }}></div>
-                <span className="text-xs text-neutral-600">Restaurants</span>
+                <div className="w-4 h-4 rounded-sm bg-blue-600"></div>
+                <span className="text-xs text-neutral-600">36% Intermediate</span>
               </div>
               <div className="flex items-center gap-2">
-                <div className="w-3 h-3 rounded-full" style={{ backgroundColor: '#3b82f6' }}></div>
-                <span className="text-xs text-neutral-600">Services</span>
+                <div className="w-4 h-4 rotate-45 bg-black"></div>
+                <span className="text-xs text-neutral-600">41% Advanced/Expert</span>
               </div>
             </div>
           </div>
 
-          {/* Toggles */}
+          {/* Controls */}
           <div className="border-t border-neutral-200 pt-3 space-y-2">
-            <label className="flex items-center justify-between cursor-pointer">
-              <span className="text-xs font-medium text-neutral-700">Show Labels</span>
-              <input
-                type="checkbox"
-                checked={showLabels}
-                onChange={(e) => setShowLabels(e.target.checked)}
-                className="w-4 h-4 text-primary-600 rounded"
-              />
-            </label>
-            <label className="flex items-center justify-between cursor-pointer">
-              <span className="text-xs font-medium text-neutral-700">Show POIs</span>
-              <input
-                type="checkbox"
-                checked={showPOI}
-                onChange={(e) => setShowPOI(e.target.checked)}
-                className="w-4 h-4 text-primary-600 rounded"
-              />
-            </label>
+            <button
+              onClick={toggle3D}
+              className="w-full flex items-center justify-between px-3 py-2 bg-primary-50 hover:bg-primary-100 rounded-lg text-xs font-medium text-neutral-700 transition-colors"
+            >
+              <span>{terrainEnabled ? '3D View' : '2D View'}</span>
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+              </svg>
+            </button>
+            <button
+              onClick={resetView}
+              className="w-full flex items-center justify-center gap-2 px-3 py-2 bg-neutral-100 hover:bg-neutral-200 rounded-lg text-xs font-medium text-neutral-700 transition-colors"
+            >
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+              </svg>
+              Reset View
+            </button>
           </div>
         </div>
 
         {/* Info Badge */}
-        <div className="absolute top-4 right-16 bg-white rounded-lg shadow-md px-3 py-2 z-10">
+        <div className="absolute top-4 right-16 bg-white/95 backdrop-blur-sm rounded-lg shadow-md px-3 py-2 z-10">
           <div className="flex items-center gap-2">
             <svg className="w-4 h-4 text-primary-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
-            <span className="text-xs font-semibold text-neutral-700">Click features for details</span>
+            <span className="text-xs font-medium text-neutral-700">Click map for details</span>
           </div>
         </div>
 
-        {/* Render Zones */}
-        {trailData && (
-          <Source id="zones-source" type="geojson" data={getFeaturesByType('zone')}>
-            <Layer {...zonesLayerStyle} />
-          </Source>
-        )}
-
-        {/* Render Trails */}
-        {trailData && (
-          <Source id="trails-source" type="geojson" data={getFeaturesByType('trail')}>
-            <Layer {...trailsLayerStyle} />
-            {showLabels && (
-              <Layer
-                id="trail-labels"
-                type="symbol"
-                layout={{
-                  'text-field': ['get', 'name'],
-                  'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
-                  'text-size': 11,
-                  'symbol-placement': 'line',
-                  'text-rotation-alignment': 'map',
-                  'text-pitch-alignment': 'viewport',
-                }}
-                paint={{
-                  'text-color': '#ffffff',
-                  'text-halo-color': '#000000',
-                  'text-halo-width': 2,
-                }}
-              />
-            )}
-          </Source>
-        )}
-
-        {/* Render Lifts */}
-        {trailData && (
-          <Source id="lifts-source" type="geojson" data={getFeaturesByType('lift')}>
-            <Layer {...liftsLayerStyle} />
-            {showLabels && (
-              <Layer
-                id="lift-labels"
-                type="symbol"
-                layout={{
-                  'text-field': ['get', 'name'],
-                  'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
-                  'text-size': 10,
-                  'symbol-placement': 'line',
-                  'text-rotation-alignment': 'map',
-                }}
-                paint={{
-                  'text-color': '#f59e0b',
-                  'text-halo-color': '#ffffff',
-                  'text-halo-width': 2,
-                }}
-              />
-            )}
-          </Source>
-        )}
-
-        {/* Render POIs */}
-        {trailData && (
-          <Source id="poi-source" type="geojson" data={getFeaturesByType('poi')}>
-            <Layer {...poiLayerStyle} />
-            {showLabels && showPOI && (
-              <Layer
-                id="poi-labels"
-                type="symbol"
-                layout={{
-                  'text-field': ['get', 'name'],
-                  'text-font': ['Open Sans Semibold', 'Arial Unicode MS Regular'],
-                  'text-size': 10,
-                  'text-offset': [0, 1.5],
-                  'text-anchor': 'top',
-                }}
-                paint={{
-                  'text-color': '#1f2937',
-                  'text-halo-color': '#ffffff',
-                  'text-halo-width': 1.5,
-                }}
-              />
-            )}
-          </Source>
-        )}
+        {/* Data Attribution */}
+        <div className="absolute bottom-4 left-4 bg-white/90 backdrop-blur-sm rounded-lg shadow-sm px-3 py-2 z-10 text-xs text-neutral-600">
+          Map data © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer" className="underline hover:text-primary-600">OpenStreetMap</a> contributors
+        </div>
 
         {/* Feature Popup */}
         {popupInfo && (
@@ -420,71 +249,26 @@ export default function InteractiveTrailMap() {
             maxWidth="300px"
           >
             <div className="p-2">
-              <h3 className="font-bold text-neutral-900 mb-2">{popupInfo.properties.name}</h3>
-              {popupInfo.properties.type === 'trail' && (
-                <div className="space-y-1 text-sm">
-                  <p className="text-neutral-600">
-                    <span className="font-semibold">Difficulty:</span> {popupInfo.properties.difficulty}
-                  </p>
-                  {popupInfo.properties.length && (
-                    <p className="text-neutral-600">
-                      <span className="font-semibold">Length:</span> {popupInfo.properties.length}
-                    </p>
-                  )}
-                  {popupInfo.properties.vertical && (
-                    <p className="text-neutral-600">
-                      <span className="font-semibold">Vertical:</span> {popupInfo.properties.vertical}
-                    </p>
-                  )}
-                  <p className="text-neutral-600">
-                    <span className="font-semibold">Grooming:</span> {popupInfo.properties.grooming}
-                  </p>
-                </div>
-              )}
-              {popupInfo.properties.type === 'lift' && (
-                <div className="space-y-1 text-sm">
-                  <p className="text-neutral-600">
-                    <span className="font-semibold">Type:</span> {popupInfo.properties.lift_type}
-                  </p>
-                  {popupInfo.properties.capacity && (
-                    <p className="text-neutral-600">
-                      <span className="font-semibold">Capacity:</span> {popupInfo.properties.capacity}
-                    </p>
-                  )}
-                  {popupInfo.properties.vertical && (
-                    <p className="text-neutral-600">
-                      <span className="font-semibold">Vertical:</span> {popupInfo.properties.vertical}
-                    </p>
-                  )}
-                  <p className="text-neutral-600">
-                    <span className="font-semibold">Status:</span> {popupInfo.properties.status || 'Operating'}
-                  </p>
-                </div>
-              )}
-              {popupInfo.properties.type === 'poi' && (
-                <div className="space-y-1 text-sm">
-                  <p className="text-neutral-600">
-                    <span className="font-semibold">Category:</span> {popupInfo.properties.category}
-                  </p>
-                  {popupInfo.properties.elevation && (
-                    <p className="text-neutral-600">
-                      <span className="font-semibold">Elevation:</span> {popupInfo.properties.elevation}
-                    </p>
-                  )}
-                  {popupInfo.properties.amenities && (
-                    <div className="mt-2">
-                      <p className="font-semibold text-neutral-700 mb-1">Amenities:</p>
-                      <div className="flex flex-wrap gap-1">
-                        {JSON.parse(popupInfo.properties.amenities).map((amenity: string, i: number) => (
-                          <span key={i} className="text-xs bg-primary-100 text-primary-700 px-2 py-0.5 rounded">
-                            {amenity}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                </div>
-              )}
+              <h3 className="font-bold text-neutral-900 mb-2">
+                {popupInfo.properties.name || 'Feature'}
+              </h3>
+              <div className="space-y-1 text-xs text-neutral-600">
+                {popupInfo.properties.ele && (
+                  <p><span className="font-semibold">Elevation:</span> {popupInfo.properties.ele} m</p>
+                )}
+                {popupInfo.properties.piste_type && (
+                  <p><span className="font-semibold">Trail Type:</span> {popupInfo.properties.piste_type}</p>
+                )}
+                {popupInfo.properties.piste_difficulty && (
+                  <p><span className="font-semibold">Difficulty:</span> {popupInfo.properties.piste_difficulty}</p>
+                )}
+                {popupInfo.properties.aerialway && (
+                  <p><span className="font-semibold">Lift Type:</span> {popupInfo.properties.aerialway}</p>
+                )}
+                {popupInfo.layer && (
+                  <p className="text-neutral-500 italic mt-2">Layer: {popupInfo.layer}</p>
+                )}
+              </div>
             </div>
           </Popup>
         )}
@@ -492,4 +276,3 @@ export default function InteractiveTrailMap() {
     </div>
   );
 }
-
