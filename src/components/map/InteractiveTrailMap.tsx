@@ -19,7 +19,6 @@ const TELLURIDE_BOUNDS: [[number, number], [number, number]] = [
 
 export default function InteractiveTrailMap() {
   const mapRef = useRef<MapRef>(null);
-  const [isLoading, setIsLoading] = useState(true);
   const [popupInfo, setPopupInfo] = useState<any>(null);
   const [terrainEnabled, setTerrainEnabled] = useState(true);
   const [viewState, setViewState] = useState({
@@ -58,8 +57,6 @@ export default function InteractiveTrailMap() {
         }
       });
     }
-
-    setIsLoading(false);
   };
 
   // Handle map clicks to show feature info
@@ -115,18 +112,6 @@ export default function InteractiveTrailMap() {
       duration: 1000
     });
   };
-
-  if (isLoading) {
-    return (
-      <div className="w-full h-full flex items-center justify-center bg-neutral-100">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 mx-auto mb-3"></div>
-          <p className="text-sm text-neutral-600">Loading Trail Map...</p>
-          <p className="text-xs text-neutral-500 mt-1">Powered by Mapbox & OpenStreetMap</p>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="relative w-full h-full">
