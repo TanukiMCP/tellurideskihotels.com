@@ -143,6 +143,13 @@ export function WeatherWidget({ startDate, endDate, title = 'Weather Forecast', 
 
   // Extract daily weather data from each item
   const dailyData = weatherData.flatMap(w => w.detailedWeatherData?.daily || []);
+  
+  console.log('[WeatherWidget] Extracted daily data:', {
+    weatherDataCount: weatherData.length,
+    dailyDataCount: dailyData.length,
+    firstDay: dailyData[0],
+    allDates: dailyData.map(d => d.date),
+  });
 
   // Handle short stays (1-3 days) differently
   const isShortStay = dailyData.length <= 3;
@@ -158,36 +165,41 @@ export function WeatherWidget({ startDate, endDate, title = 'Weather Forecast', 
         </h3>
         {dailyData.length > 0 ? (
           <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-7 gap-3">
-            {dailyData.slice(0, 7).map((weather) => {
-              const date = new Date(weather.date);
-              const description = getWeatherDescription(weather);
-              
-              return (
-                <div key={weather.date} className="text-center bg-white rounded-lg p-3 border border-sky-100 shadow-sm hover:shadow-md transition-shadow">
-                  <div className="text-xs font-bold text-sky-700 mb-2">
-                    {format(date, 'EEE')}
-                  </div>
-                  <div className="text-[10px] text-neutral-600 mb-2">
-                    {format(date, 'MMM d')}
-                  </div>
-                  <div className="mb-2 flex justify-center">
-                    <WeatherIcon weather={weather} className="w-10 h-10" />
-                  </div>
-                  <div className="flex items-center justify-center gap-1 mb-1">
-                    <div className="text-lg font-bold text-neutral-900">
-                      {Math.round(weather.temp.max)}°
+            {dailyData.slice(0, 7).map((weather, index) => {
+              try {
+                const date = new Date(weather.date);
+                const description = getWeatherDescription(weather);
+                
+                return (
+                  <div key={`${weather.date}-${index}`} className="text-center bg-white rounded-lg p-3 border border-sky-100 shadow-sm hover:shadow-md transition-shadow">
+                    <div className="text-xs font-bold text-sky-700 mb-2">
+                      {format(date, 'EEE')}
                     </div>
-                    <div className="text-xs text-neutral-500">
-                      {Math.round(weather.temp.min)}°
+                    <div className="text-[10px] text-neutral-600 mb-2">
+                      {format(date, 'MMM d')}
                     </div>
+                    <div className="mb-2 flex justify-center">
+                      <WeatherIcon weather={weather} className="w-10 h-10" />
+                    </div>
+                    <div className="flex items-center justify-center gap-1 mb-1">
+                      <div className="text-lg font-bold text-neutral-900">
+                        {Math.round(weather.temp?.max || 0)}°
+                      </div>
+                      <div className="text-xs text-neutral-500">
+                        {Math.round(weather.temp?.min || 0)}°
+                      </div>
+                    </div>
+                    {(weather.pop || 0) >= 0.3 && (
+                      <div className="text-[10px] text-sky-600 flex items-center justify-center gap-0.5">
+                        💧 {Math.round((weather.pop || 0) * 100)}%
+                      </div>
+                    )}
                   </div>
-                  {(weather.pop || 0) >= 0.3 && (
-                    <div className="text-[10px] text-sky-600 flex items-center justify-center gap-0.5">
-                      💧 {Math.round((weather.pop || 0) * 100)}%
-                    </div>
-                  )}
-                </div>
-              );
+                );
+              } catch (err) {
+                console.error('[WeatherWidget] Error rendering day:', weather, err);
+                return null;
+              }
             })}
           </div>
         ) : (
