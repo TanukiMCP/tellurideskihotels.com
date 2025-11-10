@@ -27,6 +27,12 @@ export interface LiteAPIHotel {
   description?: {
     text?: string;
   };
+  rooms?: Array<{
+    id: number;
+    name: string;
+    description?: string;
+    photos: string[];
+  }>;
 }
 
 export interface LiteAPIRoom {

@@ -144,7 +144,7 @@ export async function getHotelDetails(hotelId: string): Promise<LiteAPIHotel> {
   const hotel = response.data || response;
   
   // Transform API response to match our types
-  // Field names: id, starRating, rating, hotelImages, hotelFacilities
+  // Field names: id, starRating, rating, hotelImages, hotelFacilities, rooms
   return {
     hotel_id: hotel.id || hotelId,
     name: hotel.name,
@@ -173,6 +173,13 @@ export async function getHotelDetails(hotelId: string): Promise<LiteAPIHotel> {
     description: hotel.hotelDescription ? {
       text: hotel.hotelDescription,
     } : undefined,
+    // Include room details with photos
+    rooms: (hotel.rooms || []).map((room: any) => ({
+      id: room.id,
+      name: room.roomName,
+      description: room.description,
+      photos: (room.photos || []).map((photo: any) => photo.url || photo.hd_url).filter(Boolean),
+    })),
   };
 }
 
