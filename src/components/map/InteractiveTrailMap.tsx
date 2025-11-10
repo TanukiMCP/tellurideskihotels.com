@@ -44,19 +44,6 @@ export default function InteractiveTrailMap() {
       });
       map.setTerrain({ source: 'mapbox-dem', exaggeration: 1.5 });
     }
-
-    // Style ski pistes (trails) if they exist in the outdoors layer
-    // The outdoors-v12 style includes OSM piste data
-    const layers = map.getStyle().layers;
-    if (layers) {
-      // Find and enhance existing piste layers or add custom ones
-      layers.forEach((layer: any) => {
-        // Enhance any existing ski trail rendering
-        if (layer.id.includes('piste') || layer.id.includes('path')) {
-          map.setPaintProperty(layer.id, 'line-opacity', 0.9);
-        }
-      });
-    }
   };
 
   // Handle map clicks to show feature info
