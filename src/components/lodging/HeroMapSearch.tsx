@@ -105,11 +105,35 @@ export default function HeroMapSearch({
     const isSkiMode = mapStyle === 'skiTrails';
 
     if (isSkiMode) {
+      // Hide all default Mapbox trail/piste layers to show only our custom data
+      try {
+        const style = map.getStyle();
+        if (style && style.layers) {
+          style.layers.forEach((layer: any) => {
+            // Hide default piste, aerialway, and trail labels from Mapbox
+            if (layer.id.includes('piste') || 
+                layer.id.includes('aerialway') ||
+                layer.id.includes('poi-label') && layer.id.includes('ski')) {
+              try {
+                if (map.getLayer(layer.id)) {
+                  map.setLayoutProperty(layer.id, 'visibility', 'none');
+                }
+              } catch {}
+            }
+          });
+        }
+      } catch (err) {
+        console.log('Could not hide Mapbox base trail layers:', err);
+      }
+
       // Load real Telluride ski trail data extracted from OpenStreetMap
       fetch('/data/telluride-ski-trails.json')
         .then(response => response.json())
         .then(data => {
           // Remove existing custom layers if they exist
+          if (map.getLayer('telluride-ski-trails-labels')) {
+            map.removeLayer('telluride-ski-trails-labels');
+          }
           if (map.getLayer('telluride-ski-trails')) {
             map.removeLayer('telluride-ski-trails');
           }
@@ -148,13 +172,54 @@ export default function HeroMapSearch({
                 'interpolate',
                 ['linear'],
                 ['zoom'],
-                11, 2,    // Thin at low zoom
-                13, 3,    // Medium 
-                15, 5,    // Thicker when zoomed in
-                17, 8     // Very thick up close
+                11, 3,    // Thicker at low zoom for visibility
+                13, 4,    // Medium 
+                15, 6,    // Thicker when zoomed in
+                17, 10    // Very thick up close
               ],
-              'line-opacity': 0.85
+              'line-opacity': 0.9
             }
+          });
+
+          // Add trail name labels with color-matched halos
+          map.addLayer({
+            id: 'telluride-ski-trails-labels',
+            type: 'symbol',
+            source: 'telluride-ski-trails',
+            layout: {
+              'text-field': ['get', 'name'],
+              'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
+              'text-size': [
+                'interpolate',
+                ['linear'],
+                ['zoom'],
+                13, 10,
+                15, 12,
+                17, 14
+              ],
+              'symbol-placement': 'line',
+              'text-rotation-alignment': 'map',
+              'text-pitch-alignment': 'viewport',
+              'text-max-angle': 30,
+              'symbol-spacing': 200
+            },
+            paint: {
+              'text-color': '#ffffff',
+              'text-halo-color': [
+                'match',
+                ['get', 'piste:difficulty'],
+                'novice', '#16a34a',      // Dark green halo
+                'easy', '#16a34a',        
+                'intermediate', '#1e40af', // Dark blue halo
+                'advanced', '#000000',    // Black halo
+                'expert', '#b91c1c',      // Dark red halo
+                'freeride', '#b91c1c',    
+                '#1e40af'                 
+              ],
+              'text-halo-width': 2.5,
+              'text-halo-blur': 0.5
+            },
+            minzoom: 13 // Show labels earlier
           });
 
           console.log(`[HeroMapSearch] ✅ Loaded ${data.features.length} real Telluride ski trails from OpenStreetMap`);
@@ -163,16 +228,35 @@ export default function HeroMapSearch({
           console.error('[HeroMapSearch] Failed to load ski trail data:', err);
         });
     } else {
-      // Remove ski trail layer when not in ski mode
+      // Remove ski trail layers and restore Mapbox base layers when not in ski mode
       try {
+        if (map.getLayer('telluride-ski-trails-labels')) {
+          map.removeLayer('telluride-ski-trails-labels');
+        }
         if (map.getLayer('telluride-ski-trails')) {
           map.removeLayer('telluride-ski-trails');
         }
         if (map.getSource('telluride-ski-trails')) {
           map.removeSource('telluride-ski-trails');
         }
+
+        // Restore Mapbox base trail layers
+        const style = map.getStyle();
+        if (style && style.layers) {
+          style.layers.forEach((layer: any) => {
+            if (layer.id.includes('piste') || 
+                layer.id.includes('aerialway') ||
+                layer.id.includes('poi-label') && layer.id.includes('ski')) {
+              try {
+                if (map.getLayer(layer.id)) {
+                  map.setLayoutProperty(layer.id, 'visibility', 'visible');
+                }
+              } catch {}
+            }
+          });
+        }
       } catch (err) {
-        console.log('Could not remove ski trails:', err);
+        console.log('Could not remove/restore trail layers:', err);
       }
     }
   }, [mapStyle, isMapLoaded]);
@@ -549,6 +633,41 @@ export default function HeroMapSearch({
         </div>
       )}
 
+
+      {/* Ski Trail Legend - Bottom Right (only show in Ski Trails mode) */}
+      {isMapLoaded && mapStyle === 'skiTrails' && (
+        <div className="absolute bottom-4 right-4 backdrop-blur-xl bg-white/95 rounded-xl shadow-2xl p-4 z-[500] border border-white/20">
+          <h3 className="text-sm font-bold text-neutral-900 mb-3 flex items-center gap-2">
+            <svg className="w-4 h-4 text-primary-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
+            </svg>
+            Trail Difficulty
+          </h3>
+          <div className="space-y-2">
+            <div className="flex items-center gap-2.5">
+              <div className="w-6 h-1 rounded-full bg-[#22c55e]"></div>
+              <span className="text-xs text-neutral-700 font-medium">Green Circle - Easy</span>
+            </div>
+            <div className="flex items-center gap-2.5">
+              <div className="w-6 h-1 rounded-full bg-[#3b82f6]"></div>
+              <span className="text-xs text-neutral-700 font-medium">Blue Square - Intermediate</span>
+            </div>
+            <div className="flex items-center gap-2.5">
+              <div className="w-6 h-1 rounded-full bg-[#1e1e1e]"></div>
+              <span className="text-xs text-neutral-700 font-medium">Black Diamond - Advanced</span>
+            </div>
+            <div className="flex items-center gap-2.5">
+              <div className="w-6 h-1 rounded-full bg-[#ef4444]"></div>
+              <span className="text-xs text-neutral-700 font-medium">Double Black - Expert</span>
+            </div>
+          </div>
+          <div className="mt-3 pt-3 border-t border-neutral-200">
+            <p className="text-[10px] text-neutral-500">
+              448 trails from OpenStreetMap
+            </p>
+          </div>
+        </div>
+      )}
 
       {/* Hotel Count Badge - Bottom Left */}
       {isMapLoaded && hotels.length > 0 && (
