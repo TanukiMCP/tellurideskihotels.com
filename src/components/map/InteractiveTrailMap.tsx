@@ -188,12 +188,12 @@ export default function InteractiveTrailMap() {
   };
 
   // Get filtered GeoJSON by feature type
-  const getFeaturesByType = (type: string) => {
-    if (!trailData) return { type: 'FeatureCollection', features: [] };
+  const getFeaturesByType = (type: string): GeoJSON.FeatureCollection => {
+    if (!trailData) return { type: 'FeatureCollection', features: [] } as GeoJSON.FeatureCollection;
     return {
       type: 'FeatureCollection',
       features: trailData.features.filter((f: any) => f.properties.type === type)
-    };
+    } as GeoJSON.FeatureCollection;
   };
 
   if (isLoading) {

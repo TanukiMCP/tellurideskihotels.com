@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import type { WeatherDay } from '@/lib/open-meteo/weather';
-import { getWeatherIcon, getWeatherDescription, isSnowConditions } from '@/lib/open-meteo/weather';
+import { getWeatherIconType, getWeatherDescription, isSnowConditions } from '@/lib/open-meteo/weather';
 import { format } from 'date-fns';
 import { Calendar, MapPin, Wind, Droplets } from 'lucide-react';
 
@@ -69,7 +69,7 @@ export function CurrentConditions({ checkIn, checkOut }: CurrentConditionsProps 
 
   const allDays = weatherData.slice(0, 10);
   const firstDay = allDays[0];
-  const icon = getWeatherIcon(firstDay.weatherCode);
+  const icon = getWeatherIconType(firstDay.weatherCode);
   const description = getWeatherDescription(firstDay.weatherCode);
   
   // Check for snow conditions
@@ -147,7 +147,7 @@ export function CurrentConditions({ checkIn, checkOut }: CurrentConditionsProps 
           <h3 className="text-lg font-semibold text-white mb-4">10-Day Forecast</h3>
           <div className="grid grid-cols-5 lg:grid-cols-10 gap-2 lg:gap-3">
             {allDays.map((weather, index) => {
-              const weatherIcon = getWeatherIcon(weather.weatherCode);
+              const weatherIcon = getWeatherIconType(weather.weatherCode);
               const date = new Date(weather.date);
               const isSnowDay = isSnowConditions(weather.weatherCode, weather.precipitation);
               const showPrecip = weather.precipProbability >= 0.3;
