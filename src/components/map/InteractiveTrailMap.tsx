@@ -34,13 +34,6 @@ export default function InteractiveTrailMap() {
     const map = mapRef.current?.getMap();
     if (!map) return;
 
-    // Configure scroll zoom for better UX
-    const scrollZoomHandler = map.scrollZoom;
-    if (scrollZoomHandler) {
-      scrollZoomHandler.setWheelZoomRate(1 / 200); // Smoother, more controlled zoom
-      scrollZoomHandler.setZoomRate(1 / 100); // Adjust zoom rate for better control
-    }
-
     // Add 3D terrain
     if (terrainEnabled) {
       map.addSource('mapbox-dem', {
