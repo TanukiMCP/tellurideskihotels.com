@@ -161,7 +161,7 @@ export async function getHotelDetails(hotelId: string): Promise<LiteAPIHotel> {
     }))
     .filter((img: any) => img.url && img.url.trim() !== '')
     // Sort by: defaultImage first, then by order
-    .sort((a, b) => {
+    .sort((a: any, b: any) => {
       if (a.defaultImage && !b.defaultImage) return -1;
       if (!a.defaultImage && b.defaultImage) return 1;
       return a.order - b.order;
