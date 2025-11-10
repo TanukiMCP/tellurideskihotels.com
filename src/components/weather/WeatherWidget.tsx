@@ -142,12 +142,21 @@ export function WeatherWidget({ startDate, endDate, title = 'Weather Forecast', 
   }
 
   // Extract daily weather data from each item
+  // Debug each weatherData item
+  console.log('[WeatherWidget] Raw weatherData items:', weatherData.map((w, idx) => ({
+    index: idx,
+    hasDetailed: !!w.detailedWeatherData,
+    hasDaily: !!w.detailedWeatherData?.daily,
+    dailyLength: w.detailedWeatherData?.daily?.length || 0,
+    dailyDates: w.detailedWeatherData?.daily?.map(d => d.date) || [],
+  })));
+  
+  // The API returns ONE weatherData item that contains ALL days in its daily array
   const dailyData = weatherData.flatMap(w => w.detailedWeatherData?.daily || []);
   
   console.log('[WeatherWidget] Extracted daily data:', {
     weatherDataCount: weatherData.length,
     dailyDataCount: dailyData.length,
-    firstDay: dailyData[0],
     allDates: dailyData.map(d => d.date),
   });
 
