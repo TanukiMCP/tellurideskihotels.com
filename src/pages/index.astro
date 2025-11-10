@@ -87,12 +87,17 @@ try {
           timeout: 6,
         });
         
+        // Calculate nights for per-night pricing
+        const nights = Math.ceil((new Date(checkOutDate).getTime() - new Date(featuredCheckInDate).getTime()) / (1000 * 60 * 60 * 24));
+        
         // Filter hotels to only those with availability and extract prices
         const hotelsWithAvailability = topHotelsData.filter(hotel => {
           const rateData = minRatesData[hotel.hotel_id];
           if (rateData && (rateData.suggestedSellingPrice || rateData.price)) {
             // Use suggestedSellingPrice (includes margin) or fall back to price
-            minPrices[hotel.hotel_id] = rateData.suggestedSellingPrice || rateData.price || 0;
+            // MinRates returns TOTAL price, need to divide by nights
+            const totalPrice = rateData.suggestedSellingPrice || rateData.price || 0;
+            minPrices[hotel.hotel_id] = nights > 0 ? totalPrice / nights : totalPrice;
             return true;
           }
           return false;
