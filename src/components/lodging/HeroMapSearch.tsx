@@ -57,7 +57,6 @@ export default function HeroMapSearch({
   const [hoveredHotelId, setHoveredHotelId] = useState<string | null>(null);
   const [selectedHotelId, setSelectedHotelId] = useState<string | null>(null);
   const [showMobileSearch, setShowMobileSearch] = useState(false);
-  const [trailVisibility, setTrailVisibility] = useState(0.8);
   
   // View state
   const [viewState, setViewState] = useState({
@@ -123,48 +122,59 @@ export default function HeroMapSearch({
         console.log('Found piste/lift layers:', pisteAndLiftLayers);
 
         pisteAndLiftLayers.forEach((layerId: string) => {
-          // Style ski trails
+          // Style ski trails with vibrant, ski-resort-map colors
           if (layerId.includes('piste')) {
             try {
               if (map.getLayer(layerId)) {
-                // Enhance trail width and visibility
+                // Make trails much thicker and more visible
                 map.setPaintProperty(layerId, 'line-width', [
                   'interpolate',
                   ['linear'],
                   ['zoom'],
-                  12, 2,
-                  16, 6
+                  12, 3,    // Thicker at low zoom
+                  14, 5,    // Medium thickness
+                  16, 8     // Very thick when zoomed in
                 ]);
-                map.setPaintProperty(layerId, 'line-opacity', trailVisibility);
+                
+                // Full opacity for maximum visibility
+                map.setPaintProperty(layerId, 'line-opacity', 1.0);
+                
+                // Remove any gap between lines for solid appearance
+                map.setPaintProperty(layerId, 'line-gap-width', 0);
 
-                // Color code by difficulty (if available in OSM data)
-                const existingColor = map.getPaintProperty(layerId, 'line-color');
-                if (!existingColor || existingColor === '#808080') {
-                  map.setPaintProperty(layerId, 'line-color', [
-                    'match',
-                    ['get', 'piste:difficulty'],
-                    'novice', '#22c55e',
-                    'easy', '#22c55e',
-                    'intermediate', '#3b82f6',
-                    'advanced', '#000000',
-                    'expert', '#dc2626',
-                    'freeride', '#dc2626',
-                    '#3b82f6' // default blue
-                  ]);
-                }
+                // Vibrant ski resort trail colors matching standard ski map conventions
+                map.setPaintProperty(layerId, 'line-color', [
+                  'match',
+                  ['get', 'piste:difficulty'],
+                  'novice', '#10b981',      // Bright green for beginners
+                  'easy', '#10b981',        // Bright green for easy
+                  'intermediate', '#3b82f6', // Bright blue for intermediate
+                  'advanced', '#1e1e1e',    // Black for advanced
+                  'expert', '#dc2626',      // Red for expert/double black
+                  'freeride', '#dc2626',    // Red for extreme terrain
+                  '#3b82f6'                 // Default to blue
+                ]);
               }
             } catch (err) {
               console.log('Could not style piste layer:', layerId, err);
             }
           }
 
-          // Style ski lifts
+          // Style ski lifts with bright orange/amber (classic lift color)
           if (layerId.includes('aerialway')) {
             try {
               if (map.getLayer(layerId)) {
-                map.setPaintProperty(layerId, 'line-width', 2.5);
-                map.setPaintProperty(layerId, 'line-color', '#f59e0b');
-                map.setPaintProperty(layerId, 'line-opacity', trailVisibility);
+                map.setPaintProperty(layerId, 'line-width', [
+                  'interpolate',
+                  ['linear'],
+                  ['zoom'],
+                  12, 2.5,
+                  16, 4
+                ]);
+                map.setPaintProperty(layerId, 'line-color', '#f59e0b'); // Bright amber/orange
+                map.setPaintProperty(layerId, 'line-opacity', 1.0);
+                // Add dashed pattern for lifts to distinguish from trails
+                map.setPaintProperty(layerId, 'line-dasharray', [2, 2]);
               }
             } catch (err) {
               console.log('Could not style aerialway:', layerId, err);
@@ -190,6 +200,7 @@ export default function HeroMapSearch({
                 }
                 if (layer.id.includes('aerialway')) {
                   map.setPaintProperty(layer.id, 'line-opacity', 0.3);
+                  map.setPaintProperty(layer.id, 'line-dasharray', [1, 0]);
                 }
               }
             } catch {}
@@ -199,7 +210,7 @@ export default function HeroMapSearch({
         console.error('Failed to reset trail layers:', err);
       }
     }
-  }, [mapStyle, isMapLoaded, trailVisibility]);
+  }, [mapStyle, isMapLoaded]);
 
   // Handle search submission
   const handleSearch = useCallback(async (e?: React.FormEvent) => {
@@ -416,38 +427,12 @@ export default function HeroMapSearch({
                       ? 'bg-primary-600 text-white shadow-md'
                       : 'bg-white/50 text-neutral-700 hover:bg-white'
                   }`}
-                  title="Ski trails and terrain"
+                  title="Colorful ski trails and lifts"
                 >
                   Ski Trails
                 </button>
               </div>
             </div>
-
-            {/* Trail Visibility Slider - Only show when ski trails active */}
-            {mapStyle === 'skiTrails' && (
-              <div className="backdrop-blur-xl bg-white/95 border border-white/20 rounded-xl shadow-xl p-2.5 flex-shrink-0">
-                <label className="block">
-                  <div className="flex justify-between items-center mb-1.5">
-                    <span className="text-[10px] font-bold text-gray-700 uppercase tracking-wide">
-                      Trail Visibility
-                    </span>
-                    <span className="text-[10px] text-primary-600 font-bold">
-                      {Math.round(trailVisibility * 100)}%
-                    </span>
-                  </div>
-                  <input
-                    type="range"
-                    min="0.3"
-                    max="1"
-                    step="0.1"
-                    value={trailVisibility}
-                    onChange={(e) => setTrailVisibility(parseFloat(e.target.value))}
-                    className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-primary-600"
-                    style={{ width: '160px' }}
-                  />
-                </label>
-              </div>
-            )}
 
             {/* Horizontal Search Form - Desktop Only - Adjacent to View Toggle */}
             <form onSubmit={handleSearch} className="hidden lg:flex backdrop-blur-xl bg-white/95 rounded-xl shadow-xl p-2 border border-white/20 items-center gap-2 flex-shrink-0">
