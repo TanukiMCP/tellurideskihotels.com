@@ -1,6 +1,7 @@
 ---
 import { SITE_NAME } from '@/lib/constants';
 import Container from './Container.astro';
+import { CartIcon } from '@/components/cart/CartIcon';
 ---
 
 <header class="sticky top-0 z-50 glass-effect border-b border-neutral-200 shadow-card" x-data="{ mobileMenuOpen: false }">
@@ -46,7 +47,13 @@ import Container from './Container.astro';
           About
           <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-primary-600 group-hover:w-full transition-all duration-300"></span>
         </a>
+        <CartIcon client:load />
       </nav>
+
+      {/* Cart Icon (Mobile) */}
+      <div class="lg:hidden">
+        <CartIcon client:load />
+      </div>
 
       {/* Mobile Menu Button */}
       <button 
@@ -90,6 +97,9 @@ import Container from './Container.astro';
         </a>
         <a href="/about" class="px-6 py-3 text-neutral-700 hover:bg-primary-50 hover:text-primary-600 font-semibold transition-colors">
           About
+        </a>
+        <a href="/cart" class="px-6 py-3 text-neutral-700 hover:bg-primary-50 hover:text-primary-600 font-semibold transition-colors">
+          Cart
         </a>
       </nav>
     </div>

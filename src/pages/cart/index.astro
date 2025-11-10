@@ -1,0 +1,44 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Container from '@/components/layout/Container.astro';
+import Breadcrumbs from '@/components/ui/Breadcrumbs.astro';
+import { CartView } from '@/components/cart/CartView';
+
+const metaTitle = 'Your Cart | Telluride Ski Hotels';
+const metaDescription = 'Review your hotel bookings and complete your reservation for Telluride accommodations.';
+---
+
+<BaseLayout
+  title={metaTitle}
+  description={metaDescription}
+  ogType="website"
+>
+  <main class="min-h-screen bg-neutral-50">
+    <!-- Header Section -->
+    <div class="bg-gradient-to-br from-primary-600 via-primary-700 to-primary-800 py-16 lg:py-20">
+      <Container>
+        <Breadcrumbs items={[
+          { label: 'Home', href: '/' },
+          { label: 'Cart', href: undefined },
+        ]} />
+        
+        <div class="mt-8">
+          <h1 class="text-4xl md:text-5xl lg:text-6xl mb-4 font-extrabold text-white drop-shadow-2xl">
+            Your Cart
+          </h1>
+          <p class="text-xl text-white/90 max-w-2xl">
+            Review your selections and proceed to booking
+          </p>
+        </div>
+      </Container>
+    </div>
+
+    <!-- Cart Content -->
+    <div class="py-12 lg:py-16">
+      <Container>
+        <CartView client:load />
+      </Container>
+    </div>
+  </main>
+</BaseLayout>
+

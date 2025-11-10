@@ -71,8 +71,42 @@ export const amenityIconMap: Record<string, { icon: string; color: string }> = {
   'business center': { icon: 'Briefcase', color: 'text-gray-600' },
   'meeting rooms': { icon: 'Presentation', color: 'text-blue-600' },
   
-  // Default
-  'default': { icon: 'Check', color: 'text-primary-600' },
+  // Ski Amenities
+  'ski storage': { icon: 'Box', color: 'text-blue-600' },
+  'ski locker': { icon: 'Lock', color: 'text-blue-600' },
+  'boot dryer': { icon: 'Wind', color: 'text-orange-600' },
+  'ski shop': { icon: 'Store', color: 'text-blue-600' },
+  'ski rental': { icon: 'Store', color: 'text-blue-600' },
+  'ski pass': { icon: 'Ticket', color: 'text-green-600' },
+  
+  // Transportation
+  'shuttle': { icon: 'Bus', color: 'text-blue-600' },
+  'free shuttle': { icon: 'Bus', color: 'text-green-600' },
+  'airport shuttle': { icon: 'Plane', color: 'text-blue-600' },
+  'gondola': { icon: 'Cable', color: 'text-blue-600' },
+  
+  // View & Location
+  'mountain view': { icon: 'Mountain', color: 'text-blue-600' },
+  'city view': { icon: 'Building', color: 'text-gray-600' },
+  'garden view': { icon: 'TreePine', color: 'text-green-600' },
+  'sea view': { icon: 'Waves', color: 'text-blue-600' },
+  
+  // Additional Amenities
+  'smoking rooms': { icon: 'Cigarette', color: 'text-gray-600' },
+  'non-smoking': { icon: 'BanIcon', color: 'text-green-600' },
+  'soundproof': { icon: 'Volume2', color: 'text-blue-600' },
+  'minibar': { icon: 'Wine', color: 'text-purple-600' },
+  'coffee maker': { icon: 'Coffee', color: 'text-amber-600' },
+  'dishwasher': { icon: 'Utensils', color: 'text-gray-600' },
+  'washing machine': { icon: 'WashingMachine', color: 'text-blue-600' },
+  'dryer': { icon: 'Wind', color: 'text-blue-600' },
+  'iron': { icon: 'Sparkles', color: 'text-gray-600' },
+  'hair dryer': { icon: 'Wind', color: 'text-orange-600' },
+  'bathtub': { icon: 'Bath', color: 'text-blue-600' },
+  'shower': { icon: 'Droplet', color: 'text-blue-600' },
+  
+  // Default - use a more neutral icon instead of checkmark
+  'default': { icon: 'Sparkle', color: 'text-primary-600' },
 };
 
 export function getAmenityIcon(amenityName: string): { icon: string; color: string } {

@@ -35,10 +35,10 @@ export function ActivityCard({ activity, className = '' }: ActivityCardProps) {
     <a 
       href={detailsUrl}
       onClick={handleClick}
-      className={`group bg-white rounded-2xl overflow-hidden border border-neutral-200 shadow-card hover:shadow-card-hover transition-all duration-300 hover:-translate-y-1 block ${className}`}
+      className={`group bg-white rounded-2xl overflow-hidden border border-neutral-200 shadow-card hover:shadow-card-hover transition-all duration-300 hover:-translate-y-1 flex flex-col ${className}`}
     >
       {/* Image */}
-      <div className="relative h-56 overflow-hidden bg-neutral-100">
+      <div className="relative h-56 overflow-hidden bg-neutral-100 flex-shrink-0">
         {imageUrl ? (
           <img
             src={imageUrl}
@@ -60,8 +60,8 @@ export function ActivityCard({ activity, className = '' }: ActivityCardProps) {
         </div>
       </div>
 
-      {/* Content */}
-      <div className="p-6">
+      {/* Content - flex-grow pushes footer to bottom */}
+      <div className="p-6 flex flex-col flex-grow">
         {/* Title */}
         <h3 className="text-lg font-bold text-neutral-900 mb-2 line-clamp-2 group-hover:text-primary-600 transition-colors">
           {activity.title}
@@ -113,8 +113,11 @@ export function ActivityCard({ activity, className = '' }: ActivityCardProps) {
           </div>
         )}
 
-        {/* Price and CTA */}
-        <div className="flex items-center justify-between pt-4 border-t border-neutral-200">
+        {/* Spacer to push footer to bottom */}
+        <div className="flex-grow"></div>
+
+        {/* Price and CTA - Always at bottom */}
+        <div className="flex items-center justify-between pt-4 border-t border-neutral-200 mt-auto">
           <div>
             <div className="text-xs text-neutral-600 mb-0.5">From</div>
             <div className="text-2xl font-bold text-primary-600">

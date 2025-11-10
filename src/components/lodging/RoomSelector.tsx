@@ -3,9 +3,14 @@ import { LoadingSpinner } from '@/components/shared/LoadingSpinner';
 import { EmptyState } from '@/components/shared/EmptyState';
 import type { LiteAPIRate } from '@/lib/liteapi/types';
 import { formatCurrency, calculateNights } from '@/lib/utils';
+import { AddToCartButton } from '@/components/cart/AddToCartButton';
 
 export interface RoomSelectorProps {
   hotelId: string;
+  hotelName: string;
+  hotelAddress: string;
+  hotelImage: string;
+  hotelReviewScore?: number;
   checkIn: string;
   checkOut: string;
   adults: number;
@@ -15,6 +20,10 @@ export interface RoomSelectorProps {
 
 export function RoomSelector({
   hotelId,
+  hotelName,
+  hotelAddress,
+  hotelImage,
+  hotelReviewScore,
   checkIn,
   checkOut,
   adults,
@@ -201,15 +210,44 @@ export function RoomSelector({
                   </div>
                 </div>
 
-                <button
-                  onClick={() => onRoomSelect(rate.rate_id, rate)}
-                  className="w-full bg-primary-600 text-white px-6 py-4 rounded-xl font-bold text-lg shadow-card hover:shadow-card-hover hover:bg-primary-700 transition-all duration-300 flex items-center justify-center gap-2"
-                >
-                  Select Room
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                  </svg>
-                </button>
+                <div className="space-y-3">
+                  <AddToCartButton
+                    hotel={{
+                      id: hotelId,
+                      name: hotelName,
+                      address: hotelAddress,
+                      image: hotelImage,
+                      reviewScore: hotelReviewScore,
+                    }}
+                    room={{
+                      name: rate.room_name,
+                      rateId: rate.rate_id,
+                      rate,
+                    }}
+                    booking={{
+                      checkIn,
+                      checkOut,
+                      adults,
+                      children,
+                      nights,
+                    }}
+                    pricing={{
+                      total: price,
+                      perNight: pricePerNight,
+                      currency,
+                    }}
+                    className="w-full"
+                  />
+                  <button
+                    onClick={() => onRoomSelect(rate.rate_id, rate)}
+                    className="w-full bg-white text-primary-600 px-6 py-3 rounded-xl font-bold border-2 border-primary-600 hover:bg-primary-50 transition-all duration-300 flex items-center justify-center gap-2"
+                  >
+                    Book Now
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                    </svg>
+                  </button>
+                </div>
               </div>
             </div>
           </div>

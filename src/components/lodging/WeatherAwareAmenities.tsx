@@ -87,7 +87,7 @@ export function WeatherAwareAmenities({ amenities, checkIn, checkOut }: WeatherA
           {sortedAmenities.map((amenity, index) => {
             const amenityName = amenity.name || amenity.code || '';
             const { icon: iconName, color } = getAmenityIcon(amenityName);
-            const IconComponent = (LucideIcons as any)[iconName] || LucideIcons.Check;
+            const IconComponent = (LucideIcons as any)[iconName] || LucideIcons.Sparkle;
             const category = categorizeAmenity(amenityName);
             const isHighlighted = category !== 'normal';
             

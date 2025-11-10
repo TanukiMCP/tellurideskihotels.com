@@ -4,21 +4,47 @@ export const prerender = false;
 import PageLayout from '@/components/layout/PageLayout.astro';
 import Container from '@/components/layout/Container.astro';
 import { SkiConditionsWidget } from '@/components/ski/SkiConditionsWidget';
+import { OffSeasonCountdown } from '@/components/ski/OffSeasonCountdown';
 import { CurrentConditions } from '@/components/weather/CurrentConditions';
 import { WebcamLinks } from '@/components/info/WebcamLinks';
 import { getTellurideSkiConditions } from '@/lib/snocountry/client';
+import { getImagesByCategory } from '@/lib/image-library';
+import { optimizePexelsImage, generateSrcSet } from '@/lib/image-optimizer';
 
 const pageTitle = 'Telluride Mountain Conditions | Live Ski Report & Weather';
 const pageDescription = 'Real-time ski conditions, snow reports, weather forecast, and live webcams for Telluride Ski Resort. Plan your perfect ski day with up-to-date mountain information.';
 
-// Fetch ski conditions server-side
+// Get hero background image
+const mountainImages = getImagesByCategory('mountains') || getImagesByCategory('resort');
+const heroImage = mountainImages[0];
+const optimizedHeroUrl = heroImage ? optimizePexelsImage(heroImage.url, { width: 1920, quality: 85 }) : null;
+const heroSrcSet = heroImage ? generateSrcSet(heroImage.url, [640, 768, 1024, 1280, 1536, 1920]) : null;
+
+// Check if it's currently ski season (roughly late November to early April)
+const currentDate = new Date();
+const currentMonth = currentDate.getMonth(); // 0-11
+const isSkiSeason = currentMonth >= 10 || currentMonth <= 3; // November (10) through April (3)
+
+// Determine next season start date
+let nextSeasonStart: Date;
+if (currentMonth >= 4 && currentMonth <= 10) {
+  // Summer/Fall - next season starts in November of current year
+  nextSeasonStart = new Date(currentDate.getFullYear(), 10, 22); // Nov 22
+} else {
+  // Winter/Spring - next season starts in November of next year
+  nextSeasonStart = new Date(currentDate.getFullYear() + 1, 10, 22); // Nov 22 next year
+}
+
+// Fetch ski conditions server-side (only if in season)
 let skiConditions = null;
 
-try {
-  skiConditions = await getTellurideSkiConditions();
-  console.log('[Mountain Conditions] Loaded ski conditions');
-} catch (error) {
-  console.error('[Mountain Conditions] Error fetching ski conditions:', error);
+if (isSkiSeason) {
+  try {
+    skiConditions = await getTellurideSkiConditions();
+    console.log('[Mountain Conditions] Loaded ski conditions');
+  } catch (error) {
+    console.error('[Mountain Conditions] Error fetching ski conditions:', error);
+  }
 }
 ---
 
@@ -84,38 +110,47 @@ try {
   <!-- Main Content -->
   <div class="py-16 lg:py-20">
     <Container>
-      <!-- Ski Conditions -->
-      <section class="mb-16">
-        <div class="text-center mb-10">
-          <h2 class="text-display-sm lg:text-display-md mb-4 text-neutral-900 font-bold">Current Ski Conditions</h2>
-          <p class="text-lg text-neutral-600 max-w-2xl mx-auto">
-            Live snow report updated throughout the day
-          </p>
-        </div>
-        <SkiConditionsWidget client:load initialConditions={skiConditions} />
-      </section>
+      {isSkiSeason ? (
+        <>
+          <!-- Ski Conditions -->
+          <section class="mb-16">
+            <div class="text-center mb-10">
+              <h2 class="text-display-sm lg:text-display-md mb-4 text-neutral-900 font-bold">Current Ski Conditions</h2>
+              <p class="text-lg text-neutral-600 max-w-2xl mx-auto">
+                Live snow report updated throughout the day
+              </p>
+            </div>
+            <SkiConditionsWidget client:load initialConditions={skiConditions} />
+          </section>
 
-      <!-- Weather Forecast & Webcams -->
-      <section class="mb-16">
-        <div class="text-center mb-10">
-          <h2 class="text-display-sm lg:text-display-md mb-4 text-neutral-900 font-bold">Weather & Live Views</h2>
-          <p class="text-lg text-neutral-600 max-w-2xl mx-auto">
-            Detailed forecast and live webcam access to plan your perfect ski day
-          </p>
-        </div>
-        
-        <div class="grid lg:grid-cols-3 gap-8">
-          <!-- Weather Forecast (takes 2 columns) -->
-          <div class="lg:col-span-2">
-            <CurrentConditions client:load />
-          </div>
+          <!-- Weather Forecast & Webcams -->
+          <section class="mb-16">
+            <div class="text-center mb-10">
+              <h2 class="text-display-sm lg:text-display-md mb-4 text-neutral-900 font-bold">Weather & Live Views</h2>
+              <p class="text-lg text-neutral-600 max-w-2xl mx-auto">
+                Detailed forecast and live webcam access to plan your perfect ski day
+              </p>
+            </div>
+            
+            <div class="grid lg:grid-cols-3 gap-8">
+              <!-- Weather Forecast (takes 2 columns) -->
+              <div class="lg:col-span-2">
+                <CurrentConditions client:load />
+              </div>
 
-          <!-- Webcam Links (takes 1 column) -->
-          <div class="lg:col-span-1">
-            <WebcamLinks client:load />
-          </div>
-        </div>
-      </section>
+              <!-- Webcam Links (takes 1 column) -->
+              <div class="lg:col-span-1">
+                <WebcamLinks client:load />
+              </div>
+            </div>
+          </section>
+        </>
+      ) : (
+        <!-- Off-Season Countdown -->
+        <section class="mb-16">
+          <OffSeasonCountdown client:load seasonStartDate={nextSeasonStart} />
+        </section>
+      )}
 
       <!-- Trail Map Info -->
       <section class="bg-gradient-to-br from-primary-50 to-white rounded-3xl p-12 border border-primary-200 shadow-card">
@@ -156,34 +191,48 @@ try {
     </Container>
   </div>
 
-  <!-- CTA Section -->
-  <div class="bg-gradient-to-b from-neutral-50 to-white py-16 lg:py-20">
-    <Container>
-      <div class="bg-gradient-to-br from-sky-600 via-sky-700 to-sky-800 rounded-3xl p-12 lg:p-16 text-white text-center shadow-elevated">
-        <h2 class="text-display-sm lg:text-display-md mb-6 font-extrabold">
+  <!-- CTA Section with Background Image -->
+  <div class="relative py-32 lg:py-40 overflow-hidden">
+    {mountainImages[1] ? (
+      <>
+        <img 
+          src={mountainImages[1].url}
+          alt="Telluride Ski Slopes" 
+          class="absolute inset-0 w-full h-full object-cover"
+          loading="lazy"
+        />
+        <div class="absolute inset-0 bg-gradient-to-r from-sky-900/95 via-sky-800/90 to-sky-900/95"></div>
+      </>
+    ) : (
+      <div class="absolute inset-0 bg-gradient-to-br from-sky-600 via-sky-700 to-sky-800"></div>
+    )}
+    
+    <Container class="relative">
+      <div class="max-w-4xl mx-auto text-center text-white">
+        <h2 class="text-4xl md:text-5xl lg:text-6xl mb-6 font-extrabold drop-shadow-2xl leading-tight">
           Ready to Hit the Slopes?
         </h2>
-        <p class="text-xl mb-10 max-w-2xl mx-auto leading-relaxed">
-          Book your ski hotel now and get the best rates for your Telluride ski vacation
+        <p class="text-xl lg:text-2xl mb-12 leading-relaxed font-medium text-white/95 max-w-3xl mx-auto drop-shadow-lg">
+          With perfect conditions and endless terrain, there's never been a better time to experience world-class skiing in Telluride.
         </p>
-        <div class="flex flex-wrap justify-center gap-4">
+        <div class="flex flex-wrap justify-center gap-6">
           <a
-            href="/"
-            class="inline-flex items-center gap-2 bg-white text-sky-600 px-10 py-5 rounded-xl font-bold text-lg shadow-card hover:shadow-card-hover hover:scale-105 transition-all duration-300"
+            href="/places-to-stay"
+            class="inline-flex items-center gap-3 bg-white text-sky-600 px-10 py-5 rounded-xl font-bold text-lg shadow-2xl hover:shadow-2xl hover:scale-105 transition-all duration-300"
           >
-            Search Hotels
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
             </svg>
+            Book Your Stay
           </a>
           <a
             href="/things-to-do"
-            class="inline-flex items-center gap-2 bg-sky-800 text-white px-10 py-5 rounded-xl font-bold text-lg border-2 border-white/30 hover:bg-sky-900 transition-all duration-300"
+            class="inline-flex items-center gap-3 bg-sky-900/50 backdrop-blur-sm text-white px-10 py-5 rounded-xl font-bold text-lg border-2 border-white/30 hover:bg-sky-900/70 hover:border-white/50 transition-all duration-300"
           >
-            Explore Activities
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
             </svg>
+            Explore Activities
           </a>
         </div>
       </div>

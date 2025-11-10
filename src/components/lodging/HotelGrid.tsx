@@ -59,7 +59,21 @@ export function HotelGrid({
         });
       case 'rating':
       default:
-        return sorted.sort((a, b) => (b.review_score || 0) - (a.review_score || 0));
+        // Sort by combination of rating and review count
+        // Prioritize hotels with both high ratings AND substantial review counts
+        return sorted.sort((a, b) => {
+          const ratingA = a.review_score || 0;
+          const ratingB = b.review_score || 0;
+          const countA = a.review_nr || 0;
+          const countB = b.review_nr || 0;
+          
+          // Calculate a weighted score: rating * log(review_count + 1)
+          // This favors hotels with both high ratings and many reviews
+          const scoreA = ratingA * Math.log(countA + 1);
+          const scoreB = ratingB * Math.log(countB + 1);
+          
+          return scoreB - scoreA;
+        });
     }
   }, [hotels, sortBy, minPrices]);
 

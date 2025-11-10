@@ -7,9 +7,14 @@ import { Calendar, Users, Bed, Check, AlertCircle } from 'lucide-react';
 import type { LiteAPIRate } from '@/lib/liteapi/types';
 import { formatCurrency, calculateNights } from '@/lib/utils';
 import { format } from 'date-fns';
+import { RoomCard } from './RoomCard';
 
 export interface RoomSelectorCardProps {
   hotelId: string;
+  hotelName?: string;
+  hotelAddress?: string;
+  hotelImage?: string;
+  hotelReviewScore?: number;
   initialCheckIn: string;
   initialCheckOut: string;
   initialAdults: number;
@@ -33,6 +38,10 @@ interface RoomOption {
 
 export function RoomSelectorCard({
   hotelId,
+  hotelName,
+  hotelAddress,
+  hotelImage,
+  hotelReviewScore,
   initialCheckIn,
   initialCheckOut,
   initialAdults,
@@ -45,15 +54,13 @@ export function RoomSelectorCard({
   const [checkOut, setCheckOut] = useState(initialCheckOut);
   const [adults, setAdults] = useState(initialAdults);
   const [children, setChildren] = useState(initialChildren);
-  const [roomCount, setRoomCount] = useState(initialRooms);
-  const [selectedRoomId, setSelectedRoomId] = useState<string>('');
-  const [selectedRateId, setSelectedRateId] = useState<string>('');
+  const [roomCount] = useState(initialRooms);
 
   // API data
   const [rooms, setRooms] = useState<RoomOption[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [needsRefresh, setNeedsRefresh] = useState(false);
+  const [bedFilter, setBedFilter] = useState<'all' | '1' | '2'>('all');
 
   const nights = calculateNights(checkIn, checkOut);
 
@@ -157,14 +164,6 @@ export function RoomSelectorCard({
         });
 
         setRooms(roomOptions);
-        
-        // Auto-select first room and rate if available
-        if (roomOptions.length > 0) {
-          setSelectedRoomId(roomOptions[0].roomId);
-          if (roomOptions[0].rates.length > 0) {
-            setSelectedRateId(roomOptions[0].rates[0].rate_id);
-          }
-        }
       } catch (err) {
         console.error('[RoomSelector] Error fetching rates:', err);
         setError(err instanceof Error ? err.message : 'Unable to load room availability');
@@ -178,54 +177,10 @@ export function RoomSelectorCard({
     }
   }, [hotelId, checkIn, checkOut, adults, children, roomCount]);
 
-  // Get available room types
-  const roomOptions = useMemo(() => {
-    return rooms.map(room => ({
-      value: room.roomId,
-      label: room.roomName,
-    }));
-  }, [rooms]);
-
-  // Get rate options for selected room
-  const rateOptions = useMemo(() => {
-    const selectedRoom = rooms.find(r => r.roomId === selectedRoomId);
-    if (!selectedRoom) return [];
-    
-    return selectedRoom.rates.map(rate => ({
-      value: rate.rate_id,
-      label: rate.board_type || 'Room Only',
-      rate,
-    }));
-  }, [rooms, selectedRoomId]);
-
-  // Get selected rate details
-  const selectedRate = useMemo(() => {
-    const rateOption = rateOptions.find(r => r.value === selectedRateId);
-    return rateOption?.rate;
-  }, [rateOptions, selectedRateId]);
-
-  // Check if selections have changed from initial
-  const hasChanges = useMemo(() => {
-    return checkIn !== initialCheckIn || 
-           checkOut !== initialCheckOut || 
-           adults !== initialAdults || 
-           children !== initialChildren;
-  }, [checkIn, checkOut, adults, children, initialCheckIn, initialCheckOut, initialAdults, initialChildren]);
-
-  const handleSearch = () => {
-    setNeedsRefresh(true);
-    // Trigger re-fetch via useEffect
-  };
-
-  const handleBookNow = () => {
-    if (!selectedRate || !selectedRoomId) return;
-
-    const selectedRoom = rooms.find(r => r.roomId === selectedRoomId);
-    if (!selectedRoom) return;
-
+  const handleBookNow = (rate: LiteAPIRate) => {
     onBookingReady({
-      rateId: selectedRateId,
-      roomData: selectedRate,
+      rateId: rate.rate_id,
+      roomData: rate,
       checkIn,
       checkOut,
       adults,
@@ -233,317 +188,165 @@ export function RoomSelectorCard({
     });
   };
 
-  const totalPrice = selectedRate?.total?.amount || 0;
-  const currency = selectedRate?.total?.currency || 'USD';
-  const pricePerNight = nights > 0 ? totalPrice / nights : totalPrice;
+  const [bedFilter, setBedFilter] = useState<'all' | '1' | '2'>('all');
+
+  // Filter rooms based on bed count
+  const filteredRooms = useMemo(() => {
+    if (bedFilter === 'all') return rooms;
+    
+    return rooms.filter(room => {
+      const bedCount = room.rates[0]?.bed_types?.reduce((sum, bt) => sum + (bt.count || 1), 0) || 1;
+      return bedFilter === '1' ? bedCount === 1 : bedCount >= 2;
+    });
+  }, [rooms, bedFilter]);
+
+  // Get all rates from all filtered rooms
+  const allRates = useMemo(() => {
+    return filteredRooms.flatMap(room => room.rates);
+  }, [filteredRooms]);
 
   return (
-    <Card className="shadow-elevated">
-      <CardHeader className="bg-gradient-to-br from-primary-50 to-white border-b border-primary-100">
-        <CardTitle className="text-2xl">Select Your Stay</CardTitle>
-        <p className="text-sm text-neutral-600 mt-1">Customize your dates, guests, and room preferences</p>
-      </CardHeader>
-      
-      <CardContent className="p-6 space-y-6">
-        {/* Date & Guest Selection */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          {/* Check-in */}
-          <div>
-            <label className="block text-sm font-semibold text-neutral-700 mb-2">
-              <Calendar className="inline w-4 h-4 mr-1" />
-              Check-in
-            </label>
-            <input
-              type="date"
-              value={checkIn}
-              onChange={(e) => {
-                setCheckIn(e.target.value);
-                setNeedsRefresh(true);
-              }}
-              min={format(new Date(), 'yyyy-MM-dd')}
-              className="w-full px-4 py-2.5 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all"
-            />
-          </div>
+    <div className="space-y-6">
+      {/* Header Section - Choose your room */}
+      <div>
+        <h2 className="text-3xl font-bold text-neutral-900 mb-2">Choose your room</h2>
+      </div>
 
-          {/* Check-out */}
-          <div>
-            <label className="block text-sm font-semibold text-neutral-700 mb-2">
-              <Calendar className="inline w-4 h-4 mr-1" />
-              Check-out
-            </label>
-            <input
-              type="date"
-              value={checkOut}
-              onChange={(e) => {
-                setCheckOut(e.target.value);
-                setNeedsRefresh(true);
-              }}
-              min={checkIn}
-              className="w-full px-4 py-2.5 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all"
-            />
+      {/* Date & Guest Selection */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        {/* Start date */}
+        <div className="bg-white border border-neutral-300 rounded-lg p-4">
+          <div className="flex items-center gap-2 mb-1">
+            <Calendar className="w-4 h-4 text-neutral-500" />
+            <label className="text-xs font-medium text-neutral-700">Start date</label>
           </div>
-
-          {/* Adults */}
-          <div>
-            <label className="block text-sm font-semibold text-neutral-700 mb-2">
-              <Users className="inline w-4 h-4 mr-1" />
-              Adults
-            </label>
-            <select
-              value={adults}
-              onChange={(e) => {
-                setAdults(parseInt(e.target.value));
-                setNeedsRefresh(true);
-              }}
-              className="w-full px-4 py-2.5 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all bg-white"
-            >
-              {[1, 2, 3, 4, 5, 6, 7, 8].map(num => (
-                <option key={num} value={num}>{num} {num === 1 ? 'Adult' : 'Adults'}</option>
-              ))}
-            </select>
-          </div>
-
-          {/* Children */}
-          <div>
-            <label className="block text-sm font-semibold text-neutral-700 mb-2">
-              <Users className="inline w-4 h-4 mr-1" />
-              Children
-            </label>
-            <select
-              value={children}
-              onChange={(e) => {
-                setChildren(parseInt(e.target.value));
-                setNeedsRefresh(true);
-              }}
-              className="w-full px-4 py-2.5 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all bg-white"
-            >
-              {[0, 1, 2, 3, 4].map(num => (
-                <option key={num} value={num}>{num} {num === 1 ? 'Child' : 'Children'}</option>
-              ))}
-            </select>
-          </div>
+          <input
+            type="date"
+            value={checkIn}
+            onChange={(e) => setCheckIn(e.target.value)}
+            min={format(new Date(), 'yyyy-MM-dd')}
+            className="text-base font-medium text-neutral-900 border-none p-0 focus:ring-0 w-full"
+          />
         </div>
 
-        {/* Update Availability Button */}
-        {hasChanges && needsRefresh && (
-          <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2 text-amber-800">
-                <AlertCircle className="w-5 h-5" />
-                <span className="text-sm font-medium">Your selections have changed</span>
-              </div>
-              <Button onClick={handleSearch} size="sm" variant="primary">
-                Update Availability
-              </Button>
-            </div>
+        {/* End date */}
+        <div className="bg-white border border-neutral-300 rounded-lg p-4">
+          <div className="flex items-center gap-2 mb-1">
+            <Calendar className="w-4 h-4 text-neutral-500" />
+            <label className="text-xs font-medium text-neutral-700">End date</label>
           </div>
-        )}
+          <input
+            type="date"
+            value={checkOut}
+            onChange={(e) => setCheckOut(e.target.value)}
+            min={checkIn}
+            className="text-base font-medium text-neutral-900 border-none p-0 focus:ring-0 w-full"
+          />
+        </div>
 
-        {loading ? (
-          <div className="flex justify-center py-12">
-            <LoadingSpinner size="lg" />
+        {/* Travelers */}
+        <div className="bg-white border border-neutral-300 rounded-lg p-4">
+          <div className="flex items-center gap-2 mb-1">
+            <Users className="w-4 h-4 text-neutral-500" />
+            <label className="text-xs font-medium text-neutral-700">Travelers</label>
           </div>
-        ) : error ? (
-          <div className="text-center py-8 bg-red-50 rounded-lg border border-red-200">
-            <AlertCircle className="w-12 h-12 text-red-500 mx-auto mb-3" />
-            <p className="text-red-700 font-medium">{error}</p>
-            <Button onClick={handleSearch} variant="outline" size="sm" className="mt-4">
-              Try Again
-            </Button>
+          <div className="text-base font-medium text-neutral-900">
+            {adults} {adults === 1 ? 'traveler' : 'travelers'}, 1 room
           </div>
-        ) : rooms.length === 0 ? (
-          <div className="text-center py-12 bg-neutral-50 rounded-lg border border-neutral-200">
-            <Bed className="w-12 h-12 text-neutral-400 mx-auto mb-3" />
-            <p className="text-neutral-600 font-medium mb-2">No rooms available</p>
-            <p className="text-sm text-neutral-500 mb-4">
-              This hotel doesn't have availability for the selected dates and guest count.
-              Try adjusting your dates or number of guests above, or search for other hotels.
-            </p>
-            <Button
-              onClick={() => {
-                if (typeof window !== 'undefined') {
-                  window.location.href = `/places-to-stay?checkIn=${checkIn}&checkOut=${checkOut}&adults=${adults}`;
-                }
-              }}
-              variant="outline"
-              size="sm"
-            >
-              ← Back to Search Results
-            </Button>
-          </div>
-        ) : (
-          <>
-            {/* Room & Rate Selection */}
-            <div className="space-y-4">
-              {/* Room Type Selector */}
-              <div>
-                <label className="block text-sm font-semibold text-neutral-700 mb-2">
-                  <Bed className="inline w-4 h-4 mr-1" />
-                  Room Type
-                </label>
-                <select
-                  value={selectedRoomId}
-                  onChange={(e) => {
-                    setSelectedRoomId(e.target.value);
-                    // Auto-select first rate of new room
-                    const room = rooms.find(r => r.roomId === e.target.value);
-                    if (room && room.rates.length > 0) {
-                      setSelectedRateId(room.rates[0].rate_id);
+        </div>
+      </div>
+
+      {/* Filter Pills and Room Count */}
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => setBedFilter('all')}
+            className={`px-4 py-2 rounded-full font-medium text-sm transition-all ${
+              bedFilter === 'all'
+                ? 'bg-neutral-900 text-white'
+                : 'bg-white border border-neutral-300 text-neutral-700 hover:border-neutral-400'
+            }`}
+          >
+            All rooms
+          </button>
+          <button
+            onClick={() => setBedFilter('1')}
+            className={`px-4 py-2 rounded-full font-medium text-sm transition-all ${
+              bedFilter === '1'
+                ? 'bg-neutral-900 text-white'
+                : 'bg-white border border-neutral-300 text-neutral-700 hover:border-neutral-400'
+            }`}
+          >
+            1 bed
+          </button>
+          <button
+            onClick={() => setBedFilter('2')}
+            className={`px-4 py-2 rounded-full font-medium text-sm transition-all ${
+              bedFilter === '2'
+                ? 'bg-neutral-900 text-white'
+                : 'bg-white border border-neutral-300 text-neutral-700 hover:border-neutral-400'
+            }`}
+          >
+            2 beds
+          </button>
+        </div>
+        
+        {!loading && allRates.length > 0 && (
+          <p className="text-sm text-neutral-600">
+            Showing {allRates.length} of {rooms.flatMap(r => r.rates).length} rooms
+          </p>
+        )}
+      </div>
+
+      {/* Room Cards */}
+      {loading ? (
+        <div className="flex justify-center py-12">
+          <LoadingSpinner size="lg" />
+        </div>
+      ) : error ? (
+        <div className="text-center py-8 bg-red-50 rounded-lg border border-red-200">
+          <AlertCircle className="w-12 h-12 text-red-500 mx-auto mb-3" />
+          <p className="text-red-700 font-medium">{error}</p>
+        </div>
+      ) : allRates.length === 0 ? (
+        <div className="text-center py-12 bg-neutral-50 rounded-lg border border-neutral-200">
+          <Bed className="w-12 h-12 text-neutral-400 mx-auto mb-3" />
+          <p className="text-neutral-600 font-medium mb-2">No rooms available</p>
+          <p className="text-sm text-neutral-500">
+            Try adjusting your dates or filters above.
+          </p>
+        </div>
+      ) : (
+        <div className="space-y-6">
+          {allRates.map((rate) => (
+            <RoomCard
+              key={rate.rate_id}
+              rate={rate}
+              nights={nights}
+              onReserve={handleBookNow}
+              available={Math.floor(Math.random() * 5) + 1} // Mock availability
+              hotel={
+                hotelId && hotelName && hotelAddress && hotelImage
+                  ? {
+                      id: hotelId,
+                      name: hotelName,
+                      address: hotelAddress,
+                      image: hotelImage,
+                      reviewScore: hotelReviewScore,
                     }
-                  }}
-                  className="w-full px-4 py-3 border-2 border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all bg-white text-base font-medium"
-                >
-                  {roomOptions.map(option => (
-                    <option key={option.value} value={option.value}>
-                      {option.label}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              {/* Rate/Board Type Selector */}
-              {rateOptions.length > 0 && (
-                <div>
-                  <label className="block text-sm font-semibold text-neutral-700 mb-2">
-                    Rate Options
-                  </label>
-                  <div className="space-y-2">
-                    {rateOptions.map(option => {
-                      const rateTotal = option.rate.total?.amount || 0;
-                      return (
-                        <label
-                          key={option.value}
-                          className={`flex items-center justify-between p-4 border-2 rounded-lg cursor-pointer transition-all ${
-                            selectedRateId === option.value
-                              ? 'border-primary-600 bg-primary-50'
-                              : 'border-neutral-200 hover:border-primary-300 bg-white'
-                          }`}
-                        >
-                          <div className="flex items-center gap-3">
-                            <input
-                              type="radio"
-                              name="rate"
-                              value={option.value}
-                              checked={selectedRateId === option.value}
-                              onChange={(e) => setSelectedRateId(e.target.value)}
-                              className="w-5 h-5 text-primary-600 focus:ring-primary-500"
-                            />
-                            <div>
-                              <div className="font-semibold text-neutral-900">{option.label}</div>
-                              {option.rate.cancellation_policies && option.rate.cancellation_policies.length > 0 && (
-                                <div className="text-sm text-neutral-600 mt-1">
-                                  {option.rate.cancellation_policies[0].type === 'FREE_CANCELLATION' ? (
-                                    <span className="text-green-600 font-medium">Free cancellation</span>
-                                  ) : (
-                                    <span>Cancellation policy applies</span>
-                                  )}
-                                </div>
-                              )}
-                            </div>
-                          </div>
-                          <div className="text-right">
-                            <div className="text-2xl font-bold text-primary-600">
-                              {formatCurrency(rateTotal, currency)}
-                            </div>
-                            <div className="text-sm text-neutral-600">
-                              {formatCurrency(rateTotal / nights, currency)} / night
-                            </div>
-                          </div>
-                        </label>
-                      );
-                    })}
-                  </div>
-                </div>
-              )}
-
-              {/* Room Details */}
-              {selectedRate && (
-                <div className="bg-neutral-50 rounded-lg p-4 border border-neutral-200">
-                  <h4 className="font-semibold text-neutral-900 mb-3">Room Details</h4>
-                  {((selectedRate.bed_types?.length ?? 0) > 0 || selectedRate.max_occupancy) && (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
-                    {selectedRate.bed_types && selectedRate.bed_types.length > 0 && (
-                      <div className="flex items-center gap-2">
-                        <Badge variant="outline" className="bg-white">
-                          <Bed className="h-3 w-3 mr-1" />
-                          {selectedRate.bed_types.map(b => `${b.count || 1} ${b.type || 'bed'}`).join(', ')}
-                        </Badge>
-                      </div>
-                    )}
-                    {selectedRate.max_occupancy && (
-                      <div className="flex items-center gap-2">
-                        <Badge variant="outline" className="bg-white">
-                          <Users className="h-3 w-3 mr-1" />
-                          Max {selectedRate.max_occupancy} guests
-                        </Badge>
-                      </div>
-                    )}
-                  </div>
-                  )}
-                  {selectedRate.amenities && selectedRate.amenities.length > 0 && (
-                    <div className="mt-3 pt-3 border-t border-neutral-200">
-                      <div className="flex flex-wrap gap-2">
-                        {selectedRate.amenities.slice(0, 6).map((amenity, idx) => (
-                          <span key={idx} className="inline-flex items-center text-xs bg-white px-2 py-1 rounded border border-neutral-200">
-                            <Check className="w-3 h-3 text-green-600 mr-1" />
-                            {amenity.name || amenity.code}
-                          </span>
-                        ))}
-                        {selectedRate.amenities.length > 6 && (
-                          <span className="text-xs text-neutral-500">+{selectedRate.amenities.length - 6} more</span>
-                        )}
-                      </div>
-                    </div>
-                  )}
-                  {!selectedRate.bed_types?.length && !selectedRate.max_occupancy && !selectedRate.amenities?.length && (
-                    <p className="text-sm text-neutral-600">Room details will be confirmed upon booking.</p>
-                  )}
-                </div>
-              )}
-            </div>
-
-            {/* Booking Summary & CTA */}
-            <div className="bg-gradient-to-br from-primary-600 to-primary-700 rounded-xl p-6 text-white">
-              <div className="flex items-center justify-between mb-4">
-                <div>
-                  <div className="text-sm opacity-90 mb-1">Total for {nights} night{nights !== 1 ? 's' : ''}</div>
-                  <div className="text-4xl font-bold">
-                    {formatCurrency(totalPrice, currency)}
-                  </div>
-                  <div className="text-sm opacity-90 mt-1">
-                    {formatCurrency(pricePerNight, currency)} per night
-                  </div>
-                </div>
-                <div className="text-right">
-                  <div className="text-sm opacity-90 mb-1">
-                    {adults} {adults === 1 ? 'Adult' : 'Adults'}
-                    {children > 0 && `, ${children} ${children === 1 ? 'Child' : 'Children'}`}
-                  </div>
-                  <div className="text-sm opacity-90">
-                    {format(new Date(checkIn + 'T00:00:00'), 'MMM d')} - {format(new Date(checkOut + 'T00:00:00'), 'MMM d, yyyy')}
-                  </div>
-                </div>
-              </div>
-              
-              <div className="mt-4">
-              <Button
-                onClick={handleBookNow}
-                disabled={!selectedRate || !selectedRoomId}
-                size="lg"
-                  className="w-full !bg-white !text-primary-700 hover:!bg-neutral-50 disabled:!bg-white/60 disabled:!text-neutral-500 font-bold text-lg py-6 shadow-lg transition-all"
-              >
-                  {!selectedRate || !selectedRoomId ? 'Please select a room' : 'Continue to Checkout'}
-              </Button>
-              
-              <p className="text-xs text-center mt-3 opacity-75">
-                You won't be charged yet. Review your booking on the next page.
-              </p>
-              </div>
-            </div>
-          </>
-        )}
-      </CardContent>
-    </Card>
+                  : undefined
+              }
+              booking={{
+                checkIn,
+                checkOut,
+                adults,
+                children,
+              }}
+            />
+          ))}
+        </div>
+      )}
+    </div>
   );
 }
 
