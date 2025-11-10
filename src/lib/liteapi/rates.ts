@@ -28,7 +28,7 @@ function transformRateData(hotelData: any, nights: number): Array<{
   }>;
 }> {
   const roomTypes = hotelData.roomTypes || [];
-  const rooms: any[] = [];
+  const roomsMap = new Map<string, any>(); // Group by roomTypeId to avoid duplicates
 
   roomTypes.forEach((roomType: any) => {
     const rates = roomType.rates || [];
@@ -57,65 +57,75 @@ function transformRateData(hotelData: any, nights: number): Array<{
         // Calculate per-night price
         const pricePerNight = nights > 0 ? totalPrice / nights : totalPrice;
 
-        // Only filter if price is 0 (don't check basePrice - that was the bug!)
+        // Only process if price is valid
         if (totalPrice > 0) {
-          rooms.push({
+          const transformedRate = {
+            rate_id: rate.rateId,
             room_id: roomType.roomTypeId,
             room_name: rate.name || roomType.name || 'Standard Room',
-            mapped_room_id: rate.mappedRoomId, // For linking to room photos from hotel details (mappedRoomId is in rate, not roomType)
-            rates: [{
-              rate_id: rate.rateId,
+            offer_id: roomType.offerId, // Required for prebook
+            mapped_room_id: rate.mappedRoomId, // For linking to room photos (mappedRoomId is in rate, not roomType)
+            net: {
+              amount: pricePerNight, // Per-night price WITH margin
+              currency,
+            },
+            total: {
+              amount: totalPrice, // Total price WITH margin
+              currency,
+            },
+            board_type: rate.boardName || 'Room Only',
+            cancellation_policy: rate.cancellationPolicies,
+            cancellation_policies: (() => {
+              // Handle cancellationPolicies - it can be an object or array
+              const cp = rate.cancellationPolicies;
+              if (!cp) return [];
+              
+              // If it's an array, map it directly
+              if (Array.isArray(cp)) {
+                return cp.map((policy: any) => ({
+              type: policy.refundType || 'NON_REFUNDABLE',
+              description: policy.text,
+                }));
+              }
+              
+              // If it's an object, extract from cancelPolicyInfos
+              if (cp.cancelPolicyInfos && Array.isArray(cp.cancelPolicyInfos)) {
+                return cp.cancelPolicyInfos.map((policy: any) => ({
+                  type: policy.refundType || cp.refundableTag || 'NON_REFUNDABLE',
+                  description: policy.text || policy.description || '',
+                }));
+              }
+              
+              // Fallback: create a policy from refundableTag
+              if (cp.refundableTag) {
+                const isRefundable = cp.refundableTag === 'REF' || cp.refundableTag === 'FREF';
+                return [{
+                  type: isRefundable ? 'FREE_CANCELLATION' : 'NON_REFUNDABLE',
+                  description: cp.hotelRemarks?.[0] || '',
+                }];
+              }
+              
+              return [];
+            })(),
+            bed_types: roomType.bedTypes || [],
+            max_occupancy: roomType.maxOccupancy,
+            amenities: roomType.amenities || [],
+          };
+
+          // Group rates by roomTypeId to avoid duplicate rooms
+          const roomKey = roomType.roomTypeId;
+          if (roomsMap.has(roomKey)) {
+            // Add rate to existing room
+            roomsMap.get(roomKey).rates.push(transformedRate);
+          } else {
+            // Create new room entry
+            roomsMap.set(roomKey, {
               room_id: roomType.roomTypeId,
               room_name: rate.name || roomType.name || 'Standard Room',
-              offer_id: roomType.offerId, // Required for prebook
-              mapped_room_id: rate.mappedRoomId, // For linking to room photos (mappedRoomId is in rate, not roomType)
-              net: {
-                amount: pricePerNight, // Per-night price WITH margin
-                currency,
-              },
-              total: {
-                amount: totalPrice, // Total price WITH margin
-                currency,
-              },
-              board_type: rate.boardName || 'Room Only',
-              cancellation_policy: rate.cancellationPolicies,
-              cancellation_policies: (() => {
-                // Handle cancellationPolicies - it can be an object or array
-                const cp = rate.cancellationPolicies;
-                if (!cp) return [];
-                
-                // If it's an array, map it directly
-                if (Array.isArray(cp)) {
-                  return cp.map((policy: any) => ({
-                type: policy.refundType || 'NON_REFUNDABLE',
-                description: policy.text,
-                  }));
-                }
-                
-                // If it's an object, extract from cancelPolicyInfos
-                if (cp.cancelPolicyInfos && Array.isArray(cp.cancelPolicyInfos)) {
-                  return cp.cancelPolicyInfos.map((policy: any) => ({
-                    type: policy.refundType || cp.refundableTag || 'NON_REFUNDABLE',
-                    description: policy.text || policy.description || '',
-                  }));
-                }
-                
-                // Fallback: create a policy from refundableTag
-                if (cp.refundableTag) {
-                  const isRefundable = cp.refundableTag === 'REF' || cp.refundableTag === 'FREF';
-                  return [{
-                    type: isRefundable ? 'FREE_CANCELLATION' : 'NON_REFUNDABLE',
-                    description: cp.hotelRemarks?.[0] || '',
-                  }];
-                }
-                
-                return [];
-              })(),
-              bed_types: roomType.bedTypes || [],
-              max_occupancy: roomType.maxOccupancy,
-              amenities: roomType.amenities || [],
-            }],
-          });
+              mapped_room_id: rate.mappedRoomId, // For linking to room photos from hotel details
+              rates: [transformedRate],
+            });
+          }
         }
       } catch (error) {
         console.error('[LiteAPI Rates] Error processing rate:', {
@@ -130,7 +140,7 @@ function transformRateData(hotelData: any, nights: number): Array<{
 
   return [{
     hotel_id: hotelData.hotelId,
-    rooms,
+    rooms: Array.from(roomsMap.values()),
   }];
 }
 
