@@ -11,7 +11,7 @@ export async function getStaticPaths() {
   return allArticles.map(article => ({
     params: {
       category: article.data.category,
-      slug: article.data.slug,
+      slug: article.slug,
     },
     props: { article },
   }));
@@ -33,7 +33,7 @@ let relatedArticles: CollectionEntry<'blog'>[] = [];
 // First, try to get articles specified in relatedArticles array
 if (article.data.relatedArticles && article.data.relatedArticles.length > 0) {
   relatedArticles = allArticles.filter(a =>
-    article.data.relatedArticles?.includes(a.data.slug)
+    article.data.relatedArticles?.includes(a.slug)
   );
 }
 
@@ -42,8 +42,8 @@ if (relatedArticles.length < 3) {
   const sameCategoryArticles = allArticles
     .filter(a =>
       a.data.category === article.data.category &&
-      a.data.slug !== article.data.slug &&
-      !relatedArticles.find(r => r.data.slug === a.data.slug)
+      a.slug !== article.slug &&
+      !relatedArticles.find(r => r.slug === a.slug)
     )
     .sort((a, b) => b.data.publishDate.getTime() - a.data.publishDate.getTime())
     .slice(0, 3 - relatedArticles.length);

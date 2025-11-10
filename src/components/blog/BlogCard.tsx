@@ -8,7 +8,7 @@ interface BlogCardProps {
 
 export default function BlogCard({ article, featured = false }: BlogCardProps) {
   const { data } = article;
-  const url = `/blog/${data.category}/${data.slug}`;
+  const url = `/blog/${data.category}/${article.slug}`;
 
   if (featured) {
     return (

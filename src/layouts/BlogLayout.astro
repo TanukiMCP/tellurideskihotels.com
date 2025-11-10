@@ -18,7 +18,7 @@ const { article, relatedArticles = [], headings = [] } = Astro.props;
 const { data, render } = article;
 const { Content } = await render();
 
-const fullUrl = `${Astro.site}blog/${data.category}/${data.slug}`;
+const fullUrl = `${Astro.site}blog/${data.category}/${article.slug}`;
 const categoryName = data.category.replace(/-/g, ' ');
 ---
 
@@ -135,7 +135,7 @@ const categoryName = data.category.replace(/-/g, ' ');
             <RelatedArticles
               client:load
               articles={relatedArticles}
-              currentSlug={data.slug}
+              currentSlug={article.slug}
               maxArticles={3}
             />
           )}

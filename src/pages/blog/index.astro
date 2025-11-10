@@ -18,7 +18,7 @@ const sortedArticles = allArticles.sort((a, b) => {
 const featuredArticle = sortedArticles.find(article => article.data.featured) || sortedArticles[0];
 
 // Get remaining articles
-const regularArticles = sortedArticles.filter(article => article.data.slug !== featuredArticle?.data.slug);
+const regularArticles = sortedArticles.filter(article => article.slug !== featuredArticle?.slug);
 
 // Categories for filter
 const categories = [
