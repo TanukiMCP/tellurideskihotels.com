@@ -5,7 +5,6 @@ const blogCollection = defineCollection({
   schema: z.object({
     id: z.string(),
     title: z.string().min(10).max(80),
-    slug: z.string(),
     status: z.enum(['draft', 'scheduled', 'published']),
     category: z.enum([
       'destination-guides',
