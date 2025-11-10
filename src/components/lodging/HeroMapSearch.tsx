@@ -250,12 +250,12 @@ export default function HeroMapSearch({
       {/* Subtle vignette only */}
       <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/20 pointer-events-none" />
 
-      {/* Hero Title - Centered */}
-      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center pointer-events-none z-10">
-        <h1 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl mb-4 lg:mb-6 text-white drop-shadow-2xl font-extrabold leading-tight">
-          Find Your Perfect<br className="hidden sm:block" /> Telluride Getaway
+      {/* Hero Title - Bottom */}
+      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-center pointer-events-none z-10 px-4">
+        <h1 className="text-3xl md:text-4xl lg:text-5xl mb-2 lg:mb-3 text-white drop-shadow-2xl font-extrabold leading-tight">
+          Find Your Perfect Telluride Getaway
         </h1>
-        <p className="text-lg md:text-xl lg:text-2xl text-white/95 font-semibold leading-relaxed max-w-3xl mx-auto drop-shadow-lg">
+        <p className="text-sm md:text-base lg:text-lg text-white/95 font-semibold drop-shadow-lg">
           {hotels.length}+ places to stay • Interactive map • Best rates guaranteed
         </p>
       </div>
