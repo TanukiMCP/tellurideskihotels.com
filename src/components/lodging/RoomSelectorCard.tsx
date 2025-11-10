@@ -172,25 +172,40 @@ export function RoomSelectorCard({
             
             console.log('[RoomSelector] Hotel details received, rooms:', hotelData.rooms?.length || 0);
             
-            // Create a map of room ID to photos
+            // Create a map of mapped room ID to photos
             const roomPhotosMap = new Map<string, string[]>();
             if (hotelData.rooms && Array.isArray(hotelData.rooms)) {
               for (const room of hotelData.rooms) {
                 const photos = room.photos?.map((p: any) => p.url || p.hd_url).filter(Boolean) || [];
                 if (photos.length > 0) {
-                  roomPhotosMap.set(room.id?.toString(), photos);
+                  // Use room.id as the key (this is what mappedRoomId refers to)
+                  const roomKey = room.id?.toString();
+                  if (roomKey) {
+                    roomPhotosMap.set(roomKey, photos);
+                  }
                 }
               }
             }
             
             console.log('[RoomSelector] Room photos map size:', roomPhotosMap.size);
+            console.log('[RoomSelector] Room photos map keys:', Array.from(roomPhotosMap.keys()));
             
-            // Merge photos with room options
+            // Merge photos with room options using mapped_room_id
             for (const roomOption of roomOptions) {
-              const photos = roomPhotosMap.get(roomOption.roomId);
-              if (photos && photos.length > 0) {
-                roomOption.images = photos;
-                console.log('[RoomSelector] Added', photos.length, 'images to room:', roomOption.roomName);
+              // Get the mapped_room_id from the first rate (all rates in a room should have the same mapped_room_id)
+              const mappedRoomId = (roomOption.rates[0] as any)?.mapped_room_id?.toString();
+              console.log('[RoomSelector] Looking for photos for room:', roomOption.roomName, 'mappedRoomId:', mappedRoomId);
+              
+              if (mappedRoomId) {
+                const photos = roomPhotosMap.get(mappedRoomId);
+                if (photos && photos.length > 0) {
+                  roomOption.images = photos;
+                  console.log('[RoomSelector] Added', photos.length, 'images to room:', roomOption.roomName);
+                } else {
+                  console.log('[RoomSelector] No photos found for mappedRoomId:', mappedRoomId);
+                }
+              } else {
+                console.log('[RoomSelector] No mappedRoomId for room:', roomOption.roomName);
               }
             }
           } else {

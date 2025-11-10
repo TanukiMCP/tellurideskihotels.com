@@ -62,11 +62,13 @@ function transformRateData(hotelData: any, nights: number): Array<{
           rooms.push({
             room_id: roomType.roomTypeId,
             room_name: rate.name || roomType.name || 'Standard Room',
+            mapped_room_id: roomType.mappedRoomId, // For linking to room photos from hotel details
             rates: [{
               rate_id: rate.rateId,
               room_id: roomType.roomTypeId,
               room_name: rate.name || roomType.name || 'Standard Room',
               offer_id: roomType.offerId, // Required for prebook
+              mapped_room_id: roomType.mappedRoomId, // For linking to room photos
               net: {
                 amount: pricePerNight, // Per-night price WITH margin
                 currency,
@@ -170,6 +172,7 @@ export async function searchRates(params: LiteAPIRateSearchParams): Promise<Rate
     currency: 'USD',
     guestNationality: 'US',
     margin: params.margin || LITEAPI_MARKUP_PERCENT,
+    roomMapping: true, // Enable room mapping to get mappedRoomId for linking to room photos
   };
 
   const endpoint = `/hotels/rates`;
@@ -262,6 +265,7 @@ export async function searchRatesStream(
     currency: 'USD',
     guestNationality: 'US',
     margin: params.margin || LITEAPI_MARKUP_PERCENT,
+    roomMapping: true, // Enable room mapping to get mappedRoomId for linking to room photos
     stream: true, // Enable streaming
   };
 

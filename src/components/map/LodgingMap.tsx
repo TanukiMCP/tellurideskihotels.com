@@ -243,9 +243,9 @@ export default function LodgingMap({
                 map.setPaintProperty(layerId, 'line-gap-width', 0);
                 
                 // Enhanced color coding by difficulty with more vivid colors
-                map.setPaintProperty(layerId, 'line-color', [
-                  'match',
-                  ['get', 'piste:difficulty'],
+                  map.setPaintProperty(layerId, 'line-color', [
+                    'match',
+                    ['get', 'piste:difficulty'],
                   'novice', '#22c55e',     // Green for easy
                   'easy', '#22c55e',       // Green for easy
                   'intermediate', '#3b82f6', // Blue for intermediate
@@ -253,7 +253,7 @@ export default function LodgingMap({
                   'expert', '#dc2626',     // Red for expert/double black
                   'freeride', '#dc2626',   // Red for expert terrain
                   '#3b82f6' // default blue for unmarked trails
-                ]);
+                  ]);
               }
             } catch (e) {
               console.log('Could not style layer:', layerId, e);
