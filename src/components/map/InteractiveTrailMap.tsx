@@ -229,22 +229,47 @@ export default function InteractiveTrailMap() {
           {/* Legend */}
           <div className="space-y-2">
             <h4 className="text-xs font-semibold text-neutral-700 uppercase tracking-wide">Trail Difficulty</h4>
-            <div className="space-y-1.5">
-              <div className="flex items-center gap-2">
-                <div className="w-8 h-1 rounded" style={{ backgroundColor: TRAIL_COLORS.easy }}></div>
-                <span className="text-xs text-neutral-600">● Green Circle - Easy</span>
+            <div className="space-y-2">
+              <div className="flex items-center gap-3">
+                <div className="w-6 h-6 rounded-full flex items-center justify-center" style={{ backgroundColor: TRAIL_COLORS.easy }}>
+                  <span className="text-white font-bold text-xs">●</span>
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-xs font-semibold text-neutral-900">Green Circle</span>
+                  <span className="text-[10px] text-neutral-600">Easiest</span>
+                </div>
               </div>
-              <div className="flex items-center gap-2">
-                <div className="w-8 h-1 rounded" style={{ backgroundColor: TRAIL_COLORS.intermediate }}></div>
-                <span className="text-xs text-neutral-600">■ Blue Square - Intermediate</span>
+              <div className="flex items-center gap-3">
+                <div className="w-6 h-6 rounded-sm flex items-center justify-center" style={{ backgroundColor: TRAIL_COLORS.intermediate }}>
+                  <span className="text-white font-bold text-sm">■</span>
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-xs font-semibold text-neutral-900">Blue Square</span>
+                  <span className="text-[10px] text-neutral-600">More Difficult</span>
+                </div>
               </div>
-              <div className="flex items-center gap-2">
-                <div className="w-8 h-1 rounded" style={{ backgroundColor: TRAIL_COLORS.advanced }}></div>
-                <span className="text-xs text-neutral-600">◆ Black Diamond - Advanced</span>
+              <div className="flex items-center gap-3">
+                <div className="w-6 h-6 rotate-45 flex items-center justify-center" style={{ backgroundColor: TRAIL_COLORS.advanced }}>
+                  <span className="text-white font-bold -rotate-45 text-lg leading-none">◆</span>
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-xs font-semibold text-neutral-900">Black Diamond</span>
+                  <span className="text-[10px] text-neutral-600">Most Difficult</span>
+                </div>
               </div>
-              <div className="flex items-center gap-2">
-                <div className="w-8 h-1 rounded" style={{ backgroundColor: TRAIL_COLORS.expert }}></div>
-                <span className="text-xs text-neutral-600">◆◆ Double Black - Expert</span>
+              <div className="flex items-center gap-3">
+                <div className="flex gap-0.5">
+                  <div className="w-5 h-5 rotate-45 flex items-center justify-center" style={{ backgroundColor: TRAIL_COLORS.expert }}>
+                    <span className="text-white font-bold -rotate-45 text-sm leading-none">◆</span>
+                  </div>
+                  <div className="w-5 h-5 rotate-45 flex items-center justify-center" style={{ backgroundColor: TRAIL_COLORS.expert }}>
+                    <span className="text-white font-bold -rotate-45 text-sm leading-none">◆</span>
+                  </div>
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-xs font-semibold text-neutral-900">Double Black</span>
+                  <span className="text-[10px] text-neutral-600">Experts Only</span>
+                </div>
               </div>
             </div>
           </div>

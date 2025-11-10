@@ -9,16 +9,28 @@ export const GET: APIRoute = async ({ url }) => {
     const startDate = url.searchParams.get('startDate');
     const endDate = url.searchParams.get('endDate');
     
-    // Default to 10 days if no date range specified
+    // Calculate how many days we need from TODAY to cover the requested range
     let days = 10;
     
-    // Calculate days if both dates provided
     if (startDate && endDate) {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
       const start = new Date(startDate);
       const end = new Date(endDate);
-      const diffTime = Math.abs(end.getTime() - start.getTime());
-      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1; // +1 to include both start and end
-      days = Math.min(Math.max(diffDays, 1), 16); // Clamp between 1-16 days (Open-Meteo limit)
+      
+      // Calculate days from TODAY to END of trip
+      const daysFromToday = Math.ceil((end.getTime() - today.getTime()) / (1000 * 60 * 60 * 24)) + 1;
+      
+      // Open-Meteo free tier supports up to 16 days forecast
+      days = Math.min(Math.max(daysFromToday, 1), 16);
+      
+      console.log('[Weather API] Calculated days needed:', {
+        today: today.toISOString().split('T')[0],
+        startDate,
+        endDate,
+        daysFromToday,
+        requestingDays: days
+      });
     }
     
     const weatherData = await getWeather(days);
