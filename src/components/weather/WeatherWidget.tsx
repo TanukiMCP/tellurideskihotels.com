@@ -1,13 +1,38 @@
 import { useState, useEffect } from 'react';
-import { format, parseISO, differenceInDays } from 'date-fns';
+import { format, parseISO } from 'date-fns';
+import { Cloud, CloudRain, CloudSnow, CloudFog, Sun, CloudSun, CloudDrizzle, CloudLightning, Droplets, Wind } from 'lucide-react';
 import type { WeatherDay } from '@/lib/open-meteo/weather';
-import { getWeatherIcon, getWeatherDescription } from '@/lib/open-meteo/weather';
+import { getWeatherIconType, getWeatherDescription } from '@/lib/open-meteo/weather';
 
 interface WeatherWidgetProps {
   startDate: string;
   endDate: string;
   title?: string;
   compact?: boolean;
+}
+
+function WeatherIcon({ code, className = "w-12 h-12" }: { code: number; className?: string }) {
+  const type = getWeatherIconType(code);
+  const iconClass = `${className} text-sky-600`;
+  
+  switch (type) {
+    case 'clear':
+      return <Sun className={iconClass} />;
+    case 'partly-cloudy':
+      return <CloudSun className={iconClass} />;
+    case 'cloudy':
+      return <Cloud className={iconClass} />;
+    case 'fog':
+      return <CloudFog className={iconClass} />;
+    case 'rain':
+      return code <= 55 ? <CloudDrizzle className={iconClass} /> : <CloudRain className={iconClass} />;
+    case 'snow':
+      return <CloudSnow className={iconClass} />;
+    case 'thunderstorm':
+      return <CloudLightning className={iconClass} />;
+    default:
+      return <Cloud className={iconClass} />;
+  }
 }
 
 export function WeatherWidget({ startDate, endDate, title = 'Weather Forecast', compact = false }: WeatherWidgetProps) {
@@ -69,9 +94,7 @@ export function WeatherWidget({ startDate, endDate, title = 'Weather Forecast', 
     return (
       <div className="bg-gradient-to-br from-sky-50 to-blue-50 border border-sky-200 rounded-xl p-4 shadow-sm">
         <h3 className="text-base font-bold text-sky-900 mb-2 flex items-center gap-2">
-          <svg className="w-5 h-5 text-sky-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z" />
-          </svg>
+          <Cloud className="w-5 h-5 text-sky-600" />
           {title}
         </h3>
         <p className="text-sm text-neutral-600">Weather data unavailable</p>
@@ -85,16 +108,13 @@ export function WeatherWidget({ startDate, endDate, title = 'Weather Forecast', 
     return (
       <div className="bg-gradient-to-br from-sky-50 to-blue-50 border border-sky-200 rounded-xl p-4 shadow-sm">
         <h3 className="text-base font-bold text-sky-900 mb-3 flex items-center gap-2">
-          <svg className="w-5 h-5 text-sky-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z" />
-          </svg>
+          <Cloud className="w-5 h-5 text-sky-600" />
           {title}
         </h3>
         <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-7 gap-3">
           {weatherData.slice(0, 7).map((weather) => {
             const date = parseISO(weather.date);
             const description = getWeatherDescription(weather.weatherCode);
-            const icon = getWeatherIcon(weather.weatherCode);
             
             return (
               <div key={weather.date} className="text-center bg-white rounded-lg p-3 border border-sky-100 shadow-sm hover:shadow-md transition-shadow">
@@ -104,8 +124,8 @@ export function WeatherWidget({ startDate, endDate, title = 'Weather Forecast', 
                 <div className="text-[10px] text-neutral-600 mb-2">
                   {format(date, 'MMM d')}
                 </div>
-                <div className="mb-2 text-3xl" title={description}>
-                  {icon}
+                <div className="mb-2 flex justify-center">
+                  <WeatherIcon code={weather.weatherCode} className="w-8 h-8" />
                 </div>
                 <div className="flex items-center justify-center gap-1 mb-1">
                   <div className="text-lg font-bold text-neutral-900">
@@ -115,9 +135,10 @@ export function WeatherWidget({ startDate, endDate, title = 'Weather Forecast', 
                     {Math.round(weather.temp.min)}°
                   </div>
                 </div>
-                {weather.precipProbability >= 30 && (
+                {weather.precipProbability >= 0.3 && (
                   <div className="text-[10px] text-sky-600 flex items-center justify-center gap-0.5">
-                    💧 {Math.round(weather.precipProbability)}%
+                    <Droplets className="w-3 h-3" />
+                    {Math.round(weather.precipProbability * 100)}%
                   </div>
                 )}
               </div>
@@ -133,9 +154,7 @@ export function WeatherWidget({ startDate, endDate, title = 'Weather Forecast', 
     <div className="bg-gradient-to-br from-sky-50 to-blue-50 border border-sky-200 rounded-3xl p-6 lg:p-8 shadow-lg">
       <div className="flex items-center justify-between mb-6">
         <h3 className="text-2xl font-bold text-sky-900 flex items-center gap-3">
-          <svg className="w-8 h-8 text-sky-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z" />
-          </svg>
+          <Cloud className="w-8 h-8 text-sky-600" />
           {title}
         </h3>
         <span className="text-sm text-neutral-600 font-medium">
@@ -149,7 +168,6 @@ export function WeatherWidget({ startDate, endDate, title = 'Weather Forecast', 
       }`}>
         {weatherData.map((weather) => {
           const description = getWeatherDescription(weather.weatherCode);
-          const icon = getWeatherIcon(weather.weatherCode);
           const date = parseISO(weather.date);
           
           return (
@@ -160,8 +178,8 @@ export function WeatherWidget({ startDate, endDate, title = 'Weather Forecast', 
               <div className={`${isShortStay ? 'text-base' : 'text-xs'} text-neutral-600 mb-3`}>
                 {format(date, 'MMMM d')}
               </div>
-              <div className={`mb-3 ${isShortStay ? 'text-6xl' : 'text-5xl'}`} title={description}>
-                {icon}
+              <div className="mb-3 flex justify-center">
+                <WeatherIcon code={weather.weatherCode} className={isShortStay ? 'w-16 h-16' : 'w-12 h-12'} />
               </div>
               <div className={`${isShortStay ? 'text-sm' : 'text-xs'} text-neutral-700 mb-3 font-medium`}>
                 {description}
@@ -175,21 +193,21 @@ export function WeatherWidget({ startDate, endDate, title = 'Weather Forecast', 
                 </div>
               </div>
               <div className="space-y-1 text-xs text-neutral-600">
-                {weather.precipProbability >= 30 && (
+                {weather.precipProbability >= 0.3 && (
                   <div className="flex items-center justify-center gap-1">
-                    <span>💧</span>
-                    <span>{Math.round(weather.precipProbability)}% chance</span>
+                    <Droplets className="w-4 h-4" />
+                    <span>{Math.round(weather.precipProbability * 100)}% chance</span>
                   </div>
                 )}
                 {weather.precipitation > 0 && (
                   <div className="flex items-center justify-center gap-1">
-                    <span>🌧️</span>
+                    <CloudRain className="w-4 h-4" />
                     <span>{weather.precipitation.toFixed(2)}" precip</span>
                   </div>
                 )}
                 {weather.windSpeed > 0 && (
                   <div className="flex items-center justify-center gap-1">
-                    <span>💨</span>
+                    <Wind className="w-4 h-4" />
                     <span>{Math.round(weather.windSpeed)} mph</span>
                   </div>
                 )}

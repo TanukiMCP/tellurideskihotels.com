@@ -39,16 +39,16 @@ export interface WeatherDay {
 
 // WMO Weather interpretation codes
 // https://open-meteo.com/en/docs
-export function getWeatherIcon(code: number): string {
-  if (code === 0) return '☀️'; // Clear sky
-  if (code <= 3) return '⛅'; // Partly cloudy
-  if (code <= 48) return '🌫️'; // Fog
-  if (code <= 67) return '🌧️'; // Rain
-  if (code <= 77) return '❄️'; // Snow
-  if (code <= 82) return '🌧️'; // Rain showers
-  if (code <= 86) return '❄️'; // Snow showers
-  if (code <= 99) return '⛈️'; // Thunderstorm
-  return '☁️';
+export function getWeatherIconType(code: number): 'clear' | 'partly-cloudy' | 'cloudy' | 'fog' | 'rain' | 'snow' | 'thunderstorm' {
+  if (code === 0) return 'clear';
+  if (code <= 3) return 'partly-cloudy';
+  if (code <= 48) return 'fog';
+  if (code <= 67) return 'rain';
+  if (code <= 77) return 'snow';
+  if (code <= 82) return 'rain';
+  if (code <= 86) return 'snow';
+  if (code <= 99) return 'thunderstorm';
+  return 'cloudy';
 }
 
 export function getWeatherDescription(code: number): string {
