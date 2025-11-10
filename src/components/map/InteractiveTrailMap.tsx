@@ -20,7 +20,7 @@ const TELLURIDE_BOUNDS: [[number, number], [number, number]] = [
 export default function InteractiveTrailMap() {
   const mapRef = useRef<MapRef>(null);
   const [popupInfo, setPopupInfo] = useState<any>(null);
-  const [terrainEnabled, setTerrainEnabled] = useState(false);
+  const [terrainEnabled, setTerrainEnabled] = useState(true);
   const [viewState, setViewState] = useState({
     longitude: TELLURIDE_CENTER[0],
     latitude: TELLURIDE_CENTER[1],
@@ -34,13 +34,16 @@ export default function InteractiveTrailMap() {
     const map = mapRef.current?.getMap();
     if (!map) return;
 
-    // Add 3D terrain source for later use with toggle
+    // Add 3D terrain with LOWER exaggeration to prevent scroll zoom conflicts
     map.addSource('mapbox-dem', {
       type: 'raster-dem',
       url: 'mapbox://mapbox.mapbox-terrain-dem-v1',
       tileSize: 512,
       maxzoom: 14
     });
+    
+    // Use exaggeration: 1.0 instead of 1.5 to reduce camera conflicts
+    map.setTerrain({ source: 'mapbox-dem', exaggeration: 1.0 });
   };
 
   // Handle map clicks to show feature info
@@ -78,8 +81,8 @@ export default function InteractiveTrailMap() {
       map.setTerrain(null);
       map.easeTo({ pitch: 0, duration: 500 });
     } else {
-      // Enable 3D
-      map.setTerrain({ source: 'mapbox-dem', exaggeration: 1.5 });
+      // Enable 3D - use lower exaggeration to prevent scroll zoom issues
+      map.setTerrain({ source: 'mapbox-dem', exaggeration: 1.0 });
       map.easeTo({ pitch: 45, duration: 500 });
     }
     setTerrainEnabled(!terrainEnabled);
