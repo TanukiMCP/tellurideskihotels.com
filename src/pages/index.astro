@@ -112,6 +112,11 @@ try {
           withAvailability: hotelsWithAvailability.length,
           featured: featuredHotelsData.length,
           pricesLoaded: Object.keys(minPrices).length,
+          samplePrices: Object.entries(minPrices).slice(0, 3).map(([id, price]) => ({
+            hotelId: id,
+            pricePerNight: price,
+            nights: nights,
+          })),
         });
       } catch (error) {
         console.error('[Homepage] Error fetching min rates:', error);
