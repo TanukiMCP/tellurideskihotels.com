@@ -105,18 +105,17 @@ try {
       />
 
   <!-- Quick Date Search -->
-  <div class="bg-gradient-to-b from-neutral-50 to-white py-10 border-b border-neutral-200">
+  <div class="bg-gradient-to-b from-neutral-50 to-white py-6 border-b border-neutral-200">
     <Container>
       <div class="max-w-6xl mx-auto">
-        <h2 class="text-xl font-bold text-neutral-900 mb-6 text-center">Check prices for these dates</h2>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
           <!-- Tonight -->
           <a 
             href={`/places-to-stay?location=Telluride&checkIn=${format(new Date(), 'yyyy-MM-dd')}&checkOut=${format(addDays(new Date(), 1), 'yyyy-MM-dd')}&adults=2`}
-            class="group bg-neutral-50 hover:bg-white border border-neutral-200 hover:border-primary-600 rounded-xl p-6 text-center transition-all duration-300 hover:shadow-lg"
+            class="group bg-neutral-50 hover:bg-white border border-neutral-200 hover:border-primary-600 rounded-lg p-4 text-center transition-all duration-200 hover:shadow-md"
           >
-            <div class="text-sm font-bold text-neutral-900 mb-2">Tonight</div>
-            <div class="text-sm text-primary-600 font-semibold">
+            <div class="text-xs font-bold text-neutral-900 mb-1">Tonight</div>
+            <div class="text-xs text-primary-600 font-semibold">
               {format(new Date(), 'MMM d')} - {format(addDays(new Date(), 1), 'MMM d')}
             </div>
           </a>
@@ -124,10 +123,10 @@ try {
           <!-- Tomorrow -->
           <a 
             href={`/places-to-stay?location=Telluride&checkIn=${format(addDays(new Date(), 1), 'yyyy-MM-dd')}&checkOut=${format(addDays(new Date(), 2), 'yyyy-MM-dd')}&adults=2`}
-            class="group bg-neutral-50 hover:bg-white border border-neutral-200 hover:border-primary-600 rounded-xl p-6 text-center transition-all duration-300 hover:shadow-lg"
+            class="group bg-neutral-50 hover:bg-white border border-neutral-200 hover:border-primary-600 rounded-lg p-4 text-center transition-all duration-200 hover:shadow-md"
           >
-            <div class="text-sm font-bold text-neutral-900 mb-2">Tomorrow</div>
-            <div class="text-sm text-primary-600 font-semibold">
+            <div class="text-xs font-bold text-neutral-900 mb-1">Tomorrow</div>
+            <div class="text-xs text-primary-600 font-semibold">
               {format(addDays(new Date(), 1), 'MMM d')} - {format(addDays(new Date(), 2), 'MMM d')}
             </div>
           </a>
@@ -135,10 +134,10 @@ try {
           <!-- Next Weekend -->
           <a 
             href={`/places-to-stay?location=Telluride&checkIn=${format(addDays(new Date(), 5), 'yyyy-MM-dd')}&checkOut=${format(addDays(new Date(), 7), 'yyyy-MM-dd')}&adults=2`}
-            class="group bg-neutral-50 hover:bg-white border border-neutral-200 hover:border-primary-600 rounded-xl p-6 text-center transition-all duration-300 hover:shadow-lg"
+            class="group bg-neutral-50 hover:bg-white border border-neutral-200 hover:border-primary-600 rounded-lg p-4 text-center transition-all duration-200 hover:shadow-md"
           >
-            <div class="text-sm font-bold text-neutral-900 mb-2">Next weekend</div>
-            <div class="text-sm text-primary-600 font-semibold">
+            <div class="text-xs font-bold text-neutral-900 mb-1">Next weekend</div>
+            <div class="text-xs text-primary-600 font-semibold">
               {format(addDays(new Date(), 5), 'MMM d')} - {format(addDays(new Date(), 7), 'MMM d')}
             </div>
           </a>
@@ -146,10 +145,10 @@ try {
           <!-- In Two Weeks -->
           <a 
             href={`/places-to-stay?location=Telluride&checkIn=${format(addDays(new Date(), 14), 'yyyy-MM-dd')}&checkOut=${format(addDays(new Date(), 16), 'yyyy-MM-dd')}&adults=2`}
-            class="group bg-neutral-50 hover:bg-white border border-neutral-200 hover:border-primary-600 rounded-xl p-6 text-center transition-all duration-300 hover:shadow-lg"
+            class="group bg-neutral-50 hover:bg-white border border-neutral-200 hover:border-primary-600 rounded-lg p-4 text-center transition-all duration-200 hover:shadow-md"
           >
-            <div class="text-sm font-bold text-neutral-900 mb-2">In two weeks</div>
-            <div class="text-sm text-primary-600 font-semibold">
+            <div class="text-xs font-bold text-neutral-900 mb-1">In two weeks</div>
+            <div class="text-xs text-primary-600 font-semibold">
               {format(addDays(new Date(), 14), 'MMM d')} - {format(addDays(new Date(), 16), 'MMM d')}
             </div>
           </a>
