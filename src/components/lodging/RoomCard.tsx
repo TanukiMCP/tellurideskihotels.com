@@ -34,15 +34,15 @@ export function RoomCard({ rate, nights, onReserve, available, hotel, booking }:
   
   // Extract room details
   const roomName = rate.room_name || 'Standard Room';
-  const images = rate.room_images || [];
+  const images: string[] = [];
   const totalPrice = rate.total?.amount || 0;
   const currency = rate.total?.currency || 'USD';
   const pricePerNight = nights > 0 ? totalPrice / nights : totalPrice;
   
   // Parse room features from description or use defaults
-  const sqFt = rate.room_surface_in_feet2 || 400;
+  const sqFt = 400;
   const maxOccupancy = rate.max_occupancy || 2;
-  const bedConfig = rate.bed_type || 'Standard Bed';
+  const bedConfig = rate.bed_types?.[0]?.type || 'Standard Bed';
   
   // Determine refund policy
   const isRefundable = rate.cancellation_policy?.free_cancellation_until != null;

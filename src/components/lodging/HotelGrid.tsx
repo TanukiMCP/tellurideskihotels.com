@@ -62,10 +62,10 @@ export function HotelGrid({
         // Sort by combination of rating and review count
         // Prioritize hotels with both high ratings AND substantial review counts
         return sorted.sort((a, b) => {
-          const ratingA = a.review_score || 0;
-          const ratingB = b.review_score || 0;
-          const countA = a.review_nr || 0;
-          const countB = b.review_nr || 0;
+        const ratingA = a.review_score || 0;
+        const ratingB = b.review_score || 0;
+        const countA = a.review_count || 0;
+        const countB = b.review_count || 0;
           
           // Calculate a weighted score: rating * log(review_count + 1)
           // This favors hotels with both high ratings and many reviews

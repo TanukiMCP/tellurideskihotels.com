@@ -81,7 +81,6 @@ export function RoomSelectorCard({
     async function fetchRates() {
       setLoading(true);
       setError(null);
-      setNeedsRefresh(false);
 
       try {
         const params = new URLSearchParams({
@@ -187,8 +186,6 @@ export function RoomSelectorCard({
       children,
     });
   };
-
-  const [bedFilter, setBedFilter] = useState<'all' | '1' | '2'>('all');
 
   // Filter rooms based on bed count
   const filteredRooms = useMemo(() => {
