@@ -1,14 +1,13 @@
 // Service Worker for Telluride Ski Hotels PWA
 // Provides offline support for trail map and essential assets
 
-const CACHE_NAME = 'telluride-ski-v1';
-const OFFLINE_CACHE = 'telluride-offline-v1';
+const CACHE_NAME = 'telluride-ski-v2';
+const OFFLINE_CACHE = 'telluride-offline-v2';
 
 // Assets to cache immediately on install
 const ESSENTIAL_ASSETS = [
   '/',
   '/trail-map',
-  '/data/telluride-trail-map.geojson',
   '/favicon.ico',
   '/android-chrome-192x192.png',
   '/android-chrome-512x512.png',
@@ -52,8 +51,7 @@ self.addEventListener('fetch', (event) => {
 
   // Skip external requests (Mapbox tiles, API calls, etc.)
   const url = new URL(event.request.url);
-  if (!url.origin.includes(self.location.origin) && 
-      !url.pathname.includes('.geojson')) {
+  if (!url.origin.includes(self.location.origin)) {
     return;
   }
 
@@ -77,9 +75,8 @@ self.addEventListener('fetch', (event) => {
             // Clone the response
             const responseToCache = response.clone();
 
-            // Cache maps and trail data aggressively
-            if (event.request.url.includes('.geojson') || 
-                event.request.url.includes('/trail-map')) {
+            // Cache trail map page aggressively
+            if (event.request.url.includes('/trail-map')) {
               caches.open(CACHE_NAME).then((cache) => {
                 cache.put(event.request, responseToCache);
               });
