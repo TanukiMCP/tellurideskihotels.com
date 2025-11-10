@@ -14,9 +14,9 @@ const TRAIL_MAP_STYLE = 'mapbox://styles/mapbox/outdoors-v12';
 // Trail difficulty colors matching ski industry standards
 const TRAIL_COLORS = {
   easy: '#22c55e',       // Green circle
-  intermediate: '#3b82f6', // Blue square
-  advanced: '#1e1e1e',   // Black diamond
-  expert: '#dc2626',     // Double black diamond
+  intermediate: '#2563eb', // Blue square  
+  advanced: '#000000',   // Black diamond
+  expert: '#000000',     // Double black diamond (also black)
 };
 
 // Lift type colors
@@ -120,17 +120,17 @@ export default function InteractiveTrailMap() {
         'intermediate', TRAIL_COLORS.intermediate,
         'advanced', TRAIL_COLORS.advanced,
         'expert', TRAIL_COLORS.expert,
-        '#3b82f6' // default
+        TRAIL_COLORS.intermediate // default
       ],
       'line-width': [
         'interpolate',
         ['linear'],
         ['zoom'],
-        12, 3,
-        14, 6,
-        16, 10
+        12, 4,
+        14, 7,
+        16, 12
       ],
-      'line-opacity': 0.9
+      'line-opacity': 0.95
     }
   };
 

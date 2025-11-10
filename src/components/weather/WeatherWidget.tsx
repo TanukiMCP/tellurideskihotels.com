@@ -13,7 +13,7 @@ interface WeatherWidgetProps {
 
 function WeatherIcon({ code, className = "w-12 h-12" }: { code: number; className?: string }) {
   const type = getWeatherIconType(code);
-  const iconClass = `${className} text-sky-600`;
+  const iconClass = `${className} text-primary-600`;
   
   switch (type) {
     case 'clear':
@@ -86,10 +86,10 @@ export function WeatherWidget({ startDate, endDate, title = 'Weather Forecast', 
 
   if (loading) {
     return (
-      <div className="bg-gradient-to-br from-sky-50 to-blue-50 border border-sky-200 rounded-xl p-4 shadow-sm">
+      <div className="bg-gradient-to-br from-primary-50 to-emerald-50 border border-primary-200 rounded-xl p-4 shadow-sm">
         <div className="flex items-center justify-center gap-2 py-6">
-          <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-sky-600"></div>
-          <span className="text-sky-900 font-medium text-sm">Loading weather...</span>
+          <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-primary-600"></div>
+          <span className="text-neutral-900 font-medium text-sm">Loading weather...</span>
         </div>
       </div>
     );
@@ -97,9 +97,9 @@ export function WeatherWidget({ startDate, endDate, title = 'Weather Forecast', 
 
   if (error || !weatherData.length) {
     return (
-      <div className="bg-gradient-to-br from-sky-50 to-blue-50 border border-sky-200 rounded-xl p-4 shadow-sm">
-        <h3 className="text-base font-bold text-sky-900 mb-2 flex items-center gap-2">
-          <Cloud className="w-5 h-5 text-sky-600" />
+      <div className="bg-gradient-to-br from-primary-50 to-emerald-50 border border-primary-200 rounded-xl p-4 shadow-sm">
+        <h3 className="text-base font-bold text-neutral-900 mb-2 flex items-center gap-2">
+          <Cloud className="w-5 h-5 text-primary-600" />
           {title}
         </h3>
         <p className="text-sm text-neutral-600">Weather data unavailable</p>
@@ -111,9 +111,9 @@ export function WeatherWidget({ startDate, endDate, title = 'Weather Forecast', 
 
   if (compact) {
     return (
-      <div className="bg-gradient-to-br from-sky-50 to-blue-50 border border-sky-200 rounded-xl p-4 shadow-sm">
-        <h3 className="text-base font-bold text-sky-900 mb-3 flex items-center gap-2">
-          <Cloud className="w-5 h-5 text-sky-600" />
+      <div className="bg-gradient-to-br from-primary-50 to-emerald-50 border border-primary-200 rounded-xl p-4 shadow-sm">
+        <h3 className="text-base font-bold text-neutral-900 mb-3 flex items-center gap-2">
+          <Cloud className="w-5 h-5 text-primary-600" />
           {title}
         </h3>
         <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-7 gap-3">
@@ -122,8 +122,8 @@ export function WeatherWidget({ startDate, endDate, title = 'Weather Forecast', 
             const description = getWeatherDescription(weather.weatherCode);
             
             return (
-              <div key={weather.date} className="text-center bg-white rounded-lg p-3 border border-sky-100 shadow-sm hover:shadow-md transition-shadow">
-                <div className="text-xs font-bold text-sky-700 mb-2">
+              <div key={weather.date} className="text-center bg-white rounded-lg p-3 border border-neutral-100 shadow-sm hover:shadow-md transition-shadow">
+                <div className="text-xs font-bold text-primary-700 mb-2">
                   {format(date, 'EEE')}
                 </div>
                 <div className="text-[10px] text-neutral-600 mb-2">
@@ -141,7 +141,7 @@ export function WeatherWidget({ startDate, endDate, title = 'Weather Forecast', 
                   </div>
                 </div>
                 {weather.precipProbability >= 0.3 && (
-                  <div className="text-[10px] text-sky-600 flex items-center justify-center gap-0.5">
+                  <div className="text-[10px] text-primary-600 flex items-center justify-center gap-0.5">
                     <Droplets className="w-3 h-3" />
                     {Math.round(weather.precipProbability * 100)}%
                   </div>
@@ -156,10 +156,10 @@ export function WeatherWidget({ startDate, endDate, title = 'Weather Forecast', 
 
   // Full (non-compact) view
   return (
-    <div className="bg-gradient-to-br from-sky-50 to-blue-50 border border-sky-200 rounded-3xl p-6 lg:p-8 shadow-lg">
+    <div className="bg-gradient-to-br from-primary-50 to-emerald-50 border border-primary-200 rounded-3xl p-6 lg:p-8 shadow-lg">
       <div className="flex items-center justify-between mb-6">
-        <h3 className="text-2xl font-bold text-sky-900 flex items-center gap-3">
-          <Cloud className="w-8 h-8 text-sky-600" />
+        <h3 className="text-2xl font-bold text-neutral-900 flex items-center gap-3">
+          <Cloud className="w-8 h-8 text-primary-600" />
           {title}
         </h3>
         <span className="text-sm text-neutral-600 font-medium">
@@ -177,7 +177,7 @@ export function WeatherWidget({ startDate, endDate, title = 'Weather Forecast', 
           
           return (
             <div key={weather.date} className={`bg-white rounded-xl ${isShortStay ? 'p-6' : 'p-4'} text-center shadow-md hover:shadow-lg transition-shadow border border-neutral-100`}>
-              <div className={`${isShortStay ? 'text-lg' : 'text-sm'} font-bold text-sky-700 mb-2`}>
+              <div className={`${isShortStay ? 'text-lg' : 'text-sm'} font-bold text-primary-700 mb-2`}>
                 {format(date, 'EEEE')}
               </div>
               <div className={`${isShortStay ? 'text-base' : 'text-xs'} text-neutral-600 mb-3`}>

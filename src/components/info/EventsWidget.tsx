@@ -11,49 +11,56 @@ interface Event {
   description: string;
 }
 
-// Curated Telluride events
+// Curated Telluride annual events (updated for 2025)
 const TELLURIDE_EVENTS: Event[] = [
   {
     id: '1',
-    name: 'New Year\'s Eve Torchlight Parade',
-    date: '2024-12-31',
-    type: 'festival',
-    description: 'Skiers descend the mountain with torches, followed by fireworks',
+    name: 'Ice Climbing Festival',
+    date: '2025-01-17',
+    type: 'sports',
+    description: 'Celebrate ice climbing with clinics and competitions',
   },
   {
     id: '2',
+    name: 'Mountain Mardi Gras Parade',
+    date: '2025-02-27',
+    type: 'festival',
+    description: 'Mardi Gras celebration in the mountains',
+  },
+  {
+    id: '3',
+    name: 'Telluride Mountainfilm',
+    date: '2025-05-23',
+    type: 'festival',
+    description: 'Documentary festival celebrating mountain culture and environment',
+  },
+  {
+    id: '4',
+    name: 'Bluegrass Festival',
+    date: '2025-06-18',
+    type: 'concert',
+    description: 'Annual bluegrass music festival in the mountains',
+  },
+  {
+    id: '5',
+    name: 'Jazz Festival',
+    date: '2025-08-08',
+    type: 'concert',
+    description: 'World-class jazz in an intimate mountain setting',
+  },
+  {
+    id: '6',
     name: 'Telluride Film Festival',
     date: '2025-08-29',
     type: 'festival',
     description: 'Premier film festival showcasing independent cinema',
   },
   {
-    id: '3',
-    name: 'Bluegrass Festival',
-    date: '2025-06-19',
-    type: 'concert',
-    description: 'Annual bluegrass music festival in the mountains',
-  },
-  {
-    id: '4',
-    name: 'Ice Climbing Festival',
-    date: '2025-01-15',
-    type: 'sports',
-    description: 'Celebrate ice climbing with clinics and competitions',
-  },
-  {
-    id: '5',
-    name: 'Mountain Mardi Gras Parade',
-    date: '2025-02-28',
+    id: '7',
+    name: 'New Year\'s Eve Torchlight Parade',
+    date: '2025-12-31',
     type: 'festival',
-    description: 'Mardi Gras celebration in the mountains',
-  },
-  {
-    id: '6',
-    name: 'Jazz Festival',
-    date: '2025-08-01',
-    type: 'concert',
-    description: 'World-class jazz in an intimate mountain setting',
+    description: 'Skiers descend the mountain with torches, followed by fireworks',
   },
 ];
 
@@ -66,12 +73,14 @@ const EVENT_COLORS = {
 };
 
 export function EventsWidget() {
-  // Sort events by date and get next 4
-  const sortedEvents = [...TELLURIDE_EVENTS].sort((a, b) => 
-    new Date(a.date).getTime() - new Date(b.date).getTime()
-  );
+  // Filter for upcoming events only, sort by date, and get next 4
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
   
-  const upcomingEvents = sortedEvents.slice(0, 4);
+  const upcomingEvents = [...TELLURIDE_EVENTS]
+    .filter(event => new Date(event.date) >= today)
+    .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
+    .slice(0, 4);
 
   const formatDate = (dateStr: string) => {
     const date = new Date(dateStr);

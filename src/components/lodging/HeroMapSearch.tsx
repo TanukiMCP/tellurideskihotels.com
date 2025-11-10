@@ -161,7 +161,7 @@ export default function HeroMapSearch({
   };
 
   return (
-    <div className="relative h-[600px] lg:h-[700px] w-full overflow-hidden">
+    <div className="relative h-[650px] lg:h-[750px] w-full overflow-hidden">
       {/* Mapbox Background */}
       <Map
         ref={mapRef}
@@ -250,11 +250,11 @@ export default function HeroMapSearch({
       {/* Subtle vignette only */}
       <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-transparent to-black/10 pointer-events-none" />
 
-      {/* Compact Search Panel - Top Left */}
-      <div className="absolute top-4 left-4 z-[500] pointer-events-auto">
-        <div className="flex flex-col gap-2">
-          {/* Map Style Selector */}
-          <div className="backdrop-blur-xl bg-white/95 border border-white/20 rounded-xl shadow-xl p-2">
+      {/* Map Controls - Top Bar */}
+      <div className="absolute top-4 left-4 right-4 z-[500] pointer-events-auto">
+        <div className="flex flex-col lg:flex-row gap-3 lg:items-center lg:justify-between">
+          {/* Left Side - Map Style Selector */}
+          <div className="backdrop-blur-xl bg-white/95 border border-white/20 rounded-xl shadow-xl p-2 lg:flex-shrink-0">
             <div className="flex gap-1.5">
               <button
                 onClick={() => setMapStyle('streets')}
@@ -292,61 +292,59 @@ export default function HeroMapSearch({
             </div>
           </div>
 
-          {/* Compact Search Form - Desktop */}
-          <form onSubmit={handleSearch} className="hidden lg:block backdrop-blur-xl bg-white/95 rounded-xl shadow-xl p-3 border border-white/20 w-[320px]">
-            <div className="space-y-2">
-              <div className="flex items-center gap-2">
-                <Calendar size={14} className="text-primary-600 flex-shrink-0" />
-                <input
-                  type="date"
-                  value={checkIn}
-                  onChange={(e) => setCheckIn(e.target.value)}
-                  min={format(new Date(), 'yyyy-MM-dd')}
-                  className="flex-1 px-2 py-1.5 border border-neutral-300 rounded-lg focus:border-primary-600 focus:ring-2 focus:ring-primary-600/20 outline-none transition-all text-sm bg-white"
-                  required
-                />
-              </div>
-              <div className="flex items-center gap-2">
-                <Calendar size={14} className="text-primary-600 flex-shrink-0" />
-                <input
-                  type="date"
-                  value={checkOut}
-                  onChange={(e) => setCheckOut(e.target.value)}
-                  min={checkIn}
-                  className="flex-1 px-2 py-1.5 border border-neutral-300 rounded-lg focus:border-primary-600 focus:ring-2 focus:ring-primary-600/20 outline-none transition-all text-sm bg-white"
-                  required
-                />
-              </div>
-              <div className="flex items-center gap-2">
-                <Users size={14} className="text-primary-600 flex-shrink-0" />
-                <input
-                  type="number"
-                  value={guests}
-                  onChange={(e) => setGuests(parseInt(e.target.value) || 1)}
-                  min="1"
-                  max="20"
-                  className="flex-1 px-2 py-1.5 border border-neutral-300 rounded-lg focus:border-primary-600 focus:ring-2 focus:ring-primary-600/20 outline-none transition-all text-sm bg-white"
-                  required
-                />
-              </div>
-              <button
-                type="submit"
-                disabled={isSearching}
-                className="w-full px-4 py-2 bg-gradient-to-r from-primary-600 to-primary-700 text-white rounded-lg font-bold text-sm shadow-lg hover:shadow-xl hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 flex items-center justify-center gap-2"
-              >
-                {isSearching ? (
-                  <>
-                    <div className="animate-spin rounded-full h-3 w-3 border-2 border-white border-t-transparent" />
-                    Searching...
-                  </>
-                ) : (
-                  <>
-                    <Search size={16} />
-                    Search Hotels
-                  </>
-                )}
-              </button>
+          {/* Right Side - Horizontal Search Form - Desktop Only */}
+          <form onSubmit={handleSearch} className="hidden lg:flex backdrop-blur-xl bg-white/95 rounded-xl shadow-xl p-2 border border-white/20 items-center gap-2">
+            <div className="flex items-center gap-1 px-2">
+              <Calendar size={14} className="text-primary-600 flex-shrink-0" />
+              <input
+                type="date"
+                value={checkIn}
+                onChange={(e) => setCheckIn(e.target.value)}
+                min={format(new Date(), 'yyyy-MM-dd')}
+                className="w-[130px] px-2 py-1.5 border border-neutral-300 rounded-lg focus:border-primary-600 focus:ring-2 focus:ring-primary-600/20 outline-none transition-all text-xs bg-white"
+                required
+              />
             </div>
+            <div className="flex items-center gap-1 px-2">
+              <Calendar size={14} className="text-primary-600 flex-shrink-0" />
+              <input
+                type="date"
+                value={checkOut}
+                onChange={(e) => setCheckOut(e.target.value)}
+                min={checkIn}
+                className="w-[130px] px-2 py-1.5 border border-neutral-300 rounded-lg focus:border-primary-600 focus:ring-2 focus:ring-primary-600/20 outline-none transition-all text-xs bg-white"
+                required
+              />
+            </div>
+            <div className="flex items-center gap-1 px-2">
+              <Users size={14} className="text-primary-600 flex-shrink-0" />
+              <input
+                type="number"
+                value={guests}
+                onChange={(e) => setGuests(parseInt(e.target.value) || 1)}
+                min="1"
+                max="20"
+                className="w-[70px] px-2 py-1.5 border border-neutral-300 rounded-lg focus:border-primary-600 focus:ring-2 focus:ring-primary-600/20 outline-none transition-all text-xs bg-white"
+                required
+              />
+            </div>
+            <button
+              type="submit"
+              disabled={isSearching}
+              className="px-4 py-2 bg-gradient-to-r from-primary-600 to-primary-700 text-white rounded-lg font-bold text-xs shadow-lg hover:shadow-xl hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 flex items-center justify-center gap-2 flex-shrink-0"
+            >
+              {isSearching ? (
+                <>
+                  <div className="animate-spin rounded-full h-3 w-3 border-2 border-white border-t-transparent" />
+                  Searching...
+                </>
+              ) : (
+                <>
+                  <Search size={14} />
+                  Search Hotels
+                </>
+              )}
+            </button>
           </form>
 
           {/* Mobile Search Button */}
@@ -355,7 +353,7 @@ export default function HeroMapSearch({
             className="lg:hidden backdrop-blur-xl bg-primary-600 text-white rounded-xl shadow-xl px-4 py-2.5 flex items-center justify-center gap-2 font-bold text-sm hover:bg-primary-700 transition-all"
           >
             <Search size={16} />
-            Search
+            Search Hotels
           </button>
         </div>
       </div>
@@ -444,9 +442,9 @@ export default function HeroMapSearch({
       )}
 
 
-      {/* Hotel Count Badge - Top Right (below nav controls) */}
+      {/* Hotel Count Badge - Bottom Left */}
       {isMapLoaded && hotels.length > 0 && (
-        <div className="absolute top-[70px] right-4 backdrop-blur-xl bg-white/90 rounded-xl shadow-xl px-4 py-2.5 z-[500] border border-white/20 pointer-events-none">
+        <div className="absolute bottom-4 left-4 backdrop-blur-xl bg-white/90 rounded-xl shadow-xl px-4 py-2.5 z-[500] border border-white/20 pointer-events-none">
           <div className="flex items-center gap-2">
             <MapPin className="text-primary-600" size={18} />
             <span className="text-sm font-bold text-neutral-900">

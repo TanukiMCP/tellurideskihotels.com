@@ -61,19 +61,37 @@ function getAQICategory(aqi: number): AirQualityData {
 
 export function AirQualityWidget() {
   const [loading, setLoading] = useState(true);
-  const [airQuality, setAirQuality] = useState<AirQualityData>(getAQICategory(35)); // Telluride typically has excellent AQI
+  const [airQuality, setAirQuality] = useState<AirQualityData>(getAQICategory(35)); // Default value
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    // Simulate loading - in production, this would call AirNow API
-    // Telluride typically has excellent air quality (AQI 20-50)
-    const timer = setTimeout(() => {
-      // Simulating typical Telluride air quality
-      const mockAQI = Math.floor(Math.random() * 30) + 20; // 20-50 range
-      setAirQuality(getAQICategory(mockAQI));
-      setLoading(false);
-    }, 500);
+    const fetchAirQuality = async () => {
+      try {
+        const response = await fetch('/api/air-quality');
+        
+        if (!response.ok) {
+          throw new Error('Failed to fetch air quality data');
+        }
 
-    return () => clearTimeout(timer);
+        const data = await response.json();
+        
+        if (data.aqi !== null && data.aqi !== undefined) {
+          setAirQuality(getAQICategory(data.aqi));
+        } else {
+          // Fallback to typical Telluride AQI if data unavailable
+          setAirQuality(getAQICategory(35));
+        }
+      } catch (err) {
+        console.error('[AirQualityWidget] Error fetching air quality:', err);
+        setError('Unable to load current data');
+        // Use typical Telluride AQI as fallback
+        setAirQuality(getAQICategory(35));
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchAirQuality();
   }, []);
 
   if (loading) {
@@ -146,12 +164,20 @@ export function AirQualityWidget() {
         </div>
       </div>
 
-      {/* Telluride Note */}
-      <div className="mt-4 p-3 bg-green-50 border border-green-200 rounded-lg">
-        <p className="text-xs text-green-800">
-          <span className="font-semibold">Did You Know:</span> Telluride enjoys some of the cleanest air in Colorado year-round!
-        </p>
-      </div>
+      {/* Telluride Note or Error Message */}
+      {error ? (
+        <div className="mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+          <p className="text-xs text-yellow-800">
+            <span className="font-semibold">Note:</span> {error}. Showing typical Telluride AQI.
+          </p>
+        </div>
+      ) : (
+        <div className="mt-4 p-3 bg-green-50 border border-green-200 rounded-lg">
+          <p className="text-xs text-green-800">
+            <span className="font-semibold">Did You Know:</span> Telluride enjoys some of the cleanest air in Colorado year-round!
+          </p>
+        </div>
+      )}
     </div>
   );
 }

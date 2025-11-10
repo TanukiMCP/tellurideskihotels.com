@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import type { WeatherDay } from '@/lib/open-meteo/weather';
 import { getWeatherIconType, getWeatherDescription, isSnowConditions } from '@/lib/open-meteo/weather';
 import { format } from 'date-fns';
-import { Calendar, MapPin, Wind, Droplets } from 'lucide-react';
+import { Calendar, MapPin, Wind, Droplets, CloudSnow } from 'lucide-react';
 
 interface CurrentConditionsProps {
   checkIn?: string;
@@ -91,7 +91,7 @@ export function CurrentConditions({ checkIn, checkOut }: CurrentConditionsProps 
   };
 
   return (
-    <div className={`relative overflow-hidden rounded-2xl shadow-xl ${hasSnow ? 'bg-gradient-to-br from-blue-600 to-blue-400' : 'bg-gradient-to-br from-sky-500 to-blue-500'}`}>
+    <div className={`relative overflow-hidden rounded-2xl shadow-xl ${hasSnow ? 'bg-gradient-to-br from-primary-600 to-emerald-600' : 'bg-gradient-to-br from-primary-500 to-emerald-500'}`}>
       {/* Header */}
       <div className="relative z-10 p-6 lg:p-8">
         <div className="flex items-center justify-between mb-6">
@@ -108,7 +108,7 @@ export function CurrentConditions({ checkIn, checkOut }: CurrentConditionsProps 
           </div>
           {hasSnow && (
             <div className="bg-white/20 backdrop-blur-sm rounded-lg px-3 py-1.5 flex items-center gap-1.5">
-              <span className="text-lg">❄️</span>
+              <CloudSnow className="w-5 h-5 text-white" />
               <span className="text-white text-sm font-semibold">{snowDays.length} Snow Days</span>
             </div>
           )}
@@ -169,7 +169,9 @@ export function CurrentConditions({ checkIn, checkOut }: CurrentConditionsProps 
                   </div>
                   <div className="text-3xl mb-2">{weatherIcon}</div>
                   {isSnowDay && (
-                    <div className="absolute top-1 right-1 text-sm">❄️</div>
+                    <div className="absolute top-1 right-1">
+                      <CloudSnow className="w-4 h-4 text-white" />
+                    </div>
                   )}
                   <div className="space-y-0.5">
                     <div className="text-base font-bold text-white">
