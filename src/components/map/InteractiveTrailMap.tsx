@@ -3,13 +3,16 @@
  * Uses Mapbox outdoors style with custom layer styling for ski terrain
  * Leverages OpenStreetMap ski piste data already in Mapbox
  */
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import Map, { NavigationControl, Popup } from 'react-map-gl/mapbox';
 import type { MapRef, MapMouseEvent } from 'react-map-gl/mapbox';
 import { MAPBOX_TOKEN, TELLURIDE_CENTER } from '@/lib/mapbox-utils';
 import 'mapbox-gl/dist/mapbox-gl.css';
 
-const TRAIL_MAP_STYLE = 'mapbox://styles/mapbox/outdoors-v12';
+const MAP_STYLES = {
+  outdoors: 'mapbox://styles/mapbox/outdoors-v12',
+  satellite: 'mapbox://styles/mapbox/satellite-streets-v12',
+};
 
 // Telluride Ski Resort bounds for better framing
 const TELLURIDE_BOUNDS: [[number, number], [number, number]] = [
@@ -21,6 +24,7 @@ export default function InteractiveTrailMap() {
   const mapRef = useRef<MapRef>(null);
   const [popupInfo, setPopupInfo] = useState<any>(null);
   const [terrainEnabled, setTerrainEnabled] = useState(true);
+  const [mapStyle, setMapStyle] = useState<keyof typeof MAP_STYLES>('outdoors');
   const [viewState, setViewState] = useState({
     longitude: TELLURIDE_CENTER[0],
     latitude: TELLURIDE_CENTER[1],
@@ -29,7 +33,9 @@ export default function InteractiveTrailMap() {
     bearing: 0
   });
 
-  // Handle map load and apply custom styling + real ski trail data
+  const [isMapLoaded, setIsMapLoaded] = useState(false);
+
+  // Handle map load and apply 3D terrain
   const handleMapLoad = () => {
     const map = mapRef.current?.getMap();
     if (!map) return;
@@ -50,6 +56,15 @@ export default function InteractiveTrailMap() {
       }
     });
 
+    setIsMapLoaded(true);
+  };
+
+  // Load ski trails after map is loaded and on style changes
+  useEffect(() => {
+    if (!mapRef.current || !isMapLoaded) return;
+
+    const map = mapRef.current.getMap();
+
     // Hide default Mapbox trail layers
     try {
       const style = map.getStyle();
@@ -69,6 +84,19 @@ export default function InteractiveTrailMap() {
     } catch (err) {
       console.log('Could not hide Mapbox base trail layers:', err);
     }
+
+    // Remove existing custom layers if they exist (for style changes)
+    try {
+      if (map.getLayer('telluride-ski-trails-labels')) {
+        map.removeLayer('telluride-ski-trails-labels');
+      }
+      if (map.getLayer('telluride-ski-trails')) {
+        map.removeLayer('telluride-ski-trails');
+      }
+      if (map.getSource('telluride-ski-trails')) {
+        map.removeSource('telluride-ski-trails');
+      }
+    } catch {}
 
     // Load real Telluride ski trail data from OpenStreetMap
     fetch('/data/telluride-ski-trails.json')
@@ -160,7 +188,7 @@ export default function InteractiveTrailMap() {
       .catch(err => {
         console.error('[InteractiveTrailMap] Failed to load ski trail data:', err);
       });
-  };
+  }, [isMapLoaded, mapStyle]);
 
   // Handle map clicks to show feature info
   const handleMapClick = (event: MapMouseEvent) => {
@@ -221,7 +249,7 @@ export default function InteractiveTrailMap() {
         {...viewState}
         onMove={(evt) => setViewState(evt.viewState)}
         mapboxAccessToken={MAPBOX_TOKEN}
-        mapStyle={TRAIL_MAP_STYLE}
+        mapStyle={MAP_STYLES[mapStyle]}
         style={{ width: '100%', height: '100%' }}
         onLoad={handleMapLoad}
         onClick={handleMapClick}
@@ -244,6 +272,36 @@ export default function InteractiveTrailMap() {
         <div className="absolute top-4 left-4 z-10 bg-white/95 backdrop-blur-sm rounded-xl shadow-xl p-4 space-y-3 max-w-xs">
           <h3 className="font-bold text-neutral-900 text-lg">Telluride Ski Resort</h3>
           
+          {/* Map Style Toggle */}
+          <div className="flex gap-2">
+            <button
+              onClick={() => setMapStyle('outdoors')}
+              className={`flex-1 px-3 py-2 rounded-lg text-xs font-semibold transition-all ${
+                mapStyle === 'outdoors'
+                  ? 'bg-primary-600 text-white shadow-md'
+                  : 'bg-neutral-100 text-neutral-700 hover:bg-neutral-200'
+              }`}
+            >
+              <svg className="w-4 h-4 mx-auto mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
+              </svg>
+              Terrain
+            </button>
+            <button
+              onClick={() => setMapStyle('satellite')}
+              className={`flex-1 px-3 py-2 rounded-lg text-xs font-semibold transition-all ${
+                mapStyle === 'satellite'
+                  ? 'bg-primary-600 text-white shadow-md'
+                  : 'bg-neutral-100 text-neutral-700 hover:bg-neutral-200'
+              }`}
+            >
+              <svg className="w-4 h-4 mx-auto mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              Satellite
+            </button>
+          </div>
+
           {/* Quick Stats */}
           <div className="space-y-2 text-xs border-t border-neutral-200 pt-3">
             <div className="flex justify-between">
