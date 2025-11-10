@@ -184,6 +184,9 @@ export default function HeroMapSearch({
           if (!hotel.location?.latitude || !hotel.location?.longitude) return null;
 
           const style = getMarkerStyle(hotel.hotel_id);
+          const minPrice = minPrices[hotel.hotel_id];
+          const hasPrice = minPrice && minPrice > 0;
+          const isHovered = hotel.hotel_id === hoveredHotelId;
 
           return (
             <Marker
@@ -193,31 +196,48 @@ export default function HeroMapSearch({
               anchor="center"
             >
               <div
-                className="cursor-pointer transition-all duration-200 hover:scale-110"
+                className="cursor-pointer transition-all duration-200"
                 onClick={() => handleMarkerClick(hotel)}
                 onMouseEnter={() => setHoveredHotelId(hotel.hotel_id)}
                 onMouseLeave={() => setHoveredHotelId(null)}
-                style={{
-                  backgroundColor: style.color,
-                  width: `${style.size}px`,
-                  height: `${style.size}px`,
-                  borderRadius: '50%',
-                  border: '3px solid white',
-                  boxShadow: style.glow 
-                    ? '0 4px 20px rgba(16, 185, 129, 0.6), 0 0 0 0 rgba(16, 185, 129, 0.4)'
-                    : '0 4px 12px rgba(0,0,0,0.3)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  zIndex: style.zIndex,
-                  animation: style.glow ? 'pulse-featured 2s ease-in-out infinite' : 'none',
-                }}
+                style={{ zIndex: style.zIndex }}
               >
-                <Hotel 
-                  size={style.size * 0.5}
-                  color="white"
-                  strokeWidth={2.5}
-                />
+                {/* Main Marker Circle */}
+                <div
+                  className="hover:scale-110 transition-transform duration-200"
+                  style={{
+                    backgroundColor: style.color,
+                    width: `${style.size}px`,
+                    height: `${style.size}px`,
+                    borderRadius: '50%',
+                    border: '3px solid white',
+                    boxShadow: style.glow 
+                      ? '0 4px 20px rgba(16, 185, 129, 0.6), 0 0 0 0 rgba(16, 185, 129, 0.4)'
+                      : '0 4px 12px rgba(0,0,0,0.3)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    animation: style.glow ? 'pulse-featured 2s ease-in-out infinite' : 'none',
+                  }}
+                >
+                  <Hotel 
+                    size={style.size * 0.5}
+                    color="white"
+                    strokeWidth={2.5}
+                  />
+                </div>
+                
+                {/* Price Label - shows on hover for featured hotels */}
+                {hasPrice && isHovered && (
+                  <div 
+                    className="absolute -top-10 left-1/2 transform -translate-x-1/2 bg-white px-2.5 py-1.5 rounded-lg shadow-xl border border-neutral-200 whitespace-nowrap animate-fade-in-up"
+                  >
+                    <div className="text-xs font-bold text-primary-600">
+                      ${Math.round(minPrice)}
+                    </div>
+                    <div className="text-[10px] text-neutral-600">per night</div>
+                  </div>
+                )}
               </div>
             </Marker>
           );
@@ -498,6 +518,11 @@ export default function HeroMapSearch({
           to { opacity: 1; transform: translateY(0); }
         }
         
+        @keyframes fade-in-up {
+          from { opacity: 0; transform: translate(-50%, 10px); }
+          to { opacity: 1; transform: translate(-50%, 0); }
+        }
+        
         @keyframes scale-in {
           from { opacity: 0; transform: scale(0.95); }
           to { opacity: 1; transform: scale(1); }
@@ -505,6 +530,10 @@ export default function HeroMapSearch({
         
         .animate-fade-in {
           animation: fade-in 1s ease-out;
+        }
+        
+        .animate-fade-in-up {
+          animation: fade-in-up 0.2s ease-out;
         }
         
         .animate-scale-in {

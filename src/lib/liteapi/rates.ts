@@ -15,6 +15,23 @@ export interface RateSearchResponse {
   }>;
 }
 
+export interface MinRateSearchParams {
+  hotelIds: string[];
+  checkIn: string;
+  checkOut: string;
+  adults: number;
+  currency?: string;
+  guestNationality?: string;
+  timeout?: number;
+}
+
+export interface MinRateResult {
+  hotelId: string;
+  price?: number;
+  suggestedSellingPrice?: number;
+  currency: string;
+}
+
 /**
  * Transform raw rate data from LiteAPI into our standard format
  */
@@ -490,5 +507,63 @@ export async function searchHotelsWithRates(params: {
     hotels: hotelDetails,
     minPrices,
   };
+}
+
+/**
+ * Get minimum rates for hotels - optimized for map markers and listing pages
+ * Much faster than full rates endpoint, returns only the cheapest price per hotel
+ */
+export async function getMinRates(params: MinRateSearchParams): Promise<Record<string, MinRateResult>> {
+  console.log('[LiteAPI Min Rates] Fetching minimum rates:', {
+    hotelCount: params.hotelIds.length,
+    checkIn: params.checkIn,
+    checkOut: params.checkOut,
+    adults: params.adults,
+  });
+
+  // Build request body
+  const requestBody = {
+    hotelIds: params.hotelIds,
+    checkin: params.checkIn,
+    checkout: params.checkOut,
+    occupancies: [{
+      adults: params.adults,
+      children: [],
+    }],
+    currency: params.currency || 'USD',
+    guestNationality: params.guestNationality || 'US',
+    timeout: params.timeout || 6,
+    margin: LITEAPI_MARKUP_PERCENT,
+  };
+
+  try {
+    const response = await liteAPIClient<any>('/hotels/min-rates', {
+      method: 'POST',
+      body: JSON.stringify(requestBody),
+    });
+
+    // Transform response into a map of hotel_id -> MinRateResult
+    const minRates: Record<string, MinRateResult> = {};
+    
+    if (response.data && Array.isArray(response.data)) {
+      response.data.forEach((item: any) => {
+        if (item.hotelId) {
+          minRates[item.hotelId] = {
+            hotelId: item.hotelId,
+            price: item.price,
+            suggestedSellingPrice: item.suggestedSellingPrice,
+            currency: item.currency || params.currency || 'USD',
+          };
+        }
+      });
+    }
+
+    console.log('[LiteAPI Min Rates] Fetched min rates for hotels:', Object.keys(minRates).length);
+    
+    return minRates;
+  } catch (error) {
+    console.error('[LiteAPI Min Rates] Error fetching min rates:', error);
+    return {};
+  }
 }
 

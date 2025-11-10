@@ -25,6 +25,7 @@ const heroImages = getImagesByCategory('hero') || getImagesByCategory('resort') 
 // Fetch featured hotels server-side (has access to API key)
 import type { LiteAPIHotel } from '@/lib/liteapi/types';
 import { format, addDays } from 'date-fns';
+import { getMinRates } from '@/lib/liteapi/rates';
 
 let featuredHotelsData: LiteAPIHotel[] = [];
 let topHotelsData: LiteAPIHotel[] = [];
@@ -66,12 +67,55 @@ try {
     // Score = review_score × log(review_count) × amenity_factor
     topHotelsData = getTopHotels(allHotels, 10);
     
-    // Featured hotels for map (top 6 for visual clarity)
-    featuredHotelsData = topHotelsData.slice(0, 6);
-    
-    // Set check-in date for client-side rate fetching
+    // Set check-in date (7 days from now)
     const now = new Date();
     featuredCheckInDate = format(addDays(now, 7), 'yyyy-MM-dd');
+    const checkOutDate = format(addDays(now, 14), 'yyyy-MM-dd');
+    
+    // Fetch min rates for top hotels to check availability
+    // This ensures featured hotels actually have rooms available
+    const topHotelIds = topHotelsData.map(h => h.hotel_id);
+    if (topHotelIds.length > 0) {
+      try {
+        const minRatesData = await getMinRates({
+          hotelIds: topHotelIds,
+          checkIn: featuredCheckInDate,
+          checkOut: checkOutDate,
+          adults: 2,
+          currency: 'USD',
+          guestNationality: 'US',
+          timeout: 6,
+        });
+        
+        // Filter hotels to only those with availability and extract prices
+        const hotelsWithAvailability = topHotelsData.filter(hotel => {
+          const rateData = minRatesData[hotel.hotel_id];
+          if (rateData && (rateData.suggestedSellingPrice || rateData.price)) {
+            // Use suggestedSellingPrice (includes margin) or fall back to price
+            minPrices[hotel.hotel_id] = rateData.suggestedSellingPrice || rateData.price || 0;
+            return true;
+          }
+          return false;
+        });
+        
+        // Featured hotels for map (top 6 with availability)
+        featuredHotelsData = hotelsWithAvailability.slice(0, 6);
+        
+        console.log('[Homepage] Loaded hotels with availability:', {
+          total: allHotels.length,
+          topRated: topHotelsData.length,
+          withAvailability: hotelsWithAvailability.length,
+          featured: featuredHotelsData.length,
+          pricesLoaded: Object.keys(minPrices).length,
+        });
+      } catch (error) {
+        console.error('[Homepage] Error fetching min rates:', error);
+        // Fallback: show all top hotels without prices
+        featuredHotelsData = topHotelsData.slice(0, 6);
+      }
+    } else {
+      featuredHotelsData = topHotelsData.slice(0, 6);
+    }
     
     console.log('[Homepage] Loaded hotels (smart algorithm):', {
       total: allHotels.length,
