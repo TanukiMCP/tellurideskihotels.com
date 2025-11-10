@@ -20,7 +20,7 @@ const TELLURIDE_BOUNDS: [[number, number], [number, number]] = [
 export default function InteractiveTrailMap() {
   const mapRef = useRef<MapRef>(null);
   const [popupInfo, setPopupInfo] = useState<any>(null);
-  const [terrainEnabled, setTerrainEnabled] = useState(true);
+  const [terrainEnabled, setTerrainEnabled] = useState(false);
   const [viewState, setViewState] = useState({
     longitude: TELLURIDE_CENTER[0],
     latitude: TELLURIDE_CENTER[1],
@@ -34,16 +34,13 @@ export default function InteractiveTrailMap() {
     const map = mapRef.current?.getMap();
     if (!map) return;
 
-    // Add 3D terrain
-    if (terrainEnabled) {
-      map.addSource('mapbox-dem', {
-        type: 'raster-dem',
-        url: 'mapbox://mapbox.mapbox-terrain-dem-v1',
-        tileSize: 512,
-        maxzoom: 14
-      });
-      map.setTerrain({ source: 'mapbox-dem', exaggeration: 1.5 });
-    }
+    // Add 3D terrain source for later use with toggle
+    map.addSource('mapbox-dem', {
+      type: 'raster-dem',
+      url: 'mapbox://mapbox.mapbox-terrain-dem-v1',
+      tileSize: 512,
+      maxzoom: 14
+    });
   };
 
   // Handle map clicks to show feature info
