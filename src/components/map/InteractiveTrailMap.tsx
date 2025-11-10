@@ -42,8 +42,13 @@ export default function InteractiveTrailMap() {
       maxzoom: 14
     });
     
-    // Use exaggeration: 1.0 instead of 1.5 to reduce camera conflicts
-    map.setTerrain({ source: 'mapbox-dem', exaggeration: 1.0 });
+    // Wait for source to load before applying terrain to prevent race condition
+    map.once('sourcedata', (e) => {
+      if (e.sourceId === 'mapbox-dem' && e.isSourceLoaded) {
+        // Use exaggeration: 1.0 instead of 1.5 to reduce camera conflicts
+        map.setTerrain({ source: 'mapbox-dem', exaggeration: 1.0 });
+      }
+    });
   };
 
   // Handle map clicks to show feature info
