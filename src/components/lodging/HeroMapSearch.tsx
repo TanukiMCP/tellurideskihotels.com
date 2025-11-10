@@ -247,29 +247,147 @@ export default function HeroMapSearch({
         )}
       </Map>
 
-      {/* Dark Overlay for Better Contrast */}
-      <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/30 to-black/60 pointer-events-none" />
+      {/* Subtle vignette only */}
+      <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/20 pointer-events-none" />
 
-      {/* Main Content Container */}
-      <div className="absolute inset-0 flex flex-col items-center justify-center px-4 pointer-events-none">
-        {/* Hero Title */}
-        <div className="text-center mb-8 lg:mb-12 animate-fade-in pointer-events-none">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl mb-4 lg:mb-6 text-white drop-shadow-2xl font-extrabold leading-tight">
-            Find Your Perfect<br className="hidden sm:block" /> Telluride Getaway
-          </h1>
-          <p className="text-lg md:text-xl lg:text-2xl text-white/95 font-semibold leading-relaxed max-w-3xl mx-auto drop-shadow-lg">
-            {hotels.length}+ places to stay • Interactive map • Best rates guaranteed
-          </p>
+      {/* Hero Title - Centered */}
+      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center pointer-events-none z-10">
+        <h1 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl mb-4 lg:mb-6 text-white drop-shadow-2xl font-extrabold leading-tight">
+          Find Your Perfect<br className="hidden sm:block" /> Telluride Getaway
+        </h1>
+        <p className="text-lg md:text-xl lg:text-2xl text-white/95 font-semibold leading-relaxed max-w-3xl mx-auto drop-shadow-lg">
+          {hotels.length}+ places to stay • Interactive map • Best rates guaranteed
+        </p>
+      </div>
+
+      {/* Compact Search Panel - Top Left */}
+      <div className="absolute top-4 left-4 z-[500] pointer-events-auto">
+        <div className="flex flex-col gap-2">
+          {/* Map Style Selector */}
+          <div className="backdrop-blur-xl bg-white/95 border border-white/20 rounded-xl shadow-xl p-2">
+            <div className="flex gap-1.5">
+              <button
+                onClick={() => setMapStyle('streets')}
+                className={`px-3 py-2 rounded-lg text-xs font-semibold transition-all ${
+                  mapStyle === 'streets'
+                    ? 'bg-primary-600 text-white shadow-md'
+                    : 'bg-white/50 text-neutral-700 hover:bg-white'
+                }`}
+                title="Street map"
+              >
+                Map
+              </button>
+              <button
+                onClick={() => setMapStyle('satellite')}
+                className={`px-3 py-2 rounded-lg text-xs font-semibold transition-all ${
+                  mapStyle === 'satellite'
+                    ? 'bg-primary-600 text-white shadow-md'
+                    : 'bg-white/50 text-neutral-700 hover:bg-white'
+                }`}
+                title="Satellite view"
+              >
+                Satellite
+              </button>
+              <button
+                onClick={() => setMapStyle('terrain')}
+                className={`px-3 py-2 rounded-lg text-xs font-semibold transition-all ${
+                  mapStyle === 'terrain'
+                    ? 'bg-primary-600 text-white shadow-md'
+                    : 'bg-white/50 text-neutral-700 hover:bg-white'
+                }`}
+                title="Terrain view"
+              >
+                Terrain
+              </button>
+            </div>
+          </div>
+
+          {/* Compact Search Form - Desktop */}
+          <form onSubmit={handleSearch} className="hidden lg:block backdrop-blur-xl bg-white/95 rounded-xl shadow-xl p-3 border border-white/20 w-[320px]">
+            <div className="space-y-2">
+              <div className="flex items-center gap-2">
+                <Calendar size={14} className="text-primary-600 flex-shrink-0" />
+                <input
+                  type="date"
+                  value={checkIn}
+                  onChange={(e) => setCheckIn(e.target.value)}
+                  min={format(new Date(), 'yyyy-MM-dd')}
+                  className="flex-1 px-2 py-1.5 border border-neutral-300 rounded-lg focus:border-primary-600 focus:ring-2 focus:ring-primary-600/20 outline-none transition-all text-sm bg-white"
+                  required
+                />
+              </div>
+              <div className="flex items-center gap-2">
+                <Calendar size={14} className="text-primary-600 flex-shrink-0" />
+                <input
+                  type="date"
+                  value={checkOut}
+                  onChange={(e) => setCheckOut(e.target.value)}
+                  min={checkIn}
+                  className="flex-1 px-2 py-1.5 border border-neutral-300 rounded-lg focus:border-primary-600 focus:ring-2 focus:ring-primary-600/20 outline-none transition-all text-sm bg-white"
+                  required
+                />
+              </div>
+              <div className="flex items-center gap-2">
+                <Users size={14} className="text-primary-600 flex-shrink-0" />
+                <input
+                  type="number"
+                  value={guests}
+                  onChange={(e) => setGuests(parseInt(e.target.value) || 1)}
+                  min="1"
+                  max="20"
+                  className="flex-1 px-2 py-1.5 border border-neutral-300 rounded-lg focus:border-primary-600 focus:ring-2 focus:ring-primary-600/20 outline-none transition-all text-sm bg-white"
+                  required
+                />
+              </div>
+              <button
+                type="submit"
+                disabled={isSearching}
+                className="w-full px-4 py-2 bg-gradient-to-r from-primary-600 to-primary-700 text-white rounded-lg font-bold text-sm shadow-lg hover:shadow-xl hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 flex items-center justify-center gap-2"
+              >
+                {isSearching ? (
+                  <>
+                    <div className="animate-spin rounded-full h-3 w-3 border-2 border-white border-t-transparent" />
+                    Searching...
+                  </>
+                ) : (
+                  <>
+                    <Search size={16} />
+                    Search Hotels
+                  </>
+                )}
+              </button>
+            </div>
+          </form>
+
+          {/* Mobile Search Button */}
+          <button
+            onClick={() => setShowMobileSearch(true)}
+            className="lg:hidden backdrop-blur-xl bg-primary-600 text-white rounded-xl shadow-xl px-4 py-2.5 flex items-center justify-center gap-2 font-bold text-sm hover:bg-primary-700 transition-all"
+          >
+            <Search size={16} />
+            Search
+          </button>
         </div>
+      </div>
 
-        {/* Search Panel - Desktop */}
-        <div className="hidden lg:block w-full max-w-5xl pointer-events-auto animate-scale-in">
-          <form onSubmit={handleSearch} className="backdrop-blur-xl bg-white/90 rounded-2xl shadow-2xl p-6 border border-white/20">
-            <div className="flex flex-wrap lg:flex-nowrap gap-4 items-end">
-              {/* Check-in Date */}
-              <div className="flex-1 min-w-[200px]">
+      {/* Mobile Search Modal */}
+      {showMobileSearch && (
+        <div className="lg:hidden absolute inset-0 bg-black/50 backdrop-blur-sm z-[600] flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl shadow-2xl p-6 w-full max-w-md animate-scale-in">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-bold text-neutral-900">Search Hotels</h3>
+              <button
+                onClick={() => setShowMobileSearch(false)}
+                className="p-2 hover:bg-neutral-100 rounded-lg transition-colors"
+              >
+                <X size={20} className="text-neutral-600" />
+              </button>
+            </div>
+
+            <form onSubmit={handleSearch} className="space-y-4">
+              <div>
                 <label className="block text-sm font-bold text-neutral-800 mb-2 flex items-center gap-2">
-                  <Calendar size={18} className="text-primary-600" />
+                  <Calendar size={16} className="text-primary-600" />
                   Check-in
                 </label>
                 <input
@@ -277,15 +395,14 @@ export default function HeroMapSearch({
                   value={checkIn}
                   onChange={(e) => setCheckIn(e.target.value)}
                   min={format(new Date(), 'yyyy-MM-dd')}
-                  className="w-full px-4 py-3.5 border-2 border-neutral-300 rounded-xl focus:border-primary-600 focus:ring-4 focus:ring-primary-600/20 outline-none transition-all font-semibold text-neutral-900 text-lg bg-white"
+                  className="w-full px-4 py-3 border-2 border-neutral-300 rounded-xl focus:border-primary-600 focus:ring-4 focus:ring-primary-600/20 outline-none transition-all font-semibold text-neutral-900 bg-white"
                   required
                 />
               </div>
 
-              {/* Check-out Date */}
-              <div className="flex-1 min-w-[200px]">
+              <div>
                 <label className="block text-sm font-bold text-neutral-800 mb-2 flex items-center gap-2">
-                  <Calendar size={18} className="text-primary-600" />
+                  <Calendar size={16} className="text-primary-600" />
                   Check-out
                 </label>
                 <input
@@ -293,15 +410,14 @@ export default function HeroMapSearch({
                   value={checkOut}
                   onChange={(e) => setCheckOut(e.target.value)}
                   min={checkIn}
-                  className="w-full px-4 py-3.5 border-2 border-neutral-300 rounded-xl focus:border-primary-600 focus:ring-4 focus:ring-primary-600/20 outline-none transition-all font-semibold text-neutral-900 text-lg bg-white"
+                  className="w-full px-4 py-3 border-2 border-neutral-300 rounded-xl focus:border-primary-600 focus:ring-4 focus:ring-primary-600/20 outline-none transition-all font-semibold text-neutral-900 bg-white"
                   required
                 />
               </div>
 
-              {/* Guests */}
-              <div className="w-full lg:w-40">
+              <div>
                 <label className="block text-sm font-bold text-neutral-800 mb-2 flex items-center gap-2">
-                  <Users size={18} className="text-primary-600" />
+                  <Users size={16} className="text-primary-600" />
                   Guests
                 </label>
                 <input
@@ -310,16 +426,15 @@ export default function HeroMapSearch({
                   onChange={(e) => setGuests(parseInt(e.target.value) || 1)}
                   min="1"
                   max="20"
-                  className="w-full px-4 py-3.5 border-2 border-neutral-300 rounded-xl focus:border-primary-600 focus:ring-4 focus:ring-primary-600/20 outline-none transition-all font-semibold text-neutral-900 text-lg bg-white"
+                  className="w-full px-4 py-3 border-2 border-neutral-300 rounded-xl focus:border-primary-600 focus:ring-4 focus:ring-primary-600/20 outline-none transition-all font-semibold text-neutral-900 bg-white"
                   required
                 />
               </div>
 
-              {/* Search Button */}
               <button
                 type="submit"
                 disabled={isSearching}
-                className="w-full lg:w-auto px-10 py-3.5 bg-gradient-to-r from-primary-600 to-primary-700 text-white rounded-xl font-bold text-lg shadow-xl hover:shadow-2xl hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 flex items-center justify-center gap-3 min-h-[56px]"
+                className="w-full px-8 py-3.5 bg-gradient-to-r from-primary-600 to-primary-700 text-white rounded-xl font-bold text-lg shadow-xl hover:shadow-2xl disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 flex items-center justify-center gap-3"
               >
                 {isSearching ? (
                   <>
@@ -328,149 +443,16 @@ export default function HeroMapSearch({
                   </>
                 ) : (
                   <>
-                    <Search size={22} />
+                    <Search size={20} />
                     Search Hotels
                   </>
                 )}
               </button>
-            </div>
-          </form>
-        </div>
-
-        {/* Search Panel - Mobile (Floating Button) */}
-        <div className="lg:hidden w-full pointer-events-auto">
-          {!showMobileSearch ? (
-            <button
-              onClick={() => setShowMobileSearch(true)}
-              className="w-full max-w-md mx-auto backdrop-blur-xl bg-gradient-to-r from-primary-600 to-primary-700 text-white rounded-2xl shadow-2xl p-5 flex items-center justify-center gap-3 font-bold text-lg hover:scale-105 transition-all duration-300"
-            >
-              <Search size={24} />
-              Search Hotels on Map
-            </button>
-          ) : (
-            <div className="backdrop-blur-xl bg-white/95 rounded-2xl shadow-2xl p-6 max-w-md mx-auto border border-white/20 animate-scale-in">
-              {/* Close Button */}
-              <button
-                onClick={() => setShowMobileSearch(false)}
-                className="absolute top-4 right-4 p-2 hover:bg-neutral-100 rounded-lg transition-colors"
-              >
-                <X size={20} className="text-neutral-600" />
-              </button>
-
-              <form onSubmit={handleSearch} className="space-y-4">
-                {/* Check-in Date */}
-                <div>
-                  <label className="block text-sm font-bold text-neutral-800 mb-2 flex items-center gap-2">
-                    <Calendar size={16} className="text-primary-600" />
-                    Check-in
-                  </label>
-                  <input
-                    type="date"
-                    value={checkIn}
-                    onChange={(e) => setCheckIn(e.target.value)}
-                    min={format(new Date(), 'yyyy-MM-dd')}
-                    className="w-full px-4 py-3 border-2 border-neutral-300 rounded-xl focus:border-primary-600 focus:ring-4 focus:ring-primary-600/20 outline-none transition-all font-semibold text-neutral-900 bg-white"
-                    required
-                  />
-                </div>
-
-                {/* Check-out Date */}
-                <div>
-                  <label className="block text-sm font-bold text-neutral-800 mb-2 flex items-center gap-2">
-                    <Calendar size={16} className="text-primary-600" />
-                    Check-out
-                  </label>
-                  <input
-                    type="date"
-                    value={checkOut}
-                    onChange={(e) => setCheckOut(e.target.value)}
-                    min={checkIn}
-                    className="w-full px-4 py-3 border-2 border-neutral-300 rounded-xl focus:border-primary-600 focus:ring-4 focus:ring-primary-600/20 outline-none transition-all font-semibold text-neutral-900 bg-white"
-                    required
-                  />
-                </div>
-
-                {/* Guests */}
-                <div>
-                  <label className="block text-sm font-bold text-neutral-800 mb-2 flex items-center gap-2">
-                    <Users size={16} className="text-primary-600" />
-                    Guests
-                  </label>
-                  <input
-                    type="number"
-                    value={guests}
-                    onChange={(e) => setGuests(parseInt(e.target.value) || 1)}
-                    min="1"
-                    max="20"
-                    className="w-full px-4 py-3 border-2 border-neutral-300 rounded-xl focus:border-primary-600 focus:ring-4 focus:ring-primary-600/20 outline-none transition-all font-semibold text-neutral-900 bg-white"
-                    required
-                  />
-                </div>
-
-                {/* Search Button */}
-                <button
-                  type="submit"
-                  disabled={isSearching}
-                  className="w-full px-8 py-3.5 bg-gradient-to-r from-primary-600 to-primary-700 text-white rounded-xl font-bold text-lg shadow-xl hover:shadow-2xl disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 flex items-center justify-center gap-3"
-                >
-                  {isSearching ? (
-                    <>
-                      <div className="animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent" />
-                      Searching...
-                    </>
-                  ) : (
-                    <>
-                      <Search size={20} />
-                      Search Hotels
-                    </>
-                  )}
-                </button>
-              </form>
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* Map Style Selector - Top Left */}
-      <div className="absolute top-4 left-4 z-[500] pointer-events-auto">
-        <div className="backdrop-blur-xl bg-white/90 border border-white/20 rounded-xl shadow-xl p-2">
-          <div className="flex gap-1.5">
-            <button
-              onClick={() => setMapStyle('streets')}
-              className={`px-3 py-2 rounded-lg text-xs font-semibold transition-all ${
-                mapStyle === 'streets'
-                  ? 'bg-primary-600 text-white shadow-md'
-                  : 'bg-white/50 text-neutral-700 hover:bg-white'
-              }`}
-              title="Street map"
-            >
-              Map
-            </button>
-            <button
-              onClick={() => setMapStyle('satellite')}
-              className={`px-3 py-2 rounded-lg text-xs font-semibold transition-all ${
-                mapStyle === 'satellite'
-                  ? 'bg-primary-600 text-white shadow-md'
-                  : 'bg-white/50 text-neutral-700 hover:bg-white'
-              }`}
-              title="Satellite view"
-            >
-              Satellite
-            </button>
-            <button
-              onClick={() => setMapStyle('terrain')}
-              className={`px-3 py-2 rounded-lg text-xs font-semibold transition-all ${
-                mapStyle === 'terrain'
-                  ? 'bg-primary-600 text-white shadow-md'
-                  : 'bg-white/50 text-neutral-700 hover:bg-white'
-              }`}
-              title="Terrain view"
-            >
-              Terrain
-            </button>
+            </form>
           </div>
         </div>
-      </div>
+      )}
+
 
       {/* Hotel Count Badge - Top Right (below nav controls) */}
       {isMapLoaded && hotels.length > 0 && (
