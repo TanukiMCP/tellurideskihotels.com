@@ -57,6 +57,7 @@ export default function HeroMapSearch({
   const [hoveredHotelId, setHoveredHotelId] = useState<string | null>(null);
   const [selectedHotelId, setSelectedHotelId] = useState<string | null>(null);
   const [showMobileSearch, setShowMobileSearch] = useState(false);
+  const [trailVisibility, setTrailVisibility] = useState(0.8);
   
   // View state
   const [viewState, setViewState] = useState({
@@ -96,6 +97,109 @@ export default function HeroMapSearch({
       }
     }, 300);
   }, [hotels, isMapLoaded]);
+
+  // Apply ski trail styling when ski trails view is active
+  useEffect(() => {
+    if (!mapRef.current || !isMapLoaded) return;
+    
+    const map = mapRef.current.getMap();
+    const isSkiMode = mapStyle === 'skiTrails';
+
+    if (isSkiMode) {
+      // Find and style ski trail layers from OSM data
+      try {
+        const style = map.getStyle();
+        if (!style || !style.layers) return;
+
+        // Find piste (ski trail) and aerialway (lift) layers
+        const pisteAndLiftLayers = style.layers
+          .filter((layer: any) => 
+            layer.id.includes('piste') || 
+            layer.id.includes('aerialway') ||
+            (layer.source === 'composite' && layer['source-layer'] === 'landuse')
+          )
+          .map((layer: any) => layer.id);
+
+        console.log('Found piste/lift layers:', pisteAndLiftLayers);
+
+        pisteAndLiftLayers.forEach((layerId: string) => {
+          // Style ski trails
+          if (layerId.includes('piste')) {
+            try {
+              if (map.getLayer(layerId)) {
+                // Enhance trail width and visibility
+                map.setPaintProperty(layerId, 'line-width', [
+                  'interpolate',
+                  ['linear'],
+                  ['zoom'],
+                  12, 2,
+                  16, 6
+                ]);
+                map.setPaintProperty(layerId, 'line-opacity', trailVisibility);
+
+                // Color code by difficulty (if available in OSM data)
+                const existingColor = map.getPaintProperty(layerId, 'line-color');
+                if (!existingColor || existingColor === '#808080') {
+                  map.setPaintProperty(layerId, 'line-color', [
+                    'match',
+                    ['get', 'piste:difficulty'],
+                    'novice', '#22c55e',
+                    'easy', '#22c55e',
+                    'intermediate', '#3b82f6',
+                    'advanced', '#000000',
+                    'expert', '#dc2626',
+                    'freeride', '#dc2626',
+                    '#3b82f6' // default blue
+                  ]);
+                }
+              }
+            } catch (err) {
+              console.log('Could not style piste layer:', layerId, err);
+            }
+          }
+
+          // Style ski lifts
+          if (layerId.includes('aerialway')) {
+            try {
+              if (map.getLayer(layerId)) {
+                map.setPaintProperty(layerId, 'line-width', 2.5);
+                map.setPaintProperty(layerId, 'line-color', '#f59e0b');
+                map.setPaintProperty(layerId, 'line-opacity', trailVisibility);
+              }
+            } catch (err) {
+              console.log('Could not style aerialway:', layerId, err);
+            }
+          }
+        });
+      } catch (err) {
+        console.error('Failed to enhance ski trail layers:', err);
+      }
+    } else {
+      // Reset trail styling when not in ski mode
+      try {
+        const style = map.getStyle();
+        if (!style || !style.layers) return;
+
+        style.layers.forEach((layer: any) => {
+          if (layer.id.includes('piste') || layer.id.includes('aerialway')) {
+            try {
+              if (map.getLayer(layer.id)) {
+                if (layer.id.includes('piste')) {
+                  map.setPaintProperty(layer.id, 'line-opacity', 0.3);
+                  map.setPaintProperty(layer.id, 'line-width', 1);
+                }
+                if (layer.id.includes('aerialway')) {
+                  map.setPaintProperty(layer.id, 'line-opacity', 0.3);
+                }
+              }
+            } catch {}
+          }
+        });
+      } catch (err) {
+        console.error('Failed to reset trail layers:', err);
+      }
+    }
+  }, [mapStyle, isMapLoaded, trailVisibility]);
 
   // Handle search submission
   const handleSearch = useCallback(async (e?: React.FormEvent) => {
@@ -313,6 +417,32 @@ export default function HeroMapSearch({
                 </button>
               </div>
             </div>
+
+            {/* Trail Visibility Slider - Only show when ski trails active */}
+            {mapStyle === 'skiTrails' && (
+              <div className="backdrop-blur-xl bg-white/95 border border-white/20 rounded-xl shadow-xl p-2.5 flex-shrink-0">
+                <label className="block">
+                  <div className="flex justify-between items-center mb-1.5">
+                    <span className="text-[10px] font-bold text-gray-700 uppercase tracking-wide">
+                      Trail Visibility
+                    </span>
+                    <span className="text-[10px] text-primary-600 font-bold">
+                      {Math.round(trailVisibility * 100)}%
+                    </span>
+                  </div>
+                  <input
+                    type="range"
+                    min="0.3"
+                    max="1"
+                    step="0.1"
+                    value={trailVisibility}
+                    onChange={(e) => setTrailVisibility(parseFloat(e.target.value))}
+                    className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-primary-600"
+                    style={{ width: '160px' }}
+                  />
+                </label>
+              </div>
+            )}
 
             {/* Horizontal Search Form - Desktop Only - Adjacent to View Toggle */}
             <form onSubmit={handleSearch} className="hidden lg:flex backdrop-blur-xl bg-white/95 rounded-xl shadow-xl p-2 border border-white/20 items-center gap-2 flex-shrink-0">
