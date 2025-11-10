@@ -96,7 +96,7 @@ try {
   <!-- Interactive Hero Map + Search Section -->
   <HeroMapSearch 
     client:load 
-    initialHotels={allHotels}
+    initialHotels={topHotelsData}
     featuredHotelIds={featuredHotelsData.map(h => h.hotel_id)}
     minPrices={minPrices}
     currency="USD"
@@ -110,7 +110,7 @@ try {
           Find Your Perfect Telluride Getaway
         </h1>
         <p class="text-lg md:text-xl lg:text-2xl text-primary-100 mb-8 leading-relaxed">
-          {allHotels.length}+ places to stay • Interactive map • Best rates guaranteed
+          Top 10 handpicked hotels • {allHotels.length}+ total properties • Best rates guaranteed
         </p>
         <div class="flex flex-wrap justify-center gap-4">
           <a 
