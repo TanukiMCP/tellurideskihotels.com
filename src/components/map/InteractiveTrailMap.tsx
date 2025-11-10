@@ -25,7 +25,7 @@ export default function InteractiveTrailMap() {
     longitude: TELLURIDE_CENTER[0],
     latitude: TELLURIDE_CENTER[1],
     zoom: 13.5,
-    pitch: 45,
+    pitch: 0,
     bearing: 0
   });
 
@@ -92,13 +92,11 @@ export default function InteractiveTrailMap() {
     if (terrainEnabled) {
       // Disable 3D
       map.setTerrain(null);
-      map.setPitch(0);
-      setViewState(prev => ({ ...prev, pitch: 0 }));
+      map.easeTo({ pitch: 0, duration: 500 });
     } else {
       // Enable 3D
       map.setTerrain({ source: 'mapbox-dem', exaggeration: 1.5 });
-      map.setPitch(45);
-      setViewState(prev => ({ ...prev, pitch: 45 }));
+      map.easeTo({ pitch: 45, duration: 500 });
     }
     setTerrainEnabled(!terrainEnabled);
   };
