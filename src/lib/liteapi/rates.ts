@@ -62,13 +62,13 @@ function transformRateData(hotelData: any, nights: number): Array<{
           rooms.push({
             room_id: roomType.roomTypeId,
             room_name: rate.name || roomType.name || 'Standard Room',
-            mapped_room_id: roomType.mappedRoomId, // For linking to room photos from hotel details
+            mapped_room_id: rate.mappedRoomId, // For linking to room photos from hotel details (mappedRoomId is in rate, not roomType)
             rates: [{
               rate_id: rate.rateId,
               room_id: roomType.roomTypeId,
               room_name: rate.name || roomType.name || 'Standard Room',
               offer_id: roomType.offerId, // Required for prebook
-              mapped_room_id: roomType.mappedRoomId, // For linking to room photos
+              mapped_room_id: rate.mappedRoomId, // For linking to room photos (mappedRoomId is in rate, not roomType)
               net: {
                 amount: pricePerNight, // Per-night price WITH margin
                 currency,
