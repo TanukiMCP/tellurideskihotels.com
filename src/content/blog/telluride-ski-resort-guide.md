@@ -2,7 +2,6 @@
 {
   "id": "telluride-ski-resort-guide",
   "title": "Telluride Ski Resort: Complete Guide (2025)",
-  "slug": "telluride-ski-resort-guide",
   "status": "published",
   "updatedDate": "2025-11-10T15:00:00Z",
   "category": "ski-guides",
