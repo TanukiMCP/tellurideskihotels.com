@@ -149,35 +149,50 @@ export function WeatherWidget({ startDate, endDate, title = 'Weather Forecast', 
 
   if (compact) {
     return (
-      <div className="bg-gradient-to-br from-sky-50 to-blue-50 border border-sky-200 rounded-xl p-5 shadow-sm">
-        <h3 className="text-sm font-bold text-sky-900 mb-4 flex items-center gap-2">
+      <div className="bg-gradient-to-br from-sky-50 to-blue-50 border border-sky-200 rounded-xl p-4 shadow-sm">
+        <h3 className="text-base font-bold text-sky-900 mb-3 flex items-center gap-2">
           <svg className="w-5 h-5 text-sky-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z" />
           </svg>
           {title}
         </h3>
-        <div className="flex gap-3 overflow-x-auto pb-2">
-          {dailyData.slice(0, 7).map((weather) => {
-            const date = new Date(weather.date);
-            
-            return (
-              <div key={weather.date} className="flex-shrink-0 text-center min-w-[80px] bg-white rounded-lg p-3 border border-sky-100 shadow-sm">
-                <div className="text-xs font-semibold text-sky-700 mb-2">
-                  {format(date, 'EEE')}
+        {dailyData.length > 0 ? (
+          <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-7 gap-3">
+            {dailyData.slice(0, 7).map((weather) => {
+              const date = new Date(weather.date);
+              const description = getWeatherDescription(weather);
+              
+              return (
+                <div key={weather.date} className="text-center bg-white rounded-lg p-3 border border-sky-100 shadow-sm hover:shadow-md transition-shadow">
+                  <div className="text-xs font-bold text-sky-700 mb-2">
+                    {format(date, 'EEE')}
+                  </div>
+                  <div className="text-[10px] text-neutral-600 mb-2">
+                    {format(date, 'MMM d')}
+                  </div>
+                  <div className="mb-2 flex justify-center">
+                    <WeatherIcon weather={weather} className="w-10 h-10" />
+                  </div>
+                  <div className="flex items-center justify-center gap-1 mb-1">
+                    <div className="text-lg font-bold text-neutral-900">
+                      {Math.round(weather.temp.max)}°
+                    </div>
+                    <div className="text-xs text-neutral-500">
+                      {Math.round(weather.temp.min)}°
+                    </div>
+                  </div>
+                  {(weather.pop || 0) >= 0.3 && (
+                    <div className="text-[10px] text-sky-600 flex items-center justify-center gap-0.5">
+                      💧 {Math.round((weather.pop || 0) * 100)}%
+                    </div>
+                  )}
                 </div>
-                <div className="mb-2 flex justify-center">
-                  <WeatherIcon weather={weather} className="w-8 h-8" />
-                </div>
-                <div className="text-base font-bold text-neutral-900">
-                  {Math.round(weather.temp.max)}°
-                </div>
-                <div className="text-xs text-neutral-600">
-                  {Math.round(weather.temp.min)}°
-                </div>
-              </div>
-            );
-          })}
-        </div>
+              );
+            })}
+          </div>
+        ) : (
+          <p className="text-sm text-neutral-600">Weather data unavailable</p>
+        )}
       </div>
     );
   }
