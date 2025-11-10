@@ -331,6 +331,11 @@ export async function searchHotelsWithRates(params: {
   const shouldIncludeMountainVillage = params.cityName.toLowerCase() === 'telluride';
   let allHotelsData: any[] = [];
 
+  console.log('[LiteAPI Rates] Starting hotel search:', {
+    cityName: params.cityName,
+    willSearchMountainVillage: shouldIncludeMountainVillage
+  });
+
   // Search Telluride - no limit, get all results
   const searchParams = new URLSearchParams();
   searchParams.append('cityName', params.cityName);
@@ -342,7 +347,10 @@ export async function searchHotelsWithRates(params: {
   const tellurideHotels = Array.isArray(tellurideResponse.data) ? tellurideResponse.data : [];
   allHotelsData.push(...tellurideHotels);
 
-  console.log('[LiteAPI Rates] Telluride hotels found:', tellurideHotels.length);
+  console.log('[LiteAPI Rates] Telluride hotels found:', {
+    count: tellurideHotels.length,
+    sampleNames: tellurideHotels.slice(0, 3).map((h: any) => h.name)
+  });
 
   // Also search Mountain Village if this is a Telluride search
   if (shouldIncludeMountainVillage) {
@@ -353,13 +361,18 @@ export async function searchHotelsWithRates(params: {
       // No limit - get all Mountain Village hotels too
 
       const mvEndpoint = `/data/hotels?${mvSearchParams.toString()}`;
+      console.log('[LiteAPI Rates] Searching Mountain Village hotels...');
       const mvResponse = await liteAPIClient<any>(mvEndpoint);
       const mvHotels = Array.isArray(mvResponse.data) ? mvResponse.data : [];
       
-      console.log('[LiteAPI Rates] Mountain Village hotels found:', mvHotels.length);
+      console.log('[LiteAPI Rates] Mountain Village hotels found:', {
+        count: mvHotels.length,
+        sampleNames: mvHotels.slice(0, 3).map((h: any) => h.name)
+      });
+      
       allHotelsData.push(...mvHotels);
     } catch (error) {
-      console.warn('[LiteAPI Rates] Mountain Village search failed:', error);
+      console.error('[LiteAPI Rates] Mountain Village search failed:', error);
       // Continue with just Telluride results
     }
   }
