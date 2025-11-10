@@ -142,3 +142,64 @@ export async function getWeather(days: number = 10): Promise<WeatherDay[]> {
   return weatherDays;
 }
 
+export function getPackingRecommendations(weatherData: WeatherDay[]): string[] {
+  if (!weatherData.length) return [];
+  
+  const recommendations: string[] = [];
+  const avgMinTemp = weatherData.reduce((sum, d) => sum + d.temp.min, 0) / weatherData.length;
+  const avgMaxTemp = weatherData.reduce((sum, d) => sum + d.temp.max, 0) / weatherData.length;
+  const maxPrecipProbability = Math.max(...weatherData.map(d => d.precipProbability));
+  const maxWindSpeed = Math.max(...weatherData.map(d => d.windSpeed));
+  const hasSnow = weatherData.some(d => isSnowConditions(d.weatherCode, d.precipitation));
+  
+  if (avgMinTemp <= 10) {
+    recommendations.push('Pack heavy thermal layers and insulated gear');
+  } else if (avgMinTemp <= 25) {
+    recommendations.push('Bring warm base layers and mid-weight insulation');
+  }
+  
+  if (maxPrecipProbability >= 0.5) {
+    recommendations.push('Waterproof outer layers essential');
+  }
+  
+  if (hasSnow) {
+    recommendations.push('Quality goggles and face protection recommended');
+  }
+  
+  if (maxWindSpeed >= 20) {
+    recommendations.push('Wind-resistant gear and face protection advised');
+  }
+  
+  if (avgMaxTemp >= 35) {
+    recommendations.push('Consider lighter layers for afternoon skiing');
+  }
+  
+  return recommendations.slice(0, 5);
+}
+
+export function shouldHighlightIndoorAmenities(weatherData: WeatherDay[]): boolean {
+  if (!weatherData.length) return false;
+  
+  const avgPrecipProbability = weatherData.reduce((sum, d) => sum + d.precipProbability, 0) / weatherData.length;
+  const hasRainOrSnow = weatherData.some(d => d.weatherCode >= 51); // Rain/snow codes
+  
+  return avgPrecipProbability >= 0.4 || hasRainOrSnow;
+}
+
+export function shouldHighlightOutdoorAmenities(weatherData: WeatherDay[]): boolean {
+  if (!weatherData.length) return false;
+  
+  const avgPrecipProbability = weatherData.reduce((sum, d) => sum + d.precipProbability, 0) / weatherData.length;
+  const hasClearDays = weatherData.some(d => d.weatherCode <= 3); // Clear/partly cloudy
+  
+  return avgPrecipProbability < 0.3 && hasClearDays;
+}
+
+export function shouldHighlightHeatedAmenities(weatherData: WeatherDay[]): boolean {
+  if (!weatherData.length) return false;
+  
+  const avgMinTemp = weatherData.reduce((sum, d) => sum + d.temp.min, 0) / weatherData.length;
+  
+  return avgMinTemp <= 15;
+}
+

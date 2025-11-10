@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react';
 import { Card, CardContent } from '@/components/ui/Card';
 import * as LucideIcons from 'lucide-react';
 import { getAmenityIcon } from '@/lib/amenity-icons';
-import type { WeatherData } from '@/lib/liteapi/weather';
-import { shouldHighlightIndoorAmenities, shouldHighlightOutdoorAmenities, shouldHighlightHeatedAmenities } from '@/lib/liteapi/weather';
+import type { WeatherDay } from '@/lib/open-meteo/weather';
+import { shouldHighlightIndoorAmenities, shouldHighlightOutdoorAmenities, shouldHighlightHeatedAmenities } from '@/lib/open-meteo/weather';
 
 interface WeatherAwareAmenitiesProps {
   amenities: Array<{ name?: string; code?: string }>;
@@ -12,20 +12,25 @@ interface WeatherAwareAmenitiesProps {
 }
 
 export function WeatherAwareAmenities({ amenities, checkIn, checkOut }: WeatherAwareAmenitiesProps) {
-  const [weatherData, setWeatherData] = useState<WeatherData[]>([]);
+  const [weatherData, setWeatherData] = useState<WeatherDay[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchWeather = async () => {
       try {
-        const response = await fetch(
-          `/api/weather/forecast?startDate=${checkIn}&endDate=${checkOut}&units=imperial`
-        );
+        const response = await fetch('/api/weather/open-meteo');
         
         if (!response.ok) throw new Error('Failed to fetch weather');
         
         const data = await response.json();
-        setWeatherData(data.weatherData || []);
+        const allWeatherData: WeatherDay[] = data.weatherData || [];
+        
+        // Filter to only check weather within the date range
+        const filteredWeather = allWeatherData.filter(day => 
+          day.date >= checkIn && day.date <= checkOut
+        );
+        
+        setWeatherData(filteredWeather);
       } catch (err) {
         console.error('Error fetching weather for amenities:', err);
       } finally {

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import type { WeatherData } from '@/lib/liteapi/weather';
-import { isSnowConditions } from '@/lib/liteapi/weather';
+import type { WeatherDay } from '@/lib/open-meteo/weather';
+import { isSnowConditions } from '@/lib/open-meteo/weather';
 
 interface SnowAlertBadgeProps {
   checkIn: string;
@@ -15,9 +15,7 @@ export function SnowAlertBadge({ checkIn, checkOut }: SnowAlertBadgeProps) {
     const fetchWeather = async () => {
       try {
         console.log('[SnowAlertBadge] Checking snow conditions:', { checkIn, checkOut });
-        const response = await fetch(
-          `/api/weather/forecast?startDate=${checkIn}&endDate=${checkOut}&units=imperial`
-        );
+        const response = await fetch('/api/weather/open-meteo');
         
         if (!response.ok) {
           const errorData = await response.json().catch(() => ({}));
@@ -26,13 +24,24 @@ export function SnowAlertBadge({ checkIn, checkOut }: SnowAlertBadgeProps) {
         }
         
         const data = await response.json();
-        const weatherData: WeatherData[] = data.weatherData || [];
+        const weatherData: WeatherDay[] = data.weatherData || [];
         
-        // Check if any day in the weather data has snow conditions
-        // Flatten all daily forecasts from all weather data items
-        const allDaily = weatherData.flatMap(w => w.detailedWeatherData?.daily || []);
-        const snowExpected = allDaily.length > 0 && allDaily.some(d => isSnowConditions(d));
-        console.log('[SnowAlertBadge] Snow check result:', { snowExpected, weatherDataCount: weatherData.length, dailyCount: allDaily.length });
+        // Filter to only check weather within the date range
+        const filteredWeather = weatherData.filter(day => 
+          day.date >= checkIn && day.date <= checkOut
+        );
+        
+        // Check if any day has snow conditions
+        const snowExpected = filteredWeather.some(day => 
+          isSnowConditions(day.weatherCode, day.precipitation)
+        );
+        
+        console.log('[SnowAlertBadge] Snow check result:', { 
+          snowExpected, 
+          totalDays: weatherData.length, 
+          filteredDays: filteredWeather.length,
+          dates: filteredWeather.map(d => d.date),
+        });
         setHasSnow(snowExpected);
       } catch (err) {
         console.error('[SnowAlertBadge] Error checking snow conditions:', err);
@@ -60,4 +69,3 @@ export function SnowAlertBadge({ checkIn, checkOut }: SnowAlertBadgeProps) {
     </div>
   );
 }
-

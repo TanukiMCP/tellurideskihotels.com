@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import type { WeatherData } from '@/lib/liteapi/weather';
-import { getPackingRecommendations } from '@/lib/liteapi/weather';
+import type { WeatherDay } from '@/lib/open-meteo/weather';
+import { getPackingRecommendations } from '@/lib/open-meteo/weather';
 
 interface PackingListProps {
   checkIn: string;
@@ -14,16 +14,19 @@ export function PackingList({ checkIn, checkOut }: PackingListProps) {
   useEffect(() => {
     const fetchWeather = async () => {
       try {
-        const response = await fetch(
-          `/api/weather/forecast?startDate=${checkIn}&endDate=${checkOut}&units=imperial`
-        );
+        const response = await fetch('/api/weather/open-meteo');
         
         if (!response.ok) throw new Error('Failed to fetch weather');
         
         const data = await response.json();
-        const weatherData: WeatherData[] = data.weatherData || [];
+        const weatherData: WeatherDay[] = data.weatherData || [];
         
-        const packingTips = getPackingRecommendations(weatherData);
+        // Filter to only check weather within the date range
+        const filteredWeather = weatherData.filter(day => 
+          day.date >= checkIn && day.date <= checkOut
+        );
+        
+        const packingTips = getPackingRecommendations(filteredWeather);
         setRecommendations(packingTips);
       } catch (err) {
         console.error('Error fetching packing recommendations:', err);
@@ -66,4 +69,3 @@ export function PackingList({ checkIn, checkOut }: PackingListProps) {
     </div>
   );
 }
-
