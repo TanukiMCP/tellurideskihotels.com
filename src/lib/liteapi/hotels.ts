@@ -143,8 +143,51 @@ export async function getHotelDetails(hotelId: string): Promise<LiteAPIHotel> {
   // LiteAPI returns data nested in response.data
   const hotel = response.data || response;
   
+  console.log('[LiteAPI Hotels] Hotel details received:', {
+    hotelId: hotel.id,
+    name: hotel.name,
+    imagesCount: hotel.hotelImages?.length || 0,
+    roomsCount: hotel.rooms?.length || 0,
+  });
+  
+  // Transform hotelImages correctly - use url or urlHd
+  const hotelImages = (hotel.hotelImages || [])
+    .map((img: any) => ({
+      type: img.defaultImage ? 'main' : 'gallery',
+      url: img.urlHd || img.url, // Prefer HD version
+      description: img.caption || '',
+    }))
+    .filter((img: any) => img.url && img.url.trim() !== '');
+  
+  console.log('[LiteAPI Hotels] Processed hotel images:', {
+    count: hotelImages.length,
+    firstUrl: hotelImages[0]?.url,
+  });
+  
+  // Transform rooms with correct photo URLs
+  const rooms = (hotel.rooms || []).map((room: any) => {
+    const roomPhotos = (room.photos || [])
+      .map((photo: any) => photo.hd_url || photo.url) // Prefer HD version
+      .filter((url: string) => url && url.trim() !== '');
+    
+    return {
+      id: room.id,
+      name: room.roomName,
+      description: room.description,
+      photos: roomPhotos,
+    };
+  });
+  
+  console.log('[LiteAPI Hotels] Processed rooms:', {
+    count: rooms.length,
+    sampleRoom: rooms[0] ? {
+      id: rooms[0].id,
+      name: rooms[0].name,
+      photosCount: rooms[0].photos.length,
+    } : null,
+  });
+  
   // Transform API response to match our types
-  // Field names: id, starRating, rating, hotelImages, hotelFacilities, rooms
   return {
     hotel_id: hotel.id || hotelId,
     name: hotel.name,
@@ -155,31 +198,21 @@ export async function getHotelDetails(hotelId: string): Promise<LiteAPIHotel> {
       line1: hotel.address,  // Full address as single string
       city: hotel.city,
       state: hotel.state,
-      postal_code: hotel.postalCode,
+      postal_code: hotel.zip, // Changed from postalCode to zip
       country: hotel.country,
     },
     location: hotel.location ? {
       latitude: hotel.location.latitude,
       longitude: hotel.location.longitude,
     } : undefined,
-    images: (hotel.hotelImages || []).map((img: any) => ({
-      type: img.defaultImage ? 'main' : 'gallery',
-      url: img.url,
-      description: img.caption,
-    })),
+    images: hotelImages,
     amenities: (hotel.hotelFacilities || []).map((facility: string) => ({
       name: facility,
     })),
     description: hotel.hotelDescription ? {
       text: hotel.hotelDescription,
     } : undefined,
-    // Include room details with photos
-    rooms: (hotel.rooms || []).map((room: any) => ({
-      id: room.id,
-      name: room.roomName,
-      description: room.description,
-      photos: (room.photos || []).map((photo: any) => photo.url || photo.hd_url).filter(Boolean),
-    })),
+    rooms: rooms,
   };
 }
 
