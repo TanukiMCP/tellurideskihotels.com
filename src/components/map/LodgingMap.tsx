@@ -63,7 +63,7 @@ export default function LodgingMap({
   const [mapStyle, setMapStyle] = useState<keyof typeof MAP_STYLES>('streets');
   const [showSkiTrails, setShowSkiTrails] = useState(false);
   const [showLegend, setShowLegend] = useState(false);
-  const [trailOpacity, setTrailOpacity] = useState(0.8);
+  const [trailOpacity, setTrailOpacity] = useState(0.9);
   const [viewState, setViewState] = useState({
     longitude: TELLURIDE_CENTER[0],
     latitude: TELLURIDE_CENTER[1],
@@ -79,6 +79,13 @@ export default function LodgingMap({
     window.addEventListener('resize', checkMobile);
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
+
+  // Auto-show legend when switching to ski or terrain view
+  useEffect(() => {
+    if (mapStyle === 'ski' || mapStyle === 'terrain') {
+      setShowLegend(true);
+    }
+  }, [mapStyle]);
 
   // Fit bounds to show all hotels
   useEffect(() => {
@@ -221,30 +228,32 @@ export default function LodgingMap({
             try {
               // Increase line width and opacity for better visibility
               if (map.getLayer(layerId)) {
+                // Make trails thicker and more visible
                 map.setPaintProperty(layerId, 'line-width', [
                   'interpolate',
                   ['linear'],
                   ['zoom'],
-                  12, 2,
-                  16, 6
+                  12, 3,     // Thicker at zoom 12
+                  14, 5,     // Even thicker at zoom 14
+                  16, 8      // Very thick at zoom 16
                 ]);
                 map.setPaintProperty(layerId, 'line-opacity', trailOpacity);
                 
-                // Color code by difficulty if available
-                const currentColor = map.getPaintProperty(layerId, 'line-color');
-                if (!currentColor || currentColor === '#808080') {
-                  map.setPaintProperty(layerId, 'line-color', [
-                    'match',
-                    ['get', 'piste:difficulty'],
-                    'novice', '#22c55e',
-                    'easy', '#22c55e',
-                    'intermediate', '#3b82f6',
-                    'advanced', '#000000',
-                    'expert', '#dc2626',
-                    'freeride', '#dc2626',
-                    '#3b82f6' // default blue
-                  ]);
-                }
+                // Add a white outline for better contrast
+                map.setPaintProperty(layerId, 'line-gap-width', 0);
+                
+                // Enhanced color coding by difficulty with more vivid colors
+                map.setPaintProperty(layerId, 'line-color', [
+                  'match',
+                  ['get', 'piste:difficulty'],
+                  'novice', '#22c55e',     // Green for easy
+                  'easy', '#22c55e',       // Green for easy
+                  'intermediate', '#3b82f6', // Blue for intermediate
+                  'advanced', '#1e1e1e',   // Dark black for advanced
+                  'expert', '#dc2626',     // Red for expert/double black
+                  'freeride', '#dc2626',   // Red for expert terrain
+                  '#3b82f6' // default blue for unmarked trails
+                ]);
               }
             } catch (e) {
               console.log('Could not style layer:', layerId, e);
@@ -484,6 +493,35 @@ export default function LodgingMap({
                   </div>
                 </div>
               </div>
+
+              {/* Ski Trail Difficulty Colors */}
+              {(mapStyle === 'ski' || mapStyle === 'terrain') && (
+                <div>
+                  <h5 className="text-xs font-semibold text-neutral-700 mb-2">Ski Trail Difficulty</h5>
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-2">
+                      <div className="w-8 h-1 rounded-full" style={{ backgroundColor: '#22c55e' }}></div>
+                      <span className="text-xs text-neutral-600">Green Circle - Easy/Beginner</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="w-8 h-1 rounded-full" style={{ backgroundColor: '#3b82f6' }}></div>
+                      <span className="text-xs text-neutral-600">Blue Square - Intermediate</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="w-8 h-1 rounded-full" style={{ backgroundColor: '#1e1e1e' }}></div>
+                      <span className="text-xs text-neutral-600">Black Diamond - Advanced</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="w-8 h-1 rounded-full" style={{ backgroundColor: '#dc2626' }}></div>
+                      <span className="text-xs text-neutral-600">Double Black - Expert</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="w-8 h-1 rounded-full" style={{ backgroundColor: '#f59e0b', borderTop: '1px dashed #000' }}></div>
+                      <span className="text-xs text-neutral-600">Lifts & Gondolas</span>
+                    </div>
+                  </div>
+                </div>
+              )}
 
               {/* Map Features */}
               <div>
