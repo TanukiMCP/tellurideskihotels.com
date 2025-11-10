@@ -29,7 +29,7 @@ export default function InteractiveTrailMap() {
     bearing: 0
   });
 
-  // Handle map load and apply custom styling
+  // Handle map load and apply custom styling + real ski trail data
   const handleMapLoad = () => {
     const map = mapRef.current?.getMap();
     if (!map) return;
@@ -49,6 +49,56 @@ export default function InteractiveTrailMap() {
         map.setTerrain({ source: 'mapbox-dem', exaggeration: 1.0 });
       }
     });
+
+    // Load real Telluride ski trail data from OpenStreetMap
+    fetch('/data/telluride-ski-trails.json')
+      .then(response => response.json())
+      .then(data => {
+        // Add the ski trails as a custom GeoJSON source
+        map.addSource('telluride-ski-trails', {
+          type: 'geojson',
+          data: data
+        });
+
+        // Add color-coded ski trails layer
+        map.addLayer({
+          id: 'telluride-ski-trails',
+          type: 'line',
+          source: 'telluride-ski-trails',
+          layout: {
+            'line-join': 'round',
+            'line-cap': 'round'
+          },
+          paint: {
+            'line-color': [
+              'match',
+              ['get', 'piste:difficulty'],
+              'novice', '#22c55e',      // Bright green - beginner
+              'easy', '#22c55e',        // Bright green - easy  
+              'intermediate', '#3b82f6', // Bright blue - intermediate
+              'advanced', '#1e1e1e',    // Black - advanced
+              'expert', '#ef4444',      // Bright red - expert/double black
+              'freeride', '#ef4444',    // Bright red - extreme terrain
+              '#3b82f6'                 // Default to blue
+            ],
+            'line-width': [
+              'interpolate',
+              ['linear'],
+              ['zoom'],
+              11, 3,    // Thin at low zoom
+              13, 4,    // Medium 
+              15, 6,    // Thicker when zoomed in
+              17, 10    // Very thick up close
+            ],
+            'line-opacity': 0.9
+          }
+        });
+
+        console.log(`[InteractiveTrailMap] ✅ Loaded ${data.features.length} real Telluride ski trails from OpenStreetMap`);
+      })
+      .catch(err => {
+        console.error('[InteractiveTrailMap] Failed to load ski trail data:', err);
+      });
   };
 
   // Handle map clicks to show feature info

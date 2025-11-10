@@ -97,7 +97,7 @@ export default function HeroMapSearch({
     }, 300);
   }, [hotels, isMapLoaded]);
 
-  // Apply ski trail styling when ski trails view is active
+  // Load and style real Telluride ski trails from OpenStreetMap
   useEffect(() => {
     if (!mapRef.current || !isMapLoaded) return;
     
@@ -105,10 +105,75 @@ export default function HeroMapSearch({
     const isSkiMode = mapStyle === 'skiTrails';
 
     if (isSkiMode) {
-      // The Mapbox outdoors style doesn't expose piste:difficulty in the default layers
-      // We're limited to what Mapbox provides in their base styles
-      // The trails you see are from OpenStreetMap data, but we can't color-code them without custom tileset
-      console.log('[HeroMapSearch] Ski trails view active - using Mapbox outdoors style');
+      // Load real Telluride ski trail data extracted from OpenStreetMap
+      fetch('/data/telluride-ski-trails.json')
+        .then(response => response.json())
+        .then(data => {
+          // Remove existing custom layers if they exist
+          if (map.getLayer('telluride-ski-trails')) {
+            map.removeLayer('telluride-ski-trails');
+          }
+          if (map.getSource('telluride-ski-trails')) {
+            map.removeSource('telluride-ski-trails');
+          }
+
+          // Add the ski trails as a custom GeoJSON source
+          map.addSource('telluride-ski-trails', {
+            type: 'geojson',
+            data: data
+          });
+
+          // Add color-coded ski trails layer matching ski resort map conventions
+          map.addLayer({
+            id: 'telluride-ski-trails',
+            type: 'line',
+            source: 'telluride-ski-trails',
+            layout: {
+              'line-join': 'round',
+              'line-cap': 'round'
+            },
+            paint: {
+              'line-color': [
+                'match',
+                ['get', 'piste:difficulty'],
+                'novice', '#22c55e',      // Bright green - beginner
+                'easy', '#22c55e',        // Bright green - easy  
+                'intermediate', '#3b82f6', // Bright blue - intermediate
+                'advanced', '#1e1e1e',    // Black - advanced
+                'expert', '#ef4444',      // Bright red - expert/double black
+                'freeride', '#ef4444',    // Bright red - extreme terrain
+                '#3b82f6'                 // Default to blue
+              ],
+              'line-width': [
+                'interpolate',
+                ['linear'],
+                ['zoom'],
+                11, 2,    // Thin at low zoom
+                13, 3,    // Medium 
+                15, 5,    // Thicker when zoomed in
+                17, 8     // Very thick up close
+              ],
+              'line-opacity': 0.85
+            }
+          });
+
+          console.log(`[HeroMapSearch] ✅ Loaded ${data.features.length} real Telluride ski trails from OpenStreetMap`);
+        })
+        .catch(err => {
+          console.error('[HeroMapSearch] Failed to load ski trail data:', err);
+        });
+    } else {
+      // Remove ski trail layer when not in ski mode
+      try {
+        if (map.getLayer('telluride-ski-trails')) {
+          map.removeLayer('telluride-ski-trails');
+        }
+        if (map.getSource('telluride-ski-trails')) {
+          map.removeSource('telluride-ski-trails');
+        }
+      } catch (err) {
+        console.log('Could not remove ski trails:', err);
+      }
     }
   }, [mapStyle, isMapLoaded]);
 
