@@ -173,6 +173,7 @@ export async function getHotelDetails(hotelId: string): Promise<LiteAPIHotel> {
   });
   
   // Transform rooms with correct photo URLs
+  // CRITICAL: LiteAPI returns room.roomName not room.name (per docs)
   const rooms = (hotel.rooms || []).map((room: any) => {
     const roomPhotos = (room.photos || [])
       .map((photo: any) => photo.hd_url || photo.url) // Prefer HD version
@@ -180,8 +181,8 @@ export async function getHotelDetails(hotelId: string): Promise<LiteAPIHotel> {
     
     return {
       id: room.id,
-      name: room.roomName,
-      description: room.description,
+      name: room.roomName || 'Room', // roomName from API, not name
+      description: room.description || '',
       photos: roomPhotos,
     };
   });

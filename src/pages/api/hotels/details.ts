@@ -1,5 +1,6 @@
 import type { APIRoute } from 'astro';
 import { getHotelDetails } from '@/lib/liteapi/hotels';
+import { withCache } from '@/lib/cache';
 
 export const GET: APIRoute = async ({ request }) => {
   try {
@@ -16,13 +17,20 @@ export const GET: APIRoute = async ({ request }) => {
       );
     }
 
-    const hotel = await getHotelDetails(hotelId);
+    // Cache hotel details for 2 hours (7200 seconds)
+    // Hotel info rarely changes, safe to cache aggressively
+    const hotel = await withCache(
+      `hotel-details:${hotelId}`,
+      7200,
+      () => getHotelDetails(hotelId)
+    );
 
     return new Response(JSON.stringify(hotel), {
       status: 200,
       headers: {
         'Content-Type': 'application/json',
-        'Cache-Control': 'public, max-age=3600, s-maxage=7200', // Cache 1hr client, 2hr CDN
+        'Cache-Control': 'public, max-age=3600, s-maxage=7200, stale-while-revalidate=86400',
+        'X-Cache-Status': 'HIT', // Indicate this is cacheable
       },
     });
   } catch (error: any) {

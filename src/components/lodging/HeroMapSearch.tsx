@@ -112,7 +112,7 @@ export default function HeroMapSearch({
           style.layers.forEach((layer: any) => {
             // Hide default piste, aerialway, and trail labels from Mapbox
             if (layer.id.includes('piste') || 
-                layer.id.includes('aerialway') ||
+            layer.id.includes('aerialway') ||
                 layer.id.includes('poi-label') && layer.id.includes('ski')) {
               try {
                 if (map.getLayer(layer.id)) {
@@ -169,9 +169,9 @@ export default function HeroMapSearch({
                 '#3b82f6'                 // Default to blue
               ],
               'line-width': [
-                'interpolate',
-                ['linear'],
-                ['zoom'],
+                  'interpolate',
+                  ['linear'],
+                  ['zoom'],
                 11, 3,    // Thicker at low zoom for visibility
                 13, 4,    // Medium 
                 15, 6,    // Thicker when zoomed in
@@ -206,8 +206,8 @@ export default function HeroMapSearch({
             paint: {
               'text-color': '#ffffff',
               'text-halo-color': [
-                'match',
-                ['get', 'piste:difficulty'],
+                    'match',
+                    ['get', 'piste:difficulty'],
                 'novice', '#16a34a',      // Dark green halo
                 'easy', '#16a34a',        
                 'intermediate', '#1e40af', // Dark blue halo
@@ -229,31 +229,31 @@ export default function HeroMapSearch({
         });
     } else {
       // Remove ski trail layers and restore Mapbox base layers when not in ski mode
-      try {
+            try {
         if (map.getLayer('telluride-ski-trails-labels')) {
           map.removeLayer('telluride-ski-trails-labels');
         }
         if (map.getLayer('telluride-ski-trails')) {
           map.removeLayer('telluride-ski-trails');
-        }
+              }
         if (map.getSource('telluride-ski-trails')) {
           map.removeSource('telluride-ski-trails');
-        }
+      }
 
         // Restore Mapbox base trail layers
         const style = map.getStyle();
         if (style && style.layers) {
-          style.layers.forEach((layer: any) => {
+        style.layers.forEach((layer: any) => {
             if (layer.id.includes('piste') || 
                 layer.id.includes('aerialway') ||
                 layer.id.includes('poi-label') && layer.id.includes('ski')) {
-              try {
-                if (map.getLayer(layer.id)) {
+            try {
+              if (map.getLayer(layer.id)) {
                   map.setLayoutProperty(layer.id, 'visibility', 'visible');
-                }
-              } catch {}
-            }
-          });
+              }
+            } catch {}
+          }
+        });
         }
       } catch (err) {
         console.log('Could not remove/restore trail layers:', err);
