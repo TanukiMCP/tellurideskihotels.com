@@ -13,16 +13,34 @@ import { DEFAULT_LOCATION, DEFAULT_COUNTRY_CODE } from '@/lib/constants';
 const url = Astro.url;
 const searchParams = url.searchParams;
 const location = searchParams.get('location') || DEFAULT_LOCATION;
-const checkIn = searchParams.get('checkIn') || '';
-const checkOut = searchParams.get('checkOut') || '';
+let checkIn = searchParams.get('checkIn') || '';
+let checkOut = searchParams.get('checkOut') || '';
 const adults = parseInt(searchParams.get('adults') || '2', 10);
+
+// Auto-fill default dates if not provided (7 days from now, 7 night stay)
+if (!checkIn || !checkOut) {
+  const today = new Date();
+  const defaultCheckIn = new Date(today);
+  defaultCheckIn.setDate(today.getDate() + 7);
+  const defaultCheckOut = new Date(defaultCheckIn);
+  defaultCheckOut.setDate(defaultCheckIn.getDate() + 7);
+  
+  checkIn = checkIn || defaultCheckIn.toISOString().split('T')[0];
+  checkOut = checkOut || defaultCheckOut.toISOString().split('T')[0];
+  
+  // Redirect to include dates in URL so prices show
+  const newUrl = new URL(url);
+  newUrl.searchParams.set('checkIn', checkIn);
+  newUrl.searchParams.set('checkOut', checkOut);
+  return Astro.redirect(newUrl.toString(), 302);
+}
 
 let hotels: LiteAPIHotel[] = [];
 let minPrices: Record<string, number> = {};
 let loading = false;
 let hasSearched = false;
 
-// Allow browsing without dates - only fetch hotels if dates are provided
+// Always fetch hotels with availability when dates are provided
 if (checkIn && checkOut) {
   hasSearched = true;
   try {
@@ -64,22 +82,6 @@ if (checkIn && checkOut) {
   } finally {
     loading = false;
     console.log('[Places to Stay Page] Load complete');
-  }
-} else {
-  // No dates provided - fetch all hotels for browsing
-  try {
-      console.log('[Places to Stay Page] Browsing all hotels (no dates)');
-      const { searchHotels } = await import('@/lib/liteapi/hotels');
-      const result = await searchHotels({
-        cityName: location,
-        countryCode: DEFAULT_COUNTRY_CODE,
-        // No limit - show all available properties
-      });
-    hotels = result.data || [];
-    console.log('[Places to Stay Page] Browse complete:', { hotelsFound: hotels.length });
-  } catch (error) {
-    console.error('[Places to Stay Page] Error fetching hotels:', error);
-    hotels = [];
   }
 }
 
