@@ -20,7 +20,7 @@ export function ImageWithLoading({ src, alt, className, onError, onLoadSuccess, 
     setError(false);
   }, [src]);
 
-  // Timeout fallback: if image doesn't load within 30 seconds, show error
+  // Timeout fallback: if image doesn't load within 10 seconds, mark as error
   useEffect(() => {
     const timeout = setTimeout(() => {
       if (loading) {
@@ -29,7 +29,7 @@ export function ImageWithLoading({ src, alt, className, onError, onLoadSuccess, 
         setError(true);
         onError?.();
       }
-    }, 30000);
+    }, 10000);
 
     return () => clearTimeout(timeout);
   }, [loading, src, onError]);
@@ -47,9 +47,16 @@ export function ImageWithLoading({ src, alt, className, onError, onLoadSuccess, 
     onError?.();
   };
 
-  // If no src provided or error, return null (don't render anything)
-  if (!src || src.trim() === '' || error) {
+  // If no src provided, return null
+  if (!src || src.trim() === '') {
     return null;
+  }
+
+  // If error, show a subtle placeholder instead of error message
+  if (error) {
+    return (
+      <div className={`bg-gray-100 ${className}`} />
+    );
   }
 
   return (
