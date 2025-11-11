@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { LoadingSpinner } from './LoadingSpinner';
 
 export interface ImageWithLoadingProps {
@@ -13,12 +13,27 @@ export interface ImageWithLoadingProps {
 export function ImageWithLoading({ src, alt, className, onError, onLoadSuccess, priority = false }: ImageWithLoadingProps) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+  const imgRef = useRef<HTMLImageElement>(null);
 
   // Reset loading state when src changes
   useEffect(() => {
     setLoading(true);
     setError(false);
   }, [src]);
+
+  // Check if image is already loaded (cached) - onLoad won't fire for cached images
+  useEffect(() => {
+    // Use setTimeout to ensure the img element is rendered first
+    const checkComplete = setTimeout(() => {
+      if (imgRef.current && imgRef.current.complete && imgRef.current.naturalHeight !== 0) {
+        setLoading(false);
+        setError(false);
+        onLoadSuccess?.();
+      }
+    }, 0);
+
+    return () => clearTimeout(checkComplete);
+  }, [src, onLoadSuccess]);
 
   // Timeout fallback: if image doesn't load within 15 seconds, mark as error
   // Increased timeout for slow CDN responses
@@ -68,6 +83,7 @@ export function ImageWithLoading({ src, alt, className, onError, onLoadSuccess, 
         </div>
       )}
       <img
+        ref={imgRef}
         src={src}
         alt={alt}
         className={`w-full h-full object-cover ${loading ? 'opacity-0' : 'opacity-100'} transition-opacity duration-300`}
