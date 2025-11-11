@@ -11,6 +11,8 @@ import HotelMapPopup from './HotelMapPopup';
 import {
   MAPBOX_TOKEN,
   TELLURIDE_CENTER,
+  MOUNTAIN_VILLAGE_CENTER,
+  TELLURIDE_AREA_CENTER,
   calculateBounds,
   getHotelMarkerColor,
   getMarkerSize,
@@ -65,9 +67,9 @@ export default function LodgingMap({
   const [showLegend, setShowLegend] = useState(false);
   const [trailOpacity, setTrailOpacity] = useState(0.9);
   const [viewState, setViewState] = useState({
-    longitude: TELLURIDE_CENTER[0],
-    latitude: TELLURIDE_CENTER[1],
-    zoom: 13,
+    longitude: TELLURIDE_AREA_CENTER[0],
+    latitude: TELLURIDE_AREA_CENTER[1],
+    zoom: 12,
   });
 
   // Check if mobile
@@ -87,9 +89,9 @@ export default function LodgingMap({
     }
   }, [mapStyle]);
 
-  // Fit bounds to show all hotels
+  // Fit bounds to show all hotels + both Telluride and Mountain Village areas
   useEffect(() => {
-    if (!mapRef.current || hotels.length === 0 || isLoading) return;
+    if (!mapRef.current || isLoading) return;
 
     const coordinates = hotels
       .filter((h): h is LiteAPIHotel & { location: { latitude: number; longitude: number } } => 
@@ -97,19 +99,36 @@ export default function LodgingMap({
       )
       .map(h => ({ lng: h.location.longitude, lat: h.location.latitude }));
 
-    if (coordinates.length === 0) return;
+    // Always include Telluride and Mountain Village centers to ensure both areas are visible
+    const areaMarkers = [
+      { lng: TELLURIDE_CENTER[0], lat: TELLURIDE_CENTER[1] },
+      { lng: MOUNTAIN_VILLAGE_CENTER[0], lat: MOUNTAIN_VILLAGE_CENTER[1] },
+    ];
 
-    const bounds = calculateBounds(coordinates);
+    // Combine hotel coordinates with area markers
+    const allCoordinates = [...coordinates, ...areaMarkers];
+
+    if (allCoordinates.length === 0) return;
+
+    const bounds = calculateBounds(allCoordinates);
     if (!bounds) return;
 
     setTimeout(() => {
-      if (coordinates.length === 1) {
+      if (coordinates.length === 0) {
+        // No hotels, just show the area
+        mapRef.current?.flyTo({
+          center: [TELLURIDE_AREA_CENTER[0], TELLURIDE_AREA_CENTER[1]],
+          zoom: 12,
+          duration: 1000,
+        });
+      } else if (coordinates.length === 1) {
         mapRef.current?.flyTo({
           center: [coordinates[0].lng, coordinates[0].lat],
           zoom: 13,
           duration: 1000,
         });
       } else {
+        // Fit bounds to show all hotels + both areas
         mapRef.current?.fitBounds(bounds, {
           padding: MAP_PADDING,
           maxZoom: MAX_BOUNDS_ZOOM,

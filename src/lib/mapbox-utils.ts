@@ -9,7 +9,11 @@ export const MAPBOX_STYLE = 'mapbox://styles/mapbox/streets-v12';
 
 // Telluride center point
 export const TELLURIDE_CENTER: [number, number] = [-107.8123, 37.9375]; // [lng, lat]
-export const DEFAULT_ZOOM = 13; // Increased from 12 for better initial view
+// Mountain Village center point (connected by gondola, ~2km northeast)
+export const MOUNTAIN_VILLAGE_CENTER: [number, number] = [-107.848, 37.939]; // [lng, lat]
+// Combined area center (midpoint between Telluride and Mountain Village)
+export const TELLURIDE_AREA_CENTER: [number, number] = [-107.83015, 37.93825]; // [lng, lat]
+export const DEFAULT_ZOOM = 12; // Reduced zoom to show both areas better
 
 // Maximum distance from Telluride center in km to include hotels (filters out outliers like Sawpit)
 export const MAX_DISTANCE_FROM_CENTER_KM = 10;
