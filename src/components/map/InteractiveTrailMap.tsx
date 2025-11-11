@@ -20,6 +20,13 @@ const TELLURIDE_BOUNDS: [[number, number], [number, number]] = [
   [-107.80, 37.95]   // Northeast coordinates
 ];
 
+// Expanded bounds with ~5 mile buffer to prevent cutting off trails when zooming
+// This allows users to zoom in without hitting the boundary
+const TELLURIDE_MAX_BOUNDS: [[number, number], [number, number]] = [
+  [-107.95, 37.88],  // Southwest with ~5mi buffer
+  [-107.70, 38.00]   // Northeast with ~5mi buffer
+];
+
 export default function InteractiveTrailMap() {
   const mapRef = useRef<MapRef>(null);
   const [popupInfo, setPopupInfo] = useState<any>(null);
@@ -43,7 +50,7 @@ export default function InteractiveTrailMap() {
     const map = mapRef.current?.getMap();
     if (!map) return;
 
-    // Add 3D terrain with LOWER exaggeration to prevent scroll zoom conflicts
+    // Add 3D terrain with higher exaggeration for dramatic mountain visualization
     map.addSource('mapbox-dem', {
       type: 'raster-dem',
       url: 'mapbox://mapbox.mapbox-terrain-dem-v1',
@@ -54,8 +61,8 @@ export default function InteractiveTrailMap() {
     // Wait for source to load before applying terrain to prevent race condition
     map.once('sourcedata', (e) => {
       if (e.sourceId === 'mapbox-dem' && e.isSourceLoaded) {
-        // Use exaggeration: 1.0 instead of 1.5 to reduce camera conflicts
-        map.setTerrain({ source: 'mapbox-dem', exaggeration: 1.0 });
+        // Use exaggeration: 2.5 for dramatic 3D mountain effect
+        map.setTerrain({ source: 'mapbox-dem', exaggeration: 2.5 });
       }
     });
 
@@ -368,9 +375,9 @@ export default function InteractiveTrailMap() {
       map.setTerrain(null);
       map.easeTo({ pitch: 0, duration: 500 });
     } else {
-      // Enable 3D - use lower exaggeration to prevent scroll zoom issues
-      map.setTerrain({ source: 'mapbox-dem', exaggeration: 1.0 });
-      map.easeTo({ pitch: 45, duration: 500 });
+      // Enable 3D with dramatic exaggeration for mountain visualization
+      map.setTerrain({ source: 'mapbox-dem', exaggeration: 2.5 });
+      map.easeTo({ pitch: 60, duration: 500 });
     }
     setTerrainEnabled(!terrainEnabled);
   };
@@ -396,10 +403,7 @@ export default function InteractiveTrailMap() {
         style={{ width: '100%', height: '100%' }}
         onLoad={handleMapLoad}
         onClick={handleMapClick}
-        maxBounds={[
-          [-107.90, 37.90],
-          [-107.75, 37.97]
-        ]}
+        maxBounds={TELLURIDE_MAX_BOUNDS}
         minZoom={11}
         maxZoom={18}
         scrollZoom={true}
