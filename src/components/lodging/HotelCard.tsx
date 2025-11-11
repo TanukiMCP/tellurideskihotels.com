@@ -135,7 +135,7 @@ export function HotelCard({
               className="w-full"
               variant="primary"
             >
-              View Details & Book
+              See Available Rooms
             </Button>
           </>
         ) : (
@@ -157,7 +157,7 @@ export function HotelCard({
               className="w-full"
               variant="primary"
             >
-              Check Availability
+              View Details
             </Button>
           </>
         )}
