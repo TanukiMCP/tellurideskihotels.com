@@ -25,6 +25,9 @@ export default function InteractiveTrailMap() {
   const [popupInfo, setPopupInfo] = useState<any>(null);
   const [terrainEnabled, setTerrainEnabled] = useState(true);
   const [mapStyle, setMapStyle] = useState<keyof typeof MAP_STYLES>('outdoors');
+  const [showTrails, setShowTrails] = useState(true);
+  const [showLifts, setShowLifts] = useState(true);
+  const [showPOIs, setShowPOIs] = useState(true);
   const [viewState, setViewState] = useState({
     longitude: TELLURIDE_CENTER[0],
     latitude: TELLURIDE_CENTER[1],
@@ -34,11 +37,6 @@ export default function InteractiveTrailMap() {
   });
 
   const [isMapLoaded, setIsMapLoaded] = useState(false);
-  
-  // Layer visibility toggles
-  const [showTrails, setShowTrails] = useState(true);
-  const [showLifts, setShowLifts] = useState(true);
-  const [showPOIs, setShowPOIs] = useState(true);
 
   // Handle map load and apply 3D terrain
   const handleMapLoad = () => {
@@ -64,7 +62,7 @@ export default function InteractiveTrailMap() {
     setIsMapLoaded(true);
   };
 
-  // Load ski trails after map is loaded and on style changes
+  // Load all map data (trails, lifts, POIs) after map is loaded and on style/visibility changes
   useEffect(() => {
     if (!mapRef.current || !isMapLoaded) return;
 
@@ -91,17 +89,34 @@ export default function InteractiveTrailMap() {
     }
 
     // Remove existing custom layers if they exist (for style changes)
-    try {
-      if (map.getLayer('telluride-ski-trails-labels')) {
-        map.removeLayer('telluride-ski-trails-labels');
-      }
-      if (map.getLayer('telluride-ski-trails')) {
-        map.removeLayer('telluride-ski-trails');
-      }
-      if (map.getSource('telluride-ski-trails')) {
-        map.removeSource('telluride-ski-trails');
-      }
-    } catch {}
+    const layersToRemove = [
+      'telluride-ski-trails-labels',
+      'telluride-ski-trails',
+      'telluride-lifts',
+      'telluride-pois',
+      'telluride-pois-labels'
+    ];
+    const sourcesToRemove = [
+      'telluride-ski-trails',
+      'telluride-lifts',
+      'telluride-pois'
+    ];
+
+    layersToRemove.forEach(layerId => {
+      try {
+        if (map.getLayer(layerId)) {
+          map.removeLayer(layerId);
+        }
+      } catch {}
+    });
+
+    sourcesToRemove.forEach(sourceId => {
+      try {
+        if (map.getSource(sourceId)) {
+          map.removeSource(sourceId);
+        }
+      } catch {}
+    });
 
     // Load real Telluride ski trail data from OpenStreetMap
     fetch('/data/telluride-ski-trails.json')
@@ -188,12 +203,135 @@ export default function InteractiveTrailMap() {
           minzoom: 13 // Show labels when zoomed in
         });
 
-        console.log(`[InteractiveTrailMap] ✅ Loaded ${data.features.length} real Telluride ski trails from OpenStreetMap`);
+        // Toggle trail visibility based on state
+        map.setLayoutProperty('telluride-ski-trails', 'visibility', showTrails ? 'visible' : 'none');
+        map.setLayoutProperty('telluride-ski-trails-labels', 'visibility', showTrails ? 'visible' : 'none');
+
+        console.log(`[InteractiveTrailMap] ✅ Loaded ${data.features.length} ski trails`);
       })
       .catch(err => {
         console.error('[InteractiveTrailMap] Failed to load ski trail data:', err);
       });
-  }, [isMapLoaded, mapStyle]);
+
+    // Load lift lines (gondolas and chairlifts)
+    fetch('/data/telluride-lifts.json')
+      .then(response => response.json())
+      .then(data => {
+        map.addSource('telluride-lifts', {
+          type: 'geojson',
+          data: data
+        });
+
+        // Add lift lines with dashed style
+        map.addLayer({
+          id: 'telluride-lifts',
+          type: 'line',
+          source: 'telluride-lifts',
+          layout: {
+            'line-join': 'round',
+            'line-cap': 'round',
+            'visibility': showLifts ? 'visible' : 'none'
+          },
+          paint: {
+            'line-color': [
+              'match',
+              ['get', 'aerialway'],
+              'gondola', '#f59e0b',      // Orange for gondolas
+              'cable_car', '#f59e0b',    // Orange for cable cars
+              'chair_lift', '#eab308',   // Yellow for chairlifts
+              'mixed_lift', '#f59e0b',   // Orange for mixed
+              '#fbbf24'                   // Default yellow
+            ],
+            'line-width': [
+              'interpolate',
+              ['linear'],
+              ['zoom'],
+              11, 2,
+              15, 3.5,
+              17, 5
+            ],
+            'line-opacity': 0.9,
+            'line-dasharray': [2, 2] // Dashed line for lifts
+          }
+        });
+
+        console.log(`[InteractiveTrailMap] ✅ Loaded ${data.features.length} lift lines`);
+      })
+      .catch(err => {
+        console.error('[InteractiveTrailMap] Failed to load lift data:', err);
+      });
+
+    // Load POIs (restaurants, restrooms, lift stations, etc.)
+    fetch('/data/telluride-pois.json')
+      .then(response => response.json())
+      .then(data => {
+        map.addSource('telluride-pois', {
+          type: 'geojson',
+          data: data
+        });
+
+        // Add POI markers
+        map.addLayer({
+          id: 'telluride-pois',
+          type: 'circle',
+          source: 'telluride-pois',
+          layout: {
+            'visibility': showPOIs ? 'visible' : 'none'
+          },
+          paint: {
+            'circle-radius': [
+              'interpolate',
+              ['linear'],
+              ['zoom'],
+              12, 4,
+              15, 6,
+              17, 8
+            ],
+            'circle-color': [
+              'match',
+              ['get', 'type'],
+              'restaurant', '#ef4444',      // Red for restaurants
+              'cafe', '#f97316',            // Orange for cafes
+              'restroom', '#3b82f6',        // Blue for restrooms
+              'lift-station', '#8b5cf6',    // Purple for lift stations
+              'information', '#10b981',     // Green for info
+              'viewpoint', '#06b6d4',       // Cyan for viewpoints
+              '#6b7280'                      // Gray default
+            ],
+            'circle-stroke-width': 2,
+            'circle-stroke-color': '#ffffff',
+            'circle-opacity': 0.9
+          }
+        });
+
+        // Add POI labels
+        map.addLayer({
+          id: 'telluride-pois-labels',
+          type: 'symbol',
+          source: 'telluride-pois',
+          layout: {
+            'text-field': ['get', 'name'],
+            'text-font': ['Open Sans Semibold', 'Arial Unicode MS Bold'],
+            'text-size': 11,
+            'text-offset': [0, 1.2],
+            'text-anchor': 'top',
+            'visibility': showPOIs ? 'visible' : 'none'
+          },
+          paint: {
+            'text-color': '#1f2937',
+            'text-halo-color': '#ffffff',
+            'text-halo-width': 2,
+            'text-halo-blur': 0.5
+          },
+          minzoom: 14
+        });
+
+        console.log(`[InteractiveTrailMap] ✅ Loaded ${data.features.length} POIs`);
+      })
+      .catch(err => {
+        console.error('[InteractiveTrailMap] Failed to load POI data:', err);
+      });
+  }, [isMapLoaded, mapStyle, showTrails, showLifts, showPOIs]);
 
   // Handle map clicks to show feature info
   const handleMapClick = (event: MapMouseEvent) => {
@@ -307,6 +445,38 @@ export default function InteractiveTrailMap() {
             </button>
           </div>
 
+          {/* Layer Toggles */}
+          <div className="border-t border-neutral-200 pt-3 space-y-2">
+            <h4 className="text-xs font-bold text-neutral-700 uppercase tracking-wide mb-2">Map Layers</h4>
+            <label className="flex items-center gap-2 cursor-pointer group">
+              <input
+                type="checkbox"
+                checked={showTrails}
+                onChange={(e) => setShowTrails(e.target.checked)}
+                className="w-4 h-4 rounded border-neutral-300 text-primary-600 focus:ring-primary-600"
+              />
+              <span className="text-sm text-neutral-700 group-hover:text-neutral-900 font-medium">Ski Trails (448)</span>
+            </label>
+            <label className="flex items-center gap-2 cursor-pointer group">
+              <input
+                type="checkbox"
+                checked={showLifts}
+                onChange={(e) => setShowLifts(e.target.checked)}
+                className="w-4 h-4 rounded border-neutral-300 text-primary-600 focus:ring-primary-600"
+              />
+              <span className="text-sm text-neutral-700 group-hover:text-neutral-900 font-medium">Lifts & Gondolas (18)</span>
+            </label>
+            <label className="flex items-center gap-2 cursor-pointer group">
+              <input
+                type="checkbox"
+                checked={showPOIs}
+                onChange={(e) => setShowPOIs(e.target.checked)}
+                className="w-4 h-4 rounded border-neutral-300 text-primary-600 focus:ring-primary-600"
+              />
+              <span className="text-sm text-neutral-700 group-hover:text-neutral-900 font-medium">Facilities (65)</span>
+            </label>
+          </div>
+
           {/* Quick Stats */}
           <div className="space-y-2 text-xs border-t border-neutral-200 pt-3">
             <div className="flex justify-between">
@@ -387,35 +557,82 @@ export default function InteractiveTrailMap() {
           </div>
         </div>
 
-        {/* Ski Trail Legend - Bottom Right */}
-        <div className="absolute bottom-4 right-4 bg-white/95 backdrop-blur-sm rounded-xl shadow-2xl p-4 z-10 border border-neutral-200">
+        {/* Comprehensive Map Legend - Bottom Right */}
+        <div className="absolute bottom-4 right-4 bg-white/95 backdrop-blur-sm rounded-xl shadow-2xl p-4 z-10 border border-neutral-200 max-w-xs">
           <h3 className="text-sm font-bold text-neutral-900 mb-3 flex items-center gap-2">
             <svg className="w-4 h-4 text-primary-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
             </svg>
-            Trail Difficulty
+            Map Legend
           </h3>
-          <div className="space-y-2">
-            <div className="flex items-center gap-2.5">
-              <div className="w-6 h-1 rounded-full bg-[#22c55e]"></div>
-              <span className="text-xs text-neutral-700 font-medium">Green Circle - Easy</span>
+          
+          {showTrails && (
+            <div className="mb-3">
+              <h4 className="text-xs font-semibold text-neutral-700 mb-2">Trail Difficulty</h4>
+              <div className="space-y-1.5">
+                <div className="flex items-center gap-2.5">
+                  <div className="w-6 h-1 rounded-full bg-[#22c55e]"></div>
+                  <span className="text-xs text-neutral-700">Green - Easy</span>
+                </div>
+                <div className="flex items-center gap-2.5">
+                  <div className="w-6 h-1 rounded-full bg-[#3b82f6]"></div>
+                  <span className="text-xs text-neutral-700">Blue - Intermediate</span>
+                </div>
+                <div className="flex items-center gap-2.5">
+                  <div className="w-6 h-1 rounded-full bg-[#1e1e1e]"></div>
+                  <span className="text-xs text-neutral-700">Black - Advanced</span>
+                </div>
+                <div className="flex items-center gap-2.5">
+                  <div className="w-6 h-1 rounded-full bg-[#ef4444]"></div>
+                  <span className="text-xs text-neutral-700">Red - Expert</span>
+                </div>
+              </div>
             </div>
-            <div className="flex items-center gap-2.5">
-              <div className="w-6 h-1 rounded-full bg-[#3b82f6]"></div>
-              <span className="text-xs text-neutral-700 font-medium">Blue Square - Intermediate</span>
+          )}
+
+          {showLifts && (
+            <div className="mb-3 pb-3 border-t border-neutral-200 pt-3">
+              <h4 className="text-xs font-semibold text-neutral-700 mb-2">Lifts & Gondolas</h4>
+              <div className="space-y-1.5">
+                <div className="flex items-center gap-2.5">
+                  <div className="w-6 h-0.5 bg-[#f59e0b]" style={{borderTop: '2px dashed #f59e0b'}}></div>
+                  <span className="text-xs text-neutral-700">Gondolas</span>
+                </div>
+                <div className="flex items-center gap-2.5">
+                  <div className="w-6 h-0.5 bg-[#eab308]" style={{borderTop: '2px dashed #eab308'}}></div>
+                  <span className="text-xs text-neutral-700">Chairlifts</span>
+                </div>
+              </div>
             </div>
-            <div className="flex items-center gap-2.5">
-              <div className="w-6 h-1 rounded-full bg-[#1e1e1e]"></div>
-              <span className="text-xs text-neutral-700 font-medium">Black Diamond - Advanced</span>
+          )}
+
+          {showPOIs && (
+            <div className="mb-2 pb-2 border-t border-neutral-200 pt-3">
+              <h4 className="text-xs font-semibold text-neutral-700 mb-2">Facilities</h4>
+              <div className="grid grid-cols-2 gap-x-3 gap-y-1.5">
+                <div className="flex items-center gap-1.5">
+                  <div className="w-3 h-3 rounded-full bg-[#ef4444] border-2 border-white"></div>
+                  <span className="text-xs text-neutral-700">Restaurant</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <div className="w-3 h-3 rounded-full bg-[#3b82f6] border-2 border-white"></div>
+                  <span className="text-xs text-neutral-700">Restroom</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <div className="w-3 h-3 rounded-full bg-[#8b5cf6] border-2 border-white"></div>
+                  <span className="text-xs text-neutral-700">Lift Station</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <div className="w-3 h-3 rounded-full bg-[#10b981] border-2 border-white"></div>
+                  <span className="text-xs text-neutral-700">Information</span>
+                </div>
+              </div>
             </div>
-            <div className="flex items-center gap-2.5">
-              <div className="w-6 h-1 rounded-full bg-[#ef4444]"></div>
-              <span className="text-xs text-neutral-700 font-medium">Double Black - Expert</span>
-            </div>
-          </div>
-          <div className="mt-3 pt-3 border-t border-neutral-200">
+          )}
+
+          <div className="mt-2 pt-2 border-t border-neutral-200">
             <p className="text-[10px] text-neutral-500">
-              448 trails from OpenStreetMap
+              Data from OpenStreetMap contributors
             </p>
           </div>
         </div>

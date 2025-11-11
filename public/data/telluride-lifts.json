@@ -4,15 +4,12 @@
     {
       "type": "Feature",
       "properties": {
-        "id": 17142381,
         "name": "Lift 7",
         "aerialway": "chair_lift",
+        "capacity": "Unknown",
         "occupancy": "2",
-        "aerialway:occupancy": "2",
-        "ref": "7",
-        "tiger:cfcc": "C31",
-        "tiger:county": "San Miguel, CO",
-        "tiger:reviewed": "no"
+        "duration": "Unknown",
+        "description": "Ski lift"
       },
       "geometry": {
         "type": "LineString",
@@ -75,15 +72,12 @@
     {
       "type": "Feature",
       "properties": {
-        "id": 17144535,
         "name": "Polar Queen Express",
         "aerialway": "chair_lift",
+        "capacity": "Unknown",
         "occupancy": "4",
-        "aerialway:occupancy": "4",
-        "ref": "5",
-        "tiger:cfcc": "C31",
-        "tiger:county": "San Miguel, CO",
-        "tiger:reviewed": "no"
+        "duration": "Unknown",
+        "description": "Ski lift"
       },
       "geometry": {
         "type": "LineString",
@@ -170,17 +164,12 @@
     {
       "type": "Feature",
       "properties": {
-        "id": 17145067,
         "name": "Gondola Line",
         "aerialway": "gondola",
+        "capacity": "Unknown",
         "occupancy": "8",
-        "aerialway:occupancy": "8",
-        "seasonal:summer": "yes",
-        "seasonal:winter": "yes",
-        "tiger:cfcc": "C31",
-        "tiger:county": "San Miguel, CO",
-        "tiger:name_base": "Gondola Line",
-        "tiger:reviewed": "no"
+        "duration": "Unknown",
+        "description": "Ski lift"
       },
       "geometry": {
         "type": "LineString",
@@ -331,12 +320,12 @@
     {
       "type": "Feature",
       "properties": {
-        "id": 97622900,
         "name": "Village Express",
         "aerialway": "chair_lift",
+        "capacity": "Unknown",
         "occupancy": "4",
-        "aerialway:occupancy": "4",
-        "ref": "4"
+        "duration": "Unknown",
+        "description": "Ski lift"
       },
       "geometry": {
         "type": "LineString",
@@ -443,12 +432,12 @@
     {
       "type": "Feature",
       "properties": {
-        "id": 97627574,
         "name": "Apex Lift",
         "aerialway": "chair_lift",
+        "capacity": "Unknown",
         "occupancy": "3",
-        "aerialway:occupancy": "3",
-        "ref": "6"
+        "duration": "Unknown",
+        "description": "Ski lift"
       },
       "geometry": {
         "type": "LineString",
@@ -511,12 +500,12 @@
     {
       "type": "Feature",
       "properties": {
-        "id": 97633061,
         "name": "Gold Hill Express",
         "aerialway": "chair_lift",
+        "capacity": "Unknown",
         "occupancy": "4",
-        "aerialway:occupancy": "4",
-        "ref": "14"
+        "duration": "Unknown",
+        "description": "Ski lift"
       },
       "geometry": {
         "type": "LineString",
@@ -587,12 +576,12 @@
     {
       "type": "Feature",
       "properties": {
-        "id": 97633724,
         "name": "Revelation Lift",
         "aerialway": "chair_lift",
+        "capacity": "Unknown",
         "occupancy": "4",
-        "aerialway:occupancy": "4",
-        "ref": "15"
+        "duration": "Unknown",
+        "description": "Ski lift"
       },
       "geometry": {
         "type": "LineString",
@@ -639,12 +628,12 @@
     {
       "type": "Feature",
       "properties": {
-        "id": 97854041,
         "name": "Prospect Express",
         "aerialway": "chair_lift",
+        "capacity": "Unknown",
         "occupancy": "4",
-        "aerialway:occupancy": "4",
-        "ref": "12"
+        "duration": "Unknown",
+        "description": "Ski lift"
       },
       "geometry": {
         "type": "LineString",
@@ -735,12 +724,12 @@
     {
       "type": "Feature",
       "properties": {
-        "id": 200763621,
         "name": "Ute Park",
         "aerialway": "chair_lift",
+        "capacity": "Unknown",
         "occupancy": "4",
-        "aerialway:occupancy": "4",
-        "ref": "11"
+        "duration": "Unknown",
+        "description": "Ski lift"
       },
       "geometry": {
         "type": "LineString",
@@ -799,12 +788,12 @@
     {
       "type": "Feature",
       "properties": {
-        "id": 200763622,
         "name": "Sunshine Express",
         "aerialway": "chair_lift",
+        "capacity": "Unknown",
         "occupancy": "4",
-        "aerialway:occupancy": "4",
-        "ref": "10"
+        "duration": "Unknown",
+        "description": "Ski lift"
       },
       "geometry": {
         "type": "LineString",
@@ -935,14 +924,12 @@
     {
       "type": "Feature",
       "properties": {
-        "id": 230902139,
         "name": "Chondola",
         "aerialway": "mixed_lift",
+        "capacity": "Unknown",
         "occupancy": "4",
-        "aerialway:occupancy": "4",
-        "oneway": "no",
-        "ref": "1",
-        "source": "Bing"
+        "duration": "Unknown",
+        "description": "Ski lift"
       },
       "geometry": {
         "type": "LineString",
@@ -997,12 +984,12 @@
     {
       "type": "Feature",
       "properties": {
-        "id": 231107982,
         "name": "Free Intercept Gondola",
         "aerialway": "gondola",
+        "capacity": "Unknown",
         "occupancy": "8",
-        "aerialway:occupancy": "8",
-        "source": "Bing"
+        "duration": "Unknown",
+        "description": "Ski lift"
       },
       "geometry": {
         "type": "LineString",
@@ -1049,12 +1036,12 @@
     {
       "type": "Feature",
       "properties": {
-        "id": 258652557,
         "name": "Oak Street Lift",
         "aerialway": "chair_lift",
+        "capacity": "Unknown",
         "occupancy": "2",
-        "aerialway:occupancy": "2",
-        "ref": "8"
+        "duration": "Unknown",
+        "description": "Ski lift"
       },
       "geometry": {
         "type": "LineString",
@@ -1109,12 +1096,12 @@
     {
       "type": "Feature",
       "properties": {
-        "id": 258652724,
         "name": "Plunge Lift",
         "aerialway": "chair_lift",
+        "capacity": "Unknown",
         "occupancy": "4",
-        "aerialway:occupancy": "4",
-        "ref": "9"
+        "duration": "Unknown",
+        "description": "Ski lift"
       },
       "geometry": {
         "type": "LineString",
@@ -1218,6 +1205,118 @@
           [
             -107.8219651,
             37.9144204
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Comp Hill",
+        "aerialway": "platter",
+        "capacity": "Unknown",
+        "occupancy": "Unknown",
+        "duration": "Unknown",
+        "description": "Ski lift"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -107.8453569,
+            37.9338602
+          ],
+          [
+            -107.8427389,
+            37.9316443
+          ],
+          [
+            -107.8422408,
+            37.9312228
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Gondola Magic Carpet",
+        "aerialway": "magic_carpet",
+        "capacity": "Unknown",
+        "occupancy": "Unknown",
+        "duration": "Unknown",
+        "description": "Ski lift"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -107.8449165,
+            37.9363182
+          ],
+          [
+            -107.8442919,
+            37.9358499
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Meadows Magic Carpet",
+        "aerialway": "magic_carpet",
+        "capacity": "Unknown",
+        "occupancy": "Unknown",
+        "duration": "Unknown",
+        "description": "Ski lift"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -107.8488929,
+            37.9367236
+          ],
+          [
+            -107.8485213,
+            37.9365966
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lynx",
+        "aerialway": "platter",
+        "capacity": "Unknown",
+        "occupancy": "Unknown",
+        "duration": "Unknown",
+        "description": "Ski lift"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -107.8427969,
+            37.9019571
+          ],
+          [
+            -107.8428434,
+            37.9020069
+          ],
+          [
+            -107.8443436,
+            37.9036118
+          ],
+          [
+            -107.8443951,
+            37.903667
+          ],
+          [
+            -107.8445294,
+            37.9038106
           ]
         ]
       }

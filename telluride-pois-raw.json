@@ -2,1246 +2,720 @@
   "version": 0.6,
   "generator": "Overpass API 0.7.62.8 e802775f",
   "osm3s": {
-    "timestamp_osm_base": "2025-11-10T23:59:40Z",
+    "timestamp_osm_base": "2025-11-11T00:13:00Z",
     "copyright": "The data included in this document is from www.openstreetmap.org. The data is made available under ODbL."
   },
   "elements": [
-
-{
-  "type": "node",
-  "id": 178065905,
-  "lat": 37.9371627,
-  "lon": -107.8207559,
-  "tags": {
-    "aerialway": "station"
-  }
-},
-{
-  "type": "node",
-  "id": 178092087,
-  "lat": 37.9212559,
-  "lon": -107.8392389,
-  "tags": {
-    "aerialway": "station"
-  }
-},
-{
-  "type": "node",
-  "id": 178097227,
-  "lat": 37.9360337,
-  "lon": -107.8139630,
-  "tags": {
-    "aerialway": "station",
-    "public_transport": "station"
-  }
-},
-{
-  "type": "node",
-  "id": 178097236,
-  "lat": 37.9313189,
-  "lon": -107.8330106,
-  "tags": {
-    "aerialway": "station",
-    "name": "San Sophia Station",
-    "public_transport": "station"
-  }
-},
-{
-  "type": "node",
-  "id": 178097243,
-  "lat": 37.9366124,
-  "lon": -107.8448842,
-  "tags": {
-    "aerialway": "station",
-    "public_transport": "station"
-  }
-},
-{
-  "type": "node",
-  "id": 1130123110,
-  "lat": 37.9239303,
-  "lon": -107.8306629,
-  "tags": {
-    "aerialway": "station",
-    "public_transport": "station"
-  }
-},
-{
-  "type": "node",
-  "id": 1130123114,
-  "lat": 37.9361723,
-  "lon": -107.8455107,
-  "tags": {
-    "aerialway": "station",
-    "public_transport": "station"
-  }
-},
-{
-  "type": "node",
-  "id": 1130135785,
-  "lat": 37.9105575,
-  "lon": -107.8220770,
-  "tags": {
-    "aerialway": "station",
-    "public_transport": "station"
-  }
-},
-{
-  "type": "node",
-  "id": 1130169377,
-  "lat": 37.9101670,
-  "lon": -107.8296221,
-  "tags": {
-    "aerialway": "station"
-  }
-},
-{
-  "type": "node",
-  "id": 1130169386,
-  "lat": 37.9148716,
-  "lon": -107.8299958,
-  "tags": {
-    "aerialway": "station"
-  }
-},
-{
-  "type": "node",
-  "id": 1130187476,
-  "lat": 37.9047986,
-  "lon": -107.8351481,
-  "tags": {
-    "aerialway": "station"
-  }
-},
-{
-  "type": "node",
-  "id": 1130201253,
-  "lat": 37.9028588,
-  "lon": -107.8192505,
-  "tags": {
-    "aerialway": "station"
-  }
-},
-{
-  "type": "node",
-  "id": 1130201264,
-  "lat": 37.8991430,
-  "lon": -107.8225950,
-  "tags": {
-    "aerialway": "station",
-    "public_transport": "station"
-  }
-},
-{
-  "type": "node",
-  "id": 1132589038,
-  "lat": 37.8918771,
-  "lon": -107.8387720,
-  "tags": {
-    "aerialway": "station",
-    "public_transport": "station"
-  }
-},
-{
-  "type": "node",
-  "id": 1132619757,
-  "lat": 37.9054568,
-  "lon": -107.8361647,
-  "tags": {
-    "aerialway": "station"
-  }
-},
-{
-  "type": "node",
-  "id": 2107244631,
-  "lat": 37.9040290,
-  "lon": -107.8441750,
-  "tags": {
-    "aerialway": "station",
-    "public_transport": "station"
-  }
-},
-{
-  "type": "node",
-  "id": 2107244645,
-  "lat": 37.9102923,
-  "lon": -107.8475230,
-  "tags": {
-    "aerialway": "station",
-    "public_transport": "station"
-  }
-},
-{
-  "type": "node",
-  "id": 2107244855,
-  "lat": 37.9389994,
-  "lon": -107.8565066,
-  "tags": {
-    "aerialway": "station",
-    "public_transport": "station"
-  }
-},
-{
-  "type": "node",
-  "id": 2455846504,
-  "lat": 37.9368296,
-  "lon": -107.8106470,
-  "tags": {
-    "addr:city": "Telluride",
-    "addr:housenumber": "110",
-    "addr:postcode": "81435",
-    "addr:street": "East Colorado Avenue",
-    "amenity": "restaurant",
-    "cuisine": "pizza",
-    "name": "Brown Dog Pizza",
-    "phone": "+1-970-728-8046",
-    "website": "https://browndogpizza.net/"
-  }
-},
-{
-  "type": "node",
-  "id": 3177990965,
-  "lat": 37.9348957,
-  "lon": -107.8061027,
-  "tags": {
-    "tourism": "information"
-  }
-},
-{
-  "type": "node",
-  "id": 4239808965,
-  "lat": 37.9514715,
-  "lon": -107.8775965,
-  "tags": {
-    "description": "Great viewpoint for sunset photos.",
-    "tourism": "viewpoint"
-  }
-},
-{
-  "type": "node",
-  "id": 4423823603,
-  "lat": 37.9369212,
-  "lon": -107.8122552,
-  "tags": {
-    "addr:city": "Telluride",
-    "addr:housenumber": "127",
-    "addr:postcode": "81435",
-    "addr:state": "CO",
-    "addr:street": "South Fir Street",
-    "amenity": "restaurant",
-    "name": "Baked in Telluride"
-  }
-},
-{
-  "type": "node",
-  "id": 4423823605,
-  "lat": 37.9381747,
-  "lon": -107.8117363,
-  "tags": {
-    "addr:city": "Telluride",
-    "addr:housenumber": "131",
-    "addr:postcode": "81435",
-    "addr:state": "CO",
-    "addr:street": "North Fir Street",
-    "amenity": "restaurant",
-    "cuisine": "american",
-    "name": "Cornerhouse Grille",
-    "opening_hours": "Mo -Su 11:30-24:00",
-    "takeaway": "yes"
-  }
-},
-{
-  "type": "node",
-  "id": 4423878954,
-  "lat": 37.9360582,
-  "lon": -107.8138730,
-  "tags": {
-    "aerialway": "station",
-    "aerialway:access": "both",
-    "aerialway:summer:access": "both",
-    "name": "Telluride Gondola Station",
-    "opening_hours": "07:00-24:00",
-    "public_transport": "station"
-  }
-},
-{
-  "type": "node",
-  "id": 5143689323,
-  "lat": 37.9295894,
-  "lon": -107.8322897,
-  "tags": {
-    "aerialway": "station",
-    "public_transport": "station"
-  }
-},
-{
-  "type": "node",
-  "id": 5146559325,
-  "lat": 37.9107295,
-  "lon": -107.8485160,
-  "tags": {
-    "aerialway": "station",
-    "public_transport": "station"
-  }
-},
-{
-  "type": "node",
-  "id": 6584439041,
-  "lat": 37.9357298,
-  "lon": -107.8134178,
-  "tags": {
-    "addr:city": "Telluride",
-    "addr:postcode": "81435",
-    "amenity": "restaurant",
-    "name": "Oak Street"
-  }
-},
-{
-  "type": "node",
-  "id": 7630731885,
-  "lat": 37.9393792,
-  "lon": -107.8192133,
-  "tags": {
-    "amenity": "restaurant",
-    "cuisine": "american;tapas",
-    "name": "The Tunnel"
-  }
-},
-{
-  "type": "node",
-  "id": 7818093645,
-  "lat": 37.9371703,
-  "lon": -107.8102612,
-  "tags": {
-    "amenity": "restaurant",
-    "name": "La cocina de Luz"
-  }
-},
-{
-  "type": "node",
-  "id": 8796466392,
-  "lat": 37.9026075,
-  "lon": -107.8237664,
-  "tags": {
-    "aerialway": "station",
-    "public_transport": "station"
-  }
-},
-{
-  "type": "node",
-  "id": 8796467593,
-  "lat": 37.9144204,
-  "lon": -107.8219651,
-  "tags": {
-    "aerialway": "station",
-    "public_transport": "station"
-  }
-},
-{
-  "type": "node",
-  "id": 8952708892,
-  "lat": 37.8847502,
-  "lon": -107.8467281,
-  "tags": {
-    "amenity": "toilets"
-  }
-},
-{
-  "type": "node",
-  "id": 8952708893,
-  "lat": 37.8847351,
-  "lon": -107.8466730,
-  "tags": {
-    "information": "guidepost",
-    "tourism": "information"
-  }
-},
-{
-  "type": "node",
-  "id": 11108326698,
-  "lat": 37.9369946,
-  "lon": -107.8096152,
-  "tags": {
-    "addr:city": "Telluride",
-    "addr:housenumber": "201",
-    "addr:postcode": "81435",
-    "addr:state": "CO",
-    "addr:street": "East Colorado Avenue",
-    "amenity": "cafe",
-    "cuisine": "sandwich",
-    "internet_access": "no",
-    "name": "The Butcher & The Baker",
-    "opening_hours": "Mo-Sa 07:00-20:00; Su 08:00-14:00",
-    "outdoor_seating": "yes",
-    "phone": "+1 970-728-2899",
-    "website": "https://butcherandbakercafe.com"
-  }
-},
-{
-  "type": "node",
-  "id": 11983446904,
-  "lat": 37.9374631,
-  "lon": -107.8125150,
-  "tags": {
-    "amenity": "restaurant",
-    "cuisine": "mexican",
-    "name": "Esperanza's"
-  }
-},
-{
-  "type": "node",
-  "id": 11983446914,
-  "lat": 37.9372773,
-  "lon": -107.8120023,
-  "tags": {
-    "amenity": "restaurant",
-    "name": "Alpinist & the Goat"
-  }
-},
-{
-  "type": "node",
-  "id": 11983446917,
-  "lat": 37.9373675,
-  "lon": -107.8110727,
-  "tags": {
-    "amenity": "restaurant",
-    "cuisine": "sushi",
-    "name": "Pescado"
-  }
-},
-{
-  "type": "node",
-  "id": 11983446931,
-  "lat": 37.9375033,
-  "lon": -107.8126728,
-  "tags": {
-    "information": "office",
-    "name": "Visitors Center",
-    "tourism": "information"
-  }
-},
-{
-  "type": "node",
-  "id": 11983446945,
-  "lat": 37.9370631,
-  "lon": -107.8098763,
-  "tags": {
-    "amenity": "restaurant",
-    "bar": "yes",
-    "name": "Wood Ear"
-  }
-},
-{
-  "type": "node",
-  "id": 11983446954,
-  "lat": 37.9373317,
-  "lon": -107.8109011,
-  "tags": {
-    "amenity": "restaurant",
-    "bar": "yes",
-    "name": "Florida Saloon"
-  }
-},
-{
-  "type": "node",
-  "id": 12069051151,
-  "lat": 37.9365426,
-  "lon": -107.8456994,
-  "tags": {
-    "information": "map",
-    "tourism": "information"
-  }
-},
-{
-  "type": "node",
-  "id": 12069078762,
-  "lat": 37.9363890,
-  "lon": -107.8457982,
-  "tags": {
-    "information": "map",
-    "tourism": "information"
-  }
-},
-{
-  "type": "node",
-  "id": 12069095069,
-  "lat": 37.9358182,
-  "lon": -107.8471408,
-  "tags": {
-    "information": "map",
-    "tourism": "information"
-  }
-},
-{
-  "type": "node",
-  "id": 12069095185,
-  "lat": 37.9368567,
-  "lon": -107.8463673,
-  "tags": {
-    "information": "map",
-    "tourism": "information"
-  }
-},
-{
-  "type": "node",
-  "id": 12069116417,
-  "lat": 37.9382003,
-  "lon": -107.8462980,
-  "tags": {
-    "information": "map",
-    "tourism": "information"
-  }
-},
-{
-  "type": "node",
-  "id": 12069120252,
-  "lat": 37.9300963,
-  "lon": -107.8320932,
-  "tags": {
-    "board_type": "geology",
-    "information": "board",
-    "tourism": "information"
-  }
-},
-{
-  "type": "node",
-  "id": 12069173155,
-  "lat": 37.9310920,
-  "lon": -107.8327881,
-  "tags": {
-    "amenity": "toilets",
-    "wheelchair": "yes"
-  }
-},
-{
-  "type": "node",
-  "id": 12181171224,
-  "lat": 37.9293596,
-  "lon": -107.8326455,
-  "tags": {
-    "information": "guidepost",
-    "operator": "Telluride",
-    "ski": "yes",
-    "tourism": "information"
-  }
-},
-{
-  "type": "node",
-  "id": 12181171272,
-  "lat": 37.9340367,
-  "lon": -107.8117786,
-  "tags": {
-    "board_type": "welcome_sign",
-    "information": "board",
-    "tourism": "information"
-  }
-},
-{
-  "type": "node",
-  "id": 12181171289,
-  "lat": 37.9341880,
-  "lon": -107.8048211,
-  "tags": {
-    "amenity": "toilets"
-  }
-},
-{
-  "type": "node",
-  "id": 12388989050,
-  "lat": 37.9367125,
-  "lon": -107.8464422,
-  "tags": {
-    "amenity": "cafe",
-    "name": "Telluride Coffee Company"
-  }
-},
-{
-  "type": "node",
-  "id": 12551293404,
-  "lat": 37.9368683,
-  "lon": -107.8126236,
-  "tags": {
-    "addr:city": "Telluride",
-    "addr:housenumber": "219",
-    "addr:postcode": "81435",
-    "addr:state": "CO",
-    "addr:street": "West Pacific Avenue",
-    "amenity": "restaurant",
-    "cuisine": "french",
-    "name": "Petite Maison",
-    "phone": "+1-970-728-7020",
-    "source": "esri/USA_NAD_Addresses",
-    "website": "https://petitemaisontelluride.com/"
-  }
-},
-{
-  "type": "node",
-  "id": 13163020201,
-  "lat": 37.9359524,
-  "lon": -107.8138777,
-  "tags": {
-    "amenity": "toilets"
-  }
-},
-{
-  "type": "way",
-  "id": 17142381,
-  "center": {
-    "lat": 37.9333760,
-    "lon": -107.8265228
-  },
-  "nodes": [
-    178065905,
-    8796467557,
-    8796467556,
-    8796467555,
-    8796467554,
-    8796467553,
-    8796467552,
-    8796467551,
-    8796467549,
-    8796467548,
-    8796467547,
-    8796467546,
-    5143689323
-  ],
-  "tags": {
-    "aerialway": "chair_lift",
-    "aerialway:occupancy": "2",
-    "name": "Lift 7",
-    "ref": "7",
-    "tiger:cfcc": "C31",
-    "tiger:county": "San Miguel, CO",
-    "tiger:reviewed": "no"
-  }
-},
-{
-  "type": "way",
-  "id": 17144535,
-  "center": {
-    "lat": 37.9157115,
-    "lon": -107.8344305
-  },
-  "nodes": [
-    178092087,
-    8796466364,
-    8796466365,
-    8796466366,
-    8796466367,
-    8796466368,
-    8796466369,
-    8796466370,
-    8796466371,
-    8796466372,
-    8796466373,
-    8796466374,
-    8796466375,
-    8796466376,
-    8796466377,
-    8796466378,
-    8796466379,
-    8796466380,
-    1130169377
-  ],
-  "tags": {
-    "aerialway": "chair_lift",
-    "aerialway:occupancy": "4",
-    "name": "Polar Queen Express",
-    "ref": "5",
-    "tiger:cfcc": "C31",
-    "tiger:county": "San Miguel, CO",
-    "tiger:reviewed": "no"
-  }
-},
-{
-  "type": "way",
-  "id": 17145067,
-  "center": {
-    "lat": 37.9339657,
-    "lon": -107.8294236
-  },
-  "nodes": [
-    178097227,
-    8796467562,
-    178097228,
-    178097229,
-    178097231,
-    178097233,
-    1467605705,
-    8796467561,
-    9695855761,
-    8796467560,
-    1467605704,
-    1467605703,
-    1467605701,
-    8796467550,
-    1467605700,
-    1467605698,
-    9695855871,
-    9695855870,
-    178097235,
-    9695855869,
-    8796467545,
-    8796467544,
-    8796467543,
-    178097236,
-    8796467542,
-    178097237,
-    1467605699,
-    8796467541,
-    178097239,
-    1467605706,
-    178097241,
-    8796467540,
-    8796467539,
-    8796467538,
-    178097243
-  ],
-  "tags": {
-    "aerialway": "gondola",
-    "aerialway:occupancy": "8",
-    "name": "Gondola Line",
-    "seasonal:summer": "yes",
-    "seasonal:winter": "yes",
-    "tiger:cfcc": "C31",
-    "tiger:county": "San Miguel, CO",
-    "tiger:name_base": "Gondola Line",
-    "tiger:reviewed": "no"
-  }
-},
-{
-  "type": "way",
-  "id": 97622900,
-  "center": {
-    "lat": 37.9300513,
-    "lon": -107.8380868
-  },
-  "nodes": [
-    1130123114,
-    8796466344,
-    8796466345,
-    8796466346,
-    8796466347,
-    8796466348,
-    12593784952,
-    8796466349,
-    8796466350,
-    8796466351,
-    8796466352,
-    8796466353,
-    8796466355,
-    8796466354,
-    8796466356,
-    8796466357,
-    8796466358,
-    8796466359,
-    8796466360,
-    12593762419,
-    8796466361,
-    8796466362,
-    8796466363,
-    1130123110
-  ],
-  "tags": {
-    "aerialway": "chair_lift",
-    "aerialway:occupancy": "4",
-    "name": "Village Express",
-    "ref": "4"
-  }
-},
-{
-  "type": "way",
-  "id": 97627574,
-  "center": {
-    "lat": 37.9127146,
-    "lon": -107.8260364
-  },
-  "nodes": [
-    1130169386,
-    8796467604,
-    8796467603,
-    8796467602,
-    8796467601,
-    8796467600,
-    8796467599,
-    8796467598,
-    8796467597,
-    8796467594,
-    8796467595,
-    8796467596,
-    1130135785
-  ],
-  "tags": {
-    "aerialway": "chair_lift",
-    "aerialway:occupancy": "3",
-    "name": "Apex Lift",
-    "ref": "6"
-  }
-},
-{
-  "type": "way",
-  "id": 97633061,
-  "center": {
-    "lat": 37.9037030,
-    "lon": -107.8294572
-  },
-  "nodes": [
-    1130187476,
-    8796466381,
-    8796466382,
-    8796466383,
-    8796466384,
-    8796466385,
-    8796466386,
-    8796466387,
-    7233933139,
-    8796466389,
-    8796466390,
-    7233933135,
-    10790762335,
-    10790762336,
-    8796466392
-  ],
-  "tags": {
-    "aerialway": "chair_lift",
-    "aerialway:occupancy": "4",
-    "name": "Gold Hill Express",
-    "ref": "14"
-  }
-},
-{
-  "type": "way",
-  "id": 97633724,
-  "center": {
-    "lat": 37.9010009,
-    "lon": -107.8209227
-  },
-  "nodes": [
-    1130201253,
-    8796466399,
-    8796466398,
-    8796466397,
-    8796466396,
-    8796466395,
-    8796466394,
-    8796466393,
-    1130201264
-  ],
-  "tags": {
-    "aerialway": "chair_lift",
-    "aerialway:occupancy": "4",
-    "name": "Revelation Lift",
-    "ref": "15"
-  }
-},
-{
-  "type": "way",
-  "id": 97854041,
-  "center": {
-    "lat": 37.8986669,
-    "lon": -107.8374683
-  },
-  "nodes": [
-    1132619757,
-    8796467517,
-    8796466416,
-    8796466415,
-    8796466414,
-    8796466413,
-    8796466412,
-    8796466411,
-    8796466410,
-    8796466409,
-    8796466408,
-    8796466407,
-    8796466406,
-    8796466405,
-    8796466404,
-    8796466403,
-    8796466402,
-    8796466401,
-    8796466400,
-    1132589038
-  ],
-  "tags": {
-    "aerialway": "chair_lift",
-    "aerialway:occupancy": "4",
-    "name": "Prospect Express",
-    "ref": "12"
-  }
-},
-{
-  "type": "way",
-  "id": 200763621,
-  "center": {
-    "lat": 37.9071607,
-    "lon": -107.8458490
-  },
-  "nodes": [
-    2107244645,
-    2107244643,
-    2107244642,
-    2107244641,
-    2107244639,
-    9695827294,
-    2107244637,
-    2107244636,
-    9695827257,
-    2107244633,
-    2107244632,
-    2107244631
-  ],
-  "tags": {
-    "aerialway": "chair_lift",
-    "aerialway:occupancy": "4",
-    "name": "Ute Park",
-    "ref": "11"
-  }
-},
-{
-  "type": "way",
-  "id": 200763622,
-  "center": {
-    "lat": 37.9248645,
-    "lon": -107.8525113
-  },
-  "nodes": [
-    2107244855,
-    2107244836,
-    2107244815,
-    2107244782,
-    2107244749,
-    2107244736,
-    2107244729,
-    2107244707,
-    8796467528,
-    2107244691,
-    8796467527,
-    8796467526,
-    2107244677,
-    8796467525,
-    2107244675,
-    8796467524,
-    8796467523,
-    2107244674,
-    8796467521,
-    8796467522,
-    2107244669,
-    2107244659,
-    2107244654,
-    2107244653,
-    2107244650,
-    8796467520,
-    2107244649,
-    8796467519,
-    8796467518,
-    5146559325
-  ],
-  "tags": {
-    "aerialway": "chair_lift",
-    "aerialway:occupancy": "4",
-    "name": "Sunshine Express",
-    "ref": "10"
-  }
-},
-{
-  "type": "way",
-  "id": 223628430,
-  "center": {
-    "lat": 37.9360563,
-    "lon": -107.8138704
-  },
-  "nodes": [
-    2325068586,
-    2325068606,
-    2325068598,
-    2325068592,
-    2325068595,
-    2325068596,
-    2325068590,
-    2325068604,
-    2325068589,
-    2325068602,
-    2325068586
-  ],
-  "tags": {
-    "aerialway": "station",
-    "aerialway:access": "both",
-    "building": "yes",
-    "dog": "yes",
-    "name": "Free Gondola - Telluride Station",
-    "public_transport": "station"
-  }
-},
-{
-  "type": "way",
-  "id": 230361024,
-  "center": {
-    "lat": 37.9355879,
-    "lon": -107.8136748
-  },
-  "nodes": [
-    2388729750,
-    2388729678,
-    2388729491,
-    2388729546,
-    2388729750
-  ],
-  "tags": {
-    "aerialway": "station",
-    "building": "yes",
-    "name": "Oak Street Lift (8)",
-    "public_transport": "station",
-    "source": "Bing"
-  }
-},
-{
-  "type": "way",
-  "id": 230902139,
-  "center": {
-    "lat": 37.9378024,
-    "lon": -107.8517926
-  },
-  "nodes": [
-    2393335750,
-    8796467529,
-    8796467530,
-    8796467531,
-    8796467532,
-    8796467533,
-    8796467534,
-    8796467535,
-    8796467536,
-    8796467537,
-    2639863015
-  ],
-  "tags": {
-    "aerialway": "mixed_lift",
-    "aerialway:occupancy": "4",
-    "name": "Chondola",
-    "oneway": "no",
-    "ref": "1",
-    "source": "Bing"
-  }
-},
-{
-  "type": "way",
-  "id": 231039504,
-  "center": {
-    "lat": 37.9325913,
-    "lon": -107.8536705
-  },
-  "nodes": [
-    2394583660,
-    2394583665,
-    2639869719,
-    2394583661,
-    2394583656,
-    2394583651,
-    2394583646,
-    2394583648,
-    2394583642,
-    2394583657,
-    2394583662,
-    2394583660
-  ],
-  "tags": {
-    "aerialway": "station",
-    "building": "yes",
-    "name": "Market Plaza Gondola Station",
-    "public_transport": "station",
-    "source": "Bing"
-  }
-},
-{
-  "type": "way",
-  "id": 231107982,
-  "center": {
-    "lat": 37.9346012,
-    "lon": -107.8496275
-  },
-  "nodes": [
-    2639869717,
-    8796466343,
-    8796466342,
-    8796466341,
-    8796466340,
-    8796466339,
-    8796466338,
-    8796466337,
-    2395140833
-  ],
-  "tags": {
-    "aerialway": "gondola",
-    "aerialway:occupancy": "8",
-    "name": "Free Intercept Gondola",
-    "source": "Bing"
-  }
-},
-{
-  "type": "way",
-  "id": 231110871,
-  "center": {
-    "lat": 37.9366337,
-    "lon": -107.8449227
-  },
-  "nodes": [
-    2395179929,
-    2395179918,
-    2395179925,
-    2395179920,
-    2395179948,
-    2395179997,
-    2395179977,
-    2395179960,
-    2395179929
-  ],
-  "tags": {
-    "aerialway": "station",
-    "building": "yes",
-    "name": "Mountain Village Center Gondola Station",
-    "public_transport": "station",
-    "source": "Bing"
-  }
-},
-{
-  "type": "way",
-  "id": 258652557,
-  "center": {
-    "lat": 37.9329312,
-    "lon": -107.8162324
-  },
-  "nodes": [
-    2639847722,
-    8796467563,
-    8796467564,
-    8796467565,
-    8796467566,
-    8796467567,
-    8796467568,
-    8796467569,
-    8796467570,
-    8796467571,
-    2639847723
-  ],
-  "tags": {
-    "aerialway": "chair_lift",
-    "aerialway:occupancy": "2",
-    "name": "Oak Street Lift",
-    "ref": "8"
-  }
-},
-{
-  "type": "way",
-  "id": 258652724,
-  "center": {
-    "lat": 37.9223035,
-    "lon": -107.8200662
-  },
-  "nodes": [
-    2639849700,
-    8796467572,
-    8796467573,
-    8796467574,
-    8796467575,
-    8796467576,
-    8796467577,
-    8796467578,
-    8796467579,
-    8796467580,
-    8796467581,
-    8796467582,
-    8796467583,
-    8796467584,
-    13173802279,
-    8796467585,
-    13173802278,
-    8796467586,
-    8796467587,
-    8796467588,
-    8796467589,
-    8796467590,
-    8796467591,
-    8796467592,
-    8796467593
-  ],
-  "tags": {
-    "aerialway": "chair_lift",
-    "aerialway:occupancy": "4",
-    "name": "Plunge Lift",
-    "ref": "9"
-  }
-},
-{
-  "type": "way",
-  "id": 258653395,
-  "center": {
-    "lat": 37.9325415,
-    "lon": -107.8437988
-  },
-  "nodes": [
-    2639863006,
-    5142427198,
-    2639863008
-  ],
-  "tags": {
-    "aerialway": "platter",
-    "name": "Comp Hill",
-    "ref": "2"
-  }
-},
-{
-  "type": "way",
-  "id": 258653396,
-  "center": {
-    "lat": 37.9360840,
-    "lon": -107.8446042
-  },
-  "nodes": [
-    2639863010,
-    2639863012
-  ],
-  "tags": {
-    "aerialway": "magic_carpet",
-    "name": "Gondola Magic Carpet"
-  }
-},
-{
-  "type": "way",
-  "id": 258653397,
-  "center": {
-    "lat": 37.9366601,
-    "lon": -107.8487071
-  },
-  "nodes": [
-    2639863018,
-    2639863022
-  ],
-  "tags": {
-    "aerialway": "magic_carpet",
-    "name": "Meadows Magic Carpet"
-  }
-},
-{
-  "type": "way",
-  "id": 258655710,
-  "center": {
-    "lat": 37.9028839,
-    "lon": -107.8436631
-  },
-  "nodes": [
-    2639876539,
-    5154208372,
-    5139457147,
-    5139457148,
-    2639876540
-  ],
-  "tags": {
-    "aerialway": "platter",
-    "name": "Lynx",
-    "ref": "13"
-  }
-}
-
+    {
+      "type": "node",
+      "id": 178065905,
+      "lat": 37.9371627,
+      "lon": -107.8207559,
+      "tags": {
+        "aerialway": "station"
+      }
+    },
+    {
+      "type": "node",
+      "id": 178092087,
+      "lat": 37.9212559,
+      "lon": -107.8392389,
+      "tags": {
+        "aerialway": "station"
+      }
+    },
+    {
+      "type": "node",
+      "id": 178097227,
+      "lat": 37.9360337,
+      "lon": -107.813963,
+      "tags": {
+        "aerialway": "station",
+        "public_transport": "station"
+      }
+    },
+    {
+      "type": "node",
+      "id": 178097236,
+      "lat": 37.9313189,
+      "lon": -107.8330106,
+      "tags": {
+        "aerialway": "station",
+        "name": "San Sophia Station",
+        "public_transport": "station"
+      }
+    },
+    {
+      "type": "node",
+      "id": 178097243,
+      "lat": 37.9366124,
+      "lon": -107.8448842,
+      "tags": {
+        "aerialway": "station",
+        "public_transport": "station"
+      }
+    },
+    {
+      "type": "node",
+      "id": 1130123110,
+      "lat": 37.9239303,
+      "lon": -107.8306629,
+      "tags": {
+        "aerialway": "station",
+        "public_transport": "station"
+      }
+    },
+    {
+      "type": "node",
+      "id": 1130123114,
+      "lat": 37.9361723,
+      "lon": -107.8455107,
+      "tags": {
+        "aerialway": "station",
+        "public_transport": "station"
+      }
+    },
+    {
+      "type": "node",
+      "id": 1130135785,
+      "lat": 37.9105575,
+      "lon": -107.822077,
+      "tags": {
+        "aerialway": "station",
+        "public_transport": "station"
+      }
+    },
+    {
+      "type": "node",
+      "id": 1130169377,
+      "lat": 37.910167,
+      "lon": -107.8296221,
+      "tags": {
+        "aerialway": "station"
+      }
+    },
+    {
+      "type": "node",
+      "id": 1130169386,
+      "lat": 37.9148716,
+      "lon": -107.8299958,
+      "tags": {
+        "aerialway": "station"
+      }
+    },
+    {
+      "type": "node",
+      "id": 1130187476,
+      "lat": 37.9047986,
+      "lon": -107.8351481,
+      "tags": {
+        "aerialway": "station"
+      }
+    },
+    {
+      "type": "node",
+      "id": 1130201253,
+      "lat": 37.9028588,
+      "lon": -107.8192505,
+      "tags": {
+        "aerialway": "station"
+      }
+    },
+    {
+      "type": "node",
+      "id": 1132619757,
+      "lat": 37.9054568,
+      "lon": -107.8361647,
+      "tags": {
+        "aerialway": "station"
+      }
+    },
+    {
+      "type": "node",
+      "id": 1397541404,
+      "lat": 37.9195169,
+      "lon": -107.7676757,
+      "tags": {
+        "information": "yes",
+        "name": "One way above this point",
+        "tourism": "information"
+      }
+    },
+    {
+      "type": "node",
+      "id": 1397542173,
+      "lat": 37.9225127,
+      "lon": -107.7667821,
+      "tags": {
+        "amenity": "parking",
+        "parking": "surface"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2107244631,
+      "lat": 37.904029,
+      "lon": -107.844175,
+      "tags": {
+        "aerialway": "station",
+        "public_transport": "station"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2107244645,
+      "lat": 37.9102923,
+      "lon": -107.847523,
+      "tags": {
+        "aerialway": "station",
+        "public_transport": "station"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2107244855,
+      "lat": 37.9389994,
+      "lon": -107.8565066,
+      "tags": {
+        "aerialway": "station",
+        "public_transport": "station"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2389934528,
+      "lat": 37.9487641,
+      "lon": -107.8816762,
+      "tags": {
+        "source": "Bing",
+        "tourism": "viewpoint"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2396509388,
+      "lat": 37.9197531,
+      "lon": -107.8831229,
+      "tags": {
+        "source": "Bing",
+        "tourism": "viewpoint"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2455846504,
+      "lat": 37.9368296,
+      "lon": -107.810647,
+      "tags": {
+        "addr:city": "Telluride",
+        "addr:housenumber": "110",
+        "addr:postcode": "81435",
+        "addr:street": "East Colorado Avenue",
+        "amenity": "restaurant",
+        "cuisine": "pizza",
+        "name": "Brown Dog Pizza",
+        "phone": "+1-970-728-8046",
+        "website": "https://browndogpizza.net/"
+      }
+    },
+    {
+      "type": "node",
+      "id": 3177990965,
+      "lat": 37.9348957,
+      "lon": -107.8061027,
+      "tags": {
+        "tourism": "information"
+      }
+    },
+    {
+      "type": "node",
+      "id": 4239808965,
+      "lat": 37.9514715,
+      "lon": -107.8775965,
+      "tags": {
+        "description": "Great viewpoint for sunset photos.",
+        "tourism": "viewpoint"
+      }
+    },
+    {
+      "type": "node",
+      "id": 4423823603,
+      "lat": 37.9369212,
+      "lon": -107.8122552,
+      "tags": {
+        "addr:city": "Telluride",
+        "addr:housenumber": "127",
+        "addr:postcode": "81435",
+        "addr:state": "CO",
+        "addr:street": "South Fir Street",
+        "amenity": "restaurant",
+        "name": "Baked in Telluride"
+      }
+    },
+    {
+      "type": "node",
+      "id": 4423823605,
+      "lat": 37.9381747,
+      "lon": -107.8117363,
+      "tags": {
+        "addr:city": "Telluride",
+        "addr:housenumber": "131",
+        "addr:postcode": "81435",
+        "addr:state": "CO",
+        "addr:street": "North Fir Street",
+        "amenity": "restaurant",
+        "cuisine": "american",
+        "name": "Cornerhouse Grille",
+        "opening_hours": "Mo -Su 11:30-24:00",
+        "takeaway": "yes"
+      }
+    },
+    {
+      "type": "node",
+      "id": 4423878954,
+      "lat": 37.9360582,
+      "lon": -107.813873,
+      "tags": {
+        "aerialway": "station",
+        "aerialway:access": "both",
+        "aerialway:summer:access": "both",
+        "name": "Telluride Gondola Station",
+        "opening_hours": "07:00-24:00",
+        "public_transport": "station"
+      }
+    },
+    {
+      "type": "node",
+      "id": 4592107434,
+      "lat": 37.936622,
+      "lon": -107.8146166,
+      "tags": {
+        "amenity": "parking",
+        "capacity": "20",
+        "name": "gondola parking",
+        "parking": "surface"
+      }
+    },
+    {
+      "type": "node",
+      "id": 5143689323,
+      "lat": 37.9295894,
+      "lon": -107.8322897,
+      "tags": {
+        "aerialway": "station",
+        "public_transport": "station"
+      }
+    },
+    {
+      "type": "node",
+      "id": 5146559325,
+      "lat": 37.9107295,
+      "lon": -107.848516,
+      "tags": {
+        "aerialway": "station",
+        "public_transport": "station"
+      }
+    },
+    {
+      "type": "node",
+      "id": 6096753644,
+      "lat": 37.9500629,
+      "lon": -107.851063,
+      "tags": {
+        "amenity": "parking_space",
+        "capacity": "15",
+        "description": "Private Homeowners Parking Lot"
+      }
+    },
+    {
+      "type": "node",
+      "id": 6584439041,
+      "lat": 37.9357298,
+      "lon": -107.8134178,
+      "tags": {
+        "addr:city": "Telluride",
+        "addr:postcode": "81435",
+        "amenity": "restaurant",
+        "name": "Oak Street"
+      }
+    },
+    {
+      "type": "node",
+      "id": 6739939945,
+      "lat": 37.922087,
+      "lon": -107.7657951,
+      "tags": {
+        "amenity": "parking",
+        "parking": "surface"
+      }
+    },
+    {
+      "type": "node",
+      "id": 7630731885,
+      "lat": 37.9393792,
+      "lon": -107.8192133,
+      "tags": {
+        "amenity": "restaurant",
+        "cuisine": "american;tapas",
+        "name": "The Tunnel"
+      }
+    },
+    {
+      "type": "node",
+      "id": 7818093645,
+      "lat": 37.9371703,
+      "lon": -107.8102612,
+      "tags": {
+        "amenity": "restaurant",
+        "name": "La cocina de Luz"
+      }
+    },
+    {
+      "type": "node",
+      "id": 8032954491,
+      "lat": 37.92993,
+      "lon": -107.774232,
+      "tags": {
+        "amenity": "parking",
+        "parking": "surface"
+      }
+    },
+    {
+      "type": "node",
+      "id": 8669658818,
+      "lat": 37.9211595,
+      "lon": -107.756,
+      "tags": {
+        "name": "One way below this point",
+        "tourism": "information"
+      }
+    },
+    {
+      "type": "node",
+      "id": 8796466392,
+      "lat": 37.9026075,
+      "lon": -107.8237664,
+      "tags": {
+        "aerialway": "station",
+        "public_transport": "station"
+      }
+    },
+    {
+      "type": "node",
+      "id": 8796467593,
+      "lat": 37.9144204,
+      "lon": -107.8219651,
+      "tags": {
+        "aerialway": "station",
+        "public_transport": "station"
+      }
+    },
+    {
+      "type": "node",
+      "id": 11108326698,
+      "lat": 37.9369946,
+      "lon": -107.8096152,
+      "tags": {
+        "addr:city": "Telluride",
+        "addr:housenumber": "201",
+        "addr:postcode": "81435",
+        "addr:state": "CO",
+        "addr:street": "East Colorado Avenue",
+        "amenity": "cafe",
+        "cuisine": "sandwich",
+        "internet_access": "no",
+        "name": "The Butcher & The Baker",
+        "opening_hours": "Mo-Sa 07:00-20:00; Su 08:00-14:00",
+        "outdoor_seating": "yes",
+        "phone": "+1 970-728-2899",
+        "website": "https://butcherandbakercafe.com"
+      }
+    },
+    {
+      "type": "node",
+      "id": 11108357722,
+      "lat": 37.9372571,
+      "lon": -107.8109119,
+      "tags": {
+        "amenity": "bicycle_parking",
+        "bicycle_parking": "wall_loops",
+        "covered": "no"
+      }
+    },
+    {
+      "type": "node",
+      "id": 11108365169,
+      "lat": 37.9376677,
+      "lon": -107.8125063,
+      "tags": {
+        "amenity": "bicycle_parking",
+        "bicycle_parking": "wall_loops",
+        "covered": "no"
+      }
+    },
+    {
+      "type": "node",
+      "id": 11108387157,
+      "lat": 37.9363057,
+      "lon": -107.8112938,
+      "tags": {
+        "access": "yes",
+        "amenity": "bicycle_parking"
+      }
+    },
+    {
+      "type": "node",
+      "id": 11983446904,
+      "lat": 37.9374631,
+      "lon": -107.812515,
+      "tags": {
+        "amenity": "restaurant",
+        "cuisine": "mexican",
+        "name": "Esperanza's"
+      }
+    },
+    {
+      "type": "node",
+      "id": 11983446914,
+      "lat": 37.9372773,
+      "lon": -107.8120023,
+      "tags": {
+        "amenity": "restaurant",
+        "name": "Alpinist & the Goat"
+      }
+    },
+    {
+      "type": "node",
+      "id": 11983446917,
+      "lat": 37.9373675,
+      "lon": -107.8110727,
+      "tags": {
+        "amenity": "restaurant",
+        "cuisine": "sushi",
+        "name": "Pescado"
+      }
+    },
+    {
+      "type": "node",
+      "id": 11983446931,
+      "lat": 37.9375033,
+      "lon": -107.8126728,
+      "tags": {
+        "information": "office",
+        "name": "Visitors Center",
+        "tourism": "information"
+      }
+    },
+    {
+      "type": "node",
+      "id": 11983446945,
+      "lat": 37.9370631,
+      "lon": -107.8098763,
+      "tags": {
+        "amenity": "restaurant",
+        "bar": "yes",
+        "name": "Wood Ear"
+      }
+    },
+    {
+      "type": "node",
+      "id": 11983446954,
+      "lat": 37.9373317,
+      "lon": -107.8109011,
+      "tags": {
+        "amenity": "restaurant",
+        "bar": "yes",
+        "name": "Florida Saloon"
+      }
+    },
+    {
+      "type": "node",
+      "id": 12069051151,
+      "lat": 37.9365426,
+      "lon": -107.8456994,
+      "tags": {
+        "information": "map",
+        "tourism": "information"
+      }
+    },
+    {
+      "type": "node",
+      "id": 12069073453,
+      "lat": 37.9365932,
+      "lon": -107.845732,
+      "tags": {
+        "amenity": "bicycle_parking",
+        "bicycle_parking": "wall_loops",
+        "capacity": "36",
+        "covered": "no"
+      }
+    },
+    {
+      "type": "node",
+      "id": 12069078762,
+      "lat": 37.936389,
+      "lon": -107.8457982,
+      "tags": {
+        "information": "map",
+        "tourism": "information"
+      }
+    },
+    {
+      "type": "node",
+      "id": 12069085797,
+      "lat": 37.9367669,
+      "lon": -107.8465689,
+      "tags": {
+        "amenity": "bicycle_parking",
+        "bicycle_parking": "stands",
+        "capacity": "7",
+        "covered": "no"
+      }
+    },
+    {
+      "type": "node",
+      "id": 12069095069,
+      "lat": 37.9358182,
+      "lon": -107.8471408,
+      "tags": {
+        "information": "map",
+        "tourism": "information"
+      }
+    },
+    {
+      "type": "node",
+      "id": 12069095185,
+      "lat": 37.9368567,
+      "lon": -107.8463673,
+      "tags": {
+        "information": "map",
+        "tourism": "information"
+      }
+    },
+    {
+      "type": "node",
+      "id": 12069116417,
+      "lat": 37.9382003,
+      "lon": -107.846298,
+      "tags": {
+        "information": "map",
+        "tourism": "information"
+      }
+    },
+    {
+      "type": "node",
+      "id": 12069120252,
+      "lat": 37.9300963,
+      "lon": -107.8320932,
+      "tags": {
+        "board_type": "geology",
+        "information": "board",
+        "tourism": "information"
+      }
+    },
+    {
+      "type": "node",
+      "id": 12069126383,
+      "lat": 37.9371448,
+      "lon": -107.8460721,
+      "tags": {
+        "amenity": "bicycle_parking",
+        "bicycle_parking": "stands",
+        "capacity": "5",
+        "covered": "no"
+      }
+    },
+    {
+      "type": "node",
+      "id": 12069137164,
+      "lat": 37.9366676,
+      "lon": -107.8471775,
+      "tags": {
+        "amenity": "bicycle_parking",
+        "bicycle_parking": "stands",
+        "capacity": "7",
+        "covered": "no"
+      }
+    },
+    {
+      "type": "node",
+      "id": 12069173155,
+      "lat": 37.931092,
+      "lon": -107.8327881,
+      "tags": {
+        "amenity": "toilets",
+        "wheelchair": "yes"
+      }
+    },
+    {
+      "type": "node",
+      "id": 12181171224,
+      "lat": 37.9293596,
+      "lon": -107.8326455,
+      "tags": {
+        "information": "guidepost",
+        "operator": "Telluride",
+        "ski": "yes",
+        "tourism": "information"
+      }
+    },
+    {
+      "type": "node",
+      "id": 12181171272,
+      "lat": 37.9340367,
+      "lon": -107.8117786,
+      "tags": {
+        "board_type": "welcome_sign",
+        "information": "board",
+        "tourism": "information"
+      }
+    },
+    {
+      "type": "node",
+      "id": 12181171289,
+      "lat": 37.934188,
+      "lon": -107.8048211,
+      "tags": {
+        "amenity": "toilets"
+      }
+    },
+    {
+      "type": "node",
+      "id": 12388989050,
+      "lat": 37.9367125,
+      "lon": -107.8464422,
+      "tags": {
+        "amenity": "cafe",
+        "name": "Telluride Coffee Company"
+      }
+    },
+    {
+      "type": "node",
+      "id": 12551293404,
+      "lat": 37.9368683,
+      "lon": -107.8126236,
+      "tags": {
+        "addr:city": "Telluride",
+        "addr:housenumber": "219",
+        "addr:postcode": "81435",
+        "addr:state": "CO",
+        "addr:street": "West Pacific Avenue",
+        "amenity": "restaurant",
+        "cuisine": "french",
+        "name": "Petite Maison",
+        "phone": "+1-970-728-7020",
+        "source": "esri/USA_NAD_Addresses",
+        "website": "https://petitemaisontelluride.com/"
+      }
+    },
+    {
+      "type": "node",
+      "id": 13163020201,
+      "lat": 37.9359524,
+      "lon": -107.8138777,
+      "tags": {
+        "amenity": "toilets"
+      }
+    }
   ]
 }
