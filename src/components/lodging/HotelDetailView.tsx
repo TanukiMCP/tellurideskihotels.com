@@ -150,7 +150,8 @@ export function HotelDetailView({ hotel, checkIn, checkOut, adults, children = 0
             <ImageWithLoading
               src={allImages[0]}
               alt={hotel.name || 'Hotel'}
-              className="w-full h-[500px] object-cover rounded-xl shadow-lg"
+              className="w-full h-[500px] rounded-xl shadow-lg"
+              priority={true}
             />
               <button
                 onClick={() => setFullImageView(allImages[0])}
@@ -170,7 +171,8 @@ export function HotelDetailView({ hotel, checkIn, checkOut, adults, children = 0
               <ImageWithLoading
                 src={allImages[0]}
                 alt={hotel.name || 'Hotel'}
-                    className="w-full h-96 object-cover rounded-lg shadow-md cursor-pointer"
+                    className="w-full h-96 rounded-lg shadow-md cursor-pointer"
+                priority={true}
               />
                   <button
                     onClick={() => setFullImageView(allImages[0])}
@@ -190,7 +192,7 @@ export function HotelDetailView({ hotel, checkIn, checkOut, adults, children = 0
               <ImageWithLoading
                 src={imgUrl}
                 alt={`${hotel.name} - Image ${index + 2}`}
-                    className="w-full h-48 object-cover rounded-lg shadow-md cursor-pointer"
+                    className="w-full h-48 rounded-lg shadow-md cursor-pointer"
               />
                   <button
                     onClick={() => setFullImageView(imgUrl)}

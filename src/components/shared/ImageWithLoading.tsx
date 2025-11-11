@@ -6,9 +6,10 @@ export interface ImageWithLoadingProps {
   alt: string;
   className?: string;
   onError?: () => void;
+  priority?: boolean; // If true, load eagerly instead of lazy
 }
 
-export function ImageWithLoading({ src, alt, className, onError }: ImageWithLoadingProps) {
+export function ImageWithLoading({ src, alt, className, onError, priority = false }: ImageWithLoadingProps) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
 
@@ -64,17 +65,18 @@ export function ImageWithLoading({ src, alt, className, onError }: ImageWithLoad
   return (
     <div className={`relative ${className}`}>
       {loading && (
-        <div className="absolute inset-0 flex items-center justify-center bg-gray-100">
+        <div className="absolute inset-0 flex items-center justify-center bg-gray-100 z-10">
           <LoadingSpinner size="sm" />
         </div>
       )}
       <img
         src={src}
         alt={alt}
-        className={`${className} ${loading ? 'opacity-0' : 'opacity-100'} transition-opacity duration-300`}
+        className={`w-full h-full object-cover ${loading ? 'opacity-0' : 'opacity-100'} transition-opacity duration-300`}
         onLoad={handleLoad}
         onError={handleError}
-        loading="lazy"
+        loading={priority ? 'eager' : 'lazy'}
+        fetchpriority={priority ? 'high' : 'auto'}
       />
     </div>
   );
