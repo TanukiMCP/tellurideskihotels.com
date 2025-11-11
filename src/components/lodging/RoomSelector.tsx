@@ -127,10 +127,18 @@ export function RoomSelector({
     <div className="space-y-4">
       <h3 className="text-2xl font-bold text-neutral-900 mb-6">Select Your Room</h3>
       {rooms.map((rate) => {
-        const price = rate.total?.amount || rate.net?.amount || 0;
-        const currency = rate.total?.currency || rate.net?.currency || 'USD';
-        const pricePerNight = nights > 0 ? price / nights : price;
-        const isRefundable = rate.cancellation_policies?.some(p => p.type === 'FREE_CANCELLATION');
+        // Use SSP (public price) for display - compliance requirement
+        const displayPrice = rate.total?.amount || 0;
+        const currency = rate.total?.currency || 'USD';
+        const pricePerNight = rate.net?.amount || 0;
+        
+        // Extract refundable status from cancellation policy
+        const cancellationPolicy = rate.cancellation_policy;
+        const isRefundable = cancellationPolicy?.refundableTag === 'RFN' || 
+                            rate.cancellation_policies?.some(p => p.type === 'FREE_CANCELLATION');
+        
+        // Check for excluded fees (pay at property)
+        const hasExcludedFees = rate.taxes_and_fees && rate.taxes_and_fees.excluded > 0;
 
         return (
           <div 
@@ -203,11 +211,27 @@ export function RoomSelector({
                 <div className="mb-4">
                   <div className="text-sm text-neutral-600 mb-1">Total for {nights} {nights === 1 ? 'night' : 'nights'}</div>
                   <div className="text-3xl lg:text-4xl font-bold text-primary-600 mb-2">
-                    {formatCurrency(price, currency)}
+                    {formatCurrency(displayPrice, currency)}
                   </div>
                   <div className="text-sm text-neutral-600">
                     {formatCurrency(pricePerNight, currency)} per night
                   </div>
+                  
+                  {/* Tax & Fee Information */}
+                  {rate.taxes_and_fees && (
+                    <div className="mt-3 pt-3 border-t border-neutral-200 space-y-1">
+                      {rate.taxes_and_fees.included > 0 && (
+                        <div className="text-xs text-neutral-500">
+                          Includes {formatCurrency(rate.taxes_and_fees.included, currency)} in taxes & fees
+                        </div>
+                      )}
+                      {hasExcludedFees && (
+                        <div className="text-xs text-amber-600 font-medium">
+                          + {formatCurrency(rate.taxes_and_fees.excluded, currency)} due at property
+                        </div>
+                      )}
+                    </div>
+                  )}
                 </div>
 
                 <div className="space-y-3">
@@ -232,7 +256,7 @@ export function RoomSelector({
                       nights,
                     }}
                     pricing={{
-                      total: price,
+                      total: displayPrice,
                       perNight: pricePerNight,
                       currency,
                     }}

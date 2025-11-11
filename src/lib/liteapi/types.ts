@@ -68,19 +68,39 @@ export interface LiteAPIRate {
   room_name: string;
   room_description?: string;
   offer_id?: string;
+  mapped_room_id?: number; // Links to room.id in hotel details
   checkin?: string;
   checkout?: string;
   adults?: number;
   children?: number;
+  // Public-facing prices (SSP - Suggested Selling Price)
   total?: {
-    amount?: number;
+    amount?: number; // Total SSP for entire stay
     currency?: string;
   };
   net?: {
-    amount?: number;
+    amount?: number; // Per-night SSP
     currency?: string;
   };
-  board_type?: string;
+  // Internal prices (what customer actually pays)
+  internal_price?: {
+    per_night: number;
+    total: number;
+    currency: string;
+  };
+  // Tax and fee breakdown
+  taxes_and_fees?: {
+    included: number; // Already in price
+    excluded: number; // Pay at property
+    details: Array<{
+      included: boolean;
+      description: string;
+      amount: number;
+      currency: string;
+    }>;
+  };
+  board_type?: string; // "Room Only", "Breakfast Included", etc.
+  board_code?: string; // "RO", "BB", "BI", etc.
   cancellation_policy?: any;
   cancellation_policies?: Array<{
     type?: string;

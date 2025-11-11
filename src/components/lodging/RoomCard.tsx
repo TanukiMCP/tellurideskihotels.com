@@ -36,17 +36,25 @@ export function RoomCard({ rate, nights, onReserve, available, hotel, booking }:
   const roomName = rate.room_name || 'Standard Room';
   // Extract room images from rate data (if available)
   const images: string[] = (rate as any).images?.map((img: any) => img.url || img).filter(Boolean) || [];
-  const totalPrice = rate.total?.amount || 0;
+  
+  // Use SSP (Suggested Selling Price) for public display - compliance requirement
+  const displayTotalPrice = rate.total?.amount || 0;
+  const displayPricePerNight = rate.net?.amount || 0;
   const currency = rate.total?.currency || 'USD';
-  const pricePerNight = nights > 0 ? totalPrice / nights : totalPrice;
+  
+  // Check for excluded fees (pay at property)
+  const hasExcludedFees = rate.taxes_and_fees && rate.taxes_and_fees.excluded > 0;
+  const excludedFeesAmount = rate.taxes_and_fees?.excluded || 0;
   
   // Parse room features from description or use defaults
   const sqFt = 400;
   const maxOccupancy = rate.max_occupancy || 2;
   const bedConfig = rate.bed_types?.[0]?.type || 'Standard Bed';
   
-  // Determine refund policy
-  const isRefundable = rate.cancellation_policy?.free_cancellation_until != null;
+  // Determine refund policy from cancellationPolicies
+  const cancellationPolicy = rate.cancellation_policy;
+  const isRefundable = cancellationPolicy?.refundableTag === 'RFN' || 
+                       rate.cancellation_policy?.free_cancellation_until != null;
   
   const nextImage = () => {
     setCurrentImageIndex((prev) => (prev + 1) % images.length);
@@ -154,15 +162,34 @@ export function RoomCard({ rate, nights, onReserve, available, hotel, booking }:
             {/* Price Display */}
             <div className="mb-4">
               <div className="text-2xl font-bold text-neutral-900 mb-1">
-                {formatCurrency(pricePerNight, currency)} <span className="text-base font-normal text-neutral-600">nightly</span>
+                {formatCurrency(displayPricePerNight, currency)} <span className="text-base font-normal text-neutral-600">nightly</span>
               </div>
               <div className="text-lg font-semibold text-neutral-900">
-                {formatCurrency(totalPrice, currency)} <span className="text-sm font-normal text-neutral-600">total</span>
+                {formatCurrency(displayTotalPrice, currency)} <span className="text-sm font-normal text-neutral-600">total</span>
               </div>
-              <div className="flex items-center gap-1 text-sm text-neutral-600 mt-2">
-                <Check className="w-4 h-4 text-green-600" />
-                <span>Total includes taxes and fees</span>
-              </div>
+              
+              {/* Tax & Fee Information */}
+              {rate.taxes_and_fees ? (
+                <div className="mt-2 space-y-1">
+                  {rate.taxes_and_fees.included > 0 && (
+                    <div className="flex items-center gap-1 text-xs text-neutral-600">
+                      <Check className="w-3.5 h-3.5 text-green-600" />
+                      <span>Includes {formatCurrency(rate.taxes_and_fees.included, currency)} in taxes & fees</span>
+                    </div>
+                  )}
+                  {hasExcludedFees && (
+                    <div className="text-xs text-amber-600 font-medium">
+                      + {formatCurrency(excludedFeesAmount, currency)} due at property
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <div className="flex items-center gap-1 text-sm text-neutral-600 mt-2">
+                  <Check className="w-4 h-4 text-green-600" />
+                  <span>Total includes taxes and fees</span>
+                </div>
+              )}
+              
               {available && available <= 3 && (
                 <div className="text-sm text-red-600 font-medium mt-2">
                   We have {available} left
@@ -185,8 +212,8 @@ export function RoomCard({ rate, nights, onReserve, available, hotel, booking }:
                     nights,
                   }}
                   pricing={{
-                    total: totalPrice,
-                    perNight: pricePerNight,
+                    total: displayTotalPrice,
+                    perNight: displayPricePerNight,
                     currency,
                   }}
                   className="w-full"

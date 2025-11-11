@@ -52,45 +52,73 @@ function transformRateData(hotelData: any, nights: number): Array<{
     
     rates.forEach((rate: any) => {
       try {
-        // LiteAPI pricing structure (VERIFIED):
-        // When margin=15 is sent:
-        // - retailRate.total[0].amount = Hotel's base cost (what LiteAPI pays hotel)
-        // - We need to ADD our margin on top to get customer price
-        // OR use suggestedSellingPrice if present (which already includes markup)
+        // LiteAPI pricing structure per documentation:
+        // https://docs.liteapi.travel/docs/hotel-rates-api-json-data-structure
+        // 
+        // retailRate.total[0].amount = What customer MUST pay (includes margin + included taxes/fees)
+        // retailRate.suggestedSellingPrice[0].amount = Public SSP (what hotel expects for public display)
+        // retailRate.initialPrice[0].amount = Base hotel price (before discounts)
+        //
+        // For PUBLIC sites: Display suggestedSellingPrice (SSP compliance)
+        // For CLOSED USER GROUPS: Can display total (discounted price)
+        //
+        // Since we're a public site, we MUST use suggestedSellingPrice
         
-        // CORRECT: Use suggestedSellingPrice FIRST (already includes margin)
-        // Handle both array and object format
-        const suggestedData = Array.isArray(rate.retailRate?.suggestedSellingPrice)
-          ? rate.retailRate.suggestedSellingPrice[0]
-          : rate.retailRate?.suggestedSellingPrice;
         const totalData = Array.isArray(rate.retailRate?.total) 
           ? rate.retailRate.total[0] 
           : rate.retailRate?.total;
+        const suggestedData = Array.isArray(rate.retailRate?.suggestedSellingPrice)
+          ? rate.retailRate.suggestedSellingPrice[0]
+          : rate.retailRate?.suggestedSellingPrice;
+        const initialData = Array.isArray(rate.retailRate?.initialPrice)
+          ? rate.retailRate.initialPrice[0]
+          : rate.retailRate?.initialPrice;
           
-        // Priority: suggestedSellingPrice > total
-        const totalPrice = suggestedData?.amount || totalData?.amount || 0;
-        const currency = suggestedData?.currency || totalData?.currency || 'USD';
+        // Use SSP for public display (compliance requirement)
+        const publicPrice = suggestedData?.amount || totalData?.amount || 0;
+        const internalPrice = totalData?.amount || 0; // What customer actually pays
+        const currency = totalData?.currency || suggestedData?.currency || 'USD';
         
-        // Calculate per-night price
-        const pricePerNight = nights > 0 ? totalPrice / nights : totalPrice;
+        // Calculate per-night prices
+        const publicPricePerNight = nights > 0 ? publicPrice / nights : publicPrice;
+        const internalPricePerNight = nights > 0 ? internalPrice / nights : internalPrice;
+
+        // Extract taxes and fees information
+        const taxesAndFees = rate.retailRate?.taxesAndFees || [];
+        const includedFees = taxesAndFees.filter((fee: any) => fee.included).reduce((sum: number, fee: any) => sum + (fee.amount || 0), 0);
+        const excludedFees = taxesAndFees.filter((fee: any) => !fee.included).reduce((sum: number, fee: any) => sum + (fee.amount || 0), 0);
 
         // Only process if price is valid
-        if (totalPrice > 0) {
+        if (publicPrice > 0 && internalPrice > 0) {
           const transformedRate = {
             rate_id: rate.rateId,
             room_id: roomType.roomTypeId,
             room_name: rate.name || roomType.name || 'Standard Room',
             offer_id: roomType.offerId, // Required for prebook
             mapped_room_id: rate.mappedRoomId, // For linking to room photos (mappedRoomId is in rate, not roomType)
+            // Public-facing price (SSP - what we display)
             net: {
-              amount: pricePerNight, // Per-night price WITH margin
+              amount: publicPricePerNight, // Per-night SSP
               currency,
             },
             total: {
-              amount: totalPrice, // Total price WITH margin
+              amount: publicPrice, // Total SSP for stay
               currency,
             },
+            // Internal prices (what customer actually pays at checkout)
+            internal_price: {
+              per_night: internalPricePerNight,
+              total: internalPrice,
+              currency,
+            },
+            // Tax and fee breakdown
+            taxes_and_fees: {
+              included: includedFees,
+              excluded: excludedFees, // Pay at property
+              details: taxesAndFees,
+            },
             board_type: rate.boardName || 'Room Only',
+            board_code: rate.boardType,
             cancellation_policy: rate.cancellationPolicies,
             cancellation_policies: (() => {
               // Handle cancellationPolicies - it can be an object or array
