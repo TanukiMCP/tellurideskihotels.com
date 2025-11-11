@@ -151,10 +151,11 @@ export async function getHotelDetails(hotelId: string): Promise<LiteAPIHotel> {
   });
   
   // Transform hotelImages correctly per docs: url, urlHd, caption, order, defaultImage
+  // Prefer urlHd (HD quality) over url (standard quality)
   const hotelImages = (hotel.hotelImages || [])
     .map((img: any) => ({
       type: img.defaultImage ? 'main' : 'gallery',
-      url: img.url || '', // Standard URL
+      url: img.urlHd || img.url || '', // Prefer HD URL, fallback to standard URL
       description: img.caption || '',
       order: img.order || 0,
       defaultImage: img.defaultImage || false,
@@ -176,9 +177,10 @@ export async function getHotelDetails(hotelId: string): Promise<LiteAPIHotel> {
   
   // Transform rooms with correct photo URLs
   // CRITICAL: LiteAPI returns room.roomName not room.name (per docs)
+  // Per API docs: prefer hd_url, fallback to url, then failoverPhoto
   const rooms = (hotel.rooms || []).map((room: any) => {
     const roomPhotos = (room.photos || [])
-      .map((photo: any) => photo.hd_url || photo.url) // Prefer HD version
+      .map((photo: any) => photo.hd_url || photo.url || photo.failoverPhoto) // Prefer HD, then standard, then failover
       .filter((url: string) => url && url.trim() !== '');
     
     return {
