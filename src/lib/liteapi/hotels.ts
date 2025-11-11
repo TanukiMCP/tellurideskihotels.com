@@ -148,18 +148,27 @@ export async function getHotelDetails(hotelId: string): Promise<LiteAPIHotel> {
     name: hotel.name,
     imagesCount: hotel.hotelImages?.length || 0,
     roomsCount: hotel.rooms?.length || 0,
+    sampleImage: hotel.hotelImages?.[0] ? {
+      url: hotel.hotelImages[0].url,
+      urlHd: hotel.hotelImages[0].urlHd,
+      defaultImage: hotel.hotelImages[0].defaultImage,
+    } : null,
   });
   
   // Transform hotelImages correctly per docs: url, urlHd, caption, order, defaultImage
   // Prefer urlHd (HD quality) over url (standard quality)
   const hotelImages = (hotel.hotelImages || [])
-    .map((img: any) => ({
-      type: img.defaultImage ? 'main' : 'gallery',
-      url: img.urlHd || img.url || '', // Prefer HD URL, fallback to standard URL
-      description: img.caption || '',
-      order: img.order || 0,
-      defaultImage: img.defaultImage || false,
-    }))
+    .map((img: any) => {
+      // Use HD URL if available, otherwise fallback to standard URL
+      const imageUrl = img.urlHd || img.url || '';
+      return {
+        type: img.defaultImage ? 'main' : 'gallery',
+        url: imageUrl,
+        description: img.caption || '',
+        order: img.order || 0,
+        defaultImage: img.defaultImage || false,
+      };
+    })
     .filter((img: any) => img.url && img.url.trim() !== '')
     // Sort by: defaultImage first, then by order
     .sort((a: any, b: any) => {
@@ -173,6 +182,12 @@ export async function getHotelDetails(hotelId: string): Promise<LiteAPIHotel> {
     firstUrl: hotelImages[0]?.url,
     allUrls: hotelImages.slice(0, 3).map((img: any) => img.url),
     hasDefaultImage: hotelImages.some((img: any) => img.defaultImage),
+    urlSources: hotel.hotelImages?.slice(0, 3).map((img: any) => ({
+      hasUrl: !!img.url,
+      hasUrlHd: !!img.urlHd,
+      url: img.url,
+      urlHd: img.urlHd,
+    })),
   });
   
   // Transform rooms with correct photo URLs

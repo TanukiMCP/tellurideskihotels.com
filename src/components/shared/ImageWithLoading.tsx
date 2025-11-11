@@ -20,7 +20,8 @@ export function ImageWithLoading({ src, alt, className, onError, onLoadSuccess, 
     setError(false);
   }, [src]);
 
-  // Timeout fallback: if image doesn't load within 10 seconds, mark as error
+  // Timeout fallback: if image doesn't load within 15 seconds, mark as error
+  // Increased timeout for slow CDN responses
   useEffect(() => {
     const timeout = setTimeout(() => {
       if (loading) {
@@ -29,7 +30,7 @@ export function ImageWithLoading({ src, alt, className, onError, onLoadSuccess, 
         setError(true);
         onError?.();
       }
-    }, 10000);
+    }, 15000);
 
     return () => clearTimeout(timeout);
   }, [loading, src, onError]);
@@ -73,7 +74,7 @@ export function ImageWithLoading({ src, alt, className, onError, onLoadSuccess, 
         onLoad={handleLoad}
         onError={handleError}
         loading={priority ? 'eager' : 'lazy'}
-        fetchPriority={priority ? 'high' : 'auto'}
+        {...(priority ? { fetchpriority: 'high' as const } : {})}
       />
     </div>
   );
