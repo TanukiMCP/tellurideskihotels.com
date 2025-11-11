@@ -592,7 +592,16 @@ export async function getMinRates(params: MinRateSearchParams): Promise<Record<s
       });
     }
 
-    console.log('[LiteAPI Min Rates] Fetched min rates for hotels:', Object.keys(minRates).length);
+    console.log('[LiteAPI Min Rates] Fetched min rates for hotels:', {
+      totalHotels: Object.keys(minRates).length,
+      hotelIds: Object.keys(minRates),
+      sampleRates: Object.entries(minRates).slice(0, 3).map(([id, rate]) => ({
+        hotelId: id,
+        price: rate.price,
+        suggestedSellingPrice: rate.suggestedSellingPrice,
+        currency: rate.currency,
+      })),
+    });
     
     return minRates;
   } catch (error) {

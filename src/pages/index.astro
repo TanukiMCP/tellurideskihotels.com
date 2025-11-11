@@ -120,11 +120,13 @@ try {
         });
       } catch (error) {
         console.error('[Homepage] Error fetching min rates:', error);
-        // Fallback: show all top hotels without prices
-        featuredHotelsData = topHotelsData.slice(0, 6);
+        // Fallback: show NO hotels rather than hotels without prices
+        // Better UX to show nothing than unprofessional cards without pricing
+        featuredHotelsData = [];
       }
     } else {
-      featuredHotelsData = topHotelsData.slice(0, 6);
+      // No hotel IDs found, show nothing
+      featuredHotelsData = [];
     }
     
     console.log('[Homepage] Loaded hotels (smart algorithm):', {
@@ -306,7 +308,7 @@ try {
           <!-- Top Hotels Grid -->
           <div class="mb-10">
             <FeaturedHotels 
-              initialHotels={topHotelsData} 
+              initialHotels={featuredHotelsData} 
               minPrices={minPrices}
               currency="USD"
               checkInDate={featuredCheckInDate}
