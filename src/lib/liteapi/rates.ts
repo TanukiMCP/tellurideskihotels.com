@@ -528,9 +528,8 @@ export async function searchHotelsWithRates(params: {
     })),
   });
 
-  // Fetch full details for ALL hotels (not just ones with availability)
-  // This ensures users can see all hotels, even if they don't have availability for these dates
-  const hotelDetailsPromises = hotelIds.map(id =>
+  // Fetch full details only for hotels with availability
+  const hotelDetailsPromises = hotelIdsWithRates.map(id =>
     getHotelDetails(id).catch(err => {
       console.error(`[LiteAPI Rates] Error fetching details for ${id}:`, err);
       return null;
@@ -541,8 +540,7 @@ export async function searchHotelsWithRates(params: {
     .filter((h): h is LiteAPIHotel => h !== null);
 
   console.log('[LiteAPI Rates] Search complete:', {
-    totalHotels: hotelDetails.length,
-    hotelsWithAvailability: hotelIdsWithRates.length,
+    hotelsWithAvailability: hotelDetails.length,
     hotelsWithPrices: Object.keys(minPrices).length,
   });
 
