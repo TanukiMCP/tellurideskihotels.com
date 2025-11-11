@@ -1,0 +1,935 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 178065905,
+        "name": "Lift Station",
+        "type": "lift-station",
+        "aerialway": "station"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -107.8207559,
+          37.9371627
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 178092087,
+        "name": "Lift Station",
+        "type": "lift-station",
+        "aerialway": "station"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -107.8392389,
+          37.9212559
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 178097227,
+        "name": "Lift Station",
+        "type": "lift-station",
+        "aerialway": "station",
+        "public_transport": "station"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -107.813963,
+          37.9360337
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 178097236,
+        "name": "San Sophia Station",
+        "type": "lift-station",
+        "aerialway": "station",
+        "public_transport": "station"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -107.8330106,
+          37.9313189
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 178097243,
+        "name": "Lift Station",
+        "type": "lift-station",
+        "aerialway": "station",
+        "public_transport": "station"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -107.8448842,
+          37.9366124
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 1130123110,
+        "name": "Lift Station",
+        "type": "lift-station",
+        "aerialway": "station",
+        "public_transport": "station"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -107.8306629,
+          37.9239303
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 1130123114,
+        "name": "Lift Station",
+        "type": "lift-station",
+        "aerialway": "station",
+        "public_transport": "station"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -107.8455107,
+          37.9361723
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 1130135785,
+        "name": "Lift Station",
+        "type": "lift-station",
+        "aerialway": "station",
+        "public_transport": "station"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -107.822077,
+          37.9105575
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 1130169377,
+        "name": "Lift Station",
+        "type": "lift-station",
+        "aerialway": "station"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -107.8296221,
+          37.910167
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 1130169386,
+        "name": "Lift Station",
+        "type": "lift-station",
+        "aerialway": "station"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -107.8299958,
+          37.9148716
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 1130187476,
+        "name": "Lift Station",
+        "type": "lift-station",
+        "aerialway": "station"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -107.8351481,
+          37.9047986
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 1130201253,
+        "name": "Lift Station",
+        "type": "lift-station",
+        "aerialway": "station"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -107.8192505,
+          37.9028588
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 1130201264,
+        "name": "Lift Station",
+        "type": "lift-station",
+        "aerialway": "station",
+        "public_transport": "station"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -107.822595,
+          37.899143
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 1132589038,
+        "name": "Lift Station",
+        "type": "lift-station",
+        "aerialway": "station",
+        "public_transport": "station"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -107.838772,
+          37.8918771
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 1132619757,
+        "name": "Lift Station",
+        "type": "lift-station",
+        "aerialway": "station"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -107.8361647,
+          37.9054568
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 2107244631,
+        "name": "Lift Station",
+        "type": "lift-station",
+        "aerialway": "station",
+        "public_transport": "station"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -107.844175,
+          37.904029
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 2107244645,
+        "name": "Lift Station",
+        "type": "lift-station",
+        "aerialway": "station",
+        "public_transport": "station"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -107.847523,
+          37.9102923
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 2107244855,
+        "name": "Lift Station",
+        "type": "lift-station",
+        "aerialway": "station",
+        "public_transport": "station"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -107.8565066,
+          37.9389994
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 2455846504,
+        "name": "Brown Dog Pizza",
+        "type": "restaurant",
+        "addr:city": "Telluride",
+        "addr:housenumber": "110",
+        "addr:postcode": "81435",
+        "addr:street": "East Colorado Avenue",
+        "amenity": "restaurant",
+        "cuisine": "pizza",
+        "phone": "+1-970-728-8046",
+        "website": "https://browndogpizza.net/"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -107.810647,
+          37.9368296
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 3177990965,
+        "name": "Information",
+        "type": "information",
+        "tourism": "information"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -107.8061027,
+          37.9348957
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 4239808965,
+        "name": "Viewpoint",
+        "type": "viewpoint",
+        "description": "Great viewpoint for sunset photos.",
+        "tourism": "viewpoint"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -107.8775965,
+          37.9514715
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 4423823603,
+        "name": "Baked in Telluride",
+        "type": "restaurant",
+        "addr:city": "Telluride",
+        "addr:housenumber": "127",
+        "addr:postcode": "81435",
+        "addr:state": "CO",
+        "addr:street": "South Fir Street",
+        "amenity": "restaurant"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -107.8122552,
+          37.9369212
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 4423823605,
+        "name": "Cornerhouse Grille",
+        "type": "restaurant",
+        "addr:city": "Telluride",
+        "addr:housenumber": "131",
+        "addr:postcode": "81435",
+        "addr:state": "CO",
+        "addr:street": "North Fir Street",
+        "amenity": "restaurant",
+        "cuisine": "american",
+        "opening_hours": "Mo -Su 11:30-24:00",
+        "takeaway": "yes"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -107.8117363,
+          37.9381747
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 4423878954,
+        "name": "Telluride Gondola Station",
+        "type": "lift-station",
+        "aerialway": "station",
+        "aerialway:access": "both",
+        "aerialway:summer:access": "both",
+        "opening_hours": "07:00-24:00",
+        "public_transport": "station"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -107.813873,
+          37.9360582
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 5143689323,
+        "name": "Lift Station",
+        "type": "lift-station",
+        "aerialway": "station",
+        "public_transport": "station"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -107.8322897,
+          37.9295894
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 5146559325,
+        "name": "Lift Station",
+        "type": "lift-station",
+        "aerialway": "station",
+        "public_transport": "station"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -107.848516,
+          37.9107295
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 6584439041,
+        "name": "Oak Street",
+        "type": "restaurant",
+        "addr:city": "Telluride",
+        "addr:postcode": "81435",
+        "amenity": "restaurant"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -107.8134178,
+          37.9357298
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 7630731885,
+        "name": "The Tunnel",
+        "type": "restaurant",
+        "amenity": "restaurant",
+        "cuisine": "american;tapas"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -107.8192133,
+          37.9393792
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 7818093645,
+        "name": "La cocina de Luz",
+        "type": "restaurant",
+        "amenity": "restaurant"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -107.8102612,
+          37.9371703
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 8796466392,
+        "name": "Lift Station",
+        "type": "lift-station",
+        "aerialway": "station",
+        "public_transport": "station"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -107.8237664,
+          37.9026075
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 8796467593,
+        "name": "Lift Station",
+        "type": "lift-station",
+        "aerialway": "station",
+        "public_transport": "station"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -107.8219651,
+          37.9144204
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 8952708892,
+        "name": "Restroom",
+        "type": "restroom",
+        "amenity": "toilets"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -107.8467281,
+          37.8847502
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 8952708893,
+        "name": "Information",
+        "type": "information",
+        "information": "guidepost",
+        "tourism": "information"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -107.846673,
+          37.8847351
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 11108326698,
+        "name": "The Butcher & The Baker",
+        "type": "cafe",
+        "addr:city": "Telluride",
+        "addr:housenumber": "201",
+        "addr:postcode": "81435",
+        "addr:state": "CO",
+        "addr:street": "East Colorado Avenue",
+        "amenity": "cafe",
+        "cuisine": "sandwich",
+        "internet_access": "no",
+        "opening_hours": "Mo-Sa 07:00-20:00; Su 08:00-14:00",
+        "outdoor_seating": "yes",
+        "phone": "+1 970-728-2899",
+        "website": "https://butcherandbakercafe.com"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -107.8096152,
+          37.9369946
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 11983446904,
+        "name": "Esperanza's",
+        "type": "restaurant",
+        "amenity": "restaurant",
+        "cuisine": "mexican"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -107.812515,
+          37.9374631
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 11983446914,
+        "name": "Alpinist & the Goat",
+        "type": "restaurant",
+        "amenity": "restaurant"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -107.8120023,
+          37.9372773
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 11983446917,
+        "name": "Pescado",
+        "type": "restaurant",
+        "amenity": "restaurant",
+        "cuisine": "sushi"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -107.8110727,
+          37.9373675
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 11983446931,
+        "name": "Visitors Center",
+        "type": "information",
+        "information": "office",
+        "tourism": "information"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -107.8126728,
+          37.9375033
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 11983446945,
+        "name": "Wood Ear",
+        "type": "restaurant",
+        "amenity": "restaurant",
+        "bar": "yes"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -107.8098763,
+          37.9370631
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 11983446954,
+        "name": "Florida Saloon",
+        "type": "restaurant",
+        "amenity": "restaurant",
+        "bar": "yes"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -107.8109011,
+          37.9373317
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 12069051151,
+        "name": "Information",
+        "type": "information",
+        "information": "map",
+        "tourism": "information"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -107.8456994,
+          37.9365426
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 12069078762,
+        "name": "Information",
+        "type": "information",
+        "information": "map",
+        "tourism": "information"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -107.8457982,
+          37.936389
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 12069095069,
+        "name": "Information",
+        "type": "information",
+        "information": "map",
+        "tourism": "information"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -107.8471408,
+          37.9358182
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 12069095185,
+        "name": "Information",
+        "type": "information",
+        "information": "map",
+        "tourism": "information"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -107.8463673,
+          37.9368567
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 12069116417,
+        "name": "Information",
+        "type": "information",
+        "information": "map",
+        "tourism": "information"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -107.846298,
+          37.9382003
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 12069120252,
+        "name": "Information",
+        "type": "information",
+        "board_type": "geology",
+        "information": "board",
+        "tourism": "information"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -107.8320932,
+          37.9300963
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 12069173155,
+        "name": "Restroom",
+        "type": "restroom",
+        "amenity": "toilets",
+        "wheelchair": "yes"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -107.8327881,
+          37.931092
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 12181171224,
+        "name": "Information",
+        "type": "information",
+        "information": "guidepost",
+        "operator": "Telluride",
+        "ski": "yes",
+        "tourism": "information"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -107.8326455,
+          37.9293596
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 12181171272,
+        "name": "Information",
+        "type": "information",
+        "board_type": "welcome_sign",
+        "information": "board",
+        "tourism": "information"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -107.8117786,
+          37.9340367
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 12181171289,
+        "name": "Restroom",
+        "type": "restroom",
+        "amenity": "toilets"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -107.8048211,
+          37.934188
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 12388989050,
+        "name": "Telluride Coffee Company",
+        "type": "cafe",
+        "amenity": "cafe"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -107.8464422,
+          37.9367125
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 12551293404,
+        "name": "Petite Maison",
+        "type": "restaurant",
+        "addr:city": "Telluride",
+        "addr:housenumber": "219",
+        "addr:postcode": "81435",
+        "addr:state": "CO",
+        "addr:street": "West Pacific Avenue",
+        "amenity": "restaurant",
+        "cuisine": "french",
+        "phone": "+1-970-728-7020",
+        "source": "esri/USA_NAD_Addresses",
+        "website": "https://petitemaisontelluride.com/"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -107.8126236,
+          37.9368683
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 13163020201,
+        "name": "Restroom",
+        "type": "restroom",
+        "amenity": "toilets"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -107.8138777,
+          37.9359524
+        ]
+      }
+    }
+  ]
+}

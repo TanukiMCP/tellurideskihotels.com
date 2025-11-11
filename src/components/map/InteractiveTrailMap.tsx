@@ -34,6 +34,11 @@ export default function InteractiveTrailMap() {
   });
 
   const [isMapLoaded, setIsMapLoaded] = useState(false);
+  
+  // Layer visibility toggles
+  const [showTrails, setShowTrails] = useState(true);
+  const [showLifts, setShowLifts] = useState(true);
+  const [showPOIs, setShowPOIs] = useState(true);
 
   // Handle map load and apply 3D terrain
   const handleMapLoad = () => {
