@@ -92,8 +92,8 @@ function transformRateData(hotelData: any, nights: number): Array<{
         const includedFees = taxesAndFees.filter((fee: any) => fee.included).reduce((sum: number, fee: any) => sum + (fee.amount || 0), 0);
         const excludedFees = taxesAndFees.filter((fee: any) => !fee.included).reduce((sum: number, fee: any) => sum + (fee.amount || 0), 0);
 
-        // Only process if we have valid SSP and retail prices
-        if (sspTotal > 0 && retailTotal > 0) {
+        // Only process if we have a valid price (SSP is required, retail is optional fallback)
+        if (sspTotal > 0) {
           const transformedRate = {
             rate_id: rate.rateId,
             room_id: roomType.roomTypeId,

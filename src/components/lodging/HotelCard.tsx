@@ -139,16 +139,27 @@ export function HotelCard({
             </Button>
           </>
         ) : (
-          <Button
-            onClick={(e) => {
-              e.stopPropagation();
-              onSelect(hotel.hotel_id);
-            }}
-            className="w-full"
-            variant="primary"
-          >
-            View Details & Check Rates
-          </Button>
+          <>
+            <div className="mb-4 pb-4 border-b border-neutral-200">
+              <div className="flex flex-col">
+                <span className="text-xs text-neutral-500 uppercase tracking-wide mb-1">Pricing</span>
+                <p className="text-sm text-neutral-600 leading-relaxed">
+                  Select dates to view current rates and availability for this property.
+                </p>
+              </div>
+            </div>
+            
+            <Button
+              onClick={(e) => {
+                e.stopPropagation();
+                onSelect(hotel.hotel_id);
+              }}
+              className="w-full"
+              variant="primary"
+            >
+              Check Availability
+            </Button>
+          </>
         )}
       </CardContent>
     </Card>
