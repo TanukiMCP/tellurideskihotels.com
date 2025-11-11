@@ -6,10 +6,11 @@ export interface ImageWithLoadingProps {
   alt: string;
   className?: string;
   onError?: () => void;
+  onLoadSuccess?: () => void;
   priority?: boolean; // If true, load eagerly instead of lazy
 }
 
-export function ImageWithLoading({ src, alt, className, onError, priority = false }: ImageWithLoadingProps) {
+export function ImageWithLoading({ src, alt, className, onError, onLoadSuccess, priority = false }: ImageWithLoadingProps) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
 
@@ -36,6 +37,7 @@ export function ImageWithLoading({ src, alt, className, onError, priority = fals
   const handleLoad = () => {
     setLoading(false);
     setError(false);
+    onLoadSuccess?.();
   };
 
   const handleError = () => {
@@ -45,21 +47,9 @@ export function ImageWithLoading({ src, alt, className, onError, priority = fals
     onError?.();
   };
 
-  // If no src provided, show error immediately
-  if (!src || src.trim() === '') {
-    return (
-      <div className={`flex flex-col items-center justify-center bg-gray-100 ${className}`}>
-        <p className="text-gray-500 text-sm font-medium">This hotel has no images provided</p>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className={`flex flex-col items-center justify-center bg-gray-100 ${className}`}>
-        <p className="text-gray-500 text-sm font-medium">This hotel has no images provided</p>
-      </div>
-    );
+  // If no src provided or error, return null (don't render anything)
+  if (!src || src.trim() === '' || error) {
+    return null;
   }
 
   return (
