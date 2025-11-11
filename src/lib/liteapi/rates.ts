@@ -519,7 +519,14 @@ export async function searchHotelsWithRates(params: {
   }
 
   const hotelIdsWithRates = Object.keys(minPrices);
-  console.log('[LiteAPI Rates] Hotels with availability:', hotelIdsWithRates.length);
+  console.log('[LiteAPI Rates] Hotels with availability:', {
+    count: hotelIdsWithRates.length,
+    hotelIds: hotelIdsWithRates,
+    samplePrices: Object.entries(minPrices).slice(0, 5).map(([id, price]) => ({
+      hotelId: id,
+      pricePerNight: price,
+    })),
+  });
 
   // Fetch full details for hotels with availability
   const hotelDetailsPromises = hotelIdsWithRates.map(id =>
