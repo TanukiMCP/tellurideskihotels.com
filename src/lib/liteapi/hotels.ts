@@ -170,8 +170,8 @@ export async function getHotelDetails(hotelId: string): Promise<LiteAPIHotel> {
   console.log('[LiteAPI Hotels] Processed hotel images:', {
     count: hotelImages.length,
     firstUrl: hotelImages[0]?.url,
-    allUrls: hotelImages.slice(0, 3).map(img => img.url),
-    hasDefaultImage: hotelImages.some(img => img.defaultImage),
+    allUrls: hotelImages.slice(0, 3).map((img: any) => img.url),
+    hasDefaultImage: hotelImages.some((img: any) => img.defaultImage),
   });
   
   // Transform rooms with correct photo URLs
@@ -197,7 +197,7 @@ export async function getHotelDetails(hotelId: string): Promise<LiteAPIHotel> {
       photosCount: rooms[0].photos.length,
       firstPhoto: rooms[0].photos[0],
     } : null,
-    totalPhotosAcrossAllRooms: rooms.reduce((sum, room) => sum + room.photos.length, 0),
+    totalPhotosAcrossAllRooms: rooms.reduce((sum: number, room: any) => sum + room.photos.length, 0),
   });
   
   // Transform API response to match our types - per LiteAPI docs

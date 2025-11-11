@@ -76,7 +76,7 @@ export function ImageWithLoading({ src, alt, className, onError, priority = fals
         onLoad={handleLoad}
         onError={handleError}
         loading={priority ? 'eager' : 'lazy'}
-        fetchpriority={priority ? 'high' : 'auto'}
+        fetchPriority={priority ? 'high' : 'auto'}
       />
     </div>
   );
