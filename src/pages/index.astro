@@ -63,35 +63,36 @@ try {
   if (hotelsResult.status === 'fulfilled') {
     allHotels = hotelsResult.value.data || [];
     
-    // Calculate top 10 hotels using balanced algorithm
+    // Get top 20 hotels using balanced algorithm to ensure we have enough with availability
     // Score = review_score × log(review_count) × amenity_factor
-    topHotelsData = getTopHotels(allHotels, 10);
+    // We fetch more than needed because not all will have availability
+    const candidateHotels = getTopHotels(allHotels, 20);
     
     // Set check-in date (7 days from now)
     const now = new Date();
     featuredCheckInDate = format(addDays(now, 7), 'yyyy-MM-dd');
     const checkOutDate = format(addDays(now, 14), 'yyyy-MM-dd');
     
-    // Fetch min rates for top hotels to check availability
-    // This ensures featured hotels actually have rooms available
-    const topHotelIds = topHotelsData.map(h => h.hotel_id);
-    if (topHotelIds.length > 0) {
+    // Fetch min rates for candidate hotels to check availability
+    // This ensures we can show the best 6 hotels that actually have rooms available
+    const candidateHotelIds = candidateHotels.map(h => h.hotel_id);
+    if (candidateHotelIds.length > 0) {
       try {
         const minRatesData = await getMinRates({
-          hotelIds: topHotelIds,
+          hotelIds: candidateHotelIds,
           checkIn: featuredCheckInDate,
           checkOut: checkOutDate,
           adults: 2,
           currency: 'USD',
           guestNationality: 'US',
-          timeout: 6,
+          timeout: 10, // Increased timeout for more hotels
         });
         
         // Calculate nights for per-night pricing
         const nights = Math.ceil((new Date(checkOutDate).getTime() - new Date(featuredCheckInDate).getTime()) / (1000 * 60 * 60 * 24));
         
         // Filter hotels to only those with availability and extract prices
-        const hotelsWithAvailability = topHotelsData.filter(hotel => {
+        const hotelsWithAvailability = candidateHotels.filter(hotel => {
           const rateData = minRatesData[hotel.hotel_id];
           if (rateData && (rateData.suggestedSellingPrice || rateData.price)) {
             // Use suggestedSellingPrice (includes margin) or fall back to price
@@ -103,15 +104,19 @@ try {
           return false;
         });
         
-        // Featured hotels for map (top 6 with availability)
+        // Take the best 6 hotels that have availability
         featuredHotelsData = hotelsWithAvailability.slice(0, 6);
+        // Also store top 10 for other uses on the page
+        topHotelsData = hotelsWithAvailability.slice(0, 10);
         
         console.log('[Homepage] Loaded hotels with availability:', {
           total: allHotels.length,
-          topRated: topHotelsData.length,
+          candidates: candidateHotels.length,
           withAvailability: hotelsWithAvailability.length,
           featured: featuredHotelsData.length,
+          topRated: topHotelsData.length,
           pricesLoaded: Object.keys(minPrices).length,
+          availabilityRate: `${Math.round((hotelsWithAvailability.length / candidateHotels.length) * 100)}%`,
           samplePrices: Object.entries(minPrices).slice(0, 3).map(([id, price]) => ({
             hotelId: id,
             pricePerNight: price,
@@ -119,14 +124,11 @@ try {
           })),
         });
       } catch (error) {
-        console.error('[Homepage] Error fetching min rates:', error);
-        // Fallback: show NO hotels rather than hotels without prices
-        // Better UX to show nothing than unprofessional cards without pricing
-        featuredHotelsData = [];
+        console.error('[Homepage] CRITICAL: Error fetching min rates:', error);
+        // In production, this should not happen - indicates API or network issue
+        // Re-throw to surface the error rather than silently failing
+        throw new Error(`Failed to fetch hotel rates: ${error instanceof Error ? error.message : 'Unknown error'}`);
       }
-    } else {
-      // No hotel IDs found, show nothing
-      featuredHotelsData = [];
     }
     
     console.log('[Homepage] Loaded hotels (smart algorithm):', {
