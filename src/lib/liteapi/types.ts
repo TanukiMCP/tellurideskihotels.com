@@ -73,19 +73,22 @@ export interface LiteAPIRate {
   checkout?: string;
   adults?: number;
   children?: number;
-  // Public-facing prices (SSP - Suggested Selling Price)
+  // PUBLIC DISPLAY PRICES (SSP - Suggested Selling Price)
+  // These are what we display and charge customers for compliance
   total?: {
-    amount?: number; // Total SSP for entire stay
+    amount?: number; // SSP: Total price for entire stay (e.g., $500 for 2 nights)
     currency?: string;
   };
   net?: {
-    amount?: number; // Per-night SSP
+    amount?: number; // SSP: Price per night (e.g., $250/night)
     currency?: string;
   };
-  // Internal prices (what customer actually pays)
+  // INTERNAL REFERENCE (Retail rates - for future member pricing feature)
+  // These are the discounted rates we could offer to a closed user group
+  // Currently stored but not displayed
   internal_price?: {
-    per_night: number;
-    total: number;
+    per_night: number; // Retail: Price per night (e.g., $230/night)
+    total: number;      // Retail: Total for stay (e.g., $460 for 2 nights)
     currency: string;
   };
   // Tax and fee breakdown

@@ -55,60 +55,66 @@ function transformRateData(hotelData: any, nights: number): Array<{
         // LiteAPI pricing structure per documentation:
         // https://docs.liteapi.travel/docs/hotel-rates-api-json-data-structure
         // 
-        // retailRate.total[0].amount = What customer MUST pay (includes margin + included taxes/fees)
-        // retailRate.suggestedSellingPrice[0].amount = Public SSP (what hotel expects for public display)
-        // retailRate.initialPrice[0].amount = Base hotel price (before discounts)
+        // retailRate.total[0].amount = Retail rate (base + your margin + included taxes/fees)
+        //   - This is what you'd charge in a CLOSED USER GROUP (members only)
+        //   - Example: $460 total for 2 nights
         //
-        // For PUBLIC sites: Display suggestedSellingPrice (SSP compliance)
-        // For CLOSED USER GROUPS: Can display total (discounted price)
+        // retailRate.suggestedSellingPrice[0].amount = SSP (Suggested Selling Price)
+        //   - This is what hotels expect you to display PUBLICLY for compliance
+        //   - This is what OTAs like Booking.com display
+        //   - Example: $500 total for 2 nights
         //
-        // Since we're a public site, we MUST use suggestedSellingPrice
+        // retailRate.initialPrice[0].amount = Base hotel price (before your margin)
+        //
+        // ⚠️ COMPLIANCE REQUIREMENT: Public sites MUST display/charge SSP to avoid rate violations
         
-        const totalData = Array.isArray(rate.retailRate?.total) 
+        const retailData = Array.isArray(rate.retailRate?.total) 
           ? rate.retailRate.total[0] 
           : rate.retailRate?.total;
-        const suggestedData = Array.isArray(rate.retailRate?.suggestedSellingPrice)
+        const sspData = Array.isArray(rate.retailRate?.suggestedSellingPrice)
           ? rate.retailRate.suggestedSellingPrice[0]
           : rate.retailRate?.suggestedSellingPrice;
         const initialData = Array.isArray(rate.retailRate?.initialPrice)
           ? rate.retailRate.initialPrice[0]
           : rate.retailRate?.initialPrice;
           
-        // Use SSP for public display (compliance requirement)
-        const publicPrice = suggestedData?.amount || totalData?.amount || 0;
-        const internalPrice = totalData?.amount || 0; // What customer actually pays
-        const currency = totalData?.currency || suggestedData?.currency || 'USD';
+        // We're a public site, so we use SSP for compliance (with retail as fallback)
+        const sspTotal = sspData?.amount || retailData?.amount || 0;
+        const retailTotal = retailData?.amount || 0;
+        const currency = sspData?.currency || retailData?.currency || 'USD';
         
-        // Calculate per-night prices
-        const publicPricePerNight = nights > 0 ? publicPrice / nights : publicPrice;
-        const internalPricePerNight = nights > 0 ? internalPrice / nights : internalPrice;
+        // Calculate per-night prices from totals
+        const sspPerNight = nights > 0 ? sspTotal / nights : sspTotal;
+        const retailPerNight = nights > 0 ? retailTotal / nights : retailTotal;
 
         // Extract taxes and fees information
         const taxesAndFees = rate.retailRate?.taxesAndFees || [];
         const includedFees = taxesAndFees.filter((fee: any) => fee.included).reduce((sum: number, fee: any) => sum + (fee.amount || 0), 0);
         const excludedFees = taxesAndFees.filter((fee: any) => !fee.included).reduce((sum: number, fee: any) => sum + (fee.amount || 0), 0);
 
-        // Only process if price is valid
-        if (publicPrice > 0 && internalPrice > 0) {
+        // Only process if we have valid SSP and retail prices
+        if (sspTotal > 0 && retailTotal > 0) {
           const transformedRate = {
             rate_id: rate.rateId,
             room_id: roomType.roomTypeId,
             room_name: rate.name || roomType.name || 'Standard Room',
             offer_id: roomType.offerId, // Required for prebook
             mapped_room_id: rate.mappedRoomId, // For linking to room photos (mappedRoomId is in rate, not roomType)
-            // Public-facing price (SSP - what we display)
+            // PUBLIC DISPLAY PRICES (SSP - Suggested Selling Price for compliance)
+            // This is what we show customers and what they pay
             net: {
-              amount: publicPricePerNight, // Per-night SSP
+              amount: sspPerNight, // SSP per night (e.g., $250/night)
               currency,
             },
             total: {
-              amount: publicPrice, // Total SSP for stay
+              amount: sspTotal, // SSP total for entire stay (e.g., $500 for 2 nights)
               currency,
             },
-            // Internal prices (what customer actually pays at checkout)
+            // INTERNAL REFERENCE ONLY (retail rates for potential future member pricing)
+            // Currently not displayed to users - stored for future closed user group feature
             internal_price: {
-              per_night: internalPricePerNight,
-              total: internalPrice,
+              per_night: retailPerNight, // Retail per night (e.g., $230/night)
+              total: retailTotal,         // Retail total (e.g., $460 for 2 nights)
               currency,
             },
             // Tax and fee breakdown
