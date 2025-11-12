@@ -59,13 +59,14 @@ export default function InteractiveTrailMap() {
       maxzoom: 14
     });
     
-    // Wait for source to load before applying terrain to prevent race condition
-    map.once('sourcedata', (e) => {
-      if (e.sourceId === 'mapbox-dem' && e.isSourceLoaded) {
-        // Use exaggeration: 2.5 for dramatic 3D mountain effect
+    // Apply terrain immediately after source is added
+    // The map will handle loading internally
+    setTimeout(() => {
+      if (map.getSource('mapbox-dem')) {
         map.setTerrain({ source: 'mapbox-dem', exaggeration: 2.5 });
+        console.log('[InteractiveTrailMap] 3D terrain enabled');
       }
-    });
+    }, 100);
 
     setIsMapLoaded(true);
   };
@@ -75,6 +76,25 @@ export default function InteractiveTrailMap() {
     if (!mapRef.current || !isMapLoaded) return;
 
     const map = mapRef.current.getMap();
+
+    // Re-add terrain source if it doesn't exist (e.g., after style change)
+    if (!map.getSource('mapbox-dem')) {
+      map.addSource('mapbox-dem', {
+        type: 'raster-dem',
+        url: 'mapbox://mapbox.mapbox-terrain-dem-v1',
+        tileSize: 512,
+        maxzoom: 14
+      });
+      
+      // Re-apply terrain if it was enabled
+      if (terrainEnabled) {
+        setTimeout(() => {
+          if (map.getSource('mapbox-dem')) {
+            map.setTerrain({ source: 'mapbox-dem', exaggeration: 2.5 });
+          }
+        }, 100);
+      }
+    }
 
     // Hide default Mapbox trail layers
     try {
@@ -339,7 +359,7 @@ export default function InteractiveTrailMap() {
       .catch(err => {
         console.error('[InteractiveTrailMap] Failed to load POI data:', err);
       });
-  }, [isMapLoaded, mapStyle, showTrails, showLifts, showPOIs]);
+  }, [isMapLoaded, mapStyle, showTrails, showLifts, showPOIs, terrainEnabled]);
 
   // Handle map clicks to show feature info
   const handleMapClick = (event: MapMouseEvent) => {
