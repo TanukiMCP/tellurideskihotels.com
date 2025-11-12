@@ -484,15 +484,19 @@ export default function InteractiveTrailMap() {
         const [lng, lat] = feature.geometry.coordinates;
 
         try {
-          // Create a simple 3D sphere object with coordinates
+          // Create a simple 3D sphere object with coordinates and altitude
+          // Adding altitude ensures the markers appear above the terrain
           // @ts-ignore
           const sphere = threeboxRef.current.sphere({
             radius: config.radius,
             color: config.color,
             material: config.material,
             units: 'meters',
-            coordinates: [lng, lat]
+            anchor: 'center'
           });
+          
+          // Set coordinates with altitude (50 meters above ground)
+          sphere.setCoords([lng, lat, 50]);
           
           // Add tooltip data
           sphere.userData = {
