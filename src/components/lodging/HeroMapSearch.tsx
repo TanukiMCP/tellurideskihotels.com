@@ -126,21 +126,40 @@ export default function HeroMapSearch({
         console.log('Could not hide Mapbox base trail layers:', err);
       }
 
-      // Load real Telluride ski trail data extracted from OpenStreetMap
+      // Remove existing custom layers if they exist
+      const layersToRemove = [
+        'telluride-ski-trails-labels',
+        'telluride-ski-trails',
+        'telluride-lifts',
+        'telluride-pois',
+        'telluride-pois-labels'
+      ];
+      const sourcesToRemove = [
+        'telluride-ski-trails',
+        'telluride-lifts',
+        'telluride-pois'
+      ];
+
+      layersToRemove.forEach(layerId => {
+        try {
+          if (map.getLayer(layerId)) {
+            map.removeLayer(layerId);
+          }
+        } catch {}
+      });
+
+      sourcesToRemove.forEach(sourceId => {
+        try {
+          if (map.getSource(sourceId)) {
+            map.removeSource(sourceId);
+          }
+        } catch {}
+      });
+
+      // Load real Telluride ski trail data from OpenStreetMap
       fetch('/data/telluride-ski-trails.json')
         .then(response => response.json())
         .then(data => {
-          // Remove existing custom layers if they exist
-          if (map.getLayer('telluride-ski-trails-labels')) {
-            map.removeLayer('telluride-ski-trails-labels');
-          }
-          if (map.getLayer('telluride-ski-trails')) {
-            map.removeLayer('telluride-ski-trails');
-          }
-          if (map.getSource('telluride-ski-trails')) {
-            map.removeSource('telluride-ski-trails');
-          }
-
           // Add the ski trails as a custom GeoJSON source
           map.addSource('telluride-ski-trails', {
             type: 'geojson',
@@ -169,15 +188,15 @@ export default function HeroMapSearch({
                 '#3b82f6'                 // Default to blue
               ],
               'line-width': [
-                  'interpolate',
-                  ['linear'],
-                  ['zoom'],
-                11, 3,    // Thicker at low zoom for visibility
+                'interpolate',
+                ['linear'],
+                ['zoom'],
+                11, 3,    // Thin at low zoom
                 13, 4,    // Medium 
                 15, 6,    // Thicker when zoomed in
                 17, 10    // Very thick up close
               ],
-              'line-opacity': 0.9
+              'line-opacity': 0.95
             }
           });
 
@@ -193,9 +212,9 @@ export default function HeroMapSearch({
                 'interpolate',
                 ['linear'],
                 ['zoom'],
-                13, 10,
-                15, 12,
-                17, 14
+                13, 11,
+                15, 13,
+                17, 15
               ],
               'symbol-placement': 'line',
               'text-rotation-alignment': 'map',
@@ -206,8 +225,8 @@ export default function HeroMapSearch({
             paint: {
               'text-color': '#ffffff',
               'text-halo-color': [
-                    'match',
-                    ['get', 'piste:difficulty'],
+                'match',
+                ['get', 'piste:difficulty'],
                 'novice', '#16a34a',      // Dark green halo
                 'easy', '#16a34a',        
                 'intermediate', '#1e40af', // Dark blue halo
@@ -219,41 +238,174 @@ export default function HeroMapSearch({
               'text-halo-width': 2.5,
               'text-halo-blur': 0.5
             },
-            minzoom: 13 // Show labels earlier
+            minzoom: 13 // Show labels when zoomed in
           });
 
-          console.log(`[HeroMapSearch] ✅ Loaded ${data.features.length} real Telluride ski trails from OpenStreetMap`);
+          console.log(`[HeroMapSearch] ✅ Loaded ${data.features.length} ski trails`);
         })
         .catch(err => {
           console.error('[HeroMapSearch] Failed to load ski trail data:', err);
         });
+
+      // Load lift lines (gondolas and chairlifts)
+      fetch('/data/telluride-lifts.json')
+        .then(response => response.json())
+        .then(data => {
+          map.addSource('telluride-lifts', {
+            type: 'geojson',
+            data: data
+          });
+
+          // Add lift lines with dashed style
+          map.addLayer({
+            id: 'telluride-lifts',
+            type: 'line',
+            source: 'telluride-lifts',
+            layout: {
+              'line-join': 'round',
+              'line-cap': 'round'
+            },
+            paint: {
+              'line-color': [
+                'match',
+                ['get', 'aerialway'],
+                'gondola', '#f59e0b',      // Orange for gondolas
+                'cable_car', '#f59e0b',    // Orange for cable cars
+                'chair_lift', '#eab308',   // Yellow for chairlifts
+                'mixed_lift', '#f59e0b',   // Orange for mixed
+                '#fbbf24'                   // Default yellow
+              ],
+              'line-width': [
+                'interpolate',
+                ['linear'],
+                ['zoom'],
+                11, 2,
+                15, 3.5,
+                17, 5
+              ],
+              'line-opacity': 0.9,
+              'line-dasharray': [2, 2] // Dashed line for lifts
+            }
+          });
+
+          console.log(`[HeroMapSearch] ✅ Loaded ${data.features.length} lift lines`);
+        })
+        .catch(err => {
+          console.error('[HeroMapSearch] Failed to load lift data:', err);
+        });
+
+      // Load POIs (restaurants, restrooms, lift stations, etc.)
+      fetch('/data/telluride-pois.json')
+        .then(response => response.json())
+        .then(data => {
+          map.addSource('telluride-pois', {
+            type: 'geojson',
+            data: data
+          });
+
+          // Add POI markers
+          map.addLayer({
+            id: 'telluride-pois',
+            type: 'circle',
+            source: 'telluride-pois',
+            paint: {
+              'circle-radius': [
+                'interpolate',
+                ['linear'],
+                ['zoom'],
+                12, 4,
+                15, 6,
+                17, 8
+              ],
+              'circle-color': [
+                'match',
+                ['get', 'type'],
+                'restaurant', '#ef4444',      // Red for restaurants
+                'cafe', '#f97316',            // Orange for cafes
+                'restroom', '#3b82f6',        // Blue for restrooms
+                'lift-station', '#8b5cf6',    // Purple for lift stations
+                'information', '#10b981',     // Green for info
+                'viewpoint', '#06b6d4',       // Cyan for viewpoints
+                '#6b7280'                      // Gray default
+              ],
+              'circle-stroke-width': 2,
+              'circle-stroke-color': '#ffffff',
+              'circle-opacity': 0.9
+            }
+          });
+
+          // Add POI labels
+          map.addLayer({
+            id: 'telluride-pois-labels',
+            type: 'symbol',
+            source: 'telluride-pois',
+            layout: {
+              'text-field': ['get', 'name'],
+              'text-font': ['Open Sans Semibold', 'Arial Unicode MS Bold'],
+              'text-size': 11,
+              'text-offset': [0, 1.2],
+              'text-anchor': 'top'
+            },
+            paint: {
+              'text-color': '#1f2937',
+              'text-halo-color': '#ffffff',
+              'text-halo-width': 2,
+              'text-halo-blur': 0.5
+            },
+            minzoom: 14
+          });
+
+          console.log(`[HeroMapSearch] ✅ Loaded ${data.features.length} POIs`);
+        })
+        .catch(err => {
+          console.error('[HeroMapSearch] Failed to load POI data:', err);
+        });
     } else {
-      // Remove ski trail layers and restore Mapbox base layers when not in ski mode
-            try {
-        if (map.getLayer('telluride-ski-trails-labels')) {
-          map.removeLayer('telluride-ski-trails-labels');
-        }
-        if (map.getLayer('telluride-ski-trails')) {
-          map.removeLayer('telluride-ski-trails');
-              }
-        if (map.getSource('telluride-ski-trails')) {
-          map.removeSource('telluride-ski-trails');
-      }
+      // Remove ski trail layers, lifts, and POIs when not in ski mode
+      try {
+        const layersToRemove = [
+          'telluride-ski-trails-labels',
+          'telluride-ski-trails',
+          'telluride-lifts',
+          'telluride-pois',
+          'telluride-pois-labels'
+        ];
+        const sourcesToRemove = [
+          'telluride-ski-trails',
+          'telluride-lifts',
+          'telluride-pois'
+        ];
+
+        layersToRemove.forEach(layerId => {
+          try {
+            if (map.getLayer(layerId)) {
+              map.removeLayer(layerId);
+            }
+          } catch {}
+        });
+
+        sourcesToRemove.forEach(sourceId => {
+          try {
+            if (map.getSource(sourceId)) {
+              map.removeSource(sourceId);
+            }
+          } catch {}
+        });
 
         // Restore Mapbox base trail layers
         const style = map.getStyle();
         if (style && style.layers) {
-        style.layers.forEach((layer: any) => {
+          style.layers.forEach((layer: any) => {
             if (layer.id.includes('piste') || 
                 layer.id.includes('aerialway') ||
                 layer.id.includes('poi-label') && layer.id.includes('ski')) {
-            try {
-              if (map.getLayer(layer.id)) {
+              try {
+                if (map.getLayer(layer.id)) {
                   map.setLayoutProperty(layer.id, 'visibility', 'visible');
-              }
-            } catch {}
-          }
-        });
+                }
+              } catch {}
+            }
+          });
         }
       } catch (err) {
         console.log('Could not remove/restore trail layers:', err);
