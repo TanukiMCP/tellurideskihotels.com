@@ -477,6 +477,14 @@ export default function InteractiveTrailMap() {
 
   return (
     <div className="relative w-full h-full">
+      {/* Hide default Mapbox attribution */}
+      <style>{`
+        .mapboxgl-ctrl-bottom-left,
+        .mapboxgl-ctrl-bottom-right {
+          display: none !important;
+        }
+      `}</style>
+      
       <Map
         ref={mapRef}
         {...viewState}
@@ -502,8 +510,8 @@ export default function InteractiveTrailMap() {
 
         {/* Map Controls - Left Panel (Classic Ski Map Style) */}
         {showLeftPanel ? (
-          <div className="absolute top-4 left-4 z-10 bg-white rounded-xl shadow-2xl border-2 border-neutral-800 max-w-sm max-h-[calc(100vh-2rem)] overflow-y-auto" style={{fontFamily: 'system-ui, -apple-system, sans-serif'}}>
-            <div className="sticky top-0 bg-white z-10 p-5 pb-3 border-b-2 border-neutral-800">
+          <div className="absolute top-4 left-4 bottom-16 z-10 bg-white rounded-xl shadow-2xl border-2 border-neutral-800 max-w-sm overflow-y-auto" style={{fontFamily: 'system-ui, -apple-system, sans-serif'}}>
+            <div className="sticky top-0 bg-white z-10 p-5 pb-3 border-b-2 border-neutral-800 rounded-t-xl">
               <div className="flex items-start justify-between">
                 <h3 className="text-base font-black text-neutral-900 uppercase tracking-wider flex-1">
                   Telluride Ski Resort
@@ -885,10 +893,12 @@ export default function InteractiveTrailMap() {
           </button>
         )}
 
-        {/* Data Attribution */}
-        <div className="absolute bottom-4 left-4 bg-white/90 backdrop-blur-sm rounded-lg shadow-sm px-3 py-2 z-10 text-xs text-neutral-600">
-          Map data © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer" className="underline hover:text-primary-600">OpenStreetMap</a> contributors
-        </div>
+        {/* Data Attribution - Only show when left panel is closed */}
+        {!showLeftPanel && (
+          <div className="absolute bottom-4 left-4 bg-white/90 backdrop-blur-sm rounded-lg shadow-sm px-3 py-2 z-10 text-xs text-neutral-600 border border-neutral-300">
+            Map data © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer" className="underline hover:text-primary-600">OpenStreetMap</a> contributors
+          </div>
+        )}
 
         {/* Feature Popup */}
         {popupInfo && (
