@@ -11,7 +11,8 @@
     "create-admin": "tsx scripts/create-admin.ts",
     "generate-article": "node scripts/generate-article.js",
     "publish-articles": "node scripts/publish-scheduled-articles.js",
-    "refresh-images": "node scripts/refresh-image-library.js"
+    "refresh-images": "node scripts/refresh-image-library.js",
+    "download-offline-tiles": "node scripts/download-telluride-tiles.js"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.5",
@@ -35,6 +36,8 @@
     "lucide-react": "^0.451.0",
     "mapbox-gl": "^3.16.0",
     "pagefind": "^1.4.0",
+    "pmtiles": "^4.3.0",
+    "protomaps-leaflet": "^5.1.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-map-gl": "^8.1.0",
