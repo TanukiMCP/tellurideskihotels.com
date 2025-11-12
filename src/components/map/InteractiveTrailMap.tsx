@@ -554,7 +554,7 @@ export default function InteractiveTrailMap() {
 
         {/* Map Controls - Left Panel (Classic Ski Map Style) */}
         {showLeftPanel ? (
-          <div className="absolute top-4 left-4 bottom-16 z-10 bg-white rounded-xl shadow-2xl border-2 border-neutral-800 max-w-sm overflow-y-auto" style={{fontFamily: 'system-ui, -apple-system, sans-serif'}}>
+          <div className="absolute top-20 left-4 bottom-16 z-10 bg-white rounded-xl shadow-2xl border-2 border-neutral-800 max-w-sm" style={{fontFamily: 'system-ui, -apple-system, sans-serif'}}>
             <div className="sticky top-0 bg-white z-10 p-5 pb-3 border-b-2 border-neutral-800 rounded-t-xl">
               <div className="flex items-start justify-between">
                 <h3 className="text-base font-black text-neutral-900 uppercase tracking-wider flex-1">
@@ -562,11 +562,12 @@ export default function InteractiveTrailMap() {
                 </h3>
                 <button
                   onClick={() => setShowLeftPanel(false)}
-                  className="text-neutral-400 hover:text-neutral-900 transition-colors ml-2"
-                  aria-label="Close panel"
+                  className="text-neutral-600 hover:text-neutral-900 transition-colors ml-2 -mr-1"
+                  aria-label="Collapse panel"
+                  title="Hide controls"
                 >
-                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
                   </svg>
                 </button>
               </div>
@@ -603,43 +604,6 @@ export default function InteractiveTrailMap() {
                   </svg>
                   Satellite
                 </button>
-              </div>
-            </div>
-
-            {/* Layer Toggles */}
-            <div className="mb-4 pb-4 border-b border-neutral-300">
-              <h4 className="text-sm font-black text-neutral-900 mb-3 uppercase tracking-wide">Map Layers</h4>
-              <div className="space-y-2">
-                <label className="flex items-center gap-2 cursor-pointer group">
-                  <input
-                    type="checkbox"
-                    checked={showTrails}
-                    onChange={(e) => setShowTrails(e.target.checked)}
-                    className="w-4 h-4 rounded border-2 border-neutral-800"
-                  />
-                  <span className="text-sm text-neutral-900 font-bold flex-1">Ski Trails</span>
-                  <span className="text-xs font-black text-neutral-600">(448)</span>
-                </label>
-                <label className="flex items-center gap-2 cursor-pointer group">
-                  <input
-                    type="checkbox"
-                    checked={showLifts}
-                    onChange={(e) => setShowLifts(e.target.checked)}
-                    className="w-4 h-4 rounded border-2 border-neutral-800"
-                  />
-                  <span className="text-sm text-neutral-900 font-bold flex-1">Lifts & Gondolas</span>
-                  <span className="text-xs font-black text-neutral-600">(18)</span>
-                </label>
-                <label className="flex items-center gap-2 cursor-pointer group">
-                  <input
-                    type="checkbox"
-                    checked={showPOIs}
-                    onChange={(e) => setShowPOIs(e.target.checked)}
-                    className="w-4 h-4 rounded border-2 border-neutral-800"
-                  />
-                  <span className="text-sm text-neutral-900 font-bold flex-1">Facilities</span>
-                  <span className="text-xs font-black text-neutral-600">(65)</span>
-                </label>
               </div>
             </div>
 
@@ -707,18 +671,19 @@ export default function InteractiveTrailMap() {
         ) : (
           <button
             onClick={() => setShowLeftPanel(true)}
-            className="absolute top-4 left-4 z-10 bg-primary-600 hover:bg-primary-700 text-white rounded-full p-3 shadow-2xl transition-all border-2 border-neutral-800"
+            className="absolute top-20 left-4 z-10 bg-primary-600 hover:bg-primary-700 text-white rounded-lg shadow-2xl transition-all border-2 border-neutral-800 flex flex-col items-center gap-1 px-2 py-3"
             aria-label="Show controls"
+            title="Show controls"
           >
-            <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
             </svg>
           </button>
         )}
 
         {/* Control Instructions */}
         {showControls && (
-          <div className="absolute top-4 right-16 bg-white/95 backdrop-blur-sm rounded-xl shadow-xl px-4 py-3 z-10 border border-neutral-200 max-w-xs">
+          <div className="absolute top-20 right-16 bg-white/95 backdrop-blur-sm rounded-xl shadow-xl px-4 py-3 z-10 border border-neutral-200 max-w-xs">
             <div className="flex items-start justify-between gap-3 mb-2">
           <div className="flex items-center gap-2">
                 <svg className="w-5 h-5 text-primary-600 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -775,7 +740,7 @@ export default function InteractiveTrailMap() {
         {!showControls && (
           <button
             onClick={() => setShowControls(true)}
-            className="absolute top-4 right-16 bg-primary-600 hover:bg-primary-700 text-white rounded-full p-2 shadow-xl z-10 transition-all"
+            className="absolute top-20 right-16 bg-primary-600 hover:bg-primary-700 text-white rounded-full p-2 shadow-xl z-10 transition-all"
           >
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -785,25 +750,76 @@ export default function InteractiveTrailMap() {
 
         {/* Classic Ski Map Legend - Bottom Right */}
         {showLegendPanel ? (
-          <div className="absolute bottom-4 right-4 bg-white rounded-xl shadow-2xl border-2 border-neutral-800 max-w-xs max-h-[calc(100vh-2rem)] overflow-y-auto z-10" style={{fontFamily: 'system-ui, -apple-system, sans-serif'}}>
-            <div className="sticky top-0 bg-white z-10 p-5 pb-3 border-b-2 border-neutral-800">
+          <div className="absolute bottom-4 right-4 bg-white rounded-xl shadow-2xl border-2 border-neutral-800 max-w-xs max-h-[calc(100vh-8rem)] overflow-y-auto z-10" style={{fontFamily: 'system-ui, -apple-system, sans-serif'}}>
+            <div className="sticky top-0 bg-white z-10 p-5 pb-3 border-b-2 border-neutral-800 rounded-t-xl">
               <div className="flex items-start justify-between">
                 <h3 className="text-base font-black text-neutral-900 uppercase tracking-wider flex-1">
                   Trail Map Legend
                 </h3>
                 <button
                   onClick={() => setShowLegendPanel(false)}
-                  className="text-neutral-400 hover:text-neutral-900 transition-colors ml-2"
-                  aria-label="Close legend"
+                  className="text-neutral-600 hover:text-neutral-900 transition-colors ml-2 -mr-1"
+                  aria-label="Collapse legend"
+                  title="Hide legend"
                 >
-                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
                   </svg>
                 </button>
               </div>
             </div>
             
             <div className="p-5 pt-4">
+          
+          {/* Layer Toggles - Integrated with Legend */}
+          <div className="mb-4 pb-4 border-b-2 border-neutral-800">
+            <div className="flex items-center justify-between mb-3">
+              <h4 className="text-sm font-black text-neutral-900 uppercase tracking-wide">Map Layers</h4>
+              <button
+                onClick={() => {
+                  const allOn = showTrails && showLifts && showPOIs;
+                  setShowTrails(!allOn);
+                  setShowLifts(!allOn);
+                  setShowPOIs(!allOn);
+                }}
+                className="text-xs font-bold text-primary-600 hover:text-primary-700 uppercase tracking-wide transition-colors"
+              >
+                {(showTrails && showLifts && showPOIs) ? 'Hide All' : 'Show All'}
+              </button>
+            </div>
+            <div className="space-y-2">
+              <label className="flex items-center gap-2 cursor-pointer group">
+                <input
+                  type="checkbox"
+                  checked={showTrails}
+                  onChange={(e) => setShowTrails(e.target.checked)}
+                  className="w-4 h-4 rounded border-2 border-neutral-800 text-primary-600 focus:ring-2 focus:ring-primary-600 cursor-pointer"
+                />
+                <span className="text-sm text-neutral-900 font-bold flex-1">Ski Trails</span>
+                <span className="text-xs font-black text-neutral-600">(448)</span>
+              </label>
+              <label className="flex items-center gap-2 cursor-pointer group">
+                <input
+                  type="checkbox"
+                  checked={showLifts}
+                  onChange={(e) => setShowLifts(e.target.checked)}
+                  className="w-4 h-4 rounded border-2 border-neutral-800 text-primary-600 focus:ring-2 focus:ring-primary-600 cursor-pointer"
+                />
+                <span className="text-sm text-neutral-900 font-bold flex-1">Lifts & Gondolas</span>
+                <span className="text-xs font-black text-neutral-600">(18)</span>
+              </label>
+              <label className="flex items-center gap-2 cursor-pointer group">
+                <input
+                  type="checkbox"
+                  checked={showPOIs}
+                  onChange={(e) => setShowPOIs(e.target.checked)}
+                  className="w-4 h-4 rounded border-2 border-neutral-800 text-primary-600 focus:ring-2 focus:ring-primary-600 cursor-pointer"
+                />
+                <span className="text-sm text-neutral-900 font-bold flex-1">Facilities</span>
+                <span className="text-xs font-black text-neutral-600">(65)</span>
+              </label>
+            </div>
+          </div>
           
           {showTrails && (
             <div className="mb-4 pb-4 border-b border-neutral-300">
@@ -928,11 +944,12 @@ export default function InteractiveTrailMap() {
         ) : (
           <button
             onClick={() => setShowLegendPanel(true)}
-            className="absolute bottom-4 right-4 z-10 bg-primary-600 hover:bg-primary-700 text-white rounded-full p-3 shadow-2xl transition-all border-2 border-neutral-800"
+            className="absolute bottom-4 right-4 z-10 bg-primary-600 hover:bg-primary-700 text-white rounded-lg shadow-2xl transition-all border-2 border-neutral-800 flex flex-col items-center gap-1 px-2 py-3"
             aria-label="Show legend"
+            title="Show legend"
           >
-            <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
             </svg>
           </button>
         )}
