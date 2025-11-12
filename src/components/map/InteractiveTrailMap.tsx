@@ -35,11 +35,12 @@ export default function InteractiveTrailMap() {
   const [showTrails, setShowTrails] = useState(true);
   const [showLifts, setShowLifts] = useState(true);
   const [showPOIs, setShowPOIs] = useState(true);
+  const [showControls, setShowControls] = useState(true);
   const [viewState, setViewState] = useState({
     longitude: TELLURIDE_CENTER[0],
     latitude: TELLURIDE_CENTER[1],
     zoom: 13.5,
-    pitch: 0,
+    pitch: 60,
     bearing: 0
   });
 
@@ -370,16 +371,29 @@ export default function InteractiveTrailMap() {
     const map = mapRef.current?.getMap();
     if (!map) return;
 
-    if (terrainEnabled) {
+    const newTerrainState = !terrainEnabled;
+    
+    if (newTerrainState) {
+      // Enable 3D with dramatic exaggeration for mountain visualization
+      if (map.getSource('mapbox-dem')) {
+        map.setTerrain({ source: 'mapbox-dem', exaggeration: 2.5 });
+      }
+      map.easeTo({ 
+        pitch: 60, 
+        duration: 800,
+        easing: (t) => t * (2 - t) // easeOutQuad for smooth animation
+      });
+    } else {
       // Disable 3D
       map.setTerrain(null);
-      map.easeTo({ pitch: 0, duration: 500 });
-    } else {
-      // Enable 3D with dramatic exaggeration for mountain visualization
-      map.setTerrain({ source: 'mapbox-dem', exaggeration: 2.5 });
-      map.easeTo({ pitch: 60, duration: 500 });
+      map.easeTo({ 
+        pitch: 0, 
+        bearing: 0,
+        duration: 800,
+        easing: (t) => t * (2 - t)
+      });
     }
-    setTerrainEnabled(!terrainEnabled);
+    setTerrainEnabled(newTerrainState);
   };
 
   const resetView = () => {
@@ -406,11 +420,13 @@ export default function InteractiveTrailMap() {
         maxBounds={TELLURIDE_MAX_BOUNDS}
         minZoom={11}
         maxZoom={18}
+        maxPitch={85}
         scrollZoom={true}
         dragPan={true}
-        dragRotate={false}
+        dragRotate={true}
         doubleClickZoom={true}
         touchZoomRotate={true}
+        touchPitch={true}
         keyboard={true}
       >
         <NavigationControl position="top-right" showCompass={true} visualizePitch={true} />
