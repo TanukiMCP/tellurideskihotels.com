@@ -485,17 +485,15 @@ export default function InteractiveTrailMap() {
         const [lng, lat] = feature.geometry.coordinates;
 
         try {
-          // Create a simple 3D sphere object
+          // Create a simple 3D sphere object with coordinates
           // @ts-ignore
           const sphere = threeboxRef.current.sphere({
             radius: config.radius,
             color: config.color,
             material: config.material,
-            units: 'meters'
+            units: 'meters',
+            coordinates: [lng, lat]
           });
-
-          // Set position
-          sphere.setCoords([lng, lat]);
           
           // Add tooltip data
           sphere.userData = {
