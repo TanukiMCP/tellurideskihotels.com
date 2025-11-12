@@ -236,50 +236,58 @@ export default function InteractiveTrailMap() {
           }
         });
 
-        // Add trail name labels with color-matched halos
-        map.addLayer({
-          id: 'telluride-ski-trails-labels',
-          type: 'symbol',
-          source: 'telluride-ski-trails',
-          layout: {
-            'text-field': ['get', 'name'],
-            'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
-            'text-size': [
-              'interpolate',
-              ['linear'],
-              ['zoom'],
-              13, 11,
-              15, 13,
-              17, 15
-            ],
-            'symbol-placement': 'line',
-            'text-rotation-alignment': 'map',
-            'text-pitch-alignment': 'viewport',
-            'text-max-angle': 30,
-            'symbol-spacing': 200
-          },
-          paint: {
-            'text-color': '#ffffff',
-            'text-halo-color': [
-              'match',
-              ['get', 'piste:difficulty'],
-              'novice', '#16a34a',      // Dark green halo
-              'easy', '#16a34a',        
-              'intermediate', '#1e40af', // Dark blue halo
-              'advanced', '#000000',    // Black halo
-              'expert', '#b91c1c',      // Dark red halo
-              'freeride', '#b91c1c',    
-              '#1e40af'                 
-            ],
-            'text-halo-width': 2.5,
-            'text-halo-blur': 0.5
-          },
-          minzoom: 13 // Show labels when zoomed in
-        });
+        // Add trail name labels with color-matched halos (only if glyphs available)
+        try {
+          map.addLayer({
+            id: 'telluride-ski-trails-labels',
+            type: 'symbol',
+            source: 'telluride-ski-trails',
+            layout: {
+              'text-field': ['get', 'name'],
+              'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
+              'text-size': [
+                'interpolate',
+                ['linear'],
+                ['zoom'],
+                13, 11,
+                15, 13,
+                17, 15
+              ],
+              'symbol-placement': 'line',
+              'text-rotation-alignment': 'map',
+              'text-pitch-alignment': 'viewport',
+              'text-max-angle': 30,
+              'symbol-spacing': 200
+            },
+            paint: {
+              'text-color': '#ffffff',
+              'text-halo-color': [
+                'match',
+                ['get', 'piste:difficulty'],
+                'novice', '#16a34a',      // Dark green halo
+                'easy', '#16a34a',        
+                'intermediate', '#1e40af', // Dark blue halo
+                'advanced', '#000000',    // Black halo
+                'expert', '#b91c1c',      // Dark red halo
+                'freeride', '#b91c1c',    
+                '#1e40af'                 
+              ],
+              'text-halo-width': 2.5,
+              'text-halo-blur': 0.5
+            },
+            minzoom: 13 // Show labels when zoomed in
+          });
+        } catch (err) {
+          console.log('[InteractiveTrailMap] Trail labels not available for this style');
+        }
 
         // Toggle trail visibility based on state
         map.setLayoutProperty('telluride-ski-trails', 'visibility', showTrails ? 'visible' : 'none');
-        map.setLayoutProperty('telluride-ski-trails-labels', 'visibility', showTrails ? 'visible' : 'none');
+        try {
+          if (map.getLayer('telluride-ski-trails-labels')) {
+            map.setLayoutProperty('telluride-ski-trails-labels', 'visibility', showTrails ? 'visible' : 'none');
+          }
+        } catch {}
 
         console.log(`[InteractiveTrailMap] ✅ Loaded ${data.features.length} ski trails`);
       })
@@ -345,93 +353,101 @@ export default function InteractiveTrailMap() {
         });
 
         // Add POI markers as text symbols (classic ski map style - square badges)
-        map.addLayer({
-          id: 'telluride-pois',
-          type: 'symbol',
-          source: 'telluride-pois',
-          layout: {
-            'visibility': showPOIs ? 'visible' : 'none',
-            // Use letter abbreviations like classic ski maps
-            'text-field': [
-              'match',
-              ['get', 'type'],
-              'restaurant', 'R',
-              'cafe', 'C',
-              'restroom', 'WC',
-              'lift-station', 'L',
-              'information', 'i',
-              'viewpoint', 'V',
-              'M' // default marker
-            ],
-            'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
-            'text-size': [
-              'interpolate',
-              ['linear'],
-              ['zoom'],
-              12, 12,
-              15, 14,
-              17, 16
-            ],
-            'text-allow-overlap': true,
-            'text-ignore-placement': false,
-            // Key for 3D: always face the viewport (billboard effect)
-            'text-rotation-alignment': 'viewport',
-            'text-pitch-alignment': 'viewport',
-            'text-offset': [0, 0]
-          },
-          paint: {
-            'text-color': '#ffffff',
-            'text-opacity': 1,
-            // Colored background effect with thick border (classic ski map style)
-            'text-halo-color': [
-              'match',
-              ['get', 'type'],
-              'restaurant', '#ef4444',      // Red
-              'cafe', '#f97316',            // Orange
-              'restroom', '#3b82f6',        // Blue
-              'lift-station', '#fbbf24',    // Yellow/gold
-              'information', '#10b981',     // Green
-              'viewpoint', '#06b6d4',       // Cyan
-              '#6b7280'                      // Gray default
-            ],
-            'text-halo-width': 4,
-            'text-halo-blur': 0
-          }
-        });
+        try {
+          map.addLayer({
+            id: 'telluride-pois',
+            type: 'symbol',
+            source: 'telluride-pois',
+            layout: {
+              'visibility': showPOIs ? 'visible' : 'none',
+              // Use letter abbreviations like classic ski maps
+              'text-field': [
+                'match',
+                ['get', 'type'],
+                'restaurant', 'R',
+                'cafe', 'C',
+                'restroom', 'WC',
+                'lift-station', 'L',
+                'information', 'i',
+                'viewpoint', 'V',
+                'M' // default marker
+              ],
+              'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
+              'text-size': [
+                'interpolate',
+                ['linear'],
+                ['zoom'],
+                12, 12,
+                15, 14,
+                17, 16
+              ],
+              'text-allow-overlap': true,
+              'text-ignore-placement': false,
+              // Key for 3D: always face the viewport (billboard effect)
+              'text-rotation-alignment': 'viewport',
+              'text-pitch-alignment': 'viewport',
+              'text-offset': [0, 0]
+            },
+            paint: {
+              'text-color': '#ffffff',
+              'text-opacity': 1,
+              // Colored background effect with thick border (classic ski map style)
+              'text-halo-color': [
+                'match',
+                ['get', 'type'],
+                'restaurant', '#ef4444',      // Red
+                'cafe', '#f97316',            // Orange
+                'restroom', '#3b82f6',        // Blue
+                'lift-station', '#fbbf24',    // Yellow/gold
+                'information', '#10b981',     // Green
+                'viewpoint', '#06b6d4',       // Cyan
+                '#6b7280'                      // Gray default
+              ],
+              'text-halo-width': 4,
+              'text-halo-blur': 0
+            }
+          });
+        } catch (err) {
+          console.log('[InteractiveTrailMap] POI markers not available for this style');
+        }
 
         // Add POI labels (billboard-style like FR 641 - always readable)
-        map.addLayer({
-          id: 'telluride-pois-labels',
-          type: 'symbol',
-          source: 'telluride-pois',
-          layout: {
-            'text-field': ['get', 'name'],
-            'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
-            'text-size': [
-              'interpolate',
-              ['linear'],
-              ['zoom'],
-              13, 11,
-              15, 13,
-              17, 16
-            ],
-            'text-offset': [0, 2],
-            'text-anchor': 'top',
-            'visibility': showPOIs ? 'visible' : 'none',
-            // Billboard effect - always face camera (like FR 641)
-            'text-rotation-alignment': 'viewport',
-            'text-pitch-alignment': 'viewport',
-            'text-allow-overlap': false
-          },
-          paint: {
-            'text-color': '#000000',
-            // Strong white halo for maximum visibility (like FR 641)
-            'text-halo-color': '#ffffff',
-            'text-halo-width': 3,
-            'text-halo-blur': 1
-          },
-          minzoom: 14
-        });
+        try {
+          map.addLayer({
+            id: 'telluride-pois-labels',
+            type: 'symbol',
+            source: 'telluride-pois',
+            layout: {
+              'text-field': ['get', 'name'],
+              'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
+              'text-size': [
+                'interpolate',
+                ['linear'],
+                ['zoom'],
+                13, 11,
+                15, 13,
+                17, 16
+              ],
+              'text-offset': [0, 2],
+              'text-anchor': 'top',
+              'visibility': showPOIs ? 'visible' : 'none',
+              // Billboard effect - always face camera (like FR 641)
+              'text-rotation-alignment': 'viewport',
+              'text-pitch-alignment': 'viewport',
+              'text-allow-overlap': false
+            },
+            paint: {
+              'text-color': '#000000',
+              // Strong white halo for maximum visibility (like FR 641)
+              'text-halo-color': '#ffffff',
+              'text-halo-width': 3,
+              'text-halo-blur': 1
+            },
+            minzoom: 14
+          });
+        } catch (err) {
+          console.log('[InteractiveTrailMap] POI labels not available for this style');
+        }
 
         console.log(`[InteractiveTrailMap] ✅ Loaded ${data.features.length} POIs`);
       })
@@ -562,14 +578,6 @@ export default function InteractiveTrailMap() {
         (document as any).msFullscreenElement
       );
       setIsFullscreen(isCurrentlyFullscreen);
-      
-      // Resize map when fullscreen state changes
-      setTimeout(() => {
-        const map = mapRef.current?.getMap();
-        if (map) {
-          map.resize();
-        }
-      }, 100);
     };
 
     document.addEventListener('fullscreenchange', handleFullscreenChange);
