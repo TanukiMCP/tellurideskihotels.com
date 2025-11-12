@@ -103,7 +103,7 @@ export function HotelCard({
         )}
         
         {checkInDate && checkOutDate && (
-          <div className="mb-4">
+          <div className="mb-3">
             <SnowAlertBadge checkIn={checkInDate} checkOut={checkOutDate} />
           </div>
         )}

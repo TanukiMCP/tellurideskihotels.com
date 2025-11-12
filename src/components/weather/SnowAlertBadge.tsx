@@ -64,9 +64,9 @@ export function SnowAlertBadge({ checkIn, checkOut }: SnowAlertBadgeProps) {
   }
 
   return (
-    <div className="inline-flex items-center gap-1.5 bg-gradient-to-r from-blue-500 to-sky-400 text-white px-3 py-1.5 rounded-full text-xs font-semibold shadow-sm animate-pulse">
-      <Snowflake className="w-4 h-4" />
-      <span>Fresh Snow Expected!</span>
+    <div className="inline-flex items-center gap-1.5 bg-sky-50 text-sky-700 px-3 py-1.5 rounded-md text-xs font-medium border border-sky-200">
+      <Snowflake className="w-3.5 h-3.5" />
+      <span>Snow expected during stay</span>
     </div>
   );
 }

@@ -101,8 +101,10 @@ const nights = checkIn && checkOut
     ]} />
 
     <div class="mb-12">
-      <h1 class="text-display-sm lg:text-display-md text-neutral-900 mb-2">Find Your Perfect Place to Stay</h1>
-      <p class="text-xl text-neutral-600 mb-8">Search and compare lodging in {location}</p>
+      <h1 class="text-display-sm lg:text-display-md text-neutral-900 mb-3">Find Your Perfect Place to Stay</h1>
+      <p class="text-xl text-neutral-600 mb-8 max-w-3xl">
+        Compare prices and availability across all accommodations in {location}. From luxury hotels to cozy mountain lodges, find the perfect base for your Telluride adventure with instant booking confirmation.
+      </p>
       
       <HotelSearchWidget
         client:load
@@ -115,24 +117,38 @@ const nights = checkIn && checkOut
       />
     </div>
 
-    {/* Removed redundant banner - search widget above already explains functionality */}
-
-    <div class="mb-6">
-      <h2 class="text-2xl font-bold text-neutral-900 mb-2">
-        {hotels.length > 0 ? `${hotels.length} Places to Stay in ${location}` : 'Loading...'}
-      </h2>
-      {checkIn && checkOut && (
-        <p class="text-neutral-600">
-          {new Date(checkIn).toLocaleDateString()} - {new Date(checkOut).toLocaleDateString()} • {nights} night{nights !== 1 ? 's' : ''} • {adults} adult{adults !== 1 ? 's' : ''}
-        </p>
-      )}
-    </div>
-
     {checkIn && checkOut && (
-      <div class="mb-8">
+      <div class="mb-10">
         <WeatherWidget client:visible startDate={checkIn} endDate={checkOut} title="Weather for Your Stay" compact={true} />
       </div>
     )}
+
+    <div class="mb-8">
+      <div class="flex items-end justify-between mb-4">
+        <div>
+          <h2 class="text-2xl font-bold text-neutral-900 mb-1">
+            {hotels.length > 0 ? `${hotels.length} Available Properties` : 'Loading accommodations...'}
+          </h2>
+          {checkIn && checkOut && (
+            <p class="text-neutral-600">
+              {new Date(checkIn).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} - {new Date(checkOut).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })} • {nights} night{nights !== 1 ? 's' : ''} • {adults} guest{adults !== 1 ? 's' : ''}
+            </p>
+          )}
+        </div>
+        {hotels.length > 0 && (
+          <p class="text-sm text-neutral-500">
+            Showing real-time availability and rates
+          </p>
+        )}
+      </div>
+      {hotels.length > 0 && (
+        <div class="bg-primary-50 border border-primary-200 rounded-lg p-4">
+          <p class="text-sm text-neutral-700 leading-relaxed">
+            <strong class="text-neutral-900">All prices shown include taxes and fees.</strong> Book with confidence – instant confirmation, free cancellation on most properties, and best price guarantee. Need help? Our team is available 24/7 to assist with your reservation.
+          </p>
+        </div>
+      )}
+    </div>
 
     <!-- Split-screen Layout with Map Sync -->
     <HotelGridWithMap
