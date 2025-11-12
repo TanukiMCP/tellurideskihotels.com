@@ -32,7 +32,7 @@ const TELLURIDE_MAX_BOUNDS: [[number, number], [number, number]] = [
 export default function InteractiveTrailMap() {
   const mapRef = useRef<MapRef>(null);
   const [popupInfo, setPopupInfo] = useState<any>(null);
-  const [terrainEnabled, setTerrainEnabled] = useState(true);
+  const [terrainEnabled, setTerrainEnabled] = useState(false);
   const [mapStyle, setMapStyle] = useState<keyof typeof MAP_STYLES>('outdoors');
   const [showTrails, setShowTrails] = useState(true);
   const [showLifts, setShowLifts] = useState(true);
@@ -43,8 +43,8 @@ export default function InteractiveTrailMap() {
   const [viewState, setViewState] = useState({
     longitude: TELLURIDE_CENTER[0],
     latitude: TELLURIDE_CENTER[1],
-    zoom: 13.5,
-    pitch: 60,
+    zoom: 12.5,
+    pitch: 0,
     bearing: 0
   });
 
@@ -73,11 +73,11 @@ export default function InteractiveTrailMap() {
         console.log('[InteractiveTrailMap] 3D terrain enabled');
       }
 
-      // Fit to resort bounds with 3D view after terrain loads
+      // Fit to resort bounds in 2D view after map loads
       setTimeout(() => {
         map.fitBounds(TELLURIDE_BOUNDS, {
           padding: { top: 100, bottom: 100, left: 450, right: 450 },
-          pitch: 60,
+          pitch: 0,
           bearing: 0,
           duration: 1500
         });
