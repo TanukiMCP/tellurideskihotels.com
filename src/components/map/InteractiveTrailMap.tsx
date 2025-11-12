@@ -33,10 +33,14 @@ const TELLURIDE_MAX_BOUNDS: [[number, number], [number, number]] = [
 const SUMMIT_3D_VIEWPOINT = {
   longitude: -107.818,  // Positioned to look at the mountain
   latitude: 37.920,     // South of the main resort to look up at peaks
-  zoom: 13.8,           // Closer zoom for dramatic effect
+  zoom: 14.0,           // Closer zoom for dramatic effect (with safety buffer)
   pitch: 70,            // Steep angle to emphasize vertical relief
   bearing: 25           // Rotate to show mountain profile and peak areas
 };
+
+// Zoom constraints to prevent camera clipping through terrain
+const MIN_ZOOM_2D = 11;   // Allow more zoom out in 2D
+const MIN_ZOOM_3D = 12.8; // Prevent clipping through terrain in 3D
 
 
 export default function InteractiveTrailMap() {
@@ -482,10 +486,10 @@ export default function InteractiveTrailMap() {
       if (map.getSource('mapbox-dem')) {
         map.setTerrain({ source: 'mapbox-dem', exaggeration: 2.5 });
       }
-      // Fly to dramatic summit viewpoint
+      // Fly to dramatic summit viewpoint with safe zoom level
       map.flyTo({ 
         center: [SUMMIT_3D_VIEWPOINT.longitude, SUMMIT_3D_VIEWPOINT.latitude],
-        zoom: SUMMIT_3D_VIEWPOINT.zoom,
+        zoom: Math.max(SUMMIT_3D_VIEWPOINT.zoom, MIN_ZOOM_3D), // Ensure safe zoom
         pitch: SUMMIT_3D_VIEWPOINT.pitch,
         bearing: SUMMIT_3D_VIEWPOINT.bearing,
         duration: 2000,
@@ -535,7 +539,7 @@ export default function InteractiveTrailMap() {
         onLoad={handleMapLoad}
         onClick={handleMapClick}
         maxBounds={TELLURIDE_MAX_BOUNDS}
-        minZoom={11}
+        minZoom={terrainEnabled ? MIN_ZOOM_3D : MIN_ZOOM_2D}
         maxZoom={18}
         maxPitch={85}
         scrollZoom={true}
