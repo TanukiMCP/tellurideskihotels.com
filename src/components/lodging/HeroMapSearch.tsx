@@ -445,11 +445,11 @@ export default function HeroMapSearch({
           {/* Map Style Selector & Search Form - Single Row on Desktop */}
           <div className="flex flex-col lg:flex-row gap-2">
             {/* Map Style Selector */}
-            <div className="backdrop-blur-xl bg-white/95 border border-white/20 rounded-xl shadow-xl p-2 flex-shrink-0">
+            <div className="backdrop-blur-xl bg-white/95 border border-white/20 rounded-xl shadow-xl p-2 flex-shrink-0 w-fit">
               <div className="flex gap-1.5">
                 <button
                   onClick={() => setMapStyle('streets')}
-                  className={`px-3 py-2 rounded-lg text-xs font-semibold transition-all ${
+                  className={`px-3 py-2 rounded-lg text-xs font-semibold transition-all whitespace-nowrap ${
                     mapStyle === 'streets'
                       ? 'bg-primary-600 text-white shadow-md'
                       : 'bg-white/50 text-neutral-700 hover:bg-white'
@@ -460,7 +460,7 @@ export default function HeroMapSearch({
                 </button>
                 <button
                   onClick={() => setMapStyle('satellite')}
-                  className={`px-3 py-2 rounded-lg text-xs font-semibold transition-all ${
+                  className={`px-3 py-2 rounded-lg text-xs font-semibold transition-all whitespace-nowrap ${
                     mapStyle === 'satellite'
                       ? 'bg-primary-600 text-white shadow-md'
                       : 'bg-white/50 text-neutral-700 hover:bg-white'
@@ -471,7 +471,7 @@ export default function HeroMapSearch({
                 </button>
                 <button
                   onClick={() => setMapStyle('skiTrails')}
-                  className={`px-3 py-2 rounded-lg text-xs font-semibold transition-all ${
+                  className={`px-3 py-2 rounded-lg text-xs font-semibold transition-all whitespace-nowrap ${
                     mapStyle === 'skiTrails'
                       ? 'bg-primary-600 text-white shadow-md'
                       : 'bg-white/50 text-neutral-700 hover:bg-white'
