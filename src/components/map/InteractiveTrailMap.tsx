@@ -72,6 +72,16 @@ export default function InteractiveTrailMap() {
         map.setTerrain({ source: 'mapbox-dem', exaggeration: 2.5 });
         console.log('[InteractiveTrailMap] 3D terrain enabled on style load');
       }
+
+      // Fit to resort bounds with 3D view after terrain loads
+      setTimeout(() => {
+        map.fitBounds(TELLURIDE_BOUNDS, {
+          padding: { top: 100, bottom: 100, left: 450, right: 450 },
+          pitch: 60,
+          bearing: 0,
+          duration: 1500
+        });
+      }, 500);
     });
 
     setIsMapLoaded(true);
