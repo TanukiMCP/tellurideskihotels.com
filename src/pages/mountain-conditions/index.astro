@@ -14,11 +14,10 @@ import { optimizePexelsImage, generateSrcSet } from '@/lib/image-optimizer';
 const pageTitle = 'Telluride Mountain Conditions | Live Ski Report & Weather';
 const pageDescription = 'Real-time ski conditions, snow reports, weather forecast, and live webcams for Telluride Ski Resort. Plan your perfect ski day with up-to-date mountain information.';
 
-// Get hero background image
-const mountainImages = getImagesByCategory('mountains') || getImagesByCategory('resort');
-const heroImage = mountainImages[0];
-const optimizedHeroUrl = heroImage ? optimizePexelsImage(heroImage.url, { width: 1920, quality: 85 }) : null;
-const heroSrcSet = heroImage ? generateSrcSet(heroImage.url, [640, 768, 1024, 1280, 1536, 1920]) : null;
+// Get hero background images from resort category
+const mountainImages = getImagesByCategory('resort');
+const heroImage = mountainImages && mountainImages.length > 0 ? mountainImages[0] : null;
+const ctaImage = mountainImages && mountainImages.length > 1 ? mountainImages[1] : null;
 
 // Check if it's currently ski season (roughly late November to early April)
 const currentDate = new Date();
@@ -206,11 +205,11 @@ if (isSkiSeason) {
 
   <!-- CTA Section with Background Image -->
   <div class="relative py-32 lg:py-40 overflow-hidden">
-    {mountainImages && mountainImages[1] ? (
+    {ctaImage ? (
       <>
         <img 
-          src={optimizePexelsImage(mountainImages[1].url, { width: 1920, quality: 85 })}
-          srcset={generateSrcSet(mountainImages[1].url, [640, 768, 1024, 1280, 1536, 1920])}
+          src={optimizePexelsImage(ctaImage.url, { width: 1920, quality: 85 })}
+          srcset={generateSrcSet(ctaImage.url, [640, 768, 1024, 1280, 1536, 1920])}
           sizes="100vw"
           alt="Telluride Ski Slopes" 
           class="absolute inset-0 w-full h-full object-cover"
