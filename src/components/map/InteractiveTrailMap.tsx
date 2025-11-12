@@ -31,31 +31,31 @@ const TELLURIDE_MAX_BOUNDS: [[number, number], [number, number]] = [
   [-107.70, 38.00]   // Northeast with ~5mi buffer
 ];
 
-// 3D Model configurations for each POI type
-const POI_3D_MODELS = {
+// 3D Object configurations for each POI type (using simple geometric shapes)
+const POI_3D_CONFIGS = {
   'lift-station': {
-    url: 'https://docs.mapbox.com/mapbox-gl-js/assets/34M_17/34M_17.gltf',
-    scale: 0.5,
-    rotation: { x: 90, y: 0, z: 0 },
-    color: '#fbbf24' // Yellow/gold for lifts
+    type: 'sphere',
+    radius: 15,
+    color: '#fbbf24', // Yellow/gold for lifts
+    material: 'MeshStandardMaterial'
   },
   'restaurant': {
-    url: 'https://docs.mapbox.com/mapbox-gl-js/assets/34M_17/34M_17.gltf',
-    scale: 0.4,
-    rotation: { x: 90, y: 0, z: 0 },
-    color: '#ef4444' // Red for restaurants
+    type: 'sphere',
+    radius: 12,
+    color: '#ef4444', // Red for restaurants
+    material: 'MeshStandardMaterial'
   },
   'restroom': {
-    url: 'https://docs.mapbox.com/mapbox-gl-js/assets/34M_17/34M_17.gltf',
-    scale: 0.3,
-    rotation: { x: 90, y: 0, z: 0 },
-    color: '#3b82f6' // Blue for restrooms
+    type: 'sphere',
+    radius: 10,
+    color: '#3b82f6', // Blue for restrooms
+    material: 'MeshStandardMaterial'
   },
   'information': {
-    url: 'https://docs.mapbox.com/mapbox-gl-js/assets/34M_17/34M_17.gltf',
-    scale: 0.35,
-    rotation: { x: 90, y: 0, z: 0 },
-    color: '#10b981' // Green for info
+    type: 'sphere',
+    radius: 11,
+    color: '#10b981', // Green for info
+    material: 'MeshStandardMaterial'
   }
 };
 
@@ -473,65 +473,54 @@ export default function InteractiveTrailMap() {
         map.setLayoutProperty('telluride-pois', 'visibility', 'none');
       }
 
-      // Load 3D models for each POI
+      // Create 3D objects for each POI
       let loadedCount = 0;
-      const totalPOIs = poiData.features.length;
 
       poiData.features.forEach((feature: any) => {
         const poiType = feature.properties.type;
-        const modelConfig = POI_3D_MODELS[poiType as keyof typeof POI_3D_MODELS];
+        const config = POI_3D_CONFIGS[poiType as keyof typeof POI_3D_CONFIGS];
         
-        if (!modelConfig) return; // Skip POI types without 3D models
+        if (!config) return; // Skip POI types without 3D configs
 
         const [lng, lat] = feature.geometry.coordinates;
 
         try {
+          // Create a simple 3D sphere object
           // @ts-ignore
-          threeboxRef.current.loadObj({
-            obj: modelConfig.url,
-            type: 'gltf',
-            scale: modelConfig.scale,
-            units: 'meters',
-            rotation: modelConfig.rotation,
-            anchor: 'center'
-          }, (model: any) => {
-            // Set model position
-            model.setCoords([lng, lat]);
-            
-            // Apply color tint to the model
-            if (model.traverse) {
-              model.traverse((child: any) => {
-                if (child.isMesh && child.material) {
-                  // @ts-ignore
-                  const THREE = window.THREE;
-                  if (THREE) {
-                    child.material.color = new THREE.Color(modelConfig.color);
-                  }
-                }
-              });
-            }
-
-            // Add tooltip data
-            model.userData = {
-              name: feature.properties.name,
-              type: poiType
-            };
-
-            // Add model to scene
-            if (threeboxRef.current) {
-              threeboxRef.current.add(model);
-              poi3DModelsRef.current.push(model);
-            }
-
-            loadedCount++;
-            if (loadedCount === totalPOIs || loadedCount % 10 === 0) {
-              console.log(`[InteractiveTrailMap] Loaded ${loadedCount}/${totalPOIs} 3D POI models`);
-            }
+          const sphere = threeboxRef.current.sphere({
+            radius: config.radius,
+            color: config.color,
+            material: config.material,
+            units: 'meters'
           });
+
+          // Set position
+          sphere.setCoords([lng, lat]);
+          
+          // Add tooltip data
+          sphere.userData = {
+            name: feature.properties.name,
+            type: poiType
+          };
+
+          // Add to scene
+          if (threeboxRef.current) {
+            threeboxRef.current.add(sphere);
+            poi3DModelsRef.current.push(sphere);
+          }
+
+          loadedCount++;
+          if (loadedCount % 20 === 0) {
+            console.log(`[InteractiveTrailMap] Created ${loadedCount} 3D POI markers`);
+          }
         } catch (error) {
-          console.error(`[InteractiveTrailMap] Failed to load 3D model for ${feature.properties.name}:`, error);
+          console.error(`[InteractiveTrailMap] Failed to create 3D object for ${feature.properties.name}:`, error);
         }
       });
+
+      if (loadedCount > 0) {
+        console.log(`[InteractiveTrailMap] ✅ Created ${loadedCount} 3D POI markers`);
+      }
     } else if (!terrainEnabled) {
       // Show 2D POI markers when 3D is disabled
       if (map.getLayer('telluride-pois')) {
