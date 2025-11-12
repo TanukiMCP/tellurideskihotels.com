@@ -12,11 +12,21 @@ import { optimizePexelsImage, generateSrcSet } from '@/lib/image-optimizer';
 const pageTitle = 'Things to Do in Telluride | Tours, Activities & Experiences';
 const pageDescription = 'Discover the best activities, tours, and experiences in Telluride, Colorado. From skiing and snowboarding to hiking and mountain biking, find your perfect adventure.';
 
-// Get hero background image
-const activityImages = getImagesByCategory('activities') || getImagesByCategory('resort');
-const heroImage = activityImages[0];
+// Get images from our media library - use resort images for activities
+const resortImages = getImagesByCategory('resort');
+
+// Hero image - use a scenic mountain/resort image
+const heroImage = resortImages[0]; // First resort image
 const optimizedHeroUrl = heroImage ? optimizePexelsImage(heroImage.url, { width: 1920, quality: 85 }) : null;
 const heroSrcSet = heroImage ? generateSrcSet(heroImage.url, [640, 768, 1024, 1280, 1536, 1920]) : null;
+
+// Why Book section image - use a different resort image
+const whyBookImage = resortImages[2]; // Third resort image
+const optimizedWhyBookUrl = whyBookImage ? optimizePexelsImage(whyBookImage.url, { width: 800, quality: 80 }) : null;
+
+// CTA section background image - use another resort image
+const ctaImage = resortImages[4]; // Fifth resort image
+const optimizedCtaUrl = ctaImage ? optimizePexelsImage(ctaImage.url, { width: 1920, quality: 80 }) : null;
 
 // Fetch initial activities server-side
 let initialActivities: ViatorProductSummary[] = [];
@@ -95,9 +105,9 @@ try {
       <div class="grid lg:grid-cols-2 gap-12 items-center">
         {/* Left Side - Image */}
         <div class="relative h-[400px] lg:h-[500px] rounded-2xl overflow-hidden shadow-2xl">
-          {activityImages[1] ? (
+          {whyBookImage && optimizedWhyBookUrl ? (
             <img 
-              src={activityImages[1].url}
+              src={optimizedWhyBookUrl}
               alt="Telluride Adventures" 
               class="w-full h-full object-cover"
               loading="lazy"
@@ -161,10 +171,10 @@ try {
 
   <!-- CTA Section with Background Image -->
   <div class="relative py-32 lg:py-40 overflow-hidden">
-    {activityImages[2] ? (
+    {ctaImage && optimizedCtaUrl ? (
       <>
         <img 
-          src={activityImages[2].url}
+          src={optimizedCtaUrl}
           alt="Telluride Adventures" 
           class="absolute inset-0 w-full h-full object-cover"
           loading="lazy"
