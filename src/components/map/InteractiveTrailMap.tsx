@@ -303,76 +303,91 @@ export default function InteractiveTrailMap() {
           data: data
         });
 
-        // Add POI markers as symbols (better for 3D - always face camera like Sims icons)
+        // Add POI markers as text symbols (classic ski map style - square badges)
         map.addLayer({
           id: 'telluride-pois',
           type: 'symbol',
           source: 'telluride-pois',
           layout: {
             'visibility': showPOIs ? 'visible' : 'none',
-            // Use emoji/unicode symbols for POI markers
-            'icon-image': [
+            // Use letter abbreviations like classic ski maps
+            'text-field': [
               'match',
               ['get', 'type'],
-              'restaurant', 'restaurant-15',
-              'cafe', 'cafe-15',
-              'restroom', 'toilet-15',
-              'lift-station', 'aerialway-15',
-              'information', 'information-15',
-              'viewpoint', 'viewpoint-15',
-              'marker-15' // default
+              'restaurant', 'R',
+              'cafe', 'C',
+              'restroom', 'WC',
+              'lift-station', 'L',
+              'information', 'i',
+              'viewpoint', 'V',
+              'M' // default marker
             ],
-            'icon-size': [
+            'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
+            'text-size': [
               'interpolate',
               ['linear'],
               ['zoom'],
-              12, 1.0,
-              15, 1.5,
-              17, 2.0
+              12, 12,
+              15, 14,
+              17, 16
             ],
-            'icon-allow-overlap': true,
-            'icon-ignore-placement': false,
+            'text-allow-overlap': true,
+            'text-ignore-placement': false,
             // Key for 3D: always face the viewport (billboard effect)
-            'icon-rotation-alignment': 'viewport',
-            'icon-pitch-alignment': 'viewport'
+            'text-rotation-alignment': 'viewport',
+            'text-pitch-alignment': 'viewport',
+            'text-offset': [0, 0]
           },
           paint: {
-            'icon-opacity': 0.95,
-            // Add a subtle halo effect
-            'icon-halo-color': '#ffffff',
-            'icon-halo-width': 2,
-            'icon-halo-blur': 1
+            'text-color': '#ffffff',
+            'text-opacity': 1,
+            // Colored background effect with thick border (classic ski map style)
+            'text-halo-color': [
+              'match',
+              ['get', 'type'],
+              'restaurant', '#ef4444',      // Red
+              'cafe', '#f97316',            // Orange
+              'restroom', '#3b82f6',        // Blue
+              'lift-station', '#fbbf24',    // Yellow/gold
+              'information', '#10b981',     // Green
+              'viewpoint', '#06b6d4',       // Cyan
+              '#6b7280'                      // Gray default
+            ],
+            'text-halo-width': 4,
+            'text-halo-blur': 0
           }
         });
 
-        // Add POI labels (also billboard-style for 3D)
+        // Add POI labels (billboard-style like FR 641 - always readable)
         map.addLayer({
           id: 'telluride-pois-labels',
           type: 'symbol',
           source: 'telluride-pois',
           layout: {
             'text-field': ['get', 'name'],
-            'text-font': ['Open Sans Semibold', 'Arial Unicode MS Bold'],
+            'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
             'text-size': [
               'interpolate',
               ['linear'],
               ['zoom'],
-              13, 10,
-              15, 12,
-              17, 14
+              13, 11,
+              15, 13,
+              17, 16
             ],
-            'text-offset': [0, 1.5],
+            'text-offset': [0, 2],
             'text-anchor': 'top',
             'visibility': showPOIs ? 'visible' : 'none',
-            // Billboard effect - always face camera
+            // Billboard effect - always face camera (like FR 641)
             'text-rotation-alignment': 'viewport',
-            'text-pitch-alignment': 'viewport'
+            'text-pitch-alignment': 'viewport',
+            'text-allow-overlap': false
           },
           paint: {
-            'text-color': '#1f2937',
+            'text-color': '#000000',
+            // Strong white halo for maximum visibility (like FR 641)
             'text-halo-color': '#ffffff',
-            'text-halo-width': 2.5,
-            'text-halo-blur': 0.5
+            'text-halo-width': 3,
+            'text-halo-blur': 1
           },
           minzoom: 14
         });
@@ -487,22 +502,25 @@ export default function InteractiveTrailMap() {
 
         {/* Map Controls - Left Panel (Classic Ski Map Style) */}
         {showLeftPanel ? (
-          <div className="absolute top-4 left-4 z-10 bg-white rounded-xl shadow-2xl p-5 border-2 border-neutral-800 max-w-sm" style={{fontFamily: 'system-ui, -apple-system, sans-serif'}}>
-            <div className="flex items-start justify-between mb-4">
-              <h3 className="text-base font-black text-neutral-900 uppercase tracking-wider border-b-2 border-neutral-800 pb-2 flex-1">
-                Telluride Ski Resort
-              </h3>
-              <button
-                onClick={() => setShowLeftPanel(false)}
-                className="text-neutral-400 hover:text-neutral-900 transition-colors ml-2"
-                aria-label="Close panel"
-              >
-                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </button>
+          <div className="absolute top-4 left-4 z-10 bg-white rounded-xl shadow-2xl border-2 border-neutral-800 max-w-sm max-h-[calc(100vh-2rem)] overflow-y-auto" style={{fontFamily: 'system-ui, -apple-system, sans-serif'}}>
+            <div className="sticky top-0 bg-white z-10 p-5 pb-3 border-b-2 border-neutral-800">
+              <div className="flex items-start justify-between">
+                <h3 className="text-base font-black text-neutral-900 uppercase tracking-wider flex-1">
+                  Telluride Ski Resort
+                </h3>
+                <button
+                  onClick={() => setShowLeftPanel(false)}
+                  className="text-neutral-400 hover:text-neutral-900 transition-colors ml-2"
+                  aria-label="Close panel"
+                >
+                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
             </div>
-
+            
+            <div className="p-5 pt-4">
             {/* Map Style Toggle */}
             <div className="mb-4 pb-4 border-b border-neutral-300">
               <h4 className="text-sm font-black text-neutral-900 mb-3 uppercase tracking-wide">Map Style</h4>
@@ -632,6 +650,7 @@ export default function InteractiveTrailMap() {
               </svg>
               Reset View
             </button>
+            </div>
           </div>
         ) : (
           <button
@@ -714,21 +733,25 @@ export default function InteractiveTrailMap() {
 
         {/* Classic Ski Map Legend - Bottom Right */}
         {showLegendPanel ? (
-          <div className="absolute bottom-4 right-4 bg-white rounded-xl shadow-2xl p-5 z-10 border-2 border-neutral-800 max-w-xs max-h-[calc(100vh-500px)] overflow-y-auto" style={{fontFamily: 'system-ui, -apple-system, sans-serif'}}>
-            <div className="flex items-start justify-between mb-4 sticky top-0 bg-white pb-2 border-b-2 border-neutral-800">
-              <h3 className="text-base font-black text-neutral-900 uppercase tracking-wider flex-1">
-                Trail Map Legend
-              </h3>
-              <button
-                onClick={() => setShowLegendPanel(false)}
-                className="text-neutral-400 hover:text-neutral-900 transition-colors ml-2"
-                aria-label="Close legend"
-              >
-                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </button>
+          <div className="absolute bottom-4 right-4 bg-white rounded-xl shadow-2xl border-2 border-neutral-800 max-w-xs max-h-[calc(100vh-2rem)] overflow-y-auto z-10" style={{fontFamily: 'system-ui, -apple-system, sans-serif'}}>
+            <div className="sticky top-0 bg-white z-10 p-5 pb-3 border-b-2 border-neutral-800">
+              <div className="flex items-start justify-between">
+                <h3 className="text-base font-black text-neutral-900 uppercase tracking-wider flex-1">
+                  Trail Map Legend
+                </h3>
+                <button
+                  onClick={() => setShowLegendPanel(false)}
+                  className="text-neutral-400 hover:text-neutral-900 transition-colors ml-2"
+                  aria-label="Close legend"
+                >
+                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
             </div>
+            
+            <div className="p-5 pt-4">
           
           {showTrails && (
             <div className="mb-4 pb-4 border-b border-neutral-300">
@@ -804,28 +827,40 @@ export default function InteractiveTrailMap() {
               <h4 className="text-sm font-black text-neutral-900 mb-3 uppercase tracking-wide">Facilities</h4>
               <div className="grid grid-cols-2 gap-3">
                 <div className="flex items-center gap-2">
-                  <div className="w-6 h-6 rounded-full bg-[#ef4444] border-2 border-neutral-800 flex items-center justify-center flex-shrink-0 shadow-sm">
-                    <span className="text-white font-black text-[10px]">R</span>
+                  <div className="w-7 h-7 bg-[#ef4444] border-2 border-neutral-800 flex items-center justify-center flex-shrink-0 shadow-sm">
+                    <span className="text-white font-black text-xs">R</span>
                   </div>
                   <span className="text-xs text-neutral-900 font-bold">Restaurant</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <div className="w-6 h-6 rounded-full bg-[#3b82f6] border-2 border-neutral-800 flex items-center justify-center flex-shrink-0 shadow-sm">
+                  <div className="w-7 h-7 bg-[#f97316] border-2 border-neutral-800 flex items-center justify-center flex-shrink-0 shadow-sm">
+                    <span className="text-white font-black text-xs">C</span>
+                  </div>
+                  <span className="text-xs text-neutral-900 font-bold">Cafe</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-7 h-7 bg-[#3b82f6] border-2 border-neutral-800 flex items-center justify-center flex-shrink-0 shadow-sm">
                     <span className="text-white font-black text-[10px]">WC</span>
                   </div>
                   <span className="text-xs text-neutral-900 font-bold">Restroom</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <div className="w-6 h-6 rounded-full bg-[#8b5cf6] border-2 border-neutral-800 flex items-center justify-center flex-shrink-0 shadow-sm">
-                    <span className="text-white font-black text-[10px]">L</span>
+                  <div className="w-7 h-7 bg-[#fbbf24] border-2 border-neutral-800 flex items-center justify-center flex-shrink-0 shadow-sm">
+                    <span className="text-white font-black text-xs">L</span>
                 </div>
                   <span className="text-xs text-neutral-900 font-bold">Lift Station</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <div className="w-6 h-6 rounded-full bg-[#10b981] border-2 border-neutral-800 flex items-center justify-center flex-shrink-0 shadow-sm">
-                    <span className="text-white font-black text-[10px]">i</span>
+                  <div className="w-7 h-7 bg-[#10b981] border-2 border-neutral-800 flex items-center justify-center flex-shrink-0 shadow-sm">
+                    <span className="text-white font-black text-xs">i</span>
                 </div>
                   <span className="text-xs text-neutral-900 font-bold">Information</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-7 h-7 bg-[#06b6d4] border-2 border-neutral-800 flex items-center justify-center flex-shrink-0 shadow-sm">
+                    <span className="text-white font-black text-xs">V</span>
+                </div>
+                  <span className="text-xs text-neutral-900 font-bold">Viewpoint</span>
                 </div>
               </div>
             </div>
@@ -836,7 +871,8 @@ export default function InteractiveTrailMap() {
               Map Data © OpenStreetMap
             </p>
           </div>
-        </div>
+            </div>
+          </div>
         ) : (
           <button
             onClick={() => setShowLegendPanel(true)}
