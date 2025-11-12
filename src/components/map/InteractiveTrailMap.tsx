@@ -28,6 +28,15 @@ const TELLURIDE_MAX_BOUNDS: [[number, number], [number, number]] = [
   [-107.70, 38.00]   // Northeast with ~5mi buffer
 ];
 
+// Dramatic 3D viewpoint focusing on the summit area
+const SUMMIT_3D_VIEWPOINT = {
+  longitude: -107.812,  // Looking at the summit/main mountain
+  latitude: 37.9275,    // Positioned to see mountain village and peaks
+  zoom: 13.2,
+  pitch: 65,            // Steep angle for dramatic mountain view
+  bearing: -15          // Slight rotation for better perspective
+};
+
 
 export default function InteractiveTrailMap() {
   const mapRef = useRef<MapRef>(null);
@@ -472,19 +481,24 @@ export default function InteractiveTrailMap() {
       if (map.getSource('mapbox-dem')) {
         map.setTerrain({ source: 'mapbox-dem', exaggeration: 2.5 });
       }
-      map.easeTo({ 
-        pitch: 60, 
-        duration: 800,
+      // Fly to dramatic summit viewpoint
+      map.flyTo({ 
+        center: [SUMMIT_3D_VIEWPOINT.longitude, SUMMIT_3D_VIEWPOINT.latitude],
+        zoom: SUMMIT_3D_VIEWPOINT.zoom,
+        pitch: SUMMIT_3D_VIEWPOINT.pitch,
+        bearing: SUMMIT_3D_VIEWPOINT.bearing,
+        duration: 2000,
+        essential: true,
         easing: (t) => t * (2 - t) // easeOutQuad for smooth animation
       });
     } else {
-      // Disable 3D
+      // Disable 3D and return to full resort overview
       map.setTerrain(null);
-      map.easeTo({ 
-        pitch: 0, 
+      map.fitBounds(TELLURIDE_BOUNDS, {
+        padding: { top: 100, bottom: 100, left: 450, right: 450 },
+        pitch: 0,
         bearing: 0,
-        duration: 800,
-        easing: (t) => t * (2 - t)
+        duration: 1500
       });
     }
     setTerrainEnabled(newTerrainState);
