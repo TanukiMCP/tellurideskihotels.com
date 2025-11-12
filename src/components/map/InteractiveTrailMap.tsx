@@ -431,24 +431,23 @@ export default function InteractiveTrailMap() {
           }
         );
 
-        // Add custom 3D layer for POIs
+        // Add custom 3D layer for POIs with proper Threebox binding
+        const tb = threeboxRef.current;
         const customLayer = {
           id: 'custom-threebox-pois',
           type: 'custom',
           renderingMode: '3d',
-          onAdd: function() {
-            // Layer will be populated by loading models below
+          onAdd: function(map: any, gl: any) {
+            // Threebox layer initialization
           },
-          render: function() {
-            if (threeboxRef.current) {
-              threeboxRef.current.update();
-            }
+          render: function(gl: any, matrix: any) {
+            tb.update();
           }
         };
 
         if (!map.getLayer('custom-threebox-pois')) {
           // @ts-ignore
-          map.addLayer(customLayer);
+          map.addLayer(customLayer, 'waterway-label');
         }
 
         console.log('[InteractiveTrailMap] ✅ Threebox initialized');
@@ -752,18 +751,32 @@ export default function InteractiveTrailMap() {
 
           {/* Controls */}
           <div className="border-t border-neutral-200 pt-3 space-y-2">
-            <button
-              onClick={toggle3D}
-              className="w-full flex items-center justify-between px-3 py-2 bg-primary-50 hover:bg-primary-100 rounded-lg text-xs font-medium text-neutral-700 transition-colors"
-            >
-              <span>{terrainEnabled ? '3D View' : '2D View'}</span>
-              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
-              </svg>
-            </button>
+            {/* Modern 3D Toggle */}
+            <div className="bg-gradient-to-r from-primary-50 to-sky-50 rounded-xl p-3 border border-primary-100">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-xs font-bold text-neutral-800 uppercase tracking-wide">Terrain View</span>
+                <div className={`w-10 h-5 rounded-full transition-all duration-300 cursor-pointer ${terrainEnabled ? 'bg-primary-600' : 'bg-neutral-300'}`} onClick={toggle3D}>
+                  <div className={`w-4 h-4 rounded-full bg-white shadow-md transform transition-transform duration-300 mt-0.5 ${terrainEnabled ? 'translate-x-5 ml-0.5' : 'translate-x-0.5'}`} />
+                </div>
+              </div>
+              <button
+                onClick={toggle3D}
+                className="w-full flex items-center justify-center gap-2 px-3 py-2.5 bg-white hover:bg-primary-50 rounded-lg text-sm font-bold text-neutral-900 transition-all shadow-sm hover:shadow-md"
+              >
+                <svg className="w-5 h-5 text-primary-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  {terrainEnabled ? (
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                  ) : (
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
+                  )}
+                </svg>
+                <span>{terrainEnabled ? '3D Terrain Active' : 'Enable 3D Terrain'}</span>
+              </button>
+            </div>
+            
             <button
               onClick={resetView}
-              className="w-full flex items-center justify-center gap-2 px-3 py-2 bg-neutral-100 hover:bg-neutral-200 rounded-lg text-xs font-medium text-neutral-700 transition-colors"
+              className="w-full flex items-center justify-center gap-2 px-3 py-2.5 bg-neutral-100 hover:bg-neutral-200 rounded-lg text-xs font-bold text-neutral-700 transition-all"
             >
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
