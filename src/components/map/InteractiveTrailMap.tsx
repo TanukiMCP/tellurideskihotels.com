@@ -10,7 +10,7 @@ import type { MapRef, MapMouseEvent } from 'react-map-gl/mapbox';
 import { MAPBOX_TOKEN, TELLURIDE_CENTER } from '@/lib/mapbox-utils';
 import 'mapbox-gl/dist/mapbox-gl.css';
 // @ts-ignore - threebox-plugin doesn't have TypeScript definitions
-import { Threebox } from 'threebox-plugin';
+import Threebox from 'threebox-plugin';
 import 'threebox-plugin/dist/threebox.css';
 
 const MAP_STYLES = {
@@ -417,8 +417,9 @@ export default function InteractiveTrailMap() {
     // Initialize Threebox if not already done
     if (!threeboxRef.current && terrainEnabled) {
       try {
-        // @ts-ignore
-        threeboxRef.current = new Threebox(
+        // @ts-ignore - Threebox is a default CommonJS export
+        const ThreeboxConstructor = Threebox.Threebox || Threebox;
+        threeboxRef.current = new ThreeboxConstructor(
           map,
           map.getCanvas().getContext('webgl'),
           {
