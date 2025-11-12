@@ -554,7 +554,7 @@ export default function InteractiveTrailMap() {
 
          {/* Map Controls - Left Panel (Classic Ski Map Style) */}
         {showLeftPanel ? (
-          <div className="absolute top-4 left-4 bottom-16 z-10 bg-white rounded-xl shadow-2xl border-2 border-neutral-800 max-w-sm flex flex-col" style={{fontFamily: 'system-ui, -apple-system, sans-serif'}}>
+          <div className="absolute top-4 left-4 z-10 bg-white rounded-xl shadow-2xl border-2 border-neutral-800 max-w-sm flex flex-col max-h-[calc(100vh-2rem)]" style={{fontFamily: 'system-ui, -apple-system, sans-serif'}}>
             <div className="bg-white z-10 p-5 pb-3 border-b-2 border-neutral-800 rounded-t-xl flex-shrink-0">
               <div className="flex items-start justify-between">
                 <h3 className="text-base font-black text-neutral-900 uppercase tracking-wider flex-1">
@@ -671,7 +671,7 @@ export default function InteractiveTrailMap() {
          ) : (
           <button
             onClick={() => setShowLeftPanel(true)}
-            className="absolute top-4 left-4 z-10 bg-primary-600 hover:bg-primary-700 text-white rounded-lg shadow-2xl transition-all border-2 border-neutral-800 flex flex-col items-center gap-1 px-2 py-3"
+            className="absolute top-4 left-4 z-10 bg-primary-600 hover:bg-primary-700 text-white rounded-lg shadow-2xl transition-all border-2 border-neutral-800 px-3 py-2"
             aria-label="Show controls"
             title="Show controls"
           >
@@ -683,7 +683,7 @@ export default function InteractiveTrailMap() {
 
         {/* Control Instructions */}
         {showControls && (
-          <div className="absolute top-4 right-16 bg-white/95 backdrop-blur-sm rounded-xl shadow-xl px-4 py-3 z-10 border border-neutral-200 max-w-xs">
+          <div className="absolute top-24 right-4 bg-white/95 backdrop-blur-sm rounded-xl shadow-xl px-4 py-3 z-10 border border-neutral-200 max-w-xs">
             <div className="flex items-start justify-between gap-3 mb-2">
           <div className="flex items-center gap-2">
                 <svg className="w-5 h-5 text-primary-600 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -740,7 +740,7 @@ export default function InteractiveTrailMap() {
         {!showControls && (
           <button
             onClick={() => setShowControls(true)}
-            className="absolute top-4 right-16 bg-primary-600 hover:bg-primary-700 text-white rounded-full p-2 shadow-xl z-10 transition-all"
+            className="absolute top-24 right-4 bg-primary-600 hover:bg-primary-700 text-white rounded-full p-2 shadow-xl z-10 transition-all"
           >
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -750,7 +750,7 @@ export default function InteractiveTrailMap() {
 
         {/* Classic Ski Map Legend - Bottom Right */}
         {showLegendPanel ? (
-          <div className="absolute bottom-4 right-4 bg-white rounded-xl shadow-2xl border-2 border-neutral-800 max-w-xs max-h-[calc(100vh-8rem)] z-10 flex flex-col" style={{fontFamily: 'system-ui, -apple-system, sans-serif'}}>
+          <div className="absolute bottom-4 right-4 bg-white rounded-xl shadow-2xl border-2 border-neutral-800 max-w-xs max-h-[calc(100vh-180px)] z-10 flex flex-col" style={{fontFamily: 'system-ui, -apple-system, sans-serif'}}>
             <div className="bg-white z-10 p-5 pb-3 border-b-2 border-neutral-800 rounded-t-xl flex-shrink-0">
               <div className="flex items-start justify-between">
                 <h3 className="text-base font-black text-neutral-900 uppercase tracking-wider flex-1">
@@ -944,7 +944,7 @@ export default function InteractiveTrailMap() {
         ) : (
           <button
             onClick={() => setShowLegendPanel(true)}
-            className="absolute bottom-4 right-4 z-10 bg-primary-600 hover:bg-primary-700 text-white rounded-lg shadow-2xl transition-all border-2 border-neutral-800 flex flex-col items-center gap-1 px-2 py-3"
+            className="absolute bottom-4 right-4 z-10 bg-primary-600 hover:bg-primary-700 text-white rounded-lg shadow-2xl transition-all border-2 border-neutral-800 px-3 py-2"
             aria-label="Show legend"
             title="Show legend"
           >
