@@ -567,92 +567,183 @@ export default function InteractiveTrailMap() {
           </div>
         </div>
 
-        {/* Info Badge */}
-        <div className="absolute top-4 right-16 bg-white/95 backdrop-blur-sm rounded-lg shadow-md px-3 py-2 z-10">
-          <div className="flex items-center gap-2">
-            <svg className="w-4 h-4 text-primary-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        {/* Control Instructions */}
+        {showControls && (
+          <div className="absolute top-4 right-16 bg-white/95 backdrop-blur-sm rounded-xl shadow-xl px-4 py-3 z-10 border border-neutral-200 max-w-xs">
+            <div className="flex items-start justify-between gap-3 mb-2">
+              <div className="flex items-center gap-2">
+                <svg className="w-5 h-5 text-primary-600 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <span className="text-sm font-black text-neutral-900">Map Controls</span>
+              </div>
+              <button 
+                onClick={() => setShowControls(false)}
+                className="text-neutral-400 hover:text-neutral-600 transition-colors"
+              >
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+            <div className="space-y-2 text-xs text-neutral-700">
+              <div className="flex items-start gap-2">
+                <svg className="w-4 h-4 text-primary-600 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122" />
+                </svg>
+                <div>
+                  <span className="font-bold">Click & Drag</span> to pan
+                </div>
+              </div>
+              <div className="flex items-start gap-2">
+                <svg className="w-4 h-4 text-primary-600 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM13 10H7" />
+                </svg>
+                <div>
+                  <span className="font-bold">Scroll</span> to zoom in/out
+                </div>
+              </div>
+              <div className="flex items-start gap-2">
+                <svg className="w-4 h-4 text-primary-600 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                </svg>
+                <div>
+                  <span className="font-bold">Right-Click & Drag</span> to rotate
+                </div>
+              </div>
+              <div className="flex items-start gap-2">
+                <svg className="w-4 h-4 text-primary-600 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122" />
+                </svg>
+                <div>
+                  <span className="font-bold">Click trails/POIs</span> for info
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+        
+        {!showControls && (
+          <button
+            onClick={() => setShowControls(true)}
+            className="absolute top-4 right-16 bg-primary-600 hover:bg-primary-700 text-white rounded-full p-2 shadow-xl z-10 transition-all"
+          >
+            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
-            <span className="text-xs font-medium text-neutral-700">Click map for details</span>
-          </div>
-        </div>
+          </button>
+        )}
 
-        {/* Comprehensive Map Legend - Bottom Right */}
-        <div className="absolute bottom-4 right-4 bg-white/95 backdrop-blur-sm rounded-xl shadow-2xl p-4 z-10 border border-neutral-200 max-w-xs max-h-[calc(100vh-500px)] overflow-y-auto">
-          <h3 className="text-sm font-bold text-neutral-900 mb-3 flex items-center gap-2 sticky top-0 bg-white/95 pb-2">
-            <svg className="w-4 h-4 text-primary-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
-            </svg>
-            Map Legend
+        {/* Classic Ski Map Legend - Bottom Right */}
+        <div className="absolute bottom-4 right-4 bg-white rounded-xl shadow-2xl p-5 z-10 border-2 border-neutral-800 max-w-xs max-h-[calc(100vh-500px)] overflow-y-auto" style={{fontFamily: 'system-ui, -apple-system, sans-serif'}}>
+          <h3 className="text-base font-black text-neutral-900 mb-4 uppercase tracking-wider border-b-2 border-neutral-800 pb-2 sticky top-0 bg-white">
+            Trail Map Legend
           </h3>
           
           {showTrails && (
-            <div className="mb-3">
-              <h4 className="text-xs font-semibold text-neutral-700 mb-2">Trail Difficulty</h4>
-              <div className="space-y-1.5">
-                <div className="flex items-center gap-2.5">
-                  <div className="w-6 h-1 rounded-full bg-[#22c55e]"></div>
-                  <span className="text-xs text-neutral-700">Green - Easy</span>
+            <div className="mb-4 pb-4 border-b border-neutral-300">
+              <h4 className="text-sm font-black text-neutral-900 mb-3 uppercase tracking-wide">Trail Difficulty</h4>
+              <div className="space-y-2.5">
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-full bg-[#22c55e] border-2 border-neutral-800 flex items-center justify-center flex-shrink-0 shadow-sm">
+                    <span className="text-white font-black text-xs">●</span>
+                  </div>
+                  <div>
+                    <div className="text-sm font-black text-neutral-900">Green Circle</div>
+                    <div className="text-xs text-neutral-600 font-semibold">Easiest • Beginner</div>
+                  </div>
                 </div>
-                <div className="flex items-center gap-2.5">
-                  <div className="w-6 h-1 rounded-full bg-[#3b82f6]"></div>
-                  <span className="text-xs text-neutral-700">Blue - Intermediate</span>
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 bg-[#3b82f6] border-2 border-neutral-800 flex items-center justify-center flex-shrink-0 shadow-sm">
+                    <span className="text-white font-black text-xs">■</span>
+                  </div>
+                  <div>
+                    <div className="text-sm font-black text-neutral-900">Blue Square</div>
+                    <div className="text-xs text-neutral-600 font-semibold">More Difficult • Intermediate</div>
+                  </div>
                 </div>
-                <div className="flex items-center gap-2.5">
-                  <div className="w-6 h-1 rounded-full bg-[#1e1e1e]"></div>
-                  <span className="text-xs text-neutral-700">Black - Advanced</span>
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 bg-[#1e1e1e] border-2 border-neutral-800 rotate-45 flex items-center justify-center flex-shrink-0 shadow-sm">
+                    <span className="text-white font-black text-xs -rotate-45">◆</span>
+                  </div>
+                  <div>
+                    <div className="text-sm font-black text-neutral-900">Black Diamond</div>
+                    <div className="text-xs text-neutral-600 font-semibold">Most Difficult • Advanced</div>
+                  </div>
                 </div>
-                <div className="flex items-center gap-2.5">
-                  <div className="w-6 h-1 rounded-full bg-[#ef4444]"></div>
-                  <span className="text-xs text-neutral-700">Red - Expert</span>
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 bg-[#ef4444] border-2 border-neutral-800 flex items-center justify-center flex-shrink-0 shadow-sm relative">
+                    <span className="text-white font-black text-xs absolute">◆</span>
+                    <span className="text-white font-black text-xs absolute translate-x-1">◆</span>
+                  </div>
+                  <div>
+                    <div className="text-sm font-black text-neutral-900">Double Black</div>
+                    <div className="text-xs text-neutral-600 font-semibold">Experts Only • Extreme</div>
+                  </div>
                 </div>
               </div>
             </div>
           )}
 
           {showLifts && (
-            <div className="mb-3 pb-3 border-t border-neutral-200 pt-3">
-              <h4 className="text-xs font-semibold text-neutral-700 mb-2">Lifts & Gondolas</h4>
-              <div className="space-y-1.5">
-                <div className="flex items-center gap-2.5">
-                  <div className="w-6 h-0.5 bg-[#f59e0b]" style={{borderTop: '2px dashed #f59e0b'}}></div>
-                  <span className="text-xs text-neutral-700">Gondolas</span>
+            <div className="mb-4 pb-4 border-b border-neutral-300">
+              <h4 className="text-sm font-black text-neutral-900 mb-3 uppercase tracking-wide">Lifts & Gondolas</h4>
+              <div className="space-y-2.5">
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-2 border-2 border-[#f59e0b] bg-white flex items-center justify-center flex-shrink-0" style={{borderStyle: 'dashed'}}>
+                  </div>
+                  <div>
+                    <div className="text-sm font-black text-neutral-900">Gondolas</div>
+                    <div className="text-xs text-neutral-600 font-semibold">Enclosed lift</div>
+                  </div>
                 </div>
-                <div className="flex items-center gap-2.5">
-                  <div className="w-6 h-0.5 bg-[#eab308]" style={{borderTop: '2px dashed #eab308'}}></div>
-                  <span className="text-xs text-neutral-700">Chairlifts</span>
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-2 border-2 border-[#eab308] bg-white flex items-center justify-center flex-shrink-0" style={{borderStyle: 'dashed'}}>
+                  </div>
+                  <div>
+                    <div className="text-sm font-black text-neutral-900">Chairlifts</div>
+                    <div className="text-xs text-neutral-600 font-semibold">Open-air lift</div>
+                  </div>
                 </div>
               </div>
             </div>
           )}
 
           {showPOIs && (
-            <div className="mb-2 pb-2 border-t border-neutral-200 pt-3">
-              <h4 className="text-xs font-semibold text-neutral-700 mb-2">Facilities</h4>
-              <div className="grid grid-cols-2 gap-x-3 gap-y-1.5">
-                <div className="flex items-center gap-1.5">
-                  <div className="w-3 h-3 rounded-full bg-[#ef4444] border-2 border-white"></div>
-                  <span className="text-xs text-neutral-700">Restaurant</span>
+            <div className="mb-4">
+              <h4 className="text-sm font-black text-neutral-900 mb-3 uppercase tracking-wide">Facilities</h4>
+              <div className="grid grid-cols-2 gap-3">
+                <div className="flex items-center gap-2">
+                  <div className="w-6 h-6 rounded-full bg-[#ef4444] border-2 border-neutral-800 flex items-center justify-center flex-shrink-0 shadow-sm">
+                    <span className="text-white font-black text-[10px]">R</span>
+                  </div>
+                  <span className="text-xs text-neutral-900 font-bold">Restaurant</span>
                 </div>
-                <div className="flex items-center gap-1.5">
-                  <div className="w-3 h-3 rounded-full bg-[#3b82f6] border-2 border-white"></div>
-                  <span className="text-xs text-neutral-700">Restroom</span>
+                <div className="flex items-center gap-2">
+                  <div className="w-6 h-6 rounded-full bg-[#3b82f6] border-2 border-neutral-800 flex items-center justify-center flex-shrink-0 shadow-sm">
+                    <span className="text-white font-black text-[10px]">WC</span>
+                  </div>
+                  <span className="text-xs text-neutral-900 font-bold">Restroom</span>
                 </div>
-                <div className="flex items-center gap-1.5">
-                  <div className="w-3 h-3 rounded-full bg-[#8b5cf6] border-2 border-white"></div>
-                  <span className="text-xs text-neutral-700">Lift Station</span>
+                <div className="flex items-center gap-2">
+                  <div className="w-6 h-6 rounded-full bg-[#8b5cf6] border-2 border-neutral-800 flex items-center justify-center flex-shrink-0 shadow-sm">
+                    <span className="text-white font-black text-[10px]">L</span>
+                  </div>
+                  <span className="text-xs text-neutral-900 font-bold">Lift Station</span>
                 </div>
-                <div className="flex items-center gap-1.5">
-                  <div className="w-3 h-3 rounded-full bg-[#10b981] border-2 border-white"></div>
-                  <span className="text-xs text-neutral-700">Information</span>
+                <div className="flex items-center gap-2">
+                  <div className="w-6 h-6 rounded-full bg-[#10b981] border-2 border-neutral-800 flex items-center justify-center flex-shrink-0 shadow-sm">
+                    <span className="text-white font-black text-[10px]">i</span>
+                  </div>
+                  <span className="text-xs text-neutral-900 font-bold">Information</span>
                 </div>
               </div>
             </div>
           )}
 
-          <div className="mt-2 pt-2 border-t border-neutral-200">
-            <p className="text-[10px] text-neutral-500">
-              Data from OpenStreetMap contributors
+          <div className="mt-4 pt-4 border-t-2 border-neutral-800">
+            <p className="text-[10px] text-neutral-600 font-semibold uppercase tracking-wide">
+              Map Data © OpenStreetMap
             </p>
           </div>
         </div>
