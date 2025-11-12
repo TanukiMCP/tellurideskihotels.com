@@ -554,8 +554,8 @@ export default function InteractiveTrailMap() {
 
          {/* Map Controls - Left Panel (Classic Ski Map Style) */}
         {showLeftPanel ? (
-          <div className="absolute top-4 left-4 bottom-16 z-10 bg-white rounded-xl shadow-2xl border-2 border-neutral-800 max-w-sm" style={{fontFamily: 'system-ui, -apple-system, sans-serif'}}>
-            <div className="sticky top-0 bg-white z-10 p-5 pb-3 border-b-2 border-neutral-800 rounded-t-xl">
+          <div className="absolute top-4 left-4 bottom-16 z-10 bg-white rounded-xl shadow-2xl border-2 border-neutral-800 max-w-sm flex flex-col" style={{fontFamily: 'system-ui, -apple-system, sans-serif'}}>
+            <div className="bg-white z-10 p-5 pb-3 border-b-2 border-neutral-800 rounded-t-xl flex-shrink-0">
               <div className="flex items-start justify-between">
                 <h3 className="text-base font-black text-neutral-900 uppercase tracking-wider flex-1">
                   Telluride Ski Resort
@@ -573,7 +573,7 @@ export default function InteractiveTrailMap() {
               </div>
             </div>
             
-            <div className="p-5 pt-4">
+            <div className="p-5 pt-4 overflow-y-auto flex-1">
             {/* Map Style Toggle */}
             <div className="mb-4 pb-4 border-b border-neutral-300">
               <h4 className="text-sm font-black text-neutral-900 mb-3 uppercase tracking-wide">Map Style</h4>
@@ -750,8 +750,8 @@ export default function InteractiveTrailMap() {
 
         {/* Classic Ski Map Legend - Bottom Right */}
         {showLegendPanel ? (
-          <div className="absolute bottom-4 right-4 bg-white rounded-xl shadow-2xl border-2 border-neutral-800 max-w-xs max-h-[calc(100vh-8rem)] overflow-y-auto z-10" style={{fontFamily: 'system-ui, -apple-system, sans-serif'}}>
-            <div className="sticky top-0 bg-white z-10 p-5 pb-3 border-b-2 border-neutral-800 rounded-t-xl">
+          <div className="absolute bottom-4 right-4 bg-white rounded-xl shadow-2xl border-2 border-neutral-800 max-w-xs max-h-[calc(100vh-8rem)] z-10 flex flex-col" style={{fontFamily: 'system-ui, -apple-system, sans-serif'}}>
+            <div className="bg-white z-10 p-5 pb-3 border-b-2 border-neutral-800 rounded-t-xl flex-shrink-0">
               <div className="flex items-start justify-between">
                 <h3 className="text-base font-black text-neutral-900 uppercase tracking-wider flex-1">
                   Trail Map Legend
@@ -769,7 +769,7 @@ export default function InteractiveTrailMap() {
               </div>
             </div>
             
-            <div className="p-5 pt-4">
+            <div className="p-5 pt-4 overflow-y-auto flex-1">
           
           {/* Layer Toggles - Integrated with Legend */}
           <div className="mb-4 pb-4 border-b-2 border-neutral-800">
