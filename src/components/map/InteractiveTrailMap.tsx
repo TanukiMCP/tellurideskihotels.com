@@ -51,22 +51,24 @@ export default function InteractiveTrailMap() {
     const map = mapRef.current?.getMap();
     if (!map) return;
 
-    // Add 3D terrain with higher exaggeration for dramatic mountain visualization
-    map.addSource('mapbox-dem', {
-      type: 'raster-dem',
-      url: 'mapbox://mapbox.mapbox-terrain-dem-v1',
-      tileSize: 512,
-      maxzoom: 14
-    });
-    
-    // Apply terrain immediately after source is added
-    // The map will handle loading internally
-    setTimeout(() => {
-      if (map.getSource('mapbox-dem')) {
-        map.setTerrain({ source: 'mapbox-dem', exaggeration: 2.5 });
-        console.log('[InteractiveTrailMap] 3D terrain enabled');
+    // According to Mapbox docs, terrain should be added on 'style.load' event
+    map.on('style.load', () => {
+      // Add 3D terrain source with higher exaggeration for dramatic mountain visualization
+      if (!map.getSource('mapbox-dem')) {
+        map.addSource('mapbox-dem', {
+          type: 'raster-dem',
+          url: 'mapbox://mapbox.mapbox-terrain-dem-v1',
+          tileSize: 512,
+          maxzoom: 14
+        });
       }
-    }, 100);
+      
+      // Apply terrain with exaggeration
+      if (terrainEnabled) {
+        map.setTerrain({ source: 'mapbox-dem', exaggeration: 2.5 });
+        console.log('[InteractiveTrailMap] 3D terrain enabled on style load');
+      }
+    });
 
     setIsMapLoaded(true);
   };
@@ -77,24 +79,23 @@ export default function InteractiveTrailMap() {
 
     const map = mapRef.current.getMap();
 
-    // Re-add terrain source if it doesn't exist (e.g., after style change)
-    if (!map.getSource('mapbox-dem')) {
-      map.addSource('mapbox-dem', {
-        type: 'raster-dem',
-        url: 'mapbox://mapbox.mapbox-terrain-dem-v1',
-        tileSize: 512,
-        maxzoom: 14
-      });
-      
-      // Re-apply terrain if it was enabled
-      if (terrainEnabled) {
-        setTimeout(() => {
-          if (map.getSource('mapbox-dem')) {
-            map.setTerrain({ source: 'mapbox-dem', exaggeration: 2.5 });
-          }
-        }, 100);
+    // Wait for style to be fully loaded before adding sources
+    const addTerrainAndLayers = () => {
+      // Re-add terrain source if it doesn't exist (e.g., after style change)
+      if (!map.getSource('mapbox-dem')) {
+        map.addSource('mapbox-dem', {
+          type: 'raster-dem',
+          url: 'mapbox://mapbox.mapbox-terrain-dem-v1',
+          tileSize: 512,
+          maxzoom: 14
+        });
+        
+        // Re-apply terrain if it was enabled
+        if (terrainEnabled) {
+          map.setTerrain({ source: 'mapbox-dem', exaggeration: 2.5 });
+          console.log('[InteractiveTrailMap] Terrain re-applied after style change');
+        }
       }
-    }
 
     // Hide default Mapbox trail layers
     try {
@@ -359,6 +360,14 @@ export default function InteractiveTrailMap() {
       .catch(err => {
         console.error('[InteractiveTrailMap] Failed to load POI data:', err);
       });
+    };
+
+    // Call the function to add terrain and layers
+    if (map.isStyleLoaded()) {
+      addTerrainAndLayers();
+    } else {
+      map.once('style.load', addTerrainAndLayers);
+    }
   }, [isMapLoaded, mapStyle, showTrails, showLifts, showPOIs, terrainEnabled]);
 
   // Handle map clicks to show feature info
