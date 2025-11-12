@@ -57,20 +57,20 @@ export default function InteractiveTrailMap() {
 
     // According to Mapbox docs, terrain should be added on 'style.load' event
     map.on('style.load', () => {
-      // Add 3D terrain source with higher exaggeration for dramatic mountain visualization
+      // Add Mapbox terrain (primary - high quality)
       if (!map.getSource('mapbox-dem')) {
-    map.addSource('mapbox-dem', {
-      type: 'raster-dem',
-      url: 'mapbox://mapbox.mapbox-terrain-dem-v1',
-      tileSize: 512,
-      maxzoom: 14
-    });
+        map.addSource('mapbox-dem', {
+          type: 'raster-dem',
+          url: 'mapbox://mapbox.mapbox-terrain-dem-v1',
+          tileSize: 512,
+          maxzoom: 14
+        });
       }
       
       // Apply terrain with exaggeration
       if (terrainEnabled) {
         map.setTerrain({ source: 'mapbox-dem', exaggeration: 2.5 });
-        console.log('[InteractiveTrailMap] 3D terrain enabled on style load');
+        console.log('[InteractiveTrailMap] 3D terrain enabled');
       }
 
       // Fit to resort bounds with 3D view after terrain loads
@@ -95,7 +95,18 @@ export default function InteractiveTrailMap() {
 
     // Wait for style to be fully loaded before adding sources
     const addTerrainAndLayers = () => {
-      // Re-add terrain source if it doesn't exist (e.g., after style change)
+      // Re-add terrain sources if they don't exist (e.g., after style change)
+      if (!map.getSource('local-terrain')) {
+        map.addSource('local-terrain', {
+          type: 'raster-dem',
+          tiles: [window.location.origin + '/tiles/terrain/{z}/{x}/{y}.png'],
+          tileSize: 256,
+          minzoom: 10,
+          maxzoom: 14,
+          encoding: 'terrarium'
+        });
+      }
+      
       if (!map.getSource('mapbox-dem')) {
         map.addSource('mapbox-dem', {
           type: 'raster-dem',
@@ -103,12 +114,16 @@ export default function InteractiveTrailMap() {
           tileSize: 512,
           maxzoom: 14
         });
-        
-        // Re-apply terrain if it was enabled
-        if (terrainEnabled) {
+      }
+      
+      // Re-apply terrain if it was enabled
+      if (terrainEnabled) {
+        try {
+          map.setTerrain({ source: 'local-terrain', exaggeration: 2.5 });
+        } catch (e) {
           map.setTerrain({ source: 'mapbox-dem', exaggeration: 2.5 });
-          console.log('[InteractiveTrailMap] Terrain re-applied after style change');
         }
+        console.log('[InteractiveTrailMap] Terrain re-applied after style change');
       }
 
     // Hide default Mapbox trail layers

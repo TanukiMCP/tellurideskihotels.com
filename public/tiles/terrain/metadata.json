@@ -1,0 +1,22 @@
+{
+  "name": "Telluride Ski Resort - Terrain",
+  "description": "Offline terrain/DEM tiles for 3D visualization",
+  "version": "1.0.0",
+  "attribution": "Mapzen Terrarium",
+  "bounds": [
+    -107.95,
+    37.88,
+    -107.7,
+    38
+  ],
+  "center": [
+    -107.825,
+    37.94,
+    12
+  ],
+  "minzoom": 10,
+  "maxzoom": 14,
+  "format": "png",
+  "type": "raster-dem",
+  "encoding": "terrarium"
+}

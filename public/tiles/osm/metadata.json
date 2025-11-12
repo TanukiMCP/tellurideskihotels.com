@@ -1,0 +1,21 @@
+{
+  "name": "Telluride Ski Resort - Base Map",
+  "description": "Offline base map tiles for Telluride ski area",
+  "version": "1.0.0",
+  "attribution": "© OpenStreetMap contributors",
+  "bounds": [
+    -107.95,
+    37.88,
+    -107.7,
+    38
+  ],
+  "center": [
+    -107.825,
+    37.94,
+    13
+  ],
+  "minzoom": 11,
+  "maxzoom": 16,
+  "format": "png",
+  "type": "baselayer"
+}
