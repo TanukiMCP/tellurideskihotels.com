@@ -29,12 +29,13 @@ const TELLURIDE_MAX_BOUNDS: [[number, number], [number, number]] = [
 ];
 
 // Dramatic 3D viewpoint focusing on the summit area
+// Camera positioned south of resort looking north at the peaks
 const SUMMIT_3D_VIEWPOINT = {
-  longitude: -107.812,  // Looking at the summit/main mountain
-  latitude: 37.9275,    // Positioned to see mountain village and peaks
-  zoom: 13.2,
-  pitch: 65,            // Steep angle for dramatic mountain view
-  bearing: -15          // Slight rotation for better perspective
+  longitude: -107.818,  // Positioned to look at the mountain
+  latitude: 37.920,     // South of the main resort to look up at peaks
+  zoom: 13.8,           // Closer zoom for dramatic effect
+  pitch: 70,            // Steep angle to emphasize vertical relief
+  bearing: 25           // Rotate to show mountain profile and peak areas
 };
 
 
