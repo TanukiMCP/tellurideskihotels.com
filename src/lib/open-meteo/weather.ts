@@ -68,6 +68,18 @@ export function getWeatherDescription(code: number): string {
   return 'Partly cloudy';
 }
 
+export function getWeatherEmoji(code: number): string {
+  if (code === 0) return '☀️';
+  if (code <= 3) return '⛅';
+  if (code <= 48) return '🌫️';
+  if (code <= 67) return '🌧️';
+  if (code <= 77) return '❄️';
+  if (code <= 82) return '🌧️';
+  if (code <= 86) return '❄️';
+  if (code <= 99) return '⛈️';
+  return '☁️';
+}
+
 export function isSnowConditions(code: number, precipitation: number): boolean {
   // Snow codes: 71-77, 85-86
   const isSnowCode = (code >= 71 && code <= 77) || (code >= 85 && code <= 86);

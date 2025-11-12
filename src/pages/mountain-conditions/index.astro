@@ -82,7 +82,7 @@ if (isSkiSeason) {
   </div>
 
   <!-- Quick Stats Strip -->
-  {skiConditions && (
+  {skiConditions && skiConditions.lifts.open > 0 && (
     <div class="bg-white border-b border-neutral-200 py-6">
       <Container>
         <div class="flex flex-wrap justify-center items-center gap-8 lg:gap-16 text-center">

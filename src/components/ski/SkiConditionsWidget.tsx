@@ -73,6 +73,34 @@ export function SkiConditionsWidget({ initialConditions }: SkiConditionsWidgetPr
 
   const { conditions: weather, trails, lifts, terrainParks, timestamp } = conditions;
   const hasNewSnow = weather.newSnow24hr > 0;
+  
+  // Check if resort is closed (all zeros)
+  const isResortClosed = trails.open === 0 && lifts.open === 0 && weather.baseDepthMax === 0;
+  
+  if (isResortClosed) {
+    return (
+      <div className="bg-gradient-to-br from-sky-50 via-white to-sky-50 rounded-2xl p-8 border border-sky-200 shadow-card">
+        <div className="text-center">
+          <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-sky-500 to-sky-600 flex items-center justify-center mx-auto mb-4 shadow-card">
+            <svg className="w-9 h-9 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          <h3 className="text-xl font-bold text-neutral-900 mb-2">{conditions.resortName}</h3>
+          <p className="text-neutral-600 mb-4">The resort is currently closed for the season.</p>
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-sky-100 text-sky-700 rounded-lg text-sm font-medium">
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+            Opening Late November 2025
+          </div>
+          <p className="text-xs text-neutral-500 mt-4">
+            Updated {getTimeSinceUpdate(new Date(timestamp))}
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-gradient-to-br from-sky-50 via-white to-sky-50 rounded-2xl p-6 border border-sky-200 shadow-card hover:shadow-card-hover transition-all duration-300">

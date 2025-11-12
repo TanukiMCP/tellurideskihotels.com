@@ -1,3 +1,5 @@
+import { Mountain, Building2, Plane } from 'lucide-react';
+
 /**
  * Webcam Links Component
  * Provides direct links to live Telluride webcams
@@ -9,7 +11,7 @@ const WEBCAM_SOURCES = [
     name: 'Telluride Ski Resort Webcams',
     url: 'https://tellurideskiresort.com/webcams/',
     description: 'Multiple live cams including Revelation Bowl, Village, and terrain parks',
-    icon: '⛷️',
+    icon: Mountain,
     locations: ['Summit', 'Village', 'Base Area', 'Terrain Parks'],
   },
   {
@@ -17,7 +19,7 @@ const WEBCAM_SOURCES = [
     name: 'Downtown Telluride',
     url: 'https://www.telluride.com/plan-your-visit/webcams/',
     description: 'Live views of Main Street and the Box Canyon',
-    icon: '🏛️',
+    icon: Building2,
     locations: ['Main Street', 'Box Canyon'],
   },
   {
@@ -25,7 +27,7 @@ const WEBCAM_SOURCES = [
     name: 'Telluride Airport Webcam',
     url: 'https://tellurideairport.com/airport-webcam/',
     description: 'Airport views with surrounding mountain panoramas',
-    icon: '✈️',
+    icon: Plane,
     locations: ['Airport', 'Mountain Views'],
   },
 ];
@@ -48,53 +50,59 @@ export function WebcamLinks() {
 
       {/* Webcam Sources */}
       <div className="space-y-3">
-        {WEBCAM_SOURCES.map((source) => (
-          <a
-            key={source.id}
-            href={source.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="block group p-4 bg-white rounded-xl border border-neutral-200 hover:border-sky-300 hover:shadow-card transition-all duration-300"
-          >
-            <div className="flex items-start gap-3">
-              {/* Icon */}
-              <div className="text-3xl flex-shrink-0 mt-1">
-                {source.icon}
-              </div>
+        {WEBCAM_SOURCES.map((source) => {
+          const IconComponent = source.icon;
+          return (
+            <a
+              key={source.id}
+              href={source.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block group p-4 bg-white rounded-xl border border-neutral-200 hover:border-sky-300 hover:shadow-card transition-all duration-300"
+            >
+              <div className="flex items-start gap-3">
+                {/* Icon */}
+                <div className="flex-shrink-0 mt-1 w-10 h-10 rounded-lg bg-sky-100 flex items-center justify-center">
+                  <IconComponent className="w-6 h-6 text-sky-600" />
+                </div>
 
-              {/* Content */}
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center justify-between gap-2 mb-1">
-                  <h4 className="font-bold text-neutral-900 group-hover:text-sky-600 transition-colors">
-                    {source.name}
-                  </h4>
-                  <svg className="w-5 h-5 text-neutral-400 group-hover:text-sky-600 group-hover:translate-x-1 transition-all flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                  </svg>
-                </div>
-                <p className="text-sm text-neutral-600 mb-2">
-                  {source.description}
-                </p>
-                <div className="flex flex-wrap gap-2">
-                  {source.locations.map((location) => (
-                    <span
-                      key={location}
-                      className="px-2 py-1 bg-sky-50 text-sky-700 text-xs font-medium rounded-md"
-                    >
-                      {location}
-                    </span>
-                  ))}
+                {/* Content */}
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center justify-between gap-2 mb-1">
+                    <h4 className="font-bold text-neutral-900 group-hover:text-sky-600 transition-colors">
+                      {source.name}
+                    </h4>
+                    <svg className="w-5 h-5 text-neutral-400 group-hover:text-sky-600 group-hover:translate-x-1 transition-all flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                    </svg>
+                  </div>
+                  <p className="text-sm text-neutral-600 mb-2">
+                    {source.description}
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    {source.locations.map((location) => (
+                      <span
+                        key={location}
+                        className="px-2 py-1 bg-sky-50 text-sky-700 text-xs font-medium rounded-md"
+                      >
+                        {location}
+                      </span>
+                    ))}
+                  </div>
                 </div>
               </div>
-            </div>
-          </a>
-        ))}
+            </a>
+          );
+        })}
       </div>
 
       {/* Info Note */}
-      <div className="mt-4 p-3 bg-sky-50 border border-sky-200 rounded-lg">
+      <div className="mt-4 p-3 bg-sky-50 border border-sky-200 rounded-lg flex items-start gap-2">
+        <svg className="w-4 h-4 text-sky-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+          <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+        </svg>
         <p className="text-xs text-sky-800">
-          <span className="font-semibold">💡 Tip:</span> Webcams are updated every few minutes. Check conditions before heading to the mountain!
+          <span className="font-semibold">Tip:</span> Webcams are updated every few minutes. Check conditions before heading to the mountain!
         </p>
       </div>
     </div>
