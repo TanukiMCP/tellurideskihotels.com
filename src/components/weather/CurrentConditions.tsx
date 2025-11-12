@@ -113,12 +113,12 @@ export function CurrentConditions({ checkIn, checkOut }: CurrentConditionsProps 
             </div>
             <div>
               <h3 className="text-xl font-extrabold text-neutral-900">Telluride, Colorado</h3>
-              {selectedDateRange && (
+            {selectedDateRange && (
                 <p className="text-sm font-semibold text-neutral-600">
-                  {format(new Date(selectedDateRange.start), 'MMM d')} - {format(new Date(selectedDateRange.end), 'MMM d, yyyy')}
+                {format(new Date(selectedDateRange.start), 'MMM d')} - {format(new Date(selectedDateRange.end), 'MMM d, yyyy')}
                 </p>
               )}
-            </div>
+              </div>
           </div>
           {hasSnow && (
             <div className="bg-sky-100 rounded-xl px-4 py-2 flex items-center gap-2 shadow-sm">
@@ -157,70 +157,70 @@ export function CurrentConditions({ checkIn, checkOut }: CurrentConditionsProps 
             {getWeatherIcon(firstDay.weatherCode, "w-28 h-28")}
           </div>
         </div>
-      </div>
+        </div>
 
-      {/* 10-Day Forecast */}
+        {/* 10-Day Forecast */}
       <div className="p-6 flex-1">
         <h3 className="text-xl font-black text-neutral-900 mb-5">10-Day Forecast</h3>
         <div className="grid grid-cols-5 lg:grid-cols-10 gap-3">
-          {allDays.map((weather, index) => {
-            const date = new Date(weather.date);
-            const isSnowDay = isSnowConditions(weather.weatherCode, weather.precipitation);
-            const showPrecip = weather.precipProbability >= 0.3;
-            
-            return (
-              <div 
-                key={weather.date} 
+            {allDays.map((weather, index) => {
+              const date = new Date(weather.date);
+              const isSnowDay = isSnowConditions(weather.weatherCode, weather.precipitation);
+              const showPrecip = weather.precipProbability >= 0.3;
+              
+              return (
+                <div 
+                  key={weather.date} 
                 className={`relative p-3 rounded-xl text-center transition-all ${
-                  index === 0
+                    index === 0
                     ? 'bg-sky-50 border-2 border-sky-300 shadow-sm' 
                     : 'bg-neutral-50 border border-neutral-200 hover:border-sky-300 hover:bg-sky-50 hover:shadow-sm'
-                }`}
-              >
+                  }`}
+                >
                 <div className="text-xs font-bold text-neutral-900 mb-1">
-                  {format(date, 'EEE')}
-                </div>
+                    {format(date, 'EEE')}
+                  </div>
                 <div className="text-xs font-semibold text-neutral-600 mb-2">
-                  {format(date, 'MMM d')}
-                </div>
+                    {format(date, 'MMM d')}
+                  </div>
                 <div className="flex justify-center mb-2 text-sky-600">
                   {getWeatherIcon(weather.weatherCode, "w-9 h-9")}
                 </div>
-                {isSnowDay && (
+                  {isSnowDay && (
                   <div className="absolute top-2 right-2">
                     <CloudSnow className="w-4 h-4 text-sky-600" />
-                  </div>
-                )}
-                <div className="space-y-0.5">
+                    </div>
+                  )}
+                  <div className="space-y-0.5">
                   <div className="text-lg font-black text-neutral-900">
-                    {Math.round(weather.temp.max)}°
-                  </div>
+                      {Math.round(weather.temp.max)}°
+                    </div>
                   <div className="text-xs font-bold text-neutral-500">
-                    {Math.round(weather.temp.min)}°
+                      {Math.round(weather.temp.min)}°
+                    </div>
                   </div>
-                </div>
-                {showPrecip && (
+                  {showPrecip && (
                   <div className="text-xs mt-1.5 flex items-center justify-center gap-1 text-sky-600 font-bold">
-                    <Droplets className="w-3 h-3" />
-                    <span>{Math.round(weather.precipProbability * 100)}%</span>
-                  </div>
-                )}
-              </div>
-            );
-          })}
+                      <Droplets className="w-3 h-3" />
+                      <span>{Math.round(weather.precipProbability * 100)}%</span>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
         </div>
-      </div>
 
-      {/* Call to Action */}
+        {/* Call to Action */}
       <div className="p-6 bg-neutral-50 border-t border-neutral-200 mt-auto">
-        <button
-          onClick={handleSearchHotels}
+          <button
+            onClick={handleSearchHotels}
           className="w-full bg-primary-600 text-white font-black py-4 px-6 rounded-xl hover:bg-primary-700 transition-all duration-200 shadow-md hover:shadow-lg hover:scale-[1.02] flex items-center justify-center gap-2 text-base"
-        >
-          <Calendar className="w-5 h-5" />
-          {selectedDateRange ? 'Book Hotels for These Dates' : 'Search Available Hotels'}
-        </button>
-      </div>
+          >
+            <Calendar className="w-5 h-5" />
+            {selectedDateRange ? 'Book Hotels for These Dates' : 'Search Available Hotels'}
+          </button>
+        </div>
     </div>
   );
 }
