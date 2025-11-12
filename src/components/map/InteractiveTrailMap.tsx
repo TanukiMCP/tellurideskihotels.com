@@ -54,6 +54,7 @@ export default function InteractiveTrailMap() {
   const [showControls, setShowControls] = useState(true);
   const [showLeftPanel, setShowLeftPanel] = useState(true);
   const [showLegendPanel, setShowLegendPanel] = useState(true);
+  const [isFullscreen, setIsFullscreen] = useState(false);
   const [viewState, setViewState] = useState({
     longitude: TELLURIDE_CENTER[0],
     latitude: TELLURIDE_CENTER[1],
@@ -63,6 +64,7 @@ export default function InteractiveTrailMap() {
   });
 
   const [isMapLoaded, setIsMapLoaded] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   // Handle map load and apply 3D terrain
   const handleMapLoad = () => {
@@ -519,8 +521,56 @@ export default function InteractiveTrailMap() {
     });
   };
 
+  const toggleFullscreen = () => {
+    if (!containerRef.current) return;
+
+    if (!isFullscreen) {
+      // Enter fullscreen
+      if (containerRef.current.requestFullscreen) {
+        containerRef.current.requestFullscreen();
+      } else if ((containerRef.current as any).webkitRequestFullscreen) {
+        (containerRef.current as any).webkitRequestFullscreen();
+      } else if ((containerRef.current as any).msRequestFullscreen) {
+        (containerRef.current as any).msRequestFullscreen();
+      }
+      setIsFullscreen(true);
+    } else {
+      // Exit fullscreen
+      if (document.exitFullscreen) {
+        document.exitFullscreen();
+      } else if ((document as any).webkitExitFullscreen) {
+        (document as any).webkitExitFullscreen();
+      } else if ((document as any).msExitFullscreen) {
+        (document as any).msExitFullscreen();
+      }
+      setIsFullscreen(false);
+    }
+  };
+
+  // Listen for fullscreen changes (user pressing ESC, etc.)
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      const isCurrentlyFullscreen = !!(
+        document.fullscreenElement ||
+        (document as any).webkitFullscreenElement ||
+        (document as any).msFullscreenElement
+      );
+      setIsFullscreen(isCurrentlyFullscreen);
+    };
+
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+    document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
+    document.addEventListener('msfullscreenchange', handleFullscreenChange);
+
+    return () => {
+      document.removeEventListener('fullscreenchange', handleFullscreenChange);
+      document.removeEventListener('webkitfullscreenchange', handleFullscreenChange);
+      document.removeEventListener('msfullscreenchange', handleFullscreenChange);
+    };
+  }, []);
+
   return (
-    <div className="relative w-full h-full">
+    <div ref={containerRef} className={`relative w-full h-full ${isFullscreen ? 'bg-neutral-900' : ''}`}>
       {/* Hide default Mapbox attribution */}
       <style>{`
         .mapboxgl-ctrl-bottom-left,
@@ -551,6 +601,24 @@ export default function InteractiveTrailMap() {
         keyboard={true}
       >
         <NavigationControl position="top-right" showCompass={true} visualizePitch={true} />
+
+        {/* Fullscreen Toggle Button */}
+        <button
+          onClick={toggleFullscreen}
+          className="absolute top-32 right-4 z-20 bg-white hover:bg-neutral-50 rounded shadow-lg transition-all border border-neutral-300 p-2.5"
+          aria-label={isFullscreen ? "Exit fullscreen" : "Enter fullscreen"}
+          title={isFullscreen ? "Exit fullscreen" : "Enter fullscreen"}
+        >
+          {isFullscreen ? (
+            <svg className="w-5 h-5 text-neutral-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 9V4.5M9 9H4.5M9 9L3.75 3.75M9 15v4.5M9 15H4.5M9 15l-5.25 5.25M15 9h4.5M15 9V4.5M15 9l5.25-5.25M15 15h4.5M15 15v4.5m0-4.5l5.25 5.25" />
+            </svg>
+          ) : (
+            <svg className="w-5 h-5 text-neutral-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3.75 3.75v4.5m0-4.5h4.5m-4.5 0L9 9M3.75 20.25v-4.5m0 4.5h4.5m-4.5 0L9 15M20.25 3.75h-4.5m4.5 0v4.5m0-4.5L15 9m5.25 11.25h-4.5m4.5 0v-4.5m0 4.5L15 15" />
+            </svg>
+          )}
+        </button>
 
          {/* Map Controls - Left Panel (Classic Ski Map Style) */}
         {showLeftPanel ? (
