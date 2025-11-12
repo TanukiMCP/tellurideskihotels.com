@@ -821,10 +821,10 @@ export default function InteractiveTrailMap() {
             </div>
           </div>
           
-          {showTrails && (
-            <div className="mb-4 pb-4 border-b border-neutral-300">
-              <h4 className="text-sm font-black text-neutral-900 mb-3 uppercase tracking-wide">Trail Difficulty</h4>
-              <div className="space-y-2.5">
+          {/* Trail Difficulty Legend - Always visible */}
+          <div className="mb-4 pb-4 border-b border-neutral-300">
+            <h4 className="text-sm font-black text-neutral-900 mb-3 uppercase tracking-wide">Trail Difficulty</h4>
+            <div className="space-y-2.5">
                 <div className="flex items-center gap-3">
                   <div className="w-8 h-8 rounded-full bg-[#22c55e] border-2 border-neutral-800 flex items-center justify-center flex-shrink-0 shadow-sm">
                     <span className="text-white font-black text-xs">●</span>
@@ -864,11 +864,10 @@ export default function InteractiveTrailMap() {
                 </div>
               </div>
             </div>
-          )}
 
-          {showLifts && (
-            <div className="mb-4 pb-4 border-b border-neutral-300">
-              <h4 className="text-sm font-black text-neutral-900 mb-3 uppercase tracking-wide">Lifts & Gondolas</h4>
+          {/* Lifts & Gondolas - Always visible for reference */}
+          <div className="mb-4 pb-4 border-b border-neutral-300">
+            <h4 className="text-sm font-black text-neutral-900 mb-3 uppercase tracking-wide">Lifts & Gondolas</h4>
               <div className="space-y-2.5">
                 <div className="flex items-center gap-3">
                   <div className="w-8 h-2 border-2 border-[#f59e0b] bg-white flex items-center justify-center flex-shrink-0" style={{borderStyle: 'dashed'}}>
@@ -888,11 +887,10 @@ export default function InteractiveTrailMap() {
                 </div>
               </div>
             </div>
-          )}
 
-          {showPOIs && (
-            <div className="mb-4">
-              <h4 className="text-sm font-black text-neutral-900 mb-3 uppercase tracking-wide">Facilities</h4>
+          {/* Facilities Legend - Always visible */}
+          <div className="mb-4">
+            <h4 className="text-sm font-black text-neutral-900 mb-3 uppercase tracking-wide">Facilities</h4>
               <div className="grid grid-cols-2 gap-3">
                 <div className="flex items-center gap-2">
                   <div className="w-7 h-7 bg-[#ef4444] border-2 border-neutral-800 flex items-center justify-center flex-shrink-0 shadow-sm">
@@ -932,7 +930,6 @@ export default function InteractiveTrailMap() {
                 </div>
               </div>
             </div>
-          )}
 
           <div className="mt-4 pt-4 border-t-2 border-neutral-800">
             <p className="text-[10px] text-neutral-600 font-semibold uppercase tracking-wide">
