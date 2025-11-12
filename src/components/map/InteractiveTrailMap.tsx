@@ -2,12 +2,16 @@
  * InteractiveTrailMap Component
  * Uses Mapbox outdoors style with custom layer styling for ski terrain
  * Leverages OpenStreetMap ski piste data already in Mapbox
+ * Integrates Threebox for 3D POI models
  */
 import { useRef, useState, useEffect } from 'react';
 import Map, { NavigationControl, Popup } from 'react-map-gl/mapbox';
 import type { MapRef, MapMouseEvent } from 'react-map-gl/mapbox';
 import { MAPBOX_TOKEN, TELLURIDE_CENTER } from '@/lib/mapbox-utils';
 import 'mapbox-gl/dist/mapbox-gl.css';
+// @ts-ignore - threebox-plugin doesn't have TypeScript definitions
+import { Threebox } from 'threebox-plugin';
+import 'threebox-plugin/dist/threebox.css';
 
 const MAP_STYLES = {
   outdoors: 'mapbox://styles/mapbox/outdoors-v12',
@@ -27,8 +31,38 @@ const TELLURIDE_MAX_BOUNDS: [[number, number], [number, number]] = [
   [-107.70, 38.00]   // Northeast with ~5mi buffer
 ];
 
+// 3D Model configurations for each POI type
+const POI_3D_MODELS = {
+  'lift-station': {
+    url: 'https://docs.mapbox.com/mapbox-gl-js/assets/34M_17/34M_17.gltf',
+    scale: 0.5,
+    rotation: { x: 90, y: 0, z: 0 },
+    color: '#fbbf24' // Yellow/gold for lifts
+  },
+  'restaurant': {
+    url: 'https://docs.mapbox.com/mapbox-gl-js/assets/34M_17/34M_17.gltf',
+    scale: 0.4,
+    rotation: { x: 90, y: 0, z: 0 },
+    color: '#ef4444' // Red for restaurants
+  },
+  'restroom': {
+    url: 'https://docs.mapbox.com/mapbox-gl-js/assets/34M_17/34M_17.gltf',
+    scale: 0.3,
+    rotation: { x: 90, y: 0, z: 0 },
+    color: '#3b82f6' // Blue for restrooms
+  },
+  'information': {
+    url: 'https://docs.mapbox.com/mapbox-gl-js/assets/34M_17/34M_17.gltf',
+    scale: 0.35,
+    rotation: { x: 90, y: 0, z: 0 },
+    color: '#10b981' // Green for info
+  }
+};
+
 export default function InteractiveTrailMap() {
   const mapRef = useRef<MapRef>(null);
+  const threeboxRef = useRef<any>(null);
+  const poi3DModelsRef = useRef<any[]>([]);
   const [popupInfo, setPopupInfo] = useState<any>(null);
   const [terrainEnabled, setTerrainEnabled] = useState(true);
   const [mapStyle, setMapStyle] = useState<keyof typeof MAP_STYLES>('outdoors');
@@ -45,6 +79,7 @@ export default function InteractiveTrailMap() {
   });
 
   const [isMapLoaded, setIsMapLoaded] = useState(false);
+  const [poiData, setPoiData] = useState<any>(null);
 
   // Handle map load and apply 3D terrain
   const handleMapLoad = () => {
@@ -294,12 +329,15 @@ export default function InteractiveTrailMap() {
     fetch('/data/telluride-pois.json')
       .then(response => response.json())
       .then(data => {
+        // Store POI data for 3D model rendering
+        setPoiData(data);
+
         map.addSource('telluride-pois', {
           type: 'geojson',
           data: data
         });
 
-        // Add POI markers
+        // Add POI markers (2D - will be hidden when 3D is active)
         map.addLayer({
           id: 'telluride-pois',
           type: 'circle',
@@ -369,6 +407,157 @@ export default function InteractiveTrailMap() {
       map.once('style.load', addTerrainAndLayers);
     }
   }, [isMapLoaded, mapStyle, showTrails, showLifts, showPOIs, terrainEnabled]);
+
+  // Handle 3D POI models with Threebox
+  useEffect(() => {
+    if (!mapRef.current || !isMapLoaded || !poiData) return;
+
+    const map = mapRef.current.getMap();
+
+    // Initialize Threebox if not already done
+    if (!threeboxRef.current && terrainEnabled) {
+      try {
+        // @ts-ignore
+        threeboxRef.current = new Threebox(
+          map,
+          map.getCanvas().getContext('webgl'),
+          {
+            defaultLights: true,
+            enableSelectingObjects: true,
+            enableDraggingObjects: false,
+            enableRotatingObjects: false,
+            enableTooltips: true
+          }
+        );
+
+        // Add custom 3D layer for POIs
+        const customLayer = {
+          id: 'custom-threebox-pois',
+          type: 'custom',
+          renderingMode: '3d',
+          onAdd: function() {
+            // Layer will be populated by loading models below
+          },
+          render: function() {
+            if (threeboxRef.current) {
+              threeboxRef.current.update();
+            }
+          }
+        };
+
+        if (!map.getLayer('custom-threebox-pois')) {
+          // @ts-ignore
+          map.addLayer(customLayer);
+        }
+
+        console.log('[InteractiveTrailMap] ✅ Threebox initialized');
+      } catch (error) {
+        console.error('[InteractiveTrailMap] Failed to initialize Threebox:', error);
+        return;
+      }
+    }
+
+    // Load 3D models for POIs when 3D is enabled
+    if (terrainEnabled && threeboxRef.current && poiData && showPOIs) {
+      // Clear existing 3D models
+      poi3DModelsRef.current.forEach(model => {
+        if (threeboxRef.current && model) {
+          threeboxRef.current.remove(model);
+        }
+      });
+      poi3DModelsRef.current = [];
+
+      // Hide 2D POI markers
+      if (map.getLayer('telluride-pois')) {
+        map.setLayoutProperty('telluride-pois', 'visibility', 'none');
+      }
+
+      // Load 3D models for each POI
+      let loadedCount = 0;
+      const totalPOIs = poiData.features.length;
+
+      poiData.features.forEach((feature: any) => {
+        const poiType = feature.properties.type;
+        const modelConfig = POI_3D_MODELS[poiType as keyof typeof POI_3D_MODELS];
+        
+        if (!modelConfig) return; // Skip POI types without 3D models
+
+        const [lng, lat] = feature.geometry.coordinates;
+
+        try {
+          // @ts-ignore
+          threeboxRef.current.loadObj({
+            obj: modelConfig.url,
+            type: 'gltf',
+            scale: modelConfig.scale,
+            units: 'meters',
+            rotation: modelConfig.rotation,
+            anchor: 'center'
+          }, (model: any) => {
+            // Set model position
+            model.setCoords([lng, lat]);
+            
+            // Apply color tint to the model
+            if (model.traverse) {
+              model.traverse((child: any) => {
+                if (child.isMesh && child.material) {
+                  // @ts-ignore
+                  const THREE = window.THREE;
+                  if (THREE) {
+                    child.material.color = new THREE.Color(modelConfig.color);
+                  }
+                }
+              });
+            }
+
+            // Add tooltip data
+            model.userData = {
+              name: feature.properties.name,
+              type: poiType
+            };
+
+            // Add model to scene
+            if (threeboxRef.current) {
+              threeboxRef.current.add(model);
+              poi3DModelsRef.current.push(model);
+            }
+
+            loadedCount++;
+            if (loadedCount === totalPOIs || loadedCount % 10 === 0) {
+              console.log(`[InteractiveTrailMap] Loaded ${loadedCount}/${totalPOIs} 3D POI models`);
+            }
+          });
+        } catch (error) {
+          console.error(`[InteractiveTrailMap] Failed to load 3D model for ${feature.properties.name}:`, error);
+        }
+      });
+    } else if (!terrainEnabled) {
+      // Show 2D POI markers when 3D is disabled
+      if (map.getLayer('telluride-pois')) {
+        map.setLayoutProperty('telluride-pois', 'visibility', showPOIs ? 'visible' : 'none');
+      }
+
+      // Remove 3D models
+      poi3DModelsRef.current.forEach(model => {
+        if (threeboxRef.current && model) {
+          threeboxRef.current.remove(model);
+        }
+      });
+      poi3DModelsRef.current = [];
+    }
+
+    // Cleanup function
+    return () => {
+      if (!terrainEnabled && threeboxRef.current) {
+        poi3DModelsRef.current.forEach(model => {
+          if (threeboxRef.current && model) {
+            threeboxRef.current.remove(model);
+          }
+        });
+        poi3DModelsRef.current = [];
+      }
+    };
+  }, [terrainEnabled, poiData, showPOIs, isMapLoaded]);
 
   // Handle map clicks to show feature info
   const handleMapClick = (event: MapMouseEvent) => {
