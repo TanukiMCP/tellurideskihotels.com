@@ -38,6 +38,8 @@ export default function InteractiveTrailMap() {
   const [showLifts, setShowLifts] = useState(true);
   const [showPOIs, setShowPOIs] = useState(true);
   const [showControls, setShowControls] = useState(true);
+  const [showLeftPanel, setShowLeftPanel] = useState(true);
+  const [showLegendPanel, setShowLegendPanel] = useState(true);
   const [viewState, setViewState] = useState({
     longitude: TELLURIDE_CENTER[0],
     latitude: TELLURIDE_CENTER[1],
@@ -57,12 +59,12 @@ export default function InteractiveTrailMap() {
     map.on('style.load', () => {
       // Add 3D terrain source with higher exaggeration for dramatic mountain visualization
       if (!map.getSource('mapbox-dem')) {
-        map.addSource('mapbox-dem', {
-          type: 'raster-dem',
-          url: 'mapbox://mapbox.mapbox-terrain-dem-v1',
-          tileSize: 512,
-          maxzoom: 14
-        });
+    map.addSource('mapbox-dem', {
+      type: 'raster-dem',
+      url: 'mapbox://mapbox.mapbox-terrain-dem-v1',
+      tileSize: 512,
+      maxzoom: 14
+    });
       }
       
       // Apply terrain with exaggeration
@@ -301,45 +303,49 @@ export default function InteractiveTrailMap() {
           data: data
         });
 
-        // Add POI markers with 3D-aware styling
+        // Add POI markers as symbols (better for 3D - always face camera like Sims icons)
         map.addLayer({
           id: 'telluride-pois',
-          type: 'circle',
+          type: 'symbol',
           source: 'telluride-pois',
           layout: {
-            'visibility': showPOIs ? 'visible' : 'none'
-          },
-          paint: {
-            // Make circles larger in 3D mode for better visibility
-            'circle-radius': [
+            'visibility': showPOIs ? 'visible' : 'none',
+            // Use emoji/unicode symbols for POI markers
+            'icon-image': [
+              'match',
+              ['get', 'type'],
+              'restaurant', 'restaurant-15',
+              'cafe', 'cafe-15',
+              'restroom', 'toilet-15',
+              'lift-station', 'aerialway-15',
+              'information', 'information-15',
+              'viewpoint', 'viewpoint-15',
+              'marker-15' // default
+            ],
+            'icon-size': [
               'interpolate',
               ['linear'],
               ['zoom'],
-              12, terrainEnabled ? 8 : 4,
-              15, terrainEnabled ? 12 : 6,
-              17, terrainEnabled ? 16 : 8
+              12, 1.0,
+              15, 1.5,
+              17, 2.0
             ],
-            'circle-color': [
-              'match',
-              ['get', 'type'],
-              'restaurant', '#ef4444',      // Red for restaurants
-              'cafe', '#f97316',            // Orange for cafes
-              'restroom', '#3b82f6',        // Blue for restrooms
-              'lift-station', '#fbbf24',    // Yellow/gold for lift stations
-              'information', '#10b981',     // Green for info
-              'viewpoint', '#06b6d4',       // Cyan for viewpoints
-              '#6b7280'                      // Gray default
-            ],
-            'circle-stroke-width': terrainEnabled ? 3 : 2,
-            'circle-stroke-color': '#ffffff',
-            'circle-opacity': terrainEnabled ? 1 : 0.9,
-            // Lift circles up in 3D mode to float above terrain
-            'circle-translate': terrainEnabled ? [0, -40] : [0, 0],
-            'circle-pitch-alignment': terrainEnabled ? 'map' : 'viewport'
+            'icon-allow-overlap': true,
+            'icon-ignore-placement': false,
+            // Key for 3D: always face the viewport (billboard effect)
+            'icon-rotation-alignment': 'viewport',
+            'icon-pitch-alignment': 'viewport'
+          },
+          paint: {
+            'icon-opacity': 0.95,
+            // Add a subtle halo effect
+            'icon-halo-color': '#ffffff',
+            'icon-halo-width': 2,
+            'icon-halo-blur': 1
           }
         });
 
-        // Add POI labels
+        // Add POI labels (also billboard-style for 3D)
         map.addLayer({
           id: 'telluride-pois-labels',
           type: 'symbol',
@@ -347,15 +353,25 @@ export default function InteractiveTrailMap() {
           layout: {
             'text-field': ['get', 'name'],
             'text-font': ['Open Sans Semibold', 'Arial Unicode MS Bold'],
-            'text-size': 11,
-            'text-offset': [0, 1.2],
+            'text-size': [
+              'interpolate',
+              ['linear'],
+              ['zoom'],
+              13, 10,
+              15, 12,
+              17, 14
+            ],
+            'text-offset': [0, 1.5],
             'text-anchor': 'top',
-            'visibility': showPOIs ? 'visible' : 'none'
+            'visibility': showPOIs ? 'visible' : 'none',
+            // Billboard effect - always face camera
+            'text-rotation-alignment': 'viewport',
+            'text-pitch-alignment': 'viewport'
           },
           paint: {
             'text-color': '#1f2937',
             'text-halo-color': '#ffffff',
-            'text-halo-width': 2,
+            'text-halo-width': 2.5,
             'text-halo-blur': 0.5
           },
           minzoom: 14
@@ -376,29 +392,8 @@ export default function InteractiveTrailMap() {
     }
   }, [isMapLoaded, mapStyle, showTrails, showLifts, showPOIs, terrainEnabled]);
 
-  // Update POI styling when 3D mode changes
-  useEffect(() => {
-    if (!mapRef.current || !isMapLoaded) return;
-    
-    const map = mapRef.current.getMap();
-    
-    if (map.getLayer('telluride-pois')) {
-      // Update circle properties for 3D mode
-      map.setPaintProperty('telluride-pois', 'circle-radius', [
-        'interpolate',
-        ['linear'],
-        ['zoom'],
-        12, terrainEnabled ? 8 : 4,
-        15, terrainEnabled ? 12 : 6,
-        17, terrainEnabled ? 16 : 8
-      ]);
-      
-      map.setPaintProperty('telluride-pois', 'circle-stroke-width', terrainEnabled ? 3 : 2);
-      map.setPaintProperty('telluride-pois', 'circle-opacity', terrainEnabled ? 1 : 0.9);
-      map.setPaintProperty('telluride-pois', 'circle-translate', terrainEnabled ? [0, -40] : [0, 0]);
-      map.setPaintProperty('telluride-pois', 'circle-pitch-alignment', terrainEnabled ? 'map' : 'viewport');
-    }
-  }, [terrainEnabled, isMapLoaded]);
+  // Note: POI markers are now symbol-based and automatically billboard in 3D
+  // No need for dynamic updates - they always face the camera!
 
   // Handle map clicks to show feature info
   const handleMapClick = (event: MapMouseEvent) => {
@@ -490,164 +485,174 @@ export default function InteractiveTrailMap() {
       >
         <NavigationControl position="top-right" showCompass={true} visualizePitch={true} />
 
-        {/* Map Controls */}
-        <div className="absolute top-4 left-4 z-10 bg-white/95 backdrop-blur-sm rounded-xl shadow-xl p-4 space-y-3 max-w-xs">
-          <h3 className="font-bold text-neutral-900 text-lg">Telluride Ski Resort</h3>
-          
-          {/* Map Style Toggle */}
-          <div className="flex gap-2">
-            <button
-              onClick={() => setMapStyle('outdoors')}
-              className={`flex-1 px-3 py-2 rounded-lg text-xs font-semibold transition-all ${
-                mapStyle === 'outdoors'
-                  ? 'bg-primary-600 text-white shadow-md'
-                  : 'bg-neutral-100 text-neutral-700 hover:bg-neutral-200'
-              }`}
-            >
-              <svg className="w-4 h-4 mx-auto mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
-              </svg>
-              Terrain
-            </button>
-            <button
-              onClick={() => setMapStyle('satellite')}
-              className={`flex-1 px-3 py-2 rounded-lg text-xs font-semibold transition-all ${
-                mapStyle === 'satellite'
-                  ? 'bg-primary-600 text-white shadow-md'
-                  : 'bg-neutral-100 text-neutral-700 hover:bg-neutral-200'
-              }`}
-            >
-              <svg className="w-4 h-4 mx-auto mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-              Satellite
-            </button>
-          </div>
+        {/* Map Controls - Left Panel (Classic Ski Map Style) */}
+        {showLeftPanel ? (
+          <div className="absolute top-4 left-4 z-10 bg-white rounded-xl shadow-2xl p-5 border-2 border-neutral-800 max-w-sm" style={{fontFamily: 'system-ui, -apple-system, sans-serif'}}>
+            <div className="flex items-start justify-between mb-4">
+              <h3 className="text-base font-black text-neutral-900 uppercase tracking-wider border-b-2 border-neutral-800 pb-2 flex-1">
+                Telluride Ski Resort
+              </h3>
+              <button
+                onClick={() => setShowLeftPanel(false)}
+                className="text-neutral-400 hover:text-neutral-900 transition-colors ml-2"
+                aria-label="Close panel"
+              >
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
 
-          {/* Layer Toggles */}
-          <div className="border-t border-neutral-200 pt-3 space-y-2">
-            <h4 className="text-xs font-bold text-neutral-700 uppercase tracking-wide mb-2">Map Layers</h4>
-            <label className="flex items-center gap-2 cursor-pointer group">
-              <input
-                type="checkbox"
-                checked={showTrails}
-                onChange={(e) => setShowTrails(e.target.checked)}
-                className="w-4 h-4 rounded border-neutral-300 text-primary-600 focus:ring-primary-600"
-              />
-              <span className="text-sm text-neutral-700 group-hover:text-neutral-900 font-medium">Ski Trails (448)</span>
-            </label>
-            <label className="flex items-center gap-2 cursor-pointer group">
-              <input
-                type="checkbox"
-                checked={showLifts}
-                onChange={(e) => setShowLifts(e.target.checked)}
-                className="w-4 h-4 rounded border-neutral-300 text-primary-600 focus:ring-primary-600"
-              />
-              <span className="text-sm text-neutral-700 group-hover:text-neutral-900 font-medium">Lifts & Gondolas (18)</span>
-            </label>
-            <label className="flex items-center gap-2 cursor-pointer group">
-              <input
-                type="checkbox"
-                checked={showPOIs}
-                onChange={(e) => setShowPOIs(e.target.checked)}
-                className="w-4 h-4 rounded border-neutral-300 text-primary-600 focus:ring-primary-600"
-              />
-              <span className="text-sm text-neutral-700 group-hover:text-neutral-900 font-medium">Facilities (65)</span>
-            </label>
-          </div>
-
-          {/* Quick Stats */}
-          <div className="space-y-2 text-xs border-t border-neutral-200 pt-3">
-            <div className="flex justify-between">
-              <span className="text-neutral-600">Vertical Drop:</span>
-              <span className="font-bold text-neutral-900">4,425 ft</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-neutral-600">Summit:</span>
-              <span className="font-bold text-neutral-900">13,320 ft</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-neutral-600">Base:</span>
-              <span className="font-bold text-neutral-900">8,725 ft</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-neutral-600">Skiable Acres:</span>
-              <span className="font-bold text-neutral-900">2,000+</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-neutral-600">Lifts:</span>
-              <span className="font-bold text-neutral-900">19</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-neutral-600">Trails:</span>
-              <span className="font-bold text-neutral-900">148</span>
-            </div>
-          </div>
-
-          {/* Trail Difficulty Legend */}
-          <div className="border-t border-neutral-200 pt-3">
-            <h4 className="text-xs font-semibold text-neutral-700 uppercase tracking-wide mb-2">Trail Difficulty</h4>
-            <div className="space-y-1.5">
-              <div className="flex items-center gap-2">
-                <div className="w-4 h-4 rounded-full bg-green-500"></div>
-                <span className="text-xs text-neutral-600">23% Beginner</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <div className="w-4 h-4 rounded-sm bg-blue-600"></div>
-                <span className="text-xs text-neutral-600">36% Intermediate</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <div className="w-4 h-4 rotate-45 bg-black"></div>
-                <span className="text-xs text-neutral-600">41% Advanced/Expert</span>
+            {/* Map Style Toggle */}
+            <div className="mb-4 pb-4 border-b border-neutral-300">
+              <h4 className="text-sm font-black text-neutral-900 mb-3 uppercase tracking-wide">Map Style</h4>
+              <div className="flex gap-2">
+                <button
+                  onClick={() => setMapStyle('outdoors')}
+                  className={`flex-1 px-3 py-2 text-xs font-black uppercase tracking-wide transition-all border-2 ${
+                    mapStyle === 'outdoors'
+                      ? 'bg-primary-600 text-white border-neutral-800'
+                      : 'bg-white text-neutral-700 border-neutral-400 hover:border-neutral-800'
+                  }`}
+                >
+                  <svg className="w-4 h-4 mx-auto mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
+                  </svg>
+                  Terrain
+                </button>
+                <button
+                  onClick={() => setMapStyle('satellite')}
+                  className={`flex-1 px-3 py-2 text-xs font-black uppercase tracking-wide transition-all border-2 ${
+                    mapStyle === 'satellite'
+                      ? 'bg-primary-600 text-white border-neutral-800'
+                      : 'bg-white text-neutral-700 border-neutral-400 hover:border-neutral-800'
+                  }`}
+                >
+                  <svg className="w-4 h-4 mx-auto mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  Satellite
+                </button>
               </div>
             </div>
-          </div>
 
-          {/* Controls */}
-          <div className="border-t border-neutral-200 pt-3 space-y-2">
-            {/* Modern 3D Toggle */}
-            <div className="bg-gradient-to-r from-primary-50 to-sky-50 rounded-xl p-3 border border-primary-100">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-xs font-bold text-neutral-800 uppercase tracking-wide">Terrain View</span>
-                <div className={`w-10 h-5 rounded-full transition-all duration-300 cursor-pointer ${terrainEnabled ? 'bg-primary-600' : 'bg-neutral-300'}`} onClick={toggle3D}>
-                  <div className={`w-4 h-4 rounded-full bg-white shadow-md transform transition-transform duration-300 mt-0.5 ${terrainEnabled ? 'translate-x-5 ml-0.5' : 'translate-x-0.5'}`} />
+            {/* Layer Toggles */}
+            <div className="mb-4 pb-4 border-b border-neutral-300">
+              <h4 className="text-sm font-black text-neutral-900 mb-3 uppercase tracking-wide">Map Layers</h4>
+              <div className="space-y-2">
+                <label className="flex items-center gap-2 cursor-pointer group">
+                  <input
+                    type="checkbox"
+                    checked={showTrails}
+                    onChange={(e) => setShowTrails(e.target.checked)}
+                    className="w-4 h-4 rounded border-2 border-neutral-800"
+                  />
+                  <span className="text-sm text-neutral-900 font-bold flex-1">Ski Trails</span>
+                  <span className="text-xs font-black text-neutral-600">(448)</span>
+                </label>
+                <label className="flex items-center gap-2 cursor-pointer group">
+                  <input
+                    type="checkbox"
+                    checked={showLifts}
+                    onChange={(e) => setShowLifts(e.target.checked)}
+                    className="w-4 h-4 rounded border-2 border-neutral-800"
+                  />
+                  <span className="text-sm text-neutral-900 font-bold flex-1">Lifts & Gondolas</span>
+                  <span className="text-xs font-black text-neutral-600">(18)</span>
+                </label>
+                <label className="flex items-center gap-2 cursor-pointer group">
+                  <input
+                    type="checkbox"
+                    checked={showPOIs}
+                    onChange={(e) => setShowPOIs(e.target.checked)}
+                    className="w-4 h-4 rounded border-2 border-neutral-800"
+                  />
+                  <span className="text-sm text-neutral-900 font-bold flex-1">Facilities</span>
+                  <span className="text-xs font-black text-neutral-600">(65)</span>
+                </label>
+              </div>
+            </div>
+
+            {/* Resort Stats */}
+            <div className="mb-4 pb-4 border-b border-neutral-300">
+              <h4 className="text-sm font-black text-neutral-900 mb-3 uppercase tracking-wide">Resort Stats</h4>
+              <div className="space-y-1.5 text-xs">
+                <div className="flex justify-between">
+                  <span className="text-neutral-600 font-semibold">Vertical Drop:</span>
+                  <span className="font-black text-neutral-900">4,425 ft</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-neutral-600 font-semibold">Summit:</span>
+                  <span className="font-black text-neutral-900">13,320 ft</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-neutral-600 font-semibold">Base:</span>
+                  <span className="font-black text-neutral-900">8,725 ft</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-neutral-600 font-semibold">Skiable Acres:</span>
+                  <span className="font-black text-neutral-900">2,000+</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-neutral-600 font-semibold">Lifts:</span>
+                  <span className="font-black text-neutral-900">19</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-neutral-600 font-semibold">Trails:</span>
+                  <span className="font-black text-neutral-900">148</span>
                 </div>
               </div>
+            </div>
+
+            {/* 3D Terrain Toggle */}
+            <div className="mb-4 pb-4 border-b border-neutral-300">
+              <h4 className="text-sm font-black text-neutral-900 mb-3 uppercase tracking-wide">Terrain View</h4>
               <button
                 onClick={toggle3D}
-                className="w-full flex items-center justify-center gap-2 px-3 py-2.5 bg-white hover:bg-primary-50 rounded-lg text-sm font-bold text-neutral-900 transition-all shadow-sm hover:shadow-md"
+                className={`w-full flex items-center justify-center gap-2 px-4 py-3 text-sm font-black uppercase tracking-wide transition-all border-2 ${
+                  terrainEnabled
+                    ? 'bg-primary-600 text-white border-neutral-800'
+                    : 'bg-white text-neutral-700 border-neutral-400 hover:border-neutral-800'
+                }`}
               >
-                <svg className="w-5 h-5 text-primary-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  {terrainEnabled ? (
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-                  ) : (
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
-                  )}
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
                 </svg>
-                <span>{terrainEnabled ? '3D Terrain Active' : 'Enable 3D Terrain'}</span>
+                {terrainEnabled ? '3D Terrain Active' : 'Enable 3D Terrain'}
               </button>
             </div>
             
+            {/* Reset View Button */}
             <button
               onClick={resetView}
-              className="w-full flex items-center justify-center gap-2 px-3 py-2.5 bg-neutral-100 hover:bg-neutral-200 rounded-lg text-xs font-bold text-neutral-700 transition-all"
+              className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-neutral-800 hover:bg-neutral-900 text-sm font-black text-white uppercase tracking-wide transition-all border-2 border-neutral-800"
             >
-              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
               </svg>
               Reset View
             </button>
           </div>
-        </div>
+        ) : (
+          <button
+            onClick={() => setShowLeftPanel(true)}
+            className="absolute top-4 left-4 z-10 bg-primary-600 hover:bg-primary-700 text-white rounded-full p-3 shadow-2xl transition-all border-2 border-neutral-800"
+            aria-label="Show controls"
+          >
+            <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          </button>
+        )}
 
         {/* Control Instructions */}
         {showControls && (
           <div className="absolute top-4 right-16 bg-white/95 backdrop-blur-sm rounded-xl shadow-xl px-4 py-3 z-10 border border-neutral-200 max-w-xs">
             <div className="flex items-start justify-between gap-3 mb-2">
-              <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2">
                 <svg className="w-5 h-5 text-primary-600 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
                 <span className="text-sm font-black text-neutral-900">Map Controls</span>
               </div>
               <button 
@@ -692,8 +697,8 @@ export default function InteractiveTrailMap() {
                   <span className="font-bold">Click trails/POIs</span> for info
                 </div>
               </div>
-            </div>
           </div>
+        </div>
         )}
         
         {!showControls && (
@@ -708,10 +713,22 @@ export default function InteractiveTrailMap() {
         )}
 
         {/* Classic Ski Map Legend - Bottom Right */}
-        <div className="absolute bottom-4 right-4 bg-white rounded-xl shadow-2xl p-5 z-10 border-2 border-neutral-800 max-w-xs max-h-[calc(100vh-500px)] overflow-y-auto" style={{fontFamily: 'system-ui, -apple-system, sans-serif'}}>
-          <h3 className="text-base font-black text-neutral-900 mb-4 uppercase tracking-wider border-b-2 border-neutral-800 pb-2 sticky top-0 bg-white">
-            Trail Map Legend
-          </h3>
+        {showLegendPanel ? (
+          <div className="absolute bottom-4 right-4 bg-white rounded-xl shadow-2xl p-5 z-10 border-2 border-neutral-800 max-w-xs max-h-[calc(100vh-500px)] overflow-y-auto" style={{fontFamily: 'system-ui, -apple-system, sans-serif'}}>
+            <div className="flex items-start justify-between mb-4 sticky top-0 bg-white pb-2 border-b-2 border-neutral-800">
+              <h3 className="text-base font-black text-neutral-900 uppercase tracking-wider flex-1">
+                Trail Map Legend
+              </h3>
+              <button
+                onClick={() => setShowLegendPanel(false)}
+                className="text-neutral-400 hover:text-neutral-900 transition-colors ml-2"
+                aria-label="Close legend"
+              >
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
           
           {showTrails && (
             <div className="mb-4 pb-4 border-b border-neutral-300">
@@ -748,11 +765,11 @@ export default function InteractiveTrailMap() {
                   <div className="w-8 h-8 bg-[#ef4444] border-2 border-neutral-800 flex items-center justify-center flex-shrink-0 shadow-sm relative">
                     <span className="text-white font-black text-xs absolute">◆</span>
                     <span className="text-white font-black text-xs absolute translate-x-1">◆</span>
-                  </div>
+                </div>
                   <div>
                     <div className="text-sm font-black text-neutral-900">Double Black</div>
                     <div className="text-xs text-neutral-600 font-semibold">Experts Only • Extreme</div>
-                  </div>
+                </div>
                 </div>
               </div>
             </div>
@@ -776,7 +793,7 @@ export default function InteractiveTrailMap() {
                   <div>
                     <div className="text-sm font-black text-neutral-900">Chairlifts</div>
                     <div className="text-xs text-neutral-600 font-semibold">Open-air lift</div>
-                  </div>
+                </div>
                 </div>
               </div>
             </div>
@@ -801,13 +818,13 @@ export default function InteractiveTrailMap() {
                 <div className="flex items-center gap-2">
                   <div className="w-6 h-6 rounded-full bg-[#8b5cf6] border-2 border-neutral-800 flex items-center justify-center flex-shrink-0 shadow-sm">
                     <span className="text-white font-black text-[10px]">L</span>
-                  </div>
+                </div>
                   <span className="text-xs text-neutral-900 font-bold">Lift Station</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <div className="w-6 h-6 rounded-full bg-[#10b981] border-2 border-neutral-800 flex items-center justify-center flex-shrink-0 shadow-sm">
                     <span className="text-white font-black text-[10px]">i</span>
-                  </div>
+                </div>
                   <span className="text-xs text-neutral-900 font-bold">Information</span>
                 </div>
               </div>
@@ -820,6 +837,17 @@ export default function InteractiveTrailMap() {
             </p>
           </div>
         </div>
+        ) : (
+          <button
+            onClick={() => setShowLegendPanel(true)}
+            className="absolute bottom-4 right-4 z-10 bg-primary-600 hover:bg-primary-700 text-white rounded-full p-3 shadow-2xl transition-all border-2 border-neutral-800"
+            aria-label="Show legend"
+          >
+            <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+          </button>
+        )}
 
         {/* Data Attribution */}
         <div className="absolute bottom-4 left-4 bg-white/90 backdrop-blur-sm rounded-lg shadow-sm px-3 py-2 z-10 text-xs text-neutral-600">
