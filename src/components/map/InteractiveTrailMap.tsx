@@ -55,17 +55,8 @@ export default function InteractiveTrailMap() {
   const [showLeftPanel, setShowLeftPanel] = useState(true);
   const [showLegendPanel, setShowLegendPanel] = useState(true);
   const [isFullscreen, setIsFullscreen] = useState(false);
-  const [viewState, setViewState] = useState({
-    longitude: TELLURIDE_CENTER[0],
-    latitude: TELLURIDE_CENTER[1],
-    zoom: 12.5,
-    pitch: 0,
-    bearing: 0
-  });
-
   const [isMapLoaded, setIsMapLoaded] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
-  const isUpdatingProgrammaticallyRef = useRef(false);
 
   // Handle map load and apply 3D terrain
   const handleMapLoad = () => {
@@ -92,17 +83,12 @@ export default function InteractiveTrailMap() {
 
       // Fit to resort bounds in 2D view after map loads
       setTimeout(() => {
-        isUpdatingProgrammaticallyRef.current = true;
         map.fitBounds(TELLURIDE_BOUNDS, {
           padding: { top: 100, bottom: 100, left: 450, right: 450 },
           pitch: 0,
           bearing: 0,
           duration: 1500
         });
-        // Reset flag after animation completes (fitBounds duration is 1500ms)
-        setTimeout(() => {
-          isUpdatingProgrammaticallyRef.current = false;
-        }, 1600);
       }, 500);
     });
 
@@ -512,7 +498,6 @@ export default function InteractiveTrailMap() {
     if (!map) return;
 
     const newTerrainState = !terrainEnabled;
-    isUpdatingProgrammaticallyRef.current = true;
     
     if (newTerrainState) {
       // Enable 3D with dramatic exaggeration for mountain visualization
@@ -521,7 +506,6 @@ export default function InteractiveTrailMap() {
       }
       
       // Use easeTo instead of flyTo to avoid fullscreen exit
-      // Don't update viewState directly - let onMoveEnd sync it after animation
       map.easeTo({ 
         center: [SUMMIT_3D_VIEWPOINT.longitude, SUMMIT_3D_VIEWPOINT.latitude],
         zoom: Math.max(SUMMIT_3D_VIEWPOINT.zoom, MIN_ZOOM_3D),
@@ -547,28 +531,16 @@ export default function InteractiveTrailMap() {
       });
     }
     setTerrainEnabled(newTerrainState);
-    
-    // Reset flag after animation completes (easeTo duration is 2000ms)
-    // Add small buffer to ensure animation is fully complete
-    setTimeout(() => {
-      isUpdatingProgrammaticallyRef.current = false;
-    }, 2100);
   };
 
   const resetView = () => {
     const map = mapRef.current?.getMap();
     if (!map) return;
     
-    isUpdatingProgrammaticallyRef.current = true;
     map.fitBounds(TELLURIDE_BOUNDS, {
       padding: 40,
       duration: 1000
     });
-    
-    // Reset flag after animation completes (fitBounds duration is 1000ms)
-    setTimeout(() => {
-      isUpdatingProgrammaticallyRef.current = false;
-    }, 1100);
   };
 
   const toggleFullscreen = () => {
@@ -631,12 +603,12 @@ export default function InteractiveTrailMap() {
       
       <Map
         ref={mapRef}
-        {...viewState}
-        onMoveEnd={(evt) => {
-          // Sync viewState when move ends
-          // The isUpdatingProgrammaticallyRef flag prevents conflicts during animations
-          // but we still need to sync the final state
-          setViewState(evt.viewState);
+        initialViewState={{
+          longitude: TELLURIDE_CENTER[0],
+          latitude: TELLURIDE_CENTER[1],
+          zoom: 12.5,
+          pitch: 0,
+          bearing: 0
         }}
         mapboxAccessToken={MAPBOX_TOKEN}
         mapStyle={MAP_STYLES[mapStyle]}
