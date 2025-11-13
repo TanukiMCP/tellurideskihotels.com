@@ -60,28 +60,17 @@ export default function InteractiveTrailMap() {
 
   // Handle map load and apply 3D terrain
   const handleMapLoad = () => {
-    const map = mapRef.current?.getMap();
-    if (!map) return;
+    setIsMapLoaded(true);
+  };
 
-    // According to Mapbox docs, terrain should be added on 'style.load' event
-    map.on('style.load', () => {
-      // Add Mapbox terrain (primary - high quality)
-      if (!map.getSource('mapbox-dem')) {
-        map.addSource('mapbox-dem', {
-          type: 'raster-dem',
-          url: 'mapbox://mapbox.mapbox-terrain-dem-v1',
-          tileSize: 512,
-          maxzoom: 14
-        });
-      }
-      
-      // Apply terrain with exaggeration
-      if (terrainEnabled) {
-        map.setTerrain({ source: 'mapbox-dem', exaggeration: 2.5 });
-        console.log('[InteractiveTrailMap] 3D terrain enabled');
-      }
-
-      // Fit to resort bounds in 2D view after map loads
+  // Initial view setup - runs once after map loads
+  useEffect(() => {
+    if (!mapRef.current || !isMapLoaded) return;
+    
+    const map = mapRef.current.getMap();
+    
+    // Wait for initial style load, then fit to resort bounds
+    const initialSetup = () => {
       setTimeout(() => {
         map.fitBounds(TELLURIDE_BOUNDS, {
           padding: { top: 100, bottom: 100, left: 450, right: 450 },
@@ -90,10 +79,14 @@ export default function InteractiveTrailMap() {
           duration: 1500
         });
       }, 500);
-    });
-
-    setIsMapLoaded(true);
-  };
+    };
+    
+    if (map.isStyleLoaded()) {
+      initialSetup();
+    } else {
+      map.once('style.load', initialSetup);
+    }
+  }, [isMapLoaded]); // Only run once when map loads
 
   // Load all map data (trails, lifts, POIs) after map is loaded and on style/visibility changes
   useEffect(() => {
