@@ -37,10 +37,10 @@ export function RoomCard({ rate, nights, onReserve, available, hotel, booking }:
   // Extract room images from rate data (if available)
   const images: string[] = (rate as any).images?.map((img: any) => img.url || img).filter(Boolean) || [];
   
-  // SSP Compliance: We display Suggested Selling Price (SSP) to comply with hotel rate parity
-  // rate.total.amount = SSP total for entire stay (e.g., $500 for 2 nights)
-  // rate.net.amount = SSP per night (e.g., $250/night)
-  // These are higher than retail rates but required for compliance with hotel partners
+  // Pricing: Display retailRate.total (what customer pays)
+  // rate.total.amount = Retail total for entire stay (includes 15% commission + taxes)
+  // rate.net.amount = Retail per night
+  // Commission is already included in these prices via LiteAPI's margin parameter
   const displayTotalPrice = rate.total?.amount || 0;
   const displayPricePerNight = rate.net?.amount || 0;
   const currency = rate.total?.currency || 'USD';

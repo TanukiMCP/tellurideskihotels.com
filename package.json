@@ -11,8 +11,7 @@
     "create-admin": "tsx scripts/create-admin.ts",
     "generate-article": "node scripts/generate-article.js",
     "publish-articles": "node scripts/publish-scheduled-articles.js",
-    "refresh-images": "node scripts/refresh-image-library.js",
-    "download-offline-tiles": "node scripts/download-telluride-tiles.js"
+    "refresh-images": "node scripts/refresh-image-library.js"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.5",

@@ -55,18 +55,20 @@ function transformRateData(hotelData: any, nights: number): Array<{
         // LiteAPI pricing structure per documentation:
         // https://docs.liteapi.travel/docs/hotel-rates-api-json-data-structure
         // 
-        // retailRate.total[0].amount = Retail rate (base + your margin + included taxes/fees)
-        //   - This is what you'd charge in a CLOSED USER GROUP (members only)
-        //   - Example: $460 total for 2 nights
+        // retailRate.total[0].amount = What customer pays (base + margin + included taxes)
+        //   - This ALREADY includes our commission (set via margin parameter)
+        //   - Example: $1,283 total (includes our 15% commission = $167)
         //
         // retailRate.suggestedSellingPrice[0].amount = SSP (Suggested Selling Price)
-        //   - This is what hotels expect you to display PUBLICLY for compliance
-        //   - This is what OTAs like Booking.com display
-        //   - Example: $500 total for 2 nights
+        //   - Public display price from hotel/OTAs (usually higher than retail)
+        //   - Example: $1,404 total
+        //   - Only required if selling ABOVE retail to show "discount"
         //
-        // retailRate.initialPrice[0].amount = Base hotel price (before your margin)
+        // retailRate.initialPrice[0].amount = Base hotel price (before margin)
+        //   - What hotel receives after our commission is deducted
         //
-        // ⚠️ COMPLIANCE REQUIREMENT: Public sites MUST display/charge SSP to avoid rate violations
+        // PRICING STRATEGY: Use retailRate.total for competitive pricing
+        // Our commission is ALREADY included via the margin parameter
         
         const retailData = Array.isArray(rate.retailRate?.total) 
           ? rate.retailRate.total[0] 
@@ -78,45 +80,46 @@ function transformRateData(hotelData: any, nights: number): Array<{
           ? rate.retailRate.initialPrice[0]
           : rate.retailRate?.initialPrice;
           
-        // We're a public site, so we use SSP for compliance (with retail as fallback)
-        const sspTotal = sspData?.amount || retailData?.amount || 0;
+        // Use retail rate (what we pay LiteAPI) as our selling price
+        // Commission is already included via margin parameter
         const retailTotal = retailData?.amount || 0;
-        const currency = sspData?.currency || retailData?.currency || 'USD';
+        const sspTotal = sspData?.amount || 0; // Store for potential "compare at" pricing
+        const currency = retailData?.currency || 'USD';
         
         // Calculate per-night prices from totals
-        const sspPerNight = nights > 0 ? sspTotal / nights : sspTotal;
         const retailPerNight = nights > 0 ? retailTotal / nights : retailTotal;
+        const sspPerNight = nights > 0 ? sspTotal / nights : sspTotal;
 
         // Extract taxes and fees information
         const taxesAndFees = rate.retailRate?.taxesAndFees || [];
         const includedFees = taxesAndFees.filter((fee: any) => fee.included).reduce((sum: number, fee: any) => sum + (fee.amount || 0), 0);
         const excludedFees = taxesAndFees.filter((fee: any) => !fee.included).reduce((sum: number, fee: any) => sum + (fee.amount || 0), 0);
 
-        // Only process if we have a valid price (SSP is required, retail is optional fallback)
-        if (sspTotal > 0) {
+        // Only process if we have a valid retail price
+        if (retailTotal > 0) {
           const transformedRate = {
             rate_id: rate.rateId,
             room_id: roomType.roomTypeId,
             room_name: rate.name || roomType.name || 'Standard Room',
             offer_id: roomType.offerId, // Required for prebook
             mapped_room_id: rate.mappedRoomId, // For linking to room photos (mappedRoomId is in rate, not roomType)
-            // PUBLIC DISPLAY PRICES (SSP - Suggested Selling Price for compliance)
-            // This is what we show customers and what they pay
+            // CUSTOMER PRICING (retailRate.total - what customer pays)
+            // This ALREADY includes our commission (set via margin parameter)
             net: {
-              amount: sspPerNight, // SSP per night (e.g., $250/night)
+              amount: retailPerNight, // Retail per night (e.g., $641/night)
               currency,
             },
             total: {
-              amount: sspTotal, // SSP total for entire stay (e.g., $500 for 2 nights)
+              amount: retailTotal, // Retail total for entire stay (e.g., $1,283 for 2 nights)
               currency,
             },
-            // INTERNAL REFERENCE ONLY (retail rates for potential future member pricing)
-            // Currently not displayed to users - stored for future closed user group feature
-            internal_price: {
-              per_night: retailPerNight, // Retail per night (e.g., $230/night)
-              total: retailTotal,         // Retail total (e.g., $460 for 2 nights)
+            // REFERENCE PRICING (for showing savings/discounts if desired)
+            // SSP is typically higher - can show "Compare at $X" messaging
+            suggested_selling_price: sspTotal > retailTotal ? {
+              per_night: sspPerNight,
+              total: sspTotal,
               currency,
-            },
+            } : undefined,
             // Tax and fee breakdown
             taxes_and_fees: {
               included: includedFees,

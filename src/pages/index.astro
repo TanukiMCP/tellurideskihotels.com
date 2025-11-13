@@ -94,10 +94,10 @@ try {
         // Filter hotels to only those with availability and extract prices
         const hotelsWithAvailability = candidateHotels.filter(hotel => {
           const rateData = minRatesData[hotel.hotel_id];
-          if (rateData && (rateData.suggestedSellingPrice || rateData.price)) {
-            // Use suggestedSellingPrice (includes margin) or fall back to price
+          if (rateData && rateData.price) {
+            // Use price (retail rate with commission already included)
             // MinRates returns TOTAL price, need to divide by nights
-            const totalPrice = rateData.suggestedSellingPrice || rateData.price || 0;
+            const totalPrice = rateData.price || 0;
             minPrices[hotel.hotel_id] = nights > 0 ? totalPrice / nights : totalPrice;
             return true;
           }

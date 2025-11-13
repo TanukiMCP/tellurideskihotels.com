@@ -3,20 +3,24 @@ export const LITEAPI_BOOKING_BASE_URL = 'https://book.liteapi.travel/v3.0';
 export const LITEAPI_PUBLIC_KEY = import.meta.env.LITEAPI_PUBLIC_KEY || '';
 export const LITEAPI_PRIVATE_KEY = import.meta.env.LITEAPI_PRIVATE_KEY || '';
 
-// Your commission margin - LiteAPI applies this and calculates rates
+// Your commission margin - LiteAPI applies this to calculate retailRate.total
 // 
-// HOW IT WORKS:
+// HOW IT WORKS (per https://docs.liteapi.travel/docs/revenue-management-and-commission):
 // - You set margin to 15%
-// - LiteAPI returns TWO prices:
-//   1. retailRate.total = Base rate + your 15% margin ($460 example)
-//   2. retailRate.suggestedSellingPrice = Public SSP from hotel ($500 example)
+// - LiteAPI calculates: retailRate.total = base rate + 15% commission + taxes
+// - Example: Base $1,116 → Retail $1,283 (includes $167 commission)
 // 
-// WHAT WE DISPLAY: SSP ($500) for compliance with hotel rate parity agreements
-// YOUR PROFIT: Difference between SSP and base hotel rate (varies by hotel/season)
+// WHAT CUSTOMER PAYS: retailRate.total ($1,283)
+// YOUR COMMISSION: Already included in retailRate.total ($167 = 15% of base)
+// WHEN YOU GET PAID: Weekly payouts on confirmed bookings (after checkout)
+// 
+// IMPORTANT: Do NOT add additional markup on top of retailRate.total
+// The commission is already built into the price LiteAPI returns
 // 
 // Industry standard margin: 10-20% for OTAs
+// Set to 0 for net rates (if you're merchant of record with separate fees)
 export const LITEAPI_MARKUP_PERCENT = parseInt(import.meta.env.LITEAPI_MARKUP_PERCENT || '15', 10);
 
 // Using liteAPI payment SDK - no payment processor fees!
-// Customer pays SSP, LiteAPI handles payment, you receive commission weekly
+// Customer pays retailRate.total, LiteAPI handles payment, you receive commission weekly
 
