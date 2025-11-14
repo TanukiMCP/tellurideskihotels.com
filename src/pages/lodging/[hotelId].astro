@@ -2,11 +2,8 @@
 export const prerender = false;
 
 const { hotelId } = Astro.params;
-const url = Astro.url;
-const searchParams = url.searchParams;
+const queryString = Astro.url.searchParams.toString();
 
 // Redirect /lodging/[hotelId] to /places-to-stay/[hotelId]
-const queryString = searchParams.toString();
-
 return Astro.redirect(`/places-to-stay/${hotelId}` + (queryString ? `?${queryString}` : ''), 301);
 ---

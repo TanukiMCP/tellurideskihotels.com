@@ -81,12 +81,7 @@ export default function LodgingMap({
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  // Auto-show legend when switching to ski or terrain view
-  useEffect(() => {
-    if (mapStyle === 'ski' || mapStyle === 'terrain') {
-      setShowLegend(true);
-    }
-  }, [mapStyle]);
+  // Legend removed - using clean map only
 
   // Fit bounds to show all hotels + both Telluride and Mountain Village areas
   useEffect(() => {

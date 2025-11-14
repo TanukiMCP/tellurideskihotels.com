@@ -5,7 +5,7 @@
 
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import type { LiteAPIRate, LiteAPIHotel } from '@/lib/liteapi/types';
+import type { LiteAPIRate } from '@/lib/liteapi/types';
 
 export interface CartItem {
   id: string; // Unique cart item ID

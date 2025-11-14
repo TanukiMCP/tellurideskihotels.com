@@ -1,4 +1,4 @@
-import type { Handler, HandlerEvent, HandlerContext } from '@netlify/functions';
+import type { Handler, HandlerEvent } from '@netlify/functions';
 import { getStore } from '@netlify/blobs';
 import { randomBytes, scryptSync } from 'crypto';
 
