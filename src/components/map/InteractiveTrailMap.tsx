@@ -493,59 +493,35 @@ export default function InteractiveTrailMap() {
         return;
       }
       
-      // Update state first to trigger minZoom change
+      // Set camera position first (no animation, instant)
+      map.jumpTo({
+        center: [SUMMIT_3D_VIEWPOINT.longitude, SUMMIT_3D_VIEWPOINT.latitude],
+        zoom: SUMMIT_3D_VIEWPOINT.zoom,
+        pitch: SUMMIT_3D_VIEWPOINT.pitch,
+        bearing: SUMMIT_3D_VIEWPOINT.bearing
+      });
+      
+      // Then enable terrain
+      map.setTerrain({ source: 'mapbox-dem', exaggeration: 2.0 });
       setTerrainEnabled(true);
       
-      // Set terrain with moderate exaggeration
-      try {
-        map.setTerrain({ source: 'mapbox-dem', exaggeration: 2.0 });
-        
-        // Wait for terrain to be applied, then move camera
-        setTimeout(() => {
-          try {
-            map.easeTo({ 
-              center: [SUMMIT_3D_VIEWPOINT.longitude, SUMMIT_3D_VIEWPOINT.latitude],
-              zoom: SUMMIT_3D_VIEWPOINT.zoom,
-              pitch: SUMMIT_3D_VIEWPOINT.pitch,
-              bearing: SUMMIT_3D_VIEWPOINT.bearing,
-              duration: 2000,
-              essential: true
-            });
-          } catch (err) {
-            console.error('[InteractiveTrailMap] Error animating camera:', err);
-          }
-        }, 100);
-      } catch (err) {
-        console.error('[InteractiveTrailMap] Error setting terrain:', err);
-        setTerrainEnabled(false);
-      }
     } else {
-      // Disable 3D terrain
-      try {
-        map.setTerrain(null);
-        setTerrainEnabled(false);
-        
-        // Reset camera after terrain is removed
-        setTimeout(() => {
-          const padding = isFullscreen 
-            ? { top: 100, bottom: 100, left: 100, right: 100 }
-            : { top: 100, bottom: 100, left: 450, right: 450 };
-          
-          try {
-            map.fitBounds(TELLURIDE_BOUNDS, {
-              padding,
-              pitch: 0,
-              bearing: 0,
-              duration: 1500,
-              essential: true
-            });
-          } catch (err) {
-            console.error('[InteractiveTrailMap] Error resetting view:', err);
-          }
-        }, 100);
-      } catch (err) {
-        console.error('[InteractiveTrailMap] Error removing terrain:', err);
-      }
+      // Disable 3D terrain first
+      map.setTerrain(null);
+      
+      // Reset to flat view
+      const padding = isFullscreen 
+        ? { top: 100, bottom: 100, left: 100, right: 100 }
+        : { top: 100, bottom: 100, left: 450, right: 450 };
+      
+      map.fitBounds(TELLURIDE_BOUNDS, {
+        padding,
+        pitch: 0,
+        bearing: 0,
+        duration: 1000
+      });
+      
+      setTerrainEnabled(false);
     }
   };
 
