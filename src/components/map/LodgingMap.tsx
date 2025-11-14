@@ -62,9 +62,10 @@ export default function LodgingMap({
   const [isMapActive, setIsMapActive] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [popupHotel, setPopupHotel] = useState<LiteAPIHotel | null>(null);
-  const [mapStyle] = useState<keyof typeof MAP_STYLES>('streets');
-  const [showSkiTrails] = useState(false);
-  const [trailOpacity] = useState(0.9);
+  const [mapStyle, setMapStyle] = useState<keyof typeof MAP_STYLES>('streets');
+  const [showSkiTrails, setShowSkiTrails] = useState(false);
+  const [showLegend, setShowLegend] = useState(false);
+  const [trailOpacity, setTrailOpacity] = useState(0.9);
   const [viewState, setViewState] = useState({
     longitude: TELLURIDE_AREA_CENTER[0],
     latitude: TELLURIDE_AREA_CENTER[1],
@@ -81,7 +82,12 @@ export default function LodgingMap({
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  // Legend removed - using clean map only
+  // Auto-show legend when switching to ski or terrain view
+  useEffect(() => {
+    if (mapStyle === 'ski' || mapStyle === 'terrain') {
+      setShowLegend(true);
+    }
+  }, [mapStyle]);
 
   // Fit bounds to show all hotels + both Telluride and Mountain Village areas
   useEffect(() => {

@@ -1,4 +1,5 @@
 import { Card, CardContent } from '@/components/ui/Card';
+import { Button } from '@/components/ui/Button';
 import { Calendar, MapPin, Search, TrendingUp } from 'lucide-react';
 
 export interface ArticleBookingWidgetProps {

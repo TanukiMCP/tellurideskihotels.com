@@ -54,6 +54,7 @@ const SUMMIT_3D_VIEWPOINT = {
 
 // Zoom constraints to prevent camera clipping through terrain
 const MIN_ZOOM_2D = 11;   // Allow more zoom out in 2D
+const MIN_ZOOM_3D = 13;   // Prevent clipping through terrain in 3D (safer threshold)
 
 
 export default function InteractiveTrailMap() {

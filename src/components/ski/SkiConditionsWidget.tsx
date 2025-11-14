@@ -5,7 +5,7 @@
 
 import { useEffect, useState } from 'react';
 import type { SkiConditions } from '@/lib/snocountry/types';
-import { getTimeSinceUpdate } from '@/lib/snocountry/client';
+import { getTimeSinceUpdate, formatSnowDepth } from '@/lib/snocountry/client';
 
 interface SkiConditionsWidgetProps {
   initialConditions?: SkiConditions | null;

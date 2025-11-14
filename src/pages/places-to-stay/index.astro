@@ -38,9 +38,11 @@ if (!checkIn || !checkOut) {
 let hotels: LiteAPIHotel[] = [];
 let minPrices: Record<string, number> = {};
 let loading = false;
+let hasSearched = false;
 
 // Always fetch hotels with availability when dates are provided
 if (checkIn && checkOut) {
+  hasSearched = true;
   try {
     loading = true;
     

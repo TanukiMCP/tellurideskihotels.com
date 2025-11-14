@@ -4,6 +4,7 @@
  */
 
 import sharp from 'sharp';
+import { readFileSync, writeFileSync } from 'fs';
 import { join } from 'path';
 
 const publicDir = join(process.cwd(), 'public');

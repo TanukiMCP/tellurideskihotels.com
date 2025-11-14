@@ -1,7 +1,13 @@
 ---
 export const prerender = false;
 
+const url = Astro.url;
+const searchParams = url.searchParams;
+
 // Redirect all /lodging routes to /places-to-stay
-const queryString = Astro.url.searchParams.toString();
-return Astro.redirect(Astro.url.pathname.replace('/lodging', '/places-to-stay') + (queryString ? `?${queryString}` : ''), 301);
+const pathname = url.pathname;
+const queryString = searchParams.toString();
+const redirectUrl = pathname.replace('/lodging', '/places-to-stay') + (queryString ? `?${queryString}` : '');
+
+return Astro.redirect(redirectUrl, 301);
 ---

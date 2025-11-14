@@ -5,7 +5,7 @@
 
 import { useState } from 'react';
 import { ShoppingCart, Check } from 'lucide-react';
-import { useCartStore } from '@/stores/cartStore';
+import { useCartStore, type CartItem } from '@/stores/cartStore';
 
 interface AddToCartButtonProps {
   hotel: {

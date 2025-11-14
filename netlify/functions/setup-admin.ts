@@ -1,4 +1,4 @@
-import type { Handler, HandlerEvent } from '@netlify/functions';
+import type { Handler, HandlerEvent, HandlerContext } from '@netlify/functions';
 import { getStore } from '@netlify/blobs';
 import { randomBytes, scryptSync } from 'crypto';
 
@@ -16,7 +16,7 @@ function hashPassword(password: string): string {
   return `${salt}:${hash}`;
 }
 
-export const handler: Handler = async (event: HandlerEvent) => {
+export const handler: Handler = async (event: HandlerEvent, context: HandlerContext) => {
   // Only allow POST requests
   if (event.httpMethod !== 'POST') {
     return {

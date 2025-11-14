@@ -18,7 +18,7 @@ export function optimizePexelsImage(
   url: string,
   options: ImageOptimizationOptions = {}
 ): string {
-  const { width, height, quality = 80 } = options;
+  const { width, height, quality = 80, format = 'auto' } = options;
   
   // Check if it's a Pexels URL
   if (!url.includes('pexels.com')) {

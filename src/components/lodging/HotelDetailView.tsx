@@ -3,12 +3,14 @@ import { Card, CardContent } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
 import { ImageWithLoading } from '@/components/shared/ImageWithLoading';
 import { Star, MapPin, MessageSquare, Home, TrendingUp, Award, Users } from 'lucide-react';
+import * as LucideIcons from 'lucide-react';
 import { RoomSelectorCard } from './RoomSelectorCard';
 import { HotelReviewsList } from './HotelReviewsList';
 import { CheckoutFlow } from '@/components/checkout/CheckoutFlow';
 import type { LiteAPIHotel, LiteAPIRate } from '@/lib/liteapi/types';
 import { formatHotelAddress, getHotelImages } from '@/lib/liteapi/utils';
 import { getRatingColor } from '@/lib/constants';
+import { getAmenityIcon } from '@/lib/amenity-icons';
 import type { SelectedRoom } from '@/lib/types';
 import { WeatherWidget } from '@/components/weather/WeatherWidget';
 import { WeatherAwareAmenities } from './WeatherAwareAmenities';
@@ -329,6 +331,7 @@ export function HotelDetailView({ hotel, checkIn, checkOut, adults, children = 0
             const sections: Array<{ title?: string; content: string }> = [];
             
             // Match headings: <h1>, <h2>, <h3>, or <p><strong>...</strong></p>
+            const headingPattern = /<(h[1-3]|p)>(.*?)<\/\1>/gi;
             const strongPattern = /<p><strong>(.*?)<\/strong><\/p>/gi;
             
             // First, extract strong paragraphs as headings

@@ -18,6 +18,7 @@ export default function HotelMapPopup({
   hotel, 
   minPrice = 0,
   currency = 'USD',
+  checkInDate,
   onViewDetails
 }: HotelMapPopupProps) {
   // Get primary image from LiteAPI only
