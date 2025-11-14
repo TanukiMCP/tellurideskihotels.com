@@ -3,14 +3,20 @@
   "id": "telluride-skiing-complete-guide",
   "title": "Telluride Skiing: Complete Guide for All Levels (2025)",
   "slug": "telluride-skiing-complete-guide",
-  "status": "scheduled",
+  "status": "published",
   "category": "ski-guides",
   "author": "Telluride Ski Hotels Team",
   "publishDate": "2025-11-13T15:00:00Z",
   "seo": {
     "metaTitle": "Telluride Skiing Guide 2025 | Tips for All Skill Levels",
     "metaDescription": "Complete skiing guide for Telluride: beginner tips, intermediate progression, expert challenges, equipment rentals, lessons, and mountain navigation strategies.",
-    "keywords": ["telluride skiing", "telluride ski tips", "learning to ski telluride", "telluride expert skiing", "ski telluride"],
+    "keywords": [
+      "telluride skiing",
+      "telluride ski tips",
+      "learning to ski telluride",
+      "telluride expert skiing",
+      "ski telluride"
+    ],
     "canonical": "https://tellurideskihotels.com/blog/ski-guides/telluride-skiing-complete-guide"
   },
   "featured": false,
@@ -19,10 +25,27 @@
   "excerpt": "Everything you need to know about skiing Telluride: terrain by ability level, lessons, rentals, mountain navigation, safety tips, and strategies for maximizing your time on the slopes.",
   "wordCount": 2700,
   "readingTime": 14,
-  "relatedHotels": ["madeline-hotel", "peaks-resort", "inn-lost-creek"],
-  "relatedArticles": ["telluride-ski-resort-guide", "telluride-ski-season-guide", "telluride-lift-tickets"],
-  "tags": ["skiing", "lessons", "tips", "terrain", "safety"],
-  "seasonalRelevance": ["winter"]
+  "relatedHotels": [
+    "madeline-hotel",
+    "peaks-resort",
+    "inn-lost-creek"
+  ],
+  "relatedArticles": [
+    "telluride-ski-resort-guide",
+    "telluride-ski-season-guide",
+    "telluride-lift-tickets"
+  ],
+  "tags": [
+    "skiing",
+    "lessons",
+    "tips",
+    "terrain",
+    "safety"
+  ],
+  "seasonalRelevance": [
+    "winter"
+  ],
+  "updatedDate": "2025-11-14T08:08:18.572Z"
 }
 ---
 

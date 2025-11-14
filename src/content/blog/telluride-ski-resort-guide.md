@@ -2,6 +2,7 @@
 {
   "id": "telluride-ski-resort-guide",
   "title": "Telluride Ski Resort: Complete Guide (2025)",
+  "slug": "telluride-ski-resort-guide",
   "status": "published",
   "updatedDate": "2025-11-10T15:00:00Z",
   "category": "ski-guides",
@@ -10,7 +11,13 @@
   "seo": {
     "metaTitle": "Telluride Ski Resort Guide 2025 | Terrain, Lifts & Tips",
     "metaDescription": "Complete guide to Telluride Ski Resort: 2,000 acres of terrain, 127 trails, expert runs, lift tickets, best times to visit, and insider skiing tips for 2025.",
-    "keywords": ["telluride ski resort", "telluride skiing", "telluride ski", "telluride terrain", "telluride lifts"],
+    "keywords": [
+      "telluride ski resort",
+      "telluride skiing",
+      "telluride ski",
+      "telluride terrain",
+      "telluride lifts"
+    ],
     "canonical": "https://tellurideskihotels.com/blog/ski-guides/telluride-ski-resort-guide"
   },
   "featured": true,
@@ -19,10 +26,27 @@
   "excerpt": "Everything you need to know about Telluride Ski Resort: terrain breakdown, lift system, best runs, ticket prices, expert tips, and how it compares to other Colorado resorts.",
   "wordCount": 3800,
   "readingTime": 19,
-  "relatedHotels": ["madeline-hotel", "peaks-resort", "inn-lost-creek", "lumiere-telluride"],
-  "relatedArticles": ["complete-guide-telluride", "best-hotels-telluride", "telluride-lift-tickets"],
-  "tags": ["skiing", "ski resort", "terrain", "lifts", "expert runs"],
-  "seasonalRelevance": ["winter"]
+  "relatedHotels": [
+    "madeline-hotel",
+    "peaks-resort",
+    "inn-lost-creek",
+    "lumiere-telluride"
+  ],
+  "relatedArticles": [
+    "complete-guide-telluride",
+    "best-hotels-telluride",
+    "telluride-lift-tickets"
+  ],
+  "tags": [
+    "skiing",
+    "ski resort",
+    "terrain",
+    "lifts",
+    "expert runs"
+  ],
+  "seasonalRelevance": [
+    "winter"
+  ]
 }
 ---
 

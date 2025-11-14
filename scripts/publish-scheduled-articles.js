@@ -210,7 +210,13 @@ async function main() {
 }
 
 // Run if called directly
-if (import.meta.url === `file://${process.argv[1]}`) {
+// Note: This check works in most environments but may need adjustment for Windows
+const isMainModule = process.argv[1] && (
+  import.meta.url === `file://${process.argv[1]}` ||
+  import.meta.url === `file:///${process.argv[1].replace(/\\/g, '/')}`
+);
+
+if (isMainModule) {
   main();
 }
 

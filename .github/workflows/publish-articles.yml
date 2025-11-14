@@ -8,6 +8,9 @@ on:
   # Allow manual triggering
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   publish:
     runs-on: ubuntu-latest
@@ -29,7 +32,7 @@ jobs:
         run: npm ci
       
       - name: Run publishing script
-        run: node scripts/publish-scheduled-articles.js
+        run: npm run publish-articles
       
       - name: Configure Git
         run: |

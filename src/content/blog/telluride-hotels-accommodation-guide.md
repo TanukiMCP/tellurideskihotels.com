@@ -3,14 +3,20 @@
   "id": "telluride-hotels-accommodation-guide",
   "title": "Telluride Hotels: Complete Accommodation Guide (2025)",
   "slug": "telluride-hotels-accommodation-guide",
-  "status": "scheduled",
+  "status": "published",
   "category": "hotel-reviews",
   "author": "Telluride Ski Hotels Team",
   "publishDate": "2025-11-10T15:00:00Z",
   "seo": {
     "metaTitle": "Telluride Hotels Guide 2025 | Find Your Perfect Accommodation",
     "metaDescription": "Complete guide to Telluride hotels: ski-in/ski-out properties, downtown boutiques, luxury resorts, budget options, and booking strategies for every budget.",
-    "keywords": ["telluride hotels", "telluride accommodations", "telluride lodging", "hotels in telluride", "telluride colorado hotels"],
+    "keywords": [
+      "telluride hotels",
+      "telluride accommodations",
+      "telluride lodging",
+      "hotels in telluride",
+      "telluride colorado hotels"
+    ],
     "canonical": "https://tellurideskihotels.com/blog/hotel-reviews/telluride-hotels-accommodation-guide"
   },
   "featured": false,
@@ -19,10 +25,29 @@
   "excerpt": "Everything you need to know about Telluride hotels: property types, neighborhoods, pricing, amenities, and expert tips for finding your ideal mountain accommodation.",
   "wordCount": 2600,
   "readingTime": 13,
-  "relatedHotels": ["madeline-hotel", "peaks-resort", "hotel-telluride", "new-sheridan-hotel", "lumiere-telluride"],
-  "relatedArticles": ["where-to-stay-telluride", "best-hotels-telluride", "ski-in-ski-out-telluride"],
-  "tags": ["hotels", "lodging", "accommodations", "booking"],
-  "seasonalRelevance": ["winter", "summer"]
+  "relatedHotels": [
+    "madeline-hotel",
+    "peaks-resort",
+    "hotel-telluride",
+    "new-sheridan-hotel",
+    "lumiere-telluride"
+  ],
+  "relatedArticles": [
+    "where-to-stay-telluride",
+    "best-hotels-telluride",
+    "ski-in-ski-out-telluride"
+  ],
+  "tags": [
+    "hotels",
+    "lodging",
+    "accommodations",
+    "booking"
+  ],
+  "seasonalRelevance": [
+    "winter",
+    "summer"
+  ],
+  "updatedDate": "2025-11-14T08:08:18.567Z"
 }
 ---
 

@@ -3,14 +3,20 @@
   "id": "best-hotels-telluride",
   "title": "15 Best Hotels in Telluride: Top Places to Stay (2025)",
   "slug": "best-hotels-telluride",
-  "status": "scheduled",
+  "status": "published",
   "category": "hotel-reviews",
   "author": "Telluride Ski Hotels Team",
   "publishDate": "2025-11-09T15:00:00Z",
   "seo": {
     "metaTitle": "15 Best Hotels in Telluride Colorado (2025) | Expert Reviews",
     "metaDescription": "Discover the 15 best hotels in Telluride from ski-in/ski-out luxury to budget-friendly options. Expert reviews, prices, and booking tips for 2025.",
-    "keywords": ["best hotels in telluride", "telluride hotels", "where to stay telluride", "telluride accommodations", "ski hotels telluride"],
+    "keywords": [
+      "best hotels in telluride",
+      "telluride hotels",
+      "where to stay telluride",
+      "telluride accommodations",
+      "ski hotels telluride"
+    ],
     "canonical": "https://tellurideskihotels.com/blog/hotel-reviews/best-hotels-telluride"
   },
   "featured": true,
@@ -19,10 +25,33 @@
   "excerpt": "The 15 best hotels in Telluride for 2025: luxury ski-in/ski-out properties, boutique downtown hotels, and budget-friendly options. Find your perfect mountain accommodation.",
   "wordCount": 2800,
   "readingTime": 14,
-  "relatedHotels": ["madeline-hotel", "peaks-resort", "hotel-telluride", "new-sheridan-hotel", "lumiere-telluride", "inn-lost-creek", "capella-telluride", "mountain-lodge-telluride"],
-  "relatedArticles": ["where-to-stay-telluride", "ski-in-ski-out-telluride", "luxury-hotels-telluride"],
-  "tags": ["hotels", "rankings", "accommodations", "reviews", "telluride"],
-  "seasonalRelevance": ["winter", "summer"]
+  "relatedHotels": [
+    "madeline-hotel",
+    "peaks-resort",
+    "hotel-telluride",
+    "new-sheridan-hotel",
+    "lumiere-telluride",
+    "inn-lost-creek",
+    "capella-telluride",
+    "mountain-lodge-telluride"
+  ],
+  "relatedArticles": [
+    "where-to-stay-telluride",
+    "ski-in-ski-out-telluride",
+    "luxury-hotels-telluride"
+  ],
+  "tags": [
+    "hotels",
+    "rankings",
+    "accommodations",
+    "reviews",
+    "telluride"
+  ],
+  "seasonalRelevance": [
+    "winter",
+    "summer"
+  ],
+  "updatedDate": "2025-11-14T08:08:18.559Z"
 }
 ---
 

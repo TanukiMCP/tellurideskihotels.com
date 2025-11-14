@@ -3,14 +3,20 @@
   "id": "telluride-ski-season-guide",
   "title": "Telluride Ski Season: When to Visit & What to Expect (2025)",
   "slug": "telluride-ski-season-guide",
-  "status": "scheduled",
+  "status": "published",
   "category": "planning-tips",
   "author": "Telluride Ski Hotels Team",
   "publishDate": "2025-11-12T15:00:00Z",
   "seo": {
     "metaTitle": "Telluride Ski Season Guide 2024-2025 | Best Times to Visit",
     "metaDescription": "Complete Telluride ski season guide: opening/closing dates, monthly snow conditions, crowd levels, pricing, and insider tips for planning your perfect ski trip.",
-    "keywords": ["telluride ski season", "when to ski telluride", "telluride snow conditions", "best time to visit telluride", "telluride season dates"],
+    "keywords": [
+      "telluride ski season",
+      "when to ski telluride",
+      "telluride snow conditions",
+      "best time to visit telluride",
+      "telluride season dates"
+    ],
     "canonical": "https://tellurideskihotels.com/blog/planning-tips/telluride-ski-season-guide"
   },
   "featured": false,
@@ -19,10 +25,26 @@
   "excerpt": "Everything about Telluride's ski season: opening and closing dates, monthly conditions, crowd patterns, pricing, snow totals, and the best times to visit for powder, value, or avoiding crowds.",
   "wordCount": 2500,
   "readingTime": 13,
-  "relatedHotels": ["madeline-hotel", "peaks-resort", "hotel-telluride"],
-  "relatedArticles": ["telluride-ski-resort-guide", "complete-guide-telluride", "telluride-lift-tickets"],
-  "tags": ["ski season", "timing", "snow conditions", "planning"],
-  "seasonalRelevance": ["winter"]
+  "relatedHotels": [
+    "madeline-hotel",
+    "peaks-resort",
+    "hotel-telluride"
+  ],
+  "relatedArticles": [
+    "telluride-ski-resort-guide",
+    "complete-guide-telluride",
+    "telluride-lift-tickets"
+  ],
+  "tags": [
+    "ski season",
+    "timing",
+    "snow conditions",
+    "planning"
+  ],
+  "seasonalRelevance": [
+    "winter"
+  ],
+  "updatedDate": "2025-11-14T08:08:18.570Z"
 }
 ---
 

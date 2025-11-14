@@ -3,14 +3,20 @@
   "id": "things-to-do-telluride",
   "title": "Things to Do in Telluride: Ultimate Activity Guide (2025)",
   "slug": "things-to-do-telluride",
-  "status": "scheduled",
+  "status": "published",
   "category": "activity-guides",
   "author": "Telluride Ski Hotels Team",
   "publishDate": "2025-11-11T15:00:00Z",
   "seo": {
     "metaTitle": "50+ Things to Do in Telluride Colorado (2025) | Activities Guide",
     "metaDescription": "Discover 50+ activities in Telluride beyond skiing: hiking, mountain biking, festivals, dining, gondola rides, hot springs, and year-round adventures.",
-    "keywords": ["things to do in telluride", "telluride activities", "telluride attractions", "telluride summer", "telluride festivals"],
+    "keywords": [
+      "things to do in telluride",
+      "telluride activities",
+      "telluride attractions",
+      "telluride summer",
+      "telluride festivals"
+    ],
     "canonical": "https://tellurideskihotels.com/blog/activity-guides/things-to-do-telluride"
   },
   "featured": true,
@@ -19,10 +25,30 @@
   "excerpt": "Complete guide to activities in Telluride: skiing, hiking, mountain biking, festivals, hot springs, dining, gondola rides, and 50+ ways to experience this mountain paradise year-round.",
   "wordCount": 3000,
   "readingTime": 15,
-  "relatedHotels": ["hotel-telluride", "peaks-resort", "madeline-hotel"],
-  "relatedArticles": ["complete-guide-telluride", "telluride-ski-resort-guide", "telluride-hiking"],
-  "tags": ["activities", "things to do", "attractions", "festivals", "adventures"],
-  "seasonalRelevance": ["winter", "summer", "spring", "fall"]
+  "relatedHotels": [
+    "hotel-telluride",
+    "peaks-resort",
+    "madeline-hotel"
+  ],
+  "relatedArticles": [
+    "complete-guide-telluride",
+    "telluride-ski-resort-guide",
+    "telluride-hiking"
+  ],
+  "tags": [
+    "activities",
+    "things to do",
+    "attractions",
+    "festivals",
+    "adventures"
+  ],
+  "seasonalRelevance": [
+    "winter",
+    "summer",
+    "spring",
+    "fall"
+  ],
+  "updatedDate": "2025-11-14T08:08:18.574Z"
 }
 ---
 
