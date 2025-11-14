@@ -31,11 +31,11 @@ const TELLURIDE_MAX_BOUNDS: [[number, number], [number, number]] = [
 // Dramatic 3D viewpoint focusing on the summit area
 // Camera positioned south of resort looking north at the peaks
 const SUMMIT_3D_VIEWPOINT = {
-  longitude: -107.818,  // Positioned to look at the mountain
-  latitude: 37.920,     // South of the main resort to look up at peaks
-  zoom: 14.0,           // Closer zoom for dramatic effect (with safety buffer)
-  pitch: 70,            // Steep angle to emphasize vertical relief
-  bearing: 25           // Rotate to show mountain profile and peak areas
+  longitude: -107.8125,  // Centered on the main ski resort area
+  latitude: 37.9275,     // Positioned to capture the full mountain range
+  zoom: 13.5,            // Optimal zoom to show entire resort with dramatic peaks
+  pitch: 65,             // Steep angle to emphasize vertical relief and terrain
+  bearing: 15            // Slight rotation to show mountain profile and peak areas
 };
 
 // Zoom constraints to prevent camera clipping through terrain
@@ -483,15 +483,6 @@ export default function InteractiveTrailMap() {
     const map = mapRef.current?.getMap();
     if (!map || !map.isStyleLoaded()) return;
 
-    // Check current terrain state from map, not from React state
-    const currentTerrain = map.getTerrain();
-    const isCurrentlyEnabled = currentTerrain !== null && currentTerrain !== undefined;
-    
-    // Prevent double-toggle
-    if (isCurrentlyEnabled === terrainEnabled) {
-      return;
-    }
-
     const newTerrainState = !terrainEnabled;
     
     if (newTerrainState) {
@@ -502,7 +493,7 @@ export default function InteractiveTrailMap() {
         return;
       }
       
-      // Set terrain first
+      // Set terrain first with enhanced exaggeration for dramatic effect
       map.setTerrain({ source: 'mapbox-dem', exaggeration: 2.5 });
       
       // Then move camera after a brief delay to let terrain settle
