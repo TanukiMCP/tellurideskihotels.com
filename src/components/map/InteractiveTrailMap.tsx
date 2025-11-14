@@ -448,7 +448,7 @@ export default function InteractiveTrailMap() {
     } else {
       map.once('style.load', addTerrainAndLayers);
     }
-  }, [isMapLoaded, mapStyle, showTrails, showLifts, showPOIs, terrainEnabled]);
+  }, [isMapLoaded, mapStyle, showTrails, showLifts, showPOIs]);
 
   // Note: POI markers are now symbol-based and automatically billboard in 3D
   // No need for dynamic updates - they always face the camera!
@@ -481,41 +481,61 @@ export default function InteractiveTrailMap() {
 
   const toggle3D = () => {
     const map = mapRef.current?.getMap();
-    if (!map) return;
+    if (!map || !map.isStyleLoaded()) return;
+
+    // Check current terrain state from map, not from React state
+    const currentTerrain = map.getTerrain();
+    const isCurrentlyEnabled = currentTerrain !== null && currentTerrain !== undefined;
+    
+    // Prevent double-toggle
+    if (isCurrentlyEnabled === terrainEnabled) {
+      return;
+    }
 
     const newTerrainState = !terrainEnabled;
     
     if (newTerrainState) {
-      // Enable 3D with dramatic exaggeration for mountain visualization
-      if (map.getSource('mapbox-dem')) {
-        map.setTerrain({ source: 'mapbox-dem', exaggeration: 2.5 });
+      // Enable 3D terrain - ensure source exists first
+      const demSource = map.getSource('mapbox-dem');
+      if (!demSource) {
+        console.warn('[InteractiveTrailMap] mapbox-dem source not found');
+        return;
       }
       
-      // Use easeTo instead of flyTo to avoid fullscreen exit
-      map.easeTo({ 
-        center: [SUMMIT_3D_VIEWPOINT.longitude, SUMMIT_3D_VIEWPOINT.latitude],
-        zoom: Math.max(SUMMIT_3D_VIEWPOINT.zoom, MIN_ZOOM_3D),
-        pitch: SUMMIT_3D_VIEWPOINT.pitch,
-        bearing: SUMMIT_3D_VIEWPOINT.bearing,
-        duration: 2000,
-        essential: true
-      });
-    } else {
-      // Disable 3D and return to full resort overview
-      map.setTerrain(null);
-      // Adjust padding based on fullscreen mode
-      const padding = isFullscreen 
-        ? { top: 100, bottom: 100, left: 100, right: 100 }
-        : { top: 100, bottom: 100, left: 450, right: 450 };
+      // Set terrain first
+      map.setTerrain({ source: 'mapbox-dem', exaggeration: 2.5 });
       
-      map.fitBounds(TELLURIDE_BOUNDS, {
-        padding,
-        pitch: 0,
-        bearing: 0,
-        duration: 1500,
-        essential: true
-      });
+      // Then move camera after a brief delay to let terrain settle
+      setTimeout(() => {
+        map.easeTo({ 
+          center: [SUMMIT_3D_VIEWPOINT.longitude, SUMMIT_3D_VIEWPOINT.latitude],
+          zoom: Math.max(SUMMIT_3D_VIEWPOINT.zoom, MIN_ZOOM_3D),
+          pitch: SUMMIT_3D_VIEWPOINT.pitch,
+          bearing: SUMMIT_3D_VIEWPOINT.bearing,
+          duration: 2000,
+          essential: true
+        });
+      }, 50);
+    } else {
+      // Disable 3D terrain
+      map.setTerrain(null);
+      
+      // Reset camera after terrain is removed
+      setTimeout(() => {
+        const padding = isFullscreen 
+          ? { top: 100, bottom: 100, left: 100, right: 100 }
+          : { top: 100, bottom: 100, left: 450, right: 450 };
+        
+        map.fitBounds(TELLURIDE_BOUNDS, {
+          padding,
+          pitch: 0,
+          bearing: 0,
+          duration: 1500,
+          essential: true
+        });
+      }, 50);
     }
+    
     setTerrainEnabled(newTerrainState);
   };
 
