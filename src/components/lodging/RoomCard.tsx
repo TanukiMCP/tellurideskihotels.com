@@ -172,26 +172,10 @@ export function RoomCard({ rate, nights, onReserve, available, hotel, booking }:
               </div>
               
               {/* Tax & Fee Information */}
-              {rate.taxes_and_fees ? (
-                <div className="mt-2 space-y-1">
-                  {rate.taxes_and_fees.included > 0 && (
-                    <div className="flex items-center gap-1 text-xs text-neutral-600">
-                      <Check className="w-3.5 h-3.5 text-green-600" />
-                      <span>Includes {formatCurrency(rate.taxes_and_fees.included, currency)} in taxes & fees</span>
-                    </div>
-                  )}
-                  {hasExcludedFees && (
-                    <div className="text-xs text-amber-600 font-medium">
-                      + {formatCurrency(excludedFeesAmount, currency)} due at property
-                    </div>
-                  )}
-                </div>
-              ) : (
-                <div className="flex items-center gap-1 text-sm text-neutral-600 mt-2">
-                  <Check className="w-4 h-4 text-green-600" />
-                  <span>Total includes taxes and fees</span>
-                </div>
-              )}
+              <div className="flex items-center gap-1 text-xs text-neutral-600 mt-2">
+                <Check className="w-3.5 h-3.5 text-green-600" />
+                <span>Total includes all taxes and fees</span>
+              </div>
               
               {available && available <= 3 && (
                 <div className="text-sm text-red-600 font-medium mt-2">

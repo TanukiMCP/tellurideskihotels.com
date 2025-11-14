@@ -220,20 +220,11 @@ export function RoomSelector({
                   </div>
                   
                   {/* Tax & Fee Information */}
-                  {rate.taxes_and_fees && (
-                    <div className="mt-3 pt-3 border-t border-neutral-200 space-y-1">
-                      {rate.taxes_and_fees.included > 0 && (
-                        <div className="text-xs text-neutral-500">
-                          Includes {formatCurrency(rate.taxes_and_fees.included, currency)} in taxes & fees
-                        </div>
-                      )}
-                      {hasExcludedFees && (
-                        <div className="text-xs text-amber-600 font-medium">
-                          + {formatCurrency(rate.taxes_and_fees.excluded, currency)} due at property
-                        </div>
-                      )}
+                  <div className="mt-3 pt-3 border-t border-neutral-200">
+                    <div className="text-xs text-neutral-500">
+                      Total includes all taxes and fees
                     </div>
-                  )}
+                  </div>
                 </div>
 
                 <div className="space-y-3">
