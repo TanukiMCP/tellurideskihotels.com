@@ -8,7 +8,7 @@
   "author": "Telluride Ski Hotels Team",
   "publishDate": "2025-11-11T15:00:00Z",
   "seo": {
-    "metaTitle": "50+ Things to Do in Telluride Colorado (2025) | Activities Guide",
+    "metaTitle": "Things to Do in Telluride Colorado 2025 | Activity Guide",
     "metaDescription": "Discover 50+ activities in Telluride beyond skiing: hiking, mountain biking, festivals, dining, gondola rides, hot springs, and year-round adventures.",
     "keywords": [
       "things to do in telluride",
