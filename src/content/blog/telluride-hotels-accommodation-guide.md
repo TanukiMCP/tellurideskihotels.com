@@ -8,7 +8,7 @@
   "author": "Telluride Ski Hotels Team",
   "publishDate": "2025-11-10T15:00:00Z",
   "seo": {
-    "metaTitle": "Telluride Hotels Guide 2025 | Find Your Perfect Accommodation",
+    "metaTitle": "Telluride Hotels Guide 2025 | Best Accommodations",
     "metaDescription": "Complete guide to Telluride hotels: ski-in/ski-out properties, downtown boutiques, luxury resorts, budget options, and booking strategies for every budget.",
     "keywords": [
       "telluride hotels",
