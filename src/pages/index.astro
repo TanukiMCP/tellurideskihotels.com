@@ -21,6 +21,7 @@ import { getTopHotels } from '@/lib/top-hotels';
 
 const heroImage = getHomepageHeroImage();
 const heroImages = getImagesByCategory('hero') || getImagesByCategory('resort') || [];
+const ctaImage = getImagesByCategory('resort')[3] || getImagesByCategory('luxury')[0] || null;
 
 // Fetch featured hotels server-side (has access to API key)
 import type { LiteAPIHotel } from '@/lib/liteapi/types';
@@ -400,7 +401,7 @@ try {
         </div>
 
         <!-- Two Column Layout: Weather + Webcams -->
-        <div class="grid lg:grid-cols-3 gap-8 mb-12">
+        <div class="grid lg:grid-cols-3 gap-8 mb-12 items-start">
           <!-- Weather Forecast (takes 2 columns) -->
           <div class="lg:col-span-2">
             <h3 class="text-2xl font-bold text-neutral-900 mb-6">10-Day Weather Forecast</h3>
@@ -408,7 +409,7 @@ try {
           </div>
 
           <!-- Webcam Links (takes 1 column) -->
-          <div class="lg:col-span-1">
+          <div class="lg:col-span-1 flex">
             <WebcamLinks client:visible />
           </div>
         </div>
@@ -506,11 +507,11 @@ try {
       <div class="grid lg:grid-cols-2 gap-0">
         <!-- Left Side - Image -->
         <div class="relative h-[400px] lg:h-auto">
-          {heroImages[2] ? (
+          {ctaImage ? (
             <>
               <img 
-                src={optimizePexelsImage(heroImages[2].url, { width: 800, quality: 90 })}
-                srcset={generateSrcSet(heroImages[2].url, [400, 600, 800])}
+                src={optimizePexelsImage(ctaImage.url, { width: 800, quality: 90 })}
+                srcset={generateSrcSet(ctaImage.url, [400, 600, 800])}
                 sizes="(max-width: 1024px) 100vw, 50vw"
                 alt="Telluride Ski Resort" 
                 class="w-full h-full object-cover"
@@ -518,9 +519,9 @@ try {
               />
             </>
           ) : (
-            <div class="w-full h-full bg-gradient-to-br from-primary-600 to-primary-700"></div>
+            <div class="w-full h-full bg-primary-600"></div>
           )}
-          <div class="absolute inset-0 bg-gradient-to-r from-black/40 via-black/20 to-transparent"></div>
+          <div class="absolute inset-0 bg-black/30"></div>
           
           <!-- Featured Badge Overlay on Image -->}
           <div class="absolute top-6 left-6 bg-white/95 backdrop-blur-sm rounded-xl px-4 py-2 shadow-lg">
@@ -534,7 +535,7 @@ try {
         </div>
 
         <!-- Right Side - Content -->
-        <div class="bg-gradient-to-br from-primary-600 to-emerald-600 p-10 lg:p-14 flex flex-col justify-center text-white relative overflow-hidden">
+        <div class="bg-primary-600 p-10 lg:p-14 flex flex-col justify-center text-white relative overflow-hidden">
           {/* Decorative Pattern */}
           <div class="absolute inset-0 opacity-10">
             <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_rgba(255,255,255,0.3),transparent_70%)]"></div>

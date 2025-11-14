@@ -34,7 +34,7 @@ const WEBCAM_SOURCES = [
 
 export function WebcamLinks() {
   return (
-    <div className="bg-gradient-to-br from-sky-50 via-white to-sky-50 rounded-2xl p-6 border border-sky-200 shadow-card h-full flex flex-col">
+    <div className="bg-sky-50 rounded-2xl p-6 border border-sky-200 shadow-card h-full flex flex-col">
       {/* Header */}
       <div className="flex items-center gap-3 mb-6">
         <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-sky-500 to-sky-600 flex items-center justify-center shadow-card">

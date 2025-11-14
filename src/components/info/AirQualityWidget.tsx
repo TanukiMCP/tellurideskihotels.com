@@ -107,13 +107,13 @@ export function AirQualityWidget() {
   }
 
   return (
-    <div className={`bg-gradient-to-br from-green-50 via-white to-green-50 rounded-2xl p-6 border border-green-200 shadow-card hover:shadow-card-hover transition-all duration-300`}>
+    <div className="bg-primary-50 rounded-2xl p-6 border border-primary-200 shadow-card hover:shadow-card-hover transition-all duration-300">
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
-          <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${airQuality.color} flex items-center justify-center shadow-card`}>
+          <div className={`w-12 h-12 rounded-xl ${airQuality.color.replace('from-', 'bg-').replace(' to-green-600', '').replace(' to-yellow-600', '').replace(' to-orange-600', '').replace(' to-red-600', '').replace(' to-purple-600', '').replace(' to-red-900', '')} flex items-center justify-center shadow-card`}>
             <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
           </div>
           <div>
@@ -125,56 +125,50 @@ export function AirQualityWidget() {
 
       {/* AQI Display */}
       <div className="text-center mb-6">
-        <div className={`inline-flex items-center justify-center w-32 h-32 rounded-full bg-gradient-to-br ${airQuality.color} shadow-card mb-4`}>
+        <div className={`inline-flex items-center justify-center w-40 h-40 rounded-full ${airQuality.color.replace('from-', 'bg-').replace(' to-green-600', '').replace(' to-yellow-600', '').replace(' to-orange-600', '').replace(' to-red-600', '').replace(' to-purple-600', '').replace(' to-red-900', '')} shadow-card mb-4`}>
           <div className="text-center text-white">
-            <div className="text-4xl font-bold">{airQuality.aqi}</div>
-            <div className="text-xs font-semibold uppercase tracking-wide">AQI</div>
+            <div className="text-5xl font-bold mb-1">{airQuality.aqi}</div>
+            <div className="text-sm font-semibold uppercase tracking-wide">AQI</div>
           </div>
         </div>
-        <div className="space-y-2">
-          <div className="inline-block px-4 py-2 bg-white rounded-lg border border-green-200 shadow-sm">
-            <div className="text-lg font-bold text-neutral-900">{airQuality.category}</div>
+        <div className="space-y-3">
+          <div className="inline-block px-6 py-3 bg-white rounded-lg border border-primary-200 shadow-sm">
+            <div className="text-xl font-bold text-neutral-900">{airQuality.category}</div>
           </div>
-          <p className="text-sm text-neutral-600 max-w-sm mx-auto">
+          <p className="text-base text-neutral-700 max-w-sm mx-auto font-medium leading-relaxed">
             {airQuality.recommendation}
           </p>
         </div>
       </div>
 
       {/* AQI Scale Reference */}
-      <div className="space-y-2 pt-4 border-t border-neutral-200">
-        <h4 className="text-xs font-bold text-neutral-700 uppercase tracking-wide mb-3">AQI Scale</h4>
-        <div className="grid grid-cols-2 gap-2 text-xs">
+      <div className="space-y-3 pt-6 border-t border-primary-200">
+        <h4 className="text-sm font-bold text-neutral-900 uppercase tracking-wide mb-4">AQI Scale</h4>
+        <div className="grid grid-cols-2 gap-3 text-sm">
           <div className="flex items-center gap-2">
-            <div className="w-3 h-3 rounded-full bg-green-500"></div>
-            <span className="text-neutral-600">0-50: Good</span>
+            <div className="w-4 h-4 rounded-full bg-green-500 flex-shrink-0"></div>
+            <span className="text-neutral-700 font-medium">0-50: Good</span>
           </div>
           <div className="flex items-center gap-2">
-            <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
-            <span className="text-neutral-600">51-100: Moderate</span>
+            <div className="w-4 h-4 rounded-full bg-yellow-500 flex-shrink-0"></div>
+            <span className="text-neutral-700 font-medium">51-100: Moderate</span>
           </div>
           <div className="flex items-center gap-2">
-            <div className="w-3 h-3 rounded-full bg-orange-500"></div>
-            <span className="text-neutral-600">101-150: Sensitive</span>
+            <div className="w-4 h-4 rounded-full bg-orange-500 flex-shrink-0"></div>
+            <span className="text-neutral-700 font-medium">101-150: Sensitive</span>
           </div>
           <div className="flex items-center gap-2">
-            <div className="w-3 h-3 rounded-full bg-red-500"></div>
-            <span className="text-neutral-600">151+: Unhealthy</span>
+            <div className="w-4 h-4 rounded-full bg-red-500 flex-shrink-0"></div>
+            <span className="text-neutral-700 font-medium">151+: Unhealthy</span>
           </div>
         </div>
       </div>
 
-      {/* Telluride Note or Error Message */}
-      {error ? (
-        <div className="mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
-          <p className="text-xs text-yellow-800">
-            <span className="font-semibold">Note:</span> {error}. Showing typical Telluride AQI.
-          </p>
-        </div>
-      ) : (
-        <div className="mt-4 p-3 bg-green-50 border border-green-200 rounded-lg">
-          <p className="text-xs text-green-800">
-            <span className="font-semibold">Did You Know:</span> Telluride enjoys some of the cleanest air in Colorado year-round!
+      {/* Error Message Only */}
+      {error && (
+        <div className="mt-4 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+          <p className="text-sm text-yellow-900 font-medium">
+            <span className="font-bold">Note:</span> {error}. Showing typical Telluride AQI.
           </p>
         </div>
       )}
