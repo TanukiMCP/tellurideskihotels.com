@@ -242,6 +242,17 @@ export async function searchRates(params: LiteAPIRateSearchParams): Promise<Rate
   const endpoint = `/hotels/rates`;
 
   try {
+    console.log('[LiteAPI Rates] Making request to LiteAPI:', {
+      endpoint,
+      bodyPreview: {
+        hotelIds: requestBody.hotelIds,
+        checkin: requestBody.checkin,
+        checkout: requestBody.checkout,
+        occupancies: requestBody.occupancies,
+        margin: requestBody.margin,
+      }
+    });
+
     const response = await liteAPIClient<any>(endpoint, {
       method: 'POST',
       body: JSON.stringify(requestBody),

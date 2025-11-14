@@ -3,6 +3,15 @@ export const LITEAPI_BOOKING_BASE_URL = 'https://book.liteapi.travel/v3.0';
 export const LITEAPI_PUBLIC_KEY = import.meta.env.LITEAPI_PUBLIC_KEY || '';
 export const LITEAPI_PRIVATE_KEY = import.meta.env.LITEAPI_PRIVATE_KEY || '';
 
+// Log API key status on startup (only first 10 chars for security)
+if (typeof process !== 'undefined') {
+  console.log('[LiteAPI Config] API Key Status:', {
+    hasPrivateKey: !!LITEAPI_PRIVATE_KEY,
+    keyPreview: LITEAPI_PRIVATE_KEY ? `${LITEAPI_PRIVATE_KEY.substring(0, 10)}...` : 'NOT SET',
+    baseUrl: LITEAPI_BASE_URL,
+  });
+}
+
 // Your commission margin - LiteAPI applies this to calculate retailRate.total
 // 
 // HOW IT WORKS (per https://docs.liteapi.travel/docs/revenue-management-and-commission):

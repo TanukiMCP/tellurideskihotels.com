@@ -7,9 +7,21 @@ export const GET: APIRoute = async ({ request }) => {
     const url = new URL(request.url);
     const hotelId = url.searchParams.get('hotelId');
 
+    console.log('[Hotel Details API] Request received:', {
+      url: request.url,
+      searchParams: Array.from(url.searchParams.entries()),
+      hotelId,
+    });
+
     if (!hotelId) {
       return new Response(
-        JSON.stringify({ error: 'hotelId is required' }),
+        JSON.stringify({ 
+          error: 'hotelId is required',
+          debug: {
+            url: request.url,
+            searchParams: Array.from(url.searchParams.entries()),
+          }
+        }),
         {
           status: 400,
           headers: { 'Content-Type': 'application/json' },
