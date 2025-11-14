@@ -1,6 +1,6 @@
 ---
 import { getCollection } from 'astro:content';
-import BaseLayout from '@/layouts/BaseLayout.astro';
+import PageLayout from '@/components/layout/PageLayout.astro';
 import Container from '@/components/layout/Container.astro';
 import BlogCard from '@/components/blog/BlogCard';
 
@@ -32,7 +32,7 @@ const categories = [
 ];
 ---
 
-<BaseLayout
+<PageLayout
   title="Telluride Ski Hotels Blog - Travel Guides & Tips"
   description="Expert guides on Telluride hotels, skiing, activities, and travel planning. Find the best places to stay and things to do in Telluride, Colorado."
 >
@@ -95,5 +95,5 @@ const categories = [
       )}
     </div>
   </Container>
-</BaseLayout>
+</PageLayout>
 

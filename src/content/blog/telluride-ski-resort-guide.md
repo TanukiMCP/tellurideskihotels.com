@@ -21,7 +21,7 @@
     "canonical": "https://tellurideskihotels.com/blog/ski-guides/telluride-ski-resort-guide"
   },
   "featured": true,
-  "featuredImage": "/images/uploads/telluride-ski-resort-aerial.jpg",
+  "featuredImage": "https://images.pexels.com/photos/4118259/pexels-photo-4118259.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
   "featuredImageAlt": "Telluride Ski Resort aerial view showing 2000 acres of terrain and mountain peaks",
   "excerpt": "Everything you need to know about Telluride Ski Resort: terrain breakdown, lift system, best runs, ticket prices, expert tips, and how it compares to other Colorado resorts.",
   "wordCount": 3800,

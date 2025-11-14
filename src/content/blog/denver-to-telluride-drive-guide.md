@@ -20,7 +20,7 @@
     "canonical": "https://tellurideskihotels.com/blog/planning-tips/denver-to-telluride-drive-guide"
   },
   "featured": false,
-  "featuredImage": "/images/uploads/denver-telluride-i70-drive.jpg",
+  "featuredImage": "https://images.pexels.com/photos/10969016/pexels-photo-10969016.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
   "featuredImageAlt": "Scenic drive from Denver to Telluride along I-70 through Colorado mountains",
   "excerpt": "Your complete guide to driving from Denver to Telluride. Learn the best routes, avoid I-70 traffic, navigate winter conditions, find the best stops, and get insider tips from Colorado locals.",
   "wordCount": 2800,

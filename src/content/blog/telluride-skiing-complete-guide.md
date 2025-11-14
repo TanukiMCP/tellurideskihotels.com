@@ -20,7 +20,7 @@
     "canonical": "https://tellurideskihotels.com/blog/ski-guides/telluride-skiing-complete-guide"
   },
   "featured": false,
-  "featuredImage": "/images/uploads/telluride-skiing-all-levels.jpg",
+  "featuredImage": "https://images.pexels.com/photos/17441633/pexels-photo-17441633.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
   "featuredImageAlt": "Skiers of all levels enjoying Telluride slopes with mountain views",
   "excerpt": "Everything you need to know about skiing Telluride: terrain by ability level, lessons, rentals, mountain navigation, safety tips, and strategies for maximizing your time on the slopes.",
   "wordCount": 2700,

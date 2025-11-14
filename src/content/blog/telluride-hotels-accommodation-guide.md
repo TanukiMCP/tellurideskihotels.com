@@ -20,7 +20,7 @@
     "canonical": "https://tellurideskihotels.com/blog/hotel-reviews/telluride-hotels-accommodation-guide"
   },
   "featured": false,
-  "featuredImage": "/images/uploads/telluride-hotels-overview.jpg",
+  "featuredImage": "https://images.pexels.com/photos/16178910/pexels-photo-16178910.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
   "featuredImageAlt": "Telluride hotels overview showing luxury mountain properties and downtown Victorian buildings",
   "excerpt": "Everything you need to know about Telluride hotels: property types, neighborhoods, pricing, amenities, and expert tips for finding your ideal mountain accommodation.",
   "wordCount": 2600,

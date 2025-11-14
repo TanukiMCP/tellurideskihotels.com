@@ -20,7 +20,7 @@
     "canonical": "https://tellurideskihotels.com/blog/hotel-reviews/best-hotels-telluride"
   },
   "featured": true,
-  "featuredImage": "/images/uploads/telluride-hotels-mountain-views.jpg",
+  "featuredImage": "https://images.pexels.com/photos/10804099/pexels-photo-10804099.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
   "featuredImageAlt": "Best hotels in Telluride Colorado with mountain views and ski access",
   "excerpt": "The 15 best hotels in Telluride for 2025: luxury ski-in/ski-out properties, boutique downtown hotels, and budget-friendly options. Find your perfect mountain accommodation.",
   "wordCount": 2800,

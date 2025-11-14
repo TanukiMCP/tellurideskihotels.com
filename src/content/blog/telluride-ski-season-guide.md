@@ -20,7 +20,7 @@
     "canonical": "https://tellurideskihotels.com/blog/planning-tips/telluride-ski-season-guide"
   },
   "featured": false,
-  "featuredImage": "/images/uploads/telluride-ski-season-winter.jpg",
+  "featuredImage": "https://images.pexels.com/photos/15232505/pexels-photo-15232505.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
   "featuredImageAlt": "Telluride ski season showing fresh powder and skiers on mountain slopes",
   "excerpt": "Everything about Telluride's ski season: opening and closing dates, monthly conditions, crowd patterns, pricing, snow totals, and the best times to visit for powder, value, or avoiding crowds.",
   "wordCount": 2500,

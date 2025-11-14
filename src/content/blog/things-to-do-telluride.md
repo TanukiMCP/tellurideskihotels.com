@@ -20,7 +20,7 @@
     "canonical": "https://tellurideskihotels.com/blog/activity-guides/things-to-do-telluride"
   },
   "featured": true,
-  "featuredImage": "/images/uploads/telluride-activities-collage.jpg",
+  "featuredImage": "https://images.pexels.com/photos/29991568/pexels-photo-29991568.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
   "featuredImageAlt": "Things to do in Telluride including hiking, skiing, festivals and downtown activities",
   "excerpt": "Complete guide to activities in Telluride: skiing, hiking, mountain biking, festivals, hot springs, dining, gondola rides, and 50+ ways to experience this mountain paradise year-round.",
   "wordCount": 3000,

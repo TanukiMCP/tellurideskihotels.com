@@ -1,6 +1,6 @@
 ---
 import type { CollectionEntry } from 'astro:content';
-import BaseLayout from './BaseLayout.astro';
+import PageLayout from '@/components/layout/PageLayout.astro';
 import Container from '@/components/layout/Container.astro';
 import ShareButtons from '@/components/blog/ShareButtons';
 import TableOfContents from '@/components/blog/TableOfContents';
@@ -22,11 +22,10 @@ const fullUrl = `${Astro.site}blog/${data.category}/${article.slug}`;
 const categoryName = data.category.replace(/-/g, ' ');
 ---
 
-<BaseLayout
+<PageLayout
   title={data.seo.metaTitle}
   description={data.seo.metaDescription}
   image={data.featuredImage}
-  article={true}
 >
   <article class="py-12">
     <Container>
@@ -327,5 +326,5 @@ const categoryName = data.category.replace(/-/g, ' ');
       });
     });
   </script>
-</BaseLayout>
+</PageLayout>
 
