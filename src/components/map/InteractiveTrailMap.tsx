@@ -15,10 +15,10 @@ const MAP_STYLES = {
   satellite: 'mapbox://styles/mapbox/satellite-streets-v12',
 };
 
-// Telluride Ski Resort bounds for better framing
+// Telluride Ski Resort bounds for better framing - updated to show all trails
 const TELLURIDE_BOUNDS: [[number, number], [number, number]] = [
-  [-107.85, 37.925], // Southwest coordinates
-  [-107.80, 37.95]   // Northeast coordinates
+  [-107.88, 37.885], // Southwest coordinates - includes lower mountain trails
+  [-107.80, 37.955]  // Northeast coordinates - includes summit area
 ];
 
 // Expanded bounds with ~5 mile buffer to prevent cutting off trails when zooming
@@ -28,12 +28,12 @@ const TELLURIDE_MAX_BOUNDS: [[number, number], [number, number]] = [
   [-107.70, 38.00]   // Northeast with ~5mi buffer
 ];
 
-// Resort-only bounds for filtering (exclude Telluride town)
+// Resort-only bounds for filtering - updated to include all ski trails
 const RESORT_BOUNDS = {
-  minLon: -107.85,
-  maxLon: -107.80,
-  minLat: 37.925,
-  maxLat: 37.95
+  minLon: -107.88,   // Expanded to include all western trails
+  maxLon: -107.80,   // Keep eastern boundary
+  minLat: 37.88,     // Lowered to include all lower mountain trails
+  maxLat: 37.96      // Expanded to include summit area
 };
 
 // Helper function to check if coordinates are within resort bounds
