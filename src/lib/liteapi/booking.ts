@@ -7,75 +7,54 @@ import type {
 } from './types';
 
 export async function prebook(request: LiteAPIPrebookRequest): Promise<LiteAPIPrebookResponse> {
-  // LiteAPI expects camelCase offerId, convert from offer_id if needed
-  const requestBody: any = { ...request };
-  if (requestBody.offer_id && !requestBody.offerId) {
-    requestBody.offerId = requestBody.offer_id;
-    delete requestBody.offer_id;
-  }
-  
-  // Enable liteAPI payment SDK to avoid Stripe fees!
-  requestBody.usePaymentSdk = true;
-  
   const response = await liteAPIBookingClient<any>('/rates/prebook', {
     method: 'POST',
-    body: JSON.stringify(requestBody),
+    body: JSON.stringify({
+      offerId: request.offerId,
+      usePaymentSdk: request.usePaymentSdk ?? true,
+    }),
   });
   
-  // LiteAPI returns data in response.data.data or response.data with camelCase, normalize to snake_case
-  // Handle nested data structure: { data: { data: {...} } } or { data: {...} } or {...}
   const data = response.data?.data || response.data || response;
   
-  console.log('[Prebook] Response with payment SDK:', {
-    hasSecretKey: !!data.secretKey,
-    hasTransactionId: !!data.transactionId,
-  });
-  
   return {
-    prebook_id: data.prebookId || data.prebook_id,
-    hotel_id: data.hotelId || data.hotel_id,
-    rate_id: data.rateId || data.rate_id,
+    prebookId: data.prebookId,
+    hotelId: data.hotelId,
+    rateId: data.rateId,
     checkin: data.checkin,
     checkout: data.checkout,
     total: data.total,
-    expires_at: data.expiresAt || data.expires_at,
-    // liteAPI payment SDK keys (only returned when usePaymentSdk: true)
-    secret_key: data.secretKey || data.secret_key,
-    transaction_id: data.transactionId || data.transaction_id,
+    currency: data.currency,
+    expiresAt: data.expiresAt,
+    secretKey: data.secretKey,
+    transactionId: data.transactionId,
   };
 }
 
 export async function confirmBooking(request: LiteAPIConfirmRequest): Promise<LiteAPIConfirmResponse> {
-  // LiteAPI expects camelCase, convert from snake_case if needed
-  const requestBody: any = {};
-  
-  // Handle prebook_id/prebookId
-  requestBody.prebookId = request.prebookId || request.prebook_id;
-  
-  // Handle payment object
-  if (request.payment) {
-    requestBody.payment = {
-      method: request.payment.method,
-      transactionId: request.payment.transactionId || request.payment.transaction_id,
-    };
-  }
-  
   const response = await liteAPIBookingClient<any>('/rates/book', {
     method: 'POST',
-    body: JSON.stringify(requestBody),
+    body: JSON.stringify({
+      prebookId: request.prebookId,
+      holder: request.holder,
+      payment: {
+        method: request.payment.method,
+        transactionId: request.payment.transactionId,
+      },
+    }),
   });
   
-  // LiteAPI returns data in response.data.data or response.data with camelCase, normalize to snake_case
-  // Handle nested data structure: { data: { data: {...} } } or { data: {...} } or {...}
   const data = response.data?.data || response.data || response;
+  
   return {
-    booking_id: data.bookingId || data.booking_id,
-    confirmation_number: data.confirmationNumber || data.confirmation_number,
+    bookingId: data.bookingId,
+    confirmationNumber: data.confirmationNumber,
     status: data.status,
-    hotel_id: data.hotelId || data.hotel_id,
+    hotelId: data.hotelId,
     checkin: data.checkin,
     checkout: data.checkout,
     total: data.total,
+    currency: data.currency,
   };
 }
 

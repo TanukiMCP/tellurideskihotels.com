@@ -138,63 +138,45 @@ export interface LiteAPIAddon {
 }
 
 export interface LiteAPIPrebookRequest {
-  hotel_id: string;
-  rate_id: string;
-  offerId?: string;
-  offer_id?: string;
-  checkin: string;
-  checkout: string;
-  adults: number;
-  children?: number;
-  guest_info?: {
-    first_name: string;
-    last_name: string;
-    email: string;
-    phone?: string;
-  };
-  addons?: Array<{
-    addon_id: string;
-    quantity?: number;
-  }>;
+  offerId: string;
+  usePaymentSdk?: boolean;
 }
 
 export interface LiteAPIPrebookResponse {
-  prebook_id: string;
-  hotel_id: string;
-  rate_id: string;
+  prebookId: string;
+  hotelId: string;
+  rateId: string;
   checkin: string;
   checkout: string;
-  total?: {
-    amount?: number;
-    currency?: string;
-  };
-  expires_at?: string;
-  // liteAPI payment SDK fields (returned when usePaymentSdk: true)
-  secret_key?: string;
-  transaction_id?: string;
+  total: number;
+  currency: string;
+  expiresAt: string;
+  secretKey?: string;
+  transactionId?: string;
 }
 
 export interface LiteAPIConfirmRequest {
-  prebook_id?: string;
-  prebookId?: string;
-  payment?: {
-    method: string;
-    transaction_id?: string;
+  prebookId: string;
+  holder: {
+    firstName: string;
+    lastName: string;
+    email: string;
+  };
+  payment: {
+    method: 'TRANSACTION_ID' | 'ACC_CREDIT_CARD' | 'WALLET' | 'CREDIT';
     transactionId?: string;
   };
 }
 
 export interface LiteAPIConfirmResponse {
-  booking_id: string;
-  confirmation_number?: string;
-  status?: string;
-  hotel_id?: string;
-  checkin?: string;
-  checkout?: string;
-  total?: {
-    amount?: number;
-    currency?: string;
-  };
+  bookingId: string;
+  confirmationNumber: string;
+  status: string;
+  hotelId: string;
+  checkin: string;
+  checkout: string;
+  total: number;
+  currency: string;
 }
 
 export interface LiteAPIHotelSearchParams {

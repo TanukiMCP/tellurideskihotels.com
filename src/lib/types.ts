@@ -34,7 +34,6 @@ export interface GuestInfo {
   lastName: string;
   email: string;
   phone?: string;
-  specialRequests?: string;
 }
 
 export interface BookingData {

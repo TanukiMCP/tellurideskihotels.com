@@ -5,48 +5,27 @@ export const POST: APIRoute = async ({ request }) => {
   try {
     const body = await request.json();
 
-    // Validate required fields (offerId is required by LiteAPI for prebook)
-    if (!body.hotel_id || !body.rate_id || !body.checkin || !body.checkout || !body.adults) {
+    if (!body.offerId) {
       return new Response(
-        JSON.stringify({ error: 'Missing required fields: hotel_id, rate_id, checkin, checkout, and adults are required' }),
-        {
-          status: 400,
-          headers: { 'Content-Type': 'application/json' },
-        }
+        JSON.stringify({ error: 'offerId is required' }),
+        { status: 400, headers: { 'Content-Type': 'application/json' } }
       );
     }
 
-    // Validate offerId (required by LiteAPI, can be offerId or offer_id)
-    if (!body.offerId && !body.offer_id) {
-      return new Response(
-        JSON.stringify({ error: 'Missing required field: offerId is required for prebook' }),
-        {
-          status: 400,
-          headers: { 'Content-Type': 'application/json' },
-        }
-      );
-    }
-
-    const result = await prebook(body);
+    const result = await prebook({
+      offerId: body.offerId,
+      usePaymentSdk: true,
+    });
 
     return new Response(JSON.stringify(result), {
       status: 200,
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: { 'Content-Type': 'application/json' },
     });
   } catch (error: any) {
-    console.error('Prebook error:', error);
+    console.error('[Prebook API] Error:', error);
     return new Response(
-      JSON.stringify({
-        error: error.message || 'Failed to prebook',
-      }),
-      {
-        status: error.status || 500,
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      }
+      JSON.stringify({ error: error.message || 'Failed to prebook' }),
+      { status: error.status || 500, headers: { 'Content-Type': 'application/json' } }
     );
   }
 };

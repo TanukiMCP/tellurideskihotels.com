@@ -6,66 +6,45 @@ export const POST: APIRoute = async ({ request }) => {
   try {
     const body = await request.json();
 
-    if (!body.prebook_id) {
+    if (!body.prebookId || !body.holder || !body.payment) {
       return new Response(
-        JSON.stringify({ error: 'prebook_id is required' }),
-        {
-          status: 400,
-          headers: { 'Content-Type': 'application/json' },
-        }
+        JSON.stringify({ error: 'prebookId, holder, and payment are required' }),
+        { status: 400, headers: { 'Content-Type': 'application/json' } }
       );
     }
 
-    console.log('[Booking Confirm] Confirming booking:', {
-      prebookId: body.prebook_id,
-      paymentMethod: body.payment?.method,
+    const result = await confirmBooking({
+      prebookId: body.prebookId,
+      holder: body.holder,
+      payment: body.payment,
     });
 
-    const result = await confirmBooking(body);
-
-    console.log('[Booking Confirm] Booking confirmed:', {
-      bookingId: result.booking_id,
-      confirmationNumber: result.confirmation_number,
-    });
-
-    // Send confirmation email (non-blocking)
-    if (body.guest_email && body.hotel_name && body.room_name) {
+    if (body.holder.email && body.hotelName && body.roomName) {
       sendBookingConfirmation({
-        bookingId: result.booking_id,
-        confirmationNumber: result.confirmation_number || result.booking_id,
-        guestName: `${body.guest_first_name} ${body.guest_last_name}`,
-        guestEmail: body.guest_email,
-        hotelName: body.hotel_name,
-        checkIn: body.checkin,
-        checkOut: body.checkout,
-        roomName: body.room_name,
+        bookingId: result.bookingId,
+        confirmationNumber: result.confirmationNumber,
+        guestName: `${body.holder.firstName} ${body.holder.lastName}`,
+        guestEmail: body.holder.email,
+        hotelName: body.hotelName,
+        checkIn: result.checkin,
+        checkOut: result.checkout,
+        roomName: body.roomName,
         adults: body.adults || 2,
         children: body.children || 0,
-        totalPrice: body.total_price || 0,
-        currency: body.currency || 'USD',
-      }).catch(err => {
-        console.error('[Booking Confirm] Email send failed (non-blocking):', err);
-      });
+        totalPrice: result.total,
+        currency: result.currency,
+      }).catch(err => console.error('[Booking Confirm] Email failed:', err));
     }
 
     return new Response(JSON.stringify(result), {
       status: 200,
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: { 'Content-Type': 'application/json' },
     });
   } catch (error: any) {
     console.error('[Booking Confirm] Error:', error);
     return new Response(
-      JSON.stringify({
-        error: error.message || 'Failed to confirm booking',
-      }),
-      {
-        status: error.status || 500,
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      }
+      JSON.stringify({ error: error.message || 'Failed to confirm booking' }),
+      { status: error.status || 500, headers: { 'Content-Type': 'application/json' } }
     );
   }
 };
