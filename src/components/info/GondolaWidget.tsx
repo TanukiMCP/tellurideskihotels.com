@@ -53,7 +53,7 @@ export function GondolaWidget() {
             </svg>
             <span className="font-semibold text-neutral-900">Operating Hours</span>
           </div>
-          <span className="text-sm font-bold text-primary-600">7:00 AM - 12:00 AM</span>
+          <span className="text-sm font-bold text-primary-600">6:30 AM - Midnight</span>
         </div>
 
         <div className="flex items-center justify-between p-3 bg-white rounded-xl border border-neutral-100">
@@ -108,12 +108,12 @@ export function GondolaWidget() {
 
       {/* Learn More CTA */}
       <a
-        href="https://www.telluride-co.gov/gondola"
+        href="https://www.telluride.com/discover/the-gondola/"
         target="_blank"
         rel="noopener noreferrer"
         className="block w-full text-center bg-primary-600 text-white px-6 py-3 rounded-xl font-semibold hover:bg-primary-700 transition-colors shadow-card hover:shadow-card-hover"
       >
-        View Gondola Schedule
+        View Full Gondola Info
       </a>
     </div>
   );
