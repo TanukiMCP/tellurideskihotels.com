@@ -103,9 +103,11 @@ export function CurrentConditions({ checkIn, checkOut }: CurrentConditionsProps 
   };
 
   return (
-    <div className="bg-white rounded-2xl shadow-lg border border-neutral-200 overflow-hidden h-full flex flex-col">
-      {/* Header */}
+    <div className="bg-white rounded-2xl shadow-lg border border-neutral-200 overflow-hidden h-full flex flex-col w-full">
+      {/* Header with Title */}
       <div className="bg-gradient-to-br from-sky-50 to-white p-6 border-b border-neutral-200">
+        <h2 className="text-2xl font-bold text-neutral-900 mb-6">10-Day Weather Forecast</h2>
+        
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-3">
             <div className="w-12 h-12 rounded-xl bg-sky-100 flex items-center justify-center shadow-sm">
@@ -161,7 +163,7 @@ export function CurrentConditions({ checkIn, checkOut }: CurrentConditionsProps 
 
         {/* 10-Day Forecast */}
       <div className="p-6 flex-1">
-        <h3 className="text-xl font-black text-neutral-900 mb-5">10-Day Forecast</h3>
+        <h3 className="text-xl font-black text-neutral-900 mb-5">Daily Breakdown</h3>
         <div className="grid grid-cols-5 lg:grid-cols-10 gap-3">
             {allDays.map((weather, index) => {
               const date = new Date(weather.date);
