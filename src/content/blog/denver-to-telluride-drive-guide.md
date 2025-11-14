@@ -9,7 +9,7 @@
   "publishDate": "2025-11-13T15:00:00Z",
   "seo": {
     "metaTitle": "Denver to Telluride Drive Guide: I-70 Route, Traffic & Tips",
-    "metaDescription": "Complete guide to driving from Denver to Telluride via I-70. Route options, drive times, traffic patterns, gas stops, winter driving tips, and local insights for Colorado residents.",
+    "metaDescription": "Complete Denver to Telluride drive guide via I-70. Route options, drive times, traffic patterns, gas stops, and winter driving tips for Colorado.",
     "keywords": [
       "denver to telluride drive",
       "i70 to telluride",
