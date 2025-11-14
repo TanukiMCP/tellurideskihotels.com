@@ -9,6 +9,7 @@ interface Event {
   date: string;
   type: 'festival' | 'concert' | 'sports' | 'art' | 'community';
   description: string;
+  url: string; // Link to full event details on official Telluride site
 }
 
 // Telluride Events Hopper - Add new events here as they're announced
@@ -22,6 +23,7 @@ const TELLURIDE_EVENTS: Event[] = [
     date: '2025-11-15',
     type: 'concert',
     description: 'Founded by husband-and-wife duo Michael and Tanya Trotter, an evening of soul and Americana music',
+    url: 'https://www.telluride.com/event/the-war-and-treaty/',
   },
   {
     id: '2',
@@ -29,6 +31,7 @@ const TELLURIDE_EVENTS: Event[] = [
     date: '2025-11-19',
     type: 'festival',
     description: 'Free community screening at the Sheridan Opera House',
+    url: 'https://www.telluride.com/event/mountainfilm-for-locals-seasons-of-stoke/',
   },
   {
     id: '3',
@@ -36,6 +39,7 @@ const TELLURIDE_EVENTS: Event[] = [
     date: '2025-11-21',
     type: 'community',
     description: 'The gondola reopens at 6:30 AM for the winter season',
+    url: 'https://www.telluride.com/event/gondola-reopens-for-the-season/',
   },
   {
     id: '4',
@@ -43,6 +47,7 @@ const TELLURIDE_EVENTS: Event[] = [
     date: '2025-11-27',
     type: 'sports',
     description: 'Annual family holiday tradition fun run/walk, free admission',
+    url: 'https://www.telluride.com/event/turkey-trot/',
   },
   {
     id: '5',
@@ -50,6 +55,7 @@ const TELLURIDE_EVENTS: Event[] = [
     date: '2025-12-06',
     type: 'sports',
     description: 'Opening weekend with plenty to do on and off the mountain',
+    url: 'https://www.telluride.com/event/telluride-ski-resort-opening-day-2025/',
   },
   {
     id: '6',
@@ -57,6 +63,7 @@ const TELLURIDE_EVENTS: Event[] = [
     date: '2025-12-10',
     type: 'festival',
     description: 'Lighting of the ceremonial Ski Tree and holiday shopping downtown',
+    url: 'https://www.telluride.com/event/noel-night/',
   },
   {
     id: '7',
@@ -64,6 +71,7 @@ const TELLURIDE_EVENTS: Event[] = [
     date: '2025-12-13',
     type: 'festival',
     description: 'Mountain Village transforms into the North Pole for holiday celebration',
+    url: 'https://www.telluride.com/event/mountain-village-holiday-prelude/',
   },
   {
     id: '8',
@@ -71,6 +79,7 @@ const TELLURIDE_EVENTS: Event[] = [
     date: '2025-12-24',
     type: 'festival',
     description: 'Torchlight parade from the top of the Gondola down into Telluride',
+    url: 'https://www.telluride.com/event/christmas-eve-torchlight-parade/',
   },
   {
     id: '9',
@@ -78,6 +87,7 @@ const TELLURIDE_EVENTS: Event[] = [
     date: '2025-12-31',
     type: 'festival',
     description: 'Ski instructors descend the mountain with torches followed by fireworks',
+    url: 'https://www.telluride.com/event/new-years-eve-torchlight-parade-fireworks/',
   },
   {
     id: '10',
@@ -85,6 +95,7 @@ const TELLURIDE_EVENTS: Event[] = [
     date: '2026-06-18',
     type: 'concert',
     description: 'Annual pilgrimage for Festivarians to celebrate bluegrass in the mountains',
+    url: 'https://www.telluride.com/event/telluride-bluegrass-festival/',
   },
   {
     id: '11',
@@ -92,6 +103,7 @@ const TELLURIDE_EVENTS: Event[] = [
     date: '2026-06-25',
     type: 'festival',
     description: 'Longest running yoga festival in the country, four-day wellness gathering',
+    url: 'https://www.telluride.com/event/telluride-yoga-festival/',
   },
   {
     id: '12',
@@ -99,6 +111,7 @@ const TELLURIDE_EVENTS: Event[] = [
     date: '2026-09-18',
     type: 'concert',
     description: 'One of the most scenic and intimate music festivals in the country',
+    url: 'https://www.telluride.com/event/telluride-blues-brews-festival/',
   },
 ];
 
@@ -159,9 +172,12 @@ export function EventsWidget() {
           upcomingEvents.map((event) => {
             const { month, day } = getMonthDay(event.date);
             return (
-              <div
+              <a
                 key={event.id}
-                className="group p-3.5 bg-white rounded-xl border border-neutral-200 hover:border-primary-300 hover:shadow-md transition-all duration-300"
+                href={event.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group block p-3.5 bg-white rounded-xl border border-neutral-200 hover:border-primary-300 hover:shadow-md transition-all duration-300"
               >
                 <div className="flex items-start gap-3">
                   {/* Date Badge */}
@@ -181,8 +197,13 @@ export function EventsWidget() {
                     </h4>
                     <p className="text-xs text-neutral-600 line-clamp-2 leading-relaxed">{event.description}</p>
                   </div>
+                  
+                  {/* External Link Icon */}
+                  <svg className="w-4 h-4 text-neutral-400 group-hover:text-primary-600 transition-colors flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                  </svg>
                 </div>
-              </div>
+              </a>
             );
           })
         ) : (
