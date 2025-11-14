@@ -10,7 +10,7 @@
   "updatedDate": "2025-11-14T08:08:18.567Z",
   "seo": {
     "metaTitle": "Telluride Skiing Guide 2025 | Tips for All Levels",
-    "metaDescription": "Complete Telluride skiing guide: beginner tips, intermediate progression, expert terrain strategies, altitude management, equipment, lessons, and insider advice.",
+    "metaDescription": "Complete Telluride skiing guide: beginner tips, intermediate progression, expert terrain strategies, altitude management, equipment, and lessons.",
     "keywords": [
       "telluride skiing",
       "skiing telluride",
