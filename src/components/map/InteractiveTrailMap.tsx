@@ -608,7 +608,7 @@ export default function InteractiveTrailMap() {
         onLoad={handleMapLoad}
         onClick={handleMapClick}
         maxBounds={TELLURIDE_MAX_BOUNDS}
-        minZoom={terrainEnabled ? MIN_ZOOM_3D : MIN_ZOOM_2D}
+        minZoom={MIN_ZOOM_2D}
         maxZoom={18}
         maxPitch={85}
         scrollZoom={true}
