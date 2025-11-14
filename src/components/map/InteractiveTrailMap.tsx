@@ -131,8 +131,16 @@ export default function InteractiveTrailMap() {
         });
       }
       
-      // Don't automatically re-apply terrain here - let the toggle function handle it
-      // Re-applying terrain during style.load causes infinite recursion
+      // Re-apply terrain if it was previously enabled (e.g., after style change)
+      if (terrainEnabled) {
+        // Small delay to ensure source is ready
+        setTimeout(() => {
+          if (map.getSource('mapbox-dem')) {
+            map.setTerrain({ source: 'mapbox-dem', exaggeration: 2.0 });
+            console.log('[InteractiveTrailMap] Re-applied 3D terrain after style change');
+          }
+        }, 100);
+      }
 
     // Hide default Mapbox trail layers
     try {
@@ -499,7 +507,7 @@ export default function InteractiveTrailMap() {
     } else {
       map.once('style.load', addTerrainAndLayers);
     }
-  }, [isMapLoaded, mapStyle, showTrails, showLifts, showPOIs]);
+  }, [isMapLoaded, mapStyle, showTrails, showLifts, showPOIs, terrainEnabled]);
 
   // Note: POI markers are now symbol-based and automatically billboard in 3D
   // No need for dynamic updates - they always face the camera!
