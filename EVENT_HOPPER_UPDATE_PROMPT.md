@@ -11,45 +11,54 @@ Update the Events Hopper in `src/components/info/EventsWidget.tsx` with current 
 
 ## Update Process
 
-### 1. Get Current Events
-Navigate to the official Telluride events calendar:
+### 1. Get Current Events from Official Site
+**CRITICAL:** Always use browser tools to navigate to the official Telluride events calendar:
 ```
 https://www.telluride.com/festivals-events/events/
 ```
 
-Use browser tools to view the page and extract upcoming events.
+Use `mcp_cursor-browser-extension_browser_navigate` and `mcp_cursor-browser-extension_browser_snapshot` to view the actual page content.
 
-### 2. Update the Events Array
-Edit `src/components/info/EventsWidget.tsx` and update the `TELLURIDE_EVENTS` array with new events.
+### 2. Extract REAL Event URLs
+**DO NOT make up or guess URLs.** Extract the exact URLs from the page:
+- Look for "See Details" links in the browser snapshot
+- URLs are in the format: `/event/[event-slug]/`
+- Full URL: `https://www.telluride.com/event/[event-slug]/`
+- Verify each URL exists on the actual page before adding it
 
-Each event object requires:
-- `id`: Unique identifier (string)
-- `name`: Event name (string)
+### 3. Update the Events Array
+Edit `src/components/info/EventsWidget.tsx` and update the `TELLURIDE_EVENTS` array.
+
+**Each event object MUST include ALL fields:**
+- `id`: Unique identifier (string, sequential numbers)
+- `name`: Event name exactly as shown on official site (string)
 - `date`: Event date in YYYY-MM-DD format (string)
 - `type`: One of: 'festival' | 'concert' | 'sports' | 'art' | 'community'
-- `description`: Brief description (string, ~80-100 chars)
-- `url`: Full URL to event detail page on telluride.com (string)
+- `description`: Brief description from official site (string, ~80-100 chars)
+- `url`: **VERIFIED** full URL to event detail page (string)
 
-### 3. Event URL Format
-Event URLs follow this pattern:
-```
-https://www.telluride.com/event/[event-slug]/
-```
+### 4. Quality Control Checklist
+Before committing, verify:
+- ✅ Every event has a `url` field
+- ✅ All URLs are real and extracted from the official site (not made up)
+- ✅ Event names match the official site exactly
+- ✅ Dates are in correct YYYY-MM-DD format
+- ✅ Descriptions are concise and accurate
+- ✅ Include 50-80 events to ensure long-term coverage
+- ✅ Mix of event types (festivals, concerts, sports, art, community)
+- ✅ Include both near-term and future major festivals
+- ✅ Update the "Last updated" comment at the top of the array
 
-Extract the exact URL from the "See Details" link on each event listing.
+### 5. Verify No Broken Links
+**IMPORTANT:** Do not create broken links. Every URL must be verified from the actual page source.
 
-### 4. Best Practices
-- Include 10-15 events to ensure the hopper stays populated
-- Mix of event types (festivals, concerts, sports, community events)
-- Include both near-term events (next few weeks/months) and major annual festivals
-- Update the "Last updated" comment at the top of the array
-- Keep descriptions concise and engaging
-
-### 5. Commit and Push
-After updating, always commit and push changes:
+### 6. Commit and Push
+After updating and verifying all URLs, always commit and push changes:
 ```bash
 git add -A && git commit -m "Update events hopper with current Telluride events" && git push
 ```
+
+**NEVER commit without verifying all URLs are real and extracted from the official site.**
 
 ## Example Event Entry
 ```typescript
