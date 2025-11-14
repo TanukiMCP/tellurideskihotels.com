@@ -496,31 +496,40 @@ export default function InteractiveTrailMap() {
       // Enable 3D with dramatic exaggeration for mountain visualization
       if (map.getSource('mapbox-dem')) {
         map.setTerrain({ source: 'mapbox-dem', exaggeration: 2.5 });
+        
+        // Wait for terrain to be applied before animating camera
+        // This prevents the infinite recursion in _calcMatrices
+        // Reference: https://docs.mapbox.com/mapbox-gl-js/example/add-terrain/
+        map.once('idle', () => {
+          // Use easeTo instead of flyTo to avoid fullscreen exit
+          map.easeTo({ 
+            center: [SUMMIT_3D_VIEWPOINT.longitude, SUMMIT_3D_VIEWPOINT.latitude],
+            zoom: Math.max(SUMMIT_3D_VIEWPOINT.zoom, MIN_ZOOM_3D),
+            pitch: SUMMIT_3D_VIEWPOINT.pitch,
+            bearing: SUMMIT_3D_VIEWPOINT.bearing,
+            duration: 2000,
+            essential: true
+          });
+        });
       }
-      
-      // Use easeTo instead of flyTo to avoid fullscreen exit
-      map.easeTo({ 
-        center: [SUMMIT_3D_VIEWPOINT.longitude, SUMMIT_3D_VIEWPOINT.latitude],
-        zoom: Math.max(SUMMIT_3D_VIEWPOINT.zoom, MIN_ZOOM_3D),
-        pitch: SUMMIT_3D_VIEWPOINT.pitch,
-        bearing: SUMMIT_3D_VIEWPOINT.bearing,
-        duration: 2000,
-        essential: true
-      });
     } else {
       // Disable 3D and return to full resort overview
       map.setTerrain(null);
-      // Adjust padding based on fullscreen mode
-      const padding = isFullscreen 
-        ? { top: 100, bottom: 100, left: 100, right: 100 }
-        : { top: 100, bottom: 100, left: 450, right: 450 };
       
-      map.fitBounds(TELLURIDE_BOUNDS, {
-        padding,
-        pitch: 0,
-        bearing: 0,
-        duration: 1500,
-        essential: true
+      // Wait for terrain to be removed before animating camera
+      map.once('idle', () => {
+        // Adjust padding based on fullscreen mode
+        const padding = isFullscreen 
+          ? { top: 100, bottom: 100, left: 100, right: 100 }
+          : { top: 100, bottom: 100, left: 450, right: 450 };
+        
+        map.fitBounds(TELLURIDE_BOUNDS, {
+          padding,
+          pitch: 0,
+          bearing: 0,
+          duration: 1500,
+          essential: true
+        });
       });
     }
     setTerrainEnabled(newTerrainState);
