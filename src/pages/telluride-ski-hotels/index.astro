@@ -1,0 +1,308 @@
+---
+export const prerender = false;
+
+import PageLayout from '@/components/layout/PageLayout.astro';
+import Container from '@/components/layout/Container.astro';
+import { HotelGridWithMap } from '@/components/lodging/HotelGridWithMap';
+import { HotelSearchWidget } from '@/components/lodging/HotelSearchWidget';
+import { WeatherWidget } from '@/components/weather/WeatherWidget';
+import { SkiConditionsWidget } from '@/components/ski/SkiConditionsWidget';
+import Breadcrumbs from '@/components/seo/Breadcrumbs.astro';
+import type { LiteAPIHotel } from '@/lib/liteapi/types';
+import { DEFAULT_LOCATION, DEFAULT_COUNTRY_CODE } from '@/lib/constants';
+import { getImagesByCategory } from '@/lib/image-library';
+
+// Get images for the page
+const luxuryImages = getImagesByCategory('luxury');
+const skiImages = getImagesByCategory('skiing');
+const mountainImages = getImagesByCategory('mountains');
+
+const heroImage = luxuryImages[0] || skiImages[0];
+
+const url = Astro.url;
+const searchParams = url.searchParams;
+const location = searchParams.get('location') || DEFAULT_LOCATION;
+let checkIn = searchParams.get('checkIn') || '';
+let checkOut = searchParams.get('checkOut') || '';
+const adults = parseInt(searchParams.get('adults') || '2', 10);
+
+// Auto-fill default dates if not provided
+if (!checkIn || !checkOut) {
+  const today = new Date();
+  const defaultCheckIn = new Date(today);
+  defaultCheckIn.setDate(today.getDate() + 7);
+  const defaultCheckOut = new Date(defaultCheckIn);
+  defaultCheckOut.setDate(defaultCheckIn.getDate() + 7);
+  
+  checkIn = checkIn || defaultCheckIn.toISOString().split('T')[0];
+  checkOut = checkOut || defaultCheckOut.toISOString().split('T')[0];
+  
+  const newUrl = new URL(url);
+  newUrl.searchParams.set('checkIn', checkIn);
+  newUrl.searchParams.set('checkOut', checkOut);
+  return Astro.redirect(newUrl.toString(), 302);
+}
+
+let hotels: LiteAPIHotel[] = [];
+let minPrices: Record<string, number> = {};
+let loading = false;
+
+if (checkIn && checkOut) {
+  try {
+    loading = true;
+    const { searchHotelsWithRates } = await import('@/lib/liteapi/rates');
+    const result = await searchHotelsWithRates({
+      cityName: location,
+      countryCode: DEFAULT_COUNTRY_CODE,
+      checkIn,
+      checkOut,
+      adults,
+    });
+    
+    hotels = result.hotels || [];
+    minPrices = result.minPrices || {};
+  } catch (error) {
+    console.error('[Telluride Ski Hotels Page] Error:', error);
+    hotels = [];
+  } finally {
+    loading = false;
+  }
+}
+
+const nights = checkIn && checkOut 
+  ? Math.ceil((new Date(checkOut).getTime() - new Date(checkIn).getTime()) / (1000 * 60 * 60 * 24))
+  : 1;
+---
+
+<PageLayout
+  title="Best Telluride Ski Hotels | Book Direct & Save (2025)"
+  description="Find and book the best ski hotels in Telluride, Colorado. Ski-in/ski-out luxury resorts, downtown Victorian hotels, and budget-friendly options with real-time pricing and instant confirmation."
+>
+  <!-- Hero Section -->
+  <div class="relative bg-gradient-to-br from-primary-900 via-primary-800 to-primary-900 text-white overflow-hidden">
+    {heroImage && (
+      <>
+        <img 
+          src={heroImage.url}
+          alt="Telluride Ski Hotels" 
+          class="absolute inset-0 w-full h-full object-cover opacity-30"
+          loading="eager"
+        />
+        <div class="absolute inset-0 bg-gradient-to-r from-primary-900/95 via-primary-800/90 to-primary-900/95"></div>
+      </>
+    )}
+    <Container class="relative py-16 lg:py-24">
+      <div class="max-w-5xl mx-auto text-center">
+        <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold mb-6 leading-tight drop-shadow-2xl">
+          Best Telluride Ski Hotels
+        </h1>
+        <p class="text-xl lg:text-2xl mb-8 text-white/95 leading-relaxed drop-shadow-lg max-w-3xl mx-auto">
+          Book ski-in/ski-out luxury resorts, historic downtown hotels, and budget-friendly mountain lodges. Real-time pricing, instant confirmation, best price guarantee.
+        </p>
+
+        <!-- Trust Badges -->
+        <div class="flex flex-wrap justify-center gap-6 mb-10">
+          <div class="flex items-center gap-2 bg-white/10 backdrop-blur-sm px-5 py-3 rounded-full border border-white/20">
+            <svg class="w-5 h-5 text-green-400" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+            </svg>
+            <span class="font-semibold text-sm">Instant Confirmation</span>
+          </div>
+          <div class="flex items-center gap-2 bg-white/10 backdrop-blur-sm px-5 py-3 rounded-full border border-white/20">
+            <svg class="w-5 h-5 text-green-400" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd" />
+            </svg>
+            <span class="font-semibold text-sm">Secure Booking</span>
+          </div>
+          <div class="flex items-center gap-2 bg-white/10 backdrop-blur-sm px-5 py-3 rounded-full border border-white/20">
+            <svg class="w-5 h-5 text-green-400" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M8.433 7.418c.155-.103.346-.196.567-.267v1.698a2.305 2.305 0 01-.567-.267C8.07 8.34 8 8.114 8 8c0-.114.07-.34.433-.582zM11 12.849v-1.698c.22.071.412.164.567.267.364.243.433.468.433.582 0 .114-.07.34-.433.582a2.305 2.305 0 01-.567.267z" />
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-13a1 1 0 10-2 0v.092a4.535 4.535 0 00-1.676.662C6.602 6.234 6 7.009 6 8c0 .99.602 1.765 1.324 2.246.48.32 1.054.545 1.676.662v1.941c-.391-.127-.68-.317-.843-.504a1 1 0 10-1.51 1.31c.562.649 1.413 1.076 2.353 1.253V15a1 1 0 102 0v-.092a4.535 4.535 0 001.676-.662C13.398 13.766 14 12.991 14 12c0-.99-.602-1.765-1.324-2.246A4.535 4.535 0 0011 9.092V7.151c.391.127.68.317.843.504a1 1 0 101.511-1.31c-.563-.649-1.413-1.076-2.354-1.253V5z" clip-rule="evenodd" />
+            </svg>
+            <span class="font-semibold text-sm">Best Price Guarantee</span>
+          </div>
+        </div>
+
+        <!-- Search Widget -->
+        <div class="bg-white rounded-2xl shadow-2xl p-6 lg:p-8 max-w-4xl mx-auto">
+          <HotelSearchWidget
+            client:load
+            initialLocation={location}
+            initialDates={checkIn && checkOut ? {
+              checkIn: new Date(checkIn),
+              checkOut: new Date(checkOut),
+            } : undefined}
+            initialGuests={{ adults, children: 0 }}
+          />
+        </div>
+      </div>
+    </Container>
+  </div>
+
+  <Container class="py-12 lg:py-16">
+    <Breadcrumbs items={[
+      { label: 'Home', href: '/' },
+      { label: 'Telluride Ski Hotels', href: undefined },
+    ]} />
+
+    <!-- Why Book With Us -->
+    <div class="mb-16 mt-8">
+      <div class="bg-gradient-to-br from-primary-50 to-blue-50 rounded-3xl p-8 lg:p-12 border border-primary-100">
+        <h2 class="text-3xl lg:text-4xl font-extrabold text-neutral-900 mb-6 text-center">Why Book Your Telluride Ski Hotel With Us</h2>
+        <div class="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+          <div class="text-center">
+            <div class="w-16 h-16 bg-primary-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
+              <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+              </svg>
+            </div>
+            <h3 class="text-xl font-bold text-neutral-900 mb-2">Real-Time Availability</h3>
+            <p class="text-neutral-600">Live pricing and availability from hundreds of properties. See exact rates before you book.</p>
+          </div>
+          <div class="text-center">
+            <div class="w-16 h-16 bg-green-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
+              <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <h3 class="text-xl font-bold text-neutral-900 mb-2">Instant Confirmation</h3>
+            <p class="text-neutral-600">Immediate booking confirmation with secure encrypted payment processing.</p>
+          </div>
+          <div class="text-center">
+            <div class="w-16 h-16 bg-amber-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
+              <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <h3 class="text-xl font-bold text-neutral-900 mb-2">Best Prices</h3>
+            <p class="text-neutral-600">No hidden fees or booking charges. Compare rates and find the best deals.</p>
+          </div>
+        </div>
+        <div class="mt-8 text-center">
+          <p class="text-neutral-700 max-w-2xl mx-auto">
+            <strong>Need Help?</strong> Call <a href="tel:+17708338433" class="text-primary-600 hover:text-primary-700 font-semibold">(770) 833-8433</a> or email <a href="mailto:hello@tellurideskihotels.com" class="text-primary-600 hover:text-primary-700 font-semibold">hello@tellurideskihotels.com</a>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Current Conditions -->
+    <div class="grid lg:grid-cols-2 gap-8 mb-12">
+      <div>
+        <h2 class="text-2xl font-bold text-neutral-900 mb-4">Current Ski Conditions</h2>
+        <SkiConditionsWidget client:visible />
+      </div>
+      {checkIn && checkOut && (
+        <div>
+          <h2 class="text-2xl font-bold text-neutral-900 mb-4">Weather for Your Stay</h2>
+          <WeatherWidget client:visible startDate={checkIn} endDate={checkOut} compact={true} />
+        </div>
+      )}
+    </div>
+
+    <!-- Hotel Results -->
+    <div class="mb-8">
+      <div class="flex items-center justify-between mb-6">
+        <div>
+          <h2 class="text-3xl font-bold text-neutral-900 mb-2">
+            {hotels.length > 0 ? `${hotels.length} Available Ski Hotels in Telluride` : 'Telluride Ski Hotels'}
+          </h2>
+          {checkIn && checkOut && (
+            <p class="text-neutral-600 text-lg">
+              {new Date(checkIn).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} - {new Date(checkOut).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })} • {nights} night{nights !== 1 ? 's' : ''} • {adults} guest{adults !== 1 ? 's' : ''}
+            </p>
+          )}
+        </div>
+      </div>
+      {hotels.length > 0 && (
+        <div class="bg-green-50 border border-green-200 rounded-xl p-5 mb-6">
+          <div class="flex items-start gap-3">
+            <svg class="w-6 h-6 text-green-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+            </svg>
+            <div>
+              <p class="font-semibold text-neutral-900 mb-1">Secure Booking Guarantee</p>
+              <p class="text-sm text-neutral-700 leading-relaxed">
+                All prices include taxes and fees. Instant confirmation, free cancellation on most properties, and best price guarantee. Our support team is available 24/7 to assist with your reservation.
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+
+    <!-- Hotel Grid with Map -->
+    <HotelGridWithMap
+      client:idle
+      hotels={hotels}
+      loading={loading}
+      minPrices={minPrices}
+      currency="USD"
+      nights={nights}
+      checkIn={checkIn}
+      checkOut={checkOut}
+      adults={adults}
+    />
+
+    <!-- SEO Content -->
+    <div class="mt-16 max-w-4xl mx-auto prose prose-lg">
+      <h2 class="text-3xl font-bold text-neutral-900 mb-6">Your Guide to Telluride Ski Hotels</h2>
+      
+      <p class="text-neutral-700 leading-relaxed mb-6">
+        Telluride offers an exceptional selection of ski hotels ranging from luxurious ski-in/ski-out resorts in Mountain Village to historic Victorian-era hotels on Main Street downtown. Whether you're seeking slope-side convenience for maximizing powder days, authentic mountain town atmosphere, family-friendly amenities, or budget-conscious value, Telluride's accommodations deliver diverse options to match every skiing style and budget.
+      </p>
+
+      <h3 class="text-2xl font-bold text-neutral-900 mb-4 mt-8">Ski-In/Ski-Out Hotels in Mountain Village</h3>
+      <p class="text-neutral-700 leading-relaxed mb-4">
+        Mountain Village's ski-in/ski-out properties eliminate morning commutes and allow you to ski until lifts close without rushing to catch shuttles. Properties like The Madeline Hotel, Peaks Resort & Spa, Lumiere, and Inn at Lost Creek offer true slope-side access where you can ski directly from the mountain to your door. These hotels command premium pricing but justify the cost through unmatched convenience, modern amenities, and time saved on the mountain.
+      </p>
+      <p class="text-neutral-700 leading-relaxed">
+        Expect to pay $400-1,200/night for ski-in/ski-out luxury, with full-service spas, heated pools, ski valets, and concierge services that handle equipment storage, lesson bookings, and lift ticket arrangements. The investment makes sense for serious skiers who prioritize maximizing time on slopes.
+      </p>
+
+      <h3 class="text-2xl font-bold text-neutral-900 mb-4 mt-8">Downtown Telluride Hotels</h3>
+      <p class="text-neutral-700 leading-relaxed mb-4">
+        Downtown hotels deliver authentic mountain town atmosphere, walkable access to restaurants and nightlife, and generally better value than ski-in/ski-out properties. The free gondola connecting downtown to Mountain Village runs frequently and takes just 13 minutes, making morning ski access easy while giving you evenings in Telluride's vibrant downtown.
+      </p>
+      <p class="text-neutral-700 leading-relaxed">
+        Properties like Hotel Telluride, New Sheridan Hotel, and Hotel Columbia range from $200-500/night, offering modern amenities or Victorian charm at mid-range pricing. Many include complimentary breakfast, rooftop hot tubs with mountain views, and pet-friendly policies. Downtown location means you're steps from Main Street's galleries, restaurants, bars, and authentic Colorado mining town character.
+      </p>
+
+      <h3 class="text-2xl font-bold text-neutral-900 mb-4 mt-8">Best Times to Book Telluride Ski Hotels</h3>
+      <p class="text-neutral-700 leading-relaxed mb-4">
+        Peak season (Christmas through February) requires booking 6-9 months in advance as properties sell out entirely with 3-4 night minimums and rates 2-3x higher than normal. Presidents Day and MLK weekends similarly command premiums. Regular January-March dates need 3-4 months advance booking for good selection.
+      </p>
+      <p class="text-neutral-700 leading-relaxed">
+        Shoulder seasons of early December and late March offer 30-50% savings with good snow conditions and lighter crowds. Late March and April deliver the lowest rates for travelers accepting spring conditions. Always compare direct hotel booking against third-party sites—hotels increasingly match rates while adding perks like breakfast, upgrades, or resort credits worth $50-150 daily.
+      </p>
+
+      <h3 class="text-2xl font-bold text-neutral-900 mb-4 mt-8">What Makes Telluride Special</h3>
+      <p class="text-neutral-700 leading-relaxed">
+        Telluride sits in a box canyon at 8,750 feet, surrounded by 13,000-foot peaks creating dramatic scenery unmatched in Colorado. The resort offers 2,000 acres with 127 trails spanning all ability levels, though the terrain distribution (41% advanced/expert) favors strong skiers. The uncrowded slopes, authentic Victorian downtown, free gondola, and locals-friendly atmosphere create an experience distinctly different from Vail, Aspen, or other mega-resorts. The smaller scale and genuine mountain town character make Telluride ideal for travelers seeking world-class skiing without commercial development overwhelming the experience.
+      </p>
+    </div>
+
+    <!-- CTA -->
+    <div class="mt-16 bg-gradient-to-br from-primary-600 via-primary-700 to-primary-800 rounded-3xl p-12 text-white text-center shadow-2xl">
+      <h2 class="text-3xl lg:text-4xl font-extrabold mb-4">Ready to Book Your Telluride Ski Hotel?</h2>
+      <p class="text-xl mb-8 text-white/95 max-w-2xl mx-auto leading-relaxed">
+        Compare rates, check availability, and book instantly with our best price guarantee. Questions? Call us at (770) 833-8433.
+      </p>
+      <div class="flex flex-wrap justify-center gap-4">
+        <a href="#" onclick="window.scrollTo({top: 0, behavior: 'smooth'}); return false;" class="inline-flex items-center gap-2 bg-white text-primary-600 px-10 py-4 rounded-xl font-bold text-lg shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300">
+          Search Hotels Now
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+        </a>
+        <a href="/blog" class="inline-flex items-center gap-2 bg-primary-800 text-white px-10 py-4 rounded-xl font-bold text-lg border-2 border-white/30 hover:bg-primary-900 transition-all duration-300">
+          Read Our Guides
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+          </svg>
+        </a>
+      </div>
+    </div>
+  </Container>
+</PageLayout>
+

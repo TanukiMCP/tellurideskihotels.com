@@ -66,6 +66,12 @@ Whether you're seeking slope-side convenience, downtown nightlife access, family
 
 For a deeper dive into choosing between locations, see our [complete accommodation guide for Telluride](/blog/hotel-reviews/telluride-hotels-accommodation-guide). To plan your timing, check our [ski season guide](/blog/planning-tips/telluride-ski-season-guide) for insights on rates and availability throughout the year.
 
+<ArticleBookingWidget 
+  variant="compact"
+  title="Find Your Perfect Telluride Hotel"
+  description="Search ski-in/ski-out resorts, downtown hotels, and budget-friendly options with real-time pricing"
+/>
+
 **Important Note:** Hotel ratings, prices, and amenities are subject to change. Price ranges reflect typical rates but vary significantly by season, room type, and availability. Peak season (Christmas through February) commands premium pricing, while early December and late March offer better value. Always verify current rates and availability directly with hotels or booking platforms before making reservations.
 
 ## Quick Picks: Best Hotels by Category
@@ -100,6 +106,13 @@ The heated outdoor pool and multiple hot tubs provide perfect après-ski relaxat
 
 The Mountain View Suites represent the best room category, offering corner units with extra space and stunning vistas across the valley. These suites typically book months in advance for peak season, so plan accordingly. The "Ski, Stay, Spa" package provides 20% off spa services when you book a three-night minimum stay, delivering real value at a property where services can otherwise add up quickly.
 
+<ArticleBookingWidget 
+  filter="ski-in-ski-out"
+  variant="default"
+  title="Browse Ski-In/Ski-Out Hotels"
+  description="Compare rates and availability for slope-side properties with direct ski access"
+/>
+
 ### 2. Peaks Resort & Spa
 
 **Location:** Mountain Village (Ski-In/Ski-Out)  
@@ -109,9 +122,6 @@ The Mountain View Suites represent the best room category, offering corner units
 The Peaks offers the complete resort experience with 177 rooms, extensive amenities, and true ski-in/ski-out access via a private slope. This property excels for families and groups seeking a full-service mountain escape where you rarely need to leave the premises. The 42,000-square-foot spa ranks as Telluride's largest, featuring everything from traditional massage therapy to altitude-adjustment treatments designed specifically for mountain visitors.
 
 Ski-in/ski-out access arrives via the property's private slope, allowing you to ski directly to the ski valet area without navigating crowds or walking through other properties. The indoor/outdoor heated pool provides year-round swimming, with the outdoor section offering spectacular mountain views while you float in steaming water surrounded by snow. Siam Thai restaurant on-site serves excellent Thai cuisine, eliminating the need for dinner reservations elsewhere.
-
-![Experience ultimate relaxation at a sunlit tropical poolside resort featuring palm trees and blue skies](https://images.pexels.com/photos/338504/pexels-photo-338504.jpeg?auto=compress&cs=tinysrgb&h=350)
-*Photo by [Thorsten technoman](https://www.pexels.com/@thorsten-technoman-109353) via Pexels*
 
 Kids' activity programs keep children entertained with supervised activities, giving parents freedom to enjoy the spa or slopes without guilt. Private ski lockers provide secure storage, while rooftop fire pits create atmospheric gathering spots for evening s'mores or cocktails. The Deluxe Spa Suites offer the best value, providing direct access to spa facilities and oversized soaking tubs perfect for tired muscles.
 
@@ -135,6 +145,13 @@ Afternoon wine and cheese receptions create social atmosphere while providing co
 The Deluxe King rooms offer the best value, providing ample space and comfortable amenities without the premium pricing of suites. The Telluride Suites work well for families or those wanting extra room, featuring separate living areas and pull-out sofas. Request upper floors for less street noise and better mountain views—the property sits on a quiet side street, but occasional late-night revelers pass by.
 
 For more activities to complement your downtown base, explore our [guide to things to do in Telluride](/blog/activity-guides/things-to-do-telluride) for recommendations within walking distance of this hotel.
+
+<ArticleBookingWidget 
+  location="downtown"
+  variant="compact"
+  title="Search Downtown Hotels"
+  description="Browse Main Street properties with walkable access to dining and nightlife"
+/>
 
 ### 4. Lumiere Telluride
 
@@ -329,6 +346,12 @@ The Mountain Village versus downtown location decision involves trade-offs beyon
 
 Many visitors split their stay—a few nights in Mountain Village for ski convenience, then moving downtown to experience Main Street's restaurants and nightlife. This approach samples both areas while avoiding full-week commitments to either location.
 
+<ArticleBookingWidget 
+  variant="featured"
+  title="Ready to Book Your Telluride Hotel?"
+  description="Compare prices across all 15 properties with real-time availability and instant confirmation"
+/>
+
 ## Planning Your Perfect Stay
 
 The 15 hotels ranked here cover every price point, location preference, and travel style you might need in Telluride. Hotel Telluride consistently delivers the best overall value proposition, combining modern comfort, excellent downtown location, and comprehensive amenities at fair mid-range pricing. Most first-time visitors find this property hits the sweet spot.
@@ -338,3 +361,9 @@ The Madeline Hotel justifies its premium pricing through impeccable service, per
 For families, Peaks Resort & Spa checks every box with kids' programs, extensive amenities, multiple dining options, spa facilities for parents, and genuine ski-in/ski-out access that eliminates logistics stress. The property may lack boutique charm, but it excels at keeping everyone happy.
 
 Visit [our places-to-stay search](/places-to-stay) to compare current availability and rates across these properties for your travel dates. For more context on what to do beyond skiing, explore [Telluride's year-round activities](/blog/activity-guides/things-to-do-telluride) that complement any accommodation choice.
+
+<ArticleBookingWidget 
+  variant="featured"
+  title="Find Your Perfect Stay in Telluride"
+  description="Search all hotels with real-time pricing, instant confirmation, and best price guarantee"
+/>

@@ -842,11 +842,48 @@ For the ultimate convenience, consider staying at a [ski-in/ski-out hotel](/lodg
 - Mix of wide shots and details
 - Professional quality
 
-**Image Sources:**
-- Pexels media library (primary) - See Media Library System below
-- Hotel-provided photos
-- Official resort images
-- Original photography when available
+**⚠️ CRITICAL: REAL PRODUCT IMAGES FOR ACTUAL HOTELS**
+
+**NEVER use generic stock photos for hotels we actually sell on our platform.**
+
+When writing reviews or mentions of specific hotels that are bookable through our site:
+- Use REAL images from LiteAPI hotel data when available
+- Check the hotel's actual images in our system first
+- Only use generic Pexels images for atmospheric/contextual shots (trails, weather, general mountain scenes)
+- NEVER show a tropical resort in Hawaii for a Telluride ski hotel
+- NEVER show a generic hotel that doesn't match the property being discussed
+- If we don't have real images for a specific property, either:
+  - Don't include an image in that section, OR
+  - Use a relevant Telluride landscape/ski scene instead (not a hotel)
+
+**Example of WRONG usage:**
+```markdown
+### The Madeline Hotel
+[Description of The Madeline]
+![Tropical resort with palm trees](pexels-image.jpg)  ❌ WRONG
+```
+
+**Example of CORRECT usage:**
+```markdown
+### The Madeline Hotel  
+[Description of The Madeline]
+![The Madeline Hotel exterior in Telluride with ski slopes](liteapi-hotel-image.jpg) ✓ CORRECT
+
+OR if no real hotel image available:
+
+### The Madeline Hotel
+[Description of The Madeline]  
+![Ski-in/ski-out access in Mountain Village Telluride](pexels-ski-village.jpg) ✓ ACCEPTABLE
+*Generic ski village scene, not specific hotel*
+```
+
+**Image Sources Priority:**
+1. **Real hotel images from LiteAPI** (when writing about bookable properties)
+2. Pexels media library (for atmospheric/contextual content)
+3. Official Telluride resort images
+4. Original photography when available
+
+**Never compromise credibility by showing unrelated locations or properties.**
 
 ### Media Library System
 
@@ -1310,14 +1347,25 @@ The [National Weather Service Grand Junction office](https://www.weather.gov/gjt
 
 ## LiteAPI Hotel Booking Widgets
 
+### ⚠️ MANDATORY: ArticleBookingWidget Integration
+
+**CRITICAL REQUIREMENT:** Every accommodation-related article MUST include ArticleBookingWidget components. These are not optional - they are essential conversion tools that drive bookings and revenue.
+
 ### ArticleBookingWidget Component
 
 Use the `ArticleBookingWidget` React component for rich, themed booking CTAs that match the site design.
 
-**Component Import:**
-```jsx
-import { ArticleBookingWidget } from '@/components/blog/ArticleBookingWidget';
+**Component Syntax for Markdown:**
+```markdown
+<ArticleBookingWidget 
+  variant="featured"
+  filter="ski-in-ski-out"
+  title="Custom Title (Optional)"
+  description="Custom description (Optional)"
+/>
 ```
+
+**Note:** These components work in markdown (.md) files - no import statement needed. Just use the JSX-style tags directly in your markdown content.
 
 **Component Props:**
 
@@ -1369,10 +1417,29 @@ import { ArticleBookingWidget } from '@/components/blog/ArticleBookingWidget';
 />
 ```
 
-### Placement Strategy
+### Mandatory Placement Rules
 
-**1. After Hotel Mentions (Hotel Reviews/Lists)**
-```jsx
+**REQUIRED FREQUENCY:** Every 300-500 words of accommodation content should include a booking widget.
+
+**Placement Strategy:**
+
+**1. After Introduction/Setup (REQUIRED)**
+Place a compact widget within the first 300 words of any accommodation article:
+```markdown
+For a deeper dive into choosing between locations, see our complete accommodation guide...
+
+<ArticleBookingWidget 
+  variant="compact"
+  title="Find Your Perfect Telluride Hotel"
+  description="Search ski-in/ski-out resorts, downtown hotels, and budget-friendly options"
+/>
+
+**Important Note:** Hotel ratings and prices are subject to change...
+```
+
+**2. After Key Sections (2-3 per article)**
+After discussing specific hotel categories or important decision points:
+```markdown
 ### 1. The Madeline Hotel & Residences
 
 **Location:** Mountain Village (Ski-In/Ski-Out)  
@@ -1389,10 +1456,43 @@ The Madeline sets the standard for luxury ski hotels in Telluride. Located steps
 - Ski concierge and valet service
 
 <ArticleBookingWidget 
-  hotelId="madeline-hotel"
-  hotelName="The Madeline Hotel"
+  filter="ski-in-ski-out"
   variant="default"
+  title="Browse Ski-In/Ski-Out Hotels"
+  description="Compare rates for slope-side properties with direct ski access"
 />
+```
+
+**3. Before Major Transitions**
+When shifting between topics (e.g., from Mountain Village to Downtown hotels):
+```markdown
+...many properties offer free cancellation and best price guarantees.
+
+<ArticleBookingWidget 
+  location="mountain-village"
+  variant="compact"
+  title="Search Mountain Village Hotels"
+/>
+
+## Downtown Telluride Hotels
+
+Downtown hotels deliver authentic mountain town atmosphere...
+```
+
+**4. End of Article (REQUIRED)**
+Always include a featured variant widget before the conclusion:
+```markdown
+Many visitors split their stay—a few nights in Mountain Village for ski convenience...
+
+<ArticleBookingWidget 
+  variant="featured"
+  title="Ready to Book Your Telluride Hotel?"
+  description="Compare prices with real-time availability and instant confirmation"
+/>
+
+## Planning Your Perfect Stay
+
+The 15 hotels ranked here cover every price point...
 ```
 
 **2. End of Article (All Accommodation Articles)**
@@ -1492,31 +1592,92 @@ Downtown Telluride provides historic charm, walkable Main Street, and vibrant ni
 />
 ```
 
-### Best Practices
+### Widget Placement Checklist (MANDATORY)
+
+Before publishing any accommodation article, verify:
+
+**Required Widgets:**
+- [ ] Compact widget within first 300 words
+- [ ] 2-3 default/compact widgets throughout body (every 300-500 words)
+- [ ] Featured widget before conclusion section
+- [ ] Minimum 3 widgets total per article
+- [ ] Maximum 5-6 widgets for long articles (3,000+ words)
+
+**Content Type Guidelines:**
+
+| Article Type | Minimum Widgets | Recommended Placement |
+|--------------|-----------------|----------------------|
+| Hotel Reviews/Listicles | 4-5 | Intro, after every 2-3 hotels, before conclusion |
+| Destination Guides | 3-4 | Intro, mid-article, before conclusion |
+| Comparison Articles | 3-4 | Intro, after each comparison section, conclusion |
+| Planning Guides | 2-3 | Mid-article transition points, conclusion |
+| Ski Guides | 2-3 | When mentioning lodging proximity, conclusion |
+
+**Best Practices:**
 
 **Frequency:**
-- Maximum 2-3 booking widgets per article
+- 1 widget every 300-500 words of accommodation content
 - Use featured variant once per article (at end)
-- Use compact for multiple inline CTAs
-- Don't place widgets back-to-back
+- Use compact for inline CTAs without disrupting flow
+- Use default for prominent CTAs after key sections
+- Don't place widgets back-to-back (minimum 200 words between)
 
-**Placement:**
-- After providing value and building trust
+**Placement Timing:**
+- After providing value and building trust (not in first 2 paragraphs)
 - Natural breaks in content flow
 - After hotel descriptions or comparisons
-- Before conclusion section
+- When transitioning between topics
+- Before conclusion section (featured variant)
 
 **Customization:**
 - Let auto-generated titles work for most cases
-- Only customize title/description for special contexts
-- Match variant to placement importance
-- Use specific hotelId when mentioning individual properties
+- Customize title/description to match surrounding content
+- Match variant to placement importance (compact inline, default for sections, featured for conclusions)
+- Use specific filters (ski-in-ski-out, luxury, budget, family-friendly) when relevant
+- Use location filters (downtown, mountain-village) when discussing locations
 
 **Conversion Optimization:**
-- Place featured widget where readers are most engaged
-- Use compact widgets to remind readers of booking option
-- Ensure widget matches article topic (filter/location)
-- Don't interrupt valuable content with CTAs
+- Place featured widget where readers are most engaged (typically before conclusion)
+- Use compact widgets as gentle reminders without interrupting flow
+- Ensure widget filter/location matches article topic and surrounding content
+- Don't interrupt valuable content mid-thought - place at natural breaks
+- Front-load widgets in listicles (after items 3, 6, 10, etc.)
+
+**Examples of WRONG Placement:**
+```markdown
+❌ Telluride offers exceptional skiing and lodging options.
+
+<ArticleBookingWidget variant="featured" />
+
+The town sits in a box canyon at 8,750 feet...
+```
+*Problem: Widget before providing any value or context*
+
+```markdown
+❌ ...The Madeline offers exceptional service and amenities.
+
+<ArticleBookingWidget filter="ski-in-ski-out" variant="default" />
+
+<ArticleBookingWidget location="mountain-village" variant="compact" />
+
+The Peaks Resort provides family-friendly features...
+```
+*Problem: Widgets placed back-to-back*
+
+**Examples of CORRECT Placement:**
+```markdown
+✅ Telluride offers exceptional skiing and lodging options ranging from ski-in/ski-out luxury to downtown boutique hotels. The town sits in a box canyon at 8,750 feet, surrounded by 13,000-foot peaks...
+
+[300 words of valuable content about the destination]
+
+<ArticleBookingWidget 
+  variant="compact"
+  title="Find Your Perfect Telluride Hotel"
+/>
+
+When choosing where to stay, location dramatically impacts your experience...
+```
+*Correct: Widget after providing context and value*
 
 ---
 
@@ -1574,15 +1735,20 @@ Downtown Telluride provides historic charm, walkable Main Street, and vibrant ni
 - [ ] Adequate white space
 
 **Conversion Elements:**
-- [ ] 2-3 ArticleBookingWidget components strategically placed
-- [ ] Featured widget variant at end of article
+- [ ] **MINIMUM 3 ArticleBookingWidget components** (intro, body, conclusion)
+- [ ] Featured widget variant at end of article (MANDATORY)
+- [ ] Compact widget within first 300 words (MANDATORY for accommodation articles)
+- [ ] Widgets every 300-500 words throughout body
 - [ ] Booking widgets match article topic (filter/location/hotelId)
+- [ ] Widget placement at natural content breaks (not mid-thought)
+- [ ] No back-to-back widgets (minimum 200 words between)
 - [ ] Natural CTAs within content (1 per section max)
 - [ ] Hotel links contextually relevant
 - [ ] Strong CTA in conclusion
 - [ ] Related hotels properly tagged
 - [ ] Booking friction minimized
 - [ ] Clear value proposition
+- [ ] All widgets use correct markdown syntax (no import statements needed)
 
 **Technical:**
 - [ ] Proper frontmatter JSON with all fields
