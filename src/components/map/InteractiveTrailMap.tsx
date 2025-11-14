@@ -28,6 +28,20 @@ const TELLURIDE_MAX_BOUNDS: [[number, number], [number, number]] = [
   [-107.70, 38.00]   // Northeast with ~5mi buffer
 ];
 
+// Resort-only bounds for filtering (exclude Telluride town)
+const RESORT_BOUNDS = {
+  minLon: -107.85,
+  maxLon: -107.80,
+  minLat: 37.925,
+  maxLat: 37.95
+};
+
+// Helper function to check if coordinates are within resort bounds
+function isInResortBounds(lon: number, lat: number): boolean {
+  return lon >= RESORT_BOUNDS.minLon && lon <= RESORT_BOUNDS.maxLon &&
+         lat >= RESORT_BOUNDS.minLat && lat <= RESORT_BOUNDS.maxLat;
+}
+
 // Dramatic 3D viewpoint focusing on the summit area
 // Camera positioned south of resort looking north at the peaks
 const SUMMIT_3D_VIEWPOINT = {
@@ -174,10 +188,29 @@ export default function InteractiveTrailMap() {
     fetch('/data/telluride-ski-trails.json')
       .then(response => response.json())
       .then(data => {
+        // Filter trails: remove "Unnamed Trail" walking trails and ensure they're in resort bounds
+        const filteredTrails = {
+          ...data,
+          features: data.features.filter((feature: any) => {
+            const name = feature.properties?.name || '';
+            // Exclude "Unnamed Trail" walking trails
+            if (name.toLowerCase().includes('unnamed trail')) {
+              return false;
+            }
+            // Ensure trail is within resort bounds
+            if (feature.geometry?.type === 'LineString' && feature.geometry.coordinates) {
+              const coords = feature.geometry.coordinates;
+              // Check if at least one point is in resort bounds
+              return coords.some((coord: number[]) => isInResortBounds(coord[0], coord[1]));
+            }
+            return true;
+          })
+        };
+        
         // Add the ski trails as a custom GeoJSON source
         map.addSource('telluride-ski-trails', {
           type: 'geojson',
-          data: data
+          data: filteredTrails
         });
 
         // Add color-coded ski trails layer
@@ -273,7 +306,7 @@ export default function InteractiveTrailMap() {
           }
         } catch {}
 
-        console.log(`[InteractiveTrailMap] ✅ Loaded ${data.features.length} ski trails`);
+        console.log(`[InteractiveTrailMap] ✅ Loaded ${filteredTrails.features.length} ski trails (filtered from ${data.features.length})`);
       })
       .catch(err => {
         console.error('[InteractiveTrailMap] Failed to load ski trail data:', err);
@@ -331,9 +364,27 @@ export default function InteractiveTrailMap() {
     fetch('/data/telluride-pois.json')
       .then(response => response.json())
       .then(data => {
+        // Filter POIs: only show those in resort bounds and exclude "Unnamed location"
+        const filteredPOIs = {
+          ...data,
+          features: data.features.filter((feature: any) => {
+            const name = feature.properties?.name || '';
+            // Exclude "Unnamed location" markers
+            if (name.toLowerCase().includes('unnamed location')) {
+              return false;
+            }
+            // Only include POIs within resort bounds (not in Telluride town)
+            if (feature.geometry?.type === 'Point' && feature.geometry.coordinates) {
+              const [lon, lat] = feature.geometry.coordinates;
+              return isInResortBounds(lon, lat);
+            }
+            return false;
+          })
+        };
+        
         map.addSource('telluride-pois', {
           type: 'geojson',
-          data: data
+          data: filteredPOIs
         });
 
         // Add POI markers as text symbols (classic ski map style - square badges)
@@ -435,7 +486,7 @@ export default function InteractiveTrailMap() {
           console.log('[InteractiveTrailMap] POI markers/labels not available for this style:', err);
         }
 
-        console.log(`[InteractiveTrailMap] ✅ Loaded ${data.features.length} POIs`);
+        console.log(`[InteractiveTrailMap] ✅ Loaded ${filteredPOIs.features.length} POIs (filtered from ${data.features.length})`);
       })
       .catch(err => {
         console.error('[InteractiveTrailMap] Failed to load POI data:', err);
@@ -768,22 +819,23 @@ export default function InteractiveTrailMap() {
           </button>
         )}
 
-        {/* Control Instructions */}
+        {/* Control Instructions - Centered and Minimizable */}
         {showControls && (
-          <div className="absolute top-24 right-4 bg-white/95 backdrop-blur-sm rounded-xl shadow-xl px-4 py-3 z-10 border border-neutral-200 max-w-xs">
+          <div className="absolute top-4 left-1/2 -translate-x-1/2 bg-white/95 backdrop-blur-sm rounded-xl shadow-xl px-4 py-3 z-20 border border-neutral-200 max-w-xs">
             <div className="flex items-start justify-between gap-3 mb-2">
           <div className="flex items-center gap-2">
-                <svg className="w-5 h-5 text-primary-600 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg className="w-4 h-4 text-primary-600 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
-                <span className="text-sm font-black text-neutral-900">Map Controls</span>
+                <span className="text-xs font-black text-neutral-900">Map Controls</span>
               </div>
               <button 
                 onClick={() => setShowControls(false)}
                 className="text-neutral-400 hover:text-neutral-600 transition-colors"
+                aria-label="Minimize controls"
               >
-                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 12H4" />
                 </svg>
               </button>
             </div>
@@ -827,9 +879,10 @@ export default function InteractiveTrailMap() {
         {!showControls && (
           <button
             onClick={() => setShowControls(true)}
-            className="absolute top-24 right-4 bg-primary-600 hover:bg-primary-700 text-white rounded-full p-2 shadow-xl z-10 transition-all"
+            className="absolute top-4 left-1/2 -translate-x-1/2 bg-primary-600 hover:bg-primary-700 text-white rounded-full p-2 shadow-xl z-20 transition-all"
+            aria-label="Show map controls"
           >
-            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
           </button>
@@ -837,31 +890,31 @@ export default function InteractiveTrailMap() {
 
         {/* Classic Ski Map Legend - Bottom Right */}
         {showLegendPanel ? (
-          <div className="absolute bottom-4 right-4 bg-white rounded-xl shadow-2xl border-2 border-neutral-800 max-w-xs max-h-[calc(100vh-180px)] z-10 flex flex-col" style={{fontFamily: 'system-ui, -apple-system, sans-serif'}}>
-            <div className="bg-white z-10 p-5 pb-3 border-b-2 border-neutral-800 rounded-t-xl flex-shrink-0">
-              <div className="flex items-start justify-between">
-                <h3 className="text-base font-black text-neutral-900 uppercase tracking-wider flex-1">
-                  Trail Map Legend
+          <div className="absolute top-4 right-4 bg-white rounded-xl shadow-2xl border-2 border-neutral-800 max-w-xs z-10" style={{fontFamily: 'system-ui, -apple-system, sans-serif'}}>
+            <div className="bg-white z-10 p-3 pb-2 border-b-2 border-neutral-800 rounded-t-xl">
+              <div className="flex items-center justify-between">
+                <h3 className="text-sm font-black text-neutral-900 uppercase tracking-wide">
+                  Legend
                 </h3>
                 <button
                   onClick={() => setShowLegendPanel(false)}
-                  className="text-neutral-600 hover:text-neutral-900 transition-colors ml-2 -mr-1"
+                  className="text-neutral-600 hover:text-neutral-900 transition-colors"
                   aria-label="Collapse legend"
                   title="Hide legend"
                 >
-                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
                   </svg>
                 </button>
               </div>
             </div>
             
-            <div className="p-5 pt-4 overflow-y-auto flex-1">
+            <div className="p-3">
           
-          {/* Layer Toggles - Integrated with Legend */}
-          <div className="mb-4 pb-4 border-b-2 border-neutral-800">
-            <div className="flex items-center justify-between mb-3">
-              <h4 className="text-sm font-black text-neutral-900 uppercase tracking-wide">Map Layers</h4>
+          {/* Layer Toggles - Compact */}
+          <div className="mb-3 pb-2 border-b border-neutral-300">
+            <div className="flex items-center justify-between mb-2">
+              <h4 className="text-xs font-black text-neutral-900 uppercase">Layers</h4>
               <button
                 onClick={() => {
                   const allOn = showTrails && showLifts && showPOIs;
@@ -869,151 +922,140 @@ export default function InteractiveTrailMap() {
                   setShowLifts(!allOn);
                   setShowPOIs(!allOn);
                 }}
-                className="text-xs font-bold text-primary-600 hover:text-primary-700 uppercase tracking-wide transition-colors"
+                className="text-[10px] font-bold text-primary-600 hover:text-primary-700 uppercase"
               >
                 {(showTrails && showLifts && showPOIs) ? 'Hide All' : 'Show All'}
               </button>
             </div>
-            <div className="space-y-2">
-              <label className="flex items-center gap-2 cursor-pointer group">
+            <div className="space-y-1.5">
+              <label className="flex items-center gap-2 cursor-pointer">
                 <input
                   type="checkbox"
                   checked={showTrails}
                   onChange={(e) => setShowTrails(e.target.checked)}
-                  className="w-4 h-4 rounded border-2 border-neutral-800 text-primary-600 focus:ring-2 focus:ring-primary-600 cursor-pointer"
+                  className="w-3.5 h-3.5 rounded border-2 border-neutral-800 text-primary-600 focus:ring-1 focus:ring-primary-600 cursor-pointer"
                 />
-                <span className="text-sm text-neutral-900 font-bold flex-1">Ski Trails</span>
-                <span className="text-xs font-black text-neutral-600">(448)</span>
+                <span className="text-xs text-neutral-900 font-bold">Trails</span>
               </label>
-              <label className="flex items-center gap-2 cursor-pointer group">
+              <label className="flex items-center gap-2 cursor-pointer">
                 <input
                   type="checkbox"
                   checked={showLifts}
                   onChange={(e) => setShowLifts(e.target.checked)}
-                  className="w-4 h-4 rounded border-2 border-neutral-800 text-primary-600 focus:ring-2 focus:ring-primary-600 cursor-pointer"
+                  className="w-3.5 h-3.5 rounded border-2 border-neutral-800 text-primary-600 focus:ring-1 focus:ring-primary-600 cursor-pointer"
                 />
-                <span className="text-sm text-neutral-900 font-bold flex-1">Lifts & Gondolas</span>
-                <span className="text-xs font-black text-neutral-600">(18)</span>
+                <span className="text-xs text-neutral-900 font-bold">Lifts</span>
               </label>
-              <label className="flex items-center gap-2 cursor-pointer group">
+              <label className="flex items-center gap-2 cursor-pointer">
                 <input
                   type="checkbox"
                   checked={showPOIs}
                   onChange={(e) => setShowPOIs(e.target.checked)}
-                  className="w-4 h-4 rounded border-2 border-neutral-800 text-primary-600 focus:ring-2 focus:ring-primary-600 cursor-pointer"
+                  className="w-3.5 h-3.5 rounded border-2 border-neutral-800 text-primary-600 focus:ring-1 focus:ring-primary-600 cursor-pointer"
                 />
-                <span className="text-sm text-neutral-900 font-bold flex-1">Facilities</span>
-                <span className="text-xs font-black text-neutral-600">(65)</span>
+                <span className="text-xs text-neutral-900 font-bold">Facilities</span>
               </label>
             </div>
           </div>
           
-          {/* Trail Difficulty Legend - Always visible */}
-          <div className="mb-4 pb-4 border-b border-neutral-300">
-            <h4 className="text-sm font-black text-neutral-900 mb-3 uppercase tracking-wide">Trail Difficulty</h4>
-            <div className="space-y-2.5">
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-full bg-[#22c55e] border-2 border-neutral-800 flex items-center justify-center flex-shrink-0 shadow-sm">
-                    <span className="text-white font-black text-xs">●</span>
-                  </div>
-                  <div>
-                    <div className="text-sm font-black text-neutral-900">Green Circle</div>
-                    <div className="text-xs text-neutral-600 font-semibold">Easiest • Beginner</div>
-                  </div>
-                </div>
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 bg-[#3b82f6] border-2 border-neutral-800 flex items-center justify-center flex-shrink-0 shadow-sm">
-                    <span className="text-white font-black text-xs">■</span>
-                  </div>
-                  <div>
-                    <div className="text-sm font-black text-neutral-900">Blue Square</div>
-                    <div className="text-xs text-neutral-600 font-semibold">More Difficult • Intermediate</div>
+          {/* Trail Difficulty Legend - Compact with proper icons */}
+          <div className="mb-3 pb-2 border-b border-neutral-300">
+            <h4 className="text-xs font-black text-neutral-900 mb-2 uppercase">Difficulty</h4>
+            <div className="space-y-1.5">
+                <div className="flex items-center gap-2">
+                  <svg className="w-5 h-5 flex-shrink-0" viewBox="0 0 24 24" fill="#22c55e" stroke="#000" strokeWidth="2">
+                    <circle cx="12" cy="12" r="10"/>
+                  </svg>
+                  <div className="flex-1">
+                    <div className="text-xs font-bold text-neutral-900">Green Circle</div>
+                    <div className="text-[10px] text-neutral-600">Beginner</div>
                   </div>
                 </div>
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 bg-[#1e1e1e] border-2 border-neutral-800 rotate-45 flex items-center justify-center flex-shrink-0 shadow-sm">
-                    <span className="text-white font-black text-xs -rotate-45">◆</span>
+                <div className="flex items-center gap-2">
+                  <svg className="w-5 h-5 flex-shrink-0" viewBox="0 0 24 24" fill="#3b82f6" stroke="#000" strokeWidth="2">
+                    <rect x="4" y="4" width="16" height="16" rx="1"/>
+                  </svg>
+                  <div className="flex-1">
+                    <div className="text-xs font-bold text-neutral-900">Blue Square</div>
+                    <div className="text-[10px] text-neutral-600">Intermediate</div>
                   </div>
-                  <div>
-                    <div className="text-sm font-black text-neutral-900">Black Diamond</div>
-                    <div className="text-xs text-neutral-600 font-semibold">Most Difficult • Advanced</div>
+                </div>
+                <div className="flex items-center gap-2">
+                  <svg className="w-5 h-5 flex-shrink-0" viewBox="0 0 24 24" fill="#1e1e1e" stroke="#000" strokeWidth="2">
+                    <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
+                  </svg>
+                  <div className="flex-1">
+                    <div className="text-xs font-bold text-neutral-900">Black Diamond</div>
+                    <div className="text-[10px] text-neutral-600">Advanced</div>
                   </div>
                 </div>
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 bg-[#ef4444] border-2 border-neutral-800 flex items-center justify-center flex-shrink-0 shadow-sm relative">
-                    <span className="text-white font-black text-xs absolute">◆</span>
-                    <span className="text-white font-black text-xs absolute translate-x-1">◆</span>
-                </div>
-                  <div>
-                    <div className="text-sm font-black text-neutral-900">Double Black</div>
-                    <div className="text-xs text-neutral-600 font-semibold">Experts Only • Extreme</div>
-                </div>
+                <div className="flex items-center gap-2">
+                  <svg className="w-5 h-5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="#000" strokeWidth="2">
+                    <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" fill="#ef4444"/>
+                    <path d="M14 4L16.59 9.13L22 9.77L18 13.57L19.09 19.01L14 16.38L8.91 19.01L10 13.57L6 9.77L11.41 9.13L14 4Z" fill="#ef4444"/>
+                  </svg>
+                  <div className="flex-1">
+                    <div className="text-xs font-bold text-neutral-900">Double Black</div>
+                    <div className="text-[10px] text-neutral-600">Expert</div>
+                  </div>
                 </div>
               </div>
             </div>
 
-          {/* Lifts & Gondolas - Always visible for reference */}
-          <div className="mb-4 pb-4 border-b border-neutral-300">
-            <h4 className="text-sm font-black text-neutral-900 mb-3 uppercase tracking-wide">Lifts & Gondolas</h4>
-              <div className="space-y-2.5">
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-2 border-2 border-[#f59e0b] bg-white flex items-center justify-center flex-shrink-0" style={{borderStyle: 'dashed'}}>
-                  </div>
-                  <div>
-                    <div className="text-sm font-black text-neutral-900">Gondolas</div>
-                    <div className="text-xs text-neutral-600 font-semibold">Enclosed lift</div>
-                  </div>
+          {/* Lifts & Gondolas - Compact */}
+          <div className="mb-3 pb-2 border-b border-neutral-300">
+            <h4 className="text-xs font-black text-neutral-900 mb-2 uppercase">Lifts</h4>
+              <div className="space-y-1.5">
+                <div className="flex items-center gap-2">
+                  <div className="w-6 h-1.5 border-2 border-[#f59e0b] bg-white" style={{borderStyle: 'dashed'}}></div>
+                  <span className="text-xs text-neutral-900 font-bold">Gondola</span>
                 </div>
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-2 border-2 border-[#eab308] bg-white flex items-center justify-center flex-shrink-0" style={{borderStyle: 'dashed'}}>
-                  </div>
-                  <div>
-                    <div className="text-sm font-black text-neutral-900">Chairlifts</div>
-                    <div className="text-xs text-neutral-600 font-semibold">Open-air lift</div>
-                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-6 h-1.5 border-2 border-[#eab308] bg-white" style={{borderStyle: 'dashed'}}></div>
+                  <span className="text-xs text-neutral-900 font-bold">Chairlift</span>
                 </div>
               </div>
             </div>
 
-          {/* Facilities Legend - Always visible */}
-          <div className="mb-4">
-            <h4 className="text-sm font-black text-neutral-900 mb-3 uppercase tracking-wide">Facilities</h4>
-              <div className="grid grid-cols-2 gap-3">
-                <div className="flex items-center gap-2">
-                  <div className="w-7 h-7 bg-[#ef4444] border-2 border-neutral-800 flex items-center justify-center flex-shrink-0 shadow-sm">
-                    <span className="text-white font-black text-xs">R</span>
+          {/* Facilities Legend - Compact Grid */}
+          <div>
+            <h4 className="text-xs font-black text-neutral-900 mb-2 uppercase">Facilities</h4>
+              <div className="grid grid-cols-2 gap-2">
+                <div className="flex items-center gap-1.5">
+                  <div className="w-5 h-5 bg-[#ef4444] border-2 border-neutral-800 flex items-center justify-center flex-shrink-0">
+                    <span className="text-white font-black text-[10px]">R</span>
                   </div>
-                  <span className="text-xs text-neutral-900 font-bold">Restaurant</span>
+                  <span className="text-[10px] text-neutral-900 font-bold">Restaurant</span>
                 </div>
-                <div className="flex items-center gap-2">
-                  <div className="w-7 h-7 bg-[#f97316] border-2 border-neutral-800 flex items-center justify-center flex-shrink-0 shadow-sm">
-                    <span className="text-white font-black text-xs">C</span>
+                <div className="flex items-center gap-1.5">
+                  <div className="w-5 h-5 bg-[#f97316] border-2 border-neutral-800 flex items-center justify-center flex-shrink-0">
+                    <span className="text-white font-black text-[10px]">C</span>
                   </div>
-                  <span className="text-xs text-neutral-900 font-bold">Cafe</span>
+                  <span className="text-[10px] text-neutral-900 font-bold">Cafe</span>
                 </div>
-                <div className="flex items-center gap-2">
-                  <div className="w-7 h-7 bg-[#3b82f6] border-2 border-neutral-800 flex items-center justify-center flex-shrink-0 shadow-sm">
-                    <span className="text-white font-black text-[10px]">WC</span>
+                <div className="flex items-center gap-1.5">
+                  <div className="w-5 h-5 bg-[#3b82f6] border-2 border-neutral-800 flex items-center justify-center flex-shrink-0">
+                    <span className="text-white font-black text-[9px]">WC</span>
                   </div>
-                  <span className="text-xs text-neutral-900 font-bold">Restroom</span>
+                  <span className="text-[10px] text-neutral-900 font-bold">Restroom</span>
                 </div>
-                <div className="flex items-center gap-2">
-                  <div className="w-7 h-7 bg-[#fbbf24] border-2 border-neutral-800 flex items-center justify-center flex-shrink-0 shadow-sm">
-                    <span className="text-white font-black text-xs">L</span>
+                <div className="flex items-center gap-1.5">
+                  <div className="w-5 h-5 bg-[#fbbf24] border-2 border-neutral-800 flex items-center justify-center flex-shrink-0">
+                    <span className="text-white font-black text-[10px]">L</span>
                 </div>
-                  <span className="text-xs text-neutral-900 font-bold">Lift Station</span>
+                  <span className="text-[10px] text-neutral-900 font-bold">Lift</span>
                 </div>
-                <div className="flex items-center gap-2">
-                  <div className="w-7 h-7 bg-[#10b981] border-2 border-neutral-800 flex items-center justify-center flex-shrink-0 shadow-sm">
-                    <span className="text-white font-black text-xs">i</span>
+                <div className="flex items-center gap-1.5">
+                  <div className="w-5 h-5 bg-[#10b981] border-2 border-neutral-800 flex items-center justify-center flex-shrink-0">
+                    <span className="text-white font-black text-[10px]">i</span>
                 </div>
-                  <span className="text-xs text-neutral-900 font-bold">Information</span>
+                  <span className="text-[10px] text-neutral-900 font-bold">Info</span>
                 </div>
-                <div className="flex items-center gap-2">
-                  <div className="w-7 h-7 bg-[#06b6d4] border-2 border-neutral-800 flex items-center justify-center flex-shrink-0 shadow-sm">
-                    <span className="text-white font-black text-xs">V</span>
+                <div className="flex items-center gap-1.5">
+                  <div className="w-5 h-5 bg-[#06b6d4] border-2 border-neutral-800 flex items-center justify-center flex-shrink-0">
+                    <span className="text-white font-black text-[10px]">V</span>
                 </div>
-                  <span className="text-xs text-neutral-900 font-bold">Viewpoint</span>
+                  <span className="text-[10px] text-neutral-900 font-bold">View</span>
                 </div>
               </div>
             </div>

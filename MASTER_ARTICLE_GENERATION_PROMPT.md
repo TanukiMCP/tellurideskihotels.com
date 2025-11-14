@@ -248,11 +248,47 @@ Every article should follow this structure (adjust based on content type):
 
 **Formatting Rules:**
 - Short paragraphs (mobile-friendly)
-- Bullet points for lists (not long sentences)
-- Numbered lists for sequential steps
+- **CRITICAL: Use bullet points SPARINGLY** - Only for short lists of 3-5 items max
+- **PRIORITIZE NARRATIVE FLOW** - Write in flowing paragraphs, not outline format
+- Numbered lists ONLY for sequential steps or rankings
 - Bold for emphasis (sparingly - 1-2 times per section)
 - Subheadings every 300-400 words
 - White space for visual breathing room
+
+**❌ AVOID: Over-Using Bullet Points**
+
+Do NOT write articles that look like outlines or PowerPoint presentations. Use bullets only when listing discrete items that don't need explanation.
+
+**Bad Example (TOO MANY BULLETS):**
+```
+The hotel offers great amenities:
+- Outdoor pool
+- Hot tubs with mountain views
+- Full-service spa
+- Ski valet service
+- Complimentary breakfast
+- Rooftop fire pits
+- Underground parking
+```
+
+**Good Example (NARRATIVE FLOW):**
+```
+The hotel delivers a full resort experience with an outdoor heated pool and multiple hot tubs overlooking the peaks. The 12,000-square-foot spa offers everything from deep tissue massages to alpine stone therapy, while the ski valet handles your equipment each morning. Start your day with the complimentary breakfast buffet, end it around the rooftop fire pits, and never worry about parking with the underground heated garage.
+```
+
+**When to Use Bullets:**
+- Quick reference lists (hours, prices, specifications)
+- "At a glance" summary boxes
+- Short lists of 3-5 related items
+- Pro tips or key takeaways (5 items max)
+
+**When to Use Narrative Paragraphs (90% of content):**
+- Descriptions of places, experiences, hotels
+- Explaining concepts or processes
+- Telling stories or providing context
+- Comparing options
+- Providing recommendations
+- EVERYTHING ELSE
 
 ### Content Depth
 
@@ -814,6 +850,10 @@ For the ultimate convenience, consider staying at a [ski-in/ski-out hotel](/lodg
 
 ### Media Library System
 
+**⚠️ CRITICAL: IMAGE EMBEDDING IS MANDATORY**
+
+Every article MUST include 5-8 embedded images throughout the body content. Images are NOT optional. Reading the CSV files and selecting appropriate images is a REQUIRED step before writing.
+
 **Location:** All images are stored in CSV files in the `media-library/` directory.
 
 **Available Image Categories:**
@@ -851,29 +891,91 @@ Each CSV file contains 30 curated images with full metadata. Use these categorie
 id,original_url,large_url,medium_url,small_url,width,height,photographer,photographer_url,alt,query
 ```
 
-**How to Use the Media Library:**
+**MANDATORY: How to Use the Media Library (STEP-BY-STEP):**
 
-1. **Identify Content Needs:** Based on your article topic, determine which image categories are relevant
-2. **Select Appropriate Images:** Choose 5-8 images from the relevant CSV files
-3. **Use the Medium URL:** For article body images, use the `medium_url` column
-4. **Use the Large URL:** For hero images, use the `large_url` column
-5. **Credit Photographers:** Include photographer name from the CSV when feasible
-6. **Use Provided Alt Text:** The `alt` column contains SEO-optimized descriptions
-7. **Customize Alt Text:** Modify alt text to include article-specific keywords when appropriate
+**STEP 1: READ THE CSV FILES** (Do this BEFORE writing the article)
+- Use the `read_file` tool to open relevant CSV files from `media-library/`
+- Example: For a hotel review article, read `luxury-ski-hotels.csv`, `hotel-rooms.csv`, `hotel-pools.csv`
+- Review the available images, their URLs, alt text, and photographers
 
-**Example Image Selection for "Best Hotels in Telluride" Article:**
-- Hero Image: From `luxury-ski-hotels.csv` (large_url)
-- Body Image 1: From `hotel-rooms.csv` (luxury room interior)
-- Body Image 2: From `ski-slopes.csv` (slope access view)
-- Body Image 3: From `hotel-spas.csv` (spa amenities)
-- Body Image 4: From `hotel-pools.csv` (outdoor pool with mountain views)
-- Body Image 5: From `mountain-villages.csv` (location context)
-- Body Image 6: From `hotel-lobbies.csv` (entrance/lobby)
+**STEP 2: SELECT 5-8 IMAGES**
+- Choose images that match your article sections
+- Select diverse images (don't use all from one CSV)
+- Note the `medium_url` and `photographer` info for each
 
-**Image Reference Format in Articles:**
+**STEP 3: PLAN IMAGE PLACEMENT**
+- Place images every 300-400 words throughout the article
+- Match image content to the surrounding text
+- First image should appear after 2-3 paragraphs
+
+**STEP 4: EMBED USING CORRECT SYNTAX**
+
+**Correct Markdown Format:**
 ```markdown
-![Alt text from CSV or customized](medium_url_from_csv)
-*Photo by [Photographer Name](photographer_url) via Pexels*
+![Descriptive alt text here](https://images.pexels.com/photos/XXXXX/image.jpeg?auto=compress&cs=tinysrgb&h=350)
+*Photo by [Photographer Name](https://www.pexels.com/@photographer-url) via Pexels*
+```
+
+**REAL EXAMPLE from luxury-ski-hotels.csv:**
+```markdown
+![Stunning winter landscape with illuminated resort nestled in snow-covered mountains during sunset](https://images.pexels.com/photos/13639247/pexels-photo-13639247.jpeg?auto=compress&cs=tinysrgb&h=350)
+*Photo by [Laura Paredis](https://www.pexels.com/@laura-paredis-1047081) via Pexels*
+```
+
+**Image Selection Example for "Best Hotels in Telluride" Article:**
+
+Before writing, read these CSV files:
+- `media-library/luxury-ski-hotels.csv`
+- `media-library/hotel-rooms.csv`
+- `media-library/ski-slopes.csv`
+- `media-library/hotel-spas.csv`
+- `media-library/hotel-pools.csv`
+- `media-library/mountain-villages.csv`
+
+Then embed:
+- **Hero Image:** From `luxury-ski-hotels.csv` (use `large_url` in frontmatter)
+- **After Introduction:** From `mountain-villages.csv` (Telluride town context)
+- **Hotel Section 1:** From `luxury-ski-hotels.csv` (luxury property exterior)
+- **Hotel Section 3:** From `hotel-rooms.csv` (room interior)
+- **Hotel Section 5:** From `ski-slopes.csv` (slope access view)
+- **Hotel Section 8:** From `hotel-spas.csv` (spa amenities)
+- **Hotel Section 11:** From `hotel-pools.csv` (outdoor pool with mountains)
+- **Before Conclusion:** From `hotel-lobbies.csv` (welcoming interior)
+
+**❌ WRONG: Articles with NO images in body content**
+```markdown
+## Best Hotels in Telluride
+
+Telluride offers amazing hotels...
+
+### 1. The Madeline Hotel
+
+The Madeline is incredible...
+
+### 2. Peaks Resort
+
+The Peaks offers...
+```
+
+**✅ CORRECT: Images embedded throughout**
+```markdown
+## Best Hotels in Telluride
+
+Telluride offers amazing hotels in both downtown and Mountain Village locations...
+
+![Mountain village with ski resort and luxury hotels in winter](https://images.pexels.com/photos/XXXXX/image.jpeg?auto=compress&cs=tinysrgb&h=350)
+*Photo by [Photographer Name](https://www.pexels.com/@photographer) via Pexels*
+
+The choice between these areas significantly impacts your experience...
+
+### 1. The Madeline Hotel
+
+The Madeline sets the standard for luxury ski hotels in Telluride...
+
+![Luxury ski hotel exterior with mountain views in winter](https://images.pexels.com/photos/XXXXX/image.jpeg?auto=compress&cs=tinysrgb&h=350)
+*Photo by [Photographer Name](https://www.pexels.com/@photographer) via Pexels*
+
+Located steps from Lift 10, this AAA Four Diamond property...
 ```
 
 ### Image Specifications
@@ -1022,7 +1124,51 @@ You don't need a car once you're in Telluride. The free gondola connects downtow
 
 ### Internal Linking Strategy
 
+**⚠️ CRITICAL: RESEARCH BEFORE LINKING**
+
+Internal linking is MANDATORY but must be intelligent and accurate. You MUST research the codebase BEFORE writing to understand what content exists and where it lives.
+
 **REQUIRED:** Every article must include 5-10 internal links.
+
+**STEP 1: RESEARCH THE CODEBASE (Do this BEFORE writing)**
+
+Use these tools to understand what exists:
+
+1. **Read the Linking Plan:**
+   ```
+   read_file tool → INTERNAL_EXTERNAL_LINKING_PLAN.md
+   ```
+   This shows all article relationships and linking strategies.
+
+2. **Check Existing Articles:**
+   ```
+   list_dir tool → src/content/blog/
+   ```
+   See what blog posts actually exist with their exact slugs.
+
+3. **Check Available Pages:**
+   ```
+   grep tool or codebase_search → Find pages like /lodging, /things-to-do, /ski-conditions
+   ```
+   Verify main site pages exist before linking.
+
+4. **Understand Article Slugs:**
+   - Article URLs follow format: `/blog/[category]/[slug]`
+   - Example: `/blog/hotel-reviews/best-hotels-telluride`
+   - DON'T guess slugs - verify them from the file listing
+
+5. **Understand Lodging Links:**
+   - Hotel listing page: `/lodging`
+   - Filter by type: `/lodging?filter=ski-in-ski-out`
+   - Filter by location: `/lodging?location=mountain-village`
+   - Specific hotel: `/lodging/[hotel-slug]` (research available hotels first)
+
+**STEP 2: PLAN YOUR LINKS**
+
+Before writing, create a mental map:
+- Which 2-3 related articles will you link to?
+- Which 3-5 lodging pages/filters make sense?
+- Which 1-2 main site pages fit naturally?
 
 **Link Types:**
 
@@ -1031,18 +1177,23 @@ You don't need a car once you're in Telluride. The free gondola connects downtow
    - Use descriptive anchor text with keywords
    - Reference the `INTERNAL_EXTERNAL_LINKING_PLAN.md` file
    - First mention of a topic = link opportunity
+   - **VERIFY THE SLUG EXISTS** before linking
 
 2. **Article-to-Hotel Links (3-5 per article)**
    - Link to specific hotel pages via `/lodging/[hotel-slug]`
    - Link to filtered lodging pages: `/lodging?filter=ski-in-ski-out`
    - Link to location pages: `/lodging?location=mountain-village`
    - Natural contextual placement when mentioning accommodations
+   - **RESEARCH AVAILABLE FILTERS** before using them
 
 3. **Article-to-Page Links (1-2 per article)**
    - Link to main pages: `/lodging`, `/things-to-do`, `/ski-conditions`
    - Link to About page when mentioning expertise: `/about`
+   - **VERIFY PAGES EXIST** using codebase search
 
-**Internal Linking Best Practices:**
+**STEP 3: IMPLEMENT NATURALLY**
+
+Place links where they add value and feel natural:
 
 ```markdown
 ✅ GOOD Examples:
@@ -1060,16 +1211,44 @@ Click [here](/blog/skiing) for more info. (Generic anchor text)
 Read this article about Telluride skiing. (No link)
 
 [Telluride skiing Telluride skiing Telluride](link) (Keyword stuffing)
+
+Check out our [complete guide](/blog/complete-guide-telluride) (Wrong! Should be /blog/destination-guides/complete-guide-telluride)
 ```
 
+**Common Link Categories to Research:**
+
+**For Ski Articles, research and link to:**
+- `/blog/ski-guides/telluride-ski-resort-guide`
+- `/blog/ski-guides/telluride-skiing-guide` 
+- `/blog/planning-tips/telluride-ski-season-guide`
+- `/lodging?filter=ski-in-ski-out`
+- `/ski-conditions`
+
+**For Hotel Articles, research and link to:**
+- `/blog/hotel-reviews/best-hotels-telluride`
+- `/blog/hotel-reviews/where-to-stay-telluride`
+- `/lodging` (main search page)
+- `/lodging?location=mountain-village` or `/lodging?location=downtown`
+- `/lodging/[specific-hotel-slug]`
+
+**For Planning Articles, research and link to:**
+- `/blog/planning-tips/best-time-visit-telluride`
+- `/blog/planning-tips/denver-to-telluride-drive-guide`
+- `/blog/destination-guides/complete-guide-telluride`
+- `/things-to-do`
+
 **Internal Linking Checklist:**
-- [ ] 2-3 links to related blog articles
-- [ ] 3-5 links to hotel/lodging pages
-- [ ] 1-2 links to main site pages
+- [ ] **RESEARCHED** existing articles using list_dir tool
+- [ ] **VERIFIED** linking plan in INTERNAL_EXTERNAL_LINKING_PLAN.md
+- [ ] **CONFIRMED** page URLs using codebase_search or grep
+- [ ] 2-3 links to related blog articles (with verified slugs)
+- [ ] 3-5 links to hotel/lodging pages (with verified filters)
+- [ ] 1-2 links to main site pages (verified to exist)
 - [ ] All links use descriptive, keyword-rich anchor text
-- [ ] Links open in same tab (internal)
+- [ ] Links open in same tab (internal, no target="_blank")
 - [ ] First mention of topic includes link
 - [ ] Links distributed naturally throughout content
+- [ ] NO broken links (all destinations verified)
 
 ### External Linking Strategy
 
