@@ -1,4 +1,4 @@
-import { liteAPIClient, liteAPIStreamClient, type StreamCallback } from './client';
+import { liteAPIClient, liteAPIStreamClient } from './client';
 import { LITEAPI_MARKUP_PERCENT } from './config';
 import type { LiteAPIRate, LiteAPIRateSearchParams, LiteAPIHotel } from './types';
 import { getHotelDetails } from './hotels';
@@ -76,9 +76,6 @@ function transformRateData(hotelData: any, nights: number): Array<{
         const sspData = Array.isArray(rate.retailRate?.suggestedSellingPrice)
           ? rate.retailRate.suggestedSellingPrice[0]
           : rate.retailRate?.suggestedSellingPrice;
-        const initialData = Array.isArray(rate.retailRate?.initialPrice)
-          ? rate.retailRate.initialPrice[0]
-          : rate.retailRate?.initialPrice;
           
         // Use retail rate (what we pay LiteAPI) as our selling price
         // Commission is already included via margin parameter

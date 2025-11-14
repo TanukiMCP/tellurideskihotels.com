@@ -1,11 +1,8 @@
 import { useState, useEffect, useMemo } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
-import { Button } from '@/components/ui/Button';
 import { LoadingSpinner } from '@/components/shared/LoadingSpinner';
-import { Badge } from '@/components/ui/Badge';
-import { Calendar, Users, Bed, Check, AlertCircle } from 'lucide-react';
+import { Calendar, Users, Bed, AlertCircle } from 'lucide-react';
 import type { LiteAPIRate } from '@/lib/liteapi/types';
-import { formatCurrency, calculateNights } from '@/lib/utils';
+import { calculateNights } from '@/lib/utils';
 import { format } from 'date-fns';
 import { RoomCard } from './RoomCard';
 
@@ -53,8 +50,8 @@ export function RoomSelectorCard({
   // User selections
   const [checkIn, setCheckIn] = useState(initialCheckIn);
   const [checkOut, setCheckOut] = useState(initialCheckOut);
-  const [adults, setAdults] = useState(initialAdults);
-  const [children, setChildren] = useState(initialChildren);
+  const [adults] = useState(initialAdults);
+  const [children] = useState(initialChildren);
   const [roomCount] = useState(initialRooms);
 
   // API data

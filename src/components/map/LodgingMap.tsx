@@ -62,10 +62,9 @@ export default function LodgingMap({
   const [isMapActive, setIsMapActive] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [popupHotel, setPopupHotel] = useState<LiteAPIHotel | null>(null);
-  const [mapStyle, setMapStyle] = useState<keyof typeof MAP_STYLES>('streets');
-  const [showSkiTrails, setShowSkiTrails] = useState(false);
-  const [showLegend, setShowLegend] = useState(false);
-  const [trailOpacity, setTrailOpacity] = useState(0.9);
+  const [mapStyle] = useState<keyof typeof MAP_STYLES>('streets');
+  const [showSkiTrails] = useState(false);
+  const [trailOpacity] = useState(0.9);
   const [viewState, setViewState] = useState({
     longitude: TELLURIDE_AREA_CENTER[0],
     latitude: TELLURIDE_AREA_CENTER[1],

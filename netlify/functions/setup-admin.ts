@@ -16,7 +16,7 @@ function hashPassword(password: string): string {
   return `${salt}:${hash}`;
 }
 
-export const handler: Handler = async (event: HandlerEvent, context: HandlerContext) => {
+export const handler: Handler = async (event: HandlerEvent) => {
   // Only allow POST requests
   if (event.httpMethod !== 'POST') {
     return {

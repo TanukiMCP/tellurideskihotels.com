@@ -16,7 +16,6 @@ export const GET: APIRoute = async ({ url }) => {
     if (startDate && endDate) {
       const today = new Date();
       today.setHours(0, 0, 0, 0);
-      const start = new Date(startDate);
       const end = new Date(endDate);
       
       // Calculate days from TODAY to END of trip

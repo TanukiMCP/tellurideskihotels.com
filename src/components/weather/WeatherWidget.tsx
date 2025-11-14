@@ -119,7 +119,6 @@ export function WeatherWidget({ startDate, endDate, title = 'Weather Forecast', 
         <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-7 gap-3">
           {weatherData.slice(0, 7).map((weather) => {
             const date = parseISO(weather.date);
-            const description = getWeatherDescription(weather.weatherCode);
             
             return (
               <div key={weather.date} className="text-center bg-white rounded-lg p-3 border border-neutral-100 shadow-sm hover:shadow-md transition-shadow">

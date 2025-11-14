@@ -20,7 +20,7 @@ export function ActivityCard({ activity, className = '' }: ActivityCardProps) {
   const durationText = formatDuration(activity.duration);
   const priceText = formatPrice(activity.pricing);
 
-  const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+  const handleClick = () => {
     // Cache pricing data for details page
     if (activity.pricing) {
       try {

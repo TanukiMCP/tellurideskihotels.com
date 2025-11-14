@@ -73,19 +73,18 @@ self.addEventListener('fetch', (event) => {
         const clone = response.clone();
         caches.open(OFFLINE_CACHE).then(cache => cache.put(event.request, clone));
         return response;
-      }).catch(() => {
-        return caches.match(event.request).then(cached => {
-          if (cached) return cached;
-          
-          // Fallback to local OSM tiles if Mapbox fails
-          const tileMatch = url.pathname.match(/\/v4\/mapbox\.\w+\/(\d+)\/(\d+)\/(\d+)/);
-          if (tileMatch) {
-            const [, z, x, y] = tileMatch;
-            return caches.match(`/tiles/osm/${z}/${x}/${y}.png`);
-          }
-          
-          return new Response('', { status: 404 });
-        });
+      }).catch(async () => {
+        const cached = await caches.match(event.request);
+        if (cached) return cached;
+        
+        // Fallback to local OSM tiles if Mapbox fails
+        const tileMatch = url.pathname.match(/\/v4\/mapbox\.\w+\/(\d+)\/(\d+)\/(\d+)/);
+        if (tileMatch) {
+          const [, z, x, y] = tileMatch;
+          return caches.match(`/tiles/osm/${z}/${x}/${y}.png`);
+        }
+        
+        return new Response('', { status: 404 });
       })
     );
     return;

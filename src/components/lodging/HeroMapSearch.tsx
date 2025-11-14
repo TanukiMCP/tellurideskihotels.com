@@ -50,7 +50,7 @@ export default function HeroMapSearch({
   const [isSearching, setIsSearching] = useState(false);
   
   // Map state
-  const [hotels, setHotels] = useState<LiteAPIHotel[]>(initialHotels);
+  const [hotels] = useState<LiteAPIHotel[]>(initialHotels);
   const [mapStyle, setMapStyle] = useState<keyof typeof MAP_STYLES>('skiTrails');
   const [isMapLoaded, setIsMapLoaded] = useState(false);
   const [popupHotel, setPopupHotel] = useState<LiteAPIHotel | null>(null);
