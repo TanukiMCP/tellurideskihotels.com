@@ -214,10 +214,6 @@ export function HotelDetailView({ hotel, checkIn, checkOut, adults, children = 0
         </div>
       ) : null}
 
-      {/* Weather Widget */}
-      <WeatherWidget startDate={checkIn} endDate={checkOut} title="Weather During Your Stay" />
-
-
       {/* Description */}
       {hotel.description?.text && (() => {
         const descriptionText = hotel.description.text;
@@ -495,6 +491,9 @@ export function HotelDetailView({ hotel, checkIn, checkOut, adults, children = 0
           </Card>
         );
       })()}
+
+      {/* Weather Widget */}
+      <WeatherWidget startDate={checkIn} endDate={checkOut} title="Weather During Your Stay" />
 
       {/* Amenities - Weather Aware */}
       {hotel.amenities && hotel.amenities.length > 0 && (
