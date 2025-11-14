@@ -117,15 +117,8 @@ export default function InteractiveTrailMap() {
         });
       }
       
-      // Re-apply terrain if it was enabled
-      if (terrainEnabled) {
-        try {
-          map.setTerrain({ source: 'local-terrain', exaggeration: 2.5 });
-        } catch (e) {
-          map.setTerrain({ source: 'mapbox-dem', exaggeration: 2.5 });
-        }
-        console.log('[InteractiveTrailMap] Terrain re-applied after style change');
-      }
+      // Don't automatically re-apply terrain here - let the toggle function handle it
+      // Re-applying terrain during style.load causes infinite recursion
 
     // Hide default Mapbox trail layers
     try {
