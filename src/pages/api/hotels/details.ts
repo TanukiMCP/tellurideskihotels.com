@@ -25,7 +25,8 @@ export const GET: APIRoute = async ({ request }) => {
       () => getHotelDetails(hotelId)
     );
 
-    return new Response(JSON.stringify(hotel), {
+    // Return data wrapped in { data: ... } for consistency with frontend expectations
+    return new Response(JSON.stringify({ data: hotel }), {
       status: 200,
       headers: {
         'Content-Type': 'application/json',
