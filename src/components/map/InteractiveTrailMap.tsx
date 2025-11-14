@@ -118,13 +118,16 @@ export default function InteractiveTrailMap() {
       }
       
       // Re-apply terrain if it was enabled
+      // IMPORTANT: Wait for map to be idle before applying terrain to prevent infinite recursion
       if (terrainEnabled) {
-        try {
-          map.setTerrain({ source: 'local-terrain', exaggeration: 2.5 });
-        } catch (e) {
-          map.setTerrain({ source: 'mapbox-dem', exaggeration: 2.5 });
-        }
-        console.log('[InteractiveTrailMap] Terrain re-applied after style change');
+        map.once('idle', () => {
+          try {
+            map.setTerrain({ source: 'local-terrain', exaggeration: 2.5 });
+          } catch (e) {
+            map.setTerrain({ source: 'mapbox-dem', exaggeration: 2.5 });
+          }
+          console.log('[InteractiveTrailMap] Terrain re-applied after style change');
+        });
       }
 
     // Hide default Mapbox trail layers
