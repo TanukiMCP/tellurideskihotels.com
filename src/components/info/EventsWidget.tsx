@@ -11,7 +11,10 @@ interface Event {
   description: string;
 }
 
-// Current upcoming Telluride events (updated November 2025)
+// Telluride Events Hopper - Add new events here as they're announced
+// Past events are automatically filtered out based on current date
+// Widget always shows the next 4 upcoming events
+// Last updated: November 14, 2025
 const TELLURIDE_EVENTS: Event[] = [
   {
     id: '1',
@@ -108,14 +111,15 @@ const EVENT_COLORS = {
 };
 
 export function EventsWidget() {
-  // Filter for upcoming events only, sort by date, and get next 3 (to show more prominently)
+  // Automatically filter for upcoming events only, sort by date, and get next 4
+  // Past events are automatically excluded based on current date
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   
   const upcomingEvents = [...TELLURIDE_EVENTS]
     .filter(event => new Date(event.date) >= today)
     .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
-    .slice(0, 3);
+    .slice(0, 4);
 
   const formatDate = (dateStr: string) => {
     const date = new Date(dateStr);
@@ -149,33 +153,33 @@ export function EventsWidget() {
         </div>
       </div>
 
-      {/* Events List */}
-      <div className="space-y-4 mb-6">
+      {/* Events List - Shows next 4 upcoming events */}
+      <div className="space-y-3 mb-6">
         {upcomingEvents.length > 0 ? (
           upcomingEvents.map((event) => {
             const { month, day } = getMonthDay(event.date);
             return (
               <div
                 key={event.id}
-                className="group p-4 bg-white rounded-xl border border-neutral-200 hover:border-primary-300 hover:shadow-md transition-all duration-300"
+                className="group p-3.5 bg-white rounded-xl border border-neutral-200 hover:border-primary-300 hover:shadow-md transition-all duration-300"
               >
-                <div className="flex items-start gap-4">
+                <div className="flex items-start gap-3">
                   {/* Date Badge */}
-                  <div className="flex-shrink-0 w-16 h-16 rounded-lg bg-primary-600 flex flex-col items-center justify-center text-white shadow-sm">
+                  <div className="flex-shrink-0 w-14 h-14 rounded-lg bg-primary-600 flex flex-col items-center justify-center text-white shadow-sm">
                     <div className="text-xs font-bold tracking-wide">
                       {month}
                     </div>
-                    <div className="text-2xl font-bold leading-none">
+                    <div className="text-xl font-bold leading-none">
                       {day}
                     </div>
                   </div>
 
                   {/* Event Info */}
                   <div className="flex-1 min-w-0">
-                    <h4 className="font-bold text-base text-neutral-900 group-hover:text-primary-600 transition-colors line-clamp-1 mb-1.5">
+                    <h4 className="font-bold text-sm text-neutral-900 group-hover:text-primary-600 transition-colors line-clamp-1 mb-1">
                       {event.name}
                     </h4>
-                    <p className="text-sm text-neutral-600 line-clamp-2 leading-relaxed">{event.description}</p>
+                    <p className="text-xs text-neutral-600 line-clamp-2 leading-relaxed">{event.description}</p>
                   </div>
                 </div>
               </div>
