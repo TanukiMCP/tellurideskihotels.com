@@ -496,32 +496,30 @@ export default function InteractiveTrailMap() {
     const newTerrainState = !terrainEnabled;
     
     if (newTerrainState) {
-      // Enable 3D with dramatic exaggeration for mountain visualization
-      if (map.getSource('mapbox-dem')) {
-        map.setTerrain({ source: 'mapbox-dem', exaggeration: 2.5 });
-        
-        // Wait for terrain to be applied before animating camera
-        // This prevents the infinite recursion in _calcMatrices
-        // Reference: https://docs.mapbox.com/mapbox-gl-js/example/add-terrain/
-        map.once('idle', () => {
-          // Use easeTo instead of flyTo to avoid fullscreen exit
-          map.easeTo({ 
-            center: [SUMMIT_3D_VIEWPOINT.longitude, SUMMIT_3D_VIEWPOINT.latitude],
-            zoom: Math.max(SUMMIT_3D_VIEWPOINT.zoom, MIN_ZOOM_3D),
-            pitch: SUMMIT_3D_VIEWPOINT.pitch,
-            bearing: SUMMIT_3D_VIEWPOINT.bearing,
-            duration: 2000,
-            essential: true
-          });
-        });
-      }
+      // Enable 3D - First move camera to safe position, THEN enable terrain
+      // This prevents the infinite recursion that occurs when terrain is enabled
+      // at extreme camera angles
+      map.easeTo({ 
+        center: [SUMMIT_3D_VIEWPOINT.longitude, SUMMIT_3D_VIEWPOINT.latitude],
+        zoom: Math.max(SUMMIT_3D_VIEWPOINT.zoom, MIN_ZOOM_3D),
+        pitch: SUMMIT_3D_VIEWPOINT.pitch,
+        bearing: SUMMIT_3D_VIEWPOINT.bearing,
+        duration: 1500,
+        essential: true
+      });
+      
+      // Wait for camera movement to complete, then enable terrain
+      map.once('moveend', () => {
+        if (map.getSource('mapbox-dem')) {
+          map.setTerrain({ source: 'mapbox-dem', exaggeration: 2.5 });
+        }
+      });
     } else {
-      // Disable 3D and return to full resort overview
+      // Disable 3D - Remove terrain first, then reset camera
       map.setTerrain(null);
       
-      // Wait for terrain to be removed before animating camera
-      map.once('idle', () => {
-        // Adjust padding based on fullscreen mode
+      // Wait a tick for terrain to be removed
+      setTimeout(() => {
         const padding = isFullscreen 
           ? { top: 100, bottom: 100, left: 100, right: 100 }
           : { top: 100, bottom: 100, left: 450, right: 450 };
@@ -533,7 +531,7 @@ export default function InteractiveTrailMap() {
           duration: 1500,
           essential: true
         });
-      });
+      }, 100);
     }
     setTerrainEnabled(newTerrainState);
   };
