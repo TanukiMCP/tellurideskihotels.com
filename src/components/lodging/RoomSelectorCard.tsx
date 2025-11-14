@@ -171,12 +171,27 @@ export function RoomSelectorCard({
             const hotelData = detailsData.data || detailsData;
             
             console.log('[RoomSelector] Hotel details received, rooms:', hotelData.rooms?.length || 0);
+            if (hotelData.rooms?.[0]) {
+              console.log('[RoomSelector] Sample room from hotel details:', {
+                id: hotelData.rooms[0].id,
+                name: hotelData.rooms[0].name,
+                photosCount: hotelData.rooms[0].photos?.length || 0,
+                firstPhoto: hotelData.rooms[0].photos?.[0],
+              });
+            }
             
             // Create a map of mapped room ID to photos
             const roomPhotosMap = new Map<string, string[]>();
             if (hotelData.rooms && Array.isArray(hotelData.rooms)) {
               for (const room of hotelData.rooms) {
-                const photos = room.photos?.map((p: any) => p.url || p.hd_url).filter(Boolean) || [];
+                // Photos are already processed as URL strings in getHotelDetails
+                const photos = room.photos || [];
+                console.log('[RoomSelector] Processing room from details:', {
+                  id: room.id,
+                  name: room.name,
+                  photosCount: photos.length,
+                  firstPhoto: photos[0],
+                });
                 if (photos.length > 0) {
                   // Use room.id as the key (this is what mappedRoomId refers to)
                   const roomKey = room.id?.toString();
@@ -191,21 +206,32 @@ export function RoomSelectorCard({
             console.log('[RoomSelector] Room photos map keys:', Array.from(roomPhotosMap.keys()));
             
             // Merge photos with room options using mapped_room_id
+            console.log('[RoomSelector] Starting to merge photos with', roomOptions.length, 'room options');
             for (const roomOption of roomOptions) {
               // Get the mapped_room_id from the first rate (all rates in a room should have the same mapped_room_id)
               const mappedRoomId = (roomOption.rates[0] as any)?.mapped_room_id?.toString();
-              console.log('[RoomSelector] Looking for photos for room:', roomOption.roomName, 'mappedRoomId:', mappedRoomId);
+              console.log('[RoomSelector] Looking for photos for room:', {
+                roomName: roomOption.roomName,
+                mappedRoomId,
+                rateData: {
+                  rate_id: roomOption.rates[0].rate_id,
+                  room_id: roomOption.rates[0].room_id,
+                  mapped_room_id: (roomOption.rates[0] as any)?.mapped_room_id,
+                },
+              });
               
               if (mappedRoomId) {
                 const photos = roomPhotosMap.get(mappedRoomId);
                 if (photos && photos.length > 0) {
                   roomOption.images = photos;
-                  console.log('[RoomSelector] Added', photos.length, 'images to room:', roomOption.roomName);
+                  console.log('[RoomSelector] ✓ Added', photos.length, 'images to room:', roomOption.roomName);
                 } else {
-                  console.log('[RoomSelector] No photos found for mappedRoomId:', mappedRoomId);
+                  console.log('[RoomSelector] ✗ No photos found in map for mappedRoomId:', mappedRoomId);
+                  console.log('[RoomSelector] Available keys in map:', Array.from(roomPhotosMap.keys()));
                 }
               } else {
-                console.log('[RoomSelector] No mappedRoomId for room:', roomOption.roomName);
+                console.log('[RoomSelector] ✗ No mappedRoomId for room:', roomOption.roomName);
+                console.log('[RoomSelector] Full rate object:', roomOption.rates[0]);
               }
             }
           } else {

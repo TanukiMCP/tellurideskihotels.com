@@ -192,10 +192,10 @@ export async function getHotelDetails(hotelId: string): Promise<LiteAPIHotel> {
   
   // Transform rooms with correct photo URLs
   // CRITICAL: LiteAPI returns room.roomName not room.name (per docs)
-  // Per API docs: prefer hd_url, fallback to url, then failoverPhoto
+  // Per docs: use photo.url field, fallback to failoverPhoto
   const rooms = (hotel.rooms || []).map((room: any) => {
     const roomPhotos = (room.photos || [])
-      .map((photo: any) => photo.hd_url || photo.url || photo.failoverPhoto) // Prefer HD, then standard, then failover
+      .map((photo: any) => photo.url || photo.failoverPhoto) // Use url field per docs, fallback to failoverPhoto
       .filter((url: string) => url && url.trim() !== '');
     
     return {
