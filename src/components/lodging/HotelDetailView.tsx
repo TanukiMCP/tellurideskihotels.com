@@ -217,105 +217,6 @@ export function HotelDetailView({ hotel, checkIn, checkOut, adults, children = 0
       {/* Weather Widget */}
       <WeatherWidget startDate={checkIn} endDate={checkOut} title="Weather During Your Stay" />
 
-      {/* Hotel Info Cards Row */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        {hotel.star_rating && (
-          <Card className="border-neutral-200">
-            <CardContent className="p-6 text-center">
-              <Star className="h-8 w-8 mx-auto mb-3 text-accent-500 fill-accent-500" />
-              <div className="text-3xl font-bold text-neutral-900 mb-1">{hotel.star_rating} Stars</div>
-              <div className="text-xs font-semibold text-neutral-900 uppercase tracking-wide mb-1">Hotel Classification</div>
-              <div className="text-xs text-neutral-600 leading-relaxed">Based on amenities & services</div>
-            </CardContent>
-          </Card>
-        )}
-        
-        {rating > 0 && (
-          <Card 
-            className="border-neutral-200 cursor-pointer hover:border-primary-300 hover:shadow-card-hover transition-all"
-            onClick={() => {
-              const reviewsSection = document.getElementById('guest-reviews');
-              if (reviewsSection) {
-                reviewsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-              }
-            }}
-          >
-            <CardContent className="p-6 text-center">
-              <div className={`inline-flex items-center justify-center w-16 h-16 rounded-full ${ratingColor.bg} mb-3`}>
-                <span className={`text-2xl font-bold ${ratingColor.text}`}>{rating.toFixed(1)}</span>
-              </div>
-              <div className="text-xs font-semibold text-neutral-900 uppercase tracking-wide mb-1">Guest Reviews</div>
-              <div className="text-xs text-neutral-600">
-                {hotel.review_count ? `${hotel.review_count.toLocaleString()} reviews` : 'Click to view'}
-              </div>
-            </CardContent>
-          </Card>
-        )}
-        
-        {(() => {
-          // Dynamic ski access display
-          const amenityStrings = hotel.amenities?.map(a => 
-            `${a.name || ''} ${a.code || ''}`.toLowerCase()
-          ) || [];
-          
-          // Check for explicit ski-in/ski-out
-          const hasSkiInSkiOut = amenityStrings.some(str => 
-            str.includes('ski-in') ||
-            str.includes('ski-out') ||
-            (str.includes('ski') && str.includes('in') && str.includes('out')) ||
-            str.includes('direct slope access') ||
-            str.includes('slope-side')
-          );
-          
-          // Check for ski amenities/storage (slope access)
-          const hasSkiAmenities = amenityStrings.some(str => 
-            str.includes('ski') ||
-            str.includes('slope') ||
-            str.includes('gondola') ||
-            str.includes('lift access')
-          );
-          
-          // Check if near gondola
-          const nearGondola = amenityStrings.some(str => 
-            str.includes('gondola') ||
-            str.includes('free shuttle')
-          ) || hotel.name?.toLowerCase().includes('mountain village');
-          
-          let icon, bgColor, textColor, title, subtitle;
-          
-          if (hasSkiInSkiOut) {
-            icon = <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>;
-            bgColor = 'bg-green-100';
-            textColor = 'text-green-600';
-            title = 'Ski In / Ski Out';
-            subtitle = 'Direct slope access';
-          } else if (hasSkiAmenities || nearGondola) {
-            icon = <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>;
-            bgColor = 'bg-blue-100';
-            textColor = 'text-blue-600';
-            title = 'Slope Access';
-            subtitle = nearGondola ? 'Free gondola to slopes' : 'Short distance to lifts';
-          } else {
-            icon = <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" /></svg>;
-            bgColor = 'bg-neutral-100';
-            textColor = 'text-neutral-600';
-            title = 'Resort Area';
-            subtitle = 'Gondola or shuttle access';
-          }
-          
-          return (
-            <Card className="border-neutral-200">
-              <CardContent className="p-6 text-center">
-                <div className={`inline-flex items-center justify-center w-16 h-16 rounded-full ${bgColor} mb-3 ${textColor}`}>
-                  {icon}
-                </div>
-                <div className="text-xs font-semibold text-neutral-900 uppercase tracking-wide mb-1">{title}</div>
-                <div className="text-xs text-neutral-600 leading-relaxed">{subtitle}</div>
-              </CardContent>
-            </Card>
-          );
-        })()}
-      </div>
 
       {/* Description */}
       {hotel.description?.text && (() => {
@@ -487,19 +388,86 @@ export function HotelDetailView({ hotel, checkIn, checkOut, adults, children = 0
                   </div>
                 </div>
                 
-                {/* Room Selection */}
-                <div className="bg-gradient-to-br from-neutral-50 to-white rounded-xl p-5 border border-neutral-200 shadow-sm hover:shadow-md transition-all">
-                  <div className="flex items-center gap-2 mb-2 text-neutral-500">
-                    <propertyType.icon className="w-4 h-4" />
-                    <span className="text-xs font-semibold uppercase tracking-wider">Room Options</span>
-                  </div>
-                  <div className="text-3xl font-bold text-neutral-900 mb-1">
-                    {roomCount > 0 ? roomCount : '—'}
-                  </div>
-                  <div className="text-xs text-neutral-600 font-medium">
-                    {roomCount > 0 ? `${roomCount} Room ${roomCount === 1 ? 'Type' : 'Types'}` : propertyType.label}
-                  </div>
-                </div>
+                {/* Ski Access */}
+                {(() => {
+                  // Dynamic ski access display
+                  const amenityStrings = hotel.amenities?.map(a => 
+                    `${a.name || ''} ${a.code || ''}`.toLowerCase()
+                  ) || [];
+                  
+                  // Check for explicit ski-in/ski-out
+                  const hasSkiInSkiOut = amenityStrings.some(str => 
+                    str.includes('ski-in') ||
+                    str.includes('ski-out') ||
+                    (str.includes('ski') && str.includes('in') && str.includes('out')) ||
+                    str.includes('direct slope access') ||
+                    str.includes('slope-side')
+                  );
+                  
+                  // Check for ski amenities/storage (slope access)
+                  const hasSkiAmenities = amenityStrings.some(str => 
+                    str.includes('ski') ||
+                    str.includes('slope') ||
+                    str.includes('gondola') ||
+                    str.includes('lift access')
+                  );
+                  
+                  // Check if near gondola
+                  const nearGondola = amenityStrings.some(str => 
+                    str.includes('gondola') ||
+                    str.includes('free shuttle')
+                  ) || hotel.name?.toLowerCase().includes('mountain village');
+                  
+                  let IconComponent, bgColor, textColor, title, subtitle;
+                  
+                  if (hasSkiInSkiOut) {
+                    IconComponent = () => (
+                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                    );
+                    bgColor = 'from-green-50 to-white';
+                    textColor = 'text-green-600';
+                    title = 'Ski In / Ski Out';
+                    subtitle = 'Direct slope access';
+                  } else if (hasSkiAmenities || nearGondola) {
+                    IconComponent = () => (
+                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                      </svg>
+                    );
+                    bgColor = 'from-blue-50 to-white';
+                    textColor = 'text-blue-600';
+                    title = 'Slope Access';
+                    subtitle = nearGondola ? 'Free gondola to slopes' : 'Short distance to lifts';
+                  } else {
+                    IconComponent = () => (
+                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+                      </svg>
+                    );
+                    bgColor = 'from-neutral-50 to-white';
+                    textColor = 'text-neutral-600';
+                    title = 'Resort Area';
+                    subtitle = 'Gondola or shuttle access';
+                  }
+                  
+                  return (
+                    <div className={`bg-gradient-to-br ${bgColor} rounded-xl p-5 border border-neutral-200 shadow-sm hover:shadow-md transition-all`}>
+                      <div className="flex items-center gap-2 mb-2 text-neutral-500">
+                        <IconComponent />
+                        <span className="text-xs font-semibold uppercase tracking-wider">Ski Access</span>
+                      </div>
+                      <div className={`text-lg font-bold ${textColor} mb-1`}>
+                        {title}
+                      </div>
+                      <div className="text-xs text-neutral-600 font-medium">
+                        {subtitle}
+                      </div>
+                    </div>
+                  );
+                })()}
               </div>
               
               {/* Description Sections */}
