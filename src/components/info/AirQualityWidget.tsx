@@ -107,7 +107,7 @@ export function AirQualityWidget() {
   }
 
   return (
-    <div className="bg-primary-50 rounded-2xl p-6 border border-primary-200 shadow-card hover:shadow-card-hover transition-all duration-300">
+    <div className="bg-primary-50 rounded-2xl p-6 border border-primary-200 shadow-card hover:shadow-card-hover transition-all duration-300 h-full flex flex-col">
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
@@ -124,7 +124,7 @@ export function AirQualityWidget() {
       </div>
 
       {/* AQI Display */}
-      <div className="text-center mb-6">
+      <div className="text-center mb-6 flex-1 flex flex-col justify-center">
         <div className={`inline-flex items-center justify-center w-40 h-40 rounded-full ${airQuality.color.replace('from-', 'bg-').replace(' to-green-600', '').replace(' to-yellow-600', '').replace(' to-orange-600', '').replace(' to-red-600', '').replace(' to-purple-600', '').replace(' to-red-900', '')} shadow-card mb-4`}>
           <div className="text-center text-white">
             <div className="text-5xl font-bold mb-1">{airQuality.aqi}</div>
@@ -142,9 +142,9 @@ export function AirQualityWidget() {
       </div>
 
       {/* AQI Scale Reference */}
-      <div className="space-y-3 pt-6 border-t border-primary-200">
+      <div className="space-y-3 pt-6 border-t border-primary-200 mt-auto">
         <h4 className="text-sm font-bold text-neutral-900 uppercase tracking-wide mb-4">AQI Scale</h4>
-        <div className="grid grid-cols-2 gap-3 text-sm">
+        <div className="grid grid-cols-2 gap-3 text-sm mb-4">
           <div className="flex items-center gap-2">
             <div className="w-4 h-4 rounded-full bg-green-500 flex-shrink-0"></div>
             <span className="text-neutral-700 font-medium">0-50: Good</span>
@@ -162,16 +162,16 @@ export function AirQualityWidget() {
             <span className="text-neutral-700 font-medium">151+: Unhealthy</span>
           </div>
         </div>
-      </div>
 
-      {/* Error Message Only */}
-      {error && (
-        <div className="mt-4 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
-          <p className="text-sm text-yellow-900 font-medium">
-            <span className="font-bold">Note:</span> {error}. Showing typical Telluride AQI.
-          </p>
-        </div>
-      )}
+        {/* Error Message Only */}
+        {error && (
+          <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+            <p className="text-sm text-yellow-900 font-medium">
+              <span className="font-bold">Note:</span> {error}. Showing typical Telluride AQI.
+            </p>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
