@@ -137,10 +137,12 @@ export default function InteractiveTrailMap() {
         setTimeout(() => {
           if (map.getSource('mapbox-dem')) {
             // First restore the 3D camera position
-            const currentCamera = map.getCamera();
+            const currentPitch = map.getPitch();
+            const currentBearing = map.getBearing();
+            
             map.easeTo({
-              pitch: currentCamera.pitch < 45 ? SUMMIT_3D_VIEWPOINT.pitch : currentCamera.pitch,
-              bearing: currentCamera.bearing,
+              pitch: currentPitch < 45 ? SUMMIT_3D_VIEWPOINT.pitch : currentPitch,
+              bearing: currentBearing,
               duration: 500
             });
             
