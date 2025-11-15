@@ -3,14 +3,20 @@
   "id": "complete-guide-telluride",
   "title": "Complete Guide to Telluride: Everything You Need to Know (2025)",
   "slug": "complete-guide-telluride",
-  "status": "scheduled",
+  "status": "published",
   "category": "destination-guides",
   "author": "Telluride Ski Hotels Team",
   "publishDate": "2025-11-15T14:00:00Z",
   "seo": {
     "metaTitle": "Complete Guide to Telluride Colorado (2025) | Plan Your Visit",
     "metaDescription": "Discover everything about Telluride, Colorado: world-class skiing, luxury hotels, dining, activities, and travel tips. Your complete 2025 planning guide.",
-    "keywords": ["telluride colorado", "telluride guide", "telluride ski resort", "things to do in telluride", "telluride hotels"],
+    "keywords": [
+      "telluride colorado",
+      "telluride guide",
+      "telluride ski resort",
+      "things to do in telluride",
+      "telluride hotels"
+    ],
     "canonical": "https://tellurideskihotels.com/blog/destination-guides/complete-guide-telluride"
   },
   "featured": true,
@@ -19,10 +25,33 @@
   "excerpt": "Everything you need to know about Telluride, Colorado: skiing, hotels, activities, weather, transportation, and insider tips for planning your perfect mountain vacation.",
   "wordCount": 3500,
   "readingTime": 18,
-  "relatedHotels": ["madeline-hotel", "peaks-resort", "hotel-telluride", "lumiere-telluride", "new-sheridan-hotel", "inn-lost-creek"],
-  "relatedArticles": ["where-to-stay-telluride", "telluride-ski-resort-guide", "things-to-do-telluride"],
-  "tags": ["telluride", "colorado", "ski resort", "travel guide", "planning"],
-  "seasonalRelevance": ["winter", "summer", "spring", "fall"]
+  "relatedHotels": [
+    "madeline-hotel",
+    "peaks-resort",
+    "hotel-telluride",
+    "lumiere-telluride",
+    "new-sheridan-hotel",
+    "inn-lost-creek"
+  ],
+  "relatedArticles": [
+    "where-to-stay-telluride",
+    "telluride-ski-resort-guide",
+    "things-to-do-telluride"
+  ],
+  "tags": [
+    "telluride",
+    "colorado",
+    "ski resort",
+    "travel guide",
+    "planning"
+  ],
+  "seasonalRelevance": [
+    "winter",
+    "summer",
+    "spring",
+    "fall"
+  ],
+  "updatedDate": "2025-11-15T14:07:50.784Z"
 }
 ---
 

@@ -3,14 +3,19 @@
   "id": "colorado-springs-to-telluride-drive",
   "title": "Colorado Springs to Telluride Drive: Best Routes & Tips",
   "slug": "colorado-springs-to-telluride-drive",
-  "status": "scheduled",
+  "status": "published",
   "category": "planning-tips",
   "author": "Telluride Ski Hotels Team",
   "publishDate": "2025-11-14T15:00:00Z",
   "seo": {
     "metaTitle": "Colorado Springs to Telluride Drive: Routes, Time & Tips",
     "metaDescription": "Complete guide to driving from Colorado Springs to Telluride. Compare routes via Pueblo or Denver, drive times, scenic options, and local tips for avoiding I-70 traffic.",
-    "keywords": ["colorado springs to telluride drive", "springs to telluride", "telluride from colorado springs", "driving route telluride"],
+    "keywords": [
+      "colorado springs to telluride drive",
+      "springs to telluride",
+      "telluride from colorado springs",
+      "driving route telluride"
+    ],
     "canonical": "https://tellurideskihotels.com/blog/planning-tips/colorado-springs-to-telluride-drive"
   },
   "featured": false,
@@ -19,10 +24,30 @@
   "excerpt": "Your complete guide to driving from Colorado Springs to Telluride. Compare route options, avoid I-70, find the best stops, and get realistic drive times for this Colorado road trip.",
   "wordCount": 2400,
   "readingTime": 12,
-  "relatedHotels": ["madeline-hotel", "peaks-resort", "hotel-telluride"],
-  "relatedArticles": ["denver-to-telluride-drive-guide", "winter-driving-telluride", "telluride-weekend-getaway"],
-  "tags": ["driving", "colorado-springs", "road-trip", "route", "locals"],
-  "seasonalRelevance": ["winter", "summer", "fall", "spring"]
+  "relatedHotels": [
+    "madeline-hotel",
+    "peaks-resort",
+    "hotel-telluride"
+  ],
+  "relatedArticles": [
+    "denver-to-telluride-drive-guide",
+    "winter-driving-telluride",
+    "telluride-weekend-getaway"
+  ],
+  "tags": [
+    "driving",
+    "colorado-springs",
+    "road-trip",
+    "route",
+    "locals"
+  ],
+  "seasonalRelevance": [
+    "winter",
+    "summer",
+    "fall",
+    "spring"
+  ],
+  "updatedDate": "2025-11-15T14:07:50.783Z"
 }
 ---
 
