@@ -136,8 +136,17 @@ export default function InteractiveTrailMap() {
         // Small delay to ensure source is ready
         setTimeout(() => {
           if (map.getSource('mapbox-dem')) {
+            // First restore the 3D camera position
+            const currentCamera = map.getCamera();
+            map.easeTo({
+              pitch: currentCamera.pitch < 45 ? SUMMIT_3D_VIEWPOINT.pitch : currentCamera.pitch,
+              bearing: currentCamera.bearing,
+              duration: 500
+            });
+            
+            // Then apply terrain
             map.setTerrain({ source: 'mapbox-dem', exaggeration: 2.0 });
-            console.log('[InteractiveTrailMap] Re-applied 3D terrain after style change');
+            console.log('[InteractiveTrailMap] Re-applied 3D terrain and camera after style change');
           }
         }, 100);
       }
@@ -222,6 +231,16 @@ export default function InteractiveTrailMap() {
         });
 
         // Add color-coded ski trails layer
+        // Find the first symbol layer to insert trails before labels
+        const layers = map.getStyle().layers;
+        let firstSymbolId;
+        for (const layer of layers) {
+          if (layer.type === 'symbol') {
+            firstSymbolId = layer.id;
+            break;
+          }
+        }
+        
         map.addLayer({
           id: 'telluride-ski-trails',
           type: 'line',
@@ -253,7 +272,7 @@ export default function InteractiveTrailMap() {
             ],
             'line-opacity': 0.95
           }
-        });
+        }, firstSymbolId); // Insert before symbol layers so trails are visible but labels are on top
 
         // Add trail name labels with color-matched halos (only if glyphs available)
         try {
@@ -330,6 +349,16 @@ export default function InteractiveTrailMap() {
         });
 
         // Add lift lines with dashed style
+        // Find the first symbol layer to insert lifts before labels
+        const layers = map.getStyle().layers;
+        let firstSymbolId;
+        for (const layer of layers) {
+          if (layer.type === 'symbol') {
+            firstSymbolId = layer.id;
+            break;
+          }
+        }
+        
         map.addLayer({
           id: 'telluride-lifts',
           type: 'line',
@@ -360,7 +389,7 @@ export default function InteractiveTrailMap() {
             'line-opacity': 0.9,
             'line-dasharray': [2, 2] // Dashed line for lifts
           }
-        });
+        }, firstSymbolId); // Insert before symbol layers
 
         console.log(`[InteractiveTrailMap] ✅ Loaded ${data.features.length} lift lines`);
       })
