@@ -8,7 +8,7 @@
   "author": "Telluride Ski Hotels Team",
   "publishDate": "2025-11-15T15:00:00Z",
   "seo": {
-    "metaTitle": "Telluride Skiing Guide 2025: Terrain, Lessons, Rentals & Tips",
+    "metaTitle": "Telluride Skiing Guide 2025: Terrain, Lessons & Tips",
     "metaDescription": "Complete Telluride skiing guide for all levels. Explore 2,000 acres of terrain, find the best runs for beginners to experts, ski school info, and insider tips.",
     "keywords": [
       "telluride skiing",

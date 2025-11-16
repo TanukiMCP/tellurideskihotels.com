@@ -8,7 +8,7 @@
   "author": "Telluride Ski Hotels Team",
   "publishDate": "2025-11-15T14:00:00Z",
   "seo": {
-    "metaTitle": "Complete Guide to Telluride Colorado (2025) | Plan Your Visit",
+    "metaTitle": "Complete Guide to Telluride Colorado 2025 | Plan Visit",
     "metaDescription": "Discover everything about Telluride, Colorado: world-class skiing, luxury hotels, dining, activities, and travel tips. Your complete 2025 planning guide.",
     "keywords": [
       "telluride colorado",
