@@ -170,7 +170,15 @@ export function RoomSelectorCard({
             const detailsData = await detailsResponse.json();
             const hotelData = detailsData.data || detailsData;
             
-            console.log('[RoomSelector] Hotel details received, rooms:', hotelData.rooms?.length || 0);
+            console.log('[RoomSelector] Hotel details received:', {
+              hotelId: hotelData.hotel_id,
+              name: hotelData.name,
+              roomsCount: hotelData.rooms?.length || 0,
+              imagesCount: hotelData.images?.length || 0,
+              hasRooms: !!hotelData.rooms,
+              roomsType: Array.isArray(hotelData.rooms) ? 'array' : typeof hotelData.rooms,
+              fullResponse: JSON.stringify(detailsData).substring(0, 500),
+            });
             if (hotelData.rooms?.[0]) {
               console.log('[RoomSelector] Sample room from hotel details:', {
                 id: hotelData.rooms[0].id,

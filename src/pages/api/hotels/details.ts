@@ -37,6 +37,19 @@ export const GET: APIRoute = async ({ request }) => {
       () => getHotelDetails(hotelId)
     );
 
+    console.log('[Hotel Details API] Returning hotel data:', {
+      hotelId: hotel.hotel_id,
+      name: hotel.name,
+      roomsCount: hotel.rooms?.length || 0,
+      imagesCount: hotel.images?.length || 0,
+      hasRooms: !!hotel.rooms,
+      sampleRoom: hotel.rooms?.[0] ? {
+        id: hotel.rooms[0].id,
+        name: hotel.rooms[0].name,
+        photosCount: hotel.rooms[0].photos?.length || 0,
+      } : null,
+    });
+
     // Return data wrapped in { data: ... } for consistency with frontend expectations
     return new Response(JSON.stringify({ data: hotel }), {
       status: 200,
