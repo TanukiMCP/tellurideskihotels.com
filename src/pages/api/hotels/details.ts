@@ -43,15 +43,25 @@ export const GET: APIRoute = async ({ request }) => {
       roomsCount: hotel.rooms?.length || 0,
       imagesCount: hotel.images?.length || 0,
       hasRooms: !!hotel.rooms,
+      roomsIsArray: Array.isArray(hotel.rooms),
       sampleRoom: hotel.rooms?.[0] ? {
         id: hotel.rooms[0].id,
         name: hotel.rooms[0].name,
         photosCount: hotel.rooms[0].photos?.length || 0,
+        photosIsArray: Array.isArray(hotel.rooms[0].photos),
       } : null,
     });
 
+    // Verify rooms are serializable before sending
+    const serialized = JSON.stringify({ data: hotel });
+    const parsed = JSON.parse(serialized);
+    console.log('[Hotel Details API] After serialization check:', {
+      roomsCount: parsed.data?.rooms?.length || 0,
+      hasRooms: !!parsed.data?.rooms,
+    });
+
     // Return data wrapped in { data: ... } for consistency with frontend expectations
-    return new Response(JSON.stringify({ data: hotel }), {
+    return new Response(serialized, {
       status: 200,
       headers: {
         'Content-Type': 'application/json',
