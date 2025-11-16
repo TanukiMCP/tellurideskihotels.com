@@ -9,7 +9,7 @@
   "publishDate": "2025-11-14T15:00:00Z",
   "seo": {
     "metaTitle": "Colorado Springs to Telluride Drive: Routes, Time & Tips",
-    "metaDescription": "Complete guide to driving from Colorado Springs to Telluride. Compare routes via Pueblo or Denver, drive times, scenic options, and local tips for avoiding I-70 traffic.",
+    "metaDescription": "Complete guide to driving from Colorado Springs to Telluride. Compare routes via Pueblo or Denver, drive times, scenic options, and tips to avoid I-70 traffic.",
     "keywords": [
       "colorado springs to telluride drive",
       "springs to telluride",
