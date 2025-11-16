@@ -3,14 +3,20 @@
   "id": "where-to-stay-telluride",
   "title": "Where to Stay in Telluride: Complete Lodging Guide (2025)",
   "slug": "where-to-stay-telluride",
-  "status": "scheduled",
+  "status": "published",
   "category": "destination-guides",
   "author": "Telluride Ski Hotels Team",
   "publishDate": "2025-11-16T14:00:00Z",
   "seo": {
     "metaTitle": "Where to Stay in Telluride: Hotels, Condos & Lodging (2025)",
     "metaDescription": "Find the perfect place to stay in Telluride. Compare downtown hotels, Mountain Village ski-in/ski-out properties, vacation rentals, and budget options.",
-    "keywords": ["where to stay in telluride", "telluride hotels", "telluride lodging", "mountain village vs downtown", "telluride accommodations"],
+    "keywords": [
+      "where to stay in telluride",
+      "telluride hotels",
+      "telluride lodging",
+      "mountain village vs downtown",
+      "telluride accommodations"
+    ],
     "canonical": "https://tellurideskihotels.com/blog/destination-guides/where-to-stay-telluride"
   },
   "featured": true,
@@ -19,10 +25,31 @@
   "excerpt": "Complete guide to choosing where to stay in Telluride: downtown vs Mountain Village, luxury hotels, ski-in/ski-out properties, vacation rentals, and budget options for every traveler.",
   "wordCount": 3200,
   "readingTime": 16,
-  "relatedHotels": ["madeline-hotel", "peaks-resort", "hotel-telluride", "new-sheridan-hotel", "lumiere-telluride", "inn-lost-creek"],
-  "relatedArticles": ["complete-guide-telluride", "best-hotels-telluride", "telluride-ski-resort-guide"],
-  "tags": ["hotels", "lodging", "accommodations", "mountain village", "downtown"],
-  "seasonalRelevance": ["winter", "summer"]
+  "relatedHotels": [
+    "madeline-hotel",
+    "peaks-resort",
+    "hotel-telluride",
+    "new-sheridan-hotel",
+    "lumiere-telluride",
+    "inn-lost-creek"
+  ],
+  "relatedArticles": [
+    "complete-guide-telluride",
+    "best-hotels-telluride",
+    "telluride-ski-resort-guide"
+  ],
+  "tags": [
+    "hotels",
+    "lodging",
+    "accommodations",
+    "mountain village",
+    "downtown"
+  ],
+  "seasonalRelevance": [
+    "winter",
+    "summer"
+  ],
+  "updatedDate": "2025-11-16T14:08:00.522Z"
 }
 ---
 
