@@ -165,19 +165,61 @@ export function RoomSelectorCard({
 
         // Fetch hotel details to get room photos
         try {
-          const detailsResponse = await fetch(`/api/hotels/details?hotelId=${hotelId}`);
+          const detailsUrl = `/api/hotels/details?hotelId=${hotelId}`;
+          console.log('[RoomSelector] Fetching hotel details from:', detailsUrl);
+          const detailsResponse = await fetch(detailsUrl);
+          
+          if (!detailsResponse.ok) {
+            console.error('[RoomSelector] Hotel details API error:', {
+              status: detailsResponse.status,
+              statusText: detailsResponse.statusText,
+              url: detailsUrl,
+            });
+            const errorText = await detailsResponse.text();
+            console.error('[RoomSelector] Error response body:', errorText.substring(0, 500));
+          }
+          
           if (detailsResponse.ok) {
-            const detailsData = await detailsResponse.json();
-            const hotelData = detailsData.data || detailsData;
+            const responseText = await detailsResponse.text();
+            console.log('[RoomSelector] Raw response text (first 500 chars):', responseText.substring(0, 500));
+            
+            let detailsData;
+            try {
+              detailsData = JSON.parse(responseText);
+            } catch (e) {
+              console.error('[RoomSelector] Failed to parse JSON response:', e);
+              throw new Error('Invalid JSON response from hotel details API');
+            }
+            
+            // Debug: log the parsed response
+            console.log('[RoomSelector] Parsed API response:', {
+              status: detailsResponse.status,
+              hasData: !!detailsData,
+              dataKeys: detailsData ? Object.keys(detailsData) : [],
+              hasDataProperty: !!detailsData?.data,
+              dataType: typeof detailsData?.data,
+              rawResponse: JSON.stringify(detailsData).substring(0, 1000),
+            });
+            
+            // Extract hotel data - handle both { data: hotel } and direct hotel response
+            const hotelData = detailsData?.data || detailsData;
+            
+            if (!hotelData || typeof hotelData !== 'object') {
+              console.error('[RoomSelector] Invalid hotel data structure:', {
+                detailsData,
+                hotelData,
+              });
+              throw new Error('Invalid hotel data structure in API response');
+            }
             
             console.log('[RoomSelector] Hotel details received:', {
-              hotelId: hotelData.hotel_id,
-              name: hotelData.name,
-              roomsCount: hotelData.rooms?.length || 0,
-              imagesCount: hotelData.images?.length || 0,
-              hasRooms: !!hotelData.rooms,
-              roomsType: Array.isArray(hotelData.rooms) ? 'array' : typeof hotelData.rooms,
-              fullResponse: JSON.stringify(detailsData).substring(0, 500),
+              hotelId: hotelData?.hotel_id,
+              name: hotelData?.name,
+              roomsCount: hotelData?.rooms?.length || 0,
+              imagesCount: hotelData?.images?.length || 0,
+              hasRooms: !!hotelData?.rooms,
+              roomsType: Array.isArray(hotelData?.rooms) ? 'array' : typeof hotelData?.rooms,
+              hotelDataKeys: hotelData ? Object.keys(hotelData) : [],
             });
             if (hotelData.rooms?.[0]) {
               console.log('[RoomSelector] Sample room from hotel details:', {
