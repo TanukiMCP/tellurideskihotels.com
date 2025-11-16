@@ -31,8 +31,9 @@ export const GET: APIRoute = async ({ request }) => {
 
     // Cache hotel details for 2 hours (7200 seconds)
     // Hotel info rarely changes, safe to cache aggressively
+    // Use versioned cache key to ensure rooms are included (v2 includes rooms)
     const hotel = await withCache(
-      `hotel-details:${hotelId}`,
+      `hotel-details-v2:${hotelId}`,
       7200,
       () => getHotelDetails(hotelId)
     );
