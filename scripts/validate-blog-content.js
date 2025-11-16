@@ -69,10 +69,10 @@ function main() {
     }
     
     if (!hasErrors) {
-      console.log('✅ All blog posts pass validation!');
+      console.log('✅ All blog posts pass validation!\n');
       process.exit(0);
     } else {
-      console.log('❌ Validation failed. Please fix the errors above.');
+      console.log('\n❌ Validation failed. Please fix the errors above.');
       process.exit(1);
     }
   } catch (error) {

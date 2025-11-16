@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
-    "build": "NODE_OPTIONS=--max_old_space_size=4096 astro check && astro build && npx pagefind --site dist",
+    "validate-content": "node scripts/validate-blog-content.js",
+    "build": "npm run validate-content && NODE_OPTIONS=--max_old_space_size=4096 astro check && astro build && npx pagefind --site dist",
     "preview": "astro preview",
     "setup-admin": "tsx scripts/setup-admin.ts",
     "create-admin": "tsx scripts/create-admin.ts",
