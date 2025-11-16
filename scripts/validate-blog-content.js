@@ -4,10 +4,14 @@
  * Run: node scripts/validate-blog-content.js
  */
 
-const fs = require('fs');
-const path = require('path');
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
-const BLOG_DIR = path.join(process.cwd(), 'src/content/blog');
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const BLOG_DIR = path.join(__dirname, '..', 'src/content/blog');
 const SCHEMA_LIMITS = {
   metaTitle: { min: 40, max: 60 },
   metaDescription: { min: 140, max: 160 },
@@ -45,28 +49,35 @@ function validateBlogPost(filePath) {
 }
 
 function main() {
-  const files = fs.readdirSync(BLOG_DIR).filter(f => f.endsWith('.md'));
-  let hasErrors = false;
-  
-  console.log('Validating blog content against schema limits...\n');
-  
-  for (const file of files) {
-    const filePath = path.join(BLOG_DIR, file);
-    const errors = validateBlogPost(filePath);
+  try {
+    const files = fs.readdirSync(BLOG_DIR).filter(f => f.endsWith('.md'));
+    let hasErrors = false;
     
-    if (errors.length > 0) {
-      hasErrors = true;
-      console.log(`❌ ${file}:`);
-      errors.forEach(err => console.log(`   ${err}`));
-      console.log('');
+    console.log('Validating blog content against schema limits...\n');
+    console.log(`Found ${files.length} blog posts to validate\n`);
+    
+    for (const file of files) {
+      const filePath = path.join(BLOG_DIR, file);
+      const errors = validateBlogPost(filePath);
+      
+      if (errors.length > 0) {
+        hasErrors = true;
+        console.log(`❌ ${file}:`);
+        errors.forEach(err => console.log(`   ${err}`));
+        console.log('');
+      }
     }
-  }
-  
-  if (!hasErrors) {
-    console.log('✅ All blog posts pass validation!');
-    process.exit(0);
-  } else {
-    console.log('❌ Validation failed. Please fix the errors above.');
+    
+    if (!hasErrors) {
+      console.log('✅ All blog posts pass validation!');
+      process.exit(0);
+    } else {
+      console.log('❌ Validation failed. Please fix the errors above.');
+      process.exit(1);
+    }
+  } catch (error) {
+    console.error('Error running validation:', error.message);
+    console.error('BLOG_DIR:', BLOG_DIR);
     process.exit(1);
   }
 }
