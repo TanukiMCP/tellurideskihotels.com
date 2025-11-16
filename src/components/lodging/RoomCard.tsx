@@ -35,7 +35,11 @@ export function RoomCard({ rate, nights, onReserve, available, hotel, booking }:
   // Extract room details
   const roomName = rate.room_name || 'Standard Room';
   // Extract room images from rate data (if available)
-  const images: string[] = (rate as any).images?.map((img: any) => img.url || img).filter(Boolean) || [];
+  // Images can be either an array of URL strings or an array of objects with url property
+  const images: string[] = (rate as any).images?.map((img: any) => {
+    if (typeof img === 'string') return img;
+    return img?.url || img;
+  }).filter(Boolean) || [];
   
   // Pricing: Display retailRate.total (what customer pays)
   // rate.total.amount = Retail total for entire stay (includes 15% commission + taxes)

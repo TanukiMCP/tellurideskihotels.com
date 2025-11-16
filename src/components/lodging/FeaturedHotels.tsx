@@ -22,13 +22,14 @@ export function FeaturedHotels({
     if (typeof window !== 'undefined') {
       // Use the SAME dates that were used to fetch these featured hotels
       // This ensures availability matches what was shown
+      // Default: 1 week from now, 1 week stay
       const checkIn = checkInDate || format(addDays(new Date(), 7), 'yyyy-MM-dd');
       const checkOut = format(addDays(new Date(checkIn), 7), 'yyyy-MM-dd');
       const adults = 2;
       const rooms = 1;
       
       window.location.href = `/places-to-stay/${hotelId}?checkIn=${checkIn}&checkOut=${checkOut}&adults=${adults}&rooms=${rooms}`;
-  }
+    }
   };
 
   if (!hotels || hotels.length === 0) {

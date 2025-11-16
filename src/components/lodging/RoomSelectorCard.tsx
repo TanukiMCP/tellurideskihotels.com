@@ -180,6 +180,12 @@ export function RoomSelectorCard({
               });
             }
             
+            // Extract hotel images as fallback (when room-specific images aren't available)
+            const hotelImages: string[] = (hotelData.images || [])
+              .map((img: any) => img.url || img)
+              .filter((url: string) => url && url.trim() !== '')
+              .slice(0, 5); // Limit to first 5 hotel images for fallback
+            
             // Create a map of mapped room ID to photos
             const roomPhotosMap = new Map<string, string[]>();
             if (hotelData.rooms && Array.isArray(hotelData.rooms)) {
@@ -204,6 +210,7 @@ export function RoomSelectorCard({
             
             console.log('[RoomSelector] Room photos map size:', roomPhotosMap.size);
             console.log('[RoomSelector] Room photos map keys:', Array.from(roomPhotosMap.keys()));
+            console.log('[RoomSelector] Hotel fallback images:', hotelImages.length);
             
             // Merge photos with room options using mapped_room_id
             console.log('[RoomSelector] Starting to merge photos with', roomOptions.length, 'room options');
@@ -226,12 +233,24 @@ export function RoomSelectorCard({
                   roomOption.images = photos;
                   console.log('[RoomSelector] ✓ Added', photos.length, 'images to room:', roomOption.roomName);
                 } else {
-                  console.log('[RoomSelector] ✗ No photos found in map for mappedRoomId:', mappedRoomId);
-                  console.log('[RoomSelector] Available keys in map:', Array.from(roomPhotosMap.keys()));
+                  // Fallback to hotel images if room-specific images aren't available
+                  if (hotelImages.length > 0) {
+                    roomOption.images = hotelImages;
+                    console.log('[RoomSelector] ⚠ Using hotel fallback images for room:', roomOption.roomName);
+                  } else {
+                    console.log('[RoomSelector] ✗ No photos found in map for mappedRoomId:', mappedRoomId);
+                    console.log('[RoomSelector] Available keys in map:', Array.from(roomPhotosMap.keys()));
+                  }
                 }
               } else {
-                console.log('[RoomSelector] ✗ No mappedRoomId for room:', roomOption.roomName);
-                console.log('[RoomSelector] Full rate object:', roomOption.rates[0]);
+                // No mappedRoomId - use hotel images as fallback
+                if (hotelImages.length > 0) {
+                  roomOption.images = hotelImages;
+                  console.log('[RoomSelector] ⚠ No mappedRoomId, using hotel fallback images for room:', roomOption.roomName);
+                } else {
+                  console.log('[RoomSelector] ✗ No mappedRoomId for room:', roomOption.roomName);
+                  console.log('[RoomSelector] Full rate object:', roomOption.rates[0]);
+                }
               }
             }
           } else {
