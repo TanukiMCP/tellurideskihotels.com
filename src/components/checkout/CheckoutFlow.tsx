@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
@@ -35,7 +35,7 @@ export function CheckoutFlow({ hotelId, hotelName, room, addons = [], onComplete
   const [prebookData, setPrebookData] = useState<any>(null);
   
   // Restore prebookData from sessionStorage if returning from payment
-  useState(() => {
+  useEffect(() => {
     if (typeof window !== 'undefined') {
       const urlParams = new URLSearchParams(window.location.search);
       if (urlParams.get('returnFromPayment')) {
@@ -52,7 +52,7 @@ export function CheckoutFlow({ hotelId, hotelName, room, addons = [], onComplete
         }
       }
     }
-  });
+  }, []);
   
   // First, do prebook when moving to payment step
   const handleGuestInfoSubmit = async (e: React.FormEvent) => {

@@ -81,7 +81,8 @@ export function LiteAPIPayment({
       
       console.log('[LiteAPI Payment] Initializing payment portal:', {
         publicKey,
-        isSandbox,
+        isSandboxSecretKey,
+        isDevDomain,
         hasSecretKey: !!secretKey,
         secretKeyPreview: secretKey ? secretKey.substring(0, 20) + '...' : null,
         hasTransactionId: !!transactionId,
