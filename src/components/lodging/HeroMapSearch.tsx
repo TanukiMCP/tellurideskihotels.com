@@ -808,7 +808,7 @@ export default function HeroMapSearch({
                                   key={idx}
                                   className="text-xs bg-neutral-100 text-neutral-700 px-2 py-1 rounded-md"
                                 >
-                                  {amenity}
+                                  {amenity.name || amenity.code || 'Amenity'}
                                 </span>
                               ))}
                               {hotel.amenities.length > 4 && (
