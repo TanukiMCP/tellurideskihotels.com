@@ -373,7 +373,7 @@
 - **Publish Date:** 2025-12-03T15:00:00Z
 - **Completed:** 2025-11-17
 
-**Day 28: "Splitting Costs in Telluride: Condos vs Hotels for Groups"** 🎯 CONVERSION FOCUS
+**Day 28: "Splitting Costs in Telluride: Condos vs Hotels for Groups"** ✅ COMPLETE 🎯 CONVERSION FOCUS
 - Keyword: telluride condos vs hotels + telluride group lodging
 - Word Count: 2,500
 - Type: Comparison with Interactive Tools
@@ -381,38 +381,53 @@
 - Tags: condos, hotels, groups, cost-splitting
 - **Tools Required:** HotelSplitCalculator, CostPerPersonRanking, LodgingComparisonMatrix
 - **Focus:** Detailed cost comparisons, when to choose each option
+- **Status:** Draft saved at `src/content/drafts/telluride-condos-vs-hotels-groups.md`
+- **Publish Date:** 2025-12-04T15:00:00Z
+- **Completed:** 2025-11-17
 
-**Day 29: "Top 10 Telluride Hotels by Value: Price per Person Analysis"** 🎯 CONVERSION FOCUS
+**Day 29: "Top 10 Telluride Hotels by Value: Price per Person Analysis"** ✅ COMPLETE 🎯 CONVERSION FOCUS
 - Keyword: best value telluride hotels + telluride hotels price per person
 - Word Count: 2,800
 - Type: Listicle with Interactive Tools
-- Category: lodging
+- Category: hotel-reviews
 - Tags: value, rankings, price-analysis, hotels
 - **Tools Required:** CostPerPersonRanking, LodgingComparisonMatrix
 - **Focus:** Hotels ranked by cost per person, value analysis
+- **Status:** Draft saved at `src/content/drafts/top-10-telluride-hotels-value.md`
+- **Publish Date:** 2025-12-05T15:00:00Z
+- **Completed:** 2025-11-17
 
-**Day 30: "Best Telluride Hotels for Groups: Ranked by Amenities & Space"** 🎯 CONVERSION FOCUS
+**Day 30: "Best Telluride Hotels for Groups: Ranked by Amenities & Space"** ✅ COMPLETE 🎯 CONVERSION FOCUS
 - Keyword: telluride hotels for groups + telluride group accommodations
 - Word Count: 2,600
 - Type: Listicle with Interactive Tools
-- Category: lodging
+- Category: hotel-reviews
 - Tags: groups, hotels, amenities, space
 - **Tools Required:** LodgingComparisonMatrix, HotelSplitCalculator, GroupCostCalculator
 - **Focus:** Group-friendly hotels, space requirements, amenities comparison
+- **Status:** Draft saved at `src/content/drafts/best-telluride-hotels-for-groups.md`
+- **Publish Date:** 2025-12-06T15:00:00Z
+- **Completed:** 2025-11-17
 
-**Day 31: "Telluride Ski Map & Trail Guide"**
+**Day 31: "Telluride Ski Map & Trail Guide"** ✅ COMPLETE
 - Keyword: telluride ski map (1,600/mo)
 - Word Count: 2,600
 - Type: Comprehensive Guide
 - Category: ski-guides
 - Tags: ski-map, trails, terrain
+- **Status:** Draft saved at `src/content/drafts/telluride-ski-map-trail-guide.md`
+- **Publish Date:** 2025-12-07T15:00:00Z
+- **Completed:** 2025-11-17
 
-**Day 32: "Best Ski Runs in Telluride: Top 20 Trails"**
+**Day 32: "Best Ski Runs in Telluride: Top 20 Trails"** ✅ COMPLETE
 - Keyword: telluride ski trails (880/mo)
 - Word Count: 2,700
 - Type: Listicle
 - Category: ski-guides
 - Tags: runs, trails, terrain
+- **Status:** Draft saved at `src/content/drafts/best-ski-runs-telluride.md`
+- **Publish Date:** 2025-12-08T15:00:00Z
+- **Completed:** 2025-11-17
 
 **Day 33: "Telluride Ski Lessons: Schools, Prices & Tips"**
 - Keyword: telluride ski lessons (590/mo)
