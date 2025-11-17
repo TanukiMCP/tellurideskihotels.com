@@ -821,12 +821,13 @@ export default function HeroMapSearch({
         {/* Overlays positioned inside map container to scroll with it */}
         {/* Hotel Cards Panel - Right Side (Desktop) / Bottom (Mobile) */}
         {hotels.length > 0 && (
-          <div className="absolute right-4 z-[400] pointer-events-auto" style={{ 
+          <div className="absolute right-4 pointer-events-auto" style={{ 
             top: '1rem',
             bottom: '1rem',
             width: 'calc(100% - 2rem)',
             height: 'calc(100% - 2rem)',
-            maxHeight: 'calc(100% - 2rem)'
+            maxHeight: 'calc(100% - 2rem)',
+            zIndex: 1000
           }}>
             <div className="lg:absolute lg:right-0 lg:w-[420px] lg:h-full lg:max-h-full w-full h-full max-h-full">
               <div className="backdrop-blur-xl bg-white/98 border-t lg:border-t-0 lg:border-l border-neutral-200 shadow-2xl h-full flex flex-col overflow-hidden rounded-xl">
@@ -1010,7 +1011,7 @@ export default function HeroMapSearch({
 
         {/* Ski Trail Legend - Bottom Right (only show in Ski Trails mode) */}
         {isMapLoaded && mapStyle === 'skiTrails' && (
-          <div className="absolute bottom-4 right-4 lg:right-[460px] backdrop-blur-xl bg-white/95 rounded-xl shadow-2xl p-4 z-[500] border border-white/20 pointer-events-auto" style={{ position: 'absolute' }}>
+          <div className="absolute bottom-4 right-4 lg:right-[460px] backdrop-blur-xl bg-white/95 rounded-xl shadow-2xl p-4 border border-white/20 pointer-events-auto" style={{ position: 'absolute', zIndex: 1001 }}>
             <h3 className="text-sm font-bold text-neutral-900 mb-3 flex items-center gap-2">
               <svg className="w-4 h-4 text-primary-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
