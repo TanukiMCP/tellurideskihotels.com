@@ -440,11 +440,23 @@ export default function HeroMapSearch({
     setSelectedHotelId(hotel.hotel_id);
     setPopupHotel(hotel);
     
-    if (hotel.location?.latitude && hotel.location?.longitude) {
-      mapRef.current?.flyTo({
-        center: [hotel.location.longitude, hotel.location.latitude],
-        zoom: Math.max(mapRef.current.getZoom(), 14),
-        duration: 800,
+    // Pan camera to nicely frame the marker and popup in view
+    if (mapRef.current && hotel.location?.latitude && hotel.location?.longitude) {
+      const currentZoom = mapRef.current.getZoom();
+      
+      // Calculate offset to account for popup width (popup appears to the right of marker)
+      // Shift the center point left so the marker + popup are nicely framed
+      const isMobile = window.innerWidth < 768;
+      const popupOffsetLng = isMobile ? 0.002 : 0.004;
+      
+      mapRef.current.easeTo({
+        center: [
+          hotel.location.longitude - popupOffsetLng, // Shift left to accommodate popup
+          hotel.location.latitude
+        ],
+        zoom: Math.max(currentZoom, 14), // Zoom in closer for better view
+        duration: 600,
+        padding: { top: 50, bottom: 50, left: 50, right: 50 },
       });
     }
   }, []);

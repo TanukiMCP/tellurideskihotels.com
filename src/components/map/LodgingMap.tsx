@@ -164,7 +164,26 @@ export default function LodgingMap({
       onHotelClick(hotel.hotel_id);
     }
     setPopupHotel(hotel);
-  }, [onHotelClick]);
+    
+    // Pan camera to nicely frame the marker and popup in view
+    if (mapRef.current && hotel.location?.latitude && hotel.location?.longitude) {
+      const currentZoom = mapRef.current.getZoom();
+      
+      // Calculate offset to account for popup width (popup appears to the right of marker)
+      // Shift the center point left so the marker + popup are nicely framed
+      const popupOffsetLng = isMobile ? 0.002 : 0.004; // Adjust based on screen size
+      
+      mapRef.current.easeTo({
+        center: [
+          hotel.location.longitude - popupOffsetLng, // Shift left to accommodate popup
+          hotel.location.latitude
+        ],
+        zoom: Math.max(currentZoom, 14), // Zoom in closer for better view
+        duration: 600,
+        padding: { top: 50, bottom: 50, left: 50, right: 50 }, // Ensure margins around content
+      });
+    }
+  }, [onHotelClick, isMobile]);
 
   // Handle marker hover
   const handleMarkerMouseEnter = useCallback((hotelId: string) => {
