@@ -167,7 +167,7 @@ export function HotelCard({
               className="w-full bg-primary-600 hover:bg-primary-700 text-white font-semibold py-3 px-4 rounded-lg transition-colors duration-200"
               type="button"
             >
-              View Details
+              View Available Rooms
             </button>
           </>
         )}

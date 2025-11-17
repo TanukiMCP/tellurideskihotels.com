@@ -8,37 +8,32 @@ interface FeaturedHotelsProps {
   minPrices?: Record<string, number>;
   currency?: string;
   checkInDate?: string;
+  checkOutDate?: string;
+  adults?: number;
 }
 
 export function FeaturedHotels({ 
   initialHotels, 
   minPrices = {},
   currency = 'USD',
-  checkInDate
+  checkInDate,
+  checkOutDate,
+  adults = 2
 }: FeaturedHotelsProps) {
   const hotels = initialHotels;
 
   const handleHotelSelect = (hotelId: string) => {
-    console.log('[FeaturedHotels] handleHotelSelect called with hotelId:', hotelId);
-    console.log('[FeaturedHotels] checkInDate prop:', checkInDate);
-    
     // Use the SAME dates that were used to fetch these featured hotels
     // This ensures availability matches what was shown
     // Default: 7 days from now, 7 day stay
     const checkIn = checkInDate || format(addDays(new Date(), 7), 'yyyy-MM-dd');
-    const checkOut = format(addDays(new Date(checkIn), 7), 'yyyy-MM-dd');
-    const adults = 2;
+    const checkOut = checkOutDate || format(addDays(new Date(checkIn), 7), 'yyyy-MM-dd');
     const rooms = 1;
     
     const url = `/places-to-stay/${hotelId}?checkIn=${checkIn}&checkOut=${checkOut}&adults=${adults}&rooms=${rooms}`;
     
-    console.log('[FeaturedHotels] Navigating to:', url);
-    console.log('[FeaturedHotels] Dates:', { checkIn, checkOut, adults, rooms });
-    
     if (typeof window !== 'undefined') {
       window.location.href = url;
-    } else {
-      console.error('[FeaturedHotels] window is not available');
     }
   };
 
@@ -55,6 +50,7 @@ export function FeaturedHotels({
             minPrice={minPrices[hotel.hotel_id]}
             currency={currency}
             checkInDate={checkInDate}
+            checkOutDate={checkOutDate}
             onSelect={handleHotelSelect}
           />
       ))}

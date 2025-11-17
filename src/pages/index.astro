@@ -18,6 +18,8 @@ import { optimizePexelsImage, generateSrcSet } from '@/lib/image-optimizer';
 import { searchHotels } from '@/lib/liteapi/hotels';
 import { getTellurideSkiConditions } from '@/lib/snocountry/client';
 import { getTopHotels } from '@/lib/top-hotels';
+import { getCollection, type CollectionEntry } from 'astro:content';
+import FeaturedBlogSection from '@/components/blog/FeaturedBlogSection';
 
 const heroImage = getHomepageHeroImage();
 const heroImages = getImagesByCategory('hero') || getImagesByCategory('resort') || [];
@@ -33,7 +35,28 @@ let topHotelsData: LiteAPIHotel[] = [];
 let allHotels: LiteAPIHotel[] = [];
 let minPrices: Record<string, number> = {};
 let featuredCheckInDate: string | undefined;
+let featuredCheckOutDate: string | undefined;
 let skiConditions = null;
+
+// Fetch featured blog article
+let featuredBlogArticle: CollectionEntry<'blog'> | null = null;
+let recentBlogArticles: CollectionEntry<'blog'>[] = [];
+try {
+  const allBlogArticles = await getCollection('blog', ({ data }) => {
+    return data.status === 'published';
+  });
+  
+  const sortedArticles = allBlogArticles.sort((a, b) => {
+    return b.data.publishDate.getTime() - a.data.publishDate.getTime();
+  });
+  
+  featuredBlogArticle = sortedArticles.find(article => article.data.featured) || sortedArticles[0] || null;
+  recentBlogArticles = sortedArticles
+    .filter(article => article.slug !== featuredBlogArticle?.slug)
+    .slice(0, 3);
+} catch (error) {
+  console.error('[Homepage] Error fetching blog articles:', error);
+}
 
 // PERFORMANCE OPTIMIZATION: Parallel fetches with timeout and caching
 // Move expensive API calls to client-side or use static data
@@ -69,10 +92,10 @@ try {
     // We fetch more than needed because not all will have availability
     const candidateHotels = getTopHotels(allHotels, 20);
     
-    // Set check-in date (7 days from now)
+    // Set check-in date (7 days from now) and check-out (7 days later = 14 days from now)
     const now = new Date();
     featuredCheckInDate = format(addDays(now, 7), 'yyyy-MM-dd');
-    const checkOutDate = format(addDays(now, 14), 'yyyy-MM-dd');
+    const featuredCheckOutDate = format(addDays(now, 14), 'yyyy-MM-dd');
     
     // Fetch min rates for candidate hotels to check availability
     // This ensures we can show the best 6 hotels that actually have rooms available
@@ -82,7 +105,7 @@ try {
         const minRatesData = await getMinRates({
           hotelIds: candidateHotelIds,
           checkIn: featuredCheckInDate,
-          checkOut: checkOutDate,
+          checkOut: featuredCheckOutDate,
           adults: 2,
           currency: 'USD',
           guestNationality: 'US',
@@ -90,7 +113,7 @@ try {
         });
         
         // Calculate nights for per-night pricing
-        const nights = Math.ceil((new Date(checkOutDate).getTime() - new Date(featuredCheckInDate).getTime()) / (1000 * 60 * 60 * 24));
+        const nights = Math.ceil((new Date(featuredCheckOutDate).getTime() - new Date(featuredCheckInDate).getTime()) / (1000 * 60 * 60 * 24));
         
         // Filter hotels to only those with availability and extract prices
         const hotelsWithAvailability = candidateHotels.filter(hotel => {
@@ -356,6 +379,8 @@ try {
               minPrices={minPrices}
               currency="USD"
               checkInDate={featuredCheckInDate}
+              checkOutDate={featuredCheckOutDate}
+              adults={2}
             />
           </div>
 
@@ -384,6 +409,12 @@ try {
       </Container>
     </div>
   )}
+
+  <!-- Featured Blog Section -->
+  <FeaturedBlogSection 
+    featuredArticle={featuredBlogArticle}
+    recentArticles={recentBlogArticles}
+  />
 
   <!-- Ski Conditions & Weather Section -->
   <div class="bg-gradient-to-b from-white via-neutral-50 to-white py-20 lg:py-28">

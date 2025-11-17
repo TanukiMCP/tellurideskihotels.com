@@ -1031,7 +1031,7 @@ export default function HeroMapSearch({
         }
       `}</style>
       </div>
-    </div>
+      </div>
     </div>
   );
 }
