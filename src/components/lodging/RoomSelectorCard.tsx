@@ -165,70 +165,12 @@ export function RoomSelectorCard({
 
         // Fetch hotel details to get room photos
         try {
-          const detailsUrl = `/api/hotels/details?hotelId=${hotelId}`;
-          console.log('[RoomSelector] Fetching hotel details from:', detailsUrl);
-          const detailsResponse = await fetch(detailsUrl);
-          
-          if (!detailsResponse.ok) {
-            console.error('[RoomSelector] Hotel details API error:', {
-              status: detailsResponse.status,
-              statusText: detailsResponse.statusText,
-              url: detailsUrl,
-            });
-            const errorText = await detailsResponse.text();
-            console.error('[RoomSelector] Error response body:', errorText.substring(0, 500));
-          }
-          
+          const detailsResponse = await fetch(`/api/hotels/details?hotelId=${hotelId}`);
           if (detailsResponse.ok) {
-            const responseText = await detailsResponse.text();
-            console.log('[RoomSelector] Raw response text (first 500 chars):', responseText.substring(0, 500));
+            const detailsData = await detailsResponse.json();
+            const hotelData = detailsData.data || detailsData;
             
-            let detailsData;
-            try {
-              detailsData = JSON.parse(responseText);
-            } catch (e) {
-              console.error('[RoomSelector] Failed to parse JSON response:', e);
-              throw new Error('Invalid JSON response from hotel details API');
-            }
-            
-            // Debug: log the parsed response
-            console.log('[RoomSelector] Parsed API response:', {
-              status: detailsResponse.status,
-              hasData: !!detailsData,
-              dataKeys: detailsData ? Object.keys(detailsData) : [],
-              hasDataProperty: !!detailsData?.data,
-              dataType: typeof detailsData?.data,
-              rawResponse: JSON.stringify(detailsData).substring(0, 1000),
-            });
-            
-            // Extract hotel data - handle both { data: hotel } and direct hotel response
-            const hotelData = detailsData?.data || detailsData;
-            
-            if (!hotelData || typeof hotelData !== 'object') {
-              console.error('[RoomSelector] Invalid hotel data structure:', {
-                detailsData,
-                hotelData,
-              });
-              throw new Error('Invalid hotel data structure in API response');
-            }
-            
-            console.log('[RoomSelector] Hotel details received:', {
-              hotelId: hotelData?.hotel_id,
-              name: hotelData?.name,
-              roomsCount: hotelData?.rooms?.length || 0,
-              imagesCount: hotelData?.images?.length || 0,
-              hasRooms: !!hotelData?.rooms,
-              roomsType: Array.isArray(hotelData?.rooms) ? 'array' : typeof hotelData?.rooms,
-              hotelDataKeys: hotelData ? Object.keys(hotelData) : [],
-            });
-            if (hotelData.rooms?.[0]) {
-              console.log('[RoomSelector] Sample room from hotel details:', {
-                id: hotelData.rooms[0].id,
-                name: hotelData.rooms[0].name,
-                photosCount: hotelData.rooms[0].photos?.length || 0,
-                firstPhoto: hotelData.rooms[0].photos?.[0],
-              });
-            }
+            console.log('[RoomSelector] Hotel details received, rooms:', hotelData.rooms?.length || 0);
             
             // Extract hotel images as fallback (when room-specific images aren't available)
             const hotelImages: string[] = (hotelData.images || [])
@@ -240,16 +182,8 @@ export function RoomSelectorCard({
             const roomPhotosMap = new Map<string, string[]>();
             if (hotelData.rooms && Array.isArray(hotelData.rooms)) {
               for (const room of hotelData.rooms) {
-                // Photos are already processed as URL strings in getHotelDetails
                 const photos = room.photos || [];
-                console.log('[RoomSelector] Processing room from details:', {
-                  id: room.id,
-                  name: room.name,
-                  photosCount: photos.length,
-                  firstPhoto: photos[0],
-                });
                 if (photos.length > 0) {
-                  // Use room.id as the key (this is what mappedRoomId refers to)
                   const roomKey = room.id?.toString();
                   if (roomKey) {
                     roomPhotosMap.set(roomKey, photos);
@@ -259,56 +193,27 @@ export function RoomSelectorCard({
             }
             
             console.log('[RoomSelector] Room photos map size:', roomPhotosMap.size);
-            console.log('[RoomSelector] Room photos map keys:', Array.from(roomPhotosMap.keys()));
             console.log('[RoomSelector] Hotel fallback images:', hotelImages.length);
             
             // Merge photos with room options using mapped_room_id
-            console.log('[RoomSelector] Starting to merge photos with', roomOptions.length, 'room options');
             for (const roomOption of roomOptions) {
-              // Get the mapped_room_id from the first rate (all rates in a room should have the same mapped_room_id)
               const mappedRoomId = (roomOption.rates[0] as any)?.mapped_room_id?.toString();
-              console.log('[RoomSelector] Looking for photos for room:', {
-                roomName: roomOption.roomName,
-                mappedRoomId,
-                rateData: {
-                  rate_id: roomOption.rates[0].rate_id,
-                  room_id: roomOption.rates[0].room_id,
-                  mapped_room_id: (roomOption.rates[0] as any)?.mapped_room_id,
-                },
-              });
               
               if (mappedRoomId) {
                 const photos = roomPhotosMap.get(mappedRoomId);
                 if (photos && photos.length > 0) {
                   roomOption.images = photos;
                   console.log('[RoomSelector] ✓ Added', photos.length, 'images to room:', roomOption.roomName);
-                } else {
-                  // Fallback to hotel images if room-specific images aren't available
-                  if (hotelImages.length > 0) {
-                    roomOption.images = hotelImages;
-                    console.log('[RoomSelector] ⚠ Using hotel fallback images for room:', roomOption.roomName);
-                  } else {
-                    console.log('[RoomSelector] ✗ No photos found in map for mappedRoomId:', mappedRoomId);
-                    console.log('[RoomSelector] Available keys in map:', Array.from(roomPhotosMap.keys()));
-                  }
-                }
-              } else {
-                // No mappedRoomId - use hotel images as fallback
-                if (hotelImages.length > 0) {
+                } else if (hotelImages.length > 0) {
                   roomOption.images = hotelImages;
-                  console.log('[RoomSelector] ⚠ No mappedRoomId, using hotel fallback images for room:', roomOption.roomName);
-                } else {
-                  console.log('[RoomSelector] ✗ No mappedRoomId for room:', roomOption.roomName);
-                  console.log('[RoomSelector] Full rate object:', roomOption.rates[0]);
                 }
+              } else if (hotelImages.length > 0) {
+                roomOption.images = hotelImages;
               }
             }
-          } else {
-            console.warn('[RoomSelector] Failed to fetch hotel details for photos');
           }
         } catch (err) {
           console.warn('[RoomSelector] Error fetching hotel details for photos:', err);
-          // Continue without photos - not a critical error
         }
 
         setRooms(roomOptions);
