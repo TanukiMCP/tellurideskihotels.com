@@ -20,7 +20,7 @@
     "canonical": "https://tellurideskihotels.com/blog/destination-guides/complete-guide-telluride"
   },
   "featured": true,
-  "featuredImage": "/images/uploads/telluride-box-canyon-winter.jpg",
+  "featuredImage": "https://images.pexels.com/photos/15232505/pexels-photo-15232505.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
   "featuredImageAlt": "Telluride Colorado box canyon with snow-capped 13,000-foot peaks and historic downtown",
   "excerpt": "Everything you need to know about Telluride, Colorado: skiing, hotels, activities, weather, transportation, and insider tips for planning your perfect mountain vacation.",
   "wordCount": 3500,

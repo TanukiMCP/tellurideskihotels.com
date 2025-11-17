@@ -20,7 +20,7 @@
     "canonical": "https://tellurideskihotels.com/blog/destination-guides/where-to-stay-telluride"
   },
   "featured": true,
-  "featuredImage": "/images/uploads/telluride-mountain-village-hotels-winter.jpg",
+  "featuredImage": "https://images.pexels.com/photos/10804099/pexels-photo-10804099.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
   "featuredImageAlt": "Ski-in ski-out hotels in Telluride Mountain Village with snow-covered slopes",
   "excerpt": "Complete guide to choosing where to stay in Telluride: downtown vs Mountain Village, luxury hotels, ski-in/ski-out properties, vacation rentals, and budget options for every traveler.",
   "wordCount": 3200,

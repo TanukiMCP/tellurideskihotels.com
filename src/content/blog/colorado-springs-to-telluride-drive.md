@@ -19,7 +19,7 @@
     "canonical": "https://tellurideskihotels.com/blog/planning-tips/colorado-springs-to-telluride-drive"
   },
   "featured": false,
-  "featuredImage": "/images/uploads/colorado-springs-telluride-route.jpg",
+  "featuredImage": "https://images.pexels.com/photos/10969016/pexels-photo-10969016.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
   "featuredImageAlt": "Scenic drive from Colorado Springs to Telluride through Colorado mountains",
   "excerpt": "Your complete guide to driving from Colorado Springs to Telluride. Compare route options, avoid I-70, find the best stops, and get realistic drive times for this Colorado road trip.",
   "wordCount": 2400,
