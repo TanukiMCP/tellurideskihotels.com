@@ -9,7 +9,7 @@
   "publishDate": "2025-11-16T15:00:00Z",
   "seo": {
     "metaTitle": "Winter Driving to Telluride: Safety Guide & Road Conditions",
-    "metaDescription": "Winter driving safety tips for Telluride. Learn Colorado chain laws, I-70 conditions, emergency prep, and safe mountain driving strategies.",
+    "metaDescription": "Winter driving safety tips for Telluride. Learn Colorado chain laws, I-70 conditions, emergency prep, and safe mountain driving strategies for Telluride.",
     "keywords": [
       "telluride winter driving",
       "i70 winter conditions",
