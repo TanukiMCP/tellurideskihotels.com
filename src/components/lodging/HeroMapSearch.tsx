@@ -441,9 +441,15 @@ export default function HeroMapSearch({
     setExpandedHotelId(expandedHotelId === hotelId ? null : hotelId);
   }, [expandedHotelId]);
 
-  // Handle card hover - show marker and pan to hotel
-  const handleCardHover = useCallback((hotel: LiteAPIHotel | null) => {
-    if (hotel && hotel.location?.latitude && hotel.location?.longitude && mapRef.current) {
+  // Handle card click - show marker and pan to hotel
+  const handleCardClick = useCallback((hotel: LiteAPIHotel, e: React.MouseEvent) => {
+    // Don't trigger if clicking the expand button or view details button
+    const target = e.target as HTMLElement;
+    if (target.closest('button')) {
+      return;
+    }
+    
+    if (hotel.location?.latitude && hotel.location?.longitude && mapRef.current) {
       setHoveredHotelId(hotel.hotel_id);
       
       // Smoothly pan to hotel location
@@ -453,8 +459,6 @@ export default function HeroMapSearch({
         duration: 500,
         padding: { top: 50, bottom: 50, left: 50, right: 50 },
       });
-    } else {
-      setHoveredHotelId(null);
     }
   }, [viewState.zoom]);
 
@@ -492,10 +496,10 @@ export default function HeroMapSearch({
         {/* Navigation Controls */}
         <NavigationControl position="top-right" showCompass={false} />
 
-        {/* Hotel Markers - Only show when hovering */}
+        {/* Hotel Markers - Only show when card is clicked */}
         {hotels.map((hotel) => {
           if (!hotel.location?.latitude || !hotel.location?.longitude) return null;
-          if (hotel.hotel_id !== hoveredHotelId) return null; // Only show marker for hovered hotel
+          if (hotel.hotel_id !== hoveredHotelId) return null; // Only show marker for selected hotel
 
           const style = getMarkerStyle(hotel.hotel_id);
           const minPrice = minPrices[hotel.hotel_id];
@@ -785,13 +789,11 @@ export default function HeroMapSearch({
                         ? 'border-primary-300 shadow-lg' 
                         : 'border-transparent hover:border-neutral-200'
                     }`}
-                    onMouseEnter={() => handleCardHover(hotel)}
-                    onMouseLeave={() => handleCardHover(null)}
                   >
                     {/* Compact Preview */}
                     <div 
                       className="cursor-pointer"
-                      onClick={() => handleHotelClick(hotel.hotel_id)}
+                      onClick={(e) => handleCardClick(hotel, e)}
                     >
                       <div className="flex gap-3 p-3">
                         {/* Image */}
@@ -915,7 +917,10 @@ export default function HeroMapSearch({
 
                         {/* View Details Button */}
                         <button
-                          onClick={() => handleHotelClick(hotel.hotel_id)}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleHotelClick(hotel.hotel_id);
+                          }}
                           className="w-full bg-primary-600 hover:bg-primary-700 text-white font-semibold py-2.5 px-4 rounded-lg transition-colors flex items-center justify-center gap-2"
                         >
                           View Details
