@@ -1,5 +1,5 @@
-import type { Handler, HandlerEvent, HandlerContext } from "@netlify/functions";
-import Resend from 'resend';
+import type { Handler, HandlerEvent } from "@netlify/functions";
+import { Resend } from 'resend';
 
 // Configuration
 const LITEAPI_BOOKING_BASE_URL = 'https://book.liteapi.travel/v3.0';
@@ -251,7 +251,7 @@ async function sendBookingConfirmation(params: {
 }
 
 // Handler
-const handler: Handler = async (event: HandlerEvent, context: HandlerContext) => {
+const handler: Handler = async (event: HandlerEvent) => {
   const startTime = Date.now();
   const requestId = Math.random().toString(36).substring(7);
   
@@ -271,6 +271,7 @@ const handler: Handler = async (event: HandlerEvent, context: HandlerContext) =>
         'Access-Control-Allow-Origin': '*',
         'Access-Control-Allow-Headers': 'Content-Type',
         'Access-Control-Allow-Methods': 'POST, OPTIONS',
+        'Content-Type': 'text/plain',
       },
       body: '',
     };
