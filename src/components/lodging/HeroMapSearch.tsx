@@ -476,9 +476,9 @@ export default function HeroMapSearch({
   };
 
   return (
-    <div className="w-full mx-auto px-4 sm:px-6 lg:px-12 py-8 lg:py-12 relative">
-      <div className="relative bg-white rounded-2xl shadow-2xl border border-neutral-200" style={{ overflow: 'visible' }}>
-        <div className="relative h-[500px] md:h-[600px] lg:h-[700px] w-full overflow-hidden rounded-2xl" id="map-container">
+    <div className="w-full mx-auto px-4 sm:px-6 lg:px-12 py-8 lg:py-12">
+      <div className="relative bg-white rounded-2xl shadow-2xl border border-neutral-200" style={{ overflow: 'visible', position: 'relative' }}>
+        <div className="relative h-[500px] md:h-[600px] lg:h-[700px] w-full overflow-hidden rounded-2xl" id="map-container" style={{ position: 'relative' }}>
       {/* Mapbox Background */}
       <Map
         ref={mapRef}
@@ -817,7 +817,7 @@ export default function HeroMapSearch({
       `}</style>
         </div>
         
-        {/* Overlays positioned relative to outer container to prevent clipping on scroll */}
+        {/* Overlays positioned relative to map container but outside overflow-hidden to prevent clipping */}
         {/* Hotel Cards Panel - Right Side (Desktop) / Bottom (Mobile) */}
         {hotels.length > 0 && (
           <div className="absolute right-4 z-[400] pointer-events-auto" style={{ 
@@ -825,7 +825,8 @@ export default function HeroMapSearch({
             bottom: '1rem',
             width: 'calc(100% - 2rem)',
             height: 'calc(100% - 2rem)',
-            maxHeight: 'calc(100% - 2rem)'
+            maxHeight: 'calc(100% - 2rem)',
+            position: 'absolute'
           }}>
             <div className="lg:absolute lg:right-0 lg:w-[420px] lg:h-full lg:max-h-full w-full h-full max-h-full">
               <div className="backdrop-blur-xl bg-white/98 border-t lg:border-t-0 lg:border-l border-neutral-200 shadow-2xl h-full flex flex-col overflow-hidden rounded-xl">
