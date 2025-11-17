@@ -478,7 +478,7 @@ export default function HeroMapSearch({
   return (
     <div className="w-full mx-auto px-4 sm:px-6 lg:px-12 py-8 lg:py-12">
       <div className="relative bg-white rounded-2xl shadow-2xl border border-neutral-200" style={{ overflow: 'visible', position: 'relative' }}>
-        <div className="relative h-[500px] md:h-[600px] lg:h-[700px] w-full overflow-hidden rounded-2xl" id="map-container" style={{ position: 'relative' }}>
+        <div className="relative h-[500px] md:h-[600px] lg:h-[700px] w-full rounded-2xl" id="map-container" style={{ position: 'relative', clipPath: 'inset(0 round 1rem)' }}>
       {/* Mapbox Background */}
       <Map
         ref={mapRef}
