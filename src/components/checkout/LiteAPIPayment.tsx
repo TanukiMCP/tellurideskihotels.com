@@ -67,24 +67,28 @@ export function LiteAPIPayment({
         return;
       }
 
-      // Determine environment - check secretKey format first (most reliable)
-      // Sandbox secretKeys start with 'pi_test_' according to docs
-      // Also check if we're on a development/staging domain
-      const isSandboxSecretKey = secretKey.startsWith('pi_test_');
-      const isDevDomain = typeof window !== 'undefined' && 
-        (window.location.hostname.includes('localhost') || 
-         window.location.hostname.includes('netlify.app'));
+      // Determine environment for LiteAPI payment SDK
+      // The SDK uses Stripe under the hood, so we need to tell it sandbox vs live
+      // Since user is using sandbox LiteAPI API key, default to sandbox mode
+      // Check hostname - if not production domain, use sandbox
+      const hostname = typeof window !== 'undefined' ? window.location.hostname : '';
+      const isProductionDomain = hostname === 'tellurideskihotels.com' || hostname === 'www.tellurideskihotels.com';
       
-      // Use sandbox if secretKey indicates sandbox OR we're on dev domain
-      // Default to sandbox for safety (user is using sandbox API key based on logs)
-      const publicKey = isSandboxSecretKey || isDevDomain ? 'sandbox' : 'live';
+      // Also check secretKey format as secondary indicator
+      // Sandbox secretKeys typically start with 'pi_test_' but may vary
+      const isSandboxSecretKey = secretKey.startsWith('pi_test_');
+      
+      // Default to sandbox unless we're on production domain AND secretKey indicates live
+      // This is safer since user is testing with sandbox API key
+      const publicKey = (isProductionDomain && !isSandboxSecretKey) ? 'live' : 'sandbox';
       
       console.log('[LiteAPI Payment] Initializing payment portal:', {
         publicKey,
+        hostname,
+        isProductionDomain,
         isSandboxSecretKey,
-        isDevDomain,
         hasSecretKey: !!secretKey,
-        secretKeyPreview: secretKey ? secretKey.substring(0, 20) + '...' : null,
+        secretKeyPreview: secretKey ? secretKey.substring(0, 30) + '...' : null,
         hasTransactionId: !!transactionId,
         transactionId,
         amount,
