@@ -170,6 +170,8 @@ const handler: Handler = async (event: HandlerEvent) => {
     path: event.path,
     hasApiKey: !!LITEAPI_PRIVATE_KEY,
     apiKeyPreview: LITEAPI_PRIVATE_KEY ? LITEAPI_PRIVATE_KEY.substring(0, 10) + '...' : 'NOT SET',
+    apiKeyEnv: isSandboxPrivate ? 'sandbox' : 'production',
+    hasPublicKey: !!LITEAPI_PUBLIC_KEY,
   });
 
   // Handle CORS preflight
