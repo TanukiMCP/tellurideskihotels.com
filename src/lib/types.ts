@@ -18,6 +18,11 @@ export interface SelectedRoom {
   children?: number;
   price: number;
   currency: string;
+  cancellationPolicy?: {
+    refundableTag?: string;
+    cancelPolicyInfos?: any[];
+    hotelRemarks?: string[];
+  };
 }
 
 export interface SelectedAddon {

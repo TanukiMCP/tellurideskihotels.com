@@ -1,4 +1,4 @@
-import type { Handler, HandlerEvent } from "@netlify/functions";
+import type { Handler, HandlerEvent, HandlerResponse } from "@netlify/functions";
 import { Resend } from 'resend';
 
 // Configuration
@@ -9,6 +9,19 @@ const RESEND_FROM_EMAIL = process.env.RESEND_FROM_EMAIL || 'booking@tellurideski
 
 // Initialize Resend
 const resend = RESEND_API_KEY ? new Resend(RESEND_API_KEY) : null;
+
+// Helper to create consistent response headers
+const createHeaders = (contentType: string = 'application/json'): { [key: string]: string } => ({
+  'Content-Type': contentType,
+  'Access-Control-Allow-Origin': '*',
+});
+
+const createCorsHeaders = (): { [key: string]: string } => ({
+  'Content-Type': 'text/plain',
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'Content-Type',
+  'Access-Control-Allow-Methods': 'POST, OPTIONS',
+});
 
 // Error class
 class LiteAPIBookingError extends Error {
@@ -267,12 +280,7 @@ const handler: Handler = async (event: HandlerEvent) => {
   if (event.httpMethod === 'OPTIONS') {
     return {
       statusCode: 200,
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Headers': 'Content-Type',
-        'Access-Control-Allow-Methods': 'POST, OPTIONS',
-        'Content-Type': 'text/plain',
-      },
+      headers: createCorsHeaders(),
       body: '',
     };
   }
@@ -281,10 +289,7 @@ const handler: Handler = async (event: HandlerEvent) => {
     console.log(`[${requestId}] [Booking Confirm Function] Invalid method: ${event.httpMethod}`);
     return {
       statusCode: 405,
-      headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*',
-      },
+      headers: createHeaders(),
       body: JSON.stringify({ error: 'Method not allowed' }),
     };
   }
@@ -294,10 +299,7 @@ const handler: Handler = async (event: HandlerEvent) => {
       console.log(`[${requestId}] [Booking Confirm Function] No request body`);
       return {
         statusCode: 400,
-        headers: {
-          'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': '*',
-        },
+        headers: createHeaders(),
         body: JSON.stringify({ error: 'Request body is required' }),
       };
     }
@@ -324,10 +326,7 @@ const handler: Handler = async (event: HandlerEvent) => {
       });
       return {
         statusCode: 400,
-        headers: {
-          'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': '*',
-        },
+        headers: createHeaders(),
         body: JSON.stringify({ error: 'prebookId, holder, and payment are required' }),
       };
     }
@@ -374,10 +373,7 @@ const handler: Handler = async (event: HandlerEvent) => {
 
     return {
       statusCode: 200,
-      headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*',
-      },
+      headers: createHeaders(),
       body: JSON.stringify(result),
     };
   } catch (error: any) {
@@ -392,10 +388,7 @@ const handler: Handler = async (event: HandlerEvent) => {
 
     return {
       statusCode: error.status || 500,
-      headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*',
-      },
+      headers: createHeaders(),
       body: JSON.stringify({
         error: error.message || 'Failed to confirm booking',
         code: error.code,
