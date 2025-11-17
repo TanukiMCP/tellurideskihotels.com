@@ -19,7 +19,7 @@ import { searchHotels } from '@/lib/liteapi/hotels';
 import { getTellurideSkiConditions } from '@/lib/snocountry/client';
 import { getTopHotels } from '@/lib/top-hotels';
 import { getCollection, type CollectionEntry } from 'astro:content';
-import FeaturedBlogSection from '@/components/blog/FeaturedBlogSection';
+import FeaturedBlogSection from '@/components/blog/FeaturedBlogSection.astro';
 
 const heroImage = getHomepageHeroImage();
 const heroImages = getImagesByCategory('hero') || getImagesByCategory('resort') || [];

@@ -51,7 +51,7 @@ const featuredUrl = `/blog/${data.category}/${featuredArticle.slug}`;
               <span class="rounded-lg bg-primary-50 px-3 py-1.5 text-xs font-semibold text-primary-700 uppercase tracking-wide">
                 {data.category.replace(/-/g, ' ')}
               </span>
-              <time dateTime={data.publishDate.toISOString()}>
+              <time datetime={data.publishDate.toISOString()}>
                 {formatDate(data.publishDate)}
               </time>
               <span>•</span>
@@ -74,7 +74,6 @@ const featuredUrl = `/blog/${data.category}/${featuredArticle.slug}`;
                 <div class="hidden sm:flex gap-2">
                   {data.tags.slice(0, 3).map((tag: string) => (
                     <span
-                      key={tag}
                       class="rounded-lg bg-neutral-100 px-2.5 py-1 text-xs font-medium text-neutral-700"
                     >
                       {tag}
@@ -97,7 +96,6 @@ const featuredUrl = `/blog/${data.category}/${featuredArticle.slug}`;
           
           return (
             <article
-              key={article.slug}
               class="group overflow-hidden rounded-2xl bg-white border border-neutral-200 shadow-card hover:shadow-card-hover transition-all duration-300 hover:-translate-y-1"
             >
               <a href={articleUrl} class="block">
@@ -114,7 +112,7 @@ const featuredUrl = `/blog/${data.category}/${featuredArticle.slug}`;
                     <span class="rounded-lg bg-primary-50 px-2.5 py-1 font-semibold text-primary-700 uppercase tracking-wide">
                       {articleData.category.replace(/-/g, ' ')}
                     </span>
-                    <time dateTime={articleData.publishDate.toISOString()}>
+                    <time datetime={articleData.publishDate.toISOString()}>
                       {formatDate(articleData.publishDate)}
                     </time>
                     <span>•</span>
