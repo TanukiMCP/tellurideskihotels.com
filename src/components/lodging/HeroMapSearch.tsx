@@ -478,7 +478,7 @@ export default function HeroMapSearch({
   return (
     <div className="w-full mx-auto px-4 sm:px-6 lg:px-12 py-8 lg:py-12">
       <div className="bg-white rounded-2xl shadow-2xl overflow-hidden border border-neutral-200">
-        <div className="relative h-[500px] md:h-[600px] lg:h-[700px] w-full overflow-hidden">
+        <div className="relative h-[500px] md:h-[600px] lg:h-[700px] w-full overflow-visible">
       {/* Mapbox Background */}
       <Map
         ref={mapRef}
@@ -743,7 +743,7 @@ export default function HeroMapSearch({
 
       {/* Hotel Cards Panel - Right Side (Desktop) / Bottom (Mobile) */}
       {hotels.length > 0 && (
-        <div className="absolute bottom-0 right-0 lg:top-0 lg:bottom-auto lg:right-0 lg:w-[420px] w-full max-h-[50vh] md:max-h-[60vh] lg:max-h-full lg:h-full z-[400] pointer-events-auto">
+        <div className="absolute bottom-0 right-0 lg:top-0 lg:bottom-auto lg:right-0 lg:w-[420px] w-full max-h-[50vh] md:max-h-[60vh] lg:max-h-full lg:h-full z-[400] pointer-events-auto" style={{ overflow: 'visible' }}>
           <div className="backdrop-blur-xl bg-white/98 border-t lg:border-t-0 lg:border-l border-neutral-200 shadow-2xl h-full flex flex-col overflow-hidden">
             {/* Header */}
             <div className="px-4 py-3 border-b border-neutral-200 flex items-center justify-between flex-shrink-0">
@@ -924,7 +924,7 @@ export default function HeroMapSearch({
 
       {/* Ski Trail Legend - Bottom Right (only show in Ski Trails mode) */}
       {isMapLoaded && mapStyle === 'skiTrails' && (
-        <div className="absolute bottom-4 right-4 lg:right-[460px] backdrop-blur-xl bg-white/95 rounded-xl shadow-2xl p-4 z-[500] border border-white/20 pointer-events-auto">
+        <div className="absolute bottom-4 right-4 lg:right-[460px] backdrop-blur-xl bg-white/95 rounded-xl shadow-2xl p-4 z-[500] border border-white/20 pointer-events-auto" style={{ overflow: 'visible' }}>
           <h3 className="text-sm font-bold text-neutral-900 mb-3 flex items-center gap-2">
             <svg className="w-4 h-4 text-primary-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
