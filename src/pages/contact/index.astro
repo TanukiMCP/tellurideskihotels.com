@@ -1,0 +1,296 @@
+---
+import PageLayout from '@/components/layout/PageLayout.astro';
+import Container from '@/components/layout/Container.astro';
+import Breadcrumbs from '@/components/seo/Breadcrumbs.astro';
+import { getImagesByCategory } from '@/lib/image-library';
+
+const resortImages = getImagesByCategory('resort');
+const heroImage = resortImages[0];
+---
+
+<PageLayout
+  title="Contact Us - Telluride Ski Hotels"
+  description="Get in touch with Telluride Ski Hotels. We're here to help with booking questions, travel planning, and Telluride recommendations."
+>
+  <!-- Hero Section with Background Image -->
+  <div class="relative py-32 lg:py-40 overflow-hidden">
+    {heroImage ? (
+      <>
+        <img 
+          src={heroImage.url}
+          alt="Telluride Mountain Views" 
+          class="absolute inset-0 w-full h-full object-cover"
+          loading="eager"
+        />
+        <div class="absolute inset-0 bg-gradient-to-r from-primary-900/95 via-primary-800/90 to-primary-900/95"></div>
+      </>
+    ) : (
+      <div class="absolute inset-0 bg-gradient-to-br from-primary-600 via-primary-700 to-primary-800"></div>
+    )}
+    
+    <Container class="relative">
+      <Breadcrumbs items={[
+        { label: 'Home', href: '/' },
+        { label: 'Contact', href: undefined },
+      ]} />
+      
+      <div class="max-w-4xl mx-auto text-center text-white mt-8">
+        <h1 class="text-4xl md:text-5xl lg:text-6xl mb-6 font-extrabold drop-shadow-2xl leading-tight">
+          Get in Touch
+        </h1>
+        <p class="text-xl lg:text-2xl leading-relaxed font-medium text-white/95 max-w-3xl mx-auto drop-shadow-lg">
+          Have questions about your booking, need travel advice, or want recommendations? We're here to help.
+        </p>
+      </div>
+    </Container>
+  </div>
+
+  <Container class="py-16 lg:py-20">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16">
+      <!-- Contact Form -->
+      <div>
+        <h2 class="text-3xl lg:text-4xl font-extrabold text-neutral-900 mb-6">Send Us a Message</h2>
+        <p class="text-lg text-neutral-600 mb-8 leading-relaxed">
+          Fill out the form below and we'll get back to you as soon as possible. We typically respond within 24 hours.
+        </p>
+
+        <form 
+          id="contact-form"
+          class="space-y-6"
+          onsubmit="return false;"
+        >
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label for="firstName" class="block text-sm font-semibold text-neutral-900 mb-2">
+                First Name *
+              </label>
+              <input
+                type="text"
+                id="firstName"
+                name="firstName"
+                required
+                class="w-full h-12 rounded-xl border-2 border-neutral-300 bg-white px-4 py-2.5 text-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:border-primary-500 transition-all duration-200"
+                placeholder="John"
+              />
+            </div>
+            <div>
+              <label for="lastName" class="block text-sm font-semibold text-neutral-900 mb-2">
+                Last Name *
+              </label>
+              <input
+                type="text"
+                id="lastName"
+                name="lastName"
+                required
+                class="w-full h-12 rounded-xl border-2 border-neutral-300 bg-white px-4 py-2.5 text-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:border-primary-500 transition-all duration-200"
+                placeholder="Doe"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label for="email" class="block text-sm font-semibold text-neutral-900 mb-2">
+              Email Address *
+            </label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              required
+              class="w-full h-12 rounded-xl border-2 border-neutral-300 bg-white px-4 py-2.5 text-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:border-primary-500 transition-all duration-200"
+              placeholder="your.email@example.com"
+            />
+          </div>
+
+          <div>
+            <label for="subject" class="block text-sm font-semibold text-neutral-900 mb-2">
+              Subject *
+            </label>
+            <select
+              id="subject"
+              name="subject"
+              required
+              class="w-full h-12 rounded-xl border-2 border-neutral-300 bg-white px-4 py-2.5 text-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:border-primary-500 transition-all duration-200"
+            >
+              <option value="">Select a topic...</option>
+              <option value="booking">Booking Question</option>
+              <option value="modification">Modify/Cancel Booking</option>
+              <option value="recommendation">Travel Recommendations</option>
+              <option value="technical">Technical Issue</option>
+              <option value="partnership">Partnership Inquiry</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="message" class="block text-sm font-semibold text-neutral-900 mb-2">
+              Message *
+            </label>
+            <textarea
+              id="message"
+              name="message"
+              rows="6"
+              required
+              class="w-full rounded-xl border-2 border-neutral-300 bg-white px-4 py-3 text-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:border-primary-500 transition-all duration-200 resize-none"
+              placeholder="Tell us how we can help..."
+            ></textarea>
+          </div>
+
+          <button
+            type="submit"
+            id="submit-btn"
+            class="w-full bg-primary-600 text-white hover:bg-primary-700 active:bg-primary-800 shadow-card hover:shadow-card-hover font-semibold px-8 py-3 text-lg rounded-xl transition-all duration-300 flex items-center justify-center gap-2"
+          >
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
+            </svg>
+            Send Message
+          </button>
+
+          <div id="form-message" class="hidden p-4 rounded-xl text-sm"></div>
+        </form>
+      </div>
+
+      <!-- Contact Information -->
+      <div>
+        <h2 class="text-3xl lg:text-4xl font-extrabold text-neutral-900 mb-6">Contact Information</h2>
+        <p class="text-lg text-neutral-600 mb-8 leading-relaxed">
+          Prefer to reach out directly? Here's how you can contact us.
+        </p>
+
+        <div class="space-y-6">
+          <!-- Email Card -->
+          <div class="flex items-start gap-4 p-6 bg-white rounded-xl border border-neutral-200 shadow-sm hover:shadow-md transition-shadow">
+            <div class="flex-shrink-0 w-12 h-12 bg-primary-100 rounded-xl flex items-center justify-center">
+              <svg class="w-6 h-6 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+              </svg>
+            </div>
+            <div>
+              <h3 class="font-bold text-lg text-neutral-900 mb-1">Email Us</h3>
+              <a 
+                href="mailto:tellurideskihotels@gmail.com" 
+                class="text-primary-600 hover:text-primary-700 font-medium transition-colors"
+              >
+                tellurideskihotels@gmail.com
+              </a>
+              <p class="text-sm text-neutral-600 mt-1">We'll respond within 24 hours</p>
+            </div>
+          </div>
+
+          <!-- Response Time Card -->
+          <div class="flex items-start gap-4 p-6 bg-white rounded-xl border border-neutral-200 shadow-sm hover:shadow-md transition-shadow">
+            <div class="flex-shrink-0 w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
+              <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <div>
+              <h3 class="font-bold text-lg text-neutral-900 mb-1">Response Time</h3>
+              <p class="text-neutral-700">We typically respond to all inquiries within 24 hours, Monday through Friday.</p>
+              <p class="text-sm text-neutral-600 mt-2">For urgent booking issues, please include your confirmation number in your message.</p>
+            </div>
+          </div>
+
+          <!-- Help Topics Card -->
+          <div class="flex items-start gap-4 p-6 bg-white rounded-xl border border-neutral-200 shadow-sm hover:shadow-md transition-shadow">
+            <div class="flex-shrink-0 w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
+              <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+              </svg>
+            </div>
+            <div>
+              <h3 class="font-bold text-lg text-neutral-900 mb-3">Common Questions</h3>
+              <ul class="space-y-2 text-neutral-700">
+                <li class="flex items-start gap-2">
+                  <span class="text-primary-600 mt-1">•</span>
+                  <span>Booking modifications or cancellations</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <span class="text-primary-600 mt-1">•</span>
+                  <span>Hotel recommendations for your dates</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <span class="text-primary-600 mt-1">•</span>
+                  <span>Travel planning and itinerary advice</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <span class="text-primary-600 mt-1">•</span>
+                  <span>Technical issues with the website</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <span class="text-primary-600 mt-1">•</span>
+                  <span>Partnership and business inquiries</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- Additional Info Card -->
+        <div class="mt-8 p-6 bg-primary-50 border-2 border-primary-200 rounded-xl">
+          <h3 class="font-semibold text-primary-900 mb-2">Need Immediate Help?</h3>
+          <p class="text-sm text-primary-800 leading-relaxed">
+            If you have an urgent booking issue, please include your confirmation number in your email. 
+            For hotel-specific questions (check-in times, amenities, etc.), we recommend contacting the hotel directly using the information provided in your booking confirmation email.
+          </p>
+        </div>
+      </div>
+    </div>
+  </Container>
+
+  <script>
+    const form = document.getElementById('contact-form') as HTMLFormElement;
+    const submitBtn = document.getElementById('submit-btn') as HTMLButtonElement;
+    const messageDiv = document.getElementById('form-message') as HTMLDivElement;
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const formData = new FormData(form);
+      const data = {
+        firstName: formData.get('firstName'),
+        lastName: formData.get('lastName'),
+        email: formData.get('email'),
+        subject: formData.get('subject'),
+        message: formData.get('message'),
+      };
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Sending...';
+      messageDiv.classList.add('hidden');
+
+      try {
+        // Create mailto link with form data
+        const subject = encodeURIComponent(`Contact Form: ${data.subject}`);
+        const body = encodeURIComponent(
+          `Name: ${data.firstName} ${data.lastName}\n` +
+          `Email: ${data.email}\n` +
+          `Subject: ${data.subject}\n\n` +
+          `Message:\n${data.message}`
+        );
+        
+        window.location.href = `mailto:tellurideskihotels@gmail.com?subject=${subject}&body=${body}`;
+        
+        // Show success message
+        messageDiv.className = 'p-4 rounded-xl text-sm bg-green-50 border-2 border-green-200 text-green-800';
+        messageDiv.textContent = 'Your email client should open. If not, please email us directly at tellurideskihotels@gmail.com';
+        messageDiv.classList.remove('hidden');
+        
+        // Reset form after a moment
+        setTimeout(() => {
+          form.reset();
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg> Send Message';
+        }, 3000);
+      } catch (error) {
+        messageDiv.className = 'p-4 rounded-xl text-sm bg-red-50 border-2 border-red-200 text-red-800';
+        messageDiv.textContent = 'There was an error. Please email us directly at tellurideskihotels@gmail.com';
+        messageDiv.classList.remove('hidden');
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg> Send Message';
+      }
+    });
+  </script>
+</PageLayout>
+

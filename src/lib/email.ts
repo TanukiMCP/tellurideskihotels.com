@@ -160,7 +160,7 @@ export async function sendBookingConfirmation(data: BookingEmailData): Promise<b
           <!-- Footer -->
           <tr>
             <td style="padding: 30px; text-align: center; background-color: #f8f9fa; border-top: 1px solid #e5e7eb;">
-              <p style="margin: 0 0 10px 0; color: #6b7280; font-size: 14px;">Questions? Contact us at <a href="mailto:support@tellurideskihotels.com" style="color: #0066CC; text-decoration: none;">support@tellurideskihotels.com</a></p>
+              <p style="margin: 0 0 10px 0; color: #6b7280; font-size: 14px;">Questions? Contact us at <a href="mailto:tellurideskihotels@gmail.com" style="color: #0066CC; text-decoration: none;">tellurideskihotels@gmail.com</a></p>
               <p style="margin: 0; color: #9ca3af; font-size: 12px;">&copy; ${new Date().getFullYear()} Telluride Ski Hotels. All rights reserved.</p>
             </td>
           </tr>
@@ -196,7 +196,7 @@ Total: ${new Intl.NumberFormat('en-US', { style: 'currency', currency: data.curr
 
 View your booking: ${SITE_URL}/booking/confirmation/${data.bookingId}
 
-Questions? Contact us at support@tellurideskihotels.com
+Questions? Contact us at tellurideskihotels@gmail.com
     `.trim());
 
     const response = await fetch(mailgunUrl, {

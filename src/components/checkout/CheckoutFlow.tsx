@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/Input';
 import { LiteAPIPayment } from './LiteAPIPayment';
 import { formatCurrency, calculateNights } from '@/lib/utils';
 import type { SelectedRoom, SelectedAddon, GuestInfo } from '@/lib/types';
-import { Shield, Phone, Mail, CheckCircle2, AlertCircle, Info } from 'lucide-react';
+import { Shield, Mail, CheckCircle2, Info } from 'lucide-react';
 
 export interface CheckoutFlowProps {
   hotelId: string;
@@ -117,11 +117,7 @@ export function CheckoutFlow({ hotelId, hotelName, room, addons = [], onComplete
             </div>
           </div>
           <div className="flex items-center gap-6 text-sm text-neutral-600">
-            <a href="tel:+1-970-555-0123" className="flex items-center gap-2 hover:text-primary-600 transition-colors">
-              <Phone className="w-4 h-4" />
-              <span className="font-medium">(970) 555-0123</span>
-            </a>
-            <a href="mailto:support@tellurideskihotels.com" className="flex items-center gap-2 hover:text-primary-600 transition-colors">
+            <a href="mailto:tellurideskihotels@gmail.com" className="flex items-center gap-2 hover:text-primary-600 transition-colors">
               <Mail className="w-4 h-4" />
               <span className="font-medium">Need Help?</span>
             </a>
@@ -145,8 +141,8 @@ export function CheckoutFlow({ hotelId, hotelName, room, addons = [], onComplete
             <span className="font-semibold">Best Price Guarantee</span>
           </div>
           <div className="flex items-center gap-2 text-primary-900">
-            <Phone className="w-5 h-5" />
-            <span className="font-semibold">24/7 Support</span>
+            <Mail className="w-5 h-5" />
+            <span className="font-semibold">Email Support</span>
           </div>
         </div>
       </div>
@@ -363,14 +359,11 @@ export function CheckoutFlow({ hotelId, hotelName, room, addons = [], onComplete
               <div className="border-t border-neutral-200 pt-4 -mx-6 px-6">
                 <h5 className="font-semibold text-neutral-900 mb-3 text-sm">Need Assistance?</h5>
                 <div className="space-y-2 text-sm">
-                  <a href="tel:+1-970-555-0123" className="flex items-center gap-2 text-neutral-700 hover:text-primary-600 transition-colors">
-                    <Phone className="w-4 h-4" />
-                    <span>(970) 555-0123</span>
-                  </a>
-                  <a href="mailto:support@tellurideskihotels.com" className="flex items-center gap-2 text-neutral-700 hover:text-primary-600 transition-colors">
+                  <a href="mailto:tellurideskihotels@gmail.com" className="flex items-center gap-2 text-neutral-700 hover:text-primary-600 transition-colors">
                     <Mail className="w-4 h-4" />
-                    <span>support@tellurideskihotels.com</span>
+                    <span>tellurideskihotels@gmail.com</span>
                   </a>
+                  <p className="text-xs text-neutral-500 mt-2">We typically respond within 24 hours</p>
                 </div>
                 <div className="mt-4 pt-4 border-t border-neutral-100">
                   <div className="flex items-center gap-2 text-primary-700">

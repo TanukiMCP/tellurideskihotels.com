@@ -5,7 +5,7 @@ import { Resend } from 'resend';
 const LITEAPI_BOOKING_BASE_URL = 'https://book.liteapi.travel/v3.0';
 const LITEAPI_PRIVATE_KEY = process.env.LITEAPI_PRIVATE_KEY || '';
 const RESEND_API_KEY = process.env.RESEND_API_KEY || '';
-const RESEND_FROM_EMAIL = process.env.RESEND_FROM_EMAIL || 'booking@tellurideskihotels.com';
+const RESEND_FROM_EMAIL = process.env.RESEND_FROM_EMAIL || 'tellurideskihotels@gmail.com';
 
 // Initialize Resend
 const resend = RESEND_API_KEY ? new Resend(RESEND_API_KEY) : null;
