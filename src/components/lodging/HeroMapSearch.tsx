@@ -476,7 +476,7 @@ export default function HeroMapSearch({
   };
 
   return (
-    <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12">
+    <div className="w-full mx-auto px-4 sm:px-6 lg:px-12 py-8 lg:py-12">
       <div className="bg-white rounded-2xl shadow-2xl overflow-hidden border border-neutral-200">
         <div className="relative h-[500px] md:h-[600px] lg:h-[700px] w-full overflow-hidden">
       {/* Mapbox Background */}
@@ -502,7 +502,6 @@ export default function HeroMapSearch({
           if (hotel.hotel_id !== hoveredHotelId) return null; // Only show marker for selected hotel
 
           const style = getMarkerStyle(hotel.hotel_id);
-          const minPrice = minPrices[hotel.hotel_id];
 
           return (
             <Marker
@@ -539,19 +538,6 @@ export default function HeroMapSearch({
                     strokeWidth={2.5}
                   />
                 </div>
-                
-                {/* Price Label */}
-                {minPrice && minPrice > 0 && (
-                  <div 
-                    className="absolute -top-10 left-1/2 transform -translate-x-1/2 bg-white px-2.5 py-1.5 rounded-lg shadow-xl border border-neutral-200 whitespace-nowrap animate-fade-in-up"
-                  >
-                    <div className="text-[10px] text-neutral-500 uppercase tracking-wide">From</div>
-                    <div className="text-xs font-bold text-primary-600">
-                      ${Math.round(minPrice)}
-                    </div>
-                    <div className="text-[10px] text-neutral-600">per night</div>
-                  </div>
-                )}
               </div>
             </Marker>
           );
