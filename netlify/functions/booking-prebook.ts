@@ -3,6 +3,18 @@ import type { Handler, HandlerEvent, HandlerResponse } from "@netlify/functions"
 // Configuration
 const LITEAPI_BOOKING_BASE_URL = 'https://book.liteapi.travel/v3.0';
 const LITEAPI_PRIVATE_KEY = process.env.LITEAPI_PRIVATE_KEY || '';
+const LITEAPI_PUBLIC_KEY = process.env.LITEAPI_PUBLIC_KEY || '';
+
+// Validate API key environment match
+const isSandboxPrivate = LITEAPI_PRIVATE_KEY.startsWith('sand_');
+const isSandboxPublic = LITEAPI_PUBLIC_KEY && !LITEAPI_PUBLIC_KEY.startsWith('prod_');
+if (LITEAPI_PUBLIC_KEY && isSandboxPrivate !== isSandboxPublic) {
+  console.warn('[Prebook Function] ⚠️ API key environment mismatch detected:', {
+    privateKeyEnv: isSandboxPrivate ? 'sandbox' : 'production',
+    publicKeyEnv: isSandboxPublic ? 'sandbox' : 'production',
+    warning: 'Keys should match the same environment (both sandbox or both production)',
+  });
+}
 
 // Helper to create consistent response headers
 const createHeaders = (contentType: string = 'application/json'): { [key: string]: string } => ({
