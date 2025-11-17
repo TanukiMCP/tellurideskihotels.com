@@ -7,7 +7,7 @@
  * - Beautiful glassmorphism UI design
  */
 import { useState, useEffect, useRef, useCallback } from 'react';
-import Map, { NavigationControl } from 'react-map-gl/mapbox';
+import Map, { Marker, NavigationControl } from 'react-map-gl/mapbox';
 import type { MapRef } from 'react-map-gl/mapbox';
 import { format, addDays } from 'date-fns';
 import { Search, Calendar, Users, X, ChevronDown, ChevronUp, Star, MapPin, ExternalLink, Hotel } from 'lucide-react';
@@ -441,8 +441,40 @@ export default function HeroMapSearch({
     setExpandedHotelId(expandedHotelId === hotelId ? null : hotelId);
   }, [expandedHotelId]);
 
+  // Handle card hover - show marker and pan to hotel
+  const handleCardHover = useCallback((hotel: LiteAPIHotel | null) => {
+    if (hotel && hotel.location?.latitude && hotel.location?.longitude && mapRef.current) {
+      setHoveredHotelId(hotel.hotel_id);
+      
+      // Smoothly pan to hotel location
+      mapRef.current.easeTo({
+        center: [hotel.location.longitude, hotel.location.latitude],
+        zoom: Math.max(viewState.zoom, 14.5),
+        duration: 500,
+        padding: { top: 50, bottom: 50, left: 50, right: 50 },
+      });
+    } else {
+      setHoveredHotelId(null);
+    }
+  }, [viewState.zoom]);
+
+  // Get marker styling
+  const getMarkerStyle = (hotelId: string) => {
+    const isHovered = hotelId === hoveredHotelId;
+    const isFeatured = featuredHotelIds.includes(hotelId);
+    
+    return {
+      size: isHovered ? 44 : isFeatured ? 36 : 32,
+      color: isHovered ? '#059669' : isFeatured ? '#10b981' : '#1e40af',
+      zIndex: isHovered ? 1000 : isFeatured ? 600 : 500,
+      glow: isHovered,
+    };
+  };
+
   return (
-    <div className="relative h-[650px] lg:h-[750px] w-full overflow-hidden">
+    <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12">
+      <div className="bg-white rounded-2xl shadow-2xl overflow-hidden border border-neutral-200">
+        <div className="relative h-[500px] md:h-[600px] lg:h-[700px] w-full overflow-hidden">
       {/* Mapbox Background */}
       <Map
         ref={mapRef}
@@ -459,6 +491,67 @@ export default function HeroMapSearch({
       >
         {/* Navigation Controls */}
         <NavigationControl position="top-right" showCompass={false} />
+
+        {/* Hotel Markers - Only show when hovering */}
+        {hotels.map((hotel) => {
+          if (!hotel.location?.latitude || !hotel.location?.longitude) return null;
+          if (hotel.hotel_id !== hoveredHotelId) return null; // Only show marker for hovered hotel
+
+          const style = getMarkerStyle(hotel.hotel_id);
+          const minPrice = minPrices[hotel.hotel_id];
+
+          return (
+            <Marker
+              key={hotel.hotel_id}
+              longitude={hotel.location.longitude}
+              latitude={hotel.location.latitude}
+              anchor="center"
+            >
+              <div
+                className="cursor-pointer transition-all duration-300"
+                style={{ zIndex: style.zIndex }}
+              >
+                {/* Main Marker Circle */}
+                <div
+                  className="hover:scale-110 transition-transform duration-300"
+                  style={{
+                    backgroundColor: style.color,
+                    width: `${style.size}px`,
+                    height: `${style.size}px`,
+                    borderRadius: '50%',
+                    border: '3px solid white',
+                    boxShadow: style.glow 
+                      ? '0 4px 20px rgba(5, 150, 105, 0.8), 0 0 0 8px rgba(5, 150, 105, 0.2)'
+                      : '0 4px 12px rgba(0,0,0,0.4)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    animation: style.glow ? 'pulse-marker 2s ease-in-out infinite' : 'none',
+                  }}
+                >
+                  <Hotel 
+                    size={style.size * 0.5}
+                    color="white"
+                    strokeWidth={2.5}
+                  />
+                </div>
+                
+                {/* Price Label */}
+                {minPrice && minPrice > 0 && (
+                  <div 
+                    className="absolute -top-10 left-1/2 transform -translate-x-1/2 bg-white px-2.5 py-1.5 rounded-lg shadow-xl border border-neutral-200 whitespace-nowrap animate-fade-in-up"
+                  >
+                    <div className="text-[10px] text-neutral-500 uppercase tracking-wide">From</div>
+                    <div className="text-xs font-bold text-primary-600">
+                      ${Math.round(minPrice)}
+                    </div>
+                    <div className="text-[10px] text-neutral-600">per night</div>
+                  </div>
+                )}
+              </div>
+            </Marker>
+          );
+        })}
       </Map>
 
       {/* Subtle vignette */}
@@ -660,8 +753,8 @@ export default function HeroMapSearch({
 
       {/* Hotel Cards Panel - Right Side (Desktop) / Bottom (Mobile) */}
       {hotels.length > 0 && (
-        <div className="absolute bottom-0 right-0 lg:top-0 lg:bottom-auto lg:right-0 lg:w-[420px] w-full max-h-[60vh] lg:max-h-full lg:h-full z-[400] pointer-events-auto">
-          <div className="backdrop-blur-xl bg-white/95 lg:bg-white/98 border-t lg:border-t-0 lg:border-l border-white/20 shadow-2xl h-full flex flex-col overflow-hidden">
+        <div className="absolute bottom-0 right-0 lg:top-0 lg:bottom-auto lg:right-0 lg:w-[420px] w-full max-h-[50vh] md:max-h-[60vh] lg:max-h-full lg:h-full z-[400] pointer-events-auto">
+          <div className="backdrop-blur-xl bg-white/98 border-t lg:border-t-0 lg:border-l border-neutral-200 shadow-2xl h-full flex flex-col overflow-hidden">
             {/* Header */}
             <div className="px-4 py-3 border-b border-neutral-200 flex items-center justify-between flex-shrink-0">
               <div>
@@ -692,8 +785,8 @@ export default function HeroMapSearch({
                         ? 'border-primary-300 shadow-lg' 
                         : 'border-transparent hover:border-neutral-200'
                     }`}
-                    onMouseEnter={() => setHoveredHotelId(hotel.hotel_id)}
-                    onMouseLeave={() => setHoveredHotelId(null)}
+                    onMouseEnter={() => handleCardHover(hotel)}
+                    onMouseLeave={() => handleCardHover(null)}
                   >
                     {/* Compact Preview */}
                     <div 
@@ -838,9 +931,12 @@ export default function HeroMapSearch({
         </div>
       )}
 
+        </div>
+      </div>
+
       {/* Ski Trail Legend - Bottom Right (only show in Ski Trails mode) */}
       {isMapLoaded && mapStyle === 'skiTrails' && (
-        <div className="absolute bottom-4 right-4 lg:right-[460px] backdrop-blur-xl bg-white/95 rounded-xl shadow-2xl p-4 z-[500] border border-white/20">
+        <div className="absolute bottom-4 right-4 lg:right-[460px] backdrop-blur-xl bg-white/95 rounded-xl shadow-2xl p-4 z-[500] border border-white/20 pointer-events-auto">
           <h3 className="text-sm font-bold text-neutral-900 mb-3 flex items-center gap-2">
             <svg className="w-4 h-4 text-primary-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
@@ -899,6 +995,30 @@ export default function HeroMapSearch({
           animation: scale-in 0.5s ease-out;
         }
 
+        @keyframes pulse-marker {
+          0%, 100% {
+            box-shadow: 0 4px 20px rgba(5, 150, 105, 0.8), 0 0 0 0 rgba(5, 150, 105, 0.4);
+          }
+          50% {
+            box-shadow: 0 4px 20px rgba(5, 150, 105, 1), 0 0 0 12px rgba(5, 150, 105, 0);
+          }
+        }
+
+        @keyframes fade-in-up {
+          from {
+            opacity: 0;
+            transform: translate(-50%, 10px);
+          }
+          to {
+            opacity: 1;
+            transform: translate(-50%, 0);
+          }
+        }
+
+        .animate-fade-in-up {
+          animation: fade-in-up 0.3s ease-out;
+        }
+
         /* Smooth scrolling for cards */
         .overflow-y-auto {
           scrollbar-width: thin;
@@ -922,6 +1042,8 @@ export default function HeroMapSearch({
           background-color: rgba(0, 0, 0, 0.3);
         }
       `}</style>
+        </div>
+      </div>
     </div>
   );
 }
