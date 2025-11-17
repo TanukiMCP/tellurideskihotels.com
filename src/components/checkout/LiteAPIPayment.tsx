@@ -69,17 +69,20 @@ export function LiteAPIPayment({
 
       // Determine environment for LiteAPI payment SDK
       // The SDK uses Stripe under the hood, so we need to tell it sandbox vs live
-      // Priority: Check secretKey format first (most reliable indicator)
-      // Sandbox secretKeys typically start with 'pi_test_' but may vary
-      const isSandboxSecretKey = secretKey.startsWith('pi_test_');
-      
-      // Check hostname as secondary indicator
+      // Since we can't reliably detect from secretKey format (LiteAPI may use different formats),
+      // we check the hostname - if it's a Netlify preview or localhost, use sandbox
+      // Otherwise, default to sandbox for safety (user is testing with sandbox API keys)
       const hostname = typeof window !== 'undefined' ? window.location.hostname : '';
       const isProductionDomain = hostname === 'tellurideskihotels.com' || hostname === 'www.tellurideskihotels.com';
+      const isNetlifyPreview = hostname.includes('netlify.app') || hostname.includes('netlify.app');
+      const isLocalhost = hostname === 'localhost' || hostname === '127.0.0.1';
       
-      // Use sandbox if secretKey indicates sandbox OR we're not on production domain
-      // Always prioritize secretKey format over domain (user might test on prod domain with sandbox keys)
-      const publicKey = isSandboxSecretKey || !isProductionDomain ? 'sandbox' : 'live';
+      // Check secretKey format as fallback (though LiteAPI may not follow standard Stripe format)
+      const isSandboxSecretKey = secretKey.startsWith('pi_test_');
+      
+      // Default to sandbox unless we're on production domain AND secretKey doesn't indicate sandbox
+      // This is safer since user is testing with sandbox API keys
+      const publicKey = (isProductionDomain && !isSandboxSecretKey && !isNetlifyPreview && !isLocalhost) ? 'live' : 'sandbox';
       
       console.log('[LiteAPI Payment] Initializing payment portal:', {
         publicKey,
