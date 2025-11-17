@@ -15,10 +15,12 @@
 
 **Pivot to High-Intent Group Planning Content:**
 - **17 conversion-focused articles** (Days 14-30) targeting group travel planning
+- **3 affordable family trip articles** (Days 55.5, 68.5, 69.5) focusing on budget accommodations and free activities
 - **Interactive planning tools** embedded in every group planning article
 - **Cost breakdown calculators** that drive direct bookings
 - **Event-based trip planners** (weddings, birthdays, memorials, corporate retreats)
 - **Group type targeting** (families, friends, couples, solo, corporate)
+- **Budget-conscious content** targeting families who need affordable options with free/low-cost activities
 
 **Why This Works:**
 - Higher search intent = closer to booking
@@ -587,6 +589,16 @@
 - Category: planning-tips
 - Tags: budget, savings, tips
 
+**Day 55.5: "Affordable Family Trip to Telluride: Budget Lodging & Free Activities Guide"** 🎯 CONVERSION FOCUS 💰
+- Keyword: affordable telluride family trip + telluride budget family vacation
+- Word Count: 3,000
+- Type: Comprehensive Guide with Interactive Tools
+- Category: planning-tips
+- Tags: budget, family, affordable, free-activities, cost-saving
+- **Tools Required:** BudgetToItineraryPlanner, GroupCostCalculator, HotelSplitCalculator
+- **Focus:** Budget-friendly accommodations, free activities, low-cost dining, ways to save money daily
+- **Special Focus:** Links to budget hotels, free hiking trails, free gondola rides, free events, budget dining options
+
 **Day 56: "Telluride Sushi & Asian Restaurants Guide"** 🆕
 - Keyword: telluride sushi (250/mo)
 - Word Count: 2,200
@@ -686,12 +698,32 @@
 - Category: dining-nightlife
 - Tags: family, kids, restaurants
 
+**Day 68.5: "Telluride Free Activities: Fun Things to Do Without Spending Money"** 🎯 CONVERSION FOCUS 💰
+- Keyword: free things to do telluride + telluride free activities
+- Word Count: 2,800
+- Type: Comprehensive Guide with Interactive Tools
+- Category: activity-guides
+- Tags: free-activities, budget, family-friendly, hiking, outdoor
+- **Tools Required:** BudgetToItineraryPlanner, GroupTypeRecommender
+- **Focus:** Free hiking trails, free gondola rides, free events, scenic drives, free photography spots, free winter activities
+- **Special Focus:** Complete guide to enjoying Telluride without spending money, links to free activity locations, seasonal free events calendar
+
 **Day 69: "Telluride with Kids: Family Vacation Guide"**
 - Keyword: telluride with kids (390/mo)
 - Word Count: 2,600
 - Type: Comprehensive Guide
 - Category: planning-tips
 - Tags: family, kids, activities
+
+**Day 69.5: "Budget-Friendly Telluride Family Vacation: Complete Cost-Saving Guide"** 🎯 CONVERSION FOCUS 💰
+- Keyword: budget telluride family vacation + affordable telluride with kids
+- Word Count: 3,200
+- Type: Comprehensive Guide with Interactive Tools
+- Category: planning-tips
+- Tags: budget, family, affordable, cost-saving, planning
+- **Tools Required:** GroupCostCalculator, BudgetToItineraryPlanner, HotelSplitCalculator, SeasonComparison
+- **Focus:** Budget accommodations for families, free/low-cost activities, meal planning tips, ways to save on lift tickets, off-season travel
+- **Special Focus:** Complete itinerary for 3-5 day budget family trip, cost breakdowns, links to budget hotels and free activities, money-saving strategies
 
 **Day 70: "Kids Ski Free Telluride: Programs & Deals"**
 - Keyword: kids ski free telluride (140/mo)
