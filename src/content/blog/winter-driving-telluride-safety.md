@@ -3,14 +3,20 @@
   "id": "winter-driving-telluride-safety",
   "title": "Winter Driving to Telluride: Safety Tips & Road Conditions",
   "slug": "winter-driving-telluride-safety",
-  "status": "scheduled",
+  "status": "published",
   "category": "planning-tips",
   "author": "Telluride Ski Hotels Team",
   "publishDate": "2025-11-16T15:00:00Z",
   "seo": {
     "metaTitle": "Winter Driving to Telluride: Safety Guide & Road Conditions",
     "metaDescription": "Essential winter driving safety tips for Telluride. Learn Colorado chain laws, I-70 conditions, emergency prep, and local driving strategies for safe mountain travel.",
-    "keywords": ["telluride winter driving", "i70 winter conditions", "colorado chain laws", "mountain driving safety", "telluride road conditions"],
+    "keywords": [
+      "telluride winter driving",
+      "i70 winter conditions",
+      "colorado chain laws",
+      "mountain driving safety",
+      "telluride road conditions"
+    ],
     "canonical": "https://tellurideskihotels.com/blog/planning-tips/winter-driving-telluride-safety"
   },
   "featured": false,
@@ -19,10 +25,27 @@
   "excerpt": "Complete winter driving safety guide for Telluride. Colorado chain laws, I-70 conditions, vehicle prep, emergency supplies, and local tips for safe mountain driving.",
   "wordCount": 2500,
   "readingTime": 13,
-  "relatedHotels": ["madeline-hotel", "peaks-resort", "hotel-telluride"],
-  "relatedArticles": ["denver-to-telluride-drive-guide", "colorado-springs-to-telluride-drive", "telluride-weather-guide"],
-  "tags": ["winter-driving", "safety", "i70", "locals", "weather"],
-  "seasonalRelevance": ["winter"]
+  "relatedHotels": [
+    "madeline-hotel",
+    "peaks-resort",
+    "hotel-telluride"
+  ],
+  "relatedArticles": [
+    "denver-to-telluride-drive-guide",
+    "colorado-springs-to-telluride-drive",
+    "telluride-weather-guide"
+  ],
+  "tags": [
+    "winter-driving",
+    "safety",
+    "i70",
+    "locals",
+    "weather"
+  ],
+  "seasonalRelevance": [
+    "winter"
+  ],
+  "updatedDate": "2025-11-17T14:10:23.602Z"
 }
 ---
 
