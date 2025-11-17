@@ -477,9 +477,8 @@ export default function HeroMapSearch({
 
   return (
     <div className="w-full mx-auto px-4 sm:px-6 lg:px-12 py-8 lg:py-12">
-      <div className="relative">
-        <div className="bg-white rounded-2xl shadow-2xl overflow-hidden border border-neutral-200">
-          <div className="relative h-[500px] md:h-[600px] lg:h-[700px] w-full">
+      <div className="relative bg-white rounded-2xl shadow-2xl border border-neutral-200" style={{ overflow: 'visible', minHeight: '500px' }}>
+        <div className="relative h-[500px] md:h-[600px] lg:h-[700px] w-full overflow-hidden rounded-2xl">
       {/* Mapbox Background */}
       <Map
         ref={mapRef}
@@ -822,7 +821,14 @@ export default function HeroMapSearch({
         {/* Overlays positioned relative to outer container to prevent clipping on scroll */}
         {/* Hotel Cards Panel - Right Side (Desktop) / Bottom (Mobile) */}
         {hotels.length > 0 && (
-          <div className="absolute bottom-4 right-4 lg:top-4 lg:bottom-auto lg:right-4 lg:w-[420px] w-[calc(100%-2rem)] max-h-[calc(100%-2rem)] lg:max-h-[calc(100%-2rem)] z-[400] pointer-events-auto" style={{ height: 'calc(100% - 2rem)' }}>
+          <div className="absolute right-4 z-[400] pointer-events-auto" style={{ 
+            top: '1rem', 
+            bottom: '1rem',
+            width: 'calc(100% - 2rem)',
+            height: 'calc(100% - 2rem)',
+            maxHeight: 'calc(100% - 2rem)'
+          }}>
+            <div className="lg:absolute lg:right-0 lg:w-[420px] lg:h-full lg:max-h-full w-full h-full max-h-full">
             <div className="backdrop-blur-xl bg-white/98 border-t lg:border-t-0 lg:border-l border-neutral-200 shadow-2xl h-full flex flex-col overflow-hidden rounded-xl">
               {/* Header */}
               <div className="px-4 py-3 border-b border-neutral-200 flex items-center justify-between flex-shrink-0">
@@ -997,6 +1003,7 @@ export default function HeroMapSearch({
                   );
                 })}
               </div>
+            </div>
             </div>
           </div>
         )}
