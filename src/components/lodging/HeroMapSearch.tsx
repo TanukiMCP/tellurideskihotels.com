@@ -478,9 +478,10 @@ export default function HeroMapSearch({
   return (
     <div className="w-full mx-auto px-4 sm:px-6 lg:px-12 py-8 lg:py-12">
       <div className="relative bg-white rounded-2xl shadow-2xl border border-neutral-200" style={{ overflow: 'visible', position: 'relative' }}>
-        <div className="relative h-[500px] md:h-[600px] lg:h-[700px] w-full overflow-hidden rounded-2xl" id="map-container" style={{ position: 'relative' }}>
-      {/* Mapbox Background */}
-      <Map
+        <div className="relative h-[500px] md:h-[600px] lg:h-[700px] w-full overflow-visible rounded-2xl" id="map-container" style={{ position: 'relative' }}>
+          <div className="absolute inset-0 overflow-hidden rounded-2xl" style={{ clipPath: 'inset(0 round 1rem)' }}>
+            {/* Mapbox Background */}
+            <Map
         ref={mapRef}
         {...viewState}
         onMove={(evt) => setViewState(evt.viewState)}
@@ -544,11 +545,11 @@ export default function HeroMapSearch({
         })}
       </Map>
 
-      {/* Subtle vignette */}
-      <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-transparent to-black/10 pointer-events-none" />
+            {/* Subtle vignette */}
+            <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-transparent to-black/10 pointer-events-none" />
 
-      {/* Map Controls - Top Left Corner */}
-      <div className="absolute top-4 left-4 z-[500] pointer-events-auto">
+            {/* Map Controls - Top Left Corner */}
+            <div className="absolute top-4 left-4 z-[500] pointer-events-auto">
         <div className="flex flex-col lg:flex-row gap-2 lg:items-start">
           {/* Map Style Selector & Search Form */}
           <div className="flex flex-col lg:flex-row gap-2">
@@ -658,9 +659,9 @@ export default function HeroMapSearch({
         </div>
       </div>
 
-      {/* Mobile Search Modal */}
-      {showMobileSearch && (
-        <div className="lg:hidden absolute inset-0 bg-black/50 backdrop-blur-sm z-[600] flex items-center justify-center p-4">
+            {/* Mobile Search Modal */}
+            {showMobileSearch && (
+              <div className="lg:hidden absolute inset-0 bg-black/50 backdrop-blur-sm z-[600] flex items-center justify-center p-4">
           <div className="bg-white rounded-2xl shadow-2xl p-6 w-full max-w-md animate-scale-in">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg font-bold text-neutral-900">Search Hotels</h3>
@@ -736,13 +737,13 @@ export default function HeroMapSearch({
                   </>
                 )}
               </button>
-            </form>
-          </div>
-        </div>
-      )}
+                </form>
+              </div>
+            </div>
+          )}
 
 
-      {/* Custom Styling */}
+          {/* Custom Styling */}
       <style>{`
         @keyframes expand {
           from {
@@ -815,9 +816,9 @@ export default function HeroMapSearch({
           background-color: rgba(0, 0, 0, 0.3);
         }
       `}</style>
-        </div>
+          </div>
         
-        {/* Overlays positioned relative to parent container (same level as map container) */}
+        {/* Overlays positioned inside map container to scroll with it */}
         {/* Hotel Cards Panel - Right Side (Desktop) / Bottom (Mobile) */}
         {hotels.length > 0 && (
           <div className="absolute right-4 z-[400] pointer-events-auto" style={{ 
