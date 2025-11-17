@@ -133,17 +133,31 @@ async function prebook(request: { offerId: string; usePaymentSdk?: boolean }) {
   });
   
   // Extract total from various possible locations
-  const total = data?.total || data?.retailRate?.total?.[0]?.amount || data?.suggestedSellingPrice?.amount || 0;
-  const currency = data?.currency || data?.retailRate?.total?.[0]?.currency || data?.suggestedSellingPrice?.currency || 'USD';
+  // Check suggestedSellingPrice first (common in prebook responses)
+  const total = data?.suggestedSellingPrice || 
+                data?.total || 
+                data?.retailRate?.total?.[0]?.amount || 
+                data?.price?.amount ||
+                0;
+  
+  // Handle if total is an object with amount property
+  const totalAmount = typeof total === 'object' && total !== null ? total.amount : total;
+  
+  const currency = data?.currency || 
+                   (typeof total === 'object' && total !== null ? total.currency : null) ||
+                   data?.retailRate?.total?.[0]?.currency || 
+                   data?.suggestedSellingPrice?.currency || 
+                   'USD';
   
   console.log('[Prebook] Extracted data:', {
     prebookId: data.prebookId,
     hotelId: data.hotelId,
-    total,
+    total: totalAmount,
     currency,
     expiresAt: data.expiresAt,
     hasSecretKey: !!data.secretKey,
     hasTransactionId: !!data.transactionId,
+    suggestedSellingPrice: data?.suggestedSellingPrice,
   });
   
   return {
@@ -152,7 +166,7 @@ async function prebook(request: { offerId: string; usePaymentSdk?: boolean }) {
     rateId: data.rateId,
     checkin: data.checkin,
     checkout: data.checkout,
-    total,
+    total: totalAmount,
     currency,
     expiresAt: data.expiresAt,
     secretKey: data.secretKey,

@@ -69,18 +69,17 @@ export function LiteAPIPayment({
 
       // Determine environment for LiteAPI payment SDK
       // The SDK uses Stripe under the hood, so we need to tell it sandbox vs live
-      // Since user is using sandbox LiteAPI API key, default to sandbox mode
-      // Check hostname - if not production domain, use sandbox
-      const hostname = typeof window !== 'undefined' ? window.location.hostname : '';
-      const isProductionDomain = hostname === 'tellurideskihotels.com' || hostname === 'www.tellurideskihotels.com';
-      
-      // Also check secretKey format as secondary indicator
+      // Priority: Check secretKey format first (most reliable indicator)
       // Sandbox secretKeys typically start with 'pi_test_' but may vary
       const isSandboxSecretKey = secretKey.startsWith('pi_test_');
       
-      // Default to sandbox unless we're on production domain AND secretKey indicates live
-      // This is safer since user is testing with sandbox API key
-      const publicKey = (isProductionDomain && !isSandboxSecretKey) ? 'live' : 'sandbox';
+      // Check hostname as secondary indicator
+      const hostname = typeof window !== 'undefined' ? window.location.hostname : '';
+      const isProductionDomain = hostname === 'tellurideskihotels.com' || hostname === 'www.tellurideskihotels.com';
+      
+      // Use sandbox if secretKey indicates sandbox OR we're not on production domain
+      // Always prioritize secretKey format over domain (user might test on prod domain with sandbox keys)
+      const publicKey = isSandboxSecretKey || !isProductionDomain ? 'sandbox' : 'live';
       
       console.log('[LiteAPI Payment] Initializing payment portal:', {
         publicKey,

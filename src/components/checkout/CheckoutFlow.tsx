@@ -241,7 +241,7 @@ export function CheckoutFlow({ hotelId, hotelName, room, addons = [], onComplete
                 <p className="text-sm text-neutral-600 mt-2">Please provide your contact details for the reservation</p>
               </CardHeader>
               <CardContent className="pt-8">
-                <form onSubmit={handleGuestInfoSubmit} className="space-y-6">
+                <form onSubmit={handleGuestInfoSubmit} className="space-y-6" autoComplete="off">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <Input
                       label="First Name"
@@ -249,6 +249,7 @@ export function CheckoutFlow({ hotelId, hotelName, room, addons = [], onComplete
                       onChange={(e) => setGuestInfo({ ...guestInfo, firstName: e.target.value })}
                       required
                       placeholder="Jackson"
+                      autoComplete="given-name"
                     />
                     <Input
                       label="Last Name"
@@ -256,6 +257,7 @@ export function CheckoutFlow({ hotelId, hotelName, room, addons = [], onComplete
                       onChange={(e) => setGuestInfo({ ...guestInfo, lastName: e.target.value })}
                       required
                       placeholder="Null"
+                      autoComplete="family-name"
                     />
                   </div>
                   <Input
@@ -265,6 +267,7 @@ export function CheckoutFlow({ hotelId, hotelName, room, addons = [], onComplete
                     onChange={(e) => setGuestInfo({ ...guestInfo, email: e.target.value })}
                     required
                     placeholder="your.email@example.com"
+                    autoComplete="email"
                   />
                   <p className="text-xs text-neutral-500">We'll send your confirmation to this email</p>
                   
@@ -275,6 +278,7 @@ export function CheckoutFlow({ hotelId, hotelName, room, addons = [], onComplete
                     onChange={(e) => setGuestInfo({ ...guestInfo, phone: e.target.value })}
                     required
                     placeholder="+1 (555) 123-4567"
+                    autoComplete="tel"
                   />
                   <p className="text-xs text-neutral-500">For booking updates and hotel contact</p>
 
