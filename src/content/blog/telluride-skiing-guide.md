@@ -20,7 +20,7 @@
     "canonical": "https://tellurideskihotels.com/blog/ski-guides/telluride-skiing-guide"
   },
   "featured": true,
-  "featuredImage": "https://images.pexels.com/photos/4118259/pexels-photo-4118259.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+  "featuredImage": "https://images.pexels.com/photos/15744610/pexels-photo-15744610.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
   "featuredImageAlt": "Skiers enjoying fresh powder at Telluride Ski Resort with mountain views",
   "excerpt": "Everything you need to know about skiing Telluride. Discover terrain for all levels, ski school programs, equipment rentals, best runs, and expert tips for maximizing your time on the mountain.",
   "wordCount": 2700,
