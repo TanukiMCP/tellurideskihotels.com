@@ -92,7 +92,7 @@ export function HotelCard({
         {address && (
           <div className="flex items-start text-sm text-neutral-600 mb-3">
             <MapPin className="h-4 w-4 mr-1.5 flex-shrink-0 mt-0.5" />
-            <span className="line-clamp-2">{address}</span>
+            <span className="truncate flex-1 min-w-0" title={address}>{address}</span>
           </div>
         )}
         
@@ -129,11 +129,15 @@ export function HotelCard({
             
             <Button
               onClick={(e) => {
+                e.preventDefault();
                 e.stopPropagation();
-                onSelect(hotel.hotel_id);
+                if (onSelect) {
+                  onSelect(hotel.hotel_id);
+                }
               }}
               className="w-full"
               variant="primary"
+              type="button"
             >
               See Available Rooms
             </Button>
@@ -151,11 +155,15 @@ export function HotelCard({
             
             <Button
               onClick={(e) => {
+                e.preventDefault();
                 e.stopPropagation();
-                onSelect(hotel.hotel_id);
+                if (onSelect) {
+                  onSelect(hotel.hotel_id);
+                }
               }}
               className="w-full"
               variant="primary"
+              type="button"
             >
               View Details
             </Button>
