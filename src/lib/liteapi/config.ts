@@ -23,11 +23,24 @@ if (typeof process !== 'undefined') {
 // YOUR COMMISSION: Already included in retailRate.total ($167 = 15% of base)
 // WHEN YOU GET PAID: Weekly payouts on confirmed bookings (after checkout)
 // 
+// ⚠️ CRITICAL: AVOID DOUBLE MARKUP
+// LiteAPI accounts have a default markup setting (user settings → Markup tab).
+// The 'margin' parameter in API calls OVERRIDES the account default.
+// 
+// RECOMMENDED SETUP TO AVOID DOUBLE MARKUP:
+// 1. Set your LiteAPI account default markup to 0% (user settings → Markup tab)
+// 2. Use the margin parameter in code (set below) to control markup
+// 3. This ensures only ONE markup is applied (the margin parameter)
+// 
+// ALTERNATIVE: Set margin to 0 here and use account default markup instead
+// The margin parameter takes precedence over account default when provided
+// 
 // IMPORTANT: Do NOT add additional markup on top of retailRate.total
 // The commission is already built into the price LiteAPI returns
 // 
 // Industry standard margin: 10-20% for OTAs
 // Set to 0 for net rates (if you're merchant of record with separate fees)
+// Set to match competitor pricing (e.g., 10-15% to match Booking.com)
 export const LITEAPI_MARKUP_PERCENT = parseInt(import.meta.env.LITEAPI_MARKUP_PERCENT || '15', 10);
 
 // Using liteAPI payment SDK - no payment processor fees!

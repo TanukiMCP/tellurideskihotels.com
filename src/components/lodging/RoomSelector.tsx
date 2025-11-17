@@ -127,12 +127,13 @@ export function RoomSelector({
     <div className="space-y-4">
       <h3 className="text-2xl font-bold text-neutral-900 mb-6">Select Your Room</h3>
       {rooms.map((rate) => {
-        // SSP Compliance: rate.total and rate.net contain Suggested Selling Price (SSP)
-        // This is what hotels require us to display publicly to avoid rate violations
-        // SSP is typically higher than retail rate (e.g., $500 SSP vs $460 retail)
-        const displayPrice = rate.total?.amount || 0;  // SSP total for stay
+        // PRICING: rate.total and rate.net contain retailRate.total from LiteAPI
+        // This is the final price customer pays (base rate + margin + taxes)
+        // Commission is already included via the margin parameter in API calls
+        // SSP (suggested_selling_price) is stored separately and is typically higher
+        const displayPrice = rate.total?.amount || 0;  // Retail total for stay
         const currency = rate.total?.currency || 'USD';
-        const pricePerNight = rate.net?.amount || 0;   // SSP per night
+        const pricePerNight = rate.net?.amount || 0;   // Retail per night
         
         // Extract refundable status from cancellation policy
         const cancellationPolicy = rate.cancellation_policy;

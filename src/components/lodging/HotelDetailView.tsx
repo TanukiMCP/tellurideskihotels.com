@@ -48,8 +48,8 @@ export function HotelDetailView({ hotel, checkIn, checkOut, adults, children = 0
     adults: number;
     children: number;
   }) => {
-    // Pass SSP to checkout - this is what customer will pay
-    // rate.total contains SSP (Suggested Selling Price) for compliance
+    // Pass retail rate to checkout - this is what customer will pay
+    // rate.total contains retailRate.total (base + margin + taxes) from LiteAPI
     const price = bookingData.roomData.total?.amount || bookingData.roomData.net?.amount || 0;
     const currency = bookingData.roomData.total?.currency || bookingData.roomData.net?.currency || 'USD';
 
