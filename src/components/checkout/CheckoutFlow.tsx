@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/Input';
 import { LiteAPIPayment } from './LiteAPIPayment';
 import { formatCurrency, calculateNights } from '@/lib/utils';
 import type { SelectedRoom, SelectedAddon, GuestInfo } from '@/lib/types';
+import { Shield, Phone, Mail, CheckCircle2, AlertCircle, Info } from 'lucide-react';
 
 export interface CheckoutFlowProps {
   hotelId: string;
@@ -12,9 +13,11 @@ export interface CheckoutFlowProps {
   room: SelectedRoom;
   addons?: SelectedAddon[];
   onComplete: (bookingId: string) => void;
+  hotelImage?: string;
+  hotelAddress?: string;
 }
 
-export function CheckoutFlow({ hotelId, hotelName, room, addons = [], onComplete }: CheckoutFlowProps) {
+export function CheckoutFlow({ hotelId, hotelName, room, addons = [], onComplete, hotelImage, hotelAddress }: CheckoutFlowProps) {
   const [step, setStep] = useState(1);
   const [guestInfo, setGuestInfo] = useState<GuestInfo>({
     firstName: '',
@@ -22,6 +25,7 @@ export function CheckoutFlow({ hotelId, hotelName, room, addons = [], onComplete
     email: '',
     phone: '',
   });
+  const [acceptedTerms, setAcceptedTerms] = useState(false);
 
   const nights = calculateNights(room.checkIn, room.checkOut);
   const addonsTotal = addons.reduce((sum, addon) => sum + addon.price, 0);
@@ -97,7 +101,56 @@ export function CheckoutFlow({ hotelId, hotelName, room, addons = [], onComplete
   };
 
   return (
-    <div className="max-w-6xl mx-auto">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      {/* Branded Header */}
+      <div className="mb-8 pb-6 border-b border-neutral-200">
+        <div className="flex items-center justify-between flex-wrap gap-4">
+          <div className="flex items-center gap-3">
+            <img 
+              src="/favicon-icon.png" 
+              alt="Telluride Ski Hotels" 
+              className="h-12 w-auto"
+            />
+            <div>
+              <h1 className="text-2xl font-bold text-neutral-900">Secure Checkout</h1>
+              <p className="text-sm text-neutral-600 mt-1">Complete your booking with TellurideSkiHotels.com</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-6 text-sm text-neutral-600">
+            <a href="tel:+1-970-555-0123" className="flex items-center gap-2 hover:text-primary-600 transition-colors">
+              <Phone className="w-4 h-4" />
+              <span className="font-medium">(970) 555-0123</span>
+            </a>
+            <a href="mailto:support@tellurideskihotels.com" className="flex items-center gap-2 hover:text-primary-600 transition-colors">
+              <Mail className="w-4 h-4" />
+              <span className="font-medium">Need Help?</span>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      {/* Trust Badges */}
+      <div className="mb-8 bg-primary-50 border border-primary-200 rounded-xl p-4">
+        <div className="flex items-center justify-center gap-8 flex-wrap text-sm">
+          <div className="flex items-center gap-2 text-primary-900">
+            <Shield className="w-5 h-5" />
+            <span className="font-semibold">Secure Payment</span>
+          </div>
+          <div className="flex items-center gap-2 text-primary-900">
+            <CheckCircle2 className="w-5 h-5" />
+            <span className="font-semibold">Instant Confirmation</span>
+          </div>
+          <div className="flex items-center gap-2 text-primary-900">
+            <CheckCircle2 className="w-5 h-5" />
+            <span className="font-semibold">Best Price Guarantee</span>
+          </div>
+          <div className="flex items-center gap-2 text-primary-900">
+            <Phone className="w-5 h-5" />
+            <span className="font-semibold">24/7 Support</span>
+          </div>
+        </div>
+      </div>
+
       {isProcessing && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center">
           <div className="bg-white rounded-2xl p-10 max-w-md mx-4 text-center shadow-2xl">
@@ -160,6 +213,8 @@ export function CheckoutFlow({ hotelId, hotelName, room, addons = [], onComplete
                     required
                     placeholder="your.email@example.com"
                   />
+                  <p className="text-xs text-neutral-500">We'll send your confirmation to this email</p>
+                  
                   <Input
                     type="tel"
                     label="Phone"
@@ -168,8 +223,48 @@ export function CheckoutFlow({ hotelId, hotelName, room, addons = [], onComplete
                     required
                     placeholder="+1 (555) 123-4567"
                   />
+                  <p className="text-xs text-neutral-500">For booking updates and hotel contact</p>
+
+                  {/* Cancellation Policy */}
+                  <div className="bg-amber-50 border-2 border-amber-200 rounded-xl p-4">
+                    <div className="flex items-start gap-3">
+                      <Info className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
+                      <div>
+                        <h4 className="font-semibold text-amber-900 mb-1">Cancellation Policy</h4>
+                        <p className="text-sm text-amber-800 leading-relaxed">
+                          {room.cancellationPolicy?.refundableTag === 'RFND' 
+                            ? 'Free cancellation up to 24 hours before check-in. Cancel before then for a full refund.'
+                            : 'This rate is non-refundable. You will be charged the full amount upon booking.'}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Terms & Conditions */}
+                  <div className="flex items-start gap-3 p-4 bg-neutral-50 rounded-xl">
+                    <input
+                      type="checkbox"
+                      id="terms"
+                      checked={acceptedTerms}
+                      onChange={(e) => setAcceptedTerms(e.target.checked)}
+                      required
+                      className="mt-1 h-5 w-5 rounded border-neutral-300 text-primary-600 focus:ring-primary-500"
+                    />
+                    <label htmlFor="terms" className="text-sm text-neutral-700">
+                      I agree to the{' '}
+                      <a href="/terms" target="_blank" className="text-primary-600 hover:text-primary-700 font-semibold underline">
+                        Terms of Service
+                      </a>
+                      {' '}and{' '}
+                      <a href="/privacy" target="_blank" className="text-primary-600 hover:text-primary-700 font-semibold underline">
+                        Privacy Policy
+                      </a>
+                      . I understand the cancellation policy and authorize payment.
+                    </label>
+                  </div>
+
                   <div className="pt-4">
-                    <Button type="submit" className="w-full" size="lg">
+                    <Button type="submit" className="w-full" size="lg" disabled={!acceptedTerms}>
                       Continue to Payment
                     </Button>
                   </div>
@@ -196,8 +291,25 @@ export function CheckoutFlow({ hotelId, hotelName, room, addons = [], onComplete
               <CardTitle className="text-xl">Booking Summary</CardTitle>
             </CardHeader>
             <CardContent className="pt-6 space-y-6">
+              {/* Hotel Image */}
+              {hotelImage && (
+                <div className="aspect-video w-full overflow-hidden rounded-xl">
+                  <img 
+                    src={hotelImage} 
+                    alt={hotelName}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              )}
+              
               <div className="space-y-3">
                 <h4 className="font-bold text-lg text-neutral-900">{hotelName}</h4>
+                {hotelAddress && (
+                  <p className="text-sm text-neutral-600">{hotelAddress}</p>
+                )}
+                <div className="bg-primary-50 border border-primary-200 rounded-lg px-3 py-2">
+                  <p className="text-sm font-semibold text-primary-900">{room.roomName}</p>
+                </div>
                 <div className="space-y-2">
                   <div className="flex items-center text-sm text-neutral-700">
                     <svg className="w-4 h-4 mr-2 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -244,10 +356,47 @@ export function CheckoutFlow({ hotelId, hotelName, room, addons = [], onComplete
                   <span className="text-lg font-bold text-neutral-900">Total</span>
                   <span className="text-2xl font-bold text-primary-700">{formatCurrency(total, room.currency)}</span>
                 </div>
+                <p className="text-xs text-neutral-600 mt-2 text-center">All taxes and fees included</p>
+              </div>
+
+              {/* Support Contact */}
+              <div className="border-t border-neutral-200 pt-4 -mx-6 px-6">
+                <h5 className="font-semibold text-neutral-900 mb-3 text-sm">Need Assistance?</h5>
+                <div className="space-y-2 text-sm">
+                  <a href="tel:+1-970-555-0123" className="flex items-center gap-2 text-neutral-700 hover:text-primary-600 transition-colors">
+                    <Phone className="w-4 h-4" />
+                    <span>(970) 555-0123</span>
+                  </a>
+                  <a href="mailto:support@tellurideskihotels.com" className="flex items-center gap-2 text-neutral-700 hover:text-primary-600 transition-colors">
+                    <Mail className="w-4 h-4" />
+                    <span>support@tellurideskihotels.com</span>
+                  </a>
+                </div>
+                <div className="mt-4 pt-4 border-t border-neutral-100">
+                  <div className="flex items-center gap-2 text-primary-700">
+                    <Shield className="w-5 h-5" />
+                    <span className="text-xs font-semibold">Your information is secure & encrypted</span>
+                  </div>
+                </div>
               </div>
             </CardContent>
           </Card>
         </div>
+      </div>
+
+      {/* Footer Note */}
+      <div className="mt-8 pt-6 border-t border-neutral-200 text-center text-sm text-neutral-600">
+        <p className="mb-2">
+          By completing this booking, you agree to our{' '}
+          <a href="/terms" target="_blank" className="text-primary-600 hover:underline font-medium">Terms of Service</a>
+          {' '}and{' '}
+          <a href="/privacy" target="_blank" className="text-primary-600 hover:underline font-medium">Privacy Policy</a>.
+        </p>
+        <p className="text-xs text-neutral-500">
+          © 2025 TellurideSkiHotels.com. All rights reserved. | 
+          <a href="/contact" className="hover:text-primary-600 ml-1">Contact Us</a> | 
+          <a href="/help" className="hover:text-primary-600 ml-1">Help Center</a>
+        </p>
       </div>
     </div>
   );
