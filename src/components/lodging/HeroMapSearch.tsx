@@ -829,7 +829,7 @@ export default function HeroMapSearch({
             maxHeight: 'calc(100% - 2rem)'
           }}>
             <div className="lg:absolute lg:right-0 lg:w-[420px] lg:h-full lg:max-h-full w-full h-full max-h-full">
-            <div className="backdrop-blur-xl bg-white/98 border-t lg:border-t-0 lg:border-l border-neutral-200 shadow-2xl h-full flex flex-col overflow-hidden rounded-xl">
+              <div className="backdrop-blur-xl bg-white/98 border-t lg:border-t-0 lg:border-l border-neutral-200 shadow-2xl h-full flex flex-col overflow-hidden rounded-xl">
               {/* Header */}
               <div className="px-4 py-3 border-b border-neutral-200 flex items-center justify-between flex-shrink-0">
                 <div>
@@ -1003,7 +1003,7 @@ export default function HeroMapSearch({
                   );
                 })}
               </div>
-            </div>
+              </div>
             </div>
           </div>
         )}
