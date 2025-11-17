@@ -112,12 +112,26 @@ async function prebook(request: { offerId: string; usePaymentSdk?: boolean }) {
   
   const data = response.data?.data || response.data || response;
   
+  console.log('[Prebook] Full response structure:', {
+    hasData: !!data,
+    keys: Object.keys(data || {}),
+    total: data?.total,
+    retailRate: data?.retailRate,
+    suggestedSellingPrice: data?.suggestedSellingPrice,
+  });
+  
+  // Extract total from various possible locations
+  const total = data?.total || data?.retailRate?.total?.[0]?.amount || data?.suggestedSellingPrice?.amount || 0;
+  const currency = data?.currency || data?.retailRate?.total?.[0]?.currency || data?.suggestedSellingPrice?.currency || 'USD';
+  
   console.log('[Prebook] Extracted data:', {
     prebookId: data.prebookId,
     hotelId: data.hotelId,
-    total: data.total,
-    currency: data.currency,
+    total,
+    currency,
     expiresAt: data.expiresAt,
+    hasSecretKey: !!data.secretKey,
+    hasTransactionId: !!data.transactionId,
   });
   
   return {
@@ -126,8 +140,8 @@ async function prebook(request: { offerId: string; usePaymentSdk?: boolean }) {
     rateId: data.rateId,
     checkin: data.checkin,
     checkout: data.checkout,
-    total: data.total,
-    currency: data.currency,
+    total,
+    currency,
     expiresAt: data.expiresAt,
     secretKey: data.secretKey,
     transactionId: data.transactionId,

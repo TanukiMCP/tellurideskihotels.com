@@ -34,6 +34,26 @@ export function CheckoutFlow({ hotelId, hotelName, room, addons = [], onComplete
   const [isProcessing, setIsProcessing] = useState(false);
   const [prebookData, setPrebookData] = useState<any>(null);
   
+  // Restore prebookData from sessionStorage if returning from payment
+  useState(() => {
+    if (typeof window !== 'undefined') {
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get('returnFromPayment')) {
+        const stored = sessionStorage.getItem('prebookData');
+        if (stored) {
+          try {
+            const data = JSON.parse(stored);
+            setPrebookData(data);
+            setStep(2);
+            console.log('[Checkout] Restored prebookData from sessionStorage:', data);
+          } catch (e) {
+            console.error('[Checkout] Failed to restore prebookData:', e);
+          }
+        }
+      }
+    }
+  });
+  
   // First, do prebook when moving to payment step
   const handleGuestInfoSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -53,6 +73,13 @@ export function CheckoutFlow({ hotelId, hotelName, room, addons = [], onComplete
 
       const data = await prebookResponse.json();
       setPrebookData(data);
+      
+      // Store in sessionStorage for payment redirect recovery
+      if (typeof window !== 'undefined') {
+        sessionStorage.setItem('prebookData', JSON.stringify(data));
+        sessionStorage.setItem('guestInfo', JSON.stringify(guestInfo));
+      }
+      
       setStep(2);
       setIsProcessing(false);
     } catch (error) {
@@ -64,16 +91,39 @@ export function CheckoutFlow({ hotelId, hotelName, room, addons = [], onComplete
   
   const handlePaymentComplete = async (transactionId: string) => {
     setIsProcessing(true);
+    
+    // Get prebookData and guestInfo (might be from sessionStorage if redirected)
+    const currentPrebookData = prebookData || (typeof window !== 'undefined' ? JSON.parse(sessionStorage.getItem('prebookData') || '{}') : null);
+    const currentGuestInfo = guestInfo.firstName ? guestInfo : (typeof window !== 'undefined' ? JSON.parse(sessionStorage.getItem('guestInfo') || '{}') : guestInfo);
+    
+    if (!currentPrebookData?.prebookId) {
+      console.error('[Checkout] Missing prebookData:', { prebookData, currentPrebookData });
+      alert('Booking session expired. Please start over.');
+      setIsProcessing(false);
+      if (typeof window !== 'undefined') {
+        sessionStorage.removeItem('prebookData');
+        sessionStorage.removeItem('guestInfo');
+        window.location.href = window.location.pathname.split('?')[0];
+      }
+      return;
+    }
+    
     try {
+      console.log('[Checkout] Confirming booking:', {
+        prebookId: currentPrebookData.prebookId,
+        transactionId,
+        guestInfo: currentGuestInfo,
+      });
+      
       const confirmResponse = await fetch('/api/booking/confirm', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          prebookId: prebookData.prebookId,
+          prebookId: currentPrebookData.prebookId,
           holder: {
-            firstName: guestInfo.firstName,
-            lastName: guestInfo.lastName,
-            email: guestInfo.email,
+            firstName: currentGuestInfo.firstName,
+            lastName: currentGuestInfo.lastName,
+            email: currentGuestInfo.email,
           },
           payment: {
             method: 'TRANSACTION_ID',
@@ -92,6 +142,13 @@ export function CheckoutFlow({ hotelId, hotelName, room, addons = [], onComplete
       }
 
       const bookingData = await confirmResponse.json();
+      
+      // Clean up sessionStorage
+      if (typeof window !== 'undefined') {
+        sessionStorage.removeItem('prebookData');
+        sessionStorage.removeItem('guestInfo');
+      }
+      
       onComplete(bookingData.bookingId);
     } catch (error) {
       console.error('[Checkout] Booking error:', error);
@@ -273,9 +330,10 @@ export function CheckoutFlow({ hotelId, hotelName, room, addons = [], onComplete
             <LiteAPIPayment
               secretKey={prebookData.secretKey}
               transactionId={prebookData.transactionId}
-              amount={prebookData.total}
-              currency={prebookData.currency}
-              returnUrl={typeof window !== 'undefined' ? `${window.location.origin}/booking/checkout?returnFromPayment=true` : '/booking/checkout?returnFromPayment=true'}
+              amount={prebookData.total || room.price}
+              currency={prebookData.currency || room.currency}
+              prebookId={prebookData.prebookId}
+              returnUrl={typeof window !== 'undefined' ? `${window.location.origin}${window.location.pathname}?returnFromPayment=true` : '/booking/checkout?returnFromPayment=true'}
               onPaymentSuccess={handlePaymentComplete}
             />
           )}
