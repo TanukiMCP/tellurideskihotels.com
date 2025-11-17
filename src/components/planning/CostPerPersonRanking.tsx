@@ -3,9 +3,8 @@
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Input } from '@/components/ui/Input';
-import { Button } from '@/components/ui/Button';
 import { ArticleBookingWidget } from '@/components/blog/ArticleBookingWidget';
-import { TrendingUp, Users, Calendar, Building2 } from 'lucide-react';
+import { TrendingUp, Users, Calendar } from 'lucide-react';
 
 export interface CostPerPersonRankingProps {
   hotelIds: string[];

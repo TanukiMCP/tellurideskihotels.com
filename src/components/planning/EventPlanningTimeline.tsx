@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Input } from '@/components/ui/Input';
 import { ArticleBookingWidget } from '@/components/blog/ArticleBookingWidget';
-import { Calendar, CheckCircle2, Clock, Users } from 'lucide-react';
+import { Calendar, Clock, Users } from 'lucide-react';
 
 export interface EventPlanningTimelineProps {
   eventType?: 'wedding' | 'birthday' | 'corporate-retreat' | 'memorial' | 'celebration';

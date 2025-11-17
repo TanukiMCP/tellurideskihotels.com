@@ -931,9 +931,6 @@ export default function HeroMapSearch({
         </div>
       )}
 
-        </div>
-      </div>
-
       {/* Ski Trail Legend - Bottom Right (only show in Ski Trails mode) */}
       {isMapLoaded && mapStyle === 'skiTrails' && (
         <div className="absolute bottom-4 right-4 lg:right-[460px] backdrop-blur-xl bg-white/95 rounded-xl shadow-2xl p-4 z-[500] border border-white/20 pointer-events-auto">
@@ -1042,7 +1039,6 @@ export default function HeroMapSearch({
           background-color: rgba(0, 0, 0, 0.3);
         }
       `}</style>
-        </div>
       </div>
     </div>
   );

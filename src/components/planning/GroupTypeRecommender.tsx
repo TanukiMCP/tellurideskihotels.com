@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
-import { Button } from '@/components/ui/Button';
 import { ArticleBookingWidget } from '@/components/blog/ArticleBookingWidget';
 import { Users, Heart, Briefcase, User, Home } from 'lucide-react';
 

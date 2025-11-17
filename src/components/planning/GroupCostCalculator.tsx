@@ -2,10 +2,9 @@
 
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
-import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { ArticleBookingWidget } from '@/components/blog/ArticleBookingWidget';
-import { Calculator, Users, Calendar, DollarSign } from 'lucide-react';
+import { Calculator, Users, Calendar } from 'lucide-react';
 
 export interface GroupCostCalculatorProps {
   groupType?: 'family' | 'friends' | 'couples' | 'corporate' | 'solo';

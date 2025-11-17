@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { ArticleBookingWidget } from '@/components/blog/ArticleBookingWidget';
-import { Calendar, TrendingDown, Users, Snowflake } from 'lucide-react';
+import { Calendar, TrendingDown } from 'lucide-react';
 
 export interface SeasonComparisonProps {
   peakDates: string;

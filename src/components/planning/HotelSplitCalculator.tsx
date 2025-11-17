@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
-import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { ArticleBookingWidget } from '@/components/blog/ArticleBookingWidget';
 import { Building2, Users, Calendar, TrendingUp } from 'lucide-react';

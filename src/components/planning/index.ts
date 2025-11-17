@@ -11,8 +11,8 @@ export type { GroupCostCalculatorProps } from './GroupCostCalculator';
 export type { HotelSplitCalculatorProps } from './HotelSplitCalculator';
 export type { BudgetToItineraryPlannerProps } from './BudgetToItineraryPlanner';
 export type { SeasonComparisonProps } from './SeasonComparison';
-export type { GroupTypeRecommenderProps } from './GroupTypeRecommender';
 export type { CostPerPersonRankingProps } from './CostPerPersonRanking';
 export type { EventPlanningTimelineProps } from './EventPlanningTimeline';
 export type { LodgingComparisonMatrixProps } from './LodgingComparisonMatrix';
+export type { GroupType } from './GroupTypeRecommender';
 

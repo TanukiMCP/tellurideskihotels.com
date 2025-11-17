@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Input } from '@/components/ui/Input';
 import { ArticleBookingWidget } from '@/components/blog/ArticleBookingWidget';
-import { Building2, Star, MapPin, Users, Calendar } from 'lucide-react';
+import { Building2, Star, Users, Calendar } from 'lucide-react';
 
 export interface LodgingComparisonMatrixProps {
   compareIds: string[];
