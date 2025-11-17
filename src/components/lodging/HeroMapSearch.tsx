@@ -1042,6 +1042,7 @@ export default function HeroMapSearch({
             </div>
           </div>
         )}
+        </div>
       </div>
     </div>
   );
