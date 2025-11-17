@@ -19,16 +19,26 @@ export function FeaturedHotels({
   const hotels = initialHotels;
 
   const handleHotelSelect = (hotelId: string) => {
+    console.log('[FeaturedHotels] handleHotelSelect called with hotelId:', hotelId);
+    console.log('[FeaturedHotels] checkInDate prop:', checkInDate);
+    
+    // Use the SAME dates that were used to fetch these featured hotels
+    // This ensures availability matches what was shown
+    // Default: 7 days from now, 7 day stay
+    const checkIn = checkInDate || format(addDays(new Date(), 7), 'yyyy-MM-dd');
+    const checkOut = format(addDays(new Date(checkIn), 7), 'yyyy-MM-dd');
+    const adults = 2;
+    const rooms = 1;
+    
+    const url = `/places-to-stay/${hotelId}?checkIn=${checkIn}&checkOut=${checkOut}&adults=${adults}&rooms=${rooms}`;
+    
+    console.log('[FeaturedHotels] Navigating to:', url);
+    console.log('[FeaturedHotels] Dates:', { checkIn, checkOut, adults, rooms });
+    
     if (typeof window !== 'undefined') {
-      // Use the SAME dates that were used to fetch these featured hotels
-      // This ensures availability matches what was shown
-      // Default: 1 week from now, 1 week stay
-      const checkIn = checkInDate || format(addDays(new Date(), 7), 'yyyy-MM-dd');
-      const checkOut = format(addDays(new Date(checkIn), 7), 'yyyy-MM-dd');
-      const adults = 2;
-      const rooms = 1;
-      
-      window.location.href = `/places-to-stay/${hotelId}?checkIn=${checkIn}&checkOut=${checkOut}&adults=${adults}&rooms=${rooms}`;
+      window.location.href = url;
+    } else {
+      console.error('[FeaturedHotels] window is not available');
     }
   };
 

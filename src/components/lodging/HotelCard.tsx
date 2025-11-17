@@ -127,20 +127,23 @@ export function HotelCard({
               </div>
             </div>
             
-            <Button
+            <button
               onClick={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
+                console.log('Button clicked for hotel:', hotel.hotel_id);
                 if (onSelect) {
+                  console.log('Calling onSelect handler');
                   onSelect(hotel.hotel_id);
+                } else {
+                  console.error('onSelect handler is not defined');
                 }
               }}
-              className="w-full"
-              variant="primary"
+              className="w-full bg-primary-600 hover:bg-primary-700 text-white font-semibold py-3 px-4 rounded-lg transition-colors duration-200"
               type="button"
             >
               See Available Rooms
-            </Button>
+            </button>
           </>
         ) : (
           <>
@@ -153,7 +156,7 @@ export function HotelCard({
               </div>
             </div>
             
-            <Button
+            <button
               onClick={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
@@ -161,12 +164,11 @@ export function HotelCard({
                   onSelect(hotel.hotel_id);
                 }
               }}
-              className="w-full"
-              variant="primary"
+              className="w-full bg-primary-600 hover:bg-primary-700 text-white font-semibold py-3 px-4 rounded-lg transition-colors duration-200"
               type="button"
             >
               View Details
-            </Button>
+            </button>
           </>
         )}
       </CardContent>
