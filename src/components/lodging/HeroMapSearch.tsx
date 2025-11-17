@@ -815,7 +815,6 @@ export default function HeroMapSearch({
           background-color: rgba(0, 0, 0, 0.3);
         }
       `}</style>
-          </div>
         </div>
         
         {/* Overlays positioned relative to outer container to prevent clipping on scroll */}
