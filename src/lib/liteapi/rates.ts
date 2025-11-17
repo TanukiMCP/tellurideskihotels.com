@@ -53,21 +53,20 @@ function transformRateData(hotelData: any, nights: number): Array<{
     rates.forEach((rate: any) => {
       try {
         // LiteAPI pricing structure per documentation:
-        // https://docs.liteapi.travel/docs/hotel-rates-api-json-data-structure
+        // https://docs.liteapi.travel/docs/revenue-management-and-commission
         // 
-        // retailRate.total[0].amount = What customer pays (base + margin + included taxes)
+        // retailRate.total[0].amount = Total for entire stay (base + margin + included taxes)
         //   - This ALREADY includes our commission (set via margin parameter)
-        //   - Example: $1,283 total (includes our 15% commission = $167)
+        //   - Example: $100 total for the stay (includes our commission)
         //
-        // retailRate.suggestedSellingPrice[0].amount = SSP (Suggested Selling Price)
+        // retailRate.suggestedSellingPrice[0].amount = SSP total for stay
         //   - Public display price from hotel/OTAs (usually higher than retail)
-        //   - Example: $1,404 total
-        //   - Only required if selling ABOVE retail to show "discount"
+        //   - Example: $115 total for the stay
         //
         // retailRate.initialPrice[0].amount = Base hotel price (before margin)
         //   - What hotel receives after our commission is deducted
         //
-        // PRICING STRATEGY: Use retailRate.total for competitive pricing
+        // PRICING STRATEGY: Use retailRate.total as the total price
         // Our commission is ALREADY included via the margin parameter
         
         const retailData = Array.isArray(rate.retailRate?.total) 
@@ -80,10 +79,10 @@ function transformRateData(hotelData: any, nights: number): Array<{
           ? rate.retailRate.initialPrice[0]
           : rate.retailRate?.initialPrice;
           
-        // Use retail rate (what we pay LiteAPI) as our selling price
+        // Use retail rate (what customer pays) as our selling price
         // Commission is already included via margin parameter
         const retailTotal = retailData?.amount || 0;
-        const sspTotal = sspData?.amount || 0; // Store for potential "compare at" pricing
+        const sspTotal = sspData?.amount || 0;
         const currency = retailData?.currency || 'USD';
         
         // Calculate per-night prices from totals
