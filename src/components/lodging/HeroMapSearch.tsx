@@ -821,11 +821,11 @@ export default function HeroMapSearch({
         {/* Hotel Cards Panel - Right Side (Desktop) / Bottom (Mobile) */}
         {hotels.length > 0 && (
           <div className="absolute right-4 z-[400] pointer-events-auto" style={{ 
-            top: 'calc(100% + 1rem)',
-            bottom: 'auto',
+            top: '1rem',
+            bottom: '1rem',
             width: 'calc(100% - 2rem)',
-            maxHeight: 'calc(100vh - 2rem)',
-            height: 'auto'
+            height: 'calc(100% - 2rem)',
+            maxHeight: 'calc(100% - 2rem)'
           }}>
             <div className="lg:absolute lg:right-0 lg:w-[420px] lg:h-full lg:max-h-full w-full h-full max-h-full">
               <div className="backdrop-blur-xl bg-white/98 border-t lg:border-t-0 lg:border-l border-neutral-200 shadow-2xl h-full flex flex-col overflow-hidden rounded-xl">
