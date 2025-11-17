@@ -11,12 +11,28 @@
 4. **Hiking exploding:** +120% growth, major content gap
 5. **Breweries trending:** +172% growth, zero current coverage
 
+### 🎯 NEW CONVERSION-FOCUSED STRATEGY (Nov 2025)
+
+**Pivot to High-Intent Group Planning Content:**
+- **17 conversion-focused articles** (Days 14-30) targeting group travel planning
+- **Interactive planning tools** embedded in every group planning article
+- **Cost breakdown calculators** that drive direct bookings
+- **Event-based trip planners** (weddings, birthdays, memorials, corporate retreats)
+- **Group type targeting** (families, friends, couples, solo, corporate)
+
+**Why This Works:**
+- Higher search intent = closer to booking
+- Interactive tools = longer time on site = more conversions
+- Cost transparency = builds trust = increases bookings
+- Shareable planning guides = natural backlinks and social sharing
+
 ### New Content Strategy:
 - **Triple restaurant content** (6% → 20%) - Now #1 category
 - **Double hiking/activities** (13% → 18%)
 - **Reduce lodging focus** (17% → 15%) - quality over quantity
 - **Add brewery & nightlife** content (new category)
 - **Replace "hotels" with "places to stay"** throughout
+- **Add group planning content** (17 articles, Days 14-30) - conversion-focused
 
 ### Revenue Impact:
 - Vacation rentals: **$11.60 CPC** (highest on site!)
@@ -175,133 +191,162 @@
 - **Completed:** 2025-11-09
 - **Local Focus:** Leave Friday after work, return Sunday night, time-saving tips, where to stop
 
-**Day 14: "Best Time to Visit Telluride: Seasonal Guide"**
-- Keyword: when to visit telluride (880/mo)
-- Word Count: 2,300
-- Type: Comprehensive Guide
+**Day 14: "Telluride Family Ski Vacation: Complete Planning Guide & Cost Breakdown"** 🎯 CONVERSION FOCUS
+- Keyword: telluride with kids (390/mo) + telluride family ski trip
+- Word Count: 3,200
+- Type: Comprehensive Guide with Interactive Tools
 - Category: planning-tips
-- Tags: timing, seasons, crowds, prices
+- Tags: family, kids, planning, cost-breakdown, group-travel
+- **Tools Required:** GroupCostCalculator, HotelSplitCalculator, BudgetToItineraryPlanner
+- **Focus:** Cost per person, hotel vs condo comparison, itinerary planning
 
-**Day 15: "Telluride Breakfast Restaurants: Best Morning Spots"** 🆕
-- Keyword: telluride breakfast (1,200/mo)
-- Word Count: 2,500
-- Type: Listicle
-- Category: dining-nightlife
-- Tags: breakfast, restaurants, morning, dining
-
-**Day 16: "Telluride Lunch Spots: Best Mid-Day Restaurants"** 🆕
-- Keyword: telluride lunch (800/mo)
-- Word Count: 2,000
-- Type: Listicle
-- Category: dining-nightlife
-- Tags: lunch, restaurants, casual-dining
-
-**Day 17: "Telluride Airport & Getting There: Complete Guide"**
-- Keyword: telluride airport (3,600/mo)
-- Word Count: 2,300
-- Type: Comprehensive Guide
+**Day 15: "Telluride Friends Ski Trip: Group Planning & Cost Splitting Guide"** 🎯 CONVERSION FOCUS
+- Keyword: telluride group lodging (140/mo) + telluride friends trip
+- Word Count: 2,800
+- Type: Comprehensive Guide with Interactive Tools
 - Category: planning-tips
-- Tags: airport, transportation, travel
+- Tags: friends, groups, cost-splitting, planning
+- **Tools Required:** GroupCostCalculator, HotelSplitCalculator, CostPerPersonRanking
+- **Focus:** Cost splitting scenarios, hotel vs vacation rental for groups
 
-### Week 3: Accommodation Focus + More Local Guides
+**Day 16: "Telluride Bachelor/Bachelorette Party: Ultimate Planning Guide"** 🎯 CONVERSION FOCUS
+- Keyword: telluride bachelorette party (170/mo) + telluride bachelor party
+- Word Count: 2,900
+- Type: Comprehensive Guide with Interactive Tools
+- Category: planning-tips
+- Tags: bachelorette, bachelor, party, groups, events
+- **Tools Required:** GroupCostCalculator, EventPlanningTimeline, BudgetToItineraryPlanner
+- **Focus:** Event planning timeline, group lodging, activity recommendations
 
-**Day 18: "Ski-In/Ski-Out Lodging in Telluride: Top Options"** ⚠️ UPDATED
-- Keyword: ski in ski out telluride (1,600/mo)
-- Word Count: 2,400
-- Type: Listicle
-- Category: lodging
-- Tags: ski-in-ski-out, convenience, lodging
-
-**Day 19: "Telluride Vacation Rentals: Complete Guide"** 🆕 
-- Keyword: telluride vacation rentals (2,400/mo, $11.60 CPC!)
+**Day 17: "Telluride Couples Retreat: Romantic Getaway Planner"** 🎯 CONVERSION FOCUS
+- Keyword: telluride romantic getaway (260/mo) + telluride couples trip
 - Word Count: 2,600
-- Type: Comprehensive Guide
-- Category: lodging
-- Tags: vacation-rentals, airbnb-alternatives, condos
-- **Priority:** HIGHEST CPC keyword on entire site
-
-**Day 20: "I-70 to Telluride: Avoiding Traffic & Finding Scenic Routes"**
-- Keyword: i70 to telluride (590/mo)
-- Word Count: 2,400
-- Type: Comprehensive Guide
+- Type: Comprehensive Guide with Interactive Tools
 - Category: planning-tips
-- Tags: i70, driving, locals, scenic-routes, traffic
-- **Local Focus:** Eisenhower Tunnel backups, alternate routes, Glenwood Springs vs Ouray route
+- Tags: couples, romantic, getaway, planning
+- **Tools Required:** BudgetToItineraryPlanner, SeasonComparison
+- **Focus:** Budget planning, romantic activities, best times to visit
 
-**Day 21: "Fine Dining in Telluride: Upscale Restaurants"** 🆕
-- Keyword: fine dining telluride (600/mo)
-- Word Count: 2,200
-- Type: Listicle
-- Category: dining-nightlife
-- Tags: fine-dining, upscale, romantic, special-occasions
+### Week 3: Group Planning & Conversion-Focused Content
 
-**Day 22: "Telluride Coffee Shops & Cafes: Best Local Spots"** 🆕
-- Keyword: telluride coffee shops (500/mo)
-- Word Count: 2,300
-- Type: Listicle
-- Category: dining-nightlife
-- Tags: coffee, cafes, breakfast, wifi
-
-**Day 23: "Red Mountain Pass to Telluride: Winter Driving Guide"**
-- Keyword: red mountain pass telluride (390/mo)
-- Word Count: 2,200
-- Type: Comprehensive Guide
+**Day 18: "Telluride Multi-Family Ski Trip: Large Group Planning Guide"** 🎯 CONVERSION FOCUS
+- Keyword: telluride group lodging (140/mo) + telluride family reunion
+- Word Count: 3,000
+- Type: Comprehensive Guide with Interactive Tools
 - Category: planning-tips
-- Tags: red-mountain-pass, winter-driving, safety, locals
-- **Local Focus:** The infamous "Million Dollar Highway", weather concerns, when to avoid, tips from locals
+- Tags: multi-family, large-groups, planning, cost-breakdown
+- **Tools Required:** GroupCostCalculator, HotelSplitCalculator, EventPlanningTimeline
+- **Focus:** Large group logistics, multiple families, cost coordination
 
-**Day 24: "Telluride Trail Running: Best Summer Routes"** 🆕
-- Keyword: telluride trail running (400/mo)
+**Day 19: "Telluride Solo Travel: Complete Independent Traveler's Guide"** 🎯 CONVERSION FOCUS
+- Keyword: solo travel telluride + telluride solo skiing
 - Word Count: 2,400
-- Type: Comprehensive Guide
-- Category: activity-guides
-- Tags: trail-running, hiking, summer, fitness
+- Type: Comprehensive Guide with Interactive Tools
+- Category: planning-tips
+- Tags: solo-travel, independent, planning, budget
+- **Tools Required:** BudgetToItineraryPlanner, GroupTypeRecommender
+- **Focus:** Solo-friendly hotels, activities, cost optimization
 
-**Day 25: "Telluride Mountain Biking: Trail Guide & Rentals"** 🆕
-- Keyword: telluride mountain biking (880/mo)
+**Day 20: "Telluride Girls Weekend: Ultimate Girlfriend Getaway Guide"** 🎯 CONVERSION FOCUS
+- Keyword: telluride girls trip + telluride girls weekend
+- Word Count: 2,700
+- Type: Comprehensive Guide with Interactive Tools
+- Category: planning-tips
+- Tags: girls-trip, friends, weekend, planning
+- **Tools Required:** GroupCostCalculator, BudgetToItineraryPlanner, SeasonComparison
+- **Focus:** Weekend itineraries, group lodging, activity planning
+
+**Day 21: "Telluride Corporate Retreat: Team Building & Lodging Guide"** 🎯 CONVERSION FOCUS
+- Keyword: telluride corporate retreat (90/mo)
+- Word Count: 2,800
+- Type: Comprehensive Guide with Interactive Tools
+- Category: planning-tips
+- Tags: corporate, business, groups, retreat
+- **Tools Required:** EventPlanningTimeline, LodgingComparisonMatrix, GroupCostCalculator
+- **Focus:** Corporate group planning, meeting spaces, team activities
+
+**Day 22: "Planning a Telluride 50th Birthday Celebration: Lodging & Activities"** 🎯 CONVERSION FOCUS
+- Keyword: telluride birthday celebration + telluride milestone birthday
+- Word Count: 2,600
+- Type: Comprehensive Guide with Interactive Tools
+- Category: planning-tips
+- Tags: birthday, celebration, milestone, events, groups
+- **Tools Required:** EventPlanningTimeline, GroupCostCalculator, BudgetToItineraryPlanner
+- **Focus:** Event planning timeline, group lodging, celebration activities
+
+**Day 23: "Telluride Memorial/Celebration of Life Trip Planning Guide"** 🎯 CONVERSION FOCUS
+- Keyword: telluride memorial trip + telluride celebration of life
 - Word Count: 2,500
-- Type: Comprehensive Guide
-- Category: activity-guides
-- Tags: mountain-biking, trails, summer
-
-**Day 26: "Telluride Day Trip from Denver: Is It Worth It?"**
-- Keyword: denver to telluride day trip (260/mo)
-- Word Count: 2,100
-- Type: Comprehensive Guide
+- Type: Comprehensive Guide with Interactive Tools
 - Category: planning-tips
-- Tags: day-trip, denver, locals, realistic
-- **Local Focus:** Honest assessment, 6+ hour drive each way, better alternatives, overnight recommendations
+- Tags: memorial, celebration-of-life, groups, planning
+- **Tools Required:** EventPlanningTimeline, GroupCostCalculator, LodgingComparisonMatrix
+- **Focus:** Sensitive group planning, large group accommodations, memorial activities
+
+**Day 24: "Telluride Wedding Party Lodging: Where to House Your Guests"** 🎯 CONVERSION FOCUS
+- Keyword: telluride wedding venues (480/mo) + telluride wedding party lodging
+- Word Count: 2,800
+- Type: Comprehensive Guide with Interactive Tools
+- Category: planning-tips
+- Tags: wedding, wedding-party, groups, lodging
+- **Tools Required:** HotelSplitCalculator, EventPlanningTimeline, CostPerPersonRanking
+- **Focus:** Large group accommodations, wedding party logistics, cost coordination
+
+**Day 25: "Telluride Ski Trip Cost Calculator: Budget by Group Size"** 🎯 CONVERSION FOCUS
+- Keyword: telluride ski trip cost + telluride trip cost calculator
+- Word Count: 2,500
+- Type: Comprehensive Guide with Interactive Tools
+- Category: planning-tips
+- Tags: cost-calculator, budget, planning, groups
+- **Tools Required:** GroupCostCalculator, BudgetToItineraryPlanner, SeasonComparison
+- **Focus:** Cost breakdowns by group size, budget planning, price comparisons
+
+**Day 26: "4-Day Telluride Itinerary: Cost Breakdown for 2/4/6/8 People"** 🎯 CONVERSION FOCUS
+- Keyword: telluride itinerary + telluride 4 day trip
+- Word Count: 2,700
+- Type: Comprehensive Guide with Interactive Tools
+- Category: planning-tips
+- Tags: itinerary, cost-breakdown, planning, groups
+- **Tools Required:** BudgetToItineraryPlanner, GroupCostCalculator, CostPerPersonRanking
+- **Focus:** Detailed itineraries with cost breakdowns by group size
 
 ### Week 4: Skiing Deep Dives + Local Tips
 
-**Day 27: "Telluride Apres Ski: Best Bars & Hangouts"** 🆕
-- Keyword: telluride apres ski (800/mo)
-- Word Count: 2,100
-- Type: Listicle
-- Category: dining-nightlife
-- Tags: apres-ski, bars, socializing, drinks
-
-**Day 28: "Telluride Lift Tickets & Ski Passes: Complete Guide"**
-- Keyword: telluride lift tickets (1,100/mo)
-- Word Count: 2,400
-- Type: Comprehensive Guide
-- Category: ski-guides
-- Tags: lift-tickets, passes, pricing
-
-**Day 29: "Telluride Ski Pass: Ikon vs Epic vs Local"**
-- Keyword: telluride ski pass (1,300/mo)
-- Word Count: 2,300
-- Type: Comparison
-- Category: ski-guides
-- Tags: ski-pass, ikon, pricing
-
-**Day 30: "Where to Stop Between Denver and Telluride"**
-- Keyword: stops between denver and telluride (180/mo)
-- Word Count: 2,400
-- Type: Comprehensive Guide
+**Day 27: "Telluride: Peak Season vs Off-Season Cost Comparison"** 🎯 CONVERSION FOCUS
+- Keyword: telluride peak season vs off season + telluride cost comparison
+- Word Count: 2,600
+- Type: Comparison with Interactive Tools
 - Category: planning-tips
-- Tags: road-trip, stops, locals, dining, gas
-- **Local Focus:** Frisco, Silverthorne, Glenwood Springs, Montrose - best food, gas, bathrooms, timing
+- Tags: peak-season, off-season, cost-comparison, timing
+- **Tools Required:** SeasonComparison, GroupCostCalculator, BudgetToItineraryPlanner
+- **Focus:** Visual cost comparisons, timing decisions, budget optimization
+
+**Day 28: "Splitting Costs in Telluride: Condos vs Hotels for Groups"** 🎯 CONVERSION FOCUS
+- Keyword: telluride condos vs hotels + telluride group lodging
+- Word Count: 2,500
+- Type: Comparison with Interactive Tools
+- Category: planning-tips
+- Tags: condos, hotels, groups, cost-splitting
+- **Tools Required:** HotelSplitCalculator, CostPerPersonRanking, LodgingComparisonMatrix
+- **Focus:** Detailed cost comparisons, when to choose each option
+
+**Day 29: "Top 10 Telluride Hotels by Value: Price per Person Analysis"** 🎯 CONVERSION FOCUS
+- Keyword: best value telluride hotels + telluride hotels price per person
+- Word Count: 2,800
+- Type: Listicle with Interactive Tools
+- Category: lodging
+- Tags: value, rankings, price-analysis, hotels
+- **Tools Required:** CostPerPersonRanking, LodgingComparisonMatrix
+- **Focus:** Hotels ranked by cost per person, value analysis
+
+**Day 30: "Best Telluride Hotels for Groups: Ranked by Amenities & Space"** 🎯 CONVERSION FOCUS
+- Keyword: telluride hotels for groups + telluride group accommodations
+- Word Count: 2,600
+- Type: Listicle with Interactive Tools
+- Category: lodging
+- Tags: groups, hotels, amenities, space
+- **Tools Required:** LodgingComparisonMatrix, HotelSplitCalculator, GroupCostCalculator
+- **Focus:** Group-friendly hotels, space requirements, amenities comparison
 
 **Day 31: "Telluride Ski Map & Trail Guide"**
 - Keyword: telluride ski map (1,600/mo)

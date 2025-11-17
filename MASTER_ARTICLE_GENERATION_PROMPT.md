@@ -1681,6 +1681,411 @@ When choosing where to stay, location dramatically impacts your experience...
 
 ---
 
+## Interactive Planning Tools System
+
+### ⚠️ MANDATORY: Planning Tools for Group Planning Articles
+
+**CRITICAL REQUIREMENT:** Every group planning, cost-focused, or event-based article MUST include at least ONE interactive planning tool. These tools drive engagement, increase time on site, and convert readers into bookings.
+
+### Available Planning Widgets
+
+All planning tools are React components that work in markdown files. Use them directly in your markdown content with JSX-style tags.
+
+#### 1. GroupCostCalculator
+
+**Use Case:** Family trips, friend groups, bachelor/bachelorette parties, any multi-person planning
+
+**Component Syntax:**
+```markdown
+<GroupCostCalculator 
+  groupType="family"
+  defaultNights={4}
+  defaultGuests={6}
+  checkIn="2025-12-20"
+  checkOut="2025-12-24"
+/>
+```
+
+**Props:**
+- `groupType`: "family" | "friends" | "couples" | "corporate" | "solo"
+- `defaultNights`: number (default: 4)
+- `defaultGuests`: number (default: 2)
+- `checkIn`: string (YYYY-MM-DD format, optional)
+- `checkOut`: string (YYYY-MM-DD format, optional)
+
+**What It Does:**
+- User inputs: # of people, # of nights, travel dates
+- Calculates: Total trip cost, cost per person
+- Shows: Hotel tier recommendations at different price points
+- Outputs: "For 6 people, 4 nights: $450/person (budget), $850/person (mid-range), $1,400/person (luxury)"
+- Includes CTA: "See Hotels Under $850/person" → filters LiteAPI results
+
+**When to Use:**
+- Family vacation planning articles
+- Friend group trip guides
+- Bachelor/bachelorette party planning
+- Any article discussing group travel costs
+
+---
+
+#### 2. HotelSplitCalculator
+
+**Use Case:** Groups comparing hotels vs condos, cost splitting scenarios
+
+**Component Syntax:**
+```markdown
+<HotelSplitCalculator 
+  hotelIds={["hotel-1", "hotel-2", "condo-1"]}
+  scenario="group-of-8"
+  defaultNights={4}
+  defaultGuests={8}
+/>
+```
+
+**Props:**
+- `hotelIds`: string[] (array of hotel IDs to compare)
+- `scenario`: string (descriptive scenario like "group-of-8", "two-families")
+- `defaultNights`: number (default: 4)
+- `defaultGuests`: number (default: 4)
+
+**What It Does:**
+- User inputs: Group size, dates
+- Compares: 3-bed condo vs 4 hotel rooms vs 2 large suites
+- Shows: Cost per person for each option with amenities comparison
+- Output: "8 people, 4 nights: 3BR Condo ($312/person) vs 4 Hotel Rooms ($425/person)"
+- Includes CTA: "View This Condo" → direct to booking
+
+**When to Use:**
+- Hotel vs condo comparison articles
+- Group lodging decision guides
+- Cost splitting scenarios
+- Articles comparing accommodation types
+
+---
+
+#### 3. BudgetToItineraryPlanner
+
+**Use Case:** Budget-conscious travelers, first-timers
+
+**Component Syntax:**
+```markdown
+<BudgetToItineraryPlanner 
+  budgetPerPerson={800}
+  tripLength={3}
+  groupSize={2}
+  checkIn="2025-01-15"
+  checkOut="2025-01-18"
+/>
+```
+
+**Props:**
+- `budgetPerPerson`: number (default: 800)
+- `tripLength`: number (default: 3)
+- `groupSize`: number (default: 2)
+- `checkIn`: string (YYYY-MM-DD format, optional)
+- `checkOut`: string (YYYY-MM-DD format, optional)
+
+**What It Does:**
+- User inputs: Budget per person, trip length, group size
+- Calculates: What percentage goes to lodging/activities/dining/lift tickets
+- Outputs: Recommended hotels in budget + sample itinerary
+- Shows: "$800/person for 3 days: $280 lodging, $200 lift tickets, $220 activities, $100 dining"
+- Includes CTA: "Book Recommended Hotels" → filtered results
+
+**When to Use:**
+- Budget planning articles
+- First-time visitor guides
+- Cost breakdown articles
+- Articles helping travelers plan within a budget
+
+---
+
+#### 4. SeasonComparison
+
+**Use Case:** Peak vs off-season decision articles
+
+**Component Syntax:**
+```markdown
+<SeasonComparison 
+  peakDates="2024-12-20 to 2025-01-05"
+  offPeakDates="2025-01-15 to 2025-02-15"
+  groupSize={4}
+/>
+```
+
+**Props:**
+- `peakDates`: string (date range string)
+- `offPeakDates`: string (date range string)
+- `groupSize`: number (default: 4)
+
+**What It Does:**
+- Visual slider comparing costs/crowds/conditions
+- Shows same hotel prices in different seasons
+- Output: "Same hotel: $1,200/night (Christmas) vs $450/night (mid-January)"
+- Includes CTA: "See Off-Peak Deals"
+
+**When to Use:**
+- Peak vs off-season comparison articles
+- Timing decision guides
+- Cost comparison articles
+- Articles discussing when to visit
+
+---
+
+#### 5. GroupTypeRecommender
+
+**Use Case:** Undecided travelers, first-time planners
+
+**Component Syntax:**
+```markdown
+<GroupTypeRecommender />
+```
+
+**Props:** None (all inputs handled internally)
+
+**What It Does:**
+- Quiz-style: "What kind of trip are you planning?"
+- User selects: Family/Couples/Friends/Solo/Corporate
+- Outputs: Recommended articles + hotels + activities for that group type
+- Includes CTA: "Start Planning Your [Group Type] Trip"
+
+**When to Use:**
+- General planning articles
+- First-time visitor guides
+- Articles helping travelers decide what type of trip to plan
+- Landing pages for group planning content
+
+---
+
+#### 6. CostPerPersonRanking
+
+**Use Case:** Hotel ranking/comparison articles
+
+**Component Syntax:**
+```markdown
+<CostPerPersonRanking 
+  hotelIds={["hotel-1", "hotel-2", "hotel-3"]}
+  groupSize={4}
+  nights={5}
+  checkIn="2025-02-15"
+  checkOut="2025-02-20"
+/>
+```
+
+**Props:**
+- `hotelIds`: string[] (array of hotel IDs to rank)
+- `groupSize`: number (default: 4)
+- `nights`: number (default: 5)
+- `checkIn`: string (YYYY-MM-DD format, optional)
+- `checkOut`: string (YYYY-MM-DD format, optional)
+
+**What It Does:**
+- Live table: Hotels ranked by cost per person (not per room)
+- Adjustable: User can change group size/nights, table re-sorts
+- Shows: Amenities, ratings, total cost vs per-person cost
+- Includes CTA: "View Rooms" for each hotel
+
+**When to Use:**
+- Hotel ranking articles
+- Value comparison articles
+- "Best hotels by price" articles
+- Group-friendly hotel guides
+
+---
+
+#### 7. EventPlanningTimeline
+
+**Use Case:** Weddings, milestone birthdays, corporate retreats
+
+**Component Syntax:**
+```markdown
+<EventPlanningTimeline 
+  eventType="50th-birthday"
+  eventDate="2025-03-15"
+  groupSize={20}
+/>
+```
+
+**Props:**
+- `eventType`: "wedding" | "birthday" | "corporate-retreat" | "memorial" | "celebration"
+- `eventDate`: string (YYYY-MM-DD format)
+- `groupSize`: number (default: 10)
+
+**What It Does:**
+- Timeline widget: "6 months out: Book lodging", "3 months out: Book activities"
+- Checklist with deadlines
+- Budget breakdown for large groups
+- Includes CTA: "Reserve Group Lodging Now"
+
+**When to Use:**
+- Event planning articles
+- Wedding party guides
+- Corporate retreat planning
+- Milestone celebration guides
+
+---
+
+#### 8. LodgingComparisonMatrix
+
+**Use Case:** Detailed hotel comparison articles
+
+**Component Syntax:**
+```markdown
+<LodgingComparisonMatrix 
+  compareIds={["hotel-1", "hotel-2", "hotel-3"]}
+  criteria={["price", "location", "amenities", "reviews"]}
+  groupSize={6}
+  nights={4}
+/>
+```
+
+**Props:**
+- `compareIds`: string[] (array of hotel IDs to compare)
+- `criteria`: string[] (comparison criteria: "price", "location", "amenities", "reviews", "space")
+- `groupSize`: number (default: 4)
+- `nights`: number (default: 4)
+
+**What It Does:**
+- Side-by-side comparison table
+- User can filter/sort by different criteria
+- Scores each hotel on weighted criteria
+- Output: "Best for families: Hotel B (94/100), Best for budget: Hotel A (88/100)"
+- Includes CTA: Individual book buttons for each
+
+**When to Use:**
+- Detailed hotel comparison articles
+- "Which hotel is best for..." articles
+- Group accommodation decision guides
+- Articles comparing multiple properties
+
+---
+
+### Mandatory Placement Rules
+
+**REQUIRED FREQUENCY:** Every group planning or cost-focused article must include at least ONE planning tool.
+
+**Placement Strategy:**
+
+**1. After Introduction (REQUIRED)**
+Place a planning tool within the first 500 words of any group planning article:
+```markdown
+Planning a Telluride family ski trip requires careful budgeting and coordination. Use the calculator below to estimate costs for your group size and trip length.
+
+<GroupCostCalculator 
+  groupType="family"
+  defaultNights={4}
+  defaultGuests={6}
+/>
+
+Once you have your budget estimate, we'll walk through the best lodging options...
+```
+
+**2. Before Major Decision Points**
+Place tools before sections where readers need to make decisions:
+```markdown
+### Hotel vs Condo: Which is Better for Your Group?
+
+Compare costs and amenities for your specific group size:
+
+<HotelSplitCalculator 
+  hotelIds={["hotel-1", "condo-1"]}
+  scenario="family-of-6"
+  defaultGuests={6}
+/>
+
+Here's what to consider when choosing...
+```
+
+**3. After Cost Breakdowns**
+Place tools after explaining cost structures:
+```markdown
+Telluride trips typically cost $800-$1,500 per person for a 4-day ski trip, depending on lodging and activities.
+
+<BudgetToItineraryPlanner 
+  budgetPerPerson={1000}
+  tripLength={4}
+  groupSize={4}
+/>
+
+Let's break down where your budget goes...
+```
+
+**4. In Comparison Sections**
+Use comparison tools when comparing options:
+```markdown
+### Peak Season vs Off-Season: Which Should You Choose?
+
+Compare costs and conditions:
+
+<SeasonComparison 
+  peakDates="2024-12-20 to 2025-01-05"
+  offPeakDates="2025-01-15 to 2025-02-15"
+  groupSize={4}
+/>
+
+Here's what changes between seasons...
+```
+
+### Tool Selection Guidelines
+
+**For Family Articles:**
+- GroupCostCalculator (required)
+- HotelSplitCalculator (hotel vs condo decisions)
+- BudgetToItineraryPlanner (budget planning)
+
+**For Friend Group Articles:**
+- GroupCostCalculator (required)
+- HotelSplitCalculator (cost splitting)
+- CostPerPersonRanking (value comparison)
+
+**For Event Planning Articles:**
+- EventPlanningTimeline (required)
+- GroupCostCalculator (budget planning)
+- LodgingComparisonMatrix (accommodation decisions)
+
+**For Budget Articles:**
+- BudgetToItineraryPlanner (required)
+- SeasonComparison (timing decisions)
+- CostPerPersonRanking (value analysis)
+
+**For Comparison Articles:**
+- LodgingComparisonMatrix (required)
+- HotelSplitCalculator (accommodation type comparison)
+- CostPerPersonRanking (price comparison)
+
+### Integration with ArticleBookingWidget
+
+Planning tools automatically include ArticleBookingWidget CTAs based on calculator results. When a tool recommends hotels within a budget or filters results, it includes a booking widget that links to filtered search results.
+
+**Example:**
+```markdown
+<GroupCostCalculator 
+  groupType="family"
+  defaultGuests={6}
+/>
+
+The calculator above shows recommended hotels. After calculating your budget, use the booking widget below to see available properties:
+
+<ArticleBookingWidget 
+  filter="family-friendly"
+  variant="featured"
+  title="Book Family-Friendly Hotels in Your Budget"
+/>
+```
+
+### Planning Tools Checklist
+
+Before publishing any group planning article, verify:
+- [ ] At least ONE planning tool included (required)
+- [ ] Tool placed within first 500 words (after introduction)
+- [ ] Tool matches article topic and group type
+- [ ] Tool props configured correctly (dates, group size, etc.)
+- [ ] ArticleBookingWidget included after tool results
+- [ ] Tool results link to filtered hotel search pages
+- [ ] Mobile-responsive tool design verified
+
+---
+
 ## Quality Checklist
 
 ### Before Submitting Content
