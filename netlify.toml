@@ -1,3 +1,14 @@
+# Booking API routes to Netlify functions
+[[redirects]]
+  from = "/api/booking/prebook"
+  to = "/.netlify/functions/booking-prebook"
+  status = 200
+
+[[redirects]]
+  from = "/api/booking/confirm"
+  to = "/.netlify/functions/booking-confirm"
+  status = 200
+
 [[redirects]]
   from = "/*"
   to = "/index.html"
@@ -7,6 +18,10 @@
 [build]
   command = "npm run build"
   publish = "dist"
+
+[functions]
+  directory = "netlify/functions"
+  node_bundler = "esbuild"
 
 [build.environment]
   NODE_VERSION = "20"
