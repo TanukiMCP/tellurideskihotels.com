@@ -477,8 +477,9 @@ export default function HeroMapSearch({
 
   return (
     <div className="w-full mx-auto px-4 sm:px-6 lg:px-12 py-8 lg:py-12">
-      <div className="bg-white rounded-2xl shadow-2xl overflow-hidden border border-neutral-200">
-        <div className="relative h-[500px] md:h-[600px] lg:h-[700px] w-full overflow-visible">
+      <div className="relative">
+        <div className="bg-white rounded-2xl shadow-2xl overflow-hidden border border-neutral-200">
+          <div className="relative h-[500px] md:h-[600px] lg:h-[700px] w-full">
       {/* Mapbox Background */}
       <Map
         ref={mapRef}
@@ -741,221 +742,6 @@ export default function HeroMapSearch({
         </div>
       )}
 
-      {/* Hotel Cards Panel - Right Side (Desktop) / Bottom (Mobile) */}
-      {hotels.length > 0 && (
-        <div className="absolute bottom-0 right-0 lg:top-0 lg:bottom-auto lg:right-0 lg:w-[420px] w-full max-h-[50vh] md:max-h-[60vh] lg:max-h-full lg:h-full z-[400] pointer-events-auto" style={{ overflow: 'visible' }}>
-          <div className="backdrop-blur-xl bg-white/98 border-t lg:border-t-0 lg:border-l border-neutral-200 shadow-2xl h-full flex flex-col overflow-hidden">
-            {/* Header */}
-            <div className="px-4 py-3 border-b border-neutral-200 flex items-center justify-between flex-shrink-0">
-              <div>
-                <h3 className="text-lg font-bold text-neutral-900">Available Hotels</h3>
-                <p className="text-xs text-neutral-600 mt-0.5">{hotels.length} properties</p>
-              </div>
-            </div>
-
-            {/* Scrollable Cards Container */}
-            <div className="flex-1 overflow-y-auto overscroll-contain px-4 py-4 space-y-3">
-              {hotels.map((hotel) => {
-                const imageUrl = getHotelMainImage(hotel);
-                const address = formatHotelAddress(hotel);
-                const rating = hotel.review_score || 0;
-                const ratingColor = getRatingColor(rating);
-                const minPrice = minPrices[hotel.hotel_id];
-                const isExpanded = expandedHotelId === hotel.hotel_id;
-                const isHovered = hoveredHotelId === hotel.hotel_id;
-                const isFeatured = featuredHotelIds.includes(hotel.hotel_id);
-
-                return (
-                  <div
-                    key={hotel.hotel_id}
-                    className={`bg-white rounded-xl shadow-md border-2 transition-all duration-300 overflow-hidden ${
-                      isExpanded 
-                        ? 'border-primary-600 shadow-xl' 
-                        : isHovered 
-                        ? 'border-primary-300 shadow-lg' 
-                        : 'border-transparent hover:border-neutral-200'
-                    }`}
-                  >
-                    {/* Compact Preview */}
-                    <div 
-                      className="cursor-pointer"
-                      onClick={(e) => handleCardClick(hotel, e)}
-                    >
-                      <div className="flex gap-3 p-3">
-                        {/* Image */}
-                        <div className="relative w-24 h-24 flex-shrink-0 rounded-lg overflow-hidden bg-neutral-100">
-                          {imageUrl ? (
-                            <img
-                              src={imageUrl}
-                              alt={hotel.name || 'Hotel'}
-                              className="w-full h-full object-cover"
-                              loading="lazy"
-                            />
-                          ) : (
-                            <div className="w-full h-full flex items-center justify-center">
-                              <Hotel className="w-8 h-8 text-neutral-400" />
-                            </div>
-                          )}
-                          {/* Featured Badge */}
-                          {isFeatured && (
-                            <div className="absolute top-1 left-1 bg-primary-600 text-white text-[10px] font-bold px-1.5 py-0.5 rounded">
-                              Featured
-                            </div>
-                          )}
-                        </div>
-
-                        {/* Content */}
-                        <div className="flex-1 min-w-0">
-                          {/* Name & Rating */}
-                          <div className="flex items-start justify-between gap-2 mb-1">
-                            <h4 className="font-bold text-sm text-neutral-900 line-clamp-1 flex-1">
-                              {hotel.name}
-                            </h4>
-                            {rating > 0 && (
-                              <div className={`${ratingColor.bg} ${ratingColor.text} px-1.5 py-0.5 rounded text-xs font-bold flex-shrink-0`}>
-                                {rating.toFixed(1)}
-                              </div>
-                            )}
-                          </div>
-
-                          {/* Star Rating */}
-                          {hotel.star_rating && (
-                            <div className="flex items-center gap-1 mb-1.5">
-                              {Array.from({ length: 5 }).map((_, i) => (
-                                <Star
-                                  key={i}
-                                  size={10}
-                                  className={i < hotel.star_rating! ? 'fill-accent-500 text-accent-500' : 'text-neutral-300'}
-                                />
-                              ))}
-                            </div>
-                          )}
-
-                          {/* Address */}
-                          {address && (
-                            <div className="flex items-start gap-1 mb-2">
-                              <MapPin size={12} className="text-neutral-500 mt-0.5 flex-shrink-0" />
-                              <p className="text-xs text-neutral-600 line-clamp-1">{address}</p>
-                            </div>
-                          )}
-
-                          {/* Price & Expand Button */}
-                          <div className="flex items-center justify-between">
-                            {minPrice && minPrice > 0 ? (
-                              <div>
-                                <div className="text-xs text-neutral-500 uppercase tracking-wide">From</div>
-                                <div className="text-lg font-bold text-primary-600">
-                                  {formatCurrency(minPrice, currency)}
-                                  <span className="text-xs font-normal text-neutral-600">/night</span>
-                                </div>
-                              </div>
-                            ) : (
-                              <div className="text-sm text-neutral-600">View Rates</div>
-                            )}
-                            <button
-                              onClick={(e) => toggleExpand(hotel.hotel_id, e)}
-                              className="p-1.5 hover:bg-neutral-100 rounded-lg transition-colors flex-shrink-0"
-                              aria-label={isExpanded ? 'Collapse' : 'Expand'}
-                            >
-                              {isExpanded ? (
-                                <ChevronUp size={18} className="text-neutral-600" />
-                              ) : (
-                                <ChevronDown size={18} className="text-neutral-600" />
-                              )}
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Expanded Details */}
-                    {isExpanded && (
-                      <div className="border-t border-neutral-200 px-3 pb-3 pt-3 animate-expand">
-                        {/* Reviews */}
-                        {hotel.review_count && rating > 0 && (
-                          <div className="mb-3">
-                            <p className="text-xs text-neutral-600">
-                              <span className="font-semibold">{hotel.review_count.toLocaleString()}</span> review{hotel.review_count !== 1 ? 's' : ''}
-                            </p>
-                          </div>
-                        )}
-
-                        {/* Amenities Preview */}
-                        {hotel.amenities && hotel.amenities.length > 0 && (
-                          <div className="mb-3">
-                            <div className="flex flex-wrap gap-1.5">
-                              {hotel.amenities.slice(0, 4).map((amenity, idx) => (
-                                <span
-                                  key={idx}
-                                  className="text-xs bg-neutral-100 text-neutral-700 px-2 py-1 rounded-md"
-                                >
-                                  {amenity.name || amenity.code || 'Amenity'}
-                                </span>
-                              ))}
-                              {hotel.amenities.length > 4 && (
-                                <span className="text-xs text-neutral-500 px-2 py-1">
-                                  +{hotel.amenities.length - 4} more
-                                </span>
-                              )}
-                            </div>
-                          </div>
-                        )}
-
-                        {/* View Details Button */}
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleHotelClick(hotel.hotel_id);
-                          }}
-                          className="w-full bg-primary-600 hover:bg-primary-700 text-white font-semibold py-2.5 px-4 rounded-lg transition-colors flex items-center justify-center gap-2"
-                        >
-                          View Details
-                          <ExternalLink size={14} />
-                        </button>
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Ski Trail Legend - Bottom Right (only show in Ski Trails mode) */}
-      {isMapLoaded && mapStyle === 'skiTrails' && (
-        <div className="absolute bottom-4 right-4 lg:right-[460px] backdrop-blur-xl bg-white/95 rounded-xl shadow-2xl p-4 z-[500] border border-white/20 pointer-events-auto" style={{ overflow: 'visible' }}>
-          <h3 className="text-sm font-bold text-neutral-900 mb-3 flex items-center gap-2">
-            <svg className="w-4 h-4 text-primary-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
-            </svg>
-            Trail Difficulty
-          </h3>
-          <div className="space-y-2">
-            <div className="flex items-center gap-2.5">
-              <div className="w-6 h-1 rounded-full bg-[#22c55e]"></div>
-              <span className="text-xs text-neutral-700 font-medium">Green Circle - Easy</span>
-            </div>
-            <div className="flex items-center gap-2.5">
-              <div className="w-6 h-1 rounded-full bg-[#3b82f6]"></div>
-              <span className="text-xs text-neutral-700 font-medium">Blue Square - Intermediate</span>
-            </div>
-            <div className="flex items-center gap-2.5">
-              <div className="w-6 h-1 rounded-full bg-[#1e1e1e]"></div>
-              <span className="text-xs text-neutral-700 font-medium">Black Diamond - Advanced</span>
-            </div>
-            <div className="flex items-center gap-2.5">
-              <div className="w-6 h-1 rounded-full bg-[#ef4444]"></div>
-              <span className="text-xs text-neutral-700 font-medium">Double Black - Expert</span>
-            </div>
-          </div>
-          <div className="mt-3 pt-3 border-t border-neutral-200">
-            <p className="text-[10px] text-neutral-500">
-              448 trails from OpenStreetMap
-            </p>
-          </div>
-        </div>
-      )}
 
       {/* Custom Styling */}
       <style>{`
@@ -1030,7 +816,225 @@ export default function HeroMapSearch({
           background-color: rgba(0, 0, 0, 0.3);
         }
       `}</style>
-      </div>
+          </div>
+        </div>
+        
+        {/* Overlays positioned relative to outer container to prevent clipping on scroll */}
+        {/* Hotel Cards Panel - Right Side (Desktop) / Bottom (Mobile) */}
+        {hotels.length > 0 && (
+          <div className="absolute bottom-4 right-4 lg:top-4 lg:bottom-auto lg:right-4 lg:w-[420px] w-[calc(100%-2rem)] max-h-[calc(100%-2rem)] lg:max-h-[calc(100%-2rem)] z-[400] pointer-events-auto" style={{ height: 'calc(100% - 2rem)' }}>
+            <div className="backdrop-blur-xl bg-white/98 border-t lg:border-t-0 lg:border-l border-neutral-200 shadow-2xl h-full flex flex-col overflow-hidden rounded-xl">
+              {/* Header */}
+              <div className="px-4 py-3 border-b border-neutral-200 flex items-center justify-between flex-shrink-0">
+                <div>
+                  <h3 className="text-lg font-bold text-neutral-900">Available Hotels</h3>
+                  <p className="text-xs text-neutral-600 mt-0.5">{hotels.length} properties</p>
+                </div>
+              </div>
+
+              {/* Scrollable Cards Container */}
+              <div className="flex-1 overflow-y-auto overscroll-contain px-4 py-4 space-y-3">
+                {hotels.map((hotel) => {
+                  const imageUrl = getHotelMainImage(hotel);
+                  const address = formatHotelAddress(hotel);
+                  const rating = hotel.review_score || 0;
+                  const ratingColor = getRatingColor(rating);
+                  const minPrice = minPrices[hotel.hotel_id];
+                  const isExpanded = expandedHotelId === hotel.hotel_id;
+                  const isHovered = hoveredHotelId === hotel.hotel_id;
+                  const isFeatured = featuredHotelIds.includes(hotel.hotel_id);
+
+                  return (
+                    <div
+                      key={hotel.hotel_id}
+                      className={`bg-white rounded-xl shadow-md border-2 transition-all duration-300 overflow-hidden ${
+                        isExpanded 
+                          ? 'border-primary-600 shadow-xl' 
+                          : isHovered 
+                          ? 'border-primary-300 shadow-lg' 
+                          : 'border-transparent hover:border-neutral-200'
+                      }`}
+                    >
+                      {/* Compact Preview */}
+                      <div 
+                        className="cursor-pointer"
+                        onClick={(e) => handleCardClick(hotel, e)}
+                      >
+                        <div className="flex gap-3 p-3">
+                          {/* Image */}
+                          <div className="relative w-24 h-24 flex-shrink-0 rounded-lg overflow-hidden bg-neutral-100">
+                            {imageUrl ? (
+                              <img
+                                src={imageUrl}
+                                alt={hotel.name || 'Hotel'}
+                                className="w-full h-full object-cover"
+                                loading="lazy"
+                              />
+                            ) : (
+                              <div className="w-full h-full flex items-center justify-center">
+                                <Hotel className="w-8 h-8 text-neutral-400" />
+                              </div>
+                            )}
+                            {/* Featured Badge */}
+                            {isFeatured && (
+                              <div className="absolute top-1 left-1 bg-primary-600 text-white text-[10px] font-bold px-1.5 py-0.5 rounded">
+                                Featured
+                              </div>
+                            )}
+                          </div>
+
+                          {/* Content */}
+                          <div className="flex-1 min-w-0">
+                            {/* Name & Rating */}
+                            <div className="flex items-start justify-between gap-2 mb-1">
+                              <h4 className="font-bold text-sm text-neutral-900 line-clamp-1 flex-1">
+                                {hotel.name}
+                              </h4>
+                              {rating > 0 && (
+                                <div className={`${ratingColor.bg} ${ratingColor.text} px-1.5 py-0.5 rounded text-xs font-bold flex-shrink-0`}>
+                                  {rating.toFixed(1)}
+                                </div>
+                              )}
+                            </div>
+
+                            {/* Star Rating */}
+                            {hotel.star_rating && (
+                              <div className="flex items-center gap-1 mb-1.5">
+                                {Array.from({ length: 5 }).map((_, i) => (
+                                  <Star
+                                    key={i}
+                                    size={10}
+                                    className={i < hotel.star_rating! ? 'fill-accent-500 text-accent-500' : 'text-neutral-300'}
+                                  />
+                                ))}
+                              </div>
+                            )}
+
+                            {/* Address */}
+                            {address && (
+                              <div className="flex items-start gap-1 mb-2">
+                                <MapPin size={12} className="text-neutral-500 mt-0.5 flex-shrink-0" />
+                                <p className="text-xs text-neutral-600 line-clamp-1">{address}</p>
+                              </div>
+                            )}
+
+                            {/* Price & Expand Button */}
+                            <div className="flex items-center justify-between">
+                              {minPrice && minPrice > 0 ? (
+                                <div>
+                                  <div className="text-xs text-neutral-500 uppercase tracking-wide">From</div>
+                                  <div className="text-lg font-bold text-primary-600">
+                                    {formatCurrency(minPrice, currency)}
+                                    <span className="text-xs font-normal text-neutral-600">/night</span>
+                                  </div>
+                                </div>
+                              ) : (
+                                <div className="text-sm text-neutral-600">View Rates</div>
+                              )}
+                              <button
+                                onClick={(e) => toggleExpand(hotel.hotel_id, e)}
+                                className="p-1.5 hover:bg-neutral-100 rounded-lg transition-colors flex-shrink-0"
+                                aria-label={isExpanded ? 'Collapse' : 'Expand'}
+                              >
+                                {isExpanded ? (
+                                  <ChevronUp size={18} className="text-neutral-600" />
+                                ) : (
+                                  <ChevronDown size={18} className="text-neutral-600" />
+                                )}
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Expanded Details */}
+                      {isExpanded && (
+                        <div className="border-t border-neutral-200 px-3 pb-3 pt-3 animate-expand">
+                          {/* Reviews */}
+                          {hotel.review_count && rating > 0 && (
+                            <div className="mb-3">
+                              <p className="text-xs text-neutral-600">
+                                <span className="font-semibold">{hotel.review_count.toLocaleString()}</span> review{hotel.review_count !== 1 ? 's' : ''}
+                              </p>
+                            </div>
+                          )}
+
+                          {/* Amenities Preview */}
+                          {hotel.amenities && hotel.amenities.length > 0 && (
+                            <div className="mb-3">
+                              <div className="flex flex-wrap gap-1.5">
+                                {hotel.amenities.slice(0, 4).map((amenity, idx) => (
+                                  <span
+                                    key={idx}
+                                    className="text-xs bg-neutral-100 text-neutral-700 px-2 py-1 rounded-md"
+                                  >
+                                    {amenity.name || amenity.code || 'Amenity'}
+                                  </span>
+                                ))}
+                                {hotel.amenities.length > 4 && (
+                                  <span className="text-xs text-neutral-500 px-2 py-1">
+                                    +{hotel.amenities.length - 4} more
+                                  </span>
+                                )}
+                              </div>
+                            </div>
+                          )}
+
+                          {/* View Details Button */}
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleHotelClick(hotel.hotel_id);
+                            }}
+                            className="w-full bg-primary-600 hover:bg-primary-700 text-white font-semibold py-2.5 px-4 rounded-lg transition-colors flex items-center justify-center gap-2"
+                          >
+                            View Details
+                            <ExternalLink size={14} />
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Ski Trail Legend - Bottom Right (only show in Ski Trails mode) */}
+        {isMapLoaded && mapStyle === 'skiTrails' && (
+          <div className="absolute bottom-4 right-4 lg:right-[460px] backdrop-blur-xl bg-white/95 rounded-xl shadow-2xl p-4 z-[500] border border-white/20 pointer-events-auto">
+            <h3 className="text-sm font-bold text-neutral-900 mb-3 flex items-center gap-2">
+              <svg className="w-4 h-4 text-primary-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
+              </svg>
+              Trail Difficulty
+            </h3>
+            <div className="space-y-2">
+              <div className="flex items-center gap-2.5">
+                <div className="w-6 h-1 rounded-full bg-[#22c55e]"></div>
+                <span className="text-xs text-neutral-700 font-medium">Green Circle - Easy</span>
+              </div>
+              <div className="flex items-center gap-2.5">
+                <div className="w-6 h-1 rounded-full bg-[#3b82f6]"></div>
+                <span className="text-xs text-neutral-700 font-medium">Blue Square - Intermediate</span>
+              </div>
+              <div className="flex items-center gap-2.5">
+                <div className="w-6 h-1 rounded-full bg-[#1e1e1e]"></div>
+                <span className="text-xs text-neutral-700 font-medium">Black Diamond - Advanced</span>
+              </div>
+              <div className="flex items-center gap-2.5">
+                <div className="w-6 h-1 rounded-full bg-[#ef4444]"></div>
+                <span className="text-xs text-neutral-700 font-medium">Double Black - Expert</span>
+              </div>
+            </div>
+            <div className="mt-3 pt-3 border-t border-neutral-200">
+              <p className="text-[10px] text-neutral-500">
+                448 trails from OpenStreetMap
+              </p>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
