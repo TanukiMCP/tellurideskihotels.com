@@ -36,28 +36,49 @@ export function CheckoutFlow({ hotelId, hotelName, room, addons = [], onComplete
   
   // Restore prebookData from sessionStorage if returning from payment
   useEffect(() => {
+    console.log('[Checkout] Component mounted, checking for payment redirect');
     if (typeof window !== 'undefined') {
       const urlParams = new URLSearchParams(window.location.search);
       const tid = urlParams.get('tid');
       const pid = urlParams.get('pid');
       const returnFromPayment = urlParams.get('returnFromPayment');
       
+      console.log('[Checkout] URL params:', { 
+        tid, 
+        pid, 
+        returnFromPayment, 
+        url: window.location.href,
+        hasSessionData: !!sessionStorage.getItem('prebookData')
+      });
+      
       // Check if we're returning from payment (either returnFromPayment param or tid+pid)
       if (returnFromPayment || (tid && pid)) {
-        console.log('[Checkout] Detected payment redirect return:', { tid, pid, returnFromPayment, url: window.location.href });
+        console.log('[Checkout] ✓ Detected payment redirect return:', { tid, pid, returnFromPayment });
         const stored = sessionStorage.getItem('prebookData');
+        const storedGuest = sessionStorage.getItem('guestInfo');
+        
         if (stored) {
           try {
             const data = JSON.parse(stored);
             setPrebookData(data);
             setStep(2);
-            console.log('[Checkout] Restored prebookData from sessionStorage:', data);
+            console.log('[Checkout] ✓ Restored prebookData from sessionStorage:', data);
+            
+            // Also restore guest info
+            if (storedGuest) {
+              const guestData = JSON.parse(storedGuest);
+              setGuestInfo(guestData);
+              console.log('[Checkout] ✓ Restored guestInfo from sessionStorage');
+            }
           } catch (e) {
-            console.error('[Checkout] Failed to restore prebookData:', e);
+            console.error('[Checkout] ❌ Failed to restore prebookData:', e);
           }
         } else {
-          console.warn('[Checkout] No prebookData in sessionStorage, user may need to restart booking');
+          console.error('[Checkout] ❌ No prebookData in sessionStorage after payment redirect!');
+          alert('Booking session lost. Please start over.');
         }
+      } else {
+        console.log('[Checkout] No payment redirect detected, starting fresh checkout');
       }
     }
   }, []);
@@ -98,14 +119,29 @@ export function CheckoutFlow({ hotelId, hotelName, room, addons = [], onComplete
   };
   
   const handlePaymentComplete = async (transactionId: string) => {
+    console.log('[Checkout] ========== PAYMENT COMPLETE HANDLER CALLED ==========');
+    console.log('[Checkout] Transaction ID:', transactionId);
+    
     setIsProcessing(true);
     
     // Get prebookData and guestInfo (might be from sessionStorage if redirected)
     const currentPrebookData = prebookData || (typeof window !== 'undefined' ? JSON.parse(sessionStorage.getItem('prebookData') || '{}') : null);
     const currentGuestInfo = guestInfo.firstName ? guestInfo : (typeof window !== 'undefined' ? JSON.parse(sessionStorage.getItem('guestInfo') || '{}') : guestInfo);
     
+    console.log('[Checkout] Current state:', {
+      hasPrebookData: !!prebookData,
+      hasCurrentPrebookData: !!currentPrebookData,
+      prebookId: currentPrebookData?.prebookId,
+      hasGuestInfo: !!currentGuestInfo,
+      guestName: currentGuestInfo ? `${currentGuestInfo.firstName} ${currentGuestInfo.lastName}` : 'none',
+    });
+    
     if (!currentPrebookData?.prebookId) {
-      console.error('[Checkout] Missing prebookData:', { prebookData, currentPrebookData });
+      console.error('[Checkout] ❌ Missing prebookData - Cannot confirm booking!', { 
+        prebookData, 
+        currentPrebookData,
+        sessionStorageKeys: typeof window !== 'undefined' ? Object.keys(sessionStorage) : []
+      });
       alert('Booking session expired. Please start over.');
       setIsProcessing(false);
       if (typeof window !== 'undefined') {
@@ -117,54 +153,70 @@ export function CheckoutFlow({ hotelId, hotelName, room, addons = [], onComplete
     }
     
     try {
-      console.log('[Checkout] Confirming booking:', {
+      const confirmPayload = {
         prebookId: currentPrebookData.prebookId,
-        transactionId,
-        guestInfo: currentGuestInfo,
+        holder: {
+          firstName: currentGuestInfo.firstName,
+          lastName: currentGuestInfo.lastName,
+          email: currentGuestInfo.email,
+        },
+        payment: {
+          method: 'TRANSACTION_ID',
+          transactionId,
+        },
+        hotelName,
+        roomName: room.roomName,
+        adults: room.adults,
+        children: room.children,
+      };
+      
+      console.log('[Checkout] 📤 Calling booking confirm API:', {
         endpoint: '/api/booking/confirm',
         fullUrl: `${window.location.origin}/api/booking/confirm`,
+        payload: confirmPayload,
       });
       
       const confirmResponse = await fetch('/api/booking/confirm', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          prebookId: currentPrebookData.prebookId,
-          holder: {
-            firstName: currentGuestInfo.firstName,
-            lastName: currentGuestInfo.lastName,
-            email: currentGuestInfo.email,
-          },
-          payment: {
-            method: 'TRANSACTION_ID',
-            transactionId,
-          },
-          hotelName,
-          roomName: room.roomName,
-          adults: room.adults,
-          children: room.children,
-        }),
+        body: JSON.stringify(confirmPayload),
       });
       
-      console.log('[Checkout] Confirm response status:', confirmResponse.status, confirmResponse.statusText);
+      console.log('[Checkout] 📥 Confirm response received:', {
+        status: confirmResponse.status,
+        statusText: confirmResponse.statusText,
+        ok: confirmResponse.ok,
+      });
 
       if (!confirmResponse.ok) {
         const errorData = await confirmResponse.json().catch(() => ({}));
+        console.error('[Checkout] ❌ Booking confirmation failed:', errorData);
         throw new Error(errorData.error || 'Failed to confirm booking');
       }
 
       const bookingData = await confirmResponse.json();
+      console.log('[Checkout] ✓ Booking confirmed successfully:', {
+        bookingId: bookingData.bookingId,
+        confirmationNumber: bookingData.confirmationNumber,
+      });
       
       // Clean up sessionStorage
       if (typeof window !== 'undefined') {
+        console.log('[Checkout] Cleaning up sessionStorage');
         sessionStorage.removeItem('prebookData');
         sessionStorage.removeItem('guestInfo');
       }
       
+      console.log('[Checkout] 🎉 Calling onComplete with bookingId:', bookingData.bookingId);
       onComplete(bookingData.bookingId);
     } catch (error) {
-      console.error('[Checkout] Booking error:', error);
-      alert(error instanceof Error ? error.message : 'Booking failed');
+      console.error('[Checkout] ❌ Booking confirmation error:', error);
+      console.error('[Checkout] Error details:', {
+        name: error instanceof Error ? error.name : 'Unknown',
+        message: error instanceof Error ? error.message : String(error),
+        stack: error instanceof Error ? error.stack : undefined,
+      });
+      alert(error instanceof Error ? error.message : 'Booking failed. Please try again or contact support.');
       setIsProcessing(false);
     }
   };

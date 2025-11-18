@@ -137,40 +137,49 @@ export function LiteAPIPayment({
   }, [sdkLoaded, secretKey, transactionId, amount, currency, returnUrl, prebookId, paymentInitialized]);
 
   // Check if we're returning from payment (payment completed)
+  // This useEffect should run immediately on component mount
   useEffect(() => {
+    console.log('[LiteAPI Payment] Checking for payment redirect on mount');
     const urlParams = new URLSearchParams(window.location.search);
     const tid = urlParams.get('tid');
     const pid = urlParams.get('pid');
     const returnFromPayment = urlParams.get('returnFromPayment');
     
+    console.log('[LiteAPI Payment] URL params:', { 
+      tid, 
+      pid, 
+      returnFromPayment,
+      fullUrl: window.location.href,
+      hasTransactionId: !!transactionId,
+      transactionId
+    });
+    
     // LiteAPI redirects back with tid and pid params
-    // We check for either returnFromPayment OR tid+pid combination
-    if ((returnFromPayment || tid) && tid && pid) {
-      console.log('[LiteAPI Payment] Payment success detected from redirect:', { 
+    // Check for payment redirect BEFORE the payment portal initializes
+    if (tid && pid && (returnFromPayment || returnFromPayment === null)) {
+      console.log('[LiteAPI Payment] ✓ Payment redirect detected! Processing...', { 
         tid, 
         pid, 
         returnFromPayment,
         currentTransactionId: transactionId,
-        url: window.location.href 
+        willCallOnPaymentSuccess: true
       });
       
-      // Verify the transactionId matches (tid should match transactionId)
-      if (tid === transactionId) {
-        console.log('[LiteAPI Payment] Transaction IDs match, calling onPaymentSuccess');
-        onPaymentSuccess(transactionId);
-      } else {
-        console.warn('[LiteAPI Payment] Transaction ID mismatch:', { 
-          expected: transactionId, 
-          received: tid,
-          note: 'Will still proceed with received tid'
-        });
-        // Still proceed with the tid from URL (might be valid if transactionId changed)
-        onPaymentSuccess(tid);
-      }
+      // Call onPaymentSuccess with the tid from the URL
+      // This is the actual transaction ID from LiteAPI
+      console.log('[LiteAPI Payment] Calling onPaymentSuccess with tid:', tid);
+      onPaymentSuccess(tid);
     } else if (tid || pid) {
-      console.log('[LiteAPI Payment] Payment redirect detected but missing params:', { tid, pid, returnFromPayment });
+      console.warn('[LiteAPI Payment] ⚠️ Incomplete payment redirect params:', { 
+        tid, 
+        pid, 
+        returnFromPayment,
+        message: 'Missing required parameters for payment confirmation'
+      });
+    } else {
+      console.log('[LiteAPI Payment] No payment redirect detected, showing payment form');
     }
-  }, [transactionId, onPaymentSuccess]);
+  }, []); // Run only once on mount
 
   if (!sdkLoaded) {
     return (
