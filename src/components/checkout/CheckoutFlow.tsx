@@ -121,6 +121,8 @@ export function CheckoutFlow({ hotelId, hotelName, room, addons = [], onComplete
         prebookId: currentPrebookData.prebookId,
         transactionId,
         guestInfo: currentGuestInfo,
+        endpoint: '/api/booking/confirm',
+        fullUrl: `${window.location.origin}/api/booking/confirm`,
       });
       
       const confirmResponse = await fetch('/api/booking/confirm', {
@@ -143,6 +145,8 @@ export function CheckoutFlow({ hotelId, hotelName, room, addons = [], onComplete
           children: room.children,
         }),
       });
+      
+      console.log('[Checkout] Confirm response status:', confirmResponse.status, confirmResponse.statusText);
 
       if (!confirmResponse.ok) {
         const errorData = await confirmResponse.json().catch(() => ({}));
