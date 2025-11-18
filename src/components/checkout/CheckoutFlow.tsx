@@ -453,22 +453,6 @@ export function CheckoutFlow({ hotelId, hotelName, room, addons = [], onComplete
         </div>
       </div>
 
-      {/* Footer Note - Only show on step 1 (Guest Information) */}
-      {step === 1 && (
-        <div className="mt-8 pt-6 border-t border-neutral-200 text-center text-sm text-neutral-600">
-          <p className="mb-2">
-            By completing this booking, you agree to our{' '}
-            <a href="/terms" target="_blank" className="text-primary-600 hover:underline font-medium">Terms of Service</a>
-            {' '}and{' '}
-            <a href="/privacy" target="_blank" className="text-primary-600 hover:underline font-medium">Privacy Policy</a>.
-          </p>
-          <p className="text-xs text-neutral-500">
-            © 2025 TellurideSkiHotels.com. All rights reserved. | 
-            <a href="/contact" className="hover:text-primary-600 ml-1">Contact Us</a> | 
-            <a href="/help" className="hover:text-primary-600 ml-1">Help Center</a>
-          </p>
-        </div>
-      )}
     </div>
   );
 }
