@@ -3,14 +3,20 @@
   "id": "telluride-weather-guide",
   "title": "Telluride Weather Guide: What to Expect Year-Round (2025)",
   "slug": "telluride-weather-guide",
-  "status": "scheduled",
+  "status": "published",
   "category": "planning-tips",
   "author": "Telluride Ski Hotels Team",
   "publishDate": "2025-11-17T15:00:00Z",
   "seo": {
     "metaTitle": "Telluride Weather Guide: Monthly Climate & What to Pack",
     "metaDescription": "Complete Telluride weather guide with monthly temperatures, snowfall, and packing tips. Plan your visit with real climate data for every season.",
-    "keywords": ["telluride weather", "telluride climate", "telluride temperature", "when to visit telluride", "telluride seasons"],
+    "keywords": [
+      "telluride weather",
+      "telluride climate",
+      "telluride temperature",
+      "when to visit telluride",
+      "telluride seasons"
+    ],
     "canonical": "https://tellurideskihotels.com/blog/planning-tips/telluride-weather-guide"
   },
   "featured": false,
@@ -19,10 +25,30 @@
   "excerpt": "Comprehensive Telluride weather guide with month-by-month climate data, seasonal highlights, packing recommendations, and timing tips for planning your perfect mountain vacation.",
   "wordCount": 2400,
   "readingTime": 12,
-  "relatedHotels": ["madeline-hotel", "peaks-resort", "hotel-telluride"],
-  "relatedArticles": ["telluride-ski-season-guide", "best-time-visit-telluride", "winter-driving-telluride-safety"],
-  "tags": ["weather", "climate", "conditions", "planning", "seasons"],
-  "seasonalRelevance": ["winter", "spring", "summer", "fall"]
+  "relatedHotels": [
+    "madeline-hotel",
+    "peaks-resort",
+    "hotel-telluride"
+  ],
+  "relatedArticles": [
+    "telluride-ski-season-guide",
+    "best-time-visit-telluride",
+    "winter-driving-telluride-safety"
+  ],
+  "tags": [
+    "weather",
+    "climate",
+    "conditions",
+    "planning",
+    "seasons"
+  ],
+  "seasonalRelevance": [
+    "winter",
+    "spring",
+    "summer",
+    "fall"
+  ],
+  "updatedDate": "2025-11-18T14:10:06.747Z"
 }
 ---
 
