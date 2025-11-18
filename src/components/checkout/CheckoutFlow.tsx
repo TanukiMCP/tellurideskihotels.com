@@ -427,7 +427,7 @@ export function CheckoutFlow({ hotelId, hotelName, room, addons = [], onComplete
               amount={prebookData.total || room.price}
               currency={prebookData.currency || room.currency}
               prebookId={prebookData.prebookId}
-              returnUrl={typeof window !== 'undefined' ? `${window.location.origin}${window.location.pathname}?returnFromPayment=true&tid=${prebookData.transactionId}&pid=${prebookData.prebookId}` : '/booking/checkout?returnFromPayment=true'}
+              returnUrl={typeof window !== 'undefined' ? `${window.location.origin}${window.location.pathname}?returnFromPayment=true` : '/booking/checkout?returnFromPayment=true'}
               onPaymentSuccess={handlePaymentComplete}
             />
           )}

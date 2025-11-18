@@ -1,0 +1,25 @@
+---
+export const prerender = false;
+
+import PageLayout from '@/components/layout/PageLayout.astro';
+import Container from '@/components/layout/Container.astro';
+import Breadcrumbs from '@/components/seo/Breadcrumbs.astro';
+import { CheckoutPage } from '@/components/checkout/CheckoutPage';
+---
+
+<PageLayout
+  title="Secure Checkout"
+  description="Complete your Telluride Ski Hotels reservation."
+>
+  <Container class="py-16 lg:py-20">
+    <Breadcrumbs items={[
+      { label: 'Home', href: '/' },
+      { label: 'Places to Stay', href: '/places-to-stay' },
+      { label: 'Checkout', href: undefined },
+    ]} />
+
+    <CheckoutPage client:load />
+  </Container>
+</PageLayout>
+
+

@@ -1,17 +1,15 @@
-import { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
 import { Star, MapPin, MessageSquare, Home, TrendingUp, Award, Users } from 'lucide-react';
 import * as LucideIcons from 'lucide-react';
 import { RoomSelectorCard } from './RoomSelectorCard';
 import { HotelReviewsList } from './HotelReviewsList';
-import { CheckoutFlow } from '@/components/checkout/CheckoutFlow';
 import { ImageGallery } from './ImageGallery';
 import type { LiteAPIHotel, LiteAPIRate } from '@/lib/liteapi/types';
 import { formatHotelAddress, getHotelImages } from '@/lib/liteapi/utils';
 import { getRatingColor } from '@/lib/constants';
 import { getAmenityIcon } from '@/lib/amenity-icons';
-import type { SelectedRoom } from '@/lib/types';
+import type { SelectedRoom, SelectedAddon } from '@/lib/types';
 import { WeatherWidget } from '@/components/weather/WeatherWidget';
 import { WeatherAwareAmenities } from './WeatherAwareAmenities';
 
@@ -25,9 +23,6 @@ export interface HotelDetailViewProps {
 }
 
 export function HotelDetailView({ hotel, checkIn, checkOut, adults, children = 0, rooms = 1 }: HotelDetailViewProps) {
-  const [selectedRoom, setSelectedRoom] = useState<SelectedRoom | null>(null);
-  const [showCheckout, setShowCheckout] = useState(false);
-
   const rating = hotel.review_score || 0;
   const ratingColor = getRatingColor(rating);
   
@@ -48,12 +43,10 @@ export function HotelDetailView({ hotel, checkIn, checkOut, adults, children = 0
     adults: number;
     children: number;
   }) => {
-    // Pass retail rate to checkout - this is what customer will pay
-    // rate.total contains retailRate.total (base + margin + taxes) from LiteAPI
     const price = bookingData.roomData.total?.amount || bookingData.roomData.net?.amount || 0;
     const currency = bookingData.roomData.total?.currency || bookingData.roomData.net?.currency || 'USD';
 
-    setSelectedRoom({
+    const selectedRoom: SelectedRoom = {
       rateId: bookingData.rateId,
       roomId: bookingData.roomData.room_id,
       roomName: bookingData.roomData.room_name,
@@ -64,42 +57,27 @@ export function HotelDetailView({ hotel, checkIn, checkOut, adults, children = 0
       children: bookingData.children,
       price,
       currency,
-    });
+      cancellationPolicy: bookingData.roomData.cancellation_policy,
+    };
 
-      setShowCheckout(true);
-  };
-
-  const handleBookingComplete = (bookingId: string) => {
-    console.log('[HotelDetailView] handleBookingComplete called with bookingId:', bookingId);
-    
-    if (!bookingId) {
-      console.error('[HotelDetailView] ❌ No bookingId provided!');
-      alert('Booking confirmed but no booking ID. Please contact support.');
-      return;
-    }
-    
-    setShowCheckout(false);
-    
     if (typeof window !== 'undefined') {
-      const confirmationUrl = `/booking/confirmation/${bookingId}`;
-      console.log('[HotelDetailView] 🎉 Redirecting to confirmation page:', confirmationUrl);
-      
-      // Use window.location.replace to prevent back button issues
-      window.location.replace(confirmationUrl);
+      const checkoutContext = {
+        hotelId: hotel.hotel_id,
+        hotelName: hotel.name || '',
+        hotelImage: hasImages ? allImages[0] : '',
+        hotelAddress: formatHotelAddress(hotel),
+        room: selectedRoom,
+        addons: [] as SelectedAddon[],
+      };
+
+      sessionStorage.setItem('checkoutContext', JSON.stringify(checkoutContext));
+      sessionStorage.setItem('checkoutOrigin', window.location.href);
+
+      window.location.href = '/booking/checkout';
+    } else {
+      console.error('[HotelDetailView] Window is undefined – cannot start checkout.');
     }
   };
-
-  if (showCheckout && selectedRoom) {
-    return (
-      <CheckoutFlow
-        hotelId={hotel.hotel_id}
-        hotelName={hotel.name || ''}
-        room={selectedRoom}
-        addons={[]}
-        onComplete={handleBookingComplete}
-      />
-    );
-  }
 
   return (
     <div className="space-y-6">
