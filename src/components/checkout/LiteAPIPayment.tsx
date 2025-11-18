@@ -236,31 +236,6 @@ export function LiteAPIPayment({
           )}
         </div>
 
-        <div className="mt-8 pt-6 border-t border-neutral-200">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
-            <div className="flex flex-col items-center p-3 bg-neutral-50 rounded-lg">
-              <svg className="w-6 h-6 text-primary-600 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-              </svg>
-              <p className="text-xs font-semibold text-neutral-900">Secure Payment</p>
-              <p className="text-xs text-neutral-600">256-bit encryption</p>
-            </div>
-            <div className="flex flex-col items-center p-3 bg-neutral-50 rounded-lg">
-              <svg className="w-6 h-6 text-primary-600 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
-              </svg>
-              <p className="text-xs font-semibold text-neutral-900">Multiple Options</p>
-              <p className="text-xs text-neutral-600">Cards & digital wallets</p>
-            </div>
-            <div className="flex flex-col items-center p-3 bg-neutral-50 rounded-lg">
-              <svg className="w-6 h-6 text-primary-600 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-              <p className="text-xs font-semibold text-neutral-900">No Extra Fees</p>
-              <p className="text-xs text-neutral-600">What you see is what you pay</p>
-            </div>
-          </div>
-        </div>
       </CardContent>
     </Card>
   );

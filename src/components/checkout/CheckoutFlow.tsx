@@ -194,27 +194,29 @@ export function CheckoutFlow({ hotelId, hotelName, room, addons = [], onComplete
         </div>
       </div>
 
-      {/* Trust Badges */}
-      <div className="mb-8 bg-primary-50 border border-primary-200 rounded-xl p-4">
-        <div className="flex items-center justify-center gap-8 flex-wrap text-sm">
-          <div className="flex items-center gap-2 text-primary-900">
-            <Shield className="w-5 h-5" />
-            <span className="font-semibold">Secure Payment</span>
-          </div>
-          <div className="flex items-center gap-2 text-primary-900">
-            <CheckCircle2 className="w-5 h-5" />
-            <span className="font-semibold">Instant Confirmation</span>
-          </div>
-          <div className="flex items-center gap-2 text-primary-900">
-            <CheckCircle2 className="w-5 h-5" />
-            <span className="font-semibold">Best Price Guarantee</span>
-          </div>
-          <div className="flex items-center gap-2 text-primary-900">
-            <Mail className="w-5 h-5" />
-            <span className="font-semibold">Email Support</span>
+      {/* Trust Badges - Only show on step 1 (Guest Information) */}
+      {step === 1 && (
+        <div className="mb-8 bg-primary-50 border border-primary-200 rounded-xl p-4">
+          <div className="flex items-center justify-center gap-8 flex-wrap text-sm">
+            <div className="flex items-center gap-2 text-primary-900">
+              <Shield className="w-5 h-5" />
+              <span className="font-semibold">Secure Payment</span>
+            </div>
+            <div className="flex items-center gap-2 text-primary-900">
+              <CheckCircle2 className="w-5 h-5" />
+              <span className="font-semibold">Instant Confirmation</span>
+            </div>
+            <div className="flex items-center gap-2 text-primary-900">
+              <CheckCircle2 className="w-5 h-5" />
+              <span className="font-semibold">Best Price Guarantee</span>
+            </div>
+            <div className="flex items-center gap-2 text-primary-900">
+              <Mail className="w-5 h-5" />
+              <span className="font-semibold">Email Support</span>
+            </div>
           </div>
         </div>
-      </div>
+      )}
 
       {isProcessing && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center">
@@ -451,20 +453,22 @@ export function CheckoutFlow({ hotelId, hotelName, room, addons = [], onComplete
         </div>
       </div>
 
-      {/* Footer Note */}
-      <div className="mt-8 pt-6 border-t border-neutral-200 text-center text-sm text-neutral-600">
-        <p className="mb-2">
-          By completing this booking, you agree to our{' '}
-          <a href="/terms" target="_blank" className="text-primary-600 hover:underline font-medium">Terms of Service</a>
-          {' '}and{' '}
-          <a href="/privacy" target="_blank" className="text-primary-600 hover:underline font-medium">Privacy Policy</a>.
-        </p>
-        <p className="text-xs text-neutral-500">
-          © 2025 TellurideSkiHotels.com. All rights reserved. | 
-          <a href="/contact" className="hover:text-primary-600 ml-1">Contact Us</a> | 
-          <a href="/help" className="hover:text-primary-600 ml-1">Help Center</a>
-        </p>
-      </div>
+      {/* Footer Note - Only show on step 1 (Guest Information) */}
+      {step === 1 && (
+        <div className="mt-8 pt-6 border-t border-neutral-200 text-center text-sm text-neutral-600">
+          <p className="mb-2">
+            By completing this booking, you agree to our{' '}
+            <a href="/terms" target="_blank" className="text-primary-600 hover:underline font-medium">Terms of Service</a>
+            {' '}and{' '}
+            <a href="/privacy" target="_blank" className="text-primary-600 hover:underline font-medium">Privacy Policy</a>.
+          </p>
+          <p className="text-xs text-neutral-500">
+            © 2025 TellurideSkiHotels.com. All rights reserved. | 
+            <a href="/contact" className="hover:text-primary-600 ml-1">Contact Us</a> | 
+            <a href="/help" className="hover:text-primary-600 ml-1">Help Center</a>
+          </p>
+        </div>
+      )}
     </div>
   );
 }
