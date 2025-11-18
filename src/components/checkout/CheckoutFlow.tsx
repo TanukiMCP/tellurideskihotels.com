@@ -38,7 +38,13 @@ export function CheckoutFlow({ hotelId, hotelName, room, addons = [], onComplete
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const urlParams = new URLSearchParams(window.location.search);
-      if (urlParams.get('returnFromPayment')) {
+      const tid = urlParams.get('tid');
+      const pid = urlParams.get('pid');
+      const returnFromPayment = urlParams.get('returnFromPayment');
+      
+      // Check if we're returning from payment (either returnFromPayment param or tid+pid)
+      if (returnFromPayment || (tid && pid)) {
+        console.log('[Checkout] Detected payment redirect return:', { tid, pid, returnFromPayment, url: window.location.href });
         const stored = sessionStorage.getItem('prebookData');
         if (stored) {
           try {
@@ -49,6 +55,8 @@ export function CheckoutFlow({ hotelId, hotelName, room, addons = [], onComplete
           } catch (e) {
             console.error('[Checkout] Failed to restore prebookData:', e);
           }
+        } else {
+          console.warn('[Checkout] No prebookData in sessionStorage, user may need to restart booking');
         }
       }
     }
@@ -337,7 +345,7 @@ export function CheckoutFlow({ hotelId, hotelName, room, addons = [], onComplete
               amount={prebookData.total || room.price}
               currency={prebookData.currency || room.currency}
               prebookId={prebookData.prebookId}
-              returnUrl={typeof window !== 'undefined' ? `${window.location.origin}${window.location.pathname}?returnFromPayment=true` : '/booking/checkout?returnFromPayment=true'}
+              returnUrl={typeof window !== 'undefined' ? `${window.location.origin}${window.location.pathname}?returnFromPayment=true&tid=${prebookData.transactionId}&pid=${prebookData.prebookId}` : '/booking/checkout?returnFromPayment=true'}
               onPaymentSuccess={handlePaymentComplete}
             />
           )}

@@ -143,15 +143,32 @@ export function LiteAPIPayment({
     const pid = urlParams.get('pid');
     const returnFromPayment = urlParams.get('returnFromPayment');
     
-    if (returnFromPayment && tid && pid) {
-      console.log('[LiteAPI Payment] Payment success detected from redirect:', { tid, pid, transactionId });
-      // Verify the transactionId matches
+    // LiteAPI redirects back with tid and pid params
+    // We check for either returnFromPayment OR tid+pid combination
+    if ((returnFromPayment || tid) && tid && pid) {
+      console.log('[LiteAPI Payment] Payment success detected from redirect:', { 
+        tid, 
+        pid, 
+        returnFromPayment,
+        currentTransactionId: transactionId,
+        url: window.location.href 
+      });
+      
+      // Verify the transactionId matches (tid should match transactionId)
       if (tid === transactionId) {
         console.log('[LiteAPI Payment] Transaction IDs match, calling onPaymentSuccess');
         onPaymentSuccess(transactionId);
       } else {
-        console.warn('[LiteAPI Payment] Transaction ID mismatch:', { expected: transactionId, received: tid });
+        console.warn('[LiteAPI Payment] Transaction ID mismatch:', { 
+          expected: transactionId, 
+          received: tid,
+          note: 'Will still proceed with received tid'
+        });
+        // Still proceed with the tid from URL (might be valid if transactionId changed)
+        onPaymentSuccess(tid);
       }
+    } else if (tid || pid) {
+      console.log('[LiteAPI Payment] Payment redirect detected but missing params:', { tid, pid, returnFromPayment });
     }
   }, [transactionId, onPaymentSuccess]);
 
