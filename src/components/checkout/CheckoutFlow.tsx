@@ -246,7 +246,7 @@ export function CheckoutFlow({ hotelId, hotelName, room, addons = [], onComplete
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2">
           {step === 1 && (
             <Card className="shadow-lg border-neutral-200">
