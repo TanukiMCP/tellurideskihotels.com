@@ -207,6 +207,30 @@ export function CheckoutFlow({ hotelId, hotelName, room, addons = [], onComplete
         sessionStorage.removeItem('guestInfo');
       }
       
+      console.log('[Checkout] 🎉 Booking confirmed! Redirecting to confirmation page...');
+      console.log('[Checkout] Booking data:', {
+        bookingId: bookingData.bookingId,
+        confirmationNumber: bookingData.confirmationNumber,
+        status: bookingData.status,
+      });
+      
+      // Ensure we have a valid bookingId
+      if (!bookingData.bookingId) {
+        console.error('[Checkout] ❌ No bookingId in response!', bookingData);
+        throw new Error('Booking confirmed but no booking ID received. Please contact support.');
+      }
+      
+      // Clean up sessionStorage before redirect
+      if (typeof window !== 'undefined') {
+        console.log('[Checkout] Cleaning up sessionStorage before redirect');
+        sessionStorage.removeItem('prebookData');
+        sessionStorage.removeItem('guestInfo');
+        
+        // Clear URL params to prevent re-processing
+        const cleanUrl = window.location.pathname.split('?')[0];
+        window.history.replaceState({}, '', cleanUrl);
+      }
+      
       console.log('[Checkout] 🎉 Calling onComplete with bookingId:', bookingData.bookingId);
       onComplete(bookingData.bookingId);
     } catch (error) {

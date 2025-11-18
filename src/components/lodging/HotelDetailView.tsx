@@ -70,9 +70,22 @@ export function HotelDetailView({ hotel, checkIn, checkOut, adults, children = 0
   };
 
   const handleBookingComplete = (bookingId: string) => {
+    console.log('[HotelDetailView] handleBookingComplete called with bookingId:', bookingId);
+    
+    if (!bookingId) {
+      console.error('[HotelDetailView] ❌ No bookingId provided!');
+      alert('Booking confirmed but no booking ID. Please contact support.');
+      return;
+    }
+    
     setShowCheckout(false);
+    
     if (typeof window !== 'undefined') {
-      window.location.href = `/booking/confirmation/${bookingId}`;
+      const confirmationUrl = `/booking/confirmation/${bookingId}`;
+      console.log('[HotelDetailView] 🎉 Redirecting to confirmation page:', confirmationUrl);
+      
+      // Use window.location.replace to prevent back button issues
+      window.location.replace(confirmationUrl);
     }
   };
 

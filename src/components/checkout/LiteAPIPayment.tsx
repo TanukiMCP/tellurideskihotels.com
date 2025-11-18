@@ -155,8 +155,8 @@ export function LiteAPIPayment({
     });
     
     // LiteAPI redirects back with tid and pid params
-    // Check for payment redirect BEFORE the payment portal initializes
-    if (tid && pid && (returnFromPayment || returnFromPayment === null)) {
+    // Check for payment redirect - if we have tid and pid, payment was successful
+    if (tid && pid) {
       console.log('[LiteAPI Payment] ✓ Payment redirect detected! Processing...', { 
         tid, 
         pid, 
@@ -165,10 +165,17 @@ export function LiteAPIPayment({
         willCallOnPaymentSuccess: true
       });
       
-      // Call onPaymentSuccess with the tid from the URL
-      // This is the actual transaction ID from LiteAPI
-      console.log('[LiteAPI Payment] Calling onPaymentSuccess with tid:', tid);
-      onPaymentSuccess(tid);
+      // Small delay to ensure component is fully mounted
+      setTimeout(() => {
+        // Call onPaymentSuccess with the tid from the URL
+        // This is the actual transaction ID from LiteAPI
+        console.log('[LiteAPI Payment] Calling onPaymentSuccess with tid:', tid);
+        try {
+          onPaymentSuccess(tid);
+        } catch (error) {
+          console.error('[LiteAPI Payment] ❌ Error calling onPaymentSuccess:', error);
+        }
+      }, 100);
     } else if (tid || pid) {
       console.warn('[LiteAPI Payment] ⚠️ Incomplete payment redirect params:', { 
         tid, 
