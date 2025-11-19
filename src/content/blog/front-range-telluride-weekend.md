@@ -3,14 +3,20 @@
   "id": "front-range-telluride-weekend",
   "title": "Front Range to Telluride: Perfect Weekend Getaway Guide",
   "slug": "front-range-telluride-weekend",
-  "status": "scheduled",
+  "status": "published",
   "category": "planning-tips",
   "author": "Telluride Ski Hotels Team",
   "publishDate": "2025-11-18T15:00:00Z",
   "seo": {
     "metaTitle": "Front Range to Telluride Weekend Trip: Complete Guide",
     "metaDescription": "Perfect weekend getaway guide from Denver/Colorado Springs to Telluride. Drive times, itineraries, where to stay, what to do, and local tips for 2-3 day trips.",
-    "keywords": ["telluride weekend trip", "denver to telluride weekend", "colorado weekend getaway", "telluride 2 day trip", "front range to telluride"],
+    "keywords": [
+      "telluride weekend trip",
+      "denver to telluride weekend",
+      "colorado weekend getaway",
+      "telluride 2 day trip",
+      "front range to telluride"
+    ],
     "canonical": "https://tellurideskihotels.com/blog/planning-tips/front-range-telluride-weekend"
   },
   "featured": false,
@@ -19,10 +25,29 @@
   "excerpt": "Complete weekend getaway guide from Denver and Colorado Springs to Telluride. Includes drive times, 2-3 day itineraries, hotel recommendations, activity planning, and local tips for maximizing your short trip.",
   "wordCount": 2300,
   "readingTime": 12,
-  "relatedHotels": ["hotel-telluride", "peaks-resort", "madeline-hotel"],
-  "relatedArticles": ["denver-to-telluride-drive-guide", "colorado-springs-to-telluride-drive", "telluride-weather-guide"],
-  "tags": ["weekend", "front-range", "locals", "itinerary", "planning"],
-  "seasonalRelevance": ["winter", "summer", "fall"]
+  "relatedHotels": [
+    "hotel-telluride",
+    "peaks-resort",
+    "madeline-hotel"
+  ],
+  "relatedArticles": [
+    "denver-to-telluride-drive-guide",
+    "colorado-springs-to-telluride-drive",
+    "telluride-weather-guide"
+  ],
+  "tags": [
+    "weekend",
+    "front-range",
+    "locals",
+    "itinerary",
+    "planning"
+  ],
+  "seasonalRelevance": [
+    "winter",
+    "summer",
+    "fall"
+  ],
+  "updatedDate": "2025-11-19T14:10:00.326Z"
 }
 ---
 
