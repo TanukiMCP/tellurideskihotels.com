@@ -124,15 +124,47 @@ async function confirmBooking(request: {
 }) {
   console.log('[Confirm] Starting booking confirmation with prebookId:', request.prebookId);
   
+  // Determine payment method based on environment
+  // In sandbox, use ACC_CREDIT_CARD (account credit card) as per LiteAPI tutorial
+  // In production, use TRANSACTION_ID with the actual transaction ID
+  let paymentMethod: string;
+  let paymentTransactionId: string | undefined;
+  
+  if (isSandboxPrivate) {
+    // Sandbox mode: Use account credit card (all sandbox keys come with attached credit card)
+    paymentMethod = 'ACC_CREDIT_CARD';
+    paymentTransactionId = undefined; // Not needed for ACC_CREDIT_CARD
+    console.log('[Confirm] 🧪 Sandbox mode detected - Using ACC_CREDIT_CARD payment method (account credit card)');
+    console.log('[Confirm] Ignoring transactionId from client (not needed in sandbox)');
+  } else {
+    // Production mode: Use TRANSACTION_ID with actual transaction ID
+    paymentMethod = request.payment.method || 'TRANSACTION_ID';
+    paymentTransactionId = request.payment.transactionId;
+    console.log('[Confirm] 🚀 Production mode - Using TRANSACTION_ID payment method');
+    console.log('[Confirm] Transaction ID:', paymentTransactionId);
+  }
+  
+  // Build payment object (only include transactionId if it's provided and we're in production)
+  const paymentPayload: { method: string; transactionId?: string } = {
+    method: paymentMethod,
+  };
+  
+  if (paymentTransactionId) {
+    paymentPayload.transactionId = paymentTransactionId;
+  }
+  
+  console.log('[Confirm] Payment payload:', {
+    method: paymentPayload.method,
+    hasTransactionId: !!paymentPayload.transactionId,
+    environment: isSandboxPrivate ? 'sandbox' : 'production',
+  });
+  
   const response = await liteAPIBookingClient<any>('/rates/book', {
     method: 'POST',
     body: JSON.stringify({
       prebookId: request.prebookId,
       holder: request.holder,
-      payment: {
-        method: request.payment.method,
-        transactionId: request.payment.transactionId,
-      },
+      payment: paymentPayload,
     }),
   });
   
@@ -328,6 +360,8 @@ const handler: Handler = async (event: HandlerEvent) => {
       hasTransactionId: !!body.payment?.transactionId,
       hotelName: body.hotelName,
       roomName: body.roomName,
+      environment: isSandboxPrivate ? 'sandbox' : 'production',
+      willUsePaymentMethod: isSandboxPrivate ? 'ACC_CREDIT_CARD' : (body.payment?.method || 'TRANSACTION_ID'),
     });
 
     if (!body.prebookId || !body.holder || !body.payment) {
