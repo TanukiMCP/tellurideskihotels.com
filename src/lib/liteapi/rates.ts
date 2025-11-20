@@ -236,6 +236,7 @@ export async function searchRates(params: LiteAPIRateSearchParams): Promise<Rate
     guestNationality: 'US',
     margin: params.margin || LITEAPI_MARKUP_PERCENT,
     roomMapping: true, // Enable room mapping to get mappedRoomId for linking to room photos
+    ...(hotelIdsArray.length === 1 ? {} : { maxRatesPerHotel: 1 }), // Limit rates for multi-hotel searches
   };
 
   const endpoint = `/hotels/rates`;

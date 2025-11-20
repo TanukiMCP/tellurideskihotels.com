@@ -123,6 +123,12 @@ async function confirmWithLiteAPI(request: {
       prebookId: request.prebookId,
       holder: request.holder,
       payment: payload,
+      guests: [{
+        occupancyNumber: 1,
+        firstName: request.holder.firstName,
+        lastName: request.holder.lastName,
+        email: request.holder.email,
+      }],
     }),
   });
 
