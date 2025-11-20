@@ -32,6 +32,7 @@ interface ImportMetaEnv {
   readonly PUBLIC_MAPBOX_ACCESS_TOKEN: string;
   readonly VIATOR_API_KEY: string;
   readonly VIATOR_BASE_URL: string;
+  readonly PUBLIC_PAYMENT_MODE: 'sandbox' | 'production';
 }
 
 interface ImportMeta {

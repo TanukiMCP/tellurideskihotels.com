@@ -15,6 +15,7 @@ export interface RoomSelectorProps {
   checkOut: string;
   adults: number;
   children?: number;
+  rooms?: number;
   onRoomSelect: (rateId: string, roomData: LiteAPIRate) => void;
 }
 
@@ -28,9 +29,10 @@ export function RoomSelector({
   checkOut,
   adults,
   children = 0,
+  rooms = 1,
   onRoomSelect,
 }: RoomSelectorProps) {
-  const [rooms, setRooms] = useState<LiteAPIRate[]>([]);
+  const [roomRates, setRoomRates] = useState<LiteAPIRate[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -50,7 +52,7 @@ export function RoomSelector({
           checkOut,
           adults: adults.toString(),
           children: children.toString(), // Always include, even if 0
-          rooms: '1', // Default to 1 room (can be made configurable later)
+          rooms: rooms.toString(),
         });
 
         console.log('[RoomSelector] Fetching rates:', params.toString());
@@ -74,7 +76,7 @@ export function RoomSelector({
         
         console.log(`[RoomSelector] Loaded ${fetchedRates.length} rate(s)`);
 
-        setRooms(fetchedRates);
+        setRoomRates(fetchedRates);
       } catch (err) {
         console.error('[RoomSelector] Error fetching rates:', err);
         setError(err instanceof Error ? err.message : 'An error occurred');
@@ -86,7 +88,7 @@ export function RoomSelector({
     if (hotelId && checkIn && checkOut) {
       fetchRates();
     }
-  }, [hotelId, checkIn, checkOut, adults, children]);
+  }, [hotelId, checkIn, checkOut, adults, children, rooms]);
 
   if (loading) {
     return (
@@ -110,7 +112,7 @@ export function RoomSelector({
     );
   }
 
-  if (rooms.length === 0) {
+  if (roomRates.length === 0) {
     return (
       <EmptyState
         title="No Rooms Available"
@@ -126,7 +128,7 @@ export function RoomSelector({
   return (
     <div className="space-y-4">
       <h3 className="text-2xl font-bold text-neutral-900 mb-6">Select Your Room</h3>
-      {rooms.map((rate) => {
+      {roomRates.map((rate) => {
         // PRICING: rate.total and rate.net contain retailRate.total from LiteAPI
         // This is the final price customer pays (base rate + margin + taxes)
         // Commission is already included via the margin parameter in API calls

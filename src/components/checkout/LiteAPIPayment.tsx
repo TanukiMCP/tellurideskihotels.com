@@ -83,7 +83,22 @@ export function LiteAPIPayment({
       // For now, always use sandbox mode since user is testing with sandbox API keys
       // TODO: Add environment variable or config to explicitly set payment mode
       // This prevents Stripe 400 errors when testing sandbox keys on production domain
-      const publicKey = 'sandbox'; // Always sandbox for now - change to 'live' when ready for production
+      
+      // Determine public key based on environment variable or fallback
+      const configuredMode = import.meta.env.PUBLIC_PAYMENT_MODE;
+      let publicKey = configuredMode === 'production' ? 'live' : 'sandbox';
+      
+      // If explicit mode not set, infer from secret key format
+      if (!configuredMode) {
+        if (secretKey.startsWith('pi_test_')) {
+            publicKey = 'sandbox';
+        } else if (secretKey.startsWith('pi_live_')) {
+            publicKey = 'live';
+        } else {
+            // Fallback to existing logic
+            publicKey = isProductionDomain && !isSandboxSecretKey ? 'live' : 'sandbox';
+        }
+      }
       
       console.log('[LiteAPI Payment] Initializing payment portal:', {
         publicKey,
