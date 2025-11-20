@@ -16,6 +16,7 @@ const EMAIL_VERIFICATION_TTL = 1000 * 60 * 60 * 24; // 24h
 const resend = RESEND_API_KEY ? new Resend(RESEND_API_KEY) : null;
 
 export type UserType = 'account' | 'guest';
+export type OAuthProvider = 'google' | 'apple' | null;
 
 export interface User {
   id: string;
@@ -24,6 +25,9 @@ export interface User {
   type: UserType;
   emailVerified: boolean;
   createdAt: number;
+  oauthProvider?: OAuthProvider;
+  oauthId?: string;
+  image?: string;
 }
 
 export interface Session {
@@ -48,7 +52,7 @@ const getSessionStore = () => getStore('sessions');
 const getVerificationStore = () => getStore('user-verifications');
 
 interface StoredUser extends User {
-  passwordHash: string;
+  passwordHash?: string;
 }
 
 function normalizeEmail(email: string) {
@@ -123,7 +127,21 @@ export async function getSessionFromRequest(request: Request): Promise<Session |
 
 export async function signIn(email: string, password: string): Promise<{ user: User; token: string }> {
   const stored = await getStoredUser(email);
-  if (!stored || !verifyPassword(password, stored.passwordHash)) {
+  
+  if (!stored) {
+    throw new AuthenticationError('Invalid credentials', 401, 'INVALID_CREDENTIALS');
+  }
+
+  // OAuth users don't have passwords
+  if (stored.oauthProvider) {
+    throw new AuthenticationError(
+      `Please sign in with ${stored.oauthProvider === 'google' ? 'Google' : 'Apple'}`,
+      403,
+      'USE_OAUTH'
+    );
+  }
+
+  if (!stored.passwordHash || !verifyPassword(password, stored.passwordHash)) {
     throw new AuthenticationError('Invalid credentials', 401, 'INVALID_CREDENTIALS');
   }
 
@@ -144,11 +162,14 @@ interface CreateUserOptions {
   type?: UserType;
   emailVerified?: boolean;
   skipVerificationEmail?: boolean;
+  oauthProvider?: OAuthProvider;
+  oauthId?: string;
+  image?: string;
 }
 
 export async function createUser(
   email: string,
-  password: string,
+  password: string | null,
   name: string,
   options: CreateUserOptions = {}
 ): Promise<User> {
@@ -166,9 +187,12 @@ export async function createUser(
     email: normalizedEmail,
     name,
     type: options.type || 'account',
-    emailVerified: Boolean(options.emailVerified),
+    emailVerified: Boolean(options.emailVerified || options.oauthProvider), // OAuth users are auto-verified
     createdAt: Date.now(),
-    passwordHash: hashPassword(password),
+    passwordHash: password ? hashPassword(password) : undefined,
+    oauthProvider: options.oauthProvider,
+    oauthId: options.oauthId,
+    image: options.image,
   };
 
   await userStore.setJSON(userKey, user);
@@ -265,5 +289,51 @@ function verifyPassword(password: string, hash: string): boolean {
   const [salt, storedHash] = hash.split(':');
   const testHash = scryptSync(password, salt, 64).toString('hex');
   return storedHash === testHash;
+}
+
+// OAuth functions
+export async function findOrCreateOAuthUser(
+  email: string,
+  name: string,
+  provider: OAuthProvider,
+  oauthId: string,
+  image?: string
+): Promise<{ user: User; token: string; isNewUser: boolean }> {
+  const normalizedEmail = normalizeEmail(email);
+  let stored = await getStoredUser(normalizedEmail);
+  let isNewUser = false;
+
+  if (!stored) {
+    // Create new OAuth user
+    const newUser = await createUser(normalizedEmail, null, name, {
+      emailVerified: true,
+      oauthProvider: provider,
+      oauthId,
+      image,
+    });
+    stored = await getStoredUser(normalizedEmail);
+    isNewUser = true;
+  } else if (!stored.oauthProvider) {
+    // Link OAuth to existing email/password account
+    stored.oauthProvider = provider;
+    stored.oauthId = oauthId;
+    if (image && !stored.image) {
+      stored.image = image;
+    }
+    if (!stored.emailVerified) {
+      stored.emailVerified = true;
+    }
+    await persistStoredUser(stored);
+  }
+
+  const user = buildUser(stored!);
+  const token = await createSession(user);
+
+  // Claim any guest bookings when OAuth user signs up
+  if (isNewUser) {
+    await claimBookingAccessForUser(normalizedEmail, user.id);
+  }
+
+  return { user, token, isNewUser };
 }
 
