@@ -3,8 +3,10 @@ import type { APIRoute } from 'astro';
 export const prerender = false;
 
 export const GET: APIRoute = async () => {
-  const hasClientId = !!import.meta.env.GOOGLE_CLIENT_ID;
-  const hasClientSecret = !!import.meta.env.GOOGLE_CLIENT_SECRET;
+  const clientId = import.meta.env.GOOGLE_CLIENT_ID || '';
+  const clientSecret = import.meta.env.GOOGLE_CLIENT_SECRET || '';
+  const hasClientId = !!clientId;
+  const hasClientSecret = !!clientSecret;
   const siteUrl = import.meta.env.PUBLIC_SITE_URL || 'https://tellurideskihotels.com';
   
   return new Response(
@@ -13,7 +15,7 @@ export const GET: APIRoute = async () => {
       hasClientId,
       hasClientSecret,
       siteUrl,
-      clientIdLength: hasClientId ? import.meta.env.GOOGLE_CLIENT_ID.length : 0,
+      clientIdLength: clientId.length,
     }),
     {
       status: 200,
