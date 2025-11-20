@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
-import { BookingCard, AccountBooking } from './BookingCard';
+import { BookingCard } from './BookingCard';
+import type { AccountBooking } from './BookingCard';
 import { Card, CardContent } from '@/components/ui/Card';
 
 interface ApiResponse {

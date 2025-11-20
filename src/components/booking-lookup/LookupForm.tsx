@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
-import { BookingDetails, BookingLookupResult } from './BookingDetails';
+import { BookingDetails } from './BookingDetails';
+import type { BookingLookupResult } from './BookingDetails';
 
 type Status = 'idle' | 'loading' | 'success' | 'error';
 
