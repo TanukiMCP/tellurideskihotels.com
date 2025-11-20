@@ -22,7 +22,7 @@
   "featured": false,
   "featuredImage": "/images/uploads/telluride-weekend-getaway.jpg",
   "featuredImageAlt": "Telluride Colorado mountain town perfect for weekend getaway from Front Range",
-  "excerpt": "Complete weekend getaway guide from Denver and Colorado Springs to Telluride. Includes drive times, 2-3 day itineraries, hotel recommendations, activity planning, and local tips for maximizing your short trip.",
+  "excerpt": "Front Range weekend getaway playbook for Telluride: realistic drive times, 2-3 day itineraries, hotel picks, and quick local tips to squeeze maximum adventure into a short trip.",
   "wordCount": 2300,
   "readingTime": 12,
   "relatedHotels": [
