@@ -9,7 +9,7 @@
   "publishDate": "2025-11-19T15:00:00Z",
   "seo": {
     "metaTitle": "Telluride Gondola Guide 2025 | Free Transportation & Views",
-    "metaDescription": "Complete guide to Telluride's free gondola: operating hours, routes, scenic views, tips for riders, and how to use it for transportation between downtown and Mountain Village.",
+    "metaDescription": "Complete guide to Telluride's free gondola: operating hours, routes, scenic views, and tips for transportation between downtown and Mountain Village.",
     "keywords": [
       "telluride gondola",
       "telluride free gondola",

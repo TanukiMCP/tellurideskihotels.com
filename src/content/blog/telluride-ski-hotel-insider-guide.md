@@ -9,7 +9,7 @@
   "publishDate": "2025-11-19T15:00:00Z",
   "seo": {
     "metaTitle": "Telluride Ski Hotel Insider's Guide: Match Your Skiing Style",
-    "metaDescription": "Find the perfect Telluride ski hotel for your skiing style. Expert recommendations matching powder hounds, cruisers, families, beginners, and luxury seekers with ideal accommodations.",
+    "metaDescription": "Find the perfect Telluride ski hotel for your skiing style. Expert recommendations for powder hounds, cruisers, families, beginners, and luxury seekers.",
     "keywords": [
       "telluride ski hotels",
       "best hotel for skiers",
