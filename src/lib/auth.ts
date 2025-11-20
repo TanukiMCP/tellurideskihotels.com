@@ -16,7 +16,7 @@ const EMAIL_VERIFICATION_TTL = 1000 * 60 * 60 * 24; // 24h
 const resend = RESEND_API_KEY ? new Resend(RESEND_API_KEY) : null;
 
 export type UserType = 'account' | 'guest';
-export type OAuthProvider = 'google' | 'apple' | null;
+export type OAuthProvider = 'google' | null;
 
 export interface User {
   id: string;
@@ -135,7 +135,7 @@ export async function signIn(email: string, password: string): Promise<{ user: U
   // OAuth users don't have passwords
   if (stored.oauthProvider) {
     throw new AuthenticationError(
-      `Please sign in with ${stored.oauthProvider === 'google' ? 'Google' : 'Apple'}`,
+      'Please sign in with Google',
       403,
       'USE_OAUTH'
     );

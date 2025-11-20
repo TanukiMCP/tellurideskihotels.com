@@ -14,7 +14,7 @@ if (!session) {
 }
 
 const isOAuthUser = session.user.oauthProvider;
-const providerName = session.user.oauthProvider === 'google' ? 'Google' : session.user.oauthProvider === 'apple' ? 'Apple' : null;
+const providerName = session.user.oauthProvider === 'google' ? 'Google' : null;
 ---
 
 <PageLayout
