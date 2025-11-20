@@ -14,23 +14,28 @@ const redirect = Astro.url.searchParams.get('redirect') || '/account';
 ---
 
 <PageLayout title="Sign in | Telluride Ski Hotels" description="Access your Telluride bookings anywhere.">
-  <div class="bg-gradient-to-br from-primary-600 via-primary-700 to-primary-900 py-16 lg:py-24 pb-32 lg:pb-40">
-    <Container class="text-white max-w-3xl space-y-4">
-      <p class="text-sm uppercase tracking-[0.2em] text-white/70 font-semibold">My Account</p>
-      <h1 class="text-4xl lg:text-5xl font-black tracking-tight">
-        Manage bookings across every device
-      </h1>
-      <p class="text-lg text-white/80">
-        Sign in to view upcoming stays, download confirmations, and convert guest bookings into a full
-        account experience.
-      </p>
+  <!-- Hero Section -->
+  <div class="bg-gradient-to-br from-primary-600 via-primary-700 to-primary-900 py-32 lg:py-40">
+    <Container class="text-white">
+      <div class="max-w-3xl mx-auto space-y-4">
+        <p class="text-sm uppercase tracking-[0.2em] text-white/70 font-semibold">My Account</p>
+        <h1 class="text-4xl lg:text-5xl font-black tracking-tight">
+          Manage bookings across every device
+        </h1>
+        <p class="text-lg text-white/80">
+          Sign in to view upcoming stays, download confirmations, and convert guest bookings into a full
+          account experience.
+        </p>
+      </div>
     </Container>
   </div>
 
-  <Container class="-mt-24 lg:-mt-32 pb-24 relative z-10">
-    <AccountLogin client:load redirectTo={redirect} />
-    <div class="text-center mt-6 text-sm text-neutral-600">
-      Don’t have an account? <a href="/account/join" class="text-primary-600 font-semibold">Create one in seconds</a>.
+  <Container class="py-16 lg:py-20">
+    <div class="max-w-lg mx-auto space-y-6">
+      <AccountLogin client:load redirectTo={redirect} />
+      <div class="text-center text-sm text-neutral-600">
+        Don't have an account? <a href="/account/join" class="text-primary-600 font-semibold">Create one in seconds</a>.
+      </div>
     </div>
   </Container>
 </PageLayout>

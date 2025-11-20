@@ -29,38 +29,45 @@ const heroImageAlt = heroImage
   title="Create an Account | Telluride Ski Hotels"
   description="Unlock synced bookings, loyalty perks, and stress-free management for every Telluride stay."
 >
-  <div class="relative text-white">
-    {heroImageUrl ? (
-      <div class="absolute inset-0">
-        <img
-          src={heroImageUrl}
-          srcset={heroSrcSet || undefined}
-          sizes="100vw"
-          alt={heroImageAlt}
-          class="w-full h-full object-cover"
-          loading="lazy"
-        />
-        <div class="absolute inset-0 bg-neutral-950/70 backdrop-blur-[1px]" />
+  <!-- Hero Section with Background Image -->
+  <Container class="py-16 lg:py-20">
+    <div class="relative rounded-3xl overflow-hidden">
+      {heroImageUrl ? (
+        <>
+          <img 
+            src={heroImageUrl}
+            srcset={heroSrcSet || undefined}
+            sizes="(max-width: 1280px) 100vw, 1280px"
+            alt={heroImageAlt}
+            class="absolute inset-0 w-full h-full object-cover"
+            loading="eager"
+          />
+          <div class="absolute inset-0 bg-neutral-950/70 backdrop-blur-[1px]"></div>
+        </>
+      ) : (
+        <div class="absolute inset-0 bg-neutral-950"></div>
+      )}
+      
+      <div class="relative py-32 lg:py-40">
+        <div class="max-w-4xl mx-auto px-8 text-center text-white space-y-5">
+          <p class="text-sm uppercase tracking-[0.25em] text-white/80 font-semibold">Telluride insider access</p>
+          <h1 class="text-4xl lg:text-6xl font-black tracking-tight">
+            Sync every reservation. Keep every stay connected.
+          </h1>
+          <p class="text-lg text-white/80 max-w-3xl mx-auto">
+            Create a Telluride Ski Hotels account to convert guest bookings, store confirmations, and unlock lightning-fast checkout for every future trip.
+          </p>
+        </div>
       </div>
-    ) : (
-      <div class="absolute inset-0 bg-neutral-950" />
-    )}
+    </div>
+  </Container>
 
-    <Container class="relative py-16 lg:py-32 pb-40 lg:pb-48 max-w-4xl space-y-5">
-      <p class="text-sm uppercase tracking-[0.25em] text-white/80 font-semibold">Telluride insider access</p>
-      <h1 class="text-4xl lg:text-6xl font-black tracking-tight">
-        Sync every reservation. Keep every stay connected.
-      </h1>
-      <p class="text-lg text-white/80 max-w-3xl">
-        Create a Telluride Ski Hotels account to convert guest bookings, store confirmations, and unlock lightning-fast checkout for every future trip.
-      </p>
-    </Container>
-  </div>
-
-  <Container class="-mt-32 lg:-mt-40 pb-24 space-y-8">
-    <AccountSignup client:load />
-    <div class="text-center text-sm text-neutral-600">
-      Already have an account? <a href="/account/login" class="text-primary-600 font-semibold">Sign in</a>.
+  <Container class="py-16 lg:py-20">
+    <div class="max-w-2xl mx-auto space-y-8">
+      <AccountSignup client:load />
+      <div class="text-center text-sm text-neutral-600">
+        Already have an account? <a href="/account/login" class="text-primary-600 font-semibold">Sign in</a>.
+      </div>
     </div>
   </Container>
 </PageLayout>
