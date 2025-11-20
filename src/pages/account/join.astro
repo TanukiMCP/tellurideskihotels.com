@@ -4,26 +4,52 @@ import PageLayout from '@/components/layout/PageLayout.astro';
 import Container from '@/components/layout/Container.astro';
 import { AccountSignup } from '@/components/account/AccountSignup';
 import { getSessionFromRequest } from '@/lib/auth';
+import { getImagesByCategory } from '@/lib/image-library';
+import { optimizePexelsImage, generateSrcSet } from '@/lib/image-optimizer';
 
 const session = await getSessionFromRequest(Astro.request);
 if (session) {
   return Astro.redirect('/account');
 }
+
+const heroImages = getImagesByCategory('resort');
+const heroImage = heroImages?.[0];
+const heroImageUrl = heroImage
+  ? optimizePexelsImage(heroImage.url, { width: 1920, quality: 85 })
+  : null;
+const heroSrcSet = heroImage
+  ? generateSrcSet(heroImage.url, [640, 960, 1280, 1600, 1920])
+  : null;
 ---
 
 <PageLayout
   title="Create an Account | Telluride Ski Hotels"
   description="Unlock synced bookings, loyalty perks, and stress-free management for every Telluride stay."
 >
-  <div class="bg-neutral-950 text-white py-16 lg:py-24">
-    <Container class="max-w-4xl space-y-5">
-      <p class="text-sm uppercase tracking-[0.3em] text-primary-300 font-semibold">Phase 2 access</p>
+  <div class="relative text-white">
+    {heroImageUrl ? (
+      <div class="absolute inset-0">
+        <img
+          src={heroImageUrl}
+          srcset={heroSrcSet || undefined}
+          sizes="100vw"
+          alt={heroImage?.alt || 'Telluride mountains'}
+          class="w-full h-full object-cover"
+          loading="lazy"
+        />
+        <div class="absolute inset-0 bg-neutral-950/70 backdrop-blur-[1px]" />
+      </div>
+    ) : (
+      <div class="absolute inset-0 bg-neutral-950" />
+    )}
+
+    <Container class="relative py-16 lg:py-24 max-w-4xl space-y-5">
+      <p class="text-sm uppercase tracking-[0.25em] text-white/80 font-semibold">Telluride insider access</p>
       <h1 class="text-4xl lg:text-6xl font-black tracking-tight">
-        Save bookings. Convert guest reservations. Travel lighter.
+        Sync every reservation. Keep every stay connected.
       </h1>
-      <p class="text-lg text-white/70">
-        Telluride Ski Hotels accounts sync every reservation by email so you can manage cancellations,
-        modifications, and confirmations anywhere.
+      <p class="text-lg text-white/80 max-w-3xl">
+        Create a Telluride Ski Hotels account to convert guest bookings, store confirmations, and unlock lightning-fast checkout for every future trip.
       </p>
     </Container>
   </div>
