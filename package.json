@@ -10,6 +10,7 @@
     "preview": "astro preview",
     "setup-admin": "tsx scripts/setup-admin.ts",
     "create-admin": "tsx scripts/create-admin.ts",
+    "migrate:user-bookings": "tsx scripts/migrations/add-user-bookings.ts",
     "generate-article": "node scripts/generate-article.js",
     "publish-articles": "node scripts/publish-scheduled-articles.js",
     "refresh-images": "node scripts/refresh-image-library.js"
@@ -58,6 +59,7 @@
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
     "autoprefixer": "^10.4.20",
+    "cross-env": "^10.1.0",
     "postcss": "^8.4.47",
     "tailwindcss": "^3.4.14",
     "tsx": "^4.20.6",

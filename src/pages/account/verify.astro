@@ -1,0 +1,16 @@
+---
+export const prerender = false;
+import PageLayout from '@/components/layout/PageLayout.astro';
+import Container from '@/components/layout/Container.astro';
+import { AccountVerify } from '@/components/account/AccountVerify';
+
+const token = Astro.url.searchParams.get('token') || undefined;
+---
+
+<PageLayout title="Verify Email | Telluride Ski Hotels" description="Secure access to your bookings.">
+  <Container class="py-24">
+    <AccountVerify client:load token={token} />
+  </Container>
+</PageLayout>
+
+

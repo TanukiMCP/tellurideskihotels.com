@@ -15,7 +15,11 @@ export async function prebook(request: LiteAPIPrebookRequest): Promise<LiteAPIPr
     }),
   });
   
-  const data = response.data?.data || response.data || response;
+  const data = response.data || response;
+  
+  if (!data) {
+    throw new Error('No data returned from prebook API');
+  }
   
   return {
     prebookId: data.prebookId,
@@ -23,8 +27,8 @@ export async function prebook(request: LiteAPIPrebookRequest): Promise<LiteAPIPr
     rateId: data.rateId,
     checkin: data.checkin,
     checkout: data.checkout,
-    total: data.total,
-    currency: data.currency,
+    total: data.suggestedSellingPrice?.amount || data.total?.amount || data.total,
+    currency: data.suggestedSellingPrice?.currency || data.total?.currency || data.currency || 'USD',
     expiresAt: data.expiresAt,
     secretKey: data.secretKey,
     transactionId: data.transactionId,
@@ -36,7 +40,6 @@ export async function confirmBooking(request: LiteAPIConfirmRequest): Promise<Li
     method: 'POST',
     body: JSON.stringify({
       prebookId: request.prebookId,
-      holder: request.holder,
       payment: {
         method: request.payment.method,
         transactionId: request.payment.transactionId,
@@ -44,7 +47,11 @@ export async function confirmBooking(request: LiteAPIConfirmRequest): Promise<Li
     }),
   });
   
-  const data = response.data?.data || response.data || response;
+  const data = response.data || response;
+  
+  if (!data) {
+    throw new Error('No data returned from booking confirmation API');
+  }
   
   return {
     bookingId: data.bookingId,
@@ -53,8 +60,8 @@ export async function confirmBooking(request: LiteAPIConfirmRequest): Promise<Li
     hotelId: data.hotelId,
     checkin: data.checkin,
     checkout: data.checkout,
-    total: data.total,
-    currency: data.currency,
+    total: data.total?.amount || data.total,
+    currency: data.total?.currency || data.currency || 'USD',
   };
 }
 
@@ -88,4 +95,3 @@ export async function amendGuestName(bookingId: string, firstName: string, lastN
     }),
   });
 }
-

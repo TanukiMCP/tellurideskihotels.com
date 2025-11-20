@@ -6,6 +6,7 @@ import { LiteAPIPayment } from './LiteAPIPayment';
 import { formatCurrency, calculateNights } from '@/lib/utils';
 import type { SelectedRoom, SelectedAddon, GuestInfo } from '@/lib/types';
 import { Shield, Mail, CheckCircle2, Info } from 'lucide-react';
+import { authClient } from '@/lib/auth-client';
 
 export interface CheckoutFlowProps {
   hotelId: string;
@@ -26,6 +27,9 @@ export function CheckoutFlow({ hotelId, hotelName, room, addons = [], onComplete
     phone: '',
   });
   const [acceptedTerms, setAcceptedTerms] = useState(false);
+  const [sessionUser, setSessionUser] = useState<any>(null);
+  const [sessionLoading, setSessionLoading] = useState(true);
+  const [identityMode, setIdentityMode] = useState<'account' | 'guest'>('guest');
 
   const nights = calculateNights(room.checkIn, room.checkOut);
   const addonsTotal = addons.reduce((sum, addon) => sum + addon.price, 0);
@@ -33,6 +37,38 @@ export function CheckoutFlow({ hotelId, hotelName, room, addons = [], onComplete
 
   const [isProcessing, setIsProcessing] = useState(false);
   const [prebookData, setPrebookData] = useState<any>(null);
+
+  useEffect(() => {
+    let mounted = true;
+    authClient
+      .session()
+      .then((data) => {
+        if (!mounted) return;
+        if (data?.user) {
+          setSessionUser(data.user);
+          setIdentityMode('account');
+          setGuestInfo((prev) => {
+            const [first = '', ...rest] = (data.user.name || '').split(' ');
+            const last = rest.join(' ') || prev.lastName || '';
+            return {
+              ...prev,
+              firstName: prev.firstName || first,
+              lastName: prev.lastName || last || data.user.name || '',
+              email: prev.email || data.user.email,
+            };
+          });
+        } else {
+          setIdentityMode('guest');
+        }
+      })
+      .finally(() => {
+        if (mounted) setSessionLoading(false);
+      });
+
+    return () => {
+      mounted = false;
+    };
+  }, []);
   
   // Restore prebookData from sessionStorage if returning from payment
   useEffect(() => {
@@ -321,6 +357,92 @@ export function CheckoutFlow({ hotelId, hotelName, room, addons = [], onComplete
           </div>
         </div>
       </div>
+
+      {step === 1 && (
+        <div className="mb-10 grid grid-cols-1 md:grid-cols-2 gap-6">
+          <Card
+            className={`border-2 ${
+              identityMode === 'account' ? 'border-primary-500 shadow-primary-200 shadow-lg' : 'border-neutral-200'
+            }`}
+          >
+            <CardHeader>
+              <p className="text-sm font-semibold text-neutral-500 uppercase tracking-wide">
+                Account checkout
+              </p>
+              <CardTitle className="text-2xl text-neutral-900">
+                {sessionUser ? 'Booking will sync to your account' : 'Sign in to save this booking'}
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {sessionLoading && <p className="text-sm text-neutral-500">Checking your session…</p>}
+              {!sessionLoading && sessionUser && (
+                <>
+                  <div className="rounded-2xl bg-neutral-50 border border-neutral-200 p-4">
+                    <p className="text-sm text-neutral-500">Signed in as</p>
+                    <p className="text-lg font-semibold text-neutral-900">{sessionUser.email}</p>
+                  </div>
+                  <p className="text-sm text-neutral-600">
+                    This reservation will instantly appear inside My Account with modification controls.
+                  </p>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={async () => {
+                      await authClient.signOut();
+                      window.location.reload();
+                    }}
+                  >
+                    Use guest checkout instead
+                  </Button>
+                </>
+              )}
+              {!sessionLoading && !sessionUser && (
+                <>
+                  <p className="text-sm text-neutral-600">
+                    Unlock cross-device booking management, instant cancellation controls, and guest-to-account
+                    conversion in one tap.
+                  </p>
+                  <div className="flex flex-col sm:flex-row gap-3">
+                    <Button
+                      type="button"
+                      onClick={() => (window.location.href = '/account/login?redirect=/booking/checkout')}
+                    >
+                      Sign in
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => (window.location.href = '/account/join')}
+                    >
+                      Create account
+                    </Button>
+                  </div>
+                </>
+              )}
+            </CardContent>
+          </Card>
+
+          <Card
+            className={`border-2 ${
+              identityMode === 'guest' ? 'border-primary-500 shadow-primary-200 shadow-lg' : 'border-neutral-200'
+            }`}
+          >
+            <CardHeader>
+              <p className="text-sm font-semibold text-neutral-500 uppercase tracking-wide">Guest checkout</p>
+              <CardTitle className="text-2xl text-neutral-900">Email-based booking management</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <p className="text-sm text-neutral-600">
+                Book without signing in. Use your booking ID + email on any device to view, cancel, or update your
+                stay. Convert to an account later with one tap.
+              </p>
+              <Button type="button" variant="outline" onClick={() => setIdentityMode('guest')}>
+                Continue as guest
+              </Button>
+            </CardContent>
+          </Card>
+        </div>
+      )}
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2">

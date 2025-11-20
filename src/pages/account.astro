@@ -1,0 +1,47 @@
+---
+import PageLayout from '@/components/layout/PageLayout.astro';
+import Container from '@/components/layout/Container.astro';
+import { BookingsList } from '@/components/account/BookingsList';
+import { getSessionFromRequest } from '@/lib/auth';
+
+export const prerender = false;
+
+const session = await getSessionFromRequest(Astro.request);
+
+if (!session) {
+  return Astro.redirect('/account/login?redirect=/account');
+}
+---
+
+<PageLayout
+  title="My Account"
+  description="Manage your Telluride bookings, loyalty perks, and upcoming stays."
+>
+  <Container class="py-16 lg:py-20">
+    <div class="max-w-4xl mx-auto space-y-10">
+      <div class="rounded-3xl bg-gradient-to-br from-primary-600 to-primary-800 text-white p-8 shadow-xl">
+        <p class="text-sm uppercase tracking-wide text-primary-200 mb-2">
+          Welcome back
+        </p>
+        <h1 class="text-3xl font-bold">
+          {session.user.name || session.user.email}
+        </h1>
+        <p class="mt-3 text-primary-100">
+          Access your bookings, download confirmations, and stay on top of your Telluride plans.
+        </p>
+      </div>
+
+      <section class="space-y-6">
+        <div>
+          <h2 class="text-2xl font-semibold text-neutral-900">Your bookings</h2>
+          <p class="text-neutral-600">
+            View all reservations made while signed in. Need help? Contact us anytime.
+          </p>
+        </div>
+
+        <BookingsList client:load />
+      </section>
+    </div>
+  </Container>
+</PageLayout>
+

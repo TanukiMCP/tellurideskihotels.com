@@ -50,9 +50,20 @@ db.exec(`
     updatedAt INTEGER NOT NULL
   );
 
+  CREATE TABLE IF NOT EXISTS user_bookings (
+    id TEXT PRIMARY KEY,
+    user_id TEXT NOT NULL,
+    booking_id TEXT NOT NULL,
+    guest_email TEXT NOT NULL,
+    created_at INTEGER NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE CASCADE
+  );
+
   CREATE INDEX IF NOT EXISTS idx_session_token ON session(token);
   CREATE INDEX IF NOT EXISTS idx_session_userId ON session(userId);
   CREATE INDEX IF NOT EXISTS idx_account_userId ON account(userId);
+  CREATE INDEX IF NOT EXISTS idx_user_bookings_user_id ON user_bookings(user_id);
+  CREATE UNIQUE INDEX IF NOT EXISTS idx_user_bookings_booking_id ON user_bookings(booking_id);
 `);
 
 console.log('✅ Database initialized successfully!');

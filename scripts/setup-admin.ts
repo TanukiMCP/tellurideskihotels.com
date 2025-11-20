@@ -1,5 +1,5 @@
 #!/usr/bin/env tsx
-import { createUser } from '../src/lib/auth.js';
+import { createUser } from '../src/lib/auth';
 
 // Default admin credentials - CHANGE THESE AFTER FIRST LOGIN!
 const DEFAULT_EMAIL = 'admin@tellurideskihotels.com';
@@ -8,7 +8,10 @@ const DEFAULT_NAME = 'Administrator';
 
 async function setupAdmin() {
   try {
-    const user = await createUser(DEFAULT_EMAIL, DEFAULT_PASSWORD, DEFAULT_NAME);
+    const user = await createUser(DEFAULT_EMAIL, DEFAULT_PASSWORD, DEFAULT_NAME, {
+      emailVerified: true,
+      skipVerificationEmail: true,
+    });
 
     console.log('\n✅ Admin user created successfully!\n');
     console.log('═══════════════════════════════════════');
@@ -19,7 +22,7 @@ async function setupAdmin() {
     console.log('\n🌐 Sign in at: http://localhost:4321/admin/login');
     console.log('\nUser ID:', user.id);
   } catch (error: any) {
-    if (error.message === 'User already exists') {
+    if (error.message === 'User already exists' || error.code === 'USER_EXISTS') {
       console.log('\n⚠️  Admin user already exists!');
       console.log('Email:', DEFAULT_EMAIL);
       console.log('\nUse this email to sign in at /admin/login');

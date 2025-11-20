@@ -1,14 +1,29 @@
 import { SignJWT, jwtVerify } from 'jose';
 import { getStore } from '@netlify/blobs';
+import { randomBytes, randomUUID, scryptSync } from 'crypto';
+import { Resend } from 'resend';
+import { claimBookingAccessForUser } from './server/booking-access';
 
 const SECRET = new TextEncoder().encode(
   process.env.BETTER_AUTH_SECRET || 'dev-secret-change-in-production-minimum-32-chars'
 );
+const SITE_URL = process.env.PUBLIC_SITE_URL || 'https://tellurideskihotels.com';
+const RESEND_API_KEY = process.env.RESEND_API_KEY || '';
+const RESEND_FROM_EMAIL =
+  process.env.FROM_EMAIL || process.env.RESEND_FROM_EMAIL || 'bookings@tellurideskihotels.com';
+const EMAIL_VERIFICATION_TTL = 1000 * 60 * 60 * 24; // 24h
+
+const resend = RESEND_API_KEY ? new Resend(RESEND_API_KEY) : null;
+
+export type UserType = 'account' | 'guest';
 
 export interface User {
   id: string;
   email: string;
   name?: string;
+  type: UserType;
+  emailVerified: boolean;
+  createdAt: number;
 }
 
 export interface Session {
@@ -16,13 +31,57 @@ export interface Session {
   expiresAt: number;
 }
 
-// Simple user store using Netlify Blobs
+export class AuthenticationError extends Error {
+  constructor(
+    message: string,
+    public status = 400,
+    public code: string = 'AUTH_ERROR'
+  ) {
+    super(message);
+    this.name = 'AuthenticationError';
+  }
+}
+
+// Simple user + verification store using Netlify Blobs
 const getUserStore = () => getStore('users');
 const getSessionStore = () => getStore('sessions');
+const getVerificationStore = () => getStore('user-verifications');
+
+interface StoredUser extends User {
+  passwordHash: string;
+}
+
+function normalizeEmail(email: string) {
+  return email.trim().toLowerCase();
+}
+
+function buildUser(data: StoredUser): User {
+  return {
+    id: data.id,
+    email: data.email,
+    name: data.name,
+    type: data.type || 'account',
+    emailVerified: Boolean(data.emailVerified),
+    createdAt: data.createdAt || Date.now(),
+  };
+}
+
+async function getStoredUser(email: string): Promise<StoredUser | null> {
+  const userStore = getUserStore();
+  const userKey = `user:${normalizeEmail(email)}`;
+  const data = (await userStore.get(userKey, { type: 'json' })) as StoredUser | null;
+  return data || null;
+}
+
+async function persistStoredUser(user: StoredUser) {
+  const userStore = getUserStore();
+  const userKey = `user:${user.email}`;
+  await userStore.setJSON(userKey, user);
+}
 
 export async function createSession(user: User): Promise<string> {
-  const expiresAt = Date.now() + (7 * 24 * 60 * 60 * 1000); // 7 days
-  
+  const expiresAt = Date.now() + 7 * 24 * 60 * 60 * 1000;
+
   const token = await new SignJWT({ userId: user.id })
     .setProtectedHeader({ alg: 'HS256' })
     .setExpirationTime('7d')
@@ -41,14 +100,11 @@ export async function createSession(user: User): Promise<string> {
 export async function verifySession(token: string): Promise<Session | null> {
   try {
     await jwtVerify(token, SECRET);
-    
     const sessionStore = getSessionStore();
-    const session = await sessionStore.get(token, { type: 'json' }) as Session | null;
-    
+    const session = (await sessionStore.get(token, { type: 'json' })) as Session | null;
     if (!session || session.expiresAt < Date.now()) {
       return null;
     }
-    
     return session;
   } catch {
     return null;
@@ -65,59 +121,149 @@ export async function getSessionFromRequest(request: Request): Promise<Session |
   return verifySession(tokenMatch[1]);
 }
 
-export async function signIn(email: string, password: string): Promise<{ user: User; token: string } | null> {
-  const userStore = getUserStore();
-  const userKey = `user:${email}`;
-  const userData = await userStore.get(userKey, { type: 'json' }) as any;
-  
-  if (!userData || !verifyPassword(password, userData.passwordHash)) {
-    return null;
+export async function signIn(email: string, password: string): Promise<{ user: User; token: string }> {
+  const stored = await getStoredUser(email);
+  if (!stored || !verifyPassword(password, stored.passwordHash)) {
+    throw new AuthenticationError('Invalid credentials', 401, 'INVALID_CREDENTIALS');
   }
 
-  const user: User = {
-    id: userData.id,
-    email: userData.email,
-    name: userData.name,
-  };
+  if (stored.type !== 'account') {
+    throw new AuthenticationError('Account type cannot sign in', 403, 'UNSUPPORTED_USER');
+  }
 
+  if (!stored.emailVerified) {
+    throw new AuthenticationError('Email not verified', 403, 'EMAIL_NOT_VERIFIED');
+  }
+
+  const user = buildUser(stored);
   const token = await createSession(user);
   return { user, token };
 }
 
-export async function createUser(email: string, password: string, name: string): Promise<User> {
+interface CreateUserOptions {
+  type?: UserType;
+  emailVerified?: boolean;
+  skipVerificationEmail?: boolean;
+}
+
+export async function createUser(
+  email: string,
+  password: string,
+  name: string,
+  options: CreateUserOptions = {}
+): Promise<User> {
+  const normalizedEmail = normalizeEmail(email);
   const userStore = getUserStore();
-  const userKey = `user:${email}`;
-  
+  const userKey = `user:${normalizedEmail}`;
+
   const existing = await userStore.get(userKey);
   if (existing) {
-    throw new Error('User already exists');
+    throw new AuthenticationError('User already exists', 409, 'USER_EXISTS');
   }
 
-  const user: User = {
-    id: Math.random().toString(36).substring(2, 15),
-    email,
+  const user: StoredUser = {
+    id: randomUUID(),
+    email: normalizedEmail,
     name,
+    type: options.type || 'account',
+    emailVerified: Boolean(options.emailVerified),
+    createdAt: Date.now(),
+    passwordHash: hashPassword(password),
   };
 
-  await userStore.setJSON(userKey, {
-    ...user,
-    passwordHash: hashPassword(password),
+  await userStore.setJSON(userKey, user);
+
+  if (user.type === 'account' && !user.emailVerified && !options.skipVerificationEmail) {
+    await queueVerificationEmail(buildUser(user));
+  }
+
+  return buildUser(user);
+}
+
+async function queueVerificationEmail(user: User) {
+  const token = randomUUID();
+  const verificationStore = getVerificationStore();
+  await verificationStore.setJSON(`verify:${token}`, {
+    userId: user.id,
+    email: user.email,
+    expiresAt: Date.now() + EMAIL_VERIFICATION_TTL,
   });
 
-  return user;
+  if (!resend) {
+    console.warn('[auth] RESEND_API_KEY missing, verification link:', token);
+    return token;
+  }
+
+  const verificationUrl = new URL('/account/verify', SITE_URL);
+  verificationUrl.searchParams.set('token', token);
+
+  await resend.emails.send({
+    from: RESEND_FROM_EMAIL,
+    to: user.email,
+    subject: 'Verify your Telluride Ski Hotels account',
+    html: `
+      <p>Hi ${user.name || 'there'},</p>
+      <p>Thanks for creating an account with Telluride Ski Hotels. Confirm your email to unlock saved bookings across devices.</p>
+      <p><a href="${verificationUrl.toString()}" target="_blank">Verify email</a></p>
+      <p>This link expires in 24 hours.</p>
+    `,
+  });
+
+  return token;
+}
+
+export async function requestEmailVerification(email: string) {
+  const stored = await getStoredUser(email);
+  if (!stored) {
+    throw new AuthenticationError('User not found', 404, 'USER_NOT_FOUND');
+  }
+
+  if (stored.emailVerified) {
+    return buildUser(stored);
+  }
+
+  return queueVerificationEmail(buildUser(stored));
+}
+
+export async function verifyEmailToken(token: string): Promise<User> {
+  const verificationStore = getVerificationStore();
+  const record = (await verificationStore.get(`verify:${token}`, {
+    type: 'json',
+  })) as { email: string; userId: string; expiresAt: number } | null;
+
+  if (!record) {
+    throw new AuthenticationError('Verification link is invalid', 410, 'TOKEN_INVALID');
+  }
+
+  if (record.expiresAt < Date.now()) {
+    await verificationStore.delete(`verify:${token}`);
+    throw new AuthenticationError('Verification link has expired', 410, 'TOKEN_EXPIRED');
+  }
+
+  const stored = await getStoredUser(record.email);
+  if (!stored || stored.id !== record.userId) {
+    throw new AuthenticationError('User not found for verification token', 404, 'USER_NOT_FOUND');
+  }
+
+  if (!stored.emailVerified) {
+    stored.emailVerified = true;
+    await persistStoredUser(stored);
+    await claimBookingAccessForUser(stored.email, stored.id);
+  }
+
+  await verificationStore.delete(`verify:${token}`);
+  return buildUser(stored);
 }
 
 function hashPassword(password: string): string {
-  const crypto = require('crypto');
-  const salt = crypto.randomBytes(16).toString('hex');
-  const hash = crypto.scryptSync(password, salt, 64).toString('hex');
+  const salt = randomBytes(16).toString('hex');
+  const hash = scryptSync(password, salt, 64).toString('hex');
   return `${salt}:${hash}`;
 }
 
 function verifyPassword(password: string, hash: string): boolean {
-  const crypto = require('crypto');
   const [salt, storedHash] = hash.split(':');
-  const testHash = crypto.scryptSync(password, salt, 64).toString('hex');
+  const testHash = scryptSync(password, salt, 64).toString('hex');
   return storedHash === testHash;
 }
 

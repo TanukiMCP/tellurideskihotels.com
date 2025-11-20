@@ -1,0 +1,29 @@
+---
+import PageLayout from '@/components/layout/PageLayout.astro';
+import Container from '@/components/layout/Container.astro';
+import { LookupForm } from '@/components/booking-lookup/LookupForm';
+---
+
+<PageLayout
+  title="Find Your Booking"
+  description="Retrieve your Telluride reservation using your booking ID and the email address used at checkout."
+>
+  <Container class="py-16 lg:py-20">
+    <div class="max-w-3xl mx-auto space-y-10">
+      <div class="bg-white shadow-xl rounded-3xl border border-neutral-200 p-8 space-y-4">
+        <p class="text-sm uppercase tracking-wide text-primary-600 font-semibold">
+          Guest access
+        </p>
+        <h1 class="text-3xl font-bold text-neutral-900">
+          Lookup your reservation
+        </h1>
+        <p class="text-neutral-600">
+          Enter the booking ID from your confirmation email along with the email address used during checkout. Add your last name for an extra verification step.
+        </p>
+      </div>
+
+      <LookupForm client:load />
+    </div>
+  </Container>
+</PageLayout>
+

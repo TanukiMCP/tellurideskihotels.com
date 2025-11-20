@@ -1,0 +1,39 @@
+---
+export const prerender = false;
+import PageLayout from '@/components/layout/PageLayout.astro';
+import Container from '@/components/layout/Container.astro';
+import { AccountSignup } from '@/components/account/AccountSignup';
+import { getSessionFromRequest } from '@/lib/auth';
+
+const session = await getSessionFromRequest(Astro.request);
+if (session) {
+  return Astro.redirect('/account');
+}
+---
+
+<PageLayout
+  title="Create an Account | Telluride Ski Hotels"
+  description="Unlock synced bookings, loyalty perks, and stress-free management for every Telluride stay."
+>
+  <div class="bg-neutral-950 text-white py-16 lg:py-24">
+    <Container class="max-w-4xl space-y-5">
+      <p class="text-sm uppercase tracking-[0.3em] text-primary-300 font-semibold">Phase 2 access</p>
+      <h1 class="text-4xl lg:text-6xl font-black tracking-tight">
+        Save bookings. Convert guest reservations. Travel lighter.
+      </h1>
+      <p class="text-lg text-white/70">
+        Telluride Ski Hotels accounts sync every reservation by email so you can manage cancellations,
+        modifications, and confirmations anywhere.
+      </p>
+    </Container>
+  </div>
+
+  <Container class="-mt-24 pb-24 space-y-8">
+    <AccountSignup client:load />
+    <div class="text-center text-sm text-neutral-600">
+      Already have an account? <a href="/account/login" class="text-primary-600 font-semibold">Sign in</a>.
+    </div>
+  </Container>
+</PageLayout>
+
+
