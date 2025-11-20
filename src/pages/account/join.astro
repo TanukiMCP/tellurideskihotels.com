@@ -20,6 +20,9 @@ const heroImageUrl = heroImage
 const heroSrcSet = heroImage
   ? generateSrcSet(heroImage.url, [640, 960, 1280, 1600, 1920])
   : null;
+const heroImageAlt = heroImage
+  ? `Telluride resort view by ${heroImage.photographer}`
+  : 'Telluride mountains';
 ---
 
 <PageLayout
@@ -33,7 +36,7 @@ const heroSrcSet = heroImage
           src={heroImageUrl}
           srcset={heroSrcSet || undefined}
           sizes="100vw"
-          alt={heroImage?.alt || 'Telluride mountains'}
+          alt={heroImageAlt}
           class="w-full h-full object-cover"
           loading="lazy"
         />
