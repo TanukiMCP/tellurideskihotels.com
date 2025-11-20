@@ -7,7 +7,13 @@ const SITE_URL = import.meta.env.PUBLIC_SITE_URL || 'https://tellurideskihotels.
 
 export const GET: APIRoute = async ({ url, redirect }) => {
   if (!APPLE_CLIENT_ID) {
-    return new Response('Apple OAuth not configured', { status: 500 });
+    return new Response(
+      JSON.stringify({ error: { message: 'Apple OAuth is not configured. Please use email sign-up instead.', code: 'OAUTH_NOT_CONFIGURED' } }),
+      { 
+        status: 503,
+        headers: { 'Content-Type': 'application/json' }
+      }
+    );
   }
 
   const redirectUri = `${SITE_URL}/api/auth/oauth/apple/callback`;

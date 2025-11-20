@@ -59,9 +59,42 @@ export function AccountLogin({ redirectTo = '/account' }: AccountLoginProps) {
     }
   };
 
-  const handleOAuthLogin = (provider: 'google' | 'apple') => {
+  const handleOAuthLogin = async (provider: 'google' | 'apple') => {
     const currentPath = typeof window !== 'undefined' ? window.location.pathname : redirectTo;
-    window.location.href = `/api/auth/oauth/${provider}?state=${encodeURIComponent(redirectTo || currentPath)}`;
+    const state = encodeURIComponent(redirectTo || currentPath);
+    
+    try {
+      // Check if OAuth is configured by making a request first
+      const response = await fetch(`/api/auth/oauth/${provider}?state=${state}`, {
+        method: 'GET',
+        redirect: 'manual',
+      });
+      
+      if (response.status === 503) {
+        // OAuth not configured - show error
+        const data = await response.json().catch(() => ({}));
+        setError(data.error?.message || `${provider === 'google' ? 'Google' : 'Apple'} OAuth is not configured. Please use email sign-in instead.`);
+        return;
+      }
+      
+      // If we get a redirect (3xx), OAuth is configured, follow the redirect
+      if (response.status >= 300 && response.status < 400) {
+        const location = response.headers.get('Location');
+        if (location) {
+          window.location.href = location;
+        } else {
+          // Fallback to direct redirect
+          window.location.href = `/api/auth/oauth/${provider}?state=${state}`;
+        }
+      } else {
+        // Unexpected response
+        setError(`${provider === 'google' ? 'Google' : 'Apple'} sign-in is currently unavailable. Please use email sign-in instead.`);
+      }
+    } catch (err) {
+      // If fetch fails, try direct redirect as fallback
+      console.error(`OAuth ${provider} error:`, err);
+      window.location.href = `/api/auth/oauth/${provider}?state=${state}`;
+    }
   };
 
   return (

@@ -47,8 +47,39 @@ export function AccountSignup() {
     }
   };
 
-  const handleOAuthSignup = (provider: 'google' | 'apple') => {
-    window.location.href = `/api/auth/oauth/${provider}?state=${encodeURIComponent('/account')}`;
+  const handleOAuthSignup = async (provider: 'google' | 'apple') => {
+    try {
+      // Check if OAuth is configured by making a request first
+      const response = await fetch(`/api/auth/oauth/${provider}?state=${encodeURIComponent('/account')}`, {
+        method: 'GET',
+        redirect: 'manual',
+      });
+      
+      if (response.status === 503) {
+        // OAuth not configured - show error
+        const data = await response.json().catch(() => ({}));
+        setError(data.error?.message || `${provider === 'google' ? 'Google' : 'Apple'} OAuth is not configured. Please use email sign-up instead.`);
+        return;
+      }
+      
+      // If we get a redirect (3xx), OAuth is configured, follow the redirect
+      if (response.status >= 300 && response.status < 400) {
+        const location = response.headers.get('Location');
+        if (location) {
+          window.location.href = location;
+        } else {
+          // Fallback to direct redirect
+          window.location.href = `/api/auth/oauth/${provider}?state=${encodeURIComponent('/account')}`;
+        }
+      } else {
+        // Unexpected response
+        setError(`${provider === 'google' ? 'Google' : 'Apple'} sign-up is currently unavailable. Please use email sign-up instead.`);
+      }
+    } catch (err) {
+      // If fetch fails, try direct redirect as fallback
+      console.error(`OAuth ${provider} error:`, err);
+      window.location.href = `/api/auth/oauth/${provider}?state=${encodeURIComponent('/account')}`;
+    }
   };
 
   return (

@@ -49,10 +49,11 @@ export const authClient = {
   },
   signUp: async ({ name, email, password }: { name: string; email: string; password: string }) => {
     try {
-      const response = await fetch('/api/auth/sign-in', {
+      const response = await fetch('/api/auth/[...all]', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ action: 'sign-up', name, email, password }),
+        credentials: 'include',
       });
       const data = await response.json();
       if (!response.ok) {
