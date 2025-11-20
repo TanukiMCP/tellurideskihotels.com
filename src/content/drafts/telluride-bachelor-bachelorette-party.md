@@ -22,7 +22,7 @@
   "featured": false,
   "featuredImage": "https://images.pexels.com/photos/7357314/pexels-photo-7357314.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
   "featuredImageAlt": "Two women in winter attire enjoying hot beverages by the ski slopes at night",
-  "excerpt": "Complete planning guide for Telluride bachelor and bachelorette parties: event timeline, group lodging strategies, activity recommendations, cost breakdowns, and expert tips for memorable celebrations.",
+  "excerpt": "Complete planning guide for Telluride bachelor and bachelorette parties: event timeline, group lodging strategies, activity recommendations, cost breakdowns, and expert tips for memorable...",
   "wordCount": 2900,
   "readingTime": 15,
   "relatedHotels": [

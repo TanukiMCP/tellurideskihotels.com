@@ -22,7 +22,7 @@
   "featured": true,
   "featuredImage": "https://images.pexels.com/photos/4969872/pexels-photo-4969872.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
   "featuredImageAlt": "Telluride mountain village and downtown town comparison showing both accommodation areas",
-  "excerpt": "Mountain Village ski-in/ski-out convenience or downtown Telluride's Victorian charm? Comprehensive comparison of both locations including pricing, ski access, atmosphere, dining, and honest recommendations for who should stay where.",
+  "excerpt": "Mountain Village ski-in/ski-out convenience or downtown Telluride's Victorian charm? Comprehensive comparison of both locations including pricing, ski access, atmosphere, dining, and honest...",
   "wordCount": 3400,
   "readingTime": 17,
   "relatedHotels": [

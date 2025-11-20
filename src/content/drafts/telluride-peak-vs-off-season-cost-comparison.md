@@ -22,7 +22,7 @@
   "featured": false,
   "featuredImage": "https://images.pexels.com/photos/34640796/pexels-photo-34640796.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
   "featuredImageAlt": "A stunning view of a snow-capped mountain range under a clear blue sky",
-  "excerpt": "Complete cost comparison between Telluride peak season and off-season: detailed savings breakdowns, accommodation price differences, lift ticket costs, and tips for optimizing budget by choosing the right timing.",
+  "excerpt": "Complete cost comparison between Telluride peak season and off-season: detailed savings breakdowns, accommodation price differences, lift ticket costs, and tips for optimizing budget by choosing...",
   "wordCount": 2600,
   "readingTime": 13,
   "relatedHotels": [

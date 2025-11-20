@@ -3,7 +3,7 @@
   "id": "telluride-ski-hotel-insider-guide",
   "title": "Telluride Ski Hotel Insider's Guide: Which Hotel for Which Skier",
   "slug": "telluride-ski-hotel-insider-guide",
-  "status": "published",
+  "status": "scheduled",
   "category": "hotel-reviews",
   "author": "Telluride Ski Hotels Team",
   "publishDate": "2025-11-19T15:00:00Z",
@@ -22,7 +22,7 @@
   "featured": true,
   "featuredImage": "https://images.pexels.com/photos/2405649/pexels-photo-2405649.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
   "featuredImageAlt": "Skier enjoying powder skiing at Telluride with hotel recommendations for different skiing styles",
-  "excerpt": "Not all Telluride ski hotels suit all skiers. Expert guide matching powder hounds, cruisers, families, beginners, and luxury seekers with ideal accommodations.",
+  "excerpt": "Not all Telluride ski hotels suit all skiers. Expert guide matching powder hounds, cruisers, families, beginners, and luxury seekers with their ideal accommodations based on skiing style and...",
   "wordCount": 3200,
   "readingTime": 16,
   "relatedHotels": [
@@ -46,8 +46,7 @@
   ],
   "seasonalRelevance": [
     "winter"
-  ],
-  "updatedDate": "2025-11-20T14:09:56.805Z"
+  ]
 }
 ---
 

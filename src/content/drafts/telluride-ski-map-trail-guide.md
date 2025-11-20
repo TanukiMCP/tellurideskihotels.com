@@ -22,7 +22,7 @@
   "featured": false,
   "featuredImage": "https://images.pexels.com/photos/7624845/pexels-photo-7624845.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
   "featuredImageAlt": "Diverse group of friends hiking together, planning their adventure in a lush forest",
-  "excerpt": "Complete Telluride ski map and trail guide: comprehensive terrain breakdown, lift system overview, trail difficulty ratings, area navigation tips, and expert guidance for exploring Telluride's diverse terrain.",
+  "excerpt": "Complete Telluride ski map and trail guide: comprehensive terrain breakdown, lift system overview, trail difficulty ratings, area navigation tips, and expert guidance for exploring Telluride's...",
   "wordCount": 2600,
   "readingTime": 13,
   "relatedHotels": [

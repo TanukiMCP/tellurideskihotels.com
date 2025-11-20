@@ -22,7 +22,7 @@
   "featured": false,
   "featuredImage": "https://images.pexels.com/photos/15744603/pexels-photo-15744603.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
   "featuredImageAlt": "Family having fun on a ski lift with snow-covered mountains in the background",
-  "excerpt": "Complete planning guide for Telluride multi-family ski trips: large group logistics, cost coordination strategies, accommodation options for multiple families, and expert tips for successful group vacations.",
+  "excerpt": "Complete planning guide for Telluride multi-family ski trips: large group logistics, cost coordination strategies, accommodation options for multiple families, and expert tips for successful...",
   "wordCount": 3000,
   "readingTime": 15,
   "relatedHotels": [
