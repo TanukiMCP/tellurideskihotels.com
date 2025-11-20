@@ -6,7 +6,9 @@ const GOOGLE_CLIENT_ID = import.meta.env.GOOGLE_CLIENT_ID || '';
 const SITE_URL = import.meta.env.PUBLIC_SITE_URL || 'https://tellurideskihotels.com';
 
 export const GET: APIRoute = async ({ url, redirect }) => {
+  // Log for debugging (remove in production if needed)
   if (!GOOGLE_CLIENT_ID) {
+    console.error('[Google OAuth] GOOGLE_CLIENT_ID is not set');
     return new Response(
       JSON.stringify({ error: { message: 'Google OAuth is not configured. Please use email sign-up instead.', code: 'OAUTH_NOT_CONFIGURED' } }),
       { 

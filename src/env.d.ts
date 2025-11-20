@@ -33,6 +33,8 @@ interface ImportMetaEnv {
   readonly VIATOR_API_KEY: string;
   readonly VIATOR_BASE_URL: string;
   readonly PUBLIC_PAYMENT_MODE: 'sandbox' | 'production';
+  readonly GOOGLE_CLIENT_ID?: string;
+  readonly GOOGLE_CLIENT_SECRET?: string;
 }
 
 interface ImportMeta {
