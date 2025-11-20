@@ -3,14 +3,20 @@
   "id": "best-time-visit-telluride",
   "title": "Best Time to Visit Telluride: Complete Seasonal Guide (2025)",
   "slug": "best-time-visit-telluride",
-  "status": "scheduled",
+  "status": "published",
   "category": "planning-tips",
   "author": "Telluride Ski Hotels Team",
   "publishDate": "2025-11-19T15:00:00Z",
   "seo": {
     "metaTitle": "Best Time to Visit Telluride: Seasonal Guide for 2025",
     "metaDescription": "When is the best time to visit Telluride? Compare seasons, weather, crowds, and prices to plan your perfect trip for skiing, hiking, or festivals.",
-    "keywords": ["when to visit telluride", "best time telluride", "telluride seasons", "telluride crowds", "telluride peak season"],
+    "keywords": [
+      "when to visit telluride",
+      "best time telluride",
+      "telluride seasons",
+      "telluride crowds",
+      "telluride peak season"
+    ],
     "canonical": "https://tellurideskihotels.com/blog/planning-tips/best-time-visit-telluride"
   },
   "featured": false,
@@ -19,10 +25,30 @@
   "excerpt": "Comprehensive guide to the best time to visit Telluride. Compare seasons by weather, crowds, prices, and activities to find your perfect trip timing for skiing, hiking, or festivals.",
   "wordCount": 2300,
   "readingTime": 12,
-  "relatedHotels": ["madeline-hotel", "hotel-telluride", "peaks-resort"],
-  "relatedArticles": ["telluride-weather-guide", "telluride-ski-season-guide", "front-range-telluride-weekend"],
-  "tags": ["planning", "seasons", "timing", "crowds", "budget"],
-  "seasonalRelevance": ["winter", "summer", "fall", "spring"]
+  "relatedHotels": [
+    "madeline-hotel",
+    "hotel-telluride",
+    "peaks-resort"
+  ],
+  "relatedArticles": [
+    "telluride-weather-guide",
+    "telluride-ski-season-guide",
+    "front-range-telluride-weekend"
+  ],
+  "tags": [
+    "planning",
+    "seasons",
+    "timing",
+    "crowds",
+    "budget"
+  ],
+  "seasonalRelevance": [
+    "winter",
+    "summer",
+    "fall",
+    "spring"
+  ],
+  "updatedDate": "2025-11-20T14:09:56.796Z"
 }
 ---
 

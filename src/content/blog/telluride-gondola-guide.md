@@ -3,7 +3,7 @@
   "id": "telluride-gondola-guide",
   "title": "Telluride Gondola Guide: Free Transportation & Views (2025)",
   "slug": "telluride-gondola-guide",
-  "status": "scheduled",
+  "status": "published",
   "category": "planning-tips",
   "author": "Telluride Ski Hotels Team",
   "publishDate": "2025-11-19T15:00:00Z",
@@ -48,7 +48,8 @@
     "spring",
     "summer",
     "fall"
-  ]
+  ],
+  "updatedDate": "2025-11-20T14:09:56.803Z"
 }
 ---
 

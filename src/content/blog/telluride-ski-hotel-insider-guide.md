@@ -3,7 +3,7 @@
   "id": "telluride-ski-hotel-insider-guide",
   "title": "Telluride Ski Hotel Insider's Guide: Which Hotel for Which Skier",
   "slug": "telluride-ski-hotel-insider-guide",
-  "status": "scheduled",
+  "status": "published",
   "category": "hotel-reviews",
   "author": "Telluride Ski Hotels Team",
   "publishDate": "2025-11-19T15:00:00Z",
@@ -46,7 +46,8 @@
   ],
   "seasonalRelevance": [
     "winter"
-  ]
+  ],
+  "updatedDate": "2025-11-20T14:09:56.805Z"
 }
 ---
 
