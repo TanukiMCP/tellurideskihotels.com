@@ -8,22 +8,74 @@ import { LookupForm } from '@/components/booking-lookup/LookupForm';
   title="Find Your Booking"
   description="Retrieve your Telluride reservation using your booking ID and the email address used at checkout."
 >
-  <Container class="py-16 lg:py-20">
-    <div class="max-w-3xl mx-auto space-y-10">
-      <div class="bg-white shadow-xl rounded-3xl border border-neutral-200 p-8 space-y-4">
-        <p class="text-sm uppercase tracking-wide text-primary-600 font-semibold">
-          Guest access
-        </p>
-        <h1 class="text-3xl font-bold text-neutral-900">
-          Lookup your reservation
-        </h1>
-        <p class="text-neutral-600">
-          Enter the booking ID from your confirmation email along with the email address used during checkout. Add your last name for an extra verification step.
-        </p>
-      </div>
+  <!-- Background Treatment -->
+  <div class="relative min-h-screen bg-gradient-to-b from-white via-[#F8F6F3] to-white">
+    <Container class="py-12 lg:py-16">
+      <div class="max-w-3xl mx-auto">
+        <!-- Page Header -->
+        <div class="text-center mb-8">
+          <h1 
+            class="text-3xl md:text-4xl font-bold text-[#2C2C2C] mb-4"
+            style="font-family: 'Playfair Display', serif;"
+          >
+            Manage Your Reservation
+          </h1>
+          <p class="text-base text-[#666] max-w-2xl mx-auto">
+            View details, modify dates, or make changes to your booking
+          </p>
+        </div>
 
-      <LookupForm client:load />
-    </div>
-  </Container>
+        <!-- Feature Icons -->
+        <div class="flex flex-wrap justify-center items-center gap-6 sm:gap-8 md:gap-10 mb-10">
+          <div class="flex flex-col items-center gap-2 w-[80px] sm:w-auto">
+            <div class="w-8 h-8 flex items-center justify-center" style="color: #2D5F4F;">
+              <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+            </div>
+            <span class="text-xs text-[#666] text-center">View Details</span>
+          </div>
+          <div class="flex flex-col items-center gap-2 w-[80px] sm:w-auto">
+            <div class="w-8 h-8 flex items-center justify-center" style="color: #2D5F4F;">
+              <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+            </div>
+            <span class="text-xs text-[#666] text-center">Modify Dates</span>
+          </div>
+          <div class="flex flex-col items-center gap-2 w-[80px] sm:w-auto">
+            <div class="w-8 h-8 flex items-center justify-center" style="color: #2D5F4F;">
+              <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </div>
+            <span class="text-xs text-[#666] text-center">Cancel Booking</span>
+          </div>
+          <div class="flex flex-col items-center gap-2 w-[80px] sm:w-auto">
+            <div class="w-8 h-8 flex items-center justify-center" style="color: #2D5F4F;">
+              <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
+              </svg>
+            </div>
+            <span class="text-xs text-[#666] text-center">Get Directions</span>
+          </div>
+        </div>
+
+        <!-- Lookup Form Card -->
+        <LookupForm client:load />
+
+        <!-- Security Badge -->
+        <div class="flex items-center justify-center gap-2 mt-6">
+          <svg class="w-4 h-4 text-neutral-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+          </svg>
+          <span class="text-xs text-neutral-500">Your information is secure & encrypted</span>
+        </div>
+      </div>
+    </Container>
+  </div>
+
+  <!-- Footer Spacing -->
+  <div class="h-20 md:h-32 bg-white"></div>
 </PageLayout>
 
