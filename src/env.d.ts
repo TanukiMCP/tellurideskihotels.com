@@ -18,3 +18,16 @@ interface ImportMetaEnv {
 interface ImportMeta {
   readonly env: ImportMetaEnv;
 }
+
+declare namespace App {
+  interface Locals {
+    user?: import('./lib/auth').User;
+    session?: {
+      user: import('./lib/auth').User;
+      session: {
+        token: string;
+        expiresAt: Date;
+      };
+    };
+  }
+}
