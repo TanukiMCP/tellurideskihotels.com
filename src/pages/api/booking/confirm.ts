@@ -23,7 +23,7 @@ export const POST: APIRoute = async ({ request }) => {
 
     if (result?.bookingId && body?.holder?.email) {
       try {
-        recordBookingAccess({
+        await recordBookingAccess({
           bookingId: result.bookingId,
           email: body.holder.email,
           lastName: body.holder.lastName,
@@ -37,7 +37,7 @@ export const POST: APIRoute = async ({ request }) => {
 
     if (session?.user?.id && result?.bookingId) {
       try {
-        saveUserBooking({
+        await saveUserBooking({
           userId: session.user.id,
           bookingId: result.bookingId,
           guestEmail: body.holder.email,

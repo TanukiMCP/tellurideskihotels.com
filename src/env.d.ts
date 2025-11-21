@@ -1,45 +1,20 @@
 /// <reference path="../.astro/types.d.ts" />
 /// <reference types="astro/client" />
 
-declare namespace App {
-  interface Locals {
-    session?: {
-      user: {
-        id: string;
-        email: string;
-        name?: string;
-      };
-      session: {
-        token: string;
-        expiresAt: Date;
-      };
-    };
-    user?: {
-      id: string;
-      email: string;
-      name?: string;
-    };
-  }
-}
-
 interface ImportMetaEnv {
-  readonly LITEAPI_BASE_URL: string;
-  readonly LITEAPI_PUBLIC_KEY: string;
-  readonly LITEAPI_PRIVATE_KEY: string;
-  readonly LITEAPI_MARKUP_PERCENT: string;
+  readonly BETTER_AUTH_SECRET: string;
   readonly PUBLIC_SITE_URL: string;
-  readonly PEXELS_API_KEY: string;
-  readonly PUBLIC_MAPBOX_ACCESS_TOKEN: string;
-  readonly VIATOR_API_KEY: string;
-  readonly VIATOR_BASE_URL: string;
-  readonly PUBLIC_PAYMENT_MODE: 'sandbox' | 'production';
-  readonly GOOGLE_CLIENT_ID?: string;
-  readonly GOOGLE_CLIENT_SECRET?: string;
+  readonly RESEND_API_KEY: string;
+  readonly FROM_EMAIL: string;
+  readonly RESEND_FROM_EMAIL: string;
+  readonly LITEAPI_KEY: string;
+  readonly GOOGLE_CLIENT_ID: string;
+  readonly GOOGLE_CLIENT_SECRET: string;
   readonly TURSO_DATABASE_URL: string;
   readonly TURSO_AUTH_TOKEN: string;
+  readonly AUTH_DB_PATH: string;
 }
 
 interface ImportMeta {
   readonly env: ImportMetaEnv;
 }
-

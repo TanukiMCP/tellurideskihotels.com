@@ -44,9 +44,11 @@ export const POST: APIRoute = async ({ request }) => {
     const holderLastName = normalize(booking?.holder?.lastName);
 
     if (session?.user?.id) {
-      const ownsBooking =
-        bookingBelongsToUser(session.user.id, bookingId) ||
-        getUserBookings(session.user.id).some((record) => record.booking_id === bookingId);
+      const [ownsBookingAccess, userBookings] = await Promise.all([
+        bookingBelongsToUser(session.user.id, bookingId),
+        getUserBookings(session.user.id),
+      ]);
+      const ownsBooking = ownsBookingAccess || userBookings.some((record) => record.booking_id === bookingId);
       if (!ownsBooking) {
         return new Response(
           JSON.stringify({ error: 'Booking not associated with account' }),
@@ -80,7 +82,7 @@ export const POST: APIRoute = async ({ request }) => {
       const cancelResult = await cancelBooking(bookingId);
 
       if (holderEmail) {
-        recordBookingAccess({
+        await recordBookingAccess({
           bookingId,
           email: holderEmail,
           lastName: holderLastName,
@@ -109,7 +111,7 @@ export const POST: APIRoute = async ({ request }) => {
       const result = await amendGuestName(bookingId, newFirstName, newLastName);
 
       if (holderEmail) {
-        recordBookingAccess({
+        await recordBookingAccess({
           bookingId,
           email: holderEmail,
           lastName: newLastName,

@@ -10,7 +10,6 @@
     "preview": "astro preview",
     "setup-admin": "tsx scripts/setup-admin.ts",
     "create-admin": "tsx scripts/create-admin.ts",
-    "init-turso": "tsx scripts/init-turso.ts",
     "migrate:user-bookings": "tsx scripts/migrations/add-user-bookings.ts",
     "generate-article": "node scripts/generate-article.js",
     "publish-articles": "node scripts/publish-scheduled-articles.js",
