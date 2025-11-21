@@ -10,7 +10,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import Map, { Marker, NavigationControl } from 'react-map-gl/mapbox';
 import type { MapRef } from 'react-map-gl/mapbox';
 import { format, addDays } from 'date-fns';
-import { Search, Calendar, Users, X, ChevronDown, ChevronUp, Star, MapPin, ExternalLink, Hotel } from 'lucide-react';
+import { Search, Calendar, Users, X, ChevronDown, ChevronUp, ChevronRight, Star, MapPin, ExternalLink, Hotel } from 'lucide-react';
 import type { LiteAPIHotel } from '@/lib/liteapi/types';
 import {
   MAPBOX_TOKEN,
@@ -58,6 +58,7 @@ export default function HeroMapSearch({
   const [expandedHotelId, setExpandedHotelId] = useState<string | null>(null);
   const [hoveredHotelId, setHoveredHotelId] = useState<string | null>(null);
   const [showMobileSearch, setShowMobileSearch] = useState(false);
+  const [isLegendExpanded, setIsLegendExpanded] = useState(false);
   
   // View state
   const [viewState, setViewState] = useState({
@@ -476,271 +477,200 @@ export default function HeroMapSearch({
   };
 
   return (
-    <div className="w-full mx-auto px-4 sm:px-6 lg:px-12 py-8 lg:py-12">
-      <div className="relative bg-white rounded-2xl shadow-2xl border border-neutral-200" style={{ overflow: 'visible', position: 'relative' }}>
-        <div className="relative h-[500px] md:h-[600px] lg:h-[700px] w-full overflow-visible rounded-2xl" id="map-container" style={{ position: 'relative' }}>
-          <div className="absolute inset-0 overflow-hidden rounded-2xl" style={{ clipPath: 'inset(0 round 1rem)' }}>
-            {/* Mapbox Background */}
-            <Map
-        ref={mapRef}
-        {...viewState}
-        onMove={(evt) => setViewState(evt.viewState)}
-        mapboxAccessToken={MAPBOX_TOKEN}
-        mapStyle={MAP_STYLES[mapStyle]}
-        style={{ width: '100%', height: '100%' }}
-        onLoad={() => setIsMapLoaded(true)}
-        dragRotate={false}
-        pitchWithRotate={false}
-        scrollZoom={true}
-        dragPan={true}
-      >
-        {/* Navigation Controls */}
-        <NavigationControl position="top-right" showCompass={false} />
-
-        {/* Hotel Markers - Only show when card is clicked */}
-        {hotels.map((hotel) => {
-          if (!hotel.location?.latitude || !hotel.location?.longitude) return null;
-          if (hotel.hotel_id !== hoveredHotelId) return null; // Only show marker for selected hotel
-
-          const style = getMarkerStyle(hotel.hotel_id);
-
-          return (
-            <Marker
-              key={hotel.hotel_id}
-              longitude={hotel.location.longitude}
-              latitude={hotel.location.latitude}
-              anchor="center"
-            >
-              <div
-                className="cursor-pointer transition-all duration-300"
-                style={{ zIndex: style.zIndex }}
-              >
-                {/* Main Marker Circle */}
-                <div
-                  className="hover:scale-110 transition-transform duration-300"
-                  style={{
-                    backgroundColor: style.color,
-                    width: `${style.size}px`,
-                    height: `${style.size}px`,
-                    borderRadius: '50%',
-                    border: '3px solid white',
-                    boxShadow: style.glow 
-                      ? '0 4px 20px rgba(5, 150, 105, 0.8), 0 0 0 8px rgba(5, 150, 105, 0.2)'
-                      : '0 4px 12px rgba(0,0,0,0.4)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    animation: style.glow ? 'pulse-marker 2s ease-in-out infinite' : 'none',
-                  }}
-                >
-                  <Hotel 
-                    size={style.size * 0.5}
-                    color="white"
-                    strokeWidth={2.5}
-                  />
-                </div>
-              </div>
-            </Marker>
-          );
-        })}
-      </Map>
-
-            {/* Subtle vignette */}
-            <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-transparent to-black/10 pointer-events-none" />
-
-            {/* Map Controls - Top Left Corner */}
-            <div className="absolute top-4 left-4 z-[500] pointer-events-auto">
-        <div className="flex flex-col lg:flex-row gap-2 lg:items-start">
-          {/* Map Style Selector & Search Form */}
-          <div className="flex flex-col lg:flex-row gap-2">
-            {/* Map Style Selector */}
-            <div className="backdrop-blur-xl bg-white/95 border border-white/20 rounded-xl shadow-xl p-2 flex-shrink-0 w-fit">
-              <div className="flex gap-1.5">
-                <button
-                  onClick={() => setMapStyle('streets')}
-                  className={`px-3 py-2 rounded-lg text-xs font-semibold transition-all whitespace-nowrap ${
-                    mapStyle === 'streets'
-                      ? 'bg-primary-600 text-white shadow-md'
-                      : 'bg-white/50 text-neutral-700 hover:bg-white'
-                  }`}
-                  title="Street map view"
-                >
-                  Map
-                </button>
-                <button
-                  onClick={() => setMapStyle('satellite')}
-                  className={`px-3 py-2 rounded-lg text-xs font-semibold transition-all whitespace-nowrap ${
-                    mapStyle === 'satellite'
-                      ? 'bg-primary-600 text-white shadow-md'
-                      : 'bg-white/50 text-neutral-700 hover:bg-white'
-                  }`}
-                  title="Satellite imagery view"
-                >
-                  Satellite
-                </button>
-                <button
-                  onClick={() => setMapStyle('skiTrails')}
-                  className={`px-3 py-2 rounded-lg text-xs font-semibold transition-all whitespace-nowrap ${
-                    mapStyle === 'skiTrails'
-                      ? 'bg-primary-600 text-white shadow-md'
-                      : 'bg-white/50 text-neutral-700 hover:bg-white'
-                  }`}
-                  title="Colorful ski trails and lifts"
-                >
-                  Ski Trails
-                </button>
-              </div>
-            </div>
-
-            {/* Horizontal Search Form - Desktop Only */}
-            <form onSubmit={handleSearch} className="hidden lg:flex backdrop-blur-xl bg-white/95 rounded-xl shadow-xl p-2 border border-white/20 items-center gap-2 flex-shrink-0">
-              <div className="flex items-center gap-1 px-2">
-                <Calendar size={14} className="text-primary-600 flex-shrink-0" />
-                <input
-                  type="date"
-                  value={checkIn}
-                  onChange={(e) => setCheckIn(e.target.value)}
-                  min={format(new Date(), 'yyyy-MM-dd')}
-                  className="w-[130px] px-2 py-1.5 border border-neutral-300 rounded-lg focus:border-primary-600 focus:ring-2 focus:ring-primary-600/20 outline-none transition-all text-xs bg-white"
-                  required
-                />
-              </div>
-              <div className="flex items-center gap-1 px-2">
-                <Calendar size={14} className="text-primary-600 flex-shrink-0" />
-                <input
-                  type="date"
-                  value={checkOut}
-                  onChange={(e) => setCheckOut(e.target.value)}
-                  min={checkIn}
-                  className="w-[130px] px-2 py-1.5 border border-neutral-300 rounded-lg focus:border-primary-600 focus:ring-2 focus:ring-primary-600/20 outline-none transition-all text-xs bg-white"
-                  required
-                />
-              </div>
-              <div className="flex items-center gap-1 px-2">
-                <Users size={14} className="text-primary-600 flex-shrink-0" />
-                <input
-                  type="number"
-                  value={guests}
-                  onChange={(e) => setGuests(parseInt(e.target.value) || 1)}
-                  min="1"
-                  max="20"
-                  className="w-[70px] px-2 py-1.5 border border-neutral-300 rounded-lg focus:border-primary-600 focus:ring-2 focus:ring-primary-600/20 outline-none transition-all text-xs bg-white"
-                  required
-                />
-              </div>
-              <button
-                type="submit"
-                disabled={isSearching}
-                className="px-4 py-2 bg-gradient-to-r from-primary-600 to-primary-700 text-white rounded-lg font-bold text-xs shadow-lg hover:shadow-xl hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 flex items-center justify-center gap-2 flex-shrink-0"
-              >
-                {isSearching ? (
-                  <>
-                    <div className="animate-spin rounded-full h-3 w-3 border-2 border-white border-t-transparent" />
-                    Searching...
-                  </>
-                ) : (
-                  <>
-                    <Search size={14} />
-                    Search
-                  </>
-                )}
-              </button>
-            </form>
-          </div>
-
-          {/* Mobile Search Button */}
-          <button
-            onClick={() => setShowMobileSearch(true)}
-            className="lg:hidden backdrop-blur-xl bg-primary-600 text-white rounded-xl shadow-xl px-4 py-2.5 flex items-center justify-center gap-2 font-bold text-sm hover:bg-primary-700 transition-all"
-          >
-            <Search size={16} />
-            Search Hotels
-          </button>
-        </div>
+    <div className="relative w-full" style={{ minHeight: '70vh', height: '85vh' }} aria-label="Telluride ski trail map background">
+      {/* Map Background - De-emphasized */}
+      <div className="absolute inset-0 w-full h-full">
+        <Map
+          ref={mapRef}
+          {...viewState}
+          onMove={(evt) => setViewState(evt.viewState)}
+          mapboxAccessToken={MAPBOX_TOKEN}
+          mapStyle={MAP_STYLES[mapStyle]}
+          style={{ width: '100%', height: '100%' }}
+          onLoad={() => setIsMapLoaded(true)}
+          dragRotate={false}
+          pitchWithRotate={false}
+          scrollZoom={true}
+          dragPan={true}
+        >
+          {/* Navigation Controls */}
+          <NavigationControl position="top-right" showCompass={false} />
+        </Map>
+        
+        {/* Map Overlay - De-emphasize map */}
+        <div 
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            backgroundColor: 'rgba(255, 255, 255, 0.6)',
+            backdropFilter: 'blur(2px)',
+          }}
+        />
       </div>
 
-            {/* Mobile Search Modal */}
-            {showMobileSearch && (
-              <div className="lg:hidden absolute inset-0 bg-black/50 backdrop-blur-sm z-[600] flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl shadow-2xl p-6 w-full max-w-md animate-scale-in">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-bold text-neutral-900">Search Hotels</h3>
-              <button
-                onClick={() => setShowMobileSearch(false)}
-                className="p-2 hover:bg-neutral-100 rounded-lg transition-colors"
-              >
-                <X size={20} className="text-neutral-600" />
-              </button>
-            </div>
+      {/* Hero Content - Foreground */}
+      <div className="relative z-10 flex flex-col items-center justify-center h-full px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
+        {/* Headline */}
+        <h1 
+          className="text-4xl md:text-5xl lg:text-[52px] font-bold text-[#2C2C2C] text-center mb-4 max-w-4xl leading-tight"
+          style={{ 
+            fontFamily: 'Playfair Display, serif',
+            letterSpacing: '-0.5px',
+            lineHeight: '1.2',
+          }}
+        >
+          Your Home Base for Telluride Adventures
+        </h1>
+        
+        {/* Subheadline */}
+        <p 
+          className="text-base md:text-lg text-[#666] text-center mb-8 max-w-[600px] leading-relaxed"
+          style={{ lineHeight: '24px' }}
+        >
+          Book the perfect accommodation for your ski getaway, from cozy studios to luxury penthouses
+        </p>
 
-            <form onSubmit={handleSearch} className="space-y-4">
-              <div>
-                <label className="block text-sm font-bold text-neutral-800 mb-2 flex items-center gap-2">
-                  <Calendar size={16} className="text-primary-600" />
+        {/* Prominent Search Module */}
+        <div className="w-full max-w-[900px] bg-white rounded-xl shadow-2xl p-4 md:p-6 border border-neutral-200">
+          <form onSubmit={handleSearch} className="flex flex-col md:flex-row gap-3 md:gap-4">
+            {/* Check-in Date */}
+            <div className="flex-1 flex items-center gap-3 px-4 py-3 border border-[#E5E5E5] rounded-lg focus-within:border-[#2D5F4F] focus-within:ring-2 focus-within:ring-[#2D5F4F]/20 transition-all">
+              <Calendar className="w-5 h-5 text-[#2D5F4F] flex-shrink-0" aria-hidden="true" />
+              <div className="flex-1">
+                <label htmlFor="checkin-hero" className="block text-xs font-medium text-neutral-600 mb-1">
                   Check-in
                 </label>
                 <input
+                  id="checkin-hero"
                   type="date"
                   value={checkIn}
                   onChange={(e) => setCheckIn(e.target.value)}
                   min={format(new Date(), 'yyyy-MM-dd')}
-                  className="w-full px-4 py-3 border-2 border-neutral-300 rounded-xl focus:border-primary-600 focus:ring-4 focus:ring-primary-600/20 outline-none transition-all font-semibold text-neutral-900 bg-white"
+                  className="w-full text-base text-neutral-900 bg-transparent border-0 p-0 focus:outline-none"
                   required
+                  aria-label="Check-in date"
                 />
               </div>
+            </div>
 
-              <div>
-                <label className="block text-sm font-bold text-neutral-800 mb-2 flex items-center gap-2">
-                  <Calendar size={16} className="text-primary-600" />
+            {/* Check-out Date */}
+            <div className="flex-1 flex items-center gap-3 px-4 py-3 border border-[#E5E5E5] rounded-lg focus-within:border-[#2D5F4F] focus-within:ring-2 focus-within:ring-[#2D5F4F]/20 transition-all">
+              <Calendar className="w-5 h-5 text-[#2D5F4F] flex-shrink-0" aria-hidden="true" />
+              <div className="flex-1">
+                <label htmlFor="checkout-hero" className="block text-xs font-medium text-neutral-600 mb-1">
                   Check-out
                 </label>
                 <input
+                  id="checkout-hero"
                   type="date"
                   value={checkOut}
                   onChange={(e) => setCheckOut(e.target.value)}
                   min={checkIn}
-                  className="w-full px-4 py-3 border-2 border-neutral-300 rounded-xl focus:border-primary-600 focus:ring-4 focus:ring-primary-600/20 outline-none transition-all font-semibold text-neutral-900 bg-white"
+                  className="w-full text-base text-neutral-900 bg-transparent border-0 p-0 focus:outline-none"
                   required
+                  aria-label="Check-out date"
                 />
               </div>
+            </div>
 
-              <div>
-                <label className="block text-sm font-bold text-neutral-800 mb-2 flex items-center gap-2">
-                  <Users size={16} className="text-primary-600" />
+            {/* Guests */}
+            <div className="flex-1 flex items-center gap-3 px-4 py-3 border border-[#E5E5E5] rounded-lg focus-within:border-[#2D5F4F] focus-within:ring-2 focus-within:ring-[#2D5F4F]/20 transition-all">
+              <Users className="w-5 h-5 text-[#2D5F4F] flex-shrink-0" aria-hidden="true" />
+              <div className="flex-1">
+                <label htmlFor="guests-hero" className="block text-xs font-medium text-neutral-600 mb-1">
                   Guests
                 </label>
                 <input
+                  id="guests-hero"
                   type="number"
                   value={guests}
                   onChange={(e) => setGuests(parseInt(e.target.value) || 1)}
                   min="1"
                   max="20"
-                  className="w-full px-4 py-3 border-2 border-neutral-300 rounded-xl focus:border-primary-600 focus:ring-4 focus:ring-primary-600/20 outline-none transition-all font-semibold text-neutral-900 bg-white"
+                  className="w-full text-base text-neutral-900 bg-transparent border-0 p-0 focus:outline-none"
                   required
+                  aria-label="Number of guests"
                 />
               </div>
-
-              <button
-                type="submit"
-                disabled={isSearching}
-                className="w-full px-8 py-3.5 bg-gradient-to-r from-primary-600 to-primary-700 text-white rounded-xl font-bold text-lg shadow-xl hover:shadow-2xl disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 flex items-center justify-center gap-3"
-              >
-                {isSearching ? (
-                  <>
-                    <div className="animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent" />
-                    Searching...
-                  </>
-                ) : (
-                  <>
-                    <Search size={20} />
-                    Search Hotels
-                  </>
-                )}
-              </button>
-                </form>
-              </div>
             </div>
-          )}
+
+            {/* Search Button */}
+            <button
+              type="submit"
+              disabled={isSearching}
+              className="h-[48px] md:h-auto px-8 py-3 bg-[#2D5F4F] text-white rounded-lg font-semibold text-base shadow-lg hover:bg-[#255040] hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 flex items-center justify-center gap-2 focus:outline-none focus:ring-2 focus:ring-[#2D5F4F] focus:ring-offset-2"
+              aria-label={`Search hotels in Telluride for ${guests} guests from ${checkIn} to ${checkOut}`}
+            >
+              {isSearching ? (
+                <>
+                  <div className="animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent" />
+                  Searching...
+                </>
+              ) : (
+                <>
+                  <Search size={20} />
+                  Search
+                </>
+              )}
+            </button>
+          </form>
+        </div>
+      </div>
+
+      {/* Trail Difficulty Legend - Bottom Left, Collapsible */}
+      {isMapLoaded && mapStyle === 'skiTrails' && (
+        <div className="absolute bottom-4 left-4 z-[500] pointer-events-auto">
+          <div 
+            className={`bg-white/80 backdrop-blur-sm rounded-lg shadow-lg border border-white/20 transition-all duration-200 overflow-hidden ${
+              isLegendExpanded ? 'p-4' : 'p-2'
+            }`}
+          >
+            <button
+              onClick={() => setIsLegendExpanded(!isLegendExpanded)}
+              className="flex items-center gap-2 text-sm font-medium text-neutral-700 hover:text-neutral-900 transition-colors focus:outline-none focus:ring-2 focus:ring-[#2D5F4F] rounded"
+              aria-label={isLegendExpanded ? 'Collapse trail difficulty legend' : 'Expand trail difficulty legend'}
+            >
+              <svg className="w-4 h-4 text-[#2D5F4F]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
+              </svg>
+              <span>Trail Difficulty</span>
+              {isLegendExpanded ? (
+                <ChevronDown className="w-4 h-4" />
+              ) : (
+                <ChevronRight className="w-4 h-4" />
+              )}
+            </button>
+            
+            {isLegendExpanded && (
+              <div className="mt-3 space-y-2 animate-expand">
+                <div className="flex items-center gap-2.5">
+                  <div className="w-6 h-1 rounded-full bg-[#22c55e]"></div>
+                  <span className="text-xs text-neutral-700 font-medium">Green Circle - Easy</span>
+                </div>
+                <div className="flex items-center gap-2.5">
+                  <div className="w-6 h-1 rounded-full bg-[#3b82f6]"></div>
+                  <span className="text-xs text-neutral-700 font-medium">Blue Square - Intermediate</span>
+                </div>
+                <div className="flex items-center gap-2.5">
+                  <div className="w-6 h-1 rounded-full bg-[#1e1e1e]"></div>
+                  <span className="text-xs text-neutral-700 font-medium">Black Diamond - Advanced</span>
+                </div>
+                <div className="flex items-center gap-2.5">
+                  <div className="w-6 h-1 rounded-full bg-[#ef4444]"></div>
+                  <span className="text-xs text-neutral-700 font-medium">Double Black - Expert</span>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Mapbox Attribution - Styled */}
+      <div 
+        className="absolute bottom-2 right-2 z-[100] text-[10px] text-neutral-500 opacity-50 pointer-events-none"
+        style={{ fontFamily: 'system-ui, sans-serif' }}
+      >
+        Mapbox © OpenStreetMap
+      </div>
 
 
           {/* Custom Styling */}
@@ -817,234 +747,6 @@ export default function HeroMapSearch({
         }
       `}</style>
           </div>
-        
-        {/* Overlays positioned inside map container to scroll with it */}
-        {/* Hotel Cards Panel - Right Side (Desktop) / Bottom (Mobile) */}
-        {hotels.length > 0 && (
-          <div className="absolute right-4 pointer-events-auto" style={{ 
-            top: '1rem',
-            bottom: '1rem',
-            width: 'calc(100% - 2rem)',
-            height: 'calc(100% - 2rem)',
-            maxHeight: 'calc(100% - 2rem)',
-            zIndex: 1000
-          }}>
-            <div className="lg:absolute lg:right-0 lg:w-[420px] lg:h-full lg:max-h-full w-full h-full max-h-full">
-              <div className="backdrop-blur-xl bg-white/98 border-t lg:border-t-0 lg:border-l border-neutral-200 shadow-2xl h-full flex flex-col overflow-hidden rounded-xl">
-              {/* Header */}
-              <div className="px-4 py-3 border-b border-neutral-200 flex items-center justify-between flex-shrink-0">
-                <div>
-                  <h3 className="text-lg font-bold text-neutral-900">Available Hotels</h3>
-                  <p className="text-xs text-neutral-600 mt-0.5">{hotels.length} properties</p>
-                </div>
-              </div>
-
-              {/* Scrollable Cards Container */}
-              <div className="flex-1 overflow-y-auto overscroll-contain px-4 py-4 space-y-3">
-                {hotels.map((hotel) => {
-                  const imageUrl = getHotelMainImage(hotel);
-                  const address = formatHotelAddress(hotel);
-                  const rating = hotel.review_score || 0;
-                  const ratingColor = getRatingColor(rating);
-                  const minPrice = minPrices[hotel.hotel_id];
-                  const isExpanded = expandedHotelId === hotel.hotel_id;
-                  const isHovered = hoveredHotelId === hotel.hotel_id;
-                  const isFeatured = featuredHotelIds.includes(hotel.hotel_id);
-
-                  return (
-                    <div
-                      key={hotel.hotel_id}
-                      className={`bg-white rounded-xl shadow-md border-2 transition-all duration-300 overflow-hidden ${
-                        isExpanded 
-                          ? 'border-primary-600 shadow-xl' 
-                          : isHovered 
-                          ? 'border-primary-300 shadow-lg' 
-                          : 'border-transparent hover:border-neutral-200'
-                      }`}
-                    >
-                      {/* Compact Preview */}
-                      <div 
-                        className="cursor-pointer"
-                        onClick={(e) => handleCardClick(hotel, e)}
-                      >
-                        <div className="flex gap-3 p-3">
-                          {/* Image */}
-                          <div className="relative w-24 h-24 flex-shrink-0 rounded-lg overflow-hidden bg-neutral-100">
-                            {imageUrl ? (
-                              <img
-                                src={imageUrl}
-                                alt={hotel.name || 'Hotel'}
-                                className="w-full h-full object-cover"
-                                loading="lazy"
-                              />
-                            ) : (
-                              <div className="w-full h-full flex items-center justify-center">
-                                <Hotel className="w-8 h-8 text-neutral-400" />
-                              </div>
-                            )}
-                            {/* Featured Badge */}
-                            {isFeatured && (
-                              <div className="absolute top-1 left-1 bg-primary-600 text-white text-[10px] font-bold px-1.5 py-0.5 rounded">
-                                Featured
-                              </div>
-                            )}
-                          </div>
-
-                          {/* Content */}
-                          <div className="flex-1 min-w-0">
-                            {/* Name & Rating */}
-                            <div className="flex items-start justify-between gap-2 mb-1">
-                              <h4 className="font-bold text-sm text-neutral-900 line-clamp-1 flex-1">
-                                {hotel.name}
-                              </h4>
-                              {rating > 0 && (
-                                <div className={`${ratingColor.bg} ${ratingColor.text} px-1.5 py-0.5 rounded text-xs font-bold flex-shrink-0`}>
-                                  {rating.toFixed(1)}
-                                </div>
-                              )}
-                            </div>
-
-                            {/* Star Rating */}
-                            {hotel.star_rating && (
-                              <div className="flex items-center gap-1 mb-1.5">
-                                {Array.from({ length: 5 }).map((_, i) => (
-                                  <Star
-                                    key={i}
-                                    size={10}
-                                    className={i < hotel.star_rating! ? 'fill-accent-500 text-accent-500' : 'text-neutral-300'}
-                                  />
-                                ))}
-                              </div>
-                            )}
-
-                            {/* Address */}
-                            {address && (
-                              <div className="flex items-start gap-1 mb-2">
-                                <MapPin size={12} className="text-neutral-500 mt-0.5 flex-shrink-0" />
-                                <p className="text-xs text-neutral-600 line-clamp-1">{address}</p>
-                              </div>
-                            )}
-
-                            {/* Price & Expand Button */}
-                            <div className="flex items-center justify-between">
-                              {minPrice && minPrice > 0 ? (
-                                <div>
-                                  <div className="text-xs text-neutral-500 uppercase tracking-wide">From</div>
-                                  <div className="text-lg font-bold text-primary-600">
-                                    {formatCurrency(minPrice, currency)}
-                                    <span className="text-xs font-normal text-neutral-600">/night</span>
-                                  </div>
-                                </div>
-                              ) : (
-                                <div className="text-sm text-neutral-600">View Rates</div>
-                              )}
-                              <button
-                                onClick={(e) => toggleExpand(hotel.hotel_id, e)}
-                                className="p-1.5 hover:bg-neutral-100 rounded-lg transition-colors flex-shrink-0"
-                                aria-label={isExpanded ? 'Collapse' : 'Expand'}
-                              >
-                                {isExpanded ? (
-                                  <ChevronUp size={18} className="text-neutral-600" />
-                                ) : (
-                                  <ChevronDown size={18} className="text-neutral-600" />
-                                )}
-                              </button>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Expanded Details */}
-                      {isExpanded && (
-                        <div className="border-t border-neutral-200 px-3 pb-3 pt-3 animate-expand">
-                          {/* Reviews */}
-                          {hotel.review_count && rating > 0 && (
-                            <div className="mb-3">
-                              <p className="text-xs text-neutral-600">
-                                <span className="font-semibold">{hotel.review_count.toLocaleString()}</span> review{hotel.review_count !== 1 ? 's' : ''}
-                              </p>
-                            </div>
-                          )}
-
-                          {/* Amenities Preview */}
-                          {hotel.amenities && hotel.amenities.length > 0 && (
-                            <div className="mb-3">
-                              <div className="flex flex-wrap gap-1.5">
-                                {hotel.amenities.slice(0, 4).map((amenity, idx) => (
-                                  <span
-                                    key={idx}
-                                    className="text-xs bg-neutral-100 text-neutral-700 px-2 py-1 rounded-md"
-                                  >
-                                    {amenity.name || amenity.code || 'Amenity'}
-                                  </span>
-                                ))}
-                                {hotel.amenities.length > 4 && (
-                                  <span className="text-xs text-neutral-500 px-2 py-1">
-                                    +{hotel.amenities.length - 4} more
-                                  </span>
-                                )}
-                              </div>
-                            </div>
-                          )}
-
-                          {/* View Details Button */}
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleHotelClick(hotel.hotel_id);
-                            }}
-                            className="w-full bg-primary-600 hover:bg-primary-700 text-white font-semibold py-2.5 px-4 rounded-lg transition-colors flex items-center justify-center gap-2"
-                          >
-                            View Details
-                            <ExternalLink size={14} />
-                          </button>
-                        </div>
-                      )}
-                    </div>
-                  );
-                })}
-              </div>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Ski Trail Legend - Bottom Right (only show in Ski Trails mode) */}
-        {isMapLoaded && mapStyle === 'skiTrails' && (
-          <div className="absolute bottom-4 right-4 lg:right-[460px] backdrop-blur-xl bg-white/95 rounded-xl shadow-2xl p-4 border border-white/20 pointer-events-auto" style={{ position: 'absolute', zIndex: 1001 }}>
-            <h3 className="text-sm font-bold text-neutral-900 mb-3 flex items-center gap-2">
-              <svg className="w-4 h-4 text-primary-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
-              </svg>
-              Trail Difficulty
-            </h3>
-            <div className="space-y-2">
-              <div className="flex items-center gap-2.5">
-                <div className="w-6 h-1 rounded-full bg-[#22c55e]"></div>
-                <span className="text-xs text-neutral-700 font-medium">Green Circle - Easy</span>
-              </div>
-              <div className="flex items-center gap-2.5">
-                <div className="w-6 h-1 rounded-full bg-[#3b82f6]"></div>
-                <span className="text-xs text-neutral-700 font-medium">Blue Square - Intermediate</span>
-              </div>
-              <div className="flex items-center gap-2.5">
-                <div className="w-6 h-1 rounded-full bg-[#1e1e1e]"></div>
-                <span className="text-xs text-neutral-700 font-medium">Black Diamond - Advanced</span>
-              </div>
-              <div className="flex items-center gap-2.5">
-                <div className="w-6 h-1 rounded-full bg-[#ef4444]"></div>
-                <span className="text-xs text-neutral-700 font-medium">Double Black - Expert</span>
-              </div>
-            </div>
-            <div className="mt-3 pt-3 border-t border-neutral-200">
-              <p className="text-[10px] text-neutral-500">
-                448 trails from OpenStreetMap
-              </p>
-            </div>
-          </div>
-        )}
-        </div>
-      </div>
     </div>
   );
 }
