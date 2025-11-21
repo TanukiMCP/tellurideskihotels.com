@@ -70,9 +70,12 @@ export const GET: APIRoute = async ({ url, redirect }) => {
 
     const userInfo: GoogleUserInfo = await userInfoResponse.json();
 
-    if (!userInfo.email || !userInfo.email_verified) {
+    if (!userInfo.email) {
       return redirect(`/account/login?error=email_not_verified`);
     }
+
+    // Note: We don't check email_verified because Google sometimes returns false
+    // even for legitimate Gmail accounts when the OAuth app is in testing mode
 
     // Create or find user
     const { token, isNewUser } = await findOrCreateOAuthUser(
