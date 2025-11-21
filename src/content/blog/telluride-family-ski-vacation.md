@@ -3,7 +3,7 @@
   "id": "telluride-family-ski-vacation",
   "title": "Telluride Family Ski Vacation: Complete Planning Guide & Cost Breakdown (2025)",
   "slug": "telluride-family-ski-vacation",
-  "status": "scheduled",
+  "status": "published",
   "category": "planning-tips",
   "author": "Telluride Ski Hotels Team",
   "publishDate": "2025-11-20T15:00:00Z",
@@ -45,7 +45,8 @@
   ],
   "seasonalRelevance": [
     "winter"
-  ]
+  ],
+  "updatedDate": "2025-11-21T14:10:12.505Z"
 }
 ---
 

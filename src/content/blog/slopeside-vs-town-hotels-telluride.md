@@ -3,7 +3,7 @@
   "id": "slopeside-vs-town-hotels-telluride",
   "title": "Slopeside vs Town Hotels in Telluride: Complete Comparison Guide",
   "slug": "slopeside-vs-town-hotels-telluride",
-  "status": "scheduled",
+  "status": "published",
   "category": "hotel-reviews",
   "author": "Telluride Ski Hotels Team",
   "publishDate": "2025-11-20T15:00:00Z",
@@ -46,7 +46,8 @@
   ],
   "seasonalRelevance": [
     "winter"
-  ]
+  ],
+  "updatedDate": "2025-11-21T14:10:12.500Z"
 }
 ---
 
