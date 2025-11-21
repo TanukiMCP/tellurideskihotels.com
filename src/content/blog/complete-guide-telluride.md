@@ -1,6 +1,6 @@
 ---
 title: "Complete Guide to Telluride: Everything You Need to Know for Your Mountain Escape"
-metaDescription: "Master Telluride skiing, hotels, dining, and activities. Complete guide to Colorado's authentic box canyon ski town."
+metaDescription: "Master Telluride with insider knowledge on skiing, hotels, dining, activities, and timing. Complete planning guide for Colorado's most authentic mountain ski town."
 excerpt: "From skiing 2,000 acres to summer festivals, navigate Telluride like a local with this comprehensive guide to Colorado's box canyon gem."
 author: "Telluride Ski Hotels Team"
 publishDate: 2024-01-25

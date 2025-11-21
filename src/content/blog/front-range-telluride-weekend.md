@@ -1,6 +1,6 @@
 ---
 title: "Front Range to Telluride Weekend Getaway: Complete Planning Guide"
-metaDescription: "Plan the perfect weekend escape from Denver or Colorado Springs to Telluride with drive strategies, itineraries, and local insider tips."
+metaDescription: "Plan the perfect weekend escape from Denver or Colorado Springs to Telluride with drive strategies, detailed itineraries, and local insider tips."
 excerpt: "Master the Front Range to Telluride weekend trip with realistic timing, efficient itineraries, and strategies for maximizing your short mountain escape."
 author: "Telluride Ski Hotels Team"
 publishDate: 2024-02-25

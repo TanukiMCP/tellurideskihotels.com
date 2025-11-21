@@ -14,11 +14,6 @@ Telluride Ski Resort spans 2,000 acres across 4,425 vertical feet of the San Jua
 
 After skiing Telluride for multiple seasons, I've learned that understanding the mountain's distinct zones and their characteristics matters more than simply following trail maps. The resort divides into several areas with dramatically different personalities: the Front Side's groomed cruisers and tree skiing, Gold Hill's exposed bowls and sustained steeps, Revelation Bowl's hike-to terrain, and the Prospect area's beginner-friendly slopes. Knowing which zone suits current conditions and your ability level transforms your day from aimless wandering to purposeful exploration of the mountain's best offerings.
 
-![Breathtaking Alpine mountain range covered in snow under clear blue sky](https://images.pexels.com/photos/33430954/pexels-photo-33430954.jpeg?auto=compress&cs=tinysrgb&h=350)
-*Photo by [Marius Dubost](https://www.pexels.com/@marius-dubost-2154685620) via Pexels*
-
-For complete planning resources, see our [complete guide to Telluride](/blog/planning/complete-guide-telluride) and learn about [where to stay near the slopes](/blog/destination-guides/where-to-stay-telluride).
-
 <ArticleBookingWidget 
   checkIn="2025-01-15"
   checkOut="2025-01-20"
@@ -39,9 +34,6 @@ The Prospect area serves beginners and lower intermediates with gentle, wide-ope
 
 Revelation Bowl, accessible via a short hike from the top of Lift 9, extends the resort's skiable terrain above treeline. The 10-15 minute hike gains about 300 vertical feet, enough to thin crowds significantly while accessing terrain that often holds the best snow on the mountain. The effort is minimal by backcountry standards but substantial enough that casual skiers skip it, leaving relatively fresh snow hours after storms when lower elevations are tracked out.
 
-![Snowy ski slope with stunning mountainous views under clear winter sky](https://images.pexels.com/photos/358118/pexels-photo-358118.jpeg?auto=compress&cs=tinysrgb&h=350)
-*Photo by [Pixabay](https://www.pexels.com/@pixabay) via Pexels*
-
 ## The Lift System: Efficiency and Strategy
 
 Telluride operates 19 lifts ranging from the free gondola to high-speed quads and older fixed-grip chairs. Understanding which lifts access which terrain and their relative efficiency shapes your daily strategy and maximizes vertical feet skied.
@@ -55,9 +47,6 @@ Chair 12 (Gold Hill Express) accesses the resort's premier expert terrain. This 
 Lift 9 (Prospect Express) serves the beginner area and provides access to the Revelation Bowl hike. This chair sees lighter traffic than the main mountain lifts, making it a local favorite for lapping runs without waiting. The relatively short ride encourages multiple laps to dial in technique or chase fresh snow in Revelation Bowl.
 
 The Plunge lift accesses steep bump runs and tree skiing on the Front Side. This older fixed-grip chair moves slowly compared to high-speed quads, but the terrain it serves is worth the ride time. Advanced skiers use this lift to access some of Telluride's best tree skiing and sustained steep terrain without hiking.
-
-![Skiers on chairlift with snowy trees below on sunny winter day](https://images.pexels.com/photos/284949/pexels-photo-284949.jpeg?auto=compress&cs=tinysrgb&h=350)
-*Photo by [AS Photography](https://www.pexels.com/@asphotography) via Pexels*
 
 <ArticleBookingWidget 
   checkIn="2025-02-01"
@@ -81,9 +70,6 @@ Expert skiers have numerous options across the mountain. The Plunge drops direct
 
 Tree skiing enthusiasts should explore the glades off Plunge and throughout the Front Side. These aspen and evergreen forests provide protection from wind and flat light while creating natural playgrounds on powder days. The trees are well-spaced compared to tighter glades at other resorts, allowing intermediate-level tree skiers to progress their skills without excessive consequences.
 
-![Skier in full gear enjoying winter sports on snowy mountain slopes](https://images.pexels.com/photos/15744610/pexels-photo-15744610.jpeg?auto=compress&cs=tinysrgb&h=350)
-*Photo by [karim desouki](https://www.pexels.com/@karim-desouki-468172584) via Pexels*
-
 ## Lift Tickets and Season Pass Options
 
 Telluride operates under the Ikon Pass system, meaning Ikon Pass holders receive access as part of their pass benefits. This integration has increased visitation from pass holders but hasn't created the overwhelming crowds seen at some other Ikon resorts. The mountain's remote location and challenging terrain naturally limit crowds regardless of pass access.
@@ -92,12 +78,7 @@ Single-day lift tickets range from $150-220 depending on date and advance purcha
 
 The Telluride season pass provides unlimited skiing for locals and frequent visitors, with early-season pricing around $800-900 and regular pricing climbing to $1,200+. If you're skiing 7+ days per season, the pass pays for itself compared to daily tickets. However, most destination visitors find the Ikon Pass more valuable, as it includes Telluride plus dozens of other resorts.
 
-Children under 12 ski free with a paying adult, a significant benefit for families. Teens 13-17 receive discounted tickets, typically 20-30% off adult pricing. Seniors 65+ also qualify for modest discounts, though not as substantial as some other Colorado resorts offer. For current lift ticket pricing and pass details, visit the [official Telluride Ski Resort website](https://www.telluride.com).
-
-![Scenic winter view of alpine ski slope with snow-covered trees and mountains](https://images.pexels.com/photos/30114338/pexels-photo-30114338.jpeg?auto=compress&cs=tinysrgb&h=350)
-*Photo by [winter visual](https://www.pexels.com/@winter-visual-542776220) via Pexels*
-
-For comprehensive ski trip planning, read our [Telluride skiing guide](/blog/skiing/telluride-skiing-guide) and check the [National Weather Service forecast for Telluride](https://www.weather.gov/gjt/) before your visit.
+Children under 12 ski free with a paying adult, a significant benefit for families. Teens 13-17 receive discounted tickets, typically 20-30% off adult pricing. Seniors 65+ also qualify for modest discounts, though not as substantial as some other Colorado resorts offer.
 
 <ArticleBookingWidget 
   checkIn="2025-03-01"
@@ -118,11 +99,6 @@ March transitions toward spring skiing, with warmer temperatures and longer days
 December can be hit-or-miss for snow depth, with the resort typically opening around Thanksgiving but full terrain access often waiting until late December. What December lacks in guaranteed snow, it compensates for with relative affordability and smaller crowds—at least until Christmas week arrives. If you're considering December, the first three weeks offer significantly better value than the final one, though snow conditions may be limited.
 
 April extends the season with highly variable conditions. The resort typically closes in early April, with operations depending on snow depth and weather. Spring skiing enthusiasts love April's warm temperatures and relaxed atmosphere, while powder hunters have long since moved on to other pursuits. Hotel rates drop dramatically, making April attractive for budget-conscious skiers who don't mind spring conditions.
-
-![Skiers gliding down snowy slopes surrounded by winter forest](https://images.pexels.com/photos/11747546/pexels-photo-11747546.jpeg?auto=compress&cs=tinysrgb&h=350)
-*Photo by [Jamo Images](https://www.pexels.com/@jamoimages) via Pexels*
-
-For snow condition updates, check [OpenSnow's Telluride forecast](https://opensnow.com/location/telluride) and the resort's official snow report page.
 
 ## Frequently Asked Questions
 

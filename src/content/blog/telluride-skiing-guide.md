@@ -1,6 +1,6 @@
 ---
 title: "Telluride Skiing Guide: Terrain, Lessons, and Strategies for Every Level"
-metaDescription: "Navigate Telluride's 2,000 acres with expert terrain guidance, ski school recommendations, and insider strategies for beginners through experts."
+metaDescription: "Navigate Telluride's 2,000 acres with expert terrain guidance, ski school recommendations, and insider strategies for beginners through expert skiers."
 excerpt: "Master Telluride skiing with terrain breakdowns, lesson programs, and local knowledge for maximizing your time on the mountain."
 author: "Telluride Ski Hotels Team"
 publishDate: 2024-03-01

@@ -1,6 +1,6 @@
 ---
 title: "Telluride Weather Guide: Month-by-Month Climate and Packing Tips"
-metaDescription: "Plan your Telluride trip with accurate weather data, monthly climate patterns, and essential packing advice for every season."
+metaDescription: "Plan your Telluride trip with accurate weather data, monthly climate patterns, essential packing advice, and seasonal tips for every season."
 excerpt: "Navigate Telluride's high-elevation climate with month-by-month weather breakdowns and practical packing guidance for year-round visits."
 author: "Telluride Ski Hotels Team"
 publishDate: 2024-03-05

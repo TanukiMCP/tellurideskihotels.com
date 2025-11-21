@@ -1,6 +1,6 @@
 ---
 title: "Colorado Springs to Telluride Drive: Complete Route Guide Through the Rockies"
-metaDescription: "Navigate the 300-mile Colorado Springs to Telluride drive with route options, scenic stops, timing advice, and essential planning tips."
+metaDescription: "Navigate the 300-mile Colorado Springs to Telluride drive with route options, scenic stops, timing advice, and essential mountain planning tips."
 excerpt: "Master the scenic drive from Colorado Springs to Telluride with expert route guidance, must-see stops, and practical timing advice."
 author: "Telluride Ski Hotels Team"
 publishDate: 2024-02-01
