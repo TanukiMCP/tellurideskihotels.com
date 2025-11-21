@@ -11,6 +11,14 @@ if (session) {
 }
 
 const redirect = Astro.url.searchParams.get('redirect') || '/account';
+const error = Astro.url.searchParams.get('error');
+
+// Map error codes to user-friendly messages
+const errorMessages: Record<string, string> = {
+  oauth_failed: 'Google sign-in failed. Please try again or use email sign-in.',
+  no_code: 'Google sign-in was cancelled. Please try again.',
+  email_not_verified: 'Your Google email is not verified. Please verify your email with Google first.',
+};
 ---
 
 <PageLayout title="Sign in | Telluride Ski Hotels" description="Access your Telluride bookings anywhere.">
@@ -32,6 +40,11 @@ const redirect = Astro.url.searchParams.get('redirect') || '/account';
 
   <Container class="py-16 lg:py-20">
     <div class="max-w-lg mx-auto space-y-6">
+      {error && errorMessages[error] && (
+        <div class="bg-rose-50 border border-rose-200 text-rose-700 px-4 py-3 rounded-xl text-sm">
+          {errorMessages[error]}
+        </div>
+      )}
       <AccountLogin client:load redirectTo={redirect} />
       <div class="text-center text-sm text-neutral-600">
         Don't have an account? <a href="/account/join" class="text-primary-600 font-semibold">Create one in seconds</a>.

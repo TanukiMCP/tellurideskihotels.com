@@ -75,7 +75,7 @@ export const GET: APIRoute = async ({ url, redirect }) => {
     }
 
     // Create or find user
-    const { token } = await findOrCreateOAuthUser(
+    const { token, isNewUser } = await findOrCreateOAuthUser(
       userInfo.email,
       userInfo.name || userInfo.email,
       'google',
@@ -84,7 +84,9 @@ export const GET: APIRoute = async ({ url, redirect }) => {
     );
 
     // Set session cookie and redirect
-    const response = redirect(state);
+    // Add ?new=true for new users to show welcome message
+    const redirectUrl = isNewUser ? `${state}?new=true` : state;
+    const response = redirect(redirectUrl);
     response.headers.set(
       'Set-Cookie',
       `auth_token=${token}; Path=/; HttpOnly; SameSite=Lax; Max-Age=${7 * 24 * 60 * 60}`

@@ -15,6 +15,7 @@ if (!session) {
 
 const isOAuthUser = session.user.oauthProvider;
 const providerName = session.user.oauthProvider === 'google' ? 'Google' : null;
+const newAccount = Astro.url.searchParams.get('new') === 'true';
 ---
 
 <PageLayout
@@ -23,6 +24,19 @@ const providerName = session.user.oauthProvider === 'google' ? 'Google' : null;
 >
   <Container class="py-8 lg:py-12">
     <div class="max-w-7xl mx-auto">
+      {newAccount && (
+        <div class="bg-emerald-50 border border-emerald-200 text-emerald-700 px-6 py-4 rounded-xl mb-8">
+          <div class="flex items-start gap-3">
+            <svg class="w-6 h-6 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <div>
+              <p class="font-semibold mb-1">Welcome to Telluride Ski Hotels!</p>
+              <p class="text-sm">Your account has been created successfully. You can now manage your bookings and preferences.</p>
+            </div>
+          </div>
+        </div>
+      )}
       <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
         
         <!-- Sidebar -->
