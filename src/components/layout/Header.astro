@@ -60,9 +60,21 @@ const { session = null } = Astro.props as HeaderProps;
         </a>
         <CartIcon client:load />
         {session ? (
-          <a href="/account" class="text-neutral-700 hover:text-primary-600 font-semibold relative transition-colors duration-200 group">
-            My Account
-            <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-primary-600 group-hover:w-full transition-all duration-300"></span>
+          <a href="/account" class="flex items-center gap-2 text-neutral-700 hover:text-primary-600 font-semibold transition-colors duration-200">
+            {session.user.image ? (
+              <img 
+                src={session.user.image} 
+                alt={session.user.name || 'Profile'} 
+                class="w-8 h-8 rounded-full border-2 border-neutral-300"
+              />
+            ) : (
+              <div class="w-8 h-8 rounded-full bg-primary-100 flex items-center justify-center border-2 border-primary-200">
+                <span class="text-primary-700 font-bold text-sm">
+                  {session.user.name?.charAt(0).toUpperCase() || session.user.email.charAt(0).toUpperCase()}
+                </span>
+              </div>
+            )}
+            <span>{session.user.name?.split(' ')[0] || 'Account'}</span>
           </a>
         ) : (
           <>
@@ -135,8 +147,21 @@ const { session = null } = Astro.props as HeaderProps;
           Cart
         </a>
         {session ? (
-          <a href="/account" class="px-6 py-3 text-neutral-700 hover:bg-primary-50 hover:text-primary-600 font-semibold transition-colors">
-            My Account
+          <a href="/account" class="px-6 py-3 flex items-center gap-3 text-neutral-700 hover:bg-primary-50 hover:text-primary-600 font-semibold transition-colors">
+            {session.user.image ? (
+              <img 
+                src={session.user.image} 
+                alt={session.user.name || 'Profile'} 
+                class="w-8 h-8 rounded-full border-2 border-neutral-300"
+              />
+            ) : (
+              <div class="w-8 h-8 rounded-full bg-primary-100 flex items-center justify-center border-2 border-primary-200">
+                <span class="text-primary-700 font-bold text-sm">
+                  {session.user.name?.charAt(0).toUpperCase() || session.user.email.charAt(0).toUpperCase()}
+                </span>
+              </div>
+            )}
+            <span>{session.user.name || 'My Account'}</span>
           </a>
         ) : (
           <>
