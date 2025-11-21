@@ -23,6 +23,7 @@ export function LiteAPIPayment({
   const [sdkLoaded, setSdkLoaded] = useState(false);
   const [paymentInitialized, setPaymentInitialized] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [confirmedDetails, setConfirmedDetails] = useState(false);
 
   // Load liteAPI payment SDK script
   useEffect(() => {
@@ -216,28 +217,82 @@ export function LiteAPIPayment({
     );
   }
 
+  const formattedAmount = amount && amount > 0 
+    ? new Intl.NumberFormat('en-US', { style: 'currency', currency }).format(amount)
+    : null;
+
   return (
     <Card className="shadow-lg border-neutral-200">
       <CardHeader className="border-b border-neutral-100 bg-white pb-6">
-        <CardTitle className="text-2xl">Complete Your Payment</CardTitle>
-        <p className="text-sm text-neutral-600 mt-2">
-          Your payment is processed securely. Card details are encrypted and never stored on our servers.
+        <CardTitle className="text-2xl font-bold text-[#2C2C2C]">Complete Your Payment</CardTitle>
+        <p className="text-base text-[#666] mt-2">
+          Your reservation is almost confirmed
         </p>
       </CardHeader>
       <CardContent className="pt-8">
-        {amount && amount > 0 ? (
-          <div className="mb-8 p-6 bg-primary-50 border border-primary-200 rounded-xl">
+        {/* Security Messaging - Prominent at Top */}
+        <div className="mb-8 p-4 bg-[#F8F9F8] border border-[#E5E8E5] rounded-lg">
+          <div className="flex flex-wrap items-center justify-center gap-4 text-sm text-[#2D5F4F]">
+            <div className="flex items-center gap-2">
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+              </svg>
+              <span className="font-medium">256-bit SSL Encryption</span>
+            </div>
+            <span className="text-[#999]">•</span>
+            <div className="flex items-center gap-2">
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+              </svg>
+              <span className="font-medium">PCI Compliant</span>
+            </div>
+            <span className="text-[#999]">•</span>
+            <div className="flex items-center gap-2">
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <span className="font-medium">Secure Payment Processing</span>
+            </div>
+          </div>
+          <p className="text-xs text-[#666] text-center mt-3">
+            Your payment information is encrypted and secure
+          </p>
+        </div>
+
+        {/* Accepted Payment Methods */}
+        <div className="mb-6">
+          <p className="text-xs text-[#666] mb-3">We accept</p>
+          <div className="flex items-center gap-3">
+            <div className="w-12 h-8 bg-white border border-[#E5E5E5] rounded flex items-center justify-center">
+              <span className="text-xs font-bold text-[#1A1F71]">VISA</span>
+            </div>
+            <div className="w-12 h-8 bg-white border border-[#E5E5E5] rounded flex items-center justify-center">
+              <span className="text-xs font-bold text-[#EB001B]">MC</span>
+            </div>
+            <div className="w-12 h-8 bg-white border border-[#E5E5E5] rounded flex items-center justify-center">
+              <span className="text-xs font-bold text-[#006FCF]">AMEX</span>
+            </div>
+            <div className="w-12 h-8 bg-white border border-[#E5E5E5] rounded flex items-center justify-center">
+              <span className="text-xs font-bold text-[#FF6000]">DISC</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Total Amount Display - Redesigned */}
+        {formattedAmount ? (
+          <div className="mb-8 p-5 bg-[#F8F9F8] border border-[#E5E8E5] rounded-lg">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-primary-700 font-medium mb-1">Total Amount</p>
-                <p className="text-3xl font-bold text-primary-900">
-                  {new Intl.NumberFormat('en-US', { style: 'currency', currency }).format(amount)}
-                </p>
-              </div>
-              <div className="flex items-center gap-2 text-primary-700">
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                </svg>
+                <p className="text-sm text-[#666] mb-1">Total Amount</p>
+                <div className="flex items-center gap-2">
+                  <p className="text-3xl font-bold text-[#2D5F4F]">
+                    {formattedAmount}
+                  </p>
+                  <svg className="w-6 h-6 text-[#2D5F4F]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                  </svg>
+                </div>
+                <p className="text-xs text-[#666] italic mt-2">All taxes and fees included</p>
               </div>
             </div>
           </div>
@@ -265,37 +320,90 @@ export function LiteAPIPayment({
         )}
         
         {/* Payment method selection */}
-        <div className="mb-4">
-          <h3 className="text-lg font-semibold text-neutral-900 mb-4">Select Payment Method</h3>
+        <div className="mb-6">
+          <h3 className="text-base font-semibold text-[#2C2C2C] mb-4">Select Payment Method</h3>
         </div>
         
         {/* This div will be replaced by liteAPI payment portal */}
         <div id="liteapi-payment-portal" className="min-h-[400px] w-full">
           {!paymentInitialized && (
             <div className="flex flex-col items-center justify-center py-16">
-              <div className="animate-spin rounded-full h-14 w-14 border-b-4 border-primary-600 mb-6"></div>
-              <p className="text-neutral-700 font-medium text-lg">Loading payment options...</p>
-              <p className="text-neutral-500 text-sm mt-2">This should only take a moment</p>
+              <div className="animate-spin rounded-full h-14 w-14 border-b-4 border-[#2D5F4F] mb-6"></div>
+              <p className="text-[#2C2C2C] font-medium text-lg">Loading payment options...</p>
+              <p className="text-[#666] text-sm mt-2">This should only take a moment</p>
             </div>
           )}
         </div>
 
-        {/* Security badges */}
-        <div className="mt-8 pt-6 border-t border-neutral-200">
-          <div className="flex items-center justify-center gap-6 text-xs text-neutral-600">
-            <div className="flex items-center gap-1.5">
-              <svg className="w-4 h-4 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+        {/* Final Confirmation Checkbox */}
+        <div className="mt-8 flex items-start gap-3 p-4 bg-white border border-[#E5E5E5] rounded-lg">
+          <input
+            type="checkbox"
+            id="confirm-booking"
+            checked={confirmedDetails}
+            onChange={(e) => setConfirmedDetails(e.target.checked)}
+            className="mt-1 h-5 w-5 border-[#D5D5D5] focus:ring-2 focus:ring-[#2D5F4F]/20 transition-all duration-200 cursor-pointer"
+            style={{
+              accentColor: '#2D5F4F',
+              borderRadius: '3px',
+            }}
+          />
+          <label htmlFor="confirm-booking" className="text-sm text-[#2C2C2C] leading-relaxed cursor-pointer flex-1">
+            I have reviewed my booking details and agree to the{' '}
+            <a 
+              href="/cancellation-policy" 
+              target="_blank" 
+              className="text-[#2D5F4F] hover:text-[#255040] font-medium underline transition-colors"
+            >
+              cancellation policy
+            </a>
+            {' '}and{' '}
+            <a 
+              href="/terms" 
+              target="_blank" 
+              className="text-[#2D5F4F] hover:text-[#255040] font-medium underline transition-colors"
+            >
+              terms of service
+            </a>
+          </label>
+        </div>
+
+        {/* Note about confirmation */}
+        {!confirmedDetails && paymentInitialized && (
+          <p className="text-xs text-[#666] mt-2 text-center">
+            Please confirm your booking details to proceed with payment
+          </p>
+        )}
+
+        {/* What Happens Next Section */}
+        <div className="mt-8 p-5 bg-[#F8F6F3] border-l-4 border-[#2D5F4F] rounded-lg">
+          <h4 className="text-base font-semibold text-[#2C2C2C] mb-4">What happens next?</h4>
+          <ul className="space-y-3 text-sm text-[#666]">
+            <li className="flex items-start gap-2">
+              <svg className="w-4 h-4 text-[#2D5F4F] flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
               </svg>
-              <span className="font-medium">256-bit SSL Encryption</span>
-            </div>
-            <div className="flex items-center gap-1.5">
-              <svg className="w-4 h-4 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+              <span>Instant confirmation sent to your email</span>
+            </li>
+            <li className="flex items-start gap-2">
+              <svg className="w-4 h-4 text-[#2D5F4F] flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
               </svg>
-              <span className="font-medium">PCI Compliant</span>
-            </div>
-          </div>
+              <span>Your card will be charged immediately</span>
+            </li>
+            <li className="flex items-start gap-2">
+              <svg className="w-4 h-4 text-[#2D5F4F] flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+              </svg>
+              <span>View and manage your booking anytime</span>
+            </li>
+            <li className="flex items-start gap-2">
+              <svg className="w-4 h-4 text-[#2D5F4F] flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+              </svg>
+              <span>Check-in instructions sent 48 hours before arrival</span>
+            </li>
+          </ul>
         </div>
       </CardContent>
     </Card>

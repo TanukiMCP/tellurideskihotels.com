@@ -341,20 +341,31 @@ export function CheckoutFlow({ hotelId, hotelName, room, addons = [], onComplete
       )}
       
       <div className="mb-10">
-        <div className="flex items-center justify-center max-w-2xl mx-auto">
-          <div className={`flex items-center transition-all ${step >= 1 ? 'text-primary-600' : 'text-neutral-400'}`}>
-            <div className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold text-lg transition-all ${step >= 1 ? 'bg-primary-600 text-white shadow-lg' : 'bg-neutral-200'}`}>
-              1
+        <div className="flex flex-col items-center justify-center max-w-2xl mx-auto">
+          <div className="flex items-center justify-center w-full">
+            <div className={`flex items-center transition-all ${step >= 1 ? 'text-[#2D5F4F]' : 'text-neutral-400'}`}>
+              <div className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold text-lg transition-all ${step >= 1 ? 'bg-[#2D5F4F] text-white shadow-lg' : 'bg-neutral-200'}`}>
+                {step > 1 ? (
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                ) : (
+                  '1'
+                )}
+              </div>
+              <span className="ml-3 font-semibold text-base hidden sm:inline">Guest Information</span>
             </div>
-            <span className="ml-3 font-semibold text-base hidden sm:inline">Guest Information</span>
-          </div>
-          <div className={`flex-1 h-1 mx-6 transition-all ${step >= 2 ? 'bg-primary-600' : 'bg-neutral-200'}`} />
-          <div className={`flex items-center transition-all ${step >= 2 ? 'text-primary-600' : 'text-neutral-400'}`}>
-            <div className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold text-lg transition-all ${step >= 2 ? 'bg-primary-600 text-white shadow-lg' : 'bg-neutral-200'}`}>
-              2
+            <div className={`flex-1 h-1 mx-6 transition-all ${step >= 2 ? 'bg-[#2D5F4F]' : 'bg-neutral-200'}`} />
+            <div className={`flex items-center transition-all ${step >= 2 ? 'text-[#2D5F4F]' : 'text-neutral-400'}`}>
+              <div className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold text-lg transition-all ${step >= 2 ? 'bg-[#2D5F4F] text-white shadow-lg' : 'bg-neutral-200'}`}>
+                2
+              </div>
+              <span className="ml-3 font-semibold text-base hidden sm:inline">Payment</span>
             </div>
-            <span className="ml-3 font-semibold text-base hidden sm:inline">Payment</span>
           </div>
+          {step === 2 && (
+            <p className="text-sm text-[#666] mt-3 font-medium">Step 2 of 2 - Final Step</p>
+          )}
         </div>
       </div>
 
@@ -543,7 +554,7 @@ export function CheckoutFlow({ hotelId, hotelName, room, addons = [], onComplete
             <LiteAPIPayment
               secretKey={prebookData.secretKey}
               transactionId={prebookData.transactionId}
-              amount={prebookData.total || room.price}
+              amount={prebookData.total || total}
               currency={prebookData.currency || room.currency}
               prebookId={prebookData.prebookId}
               returnUrl={typeof window !== 'undefined' ? `${window.location.origin}${window.location.pathname}?returnFromPayment=true` : '/booking/checkout?returnFromPayment=true'}
