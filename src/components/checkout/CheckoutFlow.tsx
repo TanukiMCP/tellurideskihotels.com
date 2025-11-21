@@ -358,89 +358,27 @@ export function CheckoutFlow({ hotelId, hotelName, room, addons = [], onComplete
         </div>
       </div>
 
-      {step === 1 && (
-        <div className="mb-10 grid grid-cols-1 md:grid-cols-2 gap-6">
-          <Card
-            className={`border-2 ${
-              identityMode === 'account' ? 'border-primary-500 shadow-primary-200 shadow-lg' : 'border-neutral-200'
-            }`}
-          >
-            <CardHeader>
-              <p className="text-sm font-semibold text-neutral-500 uppercase tracking-wide">
-                Account checkout
-              </p>
-              <CardTitle className="text-2xl text-neutral-900">
-                {sessionUser ? 'Booking will sync to your account' : 'Sign in to save this booking'}
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              {sessionLoading && <p className="text-sm text-neutral-500">Checking your session…</p>}
-              {!sessionLoading && sessionUser && (
-                <>
-                  <div className="rounded-2xl bg-neutral-50 border border-neutral-200 p-4">
-                    <p className="text-sm text-neutral-500">Signed in as</p>
-                    <p className="text-lg font-semibold text-neutral-900">{sessionUser.email}</p>
-                  </div>
-                  <p className="text-sm text-neutral-600">
-                    This reservation will instantly appear inside My Account with modification controls.
-                  </p>
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={async () => {
-                      await authClient.signOut();
-                      window.location.reload();
-                    }}
-                  >
-                    Use guest checkout instead
-                  </Button>
-                </>
-              )}
-              {!sessionLoading && !sessionUser && (
-                <>
-                  <p className="text-sm text-neutral-600">
-                    Unlock cross-device booking management, instant cancellation controls, and guest-to-account
-                    conversion in one tap.
-                  </p>
-                  <div className="flex flex-col sm:flex-row gap-3">
-                    <Button
-                      type="button"
-                      onClick={() => (window.location.href = '/account/login?redirect=/booking/checkout')}
-                    >
-                      Sign in
-                    </Button>
-                    <Button
-                      type="button"
-                      variant="outline"
-                      onClick={() => (window.location.href = '/account/join')}
-                    >
-                      Create account
-                    </Button>
-                  </div>
-                </>
-              )}
-            </CardContent>
-          </Card>
-
-          <Card
-            className={`border-2 ${
-              identityMode === 'guest' ? 'border-primary-500 shadow-primary-200 shadow-lg' : 'border-neutral-200'
-            }`}
-          >
-            <CardHeader>
-              <p className="text-sm font-semibold text-neutral-500 uppercase tracking-wide">Guest checkout</p>
-              <CardTitle className="text-2xl text-neutral-900">Email-based booking management</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <p className="text-sm text-neutral-600">
-                Book without signing in. Use your booking ID + email on any device to view, cancel, or update your
-                stay. Convert to an account later with one tap.
-              </p>
-              <Button type="button" variant="outline" onClick={() => setIdentityMode('guest')}>
-                Continue as guest
+      {step === 1 && sessionUser && (
+        <div className="mb-8">
+          <div className="bg-neutral-50 border border-neutral-200 rounded-xl p-4">
+            <div className="flex items-center justify-between flex-wrap gap-3">
+              <div>
+                <p className="text-sm text-neutral-500 mb-1">Signed in as</p>
+                <p className="text-base font-semibold text-neutral-900">{sessionUser.email}</p>
+              </div>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={async () => {
+                  await authClient.signOut();
+                  window.location.reload();
+                }}
+              >
+                Sign out
               </Button>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
         </div>
       )}
 
@@ -453,8 +391,23 @@ export function CheckoutFlow({ hotelId, hotelName, room, addons = [], onComplete
                 <p className="text-sm text-neutral-600 mt-2">Please provide your contact details for the reservation</p>
               </CardHeader>
               <CardContent className="pt-8">
+                {/* Sign in link for account holders */}
+                {!sessionUser && !sessionLoading && (
+                  <div className="mb-8 text-center">
+                    <p className="text-sm text-neutral-600">
+                      Already have an account?{' '}
+                      <a
+                        href="/account/login?redirect=/booking/checkout"
+                        className="text-[#2D5F4F] hover:text-[#255040] font-medium underline transition-colors"
+                      >
+                        Sign in
+                      </a>
+                    </p>
+                  </div>
+                )}
+
                 <form onSubmit={handleGuestInfoSubmit} className="space-y-6" autoComplete="off">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <Input
                       label="First Name"
                       value={guestInfo.firstName}
@@ -462,6 +415,7 @@ export function CheckoutFlow({ hotelId, hotelName, room, addons = [], onComplete
                       required
                       placeholder="Jackson"
                       autoComplete="given-name"
+                      className="focus:border-[#2D5F4F] focus:ring-2 focus:ring-[#2D5F4F]/20"
                     />
                     <Input
                       label="Last Name"
@@ -470,37 +424,51 @@ export function CheckoutFlow({ hotelId, hotelName, room, addons = [], onComplete
                       required
                       placeholder="Null"
                       autoComplete="family-name"
+                      className="focus:border-[#2D5F4F] focus:ring-2 focus:ring-[#2D5F4F]/20"
                     />
                   </div>
-                  <Input
-                    type="email"
-                    label="Email"
-                    value={guestInfo.email}
-                    onChange={(e) => setGuestInfo({ ...guestInfo, email: e.target.value })}
-                    required
-                    placeholder="your.email@example.com"
-                    autoComplete="email"
-                  />
-                  <p className="text-xs text-neutral-500">We'll send your confirmation to this email</p>
                   
-                  <Input
-                    type="tel"
-                    label="Phone"
-                    value={guestInfo.phone}
-                    onChange={(e) => setGuestInfo({ ...guestInfo, phone: e.target.value })}
-                    required
-                    placeholder="+1 (555) 123-4567"
-                    autoComplete="tel"
-                  />
-                  <p className="text-xs text-neutral-500">For booking updates and hotel contact</p>
+                  <div>
+                    <Input
+                      type="email"
+                      label="Email"
+                      value={guestInfo.email}
+                      onChange={(e) => setGuestInfo({ ...guestInfo, email: e.target.value })}
+                      required
+                      placeholder="your.email@example.com"
+                      autoComplete="email"
+                      className="focus:border-[#2D5F4F] focus:ring-2 focus:ring-[#2D5F4F]/20"
+                    />
+                    <p className="text-xs text-neutral-500 mt-2">We'll send your confirmation to this email</p>
+                  </div>
+                  
+                  <div>
+                    <Input
+                      type="tel"
+                      label="Phone"
+                      value={guestInfo.phone}
+                      onChange={(e) => setGuestInfo({ ...guestInfo, phone: e.target.value })}
+                      required
+                      placeholder="+1 (555) 123-4567"
+                      autoComplete="tel"
+                      className="focus:border-[#2D5F4F] focus:ring-2 focus:ring-[#2D5F4F]/20"
+                    />
+                    <p className="text-xs text-neutral-500 mt-2">For booking updates and hotel contact</p>
+                  </div>
 
                   {/* Cancellation Policy */}
-                  <div className="bg-amber-50 border-2 border-amber-200 rounded-xl p-4">
+                  <div 
+                    className="rounded-md p-4 border-l-[3px]"
+                    style={{
+                      backgroundColor: '#FEF9F5',
+                      borderLeftColor: '#C87859',
+                    }}
+                  >
                     <div className="flex items-start gap-3">
-                      <Info className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
+                      <Info className="w-5 h-5 flex-shrink-0 mt-0.5" style={{ color: '#C87859' }} />
                       <div>
-                        <h4 className="font-semibold text-amber-900 mb-1">Cancellation Policy</h4>
-                        <p className="text-sm text-amber-800 leading-relaxed">
+                        <h4 className="font-semibold mb-1" style={{ color: '#4A4A4A' }}>Cancellation Policy</h4>
+                        <p className="text-sm leading-relaxed" style={{ color: '#4A4A4A' }}>
                           {room.cancellationPolicy?.refundableTag === 'RFND' 
                             ? 'Free cancellation up to 24 hours before check-in. Cancel before then for a full refund.'
                             : 'This rate is non-refundable. You will be charged the full amount upon booking.'}
@@ -510,32 +478,61 @@ export function CheckoutFlow({ hotelId, hotelName, room, addons = [], onComplete
                   </div>
 
                   {/* Terms & Conditions */}
-                  <div className="flex items-start gap-3 p-4 bg-neutral-50 rounded-xl">
+                  <div className="flex items-start gap-3">
                     <input
                       type="checkbox"
                       id="terms"
                       checked={acceptedTerms}
                       onChange={(e) => setAcceptedTerms(e.target.checked)}
                       required
-                      className="mt-1 h-5 w-5 rounded border-neutral-300 text-primary-600 focus:ring-primary-500"
+                      className="mt-1 h-5 w-5 border-neutral-300 focus:ring-2 focus:ring-[#2D5F4F]/20 transition-all duration-200 cursor-pointer"
+                      style={{
+                        accentColor: '#2D5F4F',
+                        borderRadius: '3px',
+                      }}
                     />
-                    <label htmlFor="terms" className="text-sm text-neutral-700">
+                    <label htmlFor="terms" className="text-sm text-neutral-700 leading-relaxed cursor-pointer">
                       I agree to the{' '}
-                      <a href="/terms" target="_blank" className="text-primary-600 hover:text-primary-700 font-semibold underline">
+                      <a 
+                        href="/terms" 
+                        target="_blank" 
+                        className="text-[#2D5F4F] hover:text-[#2D5F4F]/80 font-medium underline transition-colors"
+                      >
                         Terms of Service
                       </a>
                       {' '}and{' '}
-                      <a href="/privacy" target="_blank" className="text-primary-600 hover:text-primary-700 font-semibold underline">
+                      <a 
+                        href="/privacy" 
+                        target="_blank" 
+                        className="text-[#2D5F4F] hover:text-[#2D5F4F]/80 font-medium underline transition-colors"
+                      >
                         Privacy Policy
                       </a>
-                      . I understand the cancellation policy and authorize payment.
+                      . I understand the cancellation policy.
                     </label>
                   </div>
 
                   <div className="pt-4">
-                    <Button type="submit" className="w-full" size="lg" disabled={!acceptedTerms}>
-                      Continue to Payment
-                    </Button>
+                    <button
+                      type="submit"
+                      disabled={!acceptedTerms || isProcessing}
+                      className="w-full h-[52px] rounded-lg font-semibold text-base text-white transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed active:scale-[0.98]"
+                      style={{
+                        backgroundColor: '#2D5F4F',
+                      }}
+                      onMouseEnter={(e) => {
+                        if (!e.currentTarget.disabled) {
+                          e.currentTarget.style.backgroundColor = '#255040';
+                          e.currentTarget.style.boxShadow = '0 4px 12px rgba(45, 95, 79, 0.2)';
+                        }
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.backgroundColor = '#2D5F4F';
+                        e.currentTarget.style.boxShadow = '';
+                      }}
+                    >
+                      {isProcessing ? 'Processing...' : 'Continue to Payment'}
+                    </button>
                   </div>
                 </form>
               </CardContent>
@@ -563,11 +560,16 @@ export function CheckoutFlow({ hotelId, hotelName, room, addons = [], onComplete
             <CardContent className="pt-6 space-y-6">
               {/* Hotel Image */}
               {hotelImage && (
-                <div className="aspect-video w-full overflow-hidden rounded-xl">
+                <div className="aspect-video w-full overflow-hidden rounded-xl" style={{ boxShadow: '0 2px 8px rgba(0, 0, 0, 0.08)' }}>
                   <img 
                     src={hotelImage} 
                     alt={hotelName}
                     className="w-full h-full object-cover"
+                    loading="eager"
+                    fetchPriority="high"
+                    style={{
+                      imageRendering: 'crisp-edges',
+                    }}
                   />
                 </div>
               )}
