@@ -3,13 +3,13 @@
   "id": "telluride-family-ski-vacation",
   "title": "Telluride Family Ski Vacation: Complete Planning Guide & Cost Breakdown (2025)",
   "slug": "telluride-family-ski-vacation",
-  "status": "scheduled",
+  "status": "published",
   "category": "planning-tips",
   "author": "Telluride Ski Hotels Team",
   "publishDate": "2025-11-20T15:00:00Z",
   "seo": {
-    "metaTitle": "Telluride Family Ski Vacation Guide 2025 | Cost Breakdown & Planning",
-    "metaDescription": "Complete guide to planning a Telluride family ski vacation: cost breakdowns per person, hotel vs condo comparisons, itinerary planning, and tips for families with kids.",
+    "metaTitle": "Telluride Family Ski Vacation Guide 2025 | Planning",
+    "metaDescription": "Complete guide to planning a Telluride family ski vacation: cost breakdowns per person, hotel vs condo comparisons, itinerary planning, and family tips.",
     "keywords": [
       "telluride with kids",
       "telluride family ski trip",
@@ -45,7 +45,8 @@
   ],
   "seasonalRelevance": [
     "winter"
-  ]
+  ],
+  "updatedDate": "2025-11-21T22:44:24.844Z"
 }
 ---
 

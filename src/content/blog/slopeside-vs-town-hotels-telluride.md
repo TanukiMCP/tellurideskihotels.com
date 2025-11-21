@@ -3,13 +3,13 @@
   "id": "slopeside-vs-town-hotels-telluride",
   "title": "Slopeside vs Town Hotels in Telluride: Complete Comparison Guide",
   "slug": "slopeside-vs-town-hotels-telluride",
-  "status": "scheduled",
+  "status": "published",
   "category": "hotel-reviews",
   "author": "Telluride Ski Hotels Team",
   "publishDate": "2025-11-20T15:00:00Z",
   "seo": {
-    "metaTitle": "Slopeside vs Town Hotels Telluride | Where to Stay Guide 2025",
-    "metaDescription": "Mountain Village ski-in/ski-out vs downtown Telluride hotels: complete comparison of locations, pricing, convenience, atmosphere, and which works best for your skiing style.",
+    "metaTitle": "Slopeside vs Town Hotels Telluride | Where to Stay 2025",
+    "metaDescription": "Mountain Village ski-in/ski-out vs downtown Telluride hotels: complete comparison of locations, pricing, convenience, atmosphere, and which works best.",
     "keywords": [
       "telluride mountain village vs downtown",
       "ski-in ski-out telluride",
@@ -46,7 +46,8 @@
   ],
   "seasonalRelevance": [
     "winter"
-  ]
+  ],
+  "updatedDate": "2025-11-21T22:44:24.837Z"
 }
 ---
 

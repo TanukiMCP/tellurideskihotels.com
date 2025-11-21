@@ -3,13 +3,13 @@
   "id": "telluride-friends-ski-trip",
   "title": "Telluride Friends Ski Trip: Group Planning & Cost Splitting Guide (2025)",
   "slug": "telluride-friends-ski-trip",
-  "status": "scheduled",
+  "status": "published",
   "category": "planning-tips",
   "author": "Telluride Ski Hotels Team",
   "publishDate": "2025-11-21T15:00:00Z",
   "seo": {
-    "metaTitle": "Telluride Friends Ski Trip Guide 2025 | Group Planning & Costs",
-    "metaDescription": "Complete guide to planning a Telluride friends ski trip: cost splitting scenarios, hotel vs vacation rental comparisons, group lodging options, and tips for friend groups.",
+    "metaTitle": "Telluride Friends Ski Trip Guide 2025 | Group Planning",
+    "metaDescription": "Complete guide to planning a Telluride friends ski trip: cost splitting scenarios, hotel vs vacation rental comparisons, and group lodging tips.",
     "keywords": [
       "telluride group lodging",
       "telluride friends trip",
@@ -45,7 +45,8 @@
   ],
   "seasonalRelevance": [
     "winter"
-  ]
+  ],
+  "updatedDate": "2025-11-21T22:44:24.845Z"
 }
 ---
 
