@@ -1,8 +1,8 @@
 // Service Worker for Telluride Ski Hotels PWA
 // Provides offline support for trail map and essential assets
 
-const CACHE_NAME = 'telluride-ski-v2';
-const OFFLINE_CACHE = 'telluride-offline-v2';
+const CACHE_NAME = 'telluride-ski-v3'; // Incremented version to force update
+const OFFLINE_CACHE = 'telluride-offline-v3';
 
 // Assets to cache immediately on install
 const ESSENTIAL_ASSETS = [
@@ -50,6 +50,22 @@ self.addEventListener('fetch', (event) => {
 
   const url = new URL(event.request.url);
   
+  // CRITICAL: Never cache CSS, JS, or other immutable assets
+  // These have immutable cache headers and should be served directly from network/CDN
+  const isImmutableAsset = 
+    url.pathname.startsWith('/_astro/') ||
+    url.pathname.endsWith('.css') ||
+    url.pathname.endsWith('.js') ||
+    url.pathname.endsWith('.woff2') ||
+    url.pathname.endsWith('.woff') ||
+    url.pathname.endsWith('.ttf') ||
+    url.pathname.match(/\.(css|js|woff2?|ttf|eot)$/i);
+  
+  if (isImmutableAsset) {
+    // Let browser/CDN handle these - don't interfere
+    return;
+  }
+  
   // Handle local tiles
   if (url.pathname.startsWith('/tiles/')) {
     event.respondWith(
@@ -94,19 +110,29 @@ self.addEventListener('fetch', (event) => {
   // Skip other external requests
   if (!url.origin.includes(self.location.origin)) return;
 
+  // Only cache HTML pages and data files, not CSS/JS
   event.respondWith(
-    caches.match(event.request).then(cached => {
-      return cached || fetch(event.request).then(response => {
-        if (response.ok && event.request.url.includes('/trail-map')) {
-          const clone = response.clone();
-          caches.open(CACHE_NAME).then(cache => cache.put(event.request, clone));
-        }
-        return response;
-      }).catch(() => {
-        if (event.request.mode === 'navigate') {
-          return caches.match('/') || new Response('Offline', { status: 503 });
-        }
-      });
+    fetch(event.request).then(response => {
+      // Only cache HTML pages and specific data files
+      if (response.ok && 
+          (event.request.mode === 'navigate' || 
+           event.request.url.includes('/trail-map') ||
+           event.request.url.includes('/data/'))) {
+        const clone = response.clone();
+        caches.open(CACHE_NAME).then(cache => cache.put(event.request, clone));
+      }
+      return response;
+    }).catch(() => {
+      // Fallback to cache only for navigation requests
+      if (event.request.mode === 'navigate') {
+        return caches.match(event.request).then(cached => {
+          return cached || caches.match('/').then(fallback => {
+            return fallback || new Response('Offline', { status: 503 });
+          });
+        });
+      }
+      // For non-navigation requests, let them fail normally
+      return fetch(event.request);
     })
   );
 });
@@ -125,4 +151,3 @@ self.addEventListener('message', (event) => {
     );
   }
 });
-
