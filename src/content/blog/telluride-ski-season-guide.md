@@ -9,7 +9,7 @@
   "publishDate": "2025-11-12T15:00:00Z",
   "seo": {
     "metaTitle": "Telluride Ski Season Guide 2024-2025 | Best Times to Visit",
-    "metaDescription": "Telluride ski season guide: opening/closing dates, monthly conditions, crowd levels, pricing & insider planning tips.",
+    "metaDescription": "Telluride ski season guide: dates, snow conditions, crowds, pricing, and insider tips for planning your perfect trip.",
     "keywords": [
       "telluride ski season",
       "when to ski telluride",
