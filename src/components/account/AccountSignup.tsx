@@ -47,10 +47,10 @@ export function AccountSignup() {
     }
   };
 
-  const handleOAuthSignup = async (provider: 'google' | 'apple') => {
+  const handleOAuthSignup = async () => {
     try {
       // Check if OAuth is configured by making a request first
-      const response = await fetch(`/api/auth/oauth/${provider}?state=${encodeURIComponent('/account')}`, {
+      const response = await fetch(`/api/auth/oauth/google?state=${encodeURIComponent('/account')}`, {
         method: 'GET',
         redirect: 'manual',
       });
@@ -58,27 +58,16 @@ export function AccountSignup() {
       if (response.status === 503) {
         // OAuth not configured - show error
         const data = await response.json().catch(() => ({}));
-        setError(data.error?.message || `${provider === 'google' ? 'Google' : 'Apple'} OAuth is not configured. Please use email sign-up instead.`);
+        setError(data.error?.message || 'Google OAuth is not configured. Please use email sign-up instead.');
         return;
       }
       
-      // If we get a redirect (3xx), OAuth is configured, follow the redirect
-      if (response.status >= 300 && response.status < 400) {
-        const location = response.headers.get('Location');
-        if (location) {
-          window.location.href = location;
-        } else {
-          // Fallback to direct redirect
-          window.location.href = `/api/auth/oauth/${provider}?state=${encodeURIComponent('/account')}`;
-        }
-      } else {
-        // Unexpected response
-        setError(`${provider === 'google' ? 'Google' : 'Apple'} sign-up is currently unavailable. Please use email sign-up instead.`);
-      }
+      // If we get any non-503 response, proceed with the actual redirect
+      window.location.href = `/api/auth/oauth/google?state=${encodeURIComponent('/account')}`;
     } catch (err) {
       // If fetch fails, try direct redirect as fallback
-      console.error(`OAuth ${provider} error:`, err);
-      window.location.href = `/api/auth/oauth/${provider}?state=${encodeURIComponent('/account')}`;
+      console.error('OAuth google error:', err);
+      window.location.href = `/api/auth/oauth/google?state=${encodeURIComponent('/account')}`;
     }
   };
 
@@ -97,7 +86,7 @@ export function AccountSignup() {
         <div className="mb-6">
           <button
             type="button"
-            onClick={() => handleOAuthSignup('google')}
+            onClick={handleOAuthSignup}
             className="w-full flex items-center justify-center gap-3 px-4 py-3 border-2 border-neutral-300 rounded-xl font-semibold text-neutral-700 hover:border-neutral-400 hover:bg-neutral-50 transition-all"
           >
             <svg className="w-5 h-5" viewBox="0 0 24 24">
