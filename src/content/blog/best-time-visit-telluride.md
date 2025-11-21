@@ -4,7 +4,7 @@ title: "Best Time to Visit Telluride: Month-by-Month Guide"
 status: "published"
 category: "seasonal-guides"
 author: "Telluride Ski Hotels Team"
-publishDate: 2024-01-20
+publishDate: 2025-11-20
 updatedDate: 2025-11-21
 seo:
   metaTitle: "Best Time to Visit Telluride | Month-by-Month Guide"

@@ -4,7 +4,7 @@ title: "Telluride Ski Season: When to Visit & What to Expect (2025)"
 status: "published"
 category: "seasonal-guides"
 author: "Telluride Ski Hotels Team"
-publishDate: 2025-11-12
+publishDate: 2025-01-12
 updatedDate: 2025-11-21
 seo:
   metaTitle: "Telluride Ski Season Guide 2024-2025 | Best Times to Visit"

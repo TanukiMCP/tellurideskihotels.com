@@ -4,7 +4,7 @@ title: "Telluride Skiing Guide: Terrain, Lessons, and Strategies for Every Level
 status: "published"
 category: "ski-guides"
 author: "Telluride Ski Hotels Team"
-publishDate: 2024-03-01
+publishDate: 2025-11-15
 updatedDate: 2025-11-21
 seo:
   metaTitle: "Telluride Skiing Guide | Lessons & Terrain Tips"

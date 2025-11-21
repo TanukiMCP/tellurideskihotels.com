@@ -4,7 +4,7 @@ title: "Telluride Weather Guide: Month-by-Month Climate and Packing Tips"
 status: "published"
 category: "seasonal-guides"
 author: "Telluride Ski Hotels Team"
-publishDate: 2024-03-05
+publishDate: 2025-11-17
 updatedDate: 2025-11-21
 seo:
   metaTitle: "Telluride Weather Guide | Monthly Climate & Packing"

@@ -4,7 +4,7 @@ title: "Telluride Hotels: Complete Accommodation Guide (2025)"
 status: "published"
 category: "hotel-reviews"
 author: "Telluride Ski Hotels Team"
-publishDate: 2025-11-10
+publishDate: 2025-01-10
 updatedDate: 2025-11-21
 seo:
   metaTitle: "Telluride Hotels Guide 2025 | Best Accommodations"

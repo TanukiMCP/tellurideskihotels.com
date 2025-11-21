@@ -4,7 +4,7 @@ title: "Colorado Springs to Telluride Drive: Complete Route Guide Through the Ro
 status: "published"
 category: "planning-tips"
 author: "Telluride Ski Hotels Team"
-publishDate: 2024-02-01
+publishDate: 2025-11-14
 updatedDate: 2025-11-21
 seo:
   metaTitle: "Colorado Springs to Telluride | Drive Guide & Stops"

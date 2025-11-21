@@ -4,7 +4,7 @@ title: "Front Range to Telluride Weekend Getaway: Complete Planning Guide"
 status: "published"
 category: "planning-tips"
 author: "Telluride Ski Hotels Team"
-publishDate: 2024-02-25
+publishDate: 2025-11-18
 updatedDate: 2025-11-21
 seo:
   metaTitle: "Front Range to Telluride | Weekend Planning Guide"

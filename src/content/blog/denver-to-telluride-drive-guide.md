@@ -4,7 +4,7 @@ title: "Denver to Telluride Drive: Complete Route Guide for Colorado Travelers"
 status: "published"
 category: "planning-tips"
 author: "Telluride Ski Hotels Team"
-publishDate: 2024-02-05
+publishDate: 2025-11-13
 updatedDate: 2025-11-21
 seo:
   metaTitle: "Denver to Telluride | Drive Guide & Stops"

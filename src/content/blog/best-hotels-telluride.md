@@ -4,7 +4,7 @@ title: "Best Hotels in Telluride: Where Luxury Meets the San Juan Mountains"
 status: "published"
 category: "hotel-reviews"
 author: "Telluride Ski Hotels Team"
-publishDate: 2024-01-15
+publishDate: 2025-11-20
 updatedDate: 2025-11-21
 seo:
   metaTitle: "Best Hotels in Telluride | Luxury & Ski-In/Ski-Out Picks"

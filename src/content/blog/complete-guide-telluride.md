@@ -4,7 +4,7 @@ title: "Complete Guide to Telluride: Everything You Need for Your Mountain Escap
 status: "published"
 category: "destination-guides"
 author: "Telluride Ski Hotels Team"
-publishDate: 2024-01-25
+publishDate: 2025-11-15
 updatedDate: 2025-11-21
 seo:
   metaTitle: "Complete Telluride Guide | Plan the Ultimate Trip"

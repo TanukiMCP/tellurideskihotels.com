@@ -4,7 +4,7 @@ title: "Things to Do in Telluride: Beyond Skiing in Colorado's Box Canyon"
 status: "published"
 category: "activity-guides"
 author: "Telluride Ski Hotels Team"
-publishDate: 2024-02-15
+publishDate: 2025-11-11
 updatedDate: 2025-11-21
 seo:
   metaTitle: "Things to Do in Telluride | Year-Round Guide"

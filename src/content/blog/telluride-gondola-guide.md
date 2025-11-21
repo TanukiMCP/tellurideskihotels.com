@@ -4,7 +4,7 @@ title: "Telluride Gondola Guide: Free Transportation and Spectacular Mountain Vi
 status: "published"
 category: "activity-guides"
 author: "Telluride Ski Hotels Team"
-publishDate: 2024-02-20
+publishDate: 2025-11-19
 updatedDate: 2025-11-21
 seo:
   metaTitle: "Telluride Gondola Guide | Free Scenic Transit"

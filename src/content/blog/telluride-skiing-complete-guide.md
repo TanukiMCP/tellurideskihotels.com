@@ -4,7 +4,7 @@ title: "Telluride Skiing: Complete Guide for All Skill Levels (2025)"
 status: "published"
 category: "ski-guides"
 author: "Telluride Ski Hotels Team"
-publishDate: 2025-11-10
+publishDate: 2025-11-15
 updatedDate: 2025-11-21
 seo:
   metaTitle: "Telluride Skiing Guide 2025 | Tips for All Levels"

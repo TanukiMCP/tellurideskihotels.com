@@ -4,7 +4,7 @@ title: "Winter Driving to Telluride: Safety Guide and Essential Preparation"
 status: "published"
 category: "planning-tips"
 author: "Telluride Ski Hotels Team"
-publishDate: 2024-03-10
+publishDate: 2025-11-16
 updatedDate: 2025-11-21
 seo:
   metaTitle: "Winter Driving to Telluride | Safety & Prep Guide"

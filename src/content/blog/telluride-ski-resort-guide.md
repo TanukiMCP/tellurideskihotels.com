@@ -4,7 +4,7 @@ title: "Telluride Ski Resort Guide: Terrain, Lifts, and Insider Tips for 2,000 A
 status: "published"
 category: "ski-guides"
 author: "Telluride Ski Hotels Team"
-publishDate: 2024-02-10
+publishDate: 2025-11-09
 updatedDate: 2025-11-21
 seo:
   metaTitle: "Telluride Ski Resort Guide | Terrain & Lift Tips"
