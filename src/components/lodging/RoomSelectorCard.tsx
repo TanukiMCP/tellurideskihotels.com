@@ -312,36 +312,39 @@ export function RoomSelectorCard({
         </div>
       </div>
 
-      {/* Filter Pills and Room Count */}
+      {/* Filter Tabs - Redesigned */}
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-6">
           <button
             onClick={() => setBedFilter('all')}
-            className={`px-4 py-2 rounded-full font-medium text-sm transition-all ${
+            className={`text-sm font-medium transition-all pb-2 border-b-2 focus:outline-none focus:ring-2 focus:ring-[#2D5F4F] rounded ${
               bedFilter === 'all'
-                ? 'bg-neutral-900 text-white'
-                : 'bg-white border border-neutral-300 text-neutral-700 hover:border-neutral-400'
+                ? 'text-[#2D5F4F] border-[#2D5F4F]'
+                : 'text-neutral-600 border-transparent hover:text-neutral-900'
             }`}
+            aria-label="Show all rooms"
           >
             All rooms
           </button>
           <button
             onClick={() => setBedFilter('1')}
-            className={`px-4 py-2 rounded-full font-medium text-sm transition-all ${
+            className={`text-sm font-medium transition-all pb-2 border-b-2 focus:outline-none focus:ring-2 focus:ring-[#2D5F4F] rounded ${
               bedFilter === '1'
-                ? 'bg-neutral-900 text-white'
-                : 'bg-white border border-neutral-300 text-neutral-700 hover:border-neutral-400'
+                ? 'text-[#2D5F4F] border-[#2D5F4F]'
+                : 'text-neutral-600 border-transparent hover:text-neutral-900'
             }`}
+            aria-label="Filter rooms with 1 bed"
           >
             1 bed
           </button>
           <button
             onClick={() => setBedFilter('2')}
-            className={`px-4 py-2 rounded-full font-medium text-sm transition-all ${
+            className={`text-sm font-medium transition-all pb-2 border-b-2 focus:outline-none focus:ring-2 focus:ring-[#2D5F4F] rounded ${
               bedFilter === '2'
-                ? 'bg-neutral-900 text-white'
-                : 'bg-white border border-neutral-300 text-neutral-700 hover:border-neutral-400'
+                ? 'text-[#2D5F4F] border-[#2D5F4F]'
+                : 'text-neutral-600 border-transparent hover:text-neutral-900'
             }`}
+            aria-label="Filter rooms with 2 beds"
           >
             2 beds
           </button>

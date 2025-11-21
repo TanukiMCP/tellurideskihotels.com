@@ -69,4 +69,68 @@ export function calculateNights(checkIn: string, checkOut: string): number {
   return Math.max(1, diffDays);
 }
 
+/**
+ * Rewrite room title to be more guest-friendly
+ * Converts technical names like "Room, 1 King Bed, Accessible (Mobility/Hearing, w/RI Shower)"
+ * to friendly names like "Accessible King Room with Roll-In Shower"
+ */
+export function formatRoomTitle(roomName: string): string {
+  if (!roomName) return 'Standard Room';
+  
+  // Extract key information
+  const hasAccessible = /accessible|mobility|hearing|roll-in|ri shower/i.test(roomName);
+  const hasKing = /king/i.test(roomName);
+  const hasQueen = /queen/i.test(roomName);
+  const hasDouble = /double/i.test(roomName);
+  const hasTwin = /twin/i.test(roomName);
+  const hasRollInShower = /roll-in|ri shower/i.test(roomName);
+  
+  // Build friendly title
+  let title = '';
+  
+  // Start with accessibility if present (but make it secondary)
+  if (hasAccessible) {
+    if (hasKing) {
+      title = 'Accessible King Room';
+    } else if (hasQueen) {
+      title = 'Accessible Queen Room';
+    } else if (hasDouble) {
+      title = 'Accessible Double Room';
+    } else if (hasTwin) {
+      title = 'Accessible Twin Room';
+    } else {
+      title = 'Accessible Room';
+    }
+    
+    // Add roll-in shower detail if mentioned
+    if (hasRollInShower) {
+      title += ' with Roll-In Shower';
+    }
+  } else {
+    // Non-accessible rooms
+    if (hasKing) {
+      title = 'King Room';
+    } else if (hasQueen) {
+      title = 'Queen Room';
+    } else if (hasDouble) {
+      title = 'Double Room';
+    } else if (hasTwin) {
+      title = 'Twin Room';
+    } else {
+      // Fallback: clean up the original name
+      title = roomName
+        .replace(/^Room,\s*/i, '')
+        .replace(/\s*\([^)]*\)/g, '')
+        .trim();
+      
+      // If still too technical, use generic
+      if (title.length < 5 || title === roomName) {
+        title = 'Standard Room';
+      }
+    }
+  }
+  
+  return title || 'Standard Room';
+}
+
 // Removed Stripe fee calculation - now using liteAPI payment SDK (no additional fees!)
