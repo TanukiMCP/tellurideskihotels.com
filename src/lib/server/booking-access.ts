@@ -27,7 +27,7 @@ export async function recordBookingAccess(params: {
 
   try {
     const db = getDbClient();
-    const now = Date.now();
+  const now = Date.now();
     
     if (isLibSQLClient(db)) {
       // Turso/LibSQL (production)
@@ -56,27 +56,27 @@ export async function recordBookingAccess(params: {
     } else {
       // SQLite (development)
       const stmt = db.prepare(`
-        INSERT INTO booking_access (id, booking_id, email, last_name, user_id, user_type, created_at, updated_at)
-        VALUES (@id, @booking_id, @email, @last_name, @user_id, @user_type, @created_at, @updated_at)
-        ON CONFLICT(booking_id, email) DO UPDATE SET
-          last_name = excluded.last_name,
-          user_id = coalesce(excluded.user_id, booking_access.user_id),
-          user_type = CASE
-            WHEN excluded.user_id IS NOT NULL THEN 'account'
-            ELSE booking_access.user_type
-          END,
-          updated_at = excluded.updated_at
-      `);
-      stmt.run({
-        id: randomUUID(),
-        booking_id: params.bookingId,
-        email: normalizedEmail,
-        last_name: params.lastName?.trim().toLowerCase() || null,
-        user_id: params.userId || null,
-        user_type: params.userType || (params.userId ? 'account' : 'guest'),
-        created_at: now,
-        updated_at: now,
-      });
+    INSERT INTO booking_access (id, booking_id, email, last_name, user_id, user_type, created_at, updated_at)
+    VALUES (@id, @booking_id, @email, @last_name, @user_id, @user_type, @created_at, @updated_at)
+    ON CONFLICT(booking_id, email) DO UPDATE SET
+      last_name = excluded.last_name,
+      user_id = coalesce(excluded.user_id, booking_access.user_id),
+      user_type = CASE
+        WHEN excluded.user_id IS NOT NULL THEN 'account'
+        ELSE booking_access.user_type
+      END,
+      updated_at = excluded.updated_at
+  `);
+  stmt.run({
+    id: randomUUID(),
+    booking_id: params.bookingId,
+    email: normalizedEmail,
+    last_name: params.lastName?.trim().toLowerCase() || null,
+    user_id: params.userId || null,
+    user_type: params.userType || (params.userId ? 'account' : 'guest'),
+    created_at: now,
+    updated_at: now,
+  });
     }
   } catch (error) {
     console.error('[recordBookingAccess] Database error:', error);
@@ -111,10 +111,10 @@ export async function findBookingAccessByEmail(email: string): Promise<BookingAc
     } else {
       // SQLite (development)
       const stmt = db.prepare(
-        `SELECT * FROM booking_access WHERE email = ? ORDER BY created_at DESC`
-      );
-      return stmt.all(normalizedEmail) as BookingAccessRecord[];
-    }
+    `SELECT * FROM booking_access WHERE email = ? ORDER BY created_at DESC`
+  );
+  return stmt.all(normalizedEmail) as BookingAccessRecord[];
+}
   } catch (error) {
     console.error('[findBookingAccessByEmail] Database error:', error);
     return [];
@@ -135,10 +135,10 @@ export async function bookingBelongsToUser(userId: string, bookingId: string): P
     } else {
       // SQLite (development)
       const stmt = db.prepare(
-        `SELECT 1 FROM booking_access WHERE booking_id = ? AND user_id = ? LIMIT 1`
-      );
-      const row = stmt.get(bookingId, userId);
-      return !!row;
+    `SELECT 1 FROM booking_access WHERE booking_id = ? AND user_id = ? LIMIT 1`
+  );
+  const row = stmt.get(bookingId, userId);
+  return !!row;
     }
   } catch (error) {
     console.error('[bookingBelongsToUser] Database error:', error);
@@ -166,10 +166,10 @@ export async function claimBookingAccessForUser(email: string, userId: string) {
         const updateStmt = db.prepare(
           `UPDATE booking_access SET user_id = ?, user_type = 'account', updated_at = ? WHERE id = ?`
         );
-        updateStmt.run(userId, now, record.id);
+    updateStmt.run(userId, now, record.id);
       }
 
-      // Also persist to legacy user_bookings table for account dashboards
+    // Also persist to legacy user_bookings table for account dashboards
       await saveUserBooking({
         userId,
         bookingId: record.booking_id,

@@ -31,17 +31,17 @@ export async function saveUserBooking({
     } else {
       // SQLite (development)
       const stmt = db.prepare(`
-        INSERT OR IGNORE INTO user_bookings (id, user_id, booking_id, guest_email, created_at)
-        VALUES (@id, @user_id, @booking_id, @guest_email, @created_at)
-      `);
-      stmt.run({
-        id: randomUUID(),
-        user_id: userId,
-        booking_id: bookingId,
-        guest_email: guestEmail,
-        created_at: Date.now(),
-      });
-    }
+    INSERT OR IGNORE INTO user_bookings (id, user_id, booking_id, guest_email, created_at)
+    VALUES (@id, @user_id, @booking_id, @guest_email, @created_at)
+  `);
+  stmt.run({
+    id: randomUUID(),
+    user_id: userId,
+    booking_id: bookingId,
+    guest_email: guestEmail,
+    created_at: Date.now(),
+  });
+}
   } catch (error) {
     console.error('[saveUserBooking] Database error:', error);
     throw error;
@@ -76,8 +76,8 @@ export async function getUserBookings(userId: string): Promise<UserBookingRecord
          FROM user_bookings 
          WHERE user_id = ? 
          ORDER BY created_at DESC`
-      );
-      return stmt.all(userId) as UserBookingRecord[];
+  );
+  return stmt.all(userId) as UserBookingRecord[];
     }
   } catch (error) {
     console.error('[getUserBookings] Database error:', error);

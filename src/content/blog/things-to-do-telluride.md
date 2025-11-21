@@ -14,6 +14,11 @@ Telluride's identity extends far beyond its reputation as a challenging ski dest
 
 I've spent time in Telluride across all four seasons, and what strikes me most is how the town transforms while maintaining its essential character. Winter brings skiing and snow-focused activities, summer delivers festivals and alpine hiking, fall showcases golden aspen groves, and spring offers that transitional period when locals reclaim their town. Each season reveals different facets of what makes Telluride special, with activities that go well beyond the obvious tourist attractions.
 
+![Majestic snowy resort with mountain views perfect for winter getaways](https://images.pexels.com/photos/29991568/pexels-photo-29991568.jpeg?auto=compress&cs=tinysrgb&h=350)
+*Photo by [kenyi Amores](https://www.pexels.com/@kenyiamores) via Pexels*
+
+Whether you're planning a ski-focused trip or exploring year-round activities, our [complete guide to Telluride](/blog/planning/complete-guide-telluride) and [where to stay guide](/blog/destination-guides/where-to-stay-telluride) provide essential planning resources.
+
 <ArticleBookingWidget 
   checkIn="2025-01-15"
   checkOut="2025-01-20"
@@ -32,6 +37,11 @@ Sunset rides capture golden light illuminating the peaks in warm hues, creating 
 
 The gondola runs from approximately 7 AM to midnight daily, with extended hours during special events. Morning lines can develop during ski season (8:30-10 AM), but arriving early or waiting until mid-morning avoids the crowds. Evening rides offer a completely different experience, with the town's lights twinkling below and the peaks silhouetted against the darkening sky.
 
+![Scenic gondola cable car ascending mountain with forest and peaks](https://images.pexels.com/photos/5624229/pexels-photo-5624229.jpeg?auto=compress&cs=tinysrgb&h=350)
+*Photo by [Jill Wellington](https://www.pexels.com/@jill-wellington-1638660) via Pexels*
+
+For complete gondola details, visit the [official Telluride Gondola page](https://www.telluride.com/plan-your-trip/getting-around/gondola/) and learn about [Visit Telluride's transportation options](https://www.visittelluride.com/plan-your-visit/getting-around/).
+
 ## Hiking Telluride's Alpine Trails
 
 The mountains surrounding Telluride contain hundreds of miles of trails ranging from gentle nature walks to challenging alpine routes that test even fit hikers. The elevation—8,750 feet in town and much higher on the trails—affects everyone differently, so start with easier hikes to assess your acclimatization before committing to all-day epics.
@@ -43,6 +53,11 @@ Jud Wiebe Trail creates a 3-mile loop with excellent views of the box canyon and
 The gondola opens up high-elevation hiking without the exhausting climb from town. From the top of the gondola at Mountain Village, numerous trails head into the alpine zone. The Village Trail provides an easy introduction to high-elevation hiking, while more ambitious routes like the Wasatch Trail climb toward 12,000+ foot ridges with expansive views across the San Juan Mountains.
 
 Bridal Veil Falls, Colorado's tallest free-falling waterfall at 365 feet, sits at the head of the box canyon. A rough 4WD road provides vehicle access for those with appropriate vehicles and confidence, while hiking trails approach from different angles. The falls flow strongest in June and July when snowmelt feeds maximum water volume. The historic power plant perched atop the falls—the world's first commercial AC power plant, built in 1895—adds historical interest to the natural spectacle.
+
+![Tranquil lake surrounded by lush evergreen forest and majestic mountains](https://images.pexels.com/photos/17441633/pexels-photo-17441633.jpeg?auto=compress&cs=tinysrgb&h=350)
+*Photo by [Kiril Gruev](https://www.pexels.com/@kiril-gruev-2644795) via Pexels*
+
+For trail maps and hiking conditions, consult the [USDA Forest Service - Grand Mesa, Uncompahgre and Gunnison National Forests](https://www.fs.usda.gov/gmug) website.
 
 <ArticleBookingWidget 
   checkIn="2025-07-15"
@@ -61,6 +76,9 @@ The Telluride Bluegrass Festival in late June represents the town's longest-runn
 The Telluride Film Festival over Labor Day weekend rivals Sundance and Cannes for industry importance. Major films premiere here, celebrities and filmmakers descend on the town, and serious cinema enthusiasts fill every screening. The festival's intimate scale creates opportunities for interactions impossible at larger events—post-screening Q&As with directors, chance encounters with actors at restaurants, and a general sense that you're part of something special rather than just another face in the crowd.
 
 Other festivals cover jazz, blues, mushroom foraging, wine, and various cultural themes. Each brings its own character and crowd, transforming the town while maintaining that essential Telluride atmosphere. The festivals require advance planning—hotels book months ahead, and ticket sales often sell out. But experiencing Telluride during a major festival reveals a different side of the town's personality.
+
+![Historic Victorian downtown street with shops and mountain backdrop](https://images.pexels.com/photos/3889854/pexels-photo-3889854.jpeg?auto=compress&cs=tinysrgb&h=350)
+*Photo by [Nextvoyage](https://www.pexels.com/@nextvoyage) via Pexels*
 
 ## Exploring Downtown Telluride's Victorian Character
 
@@ -92,6 +110,9 @@ Cross-country riders can access hundreds of miles of trails in the surrounding U
 
 Beyond biking, summer offers rock climbing, fly fishing, stand-up paddleboarding on nearby lakes, and scenic drives through the San Juan Mountains. The Via Ferrata at Mountain Village provides a unique climbing experience with fixed cables and ladders allowing non-climbers to access dramatic cliff faces safely. Guided tours handle the technical aspects while you focus on the views and the adrenaline.
 
+![Mountain bikers on scenic trail with alpine meadow and peaks](https://images.pexels.com/photos/100582/pexels-photo-100582.jpeg?auto=compress&cs=tinysrgb&h=350)
+*Photo by [Pixabay](https://www.pexels.com/@pixabay) via Pexels*
+
 ## Hot Springs and Wellness
 
 The Telluride area doesn't have natural hot springs within town, but several options exist within driving distance. Orvis Hot Springs, about 35 miles north near Ridgway, offers multiple pools with varying temperatures and clothing-optional policies. The setting is low-key and focused on soaking rather than resort amenities, appealing to travelers seeking authentic hot springs experiences.
@@ -99,6 +120,11 @@ The Telluride area doesn't have natural hot springs within town, but several opt
 Ouray, 45 miles north, bills itself as the "Switzerland of America" and features multiple hot springs pools including the Ouray Hot Springs Pool and various hotel-based options. The drive from Telluride to Ouray crosses Red Mountain Pass via the Million Dollar Highway, one of Colorado's most scenic and dramatic mountain roads. The drive itself justifies the trip, with the hot springs providing a relaxing conclusion.
 
 Within Telluride, several hotels offer spa services and heated pools. The Peaks Resort & Spa features a 42,000-square-foot Golden Door Spa with eucalyptus steam rooms, heated outdoor pools, and extensive treatment menus. The Madeline Hotel offers spa services and heated pools with mountain views. These aren't natural hot springs, but they provide post-skiing or post-hiking recovery in luxurious settings.
+
+![Luxury spa interior with tranquil ambiance and modern amenities](https://images.pexels.com/photos/3757376/pexels-photo-3757376.jpeg?auto=compress&cs=tinysrgb&h=350)
+*Photo by [Pixabay](https://www.pexels.com/@pixabay) via Pexels*
+
+For more activity ideas, explore our [Telluride ski resort guide](/blog/skiing/telluride-ski-resort-guide) and check [Colorado.com's outdoor recreation resources](https://www.colorado.com/activities/outdoor-activities).
 
 ## Frequently Asked Questions
 
