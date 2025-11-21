@@ -1,0 +1,142 @@
+---
+import PageLayout from '@/components/layout/PageLayout.astro';
+import Container from '@/components/layout/Container.astro';
+---
+
+<PageLayout
+  title="404 - Page Not Found | TellurideSkiHotels.com"
+  description="The page you're looking for doesn't exist. Return to our homepage or search for Telluride accommodations."
+>
+  <div class="min-h-screen bg-[#F8F6F3] flex items-center py-20">
+    <Container>
+      <div class="max-w-[700px] mx-auto text-center px-6">
+        <!-- Illustration -->
+        <div class="mb-8 flex justify-center">
+          <div class="relative w-48 h-48 md:w-64 md:h-64">
+            <svg
+              viewBox="0 0 200 200"
+              class="w-full h-full"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <!-- Mountain -->
+              <path
+                d="M50 150 L100 50 L150 150 Z"
+                fill="#2D5F4F"
+                opacity="0.3"
+              />
+              <path
+                d="M60 150 L100 70 L140 150 Z"
+                fill="#2D5F4F"
+                opacity="0.5"
+              />
+              <!-- Question Mark -->
+              <circle
+                cx="100"
+                cy="100"
+                r="30"
+                fill="#C87859"
+                opacity="0.8"
+              />
+              <path
+                d="M100 85 Q100 75 90 75 Q80 75 80 85 Q80 90 85 95 L85 105 M100 115 L100 125"
+                stroke="white"
+                stroke-width="4"
+                stroke-linecap="round"
+                fill="none"
+              />
+            </svg>
+          </div>
+        </div>
+
+        <!-- Error Message -->
+        <h1 
+          class="text-4xl md:text-5xl font-bold text-[#2C2C2C] mb-4"
+          style="font-family: 'Playfair Display', serif;"
+        >
+          Oops! This trail doesn't exist
+        </h1>
+        <p class="text-lg md:text-xl text-[#666] mb-8 max-w-2xl mx-auto">
+          The page you're looking for might have been moved or doesn't exist. Let's get you back on track.
+        </p>
+
+        <!-- Search Bar -->
+        <div class="mb-12 max-w-[500px] mx-auto">
+          <form action="/places-to-stay" method="get" class="relative">
+            <input
+              type="text"
+              name="location"
+              placeholder="Search for hotels, locations, or activities..."
+              class="w-full h-[52px] pl-4 pr-32 bg-white border border-[#D5D5D5] rounded-lg text-base focus:outline-none focus:border-[#2D5F4F] focus:ring-2 focus:ring-[#2D5F4F]/20"
+            />
+            <button
+              type="submit"
+              class="absolute right-2 top-1/2 transform -translate-y-1/2 bg-[#2D5F4F] text-white px-6 py-2.5 rounded-md hover:bg-[#255040] transition-colors flex items-center gap-2"
+            >
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+              Search
+            </button>
+          </form>
+        </div>
+
+        <!-- Navigation Options -->
+        <div class="mb-8">
+          <h2 class="text-lg font-semibold text-[#2C2C2C] mb-6">
+            Where would you like to go?
+          </h2>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-2xl mx-auto">
+            <a
+              href="/"
+              class="bg-white border-2 border-[#2D5F4F] rounded-lg p-6 hover:bg-[#2D5F4F] hover:text-white transition-all duration-200 group"
+            >
+              <svg class="w-8 h-8 mx-auto mb-3 text-[#2D5F4F] group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+              </svg>
+              <span class="block text-base font-semibold">Return Home</span>
+            </a>
+            <a
+              href="/places-to-stay"
+              class="bg-white border-2 border-[#2D5F4F] rounded-lg p-6 hover:bg-[#2D5F4F] hover:text-white transition-all duration-200 group"
+            >
+              <svg class="w-8 h-8 mx-auto mb-3 text-[#2D5F4F] group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+              <span class="block text-base font-semibold">Search Hotels</span>
+            </a>
+            <a
+              href="/trail-map"
+              class="bg-white border-2 border-[#2D5F4F] rounded-lg p-6 hover:bg-[#2D5F4F] hover:text-white transition-all duration-200 group"
+            >
+              <svg class="w-8 h-8 mx-auto mb-3 text-[#2D5F4F] group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
+              </svg>
+              <span class="block text-base font-semibold">View Trail Map</span>
+            </a>
+            <a
+              href="/contact"
+              class="bg-white border-2 border-[#2D5F4F] rounded-lg p-6 hover:bg-[#2D5F4F] hover:text-white transition-all duration-200 group"
+            >
+              <svg class="w-8 h-8 mx-auto mb-3 text-[#2D5F4F] group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+              </svg>
+              <span class="block text-base font-semibold">Contact Support</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Technical Info (Optional - can be hidden in production) -->
+        <div class="mt-12 pt-8 border-t border-[#E5E5E5]">
+          <p class="text-xs text-neutral-500 font-mono">
+            Error 404 • Page not found
+          </p>
+          <p class="text-xs text-neutral-400 mt-1 font-mono">
+            Path: {Astro.url.pathname}
+          </p>
+        </div>
+      </div>
+    </Container>
+  </div>
+</PageLayout>
+

@@ -1,0 +1,152 @@
+---
+import PageLayout from '@/components/layout/PageLayout.astro';
+import Container from '@/components/layout/Container.astro';
+import FAQPage from '@/components/faq/FAQPage';
+import Breadcrumbs from '@/components/seo/Breadcrumbs.astro';
+
+// Generate structured data for FAQPage schema
+const faqData = [
+  {
+    questionName: 'How do I make a reservation?',
+    acceptedAnswer: {
+      text: 'You can make a reservation directly on our website by selecting your dates, choosing a property, and completing the booking form. You\'ll receive an instant confirmation email with your booking ID.',
+    },
+  },
+  {
+    questionName: 'When will my card be charged?',
+    acceptedAnswer: {
+      text: 'Your card is authorized at the time of booking, but you won\'t be charged until check-in. Some properties may require a deposit or full payment in advance.',
+    },
+  },
+  {
+    questionName: 'What is your cancellation policy?',
+    acceptedAnswer: {
+      text: 'Cancellation policies vary by property and rate type. Free cancellation is typically available up to 48-72 hours before check-in, while non-refundable rates cannot be cancelled.',
+    },
+  },
+  {
+    questionName: 'What time is check-in and check-out?',
+    acceptedAnswer: {
+      text: 'Standard check-in is typically 3:00 PM or 4:00 PM, and check-out is 11:00 AM. These times vary by property.',
+    },
+  },
+  {
+    questionName: 'What amenities are included?',
+    acceptedAnswer: {
+      text: 'Amenities vary by property but commonly include Wi-Fi, parking, kitchen facilities, hot tubs, fireplaces, and ski storage.',
+    },
+  },
+  {
+    questionName: 'How close are properties to the ski slopes?',
+    acceptedAnswer: {
+      text: 'We list properties ranging from ski-in/ski-out to a short drive or shuttle ride away. Each property listing shows the distance to the nearest lift.',
+    },
+  },
+];
+
+const structuredData = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqData.map((faq) => ({
+    '@type': 'Question',
+    name: faq.questionName,
+    acceptedAnswer: {
+      '@type': 'Answer',
+      text: faq.acceptedAnswer.text,
+    },
+  })),
+};
+---
+
+<PageLayout
+  title="Frequently Asked Questions - TellurideSkiHotels.com"
+  description="Everything you need to know about booking your Telluride stay. Find answers about reservations, payments, cancellations, check-in, property amenities, and local activities."
+>
+  <!-- Skip Link -->
+  <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:bg-[#2D5F4F] focus:text-white focus:px-4 focus:py-2 focus:rounded">
+    Skip to main content
+  </a>
+
+  <Breadcrumbs items={[
+    { label: 'Home', href: '/' },
+    { label: 'FAQ', href: undefined },
+  ]} />
+
+  <!-- Hero Section -->
+  <div class="bg-gradient-to-b from-[#F8F9F8] to-[#F3F6F4] py-20 md:py-24">
+    <Container>
+      <div class="text-center max-w-3xl mx-auto">
+        <h1 
+          class="text-4xl md:text-5xl font-bold text-[#2C2C2C] mb-4"
+          style="font-family: 'Playfair Display', serif;"
+        >
+          Frequently Asked Questions
+        </h1>
+        <p class="text-lg md:text-xl text-[#666]">
+          Everything you need to know about booking your Telluride stay
+        </p>
+      </div>
+    </Container>
+  </div>
+
+  <!-- Main Content -->
+  <Container class="py-12 lg:py-16">
+    <div id="main-content" class="max-w-5xl mx-auto">
+      <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+        <!-- Main FAQ Content -->
+        <div class="lg:col-span-3">
+          <FAQPage client:load />
+        </div>
+
+        <!-- Sidebar -->
+        <aside class="lg:col-span-1">
+          <div class="bg-[#F8F6F3] rounded-lg p-6 sticky top-6">
+            <h3 class="text-base font-semibold text-[#2C2C2C] mb-4">Quick Links</h3>
+            <nav class="space-y-3">
+              <a
+                href="/find-booking"
+                class="block text-sm text-[#2D5F4F] hover:text-[#255040] hover:underline transition-colors"
+              >
+                Find Your Booking
+              </a>
+              <a
+                href="/find-booking"
+                class="block text-sm text-[#2D5F4F] hover:text-[#255040] hover:underline transition-colors"
+              >
+                Modify Reservation
+              </a>
+              <a
+                href="/cancellation-policy"
+                class="block text-sm text-[#2D5F4F] hover:text-[#255040] hover:underline transition-colors"
+              >
+                Cancellation Policy
+              </a>
+              <a
+                href="/terms"
+                class="block text-sm text-[#2D5F4F] hover:text-[#255040] hover:underline transition-colors"
+              >
+                Terms of Service
+              </a>
+              <a
+                href="/privacy"
+                class="block text-sm text-[#2D5F4F] hover:text-[#255040] hover:underline transition-colors"
+              >
+                Privacy Policy
+              </a>
+              <a
+                href="/contact"
+                class="block text-sm text-[#2D5F4F] hover:text-[#255040] hover:underline transition-colors"
+              >
+                Contact Us
+              </a>
+            </nav>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </Container>
+
+  <!-- Structured Data -->
+  <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+</PageLayout>
+
