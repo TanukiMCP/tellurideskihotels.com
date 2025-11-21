@@ -1,15 +1,5 @@
-import Database from 'better-sqlite3';
+import { getDbClient } from '../db';
 import { randomUUID } from 'crypto';
-
-let db: Database.Database | null = null;
-
-function getDb() {
-  if (!db) {
-    const dbPath = process.env.AUTH_DB_PATH || './auth.db';
-    db = new Database(dbPath);
-  }
-  return db;
-}
 
 export interface UserBookingRecord {
   id: string;
@@ -19,7 +9,7 @@ export interface UserBookingRecord {
   created_at: number;
 }
 
-export function saveUserBooking({
+export async function saveUserBooking({
   userId,
   bookingId,
   guestEmail,
@@ -28,24 +18,39 @@ export function saveUserBooking({
   bookingId: string;
   guestEmail: string;
 }) {
-  const stmt = getDb().prepare(`
-    INSERT OR IGNORE INTO user_bookings (id, user_id, booking_id, guest_email, created_at)
-    VALUES (@id, @user_id, @booking_id, @guest_email, @created_at)
-  `);
-
-  stmt.run({
-    id: randomUUID(),
-    user_id: userId,
-    booking_id: bookingId,
-    guest_email: guestEmail,
-    created_at: Date.now(),
-  });
+  try {
+    const db = getDbClient();
+    await db.execute({
+      sql: `INSERT OR IGNORE INTO user_bookings (id, user_id, booking_id, guest_email, created_at)
+            VALUES (?, ?, ?, ?, ?)`,
+      args: [randomUUID(), userId, bookingId, guestEmail, Date.now()],
+    });
+  } catch (error) {
+    console.error('[saveUserBooking] Database error:', error);
+    throw error;
+  }
 }
 
-export function getUserBookings(userId: string): UserBookingRecord[] {
-  const stmt = getDb().prepare(
-    `SELECT id, user_id, booking_id, guest_email, created_at FROM user_bookings WHERE user_id = ? ORDER BY created_at DESC`
-  );
-  return stmt.all(userId) as UserBookingRecord[];
+export async function getUserBookings(userId: string): Promise<UserBookingRecord[]> {
+  try {
+    const db = getDbClient();
+    const result = await db.execute({
+      sql: `SELECT id, user_id, booking_id, guest_email, created_at 
+            FROM user_bookings 
+            WHERE user_id = ? 
+            ORDER BY created_at DESC`,
+      args: [userId],
+    });
+    return result.rows.map(row => ({
+      id: row.id as string,
+      user_id: row.user_id as string,
+      booking_id: row.booking_id as string,
+      guest_email: row.guest_email as string,
+      created_at: row.created_at as number,
+    }));
+  } catch (error) {
+    console.error('[getUserBookings] Database error:', error);
+    return [];
+  }
 }
 

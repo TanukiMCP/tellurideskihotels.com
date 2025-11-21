@@ -35,6 +35,8 @@ interface ImportMetaEnv {
   readonly PUBLIC_PAYMENT_MODE: 'sandbox' | 'production';
   readonly GOOGLE_CLIENT_ID?: string;
   readonly GOOGLE_CLIENT_SECRET?: string;
+  readonly TURSO_DATABASE_URL: string;
+  readonly TURSO_AUTH_TOKEN: string;
 }
 
 interface ImportMeta {

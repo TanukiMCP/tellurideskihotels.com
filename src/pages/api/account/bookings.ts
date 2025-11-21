@@ -16,7 +16,7 @@ export const GET: APIRoute = async ({ request }) => {
   }
 
   try {
-    const records = getUserBookings(session.user.id);
+    const records = await getUserBookings(session.user.id);
 
     if (records.length === 0) {
       return new Response(JSON.stringify({ bookings: [] }), {
