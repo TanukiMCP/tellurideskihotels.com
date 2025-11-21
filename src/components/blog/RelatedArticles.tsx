@@ -19,8 +19,13 @@ export default function RelatedArticles({
   }
 
   return (
-    <section className="mt-12 border-t border-gray-200 pt-12">
-      <h2 className="mb-6 text-2xl font-bold text-gray-900">Related Articles</h2>
+    <section>
+      <h2 
+        className="mb-12 text-4xl font-bold text-[#2C2C2C] text-center"
+        style={{ fontFamily: "'Playfair Display', serif" }}
+      >
+        Related Articles
+      </h2>
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {relatedArticles.map(article => (
           <BlogCard key={article.slug} article={article} />

@@ -40,11 +40,11 @@ export default function TableOfContents({ headings }: TableOfContentsProps) {
   }
 
   return (
-    <nav className="sticky top-24 hidden max-h-[calc(100vh-8rem)] overflow-y-auto rounded-lg border border-gray-200 bg-white p-6 lg:block">
-      <h2 className="mb-4 text-sm font-bold uppercase tracking-wide text-gray-900">
-        Table of Contents
+    <nav className="sticky top-24 hidden max-h-[calc(100vh-8rem)] overflow-y-auto rounded-lg border border-[#E5E8E5] bg-[#F8F9F8] p-6 shadow-sm lg:block">
+      <h2 className="mb-4 text-xs font-semibold uppercase tracking-wider text-[#2D5F4F]">
+        In This Article
       </h2>
-      <ul className="space-y-2 text-sm">
+      <ul className="space-y-2.5 text-sm">
         {headings.map(heading => (
           <li
             key={heading.id}
@@ -52,10 +52,10 @@ export default function TableOfContents({ headings }: TableOfContentsProps) {
           >
             <a
               href={`#${heading.id}`}
-              className={`block py-1 transition-colors hover:text-blue-600 ${
+              className={`block py-1 transition-colors leading-relaxed hover:text-[#255040] hover:underline ${
                 activeId === heading.id
-                  ? 'font-semibold text-blue-600'
-                  : 'text-gray-600'
+                  ? 'font-semibold text-[#2D5F4F]'
+                  : 'text-[#2D5F4F]'
               }`}
               onClick={e => {
                 e.preventDefault();

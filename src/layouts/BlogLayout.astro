@@ -6,7 +6,7 @@ import ShareButtons from '@/components/blog/ShareButtons';
 import TableOfContents from '@/components/blog/TableOfContents';
 import RelatedArticles from '@/components/blog/RelatedArticles';
 import BlogCTA from '@/components/blog/BlogCTA';
-import { formatDate } from '@/lib/utils';
+import { formatDate, formatDateShort } from '@/lib/utils';
 
 interface Props {
   article: CollectionEntry<'blog'>;
@@ -27,92 +27,123 @@ const categoryName = data.category.replace(/-/g, ' ');
   description={data.seo.metaDescription}
   image={data.featuredImage}
 >
-  <article class="py-12">
+  <article>
+    <!-- Breadcrumbs -->
     <Container>
-      <!-- Breadcrumbs -->
-      <nav class="mb-6 text-sm text-gray-600" aria-label="Breadcrumb">
-        <ol class="flex items-center gap-2">
-          <li><a href="/" class="hover:text-blue-600">Home</a></li>
-          <li>/</li>
-          <li><a href="/blog" class="hover:text-blue-600">Blog</a></li>
-          <li>/</li>
-          <li><a href={`/blog/${data.category}`} class="hover:text-blue-600 capitalize">{categoryName}</a></li>
-          <li>/</li>
-          <li class="text-gray-900">{data.title}</li>
+      <nav class="pt-6 pb-4 text-sm text-[#999]" aria-label="Breadcrumb">
+        <ol class="flex items-center gap-2 max-w-[1200px] mx-auto">
+          <li><a href="/" class="hover:text-[#2D5F4F] transition-colors">Home</a></li>
+          <li class="text-[#999]">/</li>
+          <li><a href="/blog" class="hover:text-[#2D5F4F] transition-colors">Blog</a></li>
+          <li class="text-[#999]">/</li>
+          <li><a href={`/blog/${data.category}`} class="hover:text-[#2D5F4F] transition-colors capitalize">{categoryName}</a></li>
+          <li class="text-[#999]">/</li>
+          <li class="text-[#2C2C2C] truncate max-w-[200px]">{data.title}</li>
         </ol>
       </nav>
+    </Container>
 
-      <div class="grid gap-8 lg:grid-cols-[1fr_280px]">
-        <!-- Main Content -->
-        <div>
-          <!-- Article Header -->
-          <header class="mb-8">
-            <div class="mb-4 flex flex-wrap items-center gap-3 text-sm text-gray-600">
-              <span class="rounded-full bg-blue-100 px-3 py-1 font-medium text-blue-800 capitalize">
-                {categoryName}
-              </span>
-              <time datetime={data.publishDate.toISOString()}>
-                {formatDate(data.publishDate)}
-              </time>
-              <span>•</span>
-              <span>{data.readingTime} min read</span>
-              <span>•</span>
-              <span>{data.wordCount.toLocaleString()} words</span>
-            </div>
-
-            <h1 class="mb-4 text-4xl font-bold text-gray-900 lg:text-5xl">
+    <!-- Hero Section with Overlay -->
+    <div class="relative h-[350px] md:h-[500px] overflow-hidden">
+      <img
+        src={data.featuredImage}
+        alt={data.featuredImageAlt}
+        class="absolute inset-0 w-full h-full object-cover"
+        loading="eager"
+      />
+      <!-- Gradient Overlay -->
+      <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
+      
+      <!-- Content Overlay -->
+      <Container>
+        <div class="relative h-full flex flex-col justify-end pb-12 md:pb-16">
+          <div class="max-w-[800px]">
+            <!-- Category Badge -->
+            <span class="inline-block mb-4 px-3 py-1.5 bg-[#2D5F4F] text-white text-[11px] uppercase tracking-wider rounded font-medium">
+              {categoryName}
+            </span>
+            
+            <!-- Title -->
+            <h1 
+              class="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4 leading-tight"
+              style="font-family: 'Playfair Display', serif; text-shadow: 0 2px 8px rgba(0,0,0,0.3);"
+            >
               {data.title}
             </h1>
-
-            <p class="mb-6 text-xl text-gray-600">
-              {data.excerpt}
-            </p>
-
-            <div class="flex items-center justify-between border-y border-gray-200 py-4">
-              <div class="flex items-center gap-3">
-                <div class="flex h-10 w-10 items-center justify-center rounded-full bg-blue-600 text-white font-semibold">
-                  T
-                </div>
-                <div>
-                  <div class="font-medium text-gray-900">{data.author}</div>
-                  <div class="text-sm text-gray-600">Travel Expert</div>
-                </div>
-              </div>
-              <ShareButtons client:load url={fullUrl} title={data.title} />
+            
+            <!-- Metadata -->
+            <div class="flex flex-wrap items-center gap-3 text-sm text-white/90">
+              <span>By {data.author}</span>
+              <span>•</span>
+              <time datetime={data.publishDate.toISOString()}>
+                {formatDateShort(data.publishDate)}
+              </time>
+              <span>•</span>
+              <span class="flex items-center gap-1">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                {data.readingTime} min read
+              </span>
             </div>
-          </header>
+          </div>
+        </div>
+      </Container>
+    </div>
 
-          <!-- Featured Image -->
-          <div class="mb-8 overflow-hidden rounded-xl">
-            <img
-              src={data.featuredImage}
-              alt={data.featuredImageAlt}
-              class="h-auto w-full"
-              loading="eager"
-            />
+    <!-- Gradient Transition -->
+    <div class="h-10 bg-gradient-to-b from-transparent to-white"></div>
+
+    <Container>
+
+      <div class="grid gap-8 lg:grid-cols-[1fr_280px] py-12">
+        <!-- Main Content -->
+        <div class="max-w-[720px] mx-auto lg:mx-0">
+          <!-- Social Share - Floating Left (Desktop) -->
+          <div class="hidden lg:block fixed left-8 top-1/2 transform -translate-y-1/2 z-10">
+            <ShareButtons client:load url={fullUrl} title={data.title} />
+          </div>
+
+          <!-- Social Share - Above Content (Mobile/Tablet) -->
+          <div class="lg:hidden mb-8">
+            <ShareButtons client:load url={fullUrl} title={data.title} />
           </div>
 
           <!-- Article Content -->
-          <div class="prose prose-lg max-w-none prose-headings:font-bold prose-headings:text-gray-900 prose-h2:mt-8 prose-h2:mb-4 prose-h2:text-3xl prose-h3:mt-6 prose-h3:mb-3 prose-h3:text-2xl prose-p:text-gray-700 prose-a:text-blue-600 prose-a:no-underline hover:prose-a:underline prose-strong:text-gray-900 prose-ul:text-gray-700 prose-ol:text-gray-700 prose-li:marker:text-blue-600 prose-img:rounded-lg">
+          <div class="prose prose-lg max-w-none 
+            prose-headings:font-semibold 
+            prose-headings:text-[#2C2C2C]
+            prose-h2:mt-12 prose-h2:mb-4 prose-h2:text-[32px]
+            prose-h2:font-serif prose-h2:leading-tight
+            prose-h3:mt-8 prose-h3:mb-3 prose-h3:text-[22px]
+            prose-h3:font-semibold prose-h3:leading-tight
+            prose-p:text-[17px] prose-p:text-[#2C2C2C] prose-p:leading-[1.7] prose-p:mb-6
+            prose-a:text-[#2D5F4F] prose-a:no-underline prose-a:font-medium
+            hover:prose-a:underline
+            prose-strong:text-[#2C2C2C] prose-strong:font-semibold
+            prose-ul:text-[17px] prose-ul:text-[#2C2C2C] prose-ul:leading-[1.8] prose-ul:my-6
+            prose-ol:text-[17px] prose-ol:text-[#2C2C2C] prose-ol:leading-[1.8] prose-ol:my-6
+            prose-li:my-3 prose-li:marker:text-[#2D5F4F]
+            prose-img:rounded-lg prose-img:shadow-lg prose-img:my-10
+            prose-blockquote:border-l-4 prose-blockquote:border-[#2D5F4F]
+            prose-blockquote:bg-[#F8F6F3] prose-blockquote:pl-6 prose-blockquote:py-6
+            prose-blockquote:italic prose-blockquote:text-[19px] prose-blockquote:my-8
+            prose-blockquote:text-[#2C2C2C]
+            ">
             <Content />
-          </div>
-
-          <!-- CTA Section -->
-          <div class="mt-12">
-            <BlogCTA client:load />
           </div>
 
           <!-- Tags -->
           {data.tags && data.tags.length > 0 && (
-            <div class="mt-8 border-t border-gray-200 pt-8">
-              <h3 class="mb-3 text-sm font-semibold uppercase tracking-wide text-gray-700">
+            <div class="mt-12 border-t border-[#E5E5E5] pt-8">
+              <h3 class="mb-4 text-sm font-semibold uppercase tracking-wide text-[#666]">
                 Tags
               </h3>
               <div class="flex flex-wrap gap-2">
                 {data.tags.map(tag => (
                   <a
                     href={`/blog/tag/${tag}`}
-                    class="rounded-full bg-gray-100 px-4 py-2 text-sm text-gray-700 transition-colors hover:bg-blue-100 hover:text-blue-800"
+                    class="rounded-full bg-[#F8F6F3] px-4 py-2 text-sm text-[#2D5F4F] transition-colors hover:bg-[#2D5F4F] hover:text-white"
                   >
                     {tag}
                   </a>
@@ -122,22 +153,13 @@ const categoryName = data.category.replace(/-/g, ' ');
           )}
 
           <!-- Share Again -->
-          <div class="mt-8 flex items-center justify-between border-t border-gray-200 pt-8">
-            <div class="text-sm font-medium text-gray-700">
+          <div class="mt-12 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-t border-[#E5E5E5] pt-8">
+            <div class="text-sm font-medium text-[#666]">
               Found this helpful? Share it:
             </div>
             <ShareButtons client:load url={fullUrl} title={data.title} />
           </div>
 
-          <!-- Related Articles -->
-          {relatedArticles.length > 0 && (
-            <RelatedArticles
-              client:load
-              articles={relatedArticles}
-              currentSlug={article.slug}
-              maxArticles={3}
-            />
-          )}
         </div>
 
         <!-- Sidebar -->
@@ -148,23 +170,23 @@ const categoryName = data.category.replace(/-/g, ' ');
           )}
 
           <!-- Newsletter Signup -->
-          <div class="rounded-lg border border-gray-200 bg-white p-6">
-            <h3 class="mb-3 text-lg font-bold text-gray-900">
+          <div class="rounded-lg border border-[#E5E8E5] bg-white p-6 shadow-sm">
+            <h3 class="mb-3 text-lg font-bold text-[#2C2C2C]">
               Get Travel Tips
             </h3>
-            <p class="mb-4 text-sm text-gray-600">
+            <p class="mb-4 text-sm text-[#666]">
               Subscribe to our newsletter for the latest Telluride travel guides and hotel deals.
             </p>
             <form class="space-y-3">
               <input
                 type="email"
                 placeholder="Your email"
-                class="w-full rounded-lg border border-gray-300 px-4 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                class="w-full rounded-lg border border-[#D5D5D5] px-4 py-2 text-sm focus:border-[#2D5F4F] focus:outline-none focus:ring-2 focus:ring-[#2D5F4F]/20"
                 required
               />
               <button
                 type="submit"
-                class="w-full rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-blue-700"
+                class="w-full rounded-lg bg-[#2D5F4F] px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#255040] h-10"
               >
                 Subscribe
               </button>
@@ -172,23 +194,23 @@ const categoryName = data.category.replace(/-/g, ' ');
           </div>
 
           <!-- Popular Articles -->
-          <div class="rounded-lg border border-gray-200 bg-white p-6">
-            <h3 class="mb-4 text-lg font-bold text-gray-900">
+          <div class="rounded-lg border border-[#E5E8E5] bg-white p-6 shadow-sm">
+            <h3 class="mb-4 text-lg font-bold text-[#2C2C2C]">
               Popular Articles
             </h3>
             <ul class="space-y-3">
               <li>
-                <a href="/blog" class="text-sm text-blue-600 hover:underline">
+                <a href="/blog" class="text-sm text-[#2D5F4F] hover:text-[#255040] hover:underline transition-colors">
                   Best Hotels in Telluride
                 </a>
               </li>
               <li>
-                <a href="/blog" class="text-sm text-blue-600 hover:underline">
+                <a href="/blog" class="text-sm text-[#2D5F4F] hover:text-[#255040] hover:underline transition-colors">
                   Telluride Ski Resort Guide
                 </a>
               </li>
               <li>
-                <a href="/blog" class="text-sm text-blue-600 hover:underline">
+                <a href="/blog" class="text-sm text-[#2D5F4F] hover:text-[#255040] hover:underline transition-colors">
                   Where to Stay in Telluride
                 </a>
               </li>
@@ -196,6 +218,55 @@ const categoryName = data.category.replace(/-/g, ' ');
           </div>
         </aside>
       </div>
+
+      <!-- Newsletter CTA Section -->
+      <div class="max-w-[600px] mx-auto my-16">
+        <div class="bg-[#2D5F4F] rounded-xl p-12 text-center">
+          <svg class="w-12 h-12 text-white mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+          </svg>
+          <h3 
+            class="text-2xl md:text-3xl font-bold text-white mb-2"
+            style="font-family: 'Playfair Display', serif;"
+          >
+            Get Telluride travel tips in your inbox
+          </h3>
+          <p class="text-base text-white/90 mb-6">
+            Weekly guides, hotel deals, and insider recommendations
+          </p>
+          <form class="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
+            <input
+              type="email"
+              placeholder="Your email"
+              class="flex-1 h-12 px-4 rounded-lg border-0 focus:outline-none focus:ring-2 focus:ring-white/50"
+              required
+            />
+            <button
+              type="submit"
+              class="h-12 px-8 bg-[#C87859] text-white font-semibold rounded-lg hover:bg-[#B8694A] transition-colors whitespace-nowrap"
+            >
+              Subscribe
+            </button>
+          </form>
+          <p class="text-xs text-white/70 mt-4">
+            No spam. Unsubscribe anytime.
+          </p>
+        </div>
+      </div>
+
+      <!-- Related Articles -->
+      {relatedArticles.length > 0 && (
+        <div class="bg-[#F8F9F8] py-20 -mx-4 px-4">
+          <Container>
+            <RelatedArticles
+              client:load
+              articles={relatedArticles}
+              currentSlug={article.slug}
+              maxArticles={3}
+            />
+          </Container>
+        </div>
+      )}
     </Container>
   </article>
 

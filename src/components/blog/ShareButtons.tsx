@@ -27,15 +27,15 @@ export default function ShareButtons({ url, title, description }: ShareButtonsPr
   };
 
   return (
-    <div className="flex items-center gap-3">
-      <span className="text-sm font-medium text-gray-700">Share:</span>
-      
+    <div className="flex flex-col items-center gap-3">
+      <span className="text-sm font-medium text-[#666] whitespace-nowrap">Share this article</span>
+      <div className="flex items-center gap-3 flex-wrap justify-center">
       <a
         href={shareUrls.twitter}
         target="_blank"
         rel="noopener noreferrer"
-        className="flex h-9 w-9 items-center justify-center rounded-full bg-gray-100 text-gray-700 transition-colors hover:bg-blue-500 hover:text-white"
-        aria-label="Share on Twitter"
+        className="flex h-11 w-11 items-center justify-center rounded-lg bg-[#E8F2ED] text-[#2D5F4F] transition-all hover:bg-[#2D5F4F] hover:text-white hover:shadow-md"
+        aria-label="Share on X (Twitter)"
       >
         <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
           <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
@@ -46,7 +46,7 @@ export default function ShareButtons({ url, title, description }: ShareButtonsPr
         href={shareUrls.facebook}
         target="_blank"
         rel="noopener noreferrer"
-        className="flex h-9 w-9 items-center justify-center rounded-full bg-gray-100 text-gray-700 transition-colors hover:bg-blue-600 hover:text-white"
+        className="flex h-11 w-11 items-center justify-center rounded-lg bg-[#E8F2ED] text-[#2D5F4F] transition-all hover:bg-[#2D5F4F] hover:text-white hover:shadow-md"
         aria-label="Share on Facebook"
       >
         <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
@@ -58,7 +58,7 @@ export default function ShareButtons({ url, title, description }: ShareButtonsPr
         href={shareUrls.linkedin}
         target="_blank"
         rel="noopener noreferrer"
-        className="flex h-9 w-9 items-center justify-center rounded-full bg-gray-100 text-gray-700 transition-colors hover:bg-blue-700 hover:text-white"
+        className="flex h-11 w-11 items-center justify-center rounded-lg bg-[#E8F2ED] text-[#2D5F4F] transition-all hover:bg-[#2D5F4F] hover:text-white hover:shadow-md"
         aria-label="Share on LinkedIn"
       >
         <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
@@ -70,7 +70,7 @@ export default function ShareButtons({ url, title, description }: ShareButtonsPr
         href={shareUrls.pinterest}
         target="_blank"
         rel="noopener noreferrer"
-        className="flex h-9 w-9 items-center justify-center rounded-full bg-gray-100 text-gray-700 transition-colors hover:bg-red-600 hover:text-white"
+        className="flex h-11 w-11 items-center justify-center rounded-lg bg-[#E8F2ED] text-[#2D5F4F] transition-all hover:bg-[#2D5F4F] hover:text-white hover:shadow-md"
         aria-label="Share on Pinterest"
       >
         <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
@@ -80,19 +80,21 @@ export default function ShareButtons({ url, title, description }: ShareButtonsPr
 
       <button
         onClick={copyToClipboard}
-        className="flex h-9 w-9 items-center justify-center rounded-full bg-gray-100 text-gray-700 transition-colors hover:bg-gray-800 hover:text-white"
+        className="flex h-11 w-11 items-center justify-center rounded-lg bg-[#E8F2ED] text-[#2D5F4F] transition-all hover:bg-[#2D5F4F] hover:text-white hover:shadow-md relative"
         aria-label="Copy link"
+        title={copied ? 'Copied!' : 'Copy link'}
       >
         {copied ? (
-          <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
           </svg>
         ) : (
-          <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
           </svg>
         )}
       </button>
+      </div>
     </div>
   );
 }
