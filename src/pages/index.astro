@@ -361,18 +361,22 @@ try {
     </section>
 
     <!-- Local Information Widgets -->
-    <section class="mb-20">
-      <div class="text-center mb-12">
-        <h2 class="text-display-sm lg:text-display-md mb-6 text-neutral-900 font-extrabold">Plan Your Visit</h2>
-        <p class="text-lg lg:text-xl text-neutral-600 max-w-2xl mx-auto leading-relaxed">
-          Everything you need to know about visiting Telluride
-        </p>
-      </div>
-      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <GondolaWidget client:visible />
-        <EventsWidget client:visible />
-        <AirQualityWidget client:visible />
-      </div>
+    <section class="py-20 lg:py-20">
+      <Container>
+        <div class="max-w-[1400px] mx-auto">
+          <div class="text-center mb-12">
+            <h2 class="text-display-sm lg:text-display-md mb-6 text-neutral-900 font-extrabold">Plan Your Visit</h2>
+            <p class="text-lg lg:text-xl text-neutral-600 max-w-2xl mx-auto leading-relaxed">
+              Everything you need to know about visiting Telluride
+            </p>
+          </div>
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6 lg:gap-8">
+            <GondolaWidget client:visible />
+            <EventsWidget client:visible />
+            <AirQualityWidget client:visible />
+          </div>
+        </div>
+      </Container>
     </section>
 
     <!-- Why Choose Us Section -->
