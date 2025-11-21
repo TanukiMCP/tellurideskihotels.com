@@ -58,7 +58,10 @@ const { session = null } = Astro.props as HeaderProps;
           About
           <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-primary-600 group-hover:w-full transition-all duration-300"></span>
         </a>
-        <CartIcon client:load />
+      </nav>
+
+      {/* Right side: Cart and Auth */}
+      <div class="hidden lg:flex items-center gap-4">
         {session ? (
           <a href="/account" class="flex items-center gap-2 text-neutral-700 hover:text-primary-600 font-semibold transition-colors duration-200">
             {session.user.image ? (
@@ -90,7 +93,8 @@ const { session = null } = Astro.props as HeaderProps;
             </a>
           </>
         )}
-      </nav>
+        <CartIcon client:load />
+      </div>
 
       {/* Cart Icon (Mobile) */}
       <div class="lg:hidden">
