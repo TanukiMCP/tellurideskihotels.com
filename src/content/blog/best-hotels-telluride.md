@@ -1,6 +1,6 @@
 ---
 title: "Best Hotels in Telluride: Where Luxury Meets the San Juan Mountains"
-metaDescription: "Discover Telluride's best hotels: ski-in/ski-out luxury to historic boutiques. Expert picks for every budget and style."
+metaDescription: "Discover Telluride's finest hotels, from ski-in/ski-out luxury to historic boutique properties. Expert recommendations for every budget."
 excerpt: "From legendary ski-in/ski-out resorts to intimate boutique properties, find the perfect Telluride hotel for your mountain getaway."
 author: "Telluride Ski Hotels Team"
 publishDate: 2024-01-15
