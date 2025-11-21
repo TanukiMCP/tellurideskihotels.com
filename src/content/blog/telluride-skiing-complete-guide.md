@@ -1,53 +1,38 @@
 ---
-{
-  "id": "telluride-skiing-complete-guide",
-  "title": "Telluride Skiing: Complete Guide for All Skill Levels (2025)",
-  "slug": "telluride-skiing-complete-guide",
-  "status": "published",
-  "category": "ski-guides",
-  "author": "Telluride Ski Hotels Team",
-  "publishDate": "2025-11-10T02:00:00Z",
-  "updatedDate": "2025-11-14T08:08:18.567Z",
-  "seo": {
-    "metaTitle": "Telluride Skiing Guide 2025 | Tips for All Levels",
-    "metaDescription": "Complete Telluride skiing guide: beginner tips, intermediate progression, expert terrain strategies, altitude management, equipment, and lessons.",
-    "keywords": [
-      "telluride skiing",
-      "skiing telluride",
-      "telluride ski tips",
-      "telluride beginner skiing",
-      "telluride expert skiing"
-    ],
-    "canonical": "https://tellurideskihotels.com/blog/ski-guides/telluride-skiing-complete-guide"
-  },
-  "featured": true,
-  "featuredImage": "https://images.pexels.com/photos/2405649/pexels-photo-2405649.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
-  "featuredImageAlt": "Skier navigating deep powder snow at Telluride with mountain peaks in background",
-  "excerpt": "Everything you need to ski Telluride successfully: ability-specific strategies, altitude management, equipment recommendations, lesson options, safety tips, and insider techniques.",
-  "wordCount": 3400,
-  "readingTime": 17,
-  "relatedHotels": [
-    "madeline-hotel",
-    "peaks-resort",
-    "lumiere-telluride",
-    "hotel-telluride"
-  ],
-  "relatedArticles": [
-    "telluride-ski-resort-guide",
-    "telluride-ski-season-guide",
-    "best-hotels-telluride"
-  ],
-  "tags": [
-    "skiing",
-    "ski tips",
-    "beginner skiing",
-    "expert skiing",
-    "altitude"
-  ],
-  "seasonalRelevance": [
-    "winter"
-  ]
-}
+id: "telluride-skiing-complete-guide"
+title: "Telluride Skiing: Complete Guide for All Skill Levels (2025)"
+status: "published"
+category: "ski-guides"
+author: "Telluride Ski Hotels Team"
+publishDate: 2025-11-10
+updatedDate: 2025-11-21
+seo:
+  metaTitle: "Telluride Skiing Guide 2025 | Tips for All Levels"
+  metaDescription: "Complete Telluride skiing guide: beginner tips, intermediate progression, expert terrain strategies, altitude management, equipment, and lessons."
+  keywords:
+    - "telluride skiing"
+    - "skiing telluride"
+    - "telluride ski tips"
+    - "telluride beginner skiing"
+    - "telluride expert skiing"
+  canonical: "https://tellurideskihotels.com/blog/ski-guides/telluride-skiing-complete-guide"
+featured: true
+featuredImage: "https://images.pexels.com/photos/2405649/pexels-photo-2405649.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
+featuredImageAlt: "Skier navigating deep powder snow at Telluride with mountain peaks in background"
+excerpt: "Everything you need to ski Telluride successfully: ability-specific strategies, altitude management, equipment recommendations, lesson options, safety tips, and insider techniques."
+wordCount: 3404
+readingTime: 18
+relatedHotels:
+  - "madeline-hotel"
+  - "peaks-resort"
+  - "lumiere-telluride"
+  - "hotel-telluride"
+relatedArticles:
+  - "telluride-ski-resort-guide"
+  - "telluride-ski-season-guide"
+  - "best-hotels-telluride"
+tags: ["skiing", "ski tips", "beginner skiing", "expert skiing", "altitude"]
+seasonalRelevance: ["winter"]
 ---
 
 # Telluride Skiing: Complete Guide for All Skill Levels (2025)

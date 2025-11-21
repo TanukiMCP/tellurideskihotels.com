@@ -1,13 +1,28 @@
 ---
+id: "things-to-do-telluride"
 title: "Things to Do in Telluride: Beyond Skiing in Colorado's Box Canyon"
-metaDescription: "Discover Telluride's best activities year-round: hiking, festivals, gondola rides, hot springs, dining, and mountain adventures beyond the slopes."
-excerpt: "From world-class festivals to alpine hiking and Victorian downtown charm, explore Telluride's diverse activities across all seasons."
+status: "published"
+category: "activity-guides"
 author: "Telluride Ski Hotels Team"
 publishDate: 2024-02-15
-category: "Activities"
-tags: ["activities", "hiking", "festivals", "summer", "year-round"]
+updatedDate: 2025-11-21
+seo:
+  metaTitle: "Things to Do in Telluride | Year-Round Guide"
+  metaDescription: "Discover Telluride's best activities year-round: hiking, festivals, gondola rides, hot springs, dining, and mountain adventures beyond the slopes."
+  keywords:
+    - "things to do in telluride"
+    - "telluride activities"
+    - "telluride festivals"
+    - "telluride hiking"
+    - "telluride gondola"
 featured: true
-image: "https://images.pexels.com/photos/29991568/pexels-photo-29991568.jpeg?auto=compress&cs=tinysrgb&h=350"
+featuredImage: "https://images.pexels.com/photos/29991568/pexels-photo-29991568.jpeg?auto=compress&cs=tinysrgb&h=350"
+featuredImageAlt: "View of downtown Telluride with gondola and surrounding peaks"
+excerpt: "From world-class festivals to alpine hiking and Victorian downtown charm, explore Telluride's diverse activities across all seasons."
+wordCount: 2363
+readingTime: 12
+tags: ["activities", "hiking", "festivals", "summer", "year-round"]
+seasonalRelevance: ["winter", "spring", "summer", "fall"]
 ---
 
 Telluride's identity extends far beyond its reputation as a challenging ski destination. This box canyon town of 2,600 permanent residents hosts world-class film and music festivals, provides access to hundreds of miles of alpine trails, operates North America's only free public gondola, and maintains a Victorian downtown that feels authentically preserved rather than theme-park manufactured. The combination creates a year-round destination where you'll find compelling activities regardless of season, weather, or whether you even ski.

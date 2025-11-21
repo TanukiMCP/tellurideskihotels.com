@@ -1,13 +1,28 @@
 ---
+id: "telluride-weather-guide"
 title: "Telluride Weather Guide: Month-by-Month Climate and Packing Tips"
-metaDescription: "Plan your Telluride trip with accurate weather data, monthly climate patterns, essential packing advice, and seasonal tips for every season."
-excerpt: "Navigate Telluride's high-elevation climate with month-by-month weather breakdowns and practical packing guidance for year-round visits."
+status: "published"
+category: "seasonal-guides"
 author: "Telluride Ski Hotels Team"
 publishDate: 2024-03-05
-category: "Planning"
-tags: ["weather", "climate", "packing", "seasons", "planning"]
+updatedDate: 2025-11-21
+seo:
+  metaTitle: "Telluride Weather Guide | Monthly Climate & Packing"
+  metaDescription: "Plan your Telluride trip with accurate weather data, monthly climate patterns, essential packing advice, and seasonal tips for every season."
+  keywords:
+    - "telluride weather"
+    - "telluride climate"
+    - "telluride packing list"
+    - "telluride monthly weather"
+    - "telluride seasons"
 featured: false
-image: "https://images.pexels.com/photos/29991568/pexels-photo-29991568.jpeg?auto=compress&cs=tinysrgb&h=350"
+featuredImage: "https://images.pexels.com/photos/29991568/pexels-photo-29991568.jpeg?auto=compress&cs=tinysrgb&h=350"
+featuredImageAlt: "Telluride valley under mixed sun and clouds highlighting seasonal weather"
+excerpt: "Navigate Telluride's high-elevation climate with month-by-month weather breakdowns and practical packing guidance for year-round visits."
+wordCount: 1998
+readingTime: 10
+tags: ["weather", "climate", "packing", "seasons", "planning"]
+seasonalRelevance: ["winter", "spring", "summer", "fall"]
 ---
 
 Telluride's high-elevation location at 8,750 feet creates a mountain climate with cold snowy winters, mild summers, and dramatic daily temperature swings year-round. Understanding these weather patterns is essential for packing appropriately, timing your visit, and planning activities that match conditions. The difference between a comfortable trip and a miserable one often comes down to bringing the right clothing and setting realistic expectations for what weather you'll encounter.

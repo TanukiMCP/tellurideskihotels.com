@@ -1,51 +1,37 @@
 ---
-{
-  "id": "telluride-ski-season-guide",
-  "title": "Telluride Ski Season: When to Visit & What to Expect (2025)",
-  "slug": "telluride-ski-season-guide",
-  "status": "published",
-  "category": "planning-tips",
-  "author": "Telluride Ski Hotels Team",
-  "publishDate": "2025-11-12T15:00:00Z",
-  "seo": {
-    "metaTitle": "Telluride Ski Season Guide 2024-2025 | Best Times to Visit",
-    "metaDescription": "Complete Telluride ski season guide: opening/closing dates, monthly snow conditions, crowd levels, pricing, and insider tips for your trips.",
-    "keywords": [
-      "telluride ski season",
-      "when to ski telluride",
-      "telluride snow conditions",
-      "best time to visit telluride",
-      "telluride season dates"
-    ],
-    "canonical": "https://tellurideskihotels.com/blog/hotel-reviews/telluride-ski-season-guide"
-  },
-  "featured": false,
-  "featuredImage": "https://images.pexels.com/photos/15232505/pexels-photo-15232505.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
-  "featuredImageAlt": "Telluride ski season showing fresh powder and skiers on mountain slopes",
-  "excerpt": "Everything about Telluride's ski season: opening and closing dates, monthly conditions, crowd patterns, pricing, snow totals, and the best times to visit for powder, value, or avoiding crowds.",
-  "wordCount": 2800,
-  "readingTime": 14,
-  "relatedHotels": [
-    "madeline-hotel",
-    "peaks-resort",
-    "hotel-telluride"
-  ],
-  "relatedArticles": [
-    "telluride-ski-resort-guide",
-    "best-hotels-telluride",
-    "things-to-do-telluride"
-  ],
-  "tags": [
-    "ski season",
-    "timing",
-    "snow conditions",
-    "planning"
-  ],
-  "seasonalRelevance": [
-    "winter"
-  ],
-  "updatedDate": "2025-11-14T08:08:18.570Z"
-}
+id: "telluride-ski-season-guide"
+title: "Telluride Ski Season: When to Visit & What to Expect (2025)"
+status: "published"
+category: "seasonal-guides"
+author: "Telluride Ski Hotels Team"
+publishDate: 2025-11-12
+updatedDate: 2025-11-21
+seo:
+  metaTitle: "Telluride Ski Season Guide 2024-2025 | Best Times to Visit"
+  metaDescription: "Complete Telluride ski season guide: opening/closing dates, monthly snow conditions, crowd levels, pricing, and insider tips for your trips."
+  keywords:
+    - "telluride ski season"
+    - "when to ski telluride"
+    - "telluride snow conditions"
+    - "best time to visit telluride"
+    - "telluride season dates"
+  canonical: "https://tellurideskihotels.com/blog/hotel-reviews/telluride-ski-season-guide"
+featured: false
+featuredImage: "https://images.pexels.com/photos/15232505/pexels-photo-15232505.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
+featuredImageAlt: "Telluride ski slopes with fresh powder and skiers under blue skies"
+excerpt: "Everything about Telluride's ski season: opening and closing dates, monthly conditions, crowd patterns, pricing, snow totals, and the best times to visit for powder, value, or avoiding crowds."
+wordCount: 3245
+readingTime: 17
+relatedHotels:
+  - "madeline-hotel"
+  - "peaks-resort"
+  - "hotel-telluride"
+relatedArticles:
+  - "telluride-ski-resort-guide"
+  - "best-hotels-telluride"
+  - "things-to-do-telluride"
+tags: ["ski season", "timing", "snow conditions", "planning"]
+seasonalRelevance: ["winter"]
 ---
 
 # Telluride Ski Season: When to Visit & What to Expect (2025)

@@ -1,13 +1,28 @@
 ---
+id: "front-range-telluride-weekend"
 title: "Front Range to Telluride Weekend Getaway: Complete Planning Guide"
-metaDescription: "Plan the perfect weekend escape from Denver or Colorado Springs to Telluride with drive strategies, detailed itineraries, and local insider tips."
-excerpt: "Master the Front Range to Telluride weekend trip with realistic timing, efficient itineraries, and strategies for maximizing your short mountain escape."
+status: "published"
+category: "planning-tips"
 author: "Telluride Ski Hotels Team"
 publishDate: 2024-02-25
-category: "Planning"
-tags: ["weekend trip", "front range", "itinerary", "denver", "colorado springs"]
+updatedDate: 2025-11-21
+seo:
+  metaTitle: "Front Range to Telluride | Weekend Planning Guide"
+  metaDescription: "Plan the perfect weekend escape from Denver or Colorado Springs to Telluride with drive strategies, detailed itineraries, and local insider tips."
+  keywords:
+    - "front range to telluride"
+    - "telluride weekend trip"
+    - "denver weekend getaway"
+    - "telluride itinerary"
+    - "colorado springs to telluride"
 featured: false
-image: "https://images.pexels.com/photos/29991568/pexels-photo-29991568.jpeg?auto=compress&cs=tinysrgb&h=350"
+featuredImage: "https://images.pexels.com/photos/29991568/pexels-photo-29991568.jpeg?auto=compress&cs=tinysrgb&h=350"
+featuredImageAlt: "Weekend travelers driving toward Telluride's sunlit peaks"
+excerpt: "Master the Front Range to Telluride weekend trip with realistic timing, efficient itineraries, and strategies for maximizing your short mountain escape."
+wordCount: 2221
+readingTime: 12
+tags: ["weekend trip", "front range", "itinerary", "denver", "colorado springs"]
+seasonalRelevance: ["winter", "spring", "summer", "fall"]
 ---
 
 Living on Colorado's Front Range means you're spoiled with mountain access, but Telluride—sitting 6-7 hours away in the southwest corner of the state—offers something fundamentally different from the I-70 corridor. You'll find fewer crowds, more dramatic scenery, authentic mountain town character, and world-class skiing or hiking that feels genuinely remote despite being accessible for a weekend.

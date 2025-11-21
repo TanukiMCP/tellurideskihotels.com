@@ -1,13 +1,28 @@
 ---
+id: "telluride-gondola-guide"
 title: "Telluride Gondola Guide: Free Transportation and Spectacular Mountain Views"
-metaDescription: "Master Telluride's free gondola system with operating hours, boarding tips, scenic viewpoints, and insider strategies for this unique mountain transport."
-excerpt: "Navigate Telluride's complimentary gondola connecting downtown to Mountain Village with expert timing advice and scenic viewing tips."
+status: "published"
+category: "activity-guides"
 author: "Telluride Ski Hotels Team"
 publishDate: 2024-02-20
-category: "Planning"
-tags: ["gondola", "transportation", "free activities", "mountain village"]
+updatedDate: 2025-11-21
+seo:
+  metaTitle: "Telluride Gondola Guide | Free Scenic Transit"
+  metaDescription: "Master Telluride's free gondola system with operating hours, boarding tips, scenic viewpoints, and insider strategies for this unique mountain transport."
+  keywords:
+    - "telluride gondola"
+    - "free gondola telluride"
+    - "telluride transportation"
+    - "mountain village gondola"
+    - "telluride scenic ride"
 featured: false
-image: "https://images.pexels.com/photos/22006721/pexels-photo-22006721.jpeg?auto=compress&cs=tinysrgb&h=350"
+featuredImage: "https://images.pexels.com/photos/22006721/pexels-photo-22006721.jpeg?auto=compress&cs=tinysrgb&h=350"
+featuredImageAlt: "Telluride gondola cabin gliding above snowy San Juan Mountains"
+excerpt: "Navigate Telluride's complimentary gondola connecting downtown to Mountain Village with expert timing advice and scenic viewing tips."
+wordCount: 1882
+readingTime: 10
+tags: ["gondola", "transportation", "free activities", "mountain village"]
+seasonalRelevance: ["winter", "spring", "summer", "fall"]
 ---
 
 Telluride's free gondola represents North America's only complimentary public aerial transportation system, connecting historic downtown Telluride at 8,750 feet to Mountain Village at 9,500 feet across 1,700 vertical feet of spectacular San Juan Mountain scenery. This isn't just transportation—it's a 13-minute scenic experience that eliminates the need for cars between the two base areas while providing views that rival any paid attraction.

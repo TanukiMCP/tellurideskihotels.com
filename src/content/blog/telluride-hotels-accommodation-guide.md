@@ -1,54 +1,39 @@
 ---
-{
-  "id": "telluride-hotels-accommodation-guide",
-  "title": "Telluride Hotels: Complete Accommodation Guide (2025)",
-  "slug": "telluride-hotels-accommodation-guide",
-  "status": "published",
-  "category": "hotel-reviews",
-  "author": "Telluride Ski Hotels Team",
-  "publishDate": "2025-11-10T15:00:00Z",
-  "seo": {
-    "metaTitle": "Telluride Hotels Guide 2025 | Best Accommodations",
-    "metaDescription": "Complete guide to Telluride hotels: ski-in/ski-out properties, downtown boutiques, luxury resorts, budget options, and expert booking strategies.",
-    "keywords": [
-      "telluride hotels",
-      "telluride accommodations",
-      "telluride lodging",
-      "hotels in telluride",
-      "telluride colorado hotels"
-    ],
-    "canonical": "https://tellurideskihotels.com/blog/hotel-reviews/telluride-hotels-accommodation-guide"
-  },
-  "featured": false,
-  "featuredImage": "https://images.pexels.com/photos/16178910/pexels-photo-16178910.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
-  "featuredImageAlt": "Telluride hotels overview showing luxury mountain properties and downtown Victorian buildings",
-  "excerpt": "Everything you need to know about Telluride hotels: property types, neighborhoods, pricing, amenities, and expert tips for finding your ideal mountain accommodation.",
-  "wordCount": 2900,
-  "readingTime": 15,
-  "relatedHotels": [
-    "madeline-hotel",
-    "peaks-resort",
-    "hotel-telluride",
-    "new-sheridan-hotel",
-    "lumiere-telluride"
-  ],
-  "relatedArticles": [
-    "best-hotels-telluride",
-    "telluride-ski-season-guide",
-    "things-to-do-telluride"
-  ],
-  "tags": [
-    "hotels",
-    "lodging",
-    "accommodations",
-    "booking"
-  ],
-  "seasonalRelevance": [
-    "winter",
-    "summer"
-  ],
-  "updatedDate": "2025-11-14T08:08:18.567Z"
-}
+id: "telluride-hotels-accommodation-guide"
+title: "Telluride Hotels: Complete Accommodation Guide (2025)"
+status: "published"
+category: "hotel-reviews"
+author: "Telluride Ski Hotels Team"
+publishDate: 2025-11-10
+updatedDate: 2025-11-21
+seo:
+  metaTitle: "Telluride Hotels Guide 2025 | Best Accommodations"
+  metaDescription: "Complete guide to Telluride hotels: ski-in/ski-out properties, downtown boutiques, luxury resorts, budget options, and expert booking strategies."
+  keywords:
+    - "telluride hotels"
+    - "telluride accommodations"
+    - "telluride lodging"
+    - "hotels in telluride"
+    - "telluride colorado hotels"
+  canonical: "https://tellurideskihotels.com/blog/hotel-reviews/telluride-hotels-accommodation-guide"
+featured: false
+featuredImage: "https://images.pexels.com/photos/16178910/pexels-photo-16178910.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
+featuredImageAlt: "Telluride hotels overview showing luxury mountain properties and downtown Victorian buildings"
+excerpt: "Everything you need to know about Telluride hotels: property types, neighborhoods, pricing, amenities, and expert tips for finding your ideal mountain accommodation."
+wordCount: 3250
+readingTime: 17
+relatedHotels:
+  - "madeline-hotel"
+  - "peaks-resort"
+  - "hotel-telluride"
+  - "new-sheridan-hotel"
+  - "lumiere-telluride"
+relatedArticles:
+  - "best-hotels-telluride"
+  - "telluride-ski-season-guide"
+  - "things-to-do-telluride"
+tags: ["hotels", "lodging", "accommodations", "booking"]
+seasonalRelevance: ["winter", "spring", "summer", "fall"]
 ---
 
 # Telluride Hotels: Complete Accommodation Guide (2025)

@@ -1,54 +1,39 @@
 ---
-{
-  "id": "telluride-ski-hotel-insider-guide",
-  "title": "Telluride Ski Hotel Insider's Guide: Which Hotel for Which Skier",
-  "slug": "telluride-ski-hotel-insider-guide",
-  "status": "published",
-  "category": "hotel-reviews",
-  "author": "Telluride Ski Hotels Team",
-  "publishDate": "2025-11-19T15:00:00Z",
-  "seo": {
-    "metaTitle": "Telluride Ski Hotel Insider's Guide: Match Your Skiing Style",
-    "metaDescription": "Find the perfect Telluride ski hotel for your skiing style. Expert recommendations for powder hounds, cruisers, families, beginners, and luxury seekers.",
-    "keywords": [
-      "telluride ski hotels",
-      "best hotel for skiers",
-      "ski accommodation guide",
-      "telluride lodging by skier type",
-      "where to stay telluride skiing"
-    ],
-    "canonical": "https://tellurideskihotels.com/blog/hotel-reviews/telluride-ski-hotel-insider-guide"
-  },
-  "featured": true,
-  "featuredImage": "https://images.pexels.com/photos/2405649/pexels-photo-2405649.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
-  "featuredImageAlt": "Skier enjoying powder skiing at Telluride with hotel recommendations for different skiing styles",
-  "excerpt": "Not all Telluride ski hotels suit all skiers. Expert guide matching powder hounds, cruisers, families, beginners, and luxury seekers with ideal accommodations.",
-  "wordCount": 3200,
-  "readingTime": 16,
-  "relatedHotels": [
-    "madeline-hotel",
-    "peaks-resort",
-    "hotel-telluride",
-    "lumiere-telluride",
-    "inn-lost-creek"
-  ],
-  "relatedArticles": [
-    "best-hotels-telluride",
-    "telluride-skiing-guide",
-    "telluride-ski-resort-guide"
-  ],
-  "tags": [
-    "ski hotels",
-    "skiing styles",
-    "accommodation guide",
-    "expert tips",
-    "telluride"
-  ],
-  "seasonalRelevance": [
-    "winter"
-  ],
-  "updatedDate": "2025-11-20T14:09:56.805Z"
-}
+id: "telluride-ski-hotel-insider-guide"
+title: "Telluride Ski Hotel Insider's Guide: Which Hotel for Which Skier"
+status: "published"
+category: "hotel-reviews"
+author: "Telluride Ski Hotels Team"
+publishDate: 2025-11-19
+updatedDate: 2025-11-21
+seo:
+  metaTitle: "Telluride Ski Hotel Insider's Guide: Match Your Skiing Style"
+  metaDescription: "Find the perfect Telluride ski hotel for your skiing style. Expert recommendations for powder hounds, cruisers, families, beginners, and luxury seekers."
+  keywords:
+    - "telluride ski hotels"
+    - "best hotel for skiers"
+    - "ski accommodation guide"
+    - "telluride lodging by skier type"
+    - "where to stay telluride skiing"
+  canonical: "https://tellurideskihotels.com/blog/hotel-reviews/telluride-ski-hotel-insider-guide"
+featured: true
+featuredImage: "https://images.pexels.com/photos/2405649/pexels-photo-2405649.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
+featuredImageAlt: "Skier carving fresh powder above Telluride with ski-in ski-out hotels below"
+excerpt: "Not all Telluride ski hotels suit all skiers. Expert guide matching powder hounds, cruisers, families, beginners, and luxury seekers with ideal accommodations."
+wordCount: 3142
+readingTime: 16
+relatedHotels:
+  - "madeline-hotel"
+  - "peaks-resort"
+  - "hotel-telluride"
+  - "lumiere-telluride"
+  - "inn-lost-creek"
+relatedArticles:
+  - "best-hotels-telluride"
+  - "telluride-skiing-guide"
+  - "telluride-ski-resort-guide"
+tags: ["ski hotels", "skiing styles", "accommodation guide", "expert tips", "telluride"]
+seasonalRelevance: ["winter"]
 ---
 
 # Telluride Ski Hotel Insider's Guide: Which Hotel for Which Skier

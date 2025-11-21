@@ -1,13 +1,28 @@
 ---
-title: "Complete Guide to Telluride: Everything You Need to Know for Your Mountain Escape"
-metaDescription: "Master Telluride with insider knowledge on skiing, hotels, dining, activities, and timing. Complete planning guide for Colorado's most authentic mountain ski town."
-excerpt: "From skiing 2,000 acres to summer festivals, navigate Telluride like a local with this comprehensive guide to Colorado's box canyon gem."
+id: "complete-guide-telluride"
+title: "Complete Guide to Telluride: Everything You Need for Your Mountain Escape"
+status: "published"
+category: "destination-guides"
 author: "Telluride Ski Hotels Team"
 publishDate: 2024-01-25
-category: "Planning"
-tags: ["destination guide", "ski resort", "travel planning", "colorado"]
+updatedDate: 2025-11-21
+seo:
+  metaTitle: "Complete Telluride Guide | Plan the Ultimate Trip"
+  metaDescription: "Master Telluride with insider knowledge on skiing, hotels, dining, activities, and timing. Complete planning guide for Colorado's authentic mountain ski town."
+  keywords:
+    - "telluride guide"
+    - "telluride travel planning"
+    - "telluride hotels"
+    - "telluride skiing tips"
+    - "telluride itinerary"
 featured: true
-image: "https://images.pexels.com/photos/30151209/pexels-photo-30151209.jpeg?auto=compress&cs=tinysrgb&h=350"
+featuredImage: "https://images.pexels.com/photos/30151209/pexels-photo-30151209.jpeg?auto=compress&cs=tinysrgb&h=350"
+featuredImageAlt: "Downtown Telluride with snowcapped peaks surrounding the box canyon"
+excerpt: "From skiing 2,000 acres to summer festivals, navigate Telluride like a local with this comprehensive guide to Colorado's box canyon gem."
+wordCount: 3074
+readingTime: 16
+tags: ["destination guide", "ski resort", "travel planning", "colorado"]
+seasonalRelevance: ["winter", "spring", "summer", "fall"]
 ---
 
 Telluride occupies a box canyon at 8,750 feet elevation in Colorado's San Juan Mountains, surrounded on three sides by 13,000-foot peaks that create one of skiing's most dramatic settings. This former mining town has evolved into a world-class ski destination without sacrificing the authentic mountain character that makes it special. You won't find the sprawling development of Vail or the celebrity scene of Aspen—instead, Telluride delivers challenging terrain, manageable crowds, and a Victorian downtown that feels genuinely preserved rather than theme-park manufactured.
