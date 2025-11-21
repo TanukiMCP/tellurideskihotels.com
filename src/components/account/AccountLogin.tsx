@@ -59,31 +59,11 @@ export function AccountLogin({ redirectTo = '/account' }: AccountLoginProps) {
     }
   };
 
-  const handleOAuthLogin = async () => {
+  const handleOAuthLogin = (provider: 'google' | 'apple') => {
     const currentPath = typeof window !== 'undefined' ? window.location.pathname : redirectTo;
     const state = encodeURIComponent(redirectTo || currentPath);
-    
-    try {
-      // Check if OAuth is configured by making a request first
-      const response = await fetch(`/api/auth/oauth/google?state=${state}`, {
-        method: 'GET',
-        redirect: 'manual',
-      });
-      
-      if (response.status === 503) {
-        // OAuth not configured - show error
-        const data = await response.json().catch(() => ({}));
-        setError(data.error?.message || 'Google OAuth is not configured. Please use email sign-in instead.');
-        return;
-      }
-      
-      // For any non-503 response, follow the actual redirect
-      window.location.href = `/api/auth/oauth/google?state=${state}`;
-    } catch (err) {
-      // If fetch fails, try direct redirect as fallback
-      console.error('OAuth google error:', err);
-      window.location.href = `/api/auth/oauth/google?state=${state}`;
-    }
+    // Simply redirect to the OAuth endpoint - let the server handle the flow
+    window.location.href = `/api/auth/oauth/${provider}?state=${state}`;
   };
 
   return (
@@ -100,7 +80,7 @@ export function AccountLogin({ redirectTo = '/account' }: AccountLoginProps) {
         <div className="mb-6">
           <button
             type="button"
-            onClick={handleOAuthLogin}
+            onClick={() => handleOAuthLogin('google')}
             className="w-full flex items-center justify-center gap-3 px-4 py-3 border-2 border-neutral-300 rounded-xl font-semibold text-neutral-700 hover:border-neutral-400 hover:bg-neutral-50 transition-all"
           >
             <svg className="w-5 h-5" viewBox="0 0 24 24">

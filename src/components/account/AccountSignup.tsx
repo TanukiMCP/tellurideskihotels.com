@@ -47,28 +47,9 @@ export function AccountSignup() {
     }
   };
 
-  const handleOAuthSignup = async () => {
-    try {
-      // Check if OAuth is configured by making a request first
-      const response = await fetch(`/api/auth/oauth/google?state=${encodeURIComponent('/account')}`, {
-        method: 'GET',
-        redirect: 'manual',
-      });
-      
-      if (response.status === 503) {
-        // OAuth not configured - show error
-        const data = await response.json().catch(() => ({}));
-        setError(data.error?.message || 'Google OAuth is not configured. Please use email sign-up instead.');
-        return;
-      }
-      
-      // If we get any non-503 response, proceed with the actual redirect
-      window.location.href = `/api/auth/oauth/google?state=${encodeURIComponent('/account')}`;
-    } catch (err) {
-      // If fetch fails, try direct redirect as fallback
-      console.error('OAuth google error:', err);
-      window.location.href = `/api/auth/oauth/google?state=${encodeURIComponent('/account')}`;
-    }
+  const handleOAuthSignup = (provider: 'google' | 'apple') => {
+    // Simply redirect to the OAuth endpoint - let the server handle the flow
+    window.location.href = `/api/auth/oauth/${provider}?state=${encodeURIComponent('/account')}`;
   };
 
   return (
@@ -86,7 +67,7 @@ export function AccountSignup() {
         <div className="mb-6">
           <button
             type="button"
-            onClick={handleOAuthSignup}
+            onClick={() => handleOAuthSignup('google')}
             className="w-full flex items-center justify-center gap-3 px-4 py-3 border-2 border-neutral-300 rounded-xl font-semibold text-neutral-700 hover:border-neutral-400 hover:bg-neutral-50 transition-all"
           >
             <svg className="w-5 h-5" viewBox="0 0 24 24">
