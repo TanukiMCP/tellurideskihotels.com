@@ -14,6 +14,7 @@ function ExperienceSearchWidgetContent({ onExperienceSelect }: ExperienceSearchW
   const [allExperiences, setAllExperiences] = useState<(ViatorProduct & { categories?: TellurideExperienceCategory[] })[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [categoriesLoaded, setCategoriesLoaded] = useState(false);
   
   const [selectedCategories, setSelectedCategories] = useState<TellurideExperienceCategory[]>([]);
   const [sortBy, setSortBy] = useState<'price' | 'rating' | 'popularity'>('popularity');
@@ -81,6 +82,7 @@ function ExperienceSearchWidgetContent({ onExperienceSelect }: ExperienceSearchW
             }))
           );
           setAllExperiences(productsWithCategories);
+          setCategoriesLoaded(true);
         } else {
           setError(data.error?.message || 'Failed to load experiences');
         }
@@ -316,30 +318,36 @@ function ExperienceSearchWidgetContent({ onExperienceSelect }: ExperienceSearchW
 
             <div className="space-y-3">
               <h3 className="text-sm font-semibold text-gray-900 uppercase tracking-wide">Activity Type</h3>
-              <div className="space-y-2 max-h-64 overflow-y-auto">
-                {availableCategories.map(({ category, count }) => (
-                  <button
-                    key={category}
-                    onClick={() => toggleCategory(category)}
-                    className={`w-full text-left px-4 py-2.5 rounded-lg border-2 transition-all ${
-                      selectedCategories.includes(category)
-                        ? 'bg-primary-50 border-primary-500 text-primary-900 font-semibold'
-                        : 'bg-white border-gray-200 text-gray-700 hover:border-primary-300 hover:bg-primary-50'
-                    }`}
-                  >
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm">{getCategoryLabel(category)}</span>
-                      <span className={`text-xs px-2 py-0.5 rounded-full ${
+              {!categoriesLoaded && availableCategories.length === 0 ? (
+                <div className="text-sm text-gray-500 py-4 text-center">Loading categories...</div>
+              ) : availableCategories.length === 0 ? (
+                <div className="text-sm text-gray-500 py-4 text-center">No categories available</div>
+              ) : (
+                <div className="space-y-2 max-h-64 overflow-y-auto">
+                  {availableCategories.map(({ category, count }) => (
+                    <button
+                      key={category}
+                      onClick={() => toggleCategory(category)}
+                      className={`w-full text-left px-4 py-2.5 rounded-lg border-2 transition-all ${
                         selectedCategories.includes(category)
-                          ? 'bg-primary-600 text-white'
-                          : 'bg-gray-100 text-gray-600'
-                      }`}>
-                        {count}
-                      </span>
-                    </div>
-                  </button>
-                ))}
-              </div>
+                          ? 'bg-primary-50 border-primary-500 text-primary-900 font-semibold'
+                          : 'bg-white border-gray-200 text-gray-700 hover:border-primary-300 hover:bg-primary-50'
+                      }`}
+                    >
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm">{getCategoryLabel(category)}</span>
+                        <span className={`text-xs px-2 py-0.5 rounded-full ${
+                          selectedCategories.includes(category)
+                            ? 'bg-primary-600 text-white'
+                            : 'bg-gray-100 text-gray-600'
+                        }`}>
+                          {count}
+                        </span>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
 
             <div className="space-y-3">
