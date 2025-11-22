@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { ActivityCard } from '@/components/activities/ActivityCard';
 import type { ViatorProductSummary } from '@/lib/viator/types';
-import { LoadingSpinner } from '@/components/shared/LoadingSpinner';
 
 interface ActivityShowcaseProps {
   category?: string;
@@ -15,14 +14,10 @@ export function ActivityShowcase({
   title
 }: ActivityShowcaseProps) {
   const [activities, setActivities] = useState<ViatorProductSummary[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     async function fetchActivities() {
       try {
-        setLoading(true);
-        
         const params = new URLSearchParams({
           destination: 'Telluride',
           limit: limit.toString(),
@@ -35,37 +30,23 @@ export function ActivityShowcase({
         const response = await fetch(`/api/viator/search?${params.toString()}`);
         
         if (!response.ok) {
-          throw new Error('Failed to load activities');
+          return; // Silently fail, render nothing
         }
         
         const data = await response.json();
         setActivities(data.products || []);
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to load activities');
-      } finally {
-        setLoading(false);
+        // Silently fail, render nothing
+        console.error('[ActivityShowcase] Error fetching activities:', err);
       }
     }
 
     fetchActivities();
   }, [category, limit]);
 
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center py-12">
-        <LoadingSpinner size="lg" />
-      </div>
-    );
-  }
-
-  if (error || activities.length === 0) {
-    return (
-      <div className="my-8 p-6 bg-neutral-50 border border-neutral-200 rounded-lg">
-        <p className="text-neutral-600 text-center">
-          {error || 'No activities available at this time.'}
-        </p>
-      </div>
-    );
+  // Render nothing if no activities available
+  if (activities.length === 0) {
+    return null;
   }
 
   return (

@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { HotelCard } from '@/components/lodging/HotelCard';
 import { ImageGallery } from '@/components/lodging/ImageGallery';
 import type { LiteAPIHotel } from '@/lib/liteapi/types';
-import { LoadingSpinner } from '@/components/shared/LoadingSpinner';
 
 interface HotelShowcaseProps {
   hotelId: string;
@@ -18,23 +17,19 @@ export function HotelShowcase({
   checkOut 
 }: HotelShowcaseProps) {
   const [hotel, setHotel] = useState<LiteAPIHotel | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     async function fetchHotel() {
+      // Default dates: 1 week out from today, 1 week duration
+      const defaultCheckIn = new Date();
+      defaultCheckIn.setDate(defaultCheckIn.getDate() + 7);
+      const defaultCheckOut = new Date(defaultCheckIn);
+      defaultCheckOut.setDate(defaultCheckOut.getDate() + 7);
+      
+      const checkInDate = checkIn || defaultCheckIn.toISOString().split('T')[0];
+      const checkOutDate = checkOut || defaultCheckOut.toISOString().split('T')[0];
+      
       try {
-        setLoading(true);
-        
-        // Default dates: 1 week out from today, 1 week duration
-        const defaultCheckIn = new Date();
-        defaultCheckIn.setDate(defaultCheckIn.getDate() + 7);
-        const defaultCheckOut = new Date(defaultCheckIn);
-        defaultCheckOut.setDate(defaultCheckOut.getDate() + 7);
-        
-        const checkInDate = checkIn || defaultCheckIn.toISOString().split('T')[0];
-        const checkOutDate = checkOut || defaultCheckOut.toISOString().split('T')[0];
-        
         const params = new URLSearchParams({
           hotelId,
           checkin: checkInDate,
@@ -44,37 +39,23 @@ export function HotelShowcase({
         const response = await fetch(`/api/liteapi/hotel?${params.toString()}`);
         
         if (!response.ok) {
-          throw new Error('Failed to load hotel');
+          return; // Silently fail, render nothing
         }
         
         const data = await response.json();
         setHotel(data);
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to load hotel');
-      } finally {
-        setLoading(false);
+        // Silently fail, render nothing
+        console.error('[HotelShowcase] Error fetching hotel:', err);
       }
     }
 
     fetchHotel();
-  }, [hotelId]);
+  }, [hotelId, checkIn, checkOut]);
 
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center py-12">
-        <LoadingSpinner size="lg" />
-      </div>
-    );
-  }
-
-  if (error || !hotel) {
-    return (
-      <div className="my-8 p-6 bg-neutral-50 border border-neutral-200 rounded-lg">
-        <p className="text-neutral-600 text-center">
-          Unable to load hotel details. Please try again later.
-        </p>
-      </div>
-    );
+  // Render nothing if hotel not available
+  if (!hotel) {
+    return null;
   }
 
   return (
