@@ -289,11 +289,10 @@ export function HotelSplitCalculator({
                 </p>
                 <HotelGrid
                   filter={getBestOption()?.type === 'condo' ? undefined : 'family-friendly'}
-                  limit={6}
+                  limit={3}
                   checkIn={checkIn || format(addDays(new Date(), 7), 'yyyy-MM-dd')}
                   checkOut={checkOut || format(addDays(new Date(), 14), 'yyyy-MM-dd')}
                   title=""
-                  client:load
                 />
               </div>
             )}

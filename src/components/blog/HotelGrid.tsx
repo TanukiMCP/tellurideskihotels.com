@@ -2,9 +2,10 @@ import { useState, useEffect } from 'react';
 import { HotelCard } from '@/components/lodging/HotelCard';
 import type { LiteAPIHotel } from '@/lib/liteapi/types';
 import { LoadingSpinner } from '@/components/shared/LoadingSpinner';
+import { format, addDays } from 'date-fns';
 
 interface HotelGridProps {
-  filter?: 'ski-in-ski-out' | 'luxury' | 'budget' | 'downtown' | 'mountain-village';
+  filter?: 'ski-in-ski-out' | 'luxury' | 'budget' | 'downtown' | 'mountain-village' | 'family-friendly';
   limit?: number;
   checkIn?: string;
   checkOut?: string;
@@ -19,6 +20,7 @@ export function HotelGrid({
   title
 }: HotelGridProps) {
   const [hotels, setHotels] = useState<LiteAPIHotel[]>([]);
+  const [minPrices, setMinPrices] = useState<Record<string, number>>({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -27,46 +29,85 @@ export function HotelGrid({
       try {
         setLoading(true);
         
-        // Default dates: 1 week out from today, 1 week duration
-        const defaultCheckIn = new Date();
-        defaultCheckIn.setDate(defaultCheckIn.getDate() + 7);
-        const defaultCheckOut = new Date(defaultCheckIn);
-        defaultCheckOut.setDate(defaultCheckOut.getDate() + 7);
+        // Default dates: 1 week out from today, 1 week duration (SAME AS HOMEPAGE)
+        const defaultCheckIn = format(addDays(new Date(), 7), 'yyyy-MM-dd');
+        const defaultCheckOut = format(addDays(new Date(), 14), 'yyyy-MM-dd');
         
-        const checkInDate = checkIn || defaultCheckIn.toISOString().split('T')[0];
-        const checkOutDate = checkOut || defaultCheckOut.toISOString().split('T')[0];
+        const checkInDate = checkIn || defaultCheckIn;
+        const checkOutDate = checkOut || defaultCheckOut;
         
-        // Build query params
-        const params = new URLSearchParams({
+        // STEP 1: Fetch hotels list (SAME AS HOMEPAGE)
+        const searchParams = new URLSearchParams({
           cityName: 'Telluride',
           countryCode: 'US',
-          limit: limit.toString(),
-          checkin: checkInDate,
-          checkout: checkOutDate,
+          limit: Math.max(limit * 2, 6).toString(), // Fetch enough to account for filtering and availability (min 6 for blog posts)
         });
         
-        const response = await fetch(`/api/liteapi/search?${params.toString()}`);
+        const hotelsResponse = await fetch(`/api/liteapi/search?${searchParams.toString()}`);
         
-        if (!response.ok) {
+        if (!hotelsResponse.ok) {
           throw new Error('Failed to load hotels');
         }
         
-        const data = await response.json();
+        const hotelsData = await hotelsResponse.json();
+        let candidateHotels: LiteAPIHotel[] = hotelsData.data || [];
         
-        // Apply client-side filtering if needed
-        let filteredHotels = data.data || [];
-        
+        // Apply client-side filtering BEFORE fetching rates (more efficient)
         if (filter === 'luxury') {
-          filteredHotels = filteredHotels.filter((h: LiteAPIHotel) => 
-            (h.star_rating || 0) >= 4
-          );
+          candidateHotels = candidateHotels.filter((h) => (h.star_rating || 0) >= 4);
         } else if (filter === 'budget') {
-          filteredHotels = filteredHotels.filter((h: LiteAPIHotel) => 
-            (h.star_rating || 0) <= 3
-          );
+          candidateHotels = candidateHotels.filter((h) => (h.star_rating || 0) <= 3);
+        } else if (filter === 'ski-in-ski-out' || filter === 'family-friendly') {
+          candidateHotels = candidateHotels.filter((h) => (h.star_rating || 0) >= 4);
         }
         
-        setHotels(filteredHotels.slice(0, limit));
+        // Take top candidates (enough to ensure we get limit after availability check)
+        candidateHotels = candidateHotels.slice(0, Math.max(limit * 2, 6));
+        
+        if (candidateHotels.length === 0) {
+          setHotels([]);
+          setLoading(false);
+          return;
+        }
+        
+        // STEP 2: Fetch min rates for candidate hotels (SAME AS HOMEPAGE)
+        const hotelIds = candidateHotels.map(h => h.hotel_id);
+        const ratesParams = new URLSearchParams({
+          hotelIds: hotelIds.join(','),
+          checkIn: checkInDate,
+          checkOut: checkOutDate,
+          adults: '2',
+        });
+        
+        const ratesResponse = await fetch(`/api/hotels/min-rates?${ratesParams.toString()}`);
+        
+        if (!ratesResponse.ok) {
+          throw new Error('Failed to load rates');
+        }
+        
+        const ratesData = await ratesResponse.json();
+        const prices: Record<string, number> = {};
+        
+        // Calculate nights for per-night pricing
+        const nights = Math.ceil((new Date(checkOutDate).getTime() - new Date(checkInDate).getTime()) / (1000 * 60 * 60 * 24));
+        
+        // Extract prices from rates response
+        if (ratesData.data && Array.isArray(ratesData.data)) {
+          ratesData.data.forEach((item: any) => {
+            if (item.hotelId && item.price) {
+              // MinRates returns TOTAL price, divide by nights for per-night
+              prices[item.hotelId] = nights > 0 ? item.price / nights : item.price;
+            }
+          });
+        }
+        
+        // STEP 3: Filter to only hotels with availability (SAME AS HOMEPAGE)
+        const hotelsWithAvailability = candidateHotels.filter(hotel => {
+          return prices[hotel.hotel_id] !== undefined && prices[hotel.hotel_id] > 0;
+        });
+        
+        setHotels(hotelsWithAvailability.slice(0, limit));
+        setMinPrices(prices);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to load hotels');
       } finally {
@@ -105,10 +146,14 @@ export function HotelGrid({
           <HotelCard
             key={hotel.hotel_id}
             hotel={hotel}
-            checkInDate={checkIn}
-            checkOutDate={checkOut}
+            minPrice={minPrices[hotel.hotel_id]}
+            currency="USD"
+            checkInDate={checkIn || format(addDays(new Date(), 7), 'yyyy-MM-dd')}
+            checkOutDate={checkOut || format(addDays(new Date(), 14), 'yyyy-MM-dd')}
             onSelect={(id) => {
-              window.location.href = `/places-to-stay/${id}`;
+              const checkInDate = checkIn || format(addDays(new Date(), 7), 'yyyy-MM-dd');
+              const checkOutDate = checkOut || format(addDays(new Date(), 14), 'yyyy-MM-dd');
+              window.location.href = `/places-to-stay/${id}?checkIn=${checkInDate}&checkOut=${checkOutDate}&adults=2&rooms=1`;
             }}
           />
         ))}

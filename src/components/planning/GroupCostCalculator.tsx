@@ -57,54 +57,83 @@ export function GroupCostCalculator({
       setLoading(true);
       
       // Default dates: 1 week out from today, 1 week duration
-      const defaultCheckIn = new Date();
-      defaultCheckIn.setDate(defaultCheckIn.getDate() + 7);
-      const defaultCheckOut = new Date(defaultCheckIn);
-      defaultCheckOut.setDate(defaultCheckOut.getDate() + 7);
+      const defaultCheckIn = format(addDays(new Date(), 7), 'yyyy-MM-dd');
+      const defaultCheckOut = format(addDays(new Date(), 14), 'yyyy-MM-dd');
       
-      const checkInDate = checkIn || defaultCheckIn.toISOString().split('T')[0];
-      const checkOutDate = checkOut || defaultCheckOut.toISOString().split('T')[0];
+      const checkInDate = checkIn || defaultCheckIn;
+      const checkOutDate = checkOut || defaultCheckOut;
       
-      // Fetch actual hotel rates
-      const params = new URLSearchParams({
+      // STEP 1: Fetch hotels
+      const searchParams = new URLSearchParams({
         cityName: 'Telluride',
         countryCode: 'US',
-        limit: '10',
-        checkin: checkInDate,
-        checkout: checkOutDate,
+        limit: '30', // Fetch enough to get good sample
       });
       
-      const response = await fetch(`/api/liteapi/search?${params.toString()}`);
+      const hotelsResponse = await fetch(`/api/liteapi/search?${searchParams.toString()}`);
       
-      if (response.ok) {
-        const data = await response.json();
-        const hotels: LiteAPIHotel[] = data.data || [];
-        
-        if (hotels.length > 0) {
-          // Calculate rates based on star ratings
-          const budgetHotels = hotels.filter(h => (h.star_rating || 0) <= 3);
-          const midRangeHotels = hotels.filter(h => (h.star_rating || 0) === 4);
-          const luxuryHotels = hotels.filter(h => (h.star_rating || 0) >= 5);
-          
-          const newRates = {
-            budget: budgetHotels.length > 0 
-              ? budgetHotels.reduce((sum, h) => sum + (h.min_rate || 150), 0) / budgetHotels.length 
-              : 150,
-            midRange: midRangeHotels.length > 0 
-              ? midRangeHotels.reduce((sum, h) => sum + (h.min_rate || 350), 0) / midRangeHotels.length 
-              : 350,
-            luxury: luxuryHotels.length > 0 
-              ? luxuryHotels.reduce((sum, h) => sum + (h.min_rate || 800), 0) / luxuryHotels.length 
-              : 800,
-          };
-          
-          setLodgingRates(newRates);
-        }
+      if (!hotelsResponse.ok) {
+        throw new Error('Failed to fetch hotels');
       }
       
+      const hotelsData = await hotelsResponse.json();
+      const hotels: LiteAPIHotel[] = hotelsData.data || [];
+      
+      if (hotels.length === 0) {
+        calculateCosts(); // Use default rates
+        return;
+      }
+      
+      // STEP 2: Fetch min rates for all hotels
+      const hotelIds = hotels.map(h => h.hotel_id);
+      const ratesParams = new URLSearchParams({
+        hotelIds: hotelIds.join(','),
+        checkIn: checkInDate,
+        checkOut: checkOutDate,
+        adults: '2',
+      });
+      
+      const ratesResponse = await fetch(`/api/hotels/min-rates?${ratesParams.toString()}`);
+      
+      if (!ratesResponse.ok) {
+        calculateCosts(); // Use default rates if rates API fails
+        return;
+      }
+      
+      const ratesData = await ratesResponse.json();
+      const nights = Math.ceil((new Date(checkOutDate).getTime() - new Date(checkInDate).getTime()) / (1000 * 60 * 60 * 24));
+      
+      // Build price map
+      const prices: Record<string, number> = {};
+      if (ratesData.data && Array.isArray(ratesData.data)) {
+        ratesData.data.forEach((item: any) => {
+          if (item.hotelId && item.price) {
+            prices[item.hotelId] = nights > 0 ? item.price / nights : item.price;
+          }
+        });
+      }
+      
+      // STEP 3: Calculate average rates by category
+      const budgetHotels = hotels.filter(h => (h.star_rating || 0) <= 3 && prices[h.hotel_id]);
+      const midRangeHotels = hotels.filter(h => (h.star_rating || 0) === 4 && prices[h.hotel_id]);
+      const luxuryHotels = hotels.filter(h => (h.star_rating || 0) >= 5 && prices[h.hotel_id]);
+      
+      const newRates = {
+        budget: budgetHotels.length > 0 
+          ? budgetHotels.reduce((sum, h) => sum + prices[h.hotel_id], 0) / budgetHotels.length 
+          : lodgingRates.budget, // Keep existing if no data
+        midRange: midRangeHotels.length > 0 
+          ? midRangeHotels.reduce((sum, h) => sum + prices[h.hotel_id], 0) / midRangeHotels.length 
+          : lodgingRates.midRange,
+        luxury: luxuryHotels.length > 0 
+          ? luxuryHotels.reduce((sum, h) => sum + prices[h.hotel_id], 0) / luxuryHotels.length 
+          : lodgingRates.luxury,
+      };
+      
+      setLodgingRates(newRates);
       calculateCosts();
     } catch (err) {
-      // Fall back to default rates if API fails
+      // Fall back to existing rates if API fails
       calculateCosts();
     } finally {
       setLoading(false);
@@ -273,11 +302,10 @@ export function GroupCostCalculator({
               </p>
               <HotelGrid
                 filter={getFilterForBudget(breakdown.midRange)}
-                limit={6}
+                limit={3}
                 checkIn={checkIn || format(addDays(new Date(), 7), 'yyyy-MM-dd')}
                 checkOut={checkOut || format(addDays(new Date(), 14), 'yyyy-MM-dd')}
                 title=""
-                client:load
               />
             </div>
           </div>

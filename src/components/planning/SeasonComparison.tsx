@@ -64,46 +64,81 @@ export function SeasonComparison({
       const offPeakCheckInDate = offPeakCheckIn || defaultCheckIn.toISOString().split('T')[0];
       const offPeakCheckOutDate = offPeakCheckOut || defaultCheckOut.toISOString().split('T')[0];
       
-      // Fetch peak season rates
-      const peakParams = new URLSearchParams({
+      // STEP 1: Fetch hotels for both seasons
+      const searchParams = new URLSearchParams({
         cityName: 'Telluride',
         countryCode: 'US',
-        limit: '5',
-        checkin: peakCheckInDate,
-        checkout: peakCheckOutDate,
+        limit: '20',
       });
       
-      const peakResponse = await fetch(`/api/liteapi/search?${peakParams.toString()}`);
+      const hotelsResponse = await fetch(`/api/liteapi/search?${searchParams.toString()}`);
       
-      // Fetch off-peak season rates
-      const offPeakParams = new URLSearchParams({
-        cityName: 'Telluride',
-        countryCode: 'US',
-        limit: '5',
-        checkin: offPeakCheckInDate,
-        checkout: offPeakCheckOutDate,
+      if (!hotelsResponse.ok) {
+        throw new Error('Failed to fetch hotels');
+      }
+      
+      const hotelsData = await hotelsResponse.json();
+      const hotels: LiteAPIHotel[] = hotelsData.data || [];
+      
+      if (hotels.length === 0) {
+        throw new Error('No hotels found');
+      }
+      
+      const hotelIds = hotels.map(h => h.hotel_id);
+      const nights = Math.ceil((new Date(peakCheckOutDate).getTime() - new Date(peakCheckInDate).getTime()) / (1000 * 60 * 60 * 24));
+      
+      // STEP 2: Fetch peak season rates
+      const peakRatesParams = new URLSearchParams({
+        hotelIds: hotelIds.join(','),
+        checkIn: peakCheckInDate,
+        checkOut: peakCheckOutDate,
+        adults: '2',
       });
       
-      const offPeakResponse = await fetch(`/api/liteapi/search?${offPeakParams.toString()}`);
+      const peakRatesResponse = await fetch(`/api/hotels/min-rates?${peakRatesParams.toString()}`);
       
-      let peakHotelCost = 600; // Default fallback
-      let offPeakHotelCost = 280; // Default fallback
+      // STEP 3: Fetch off-peak season rates
+      const offPeakRatesParams = new URLSearchParams({
+        hotelIds: hotelIds.join(','),
+        checkIn: offPeakCheckInDate,
+        checkOut: offPeakCheckOutDate,
+        adults: '2',
+      });
       
-      if (peakResponse.ok) {
-        const peakDataResult = await peakResponse.json();
-        const peakHotels: LiteAPIHotel[] = peakDataResult.data || [];
-        if (peakHotels.length > 0) {
-          peakHotelCost = peakHotels.reduce((sum, h) => sum + (h.min_rate || 600), 0) / peakHotels.length;
+      const offPeakRatesResponse = await fetch(`/api/hotels/min-rates?${offPeakRatesParams.toString()}`);
+      
+      let peakHotelCost = 0;
+      let offPeakHotelCost = 0;
+      let peakCount = 0;
+      let offPeakCount = 0;
+      
+      if (peakRatesResponse.ok) {
+        const peakRatesData = await peakRatesResponse.json();
+        if (peakRatesData.data && Array.isArray(peakRatesData.data)) {
+          peakRatesData.data.forEach((item: any) => {
+            if (item.hotelId && item.price) {
+              peakHotelCost += nights > 0 ? item.price / nights : item.price;
+              peakCount++;
+            }
+          });
         }
       }
       
-      if (offPeakResponse.ok) {
-        const offPeakDataResult = await offPeakResponse.json();
-        const offPeakHotels: LiteAPIHotel[] = offPeakDataResult.data || [];
-        if (offPeakHotels.length > 0) {
-          offPeakHotelCost = offPeakHotels.reduce((sum, h) => sum + (h.min_rate || 280), 0) / offPeakHotels.length;
+      if (offPeakRatesResponse.ok) {
+        const offPeakRatesData = await offPeakRatesResponse.json();
+        if (offPeakRatesData.data && Array.isArray(offPeakRatesData.data)) {
+          offPeakRatesData.data.forEach((item: any) => {
+            if (item.hotelId && item.price) {
+              offPeakHotelCost += nights > 0 ? item.price / nights : item.price;
+              offPeakCount++;
+            }
+          });
         }
       }
+      
+      // Calculate averages
+      peakHotelCost = peakCount > 0 ? peakHotelCost / peakCount : 600;
+      offPeakHotelCost = offPeakCount > 0 ? offPeakHotelCost / offPeakCount : 280;
       
       const peak: SeasonData = {
     name: 'Peak Season',
@@ -129,30 +164,10 @@ export function SeasonComparison({
       setOffPeakData(offPeak);
       setError(null);
     } catch (err) {
-      // Fallback to estimated rates if API fails
-      const peak: SeasonData = {
-        name: 'Peak Season',
-        dates: peakDates,
-        hotelCost: 600,
-        liftTicketCost: BASE_LIFT_COST,
-        crowdLevel: 'High',
-        conditions: 'Excellent',
-        totalCost: (600 + BASE_LIFT_COST) * 4 * groupSize,
-      };
-
-      const offPeak: SeasonData = {
-    name: 'Off-Peak Season',
-    dates: offPeakDates,
-        hotelCost: 280,
-    liftTicketCost: BASE_LIFT_COST,
-    crowdLevel: 'Low',
-    conditions: 'Good to Excellent',
-        totalCost: (280 + BASE_LIFT_COST) * 4 * groupSize,
-      };
-      
-      setPeakData(peak);
-      setOffPeakData(offPeak);
-      setError(null); // Don't show error, just use estimates
+      // If API fails completely, show error state
+      setError('Unable to fetch current rates. Please try again later.');
+      setPeakData(null);
+      setOffPeakData(null);
     } finally {
       setLoading(false);
     }
@@ -290,7 +305,7 @@ export function SeasonComparison({
           </p>
           <HotelGrid
             filter={selectedSeason === 'offpeak' ? undefined : 'luxury'}
-            limit={6}
+            limit={3}
             checkIn={selectedSeason === 'offpeak' 
               ? (offPeakCheckIn || format(addDays(new Date(), 7), 'yyyy-MM-dd'))
               : (peakCheckIn || format(addDays(new Date(), 7), 'yyyy-MM-dd'))
@@ -300,7 +315,6 @@ export function SeasonComparison({
               : (peakCheckOut || format(addDays(new Date(), 14), 'yyyy-MM-dd'))
             }
             title=""
-            client:load
           />
         </div>
       </CardContent>
