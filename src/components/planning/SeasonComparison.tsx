@@ -151,12 +151,12 @@ export function SeasonComparison({
   };
 
       const offPeak: SeasonData = {
-        name: 'Off-Peak Season',
-        dates: offPeakDates,
+    name: 'Off-Peak Season',
+    dates: offPeakDates,
         hotelCost: offPeakHotelCost,
-        liftTicketCost: BASE_LIFT_COST,
-        crowdLevel: 'Low',
-        conditions: 'Good to Excellent',
+    liftTicketCost: BASE_LIFT_COST,
+    crowdLevel: 'Low',
+    conditions: 'Good to Excellent',
         totalCost: (offPeakHotelCost + BASE_LIFT_COST) * 4 * groupSize,
       };
       

@@ -359,7 +359,7 @@ export function LodgingComparisonMatrix({
               </div>
             </div>
 
-            <div className="border-t border-neutral-200 pt-4">
+              <div className="border-t border-neutral-200 pt-4">
               <div className="p-4 bg-neutral-50 border-2 border-neutral-200 rounded-lg">
                 <p className="text-sm text-neutral-600 text-center">
                   💡 <strong>Tip:</strong> Click any hotel row above to view full details and book
