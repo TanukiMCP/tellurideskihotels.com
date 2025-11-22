@@ -90,6 +90,7 @@ export function ImageWithLoading({ src, alt, className, onError, onLoadSuccess, 
         onLoad={handleLoad}
         onError={handleError}
         loading={priority ? 'eager' : 'lazy'}
+        decoding="async"
         {...(priority ? { fetchpriority: 'high' as const } : {})}
       />
     </div>

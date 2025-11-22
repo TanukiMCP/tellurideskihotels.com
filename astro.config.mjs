@@ -37,20 +37,23 @@ export default defineConfig({
   compressHTML: true,
   vite: {
     build: {
+      minify: 'terser',
       cssCodeSplit: true,
       rollupOptions: {
         output: {
           manualChunks: (id) => {
-            // Split vendor chunks for better caching
             if (id.includes('node_modules')) {
               if (id.includes('react') || id.includes('react-dom')) {
                 return 'react-vendor';
               }
-              if (id.includes('mapbox')) {
+              if (id.includes('mapbox') || id.includes('react-map-gl')) {
                 return 'mapbox-vendor';
               }
               if (id.includes('lucide-react')) {
                 return 'icons-vendor';
+              }
+              if (id.includes('recharts') || id.includes('@tremor')) {
+                return 'charts-vendor';
               }
               return 'vendor';
             }

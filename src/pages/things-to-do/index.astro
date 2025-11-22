@@ -16,16 +16,16 @@ const resortImages = getImagesByCategory('resort');
 
 // Hero image - use a scenic mountain/resort image
 const heroImage = resortImages[0]; // First resort image
-const optimizedHeroUrl = heroImage ? optimizePexelsImage(heroImage.url, { width: 1920, quality: 85 }) : null;
+const optimizedHeroUrl = heroImage ? optimizePexelsImage(heroImage.url, { width: 1920, quality: 80 }) : null;
 const heroSrcSet = heroImage ? generateSrcSet(heroImage.url, [640, 768, 1024, 1280, 1536, 1920]) : null;
 
 // Why Book section image - use a different resort image
 const whyBookImage = resortImages[2]; // Third resort image
-const optimizedWhyBookUrl = whyBookImage ? optimizePexelsImage(whyBookImage.url, { width: 800, quality: 80 }) : null;
+const optimizedWhyBookUrl = whyBookImage ? optimizePexelsImage(whyBookImage.url, { width: 800, quality: 75 }) : null;
 
 // CTA section background image - use another resort image
 const ctaImage = resortImages[4]; // Fifth resort image
-const optimizedCtaUrl = ctaImage ? optimizePexelsImage(ctaImage.url, { width: 1920, quality: 80 }) : null;
+const optimizedCtaUrl = ctaImage ? optimizePexelsImage(ctaImage.url, { width: 1920, quality: 75 }) : null;
 
 ---
 
@@ -44,6 +44,7 @@ const optimizedCtaUrl = ctaImage ? optimizePexelsImage(ctaImage.url, { width: 19
         alt="Telluride Activities" 
           class="w-full h-full object-cover object-center"
         loading="eager"
+        decoding="async"
       />
     ) : (
       <div class="w-full h-full bg-gradient-to-br from-primary-600 via-primary-700 to-primary-800"></div>
@@ -77,6 +78,7 @@ const optimizedCtaUrl = ctaImage ? optimizePexelsImage(ctaImage.url, { width: 19
               alt="Telluride Adventures" 
               class="w-full h-full object-cover"
               loading="lazy"
+              decoding="async"
             />
           ) : (
             <div class="w-full h-full bg-gradient-to-br from-primary-100 to-primary-200"></div>
@@ -144,6 +146,7 @@ const optimizedCtaUrl = ctaImage ? optimizePexelsImage(ctaImage.url, { width: 19
           alt="Telluride Adventures" 
           class="absolute inset-0 w-full h-full object-cover"
           loading="lazy"
+          decoding="async"
         />
         <div class="absolute inset-0 bg-gradient-to-r from-primary-900/95 via-primary-800/90 to-primary-900/95"></div>
       </>

@@ -180,7 +180,7 @@ try {
   <!-- Split Hero Section -->
   <div class="bg-neutral-50 py-16 lg:py-20">
     <Container>
-      <SplitHero client:load heroImage={heroImage} />
+      <SplitHero client:idle heroImage={heroImage} />
     </Container>
   </div>
 
@@ -257,7 +257,7 @@ try {
           <!-- Top Hotels Grid -->
           <div class="mb-10">
             <FeaturedHotels 
-              client:load
+              client:visible
               initialHotels={featuredHotelsData} 
               minPrices={minPrices}
               currency="USD"
@@ -428,12 +428,13 @@ try {
           {ctaImage ? (
             <>
               <img 
-                src={optimizePexelsImage(ctaImage.url, { width: 800, quality: 90 })}
+                src={optimizePexelsImage(ctaImage.url, { width: 800, quality: 80 })}
                 srcset={generateSrcSet(ctaImage.url, [400, 600, 800])}
                 sizes="(max-width: 1024px) 100vw, 50vw"
                 alt="Telluride Ski Resort" 
                 class="w-full h-full object-cover"
                 loading="lazy"
+                decoding="async"
               />
             </>
           ) : (
