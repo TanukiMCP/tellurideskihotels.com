@@ -122,11 +122,9 @@ async function loadCategoryMap(): Promise<Map<string, TellurideExperienceCategor
 }
 
 export async function getExperienceCategories(productCode: string): Promise<TellurideExperienceCategory[]> {
+  if (!productCode) return [];
   const map = await loadCategoryMap();
   const categories = map.get(productCode) || [];
-  if (categories.length === 0 && productCode) {
-    console.warn('[Category Mapper] No categories found for product code:', productCode);
-  }
   return categories;
 }
 

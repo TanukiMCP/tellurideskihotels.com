@@ -85,9 +85,14 @@ function ExperienceSearchWidgetContent({ onExperienceSelect }: ExperienceSearchW
             }))
           );
           
-          console.log('[Experience Widget] Loaded experiences:', productsWithCategories.length);
-          console.log('[Experience Widget] Experiences with categories:', productsWithCategories.filter(e => e.categories && e.categories.length > 0).length);
-          console.log('[Experience Widget] Sample categories:', productsWithCategories.slice(0, 3).map(e => ({ code: e.productCode, cats: e.categories })));
+          const withCategories = productsWithCategories.filter(e => e.categories && e.categories.length > 0);
+          console.log('[Experience Widget] Loaded', productsWithCategories.length, 'experiences');
+          console.log('[Experience Widget]', withCategories.length, 'experiences have categories');
+          if (withCategories.length === 0) {
+            console.warn('[Experience Widget] No categories loaded! Sample product codes:', productsWithCategories.slice(0, 5).map(e => e.productCode));
+          } else {
+            console.log('[Experience Widget] Sample categories:', productsWithCategories.slice(0, 5).map(e => ({ code: e.productCode, cats: e.categories?.length || 0 })));
+          }
           
           setAllExperiences(productsWithCategories);
           setCategoriesLoaded(true);

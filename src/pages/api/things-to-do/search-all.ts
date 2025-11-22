@@ -26,10 +26,14 @@ export const POST: APIRoute = async ({ request }) => {
       },
     });
 
+    const experiences = results.products || [];
+    console.log('[API] Returning', experiences.length, 'experiences');
+    console.log('[API] Sample product codes:', experiences.slice(0, 5).map(p => p.productCode));
+
     return new Response(
       JSON.stringify({
         success: true,
-        experiences: results.products || [],
+        experiences,
         totalCount: results.totalCount || 0,
       }),
       {
