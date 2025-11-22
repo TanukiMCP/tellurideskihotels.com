@@ -77,8 +77,8 @@ export function ActivityCard({ activity, className = '' }: ActivityCardProps) {
         {/* Title - BUG #3: 2-line clamping */}
         <a href={detailsUrl} onClick={handleClick} className="block">
           <h3 className="text-[18px] font-bold text-[#2C2C2C] mb-3 group-hover:text-[#2D5F4F] transition-colors leading-[1.3] line-clamp-2">
-            {activity.title}
-          </h3>
+          {activity.title}
+        </h3>
         </a>
 
         {/* Reviews - BUG #4: Star rating alignment */}

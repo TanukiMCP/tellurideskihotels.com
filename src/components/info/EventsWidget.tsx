@@ -91,18 +91,27 @@ const TELLURIDE_EVENTS: Event[] = [
     description: 'The Sheridan Arts Foundation presents Warren Miller\'s film. Doors open 30 minutes before showtime',
     url: 'https://www.telluride.com/event/sno-ciety/',
   },
-  // ... rest of events remain the same for future use
+  {
+    id: '10',
+    name: 'Noel Night',
+    date: '2025-12-03',
+    type: 'community',
+    description: 'The ceremonial lighting of the Ski Tree and Main Street with holiday shopping and festivities',
+    url: 'https://www.telluride.com/event/noel-night/',
+  },
+  {
+    id: '11',
+    name: 'Holiday Prelude',
+    date: '2025-12-06',
+    type: 'festival',
+    description: 'A weekend of holiday magic in Mountain Village with ice skating, Santa, and tree lighting',
+    url: 'https://www.telluride.com/event/holiday-prelude/',
+  },
 ];
 
 export function EventsWidget() {
   // Detect screen size to show different number of events
-  // Initialize with window width check if available (client-side)
-  const [isDesktop, setIsDesktop] = useState(() => {
-    if (typeof window !== 'undefined') {
-      return window.innerWidth >= 1024; // lg breakpoint
-    }
-    return false; // Default to mobile on server-side
-  });
+  const [isDesktop, setIsDesktop] = useState(false);
 
   useEffect(() => {
     const checkScreenSize = () => {
