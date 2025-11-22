@@ -98,17 +98,13 @@ async function loadCategoryMap(): Promise<Map<string, TellurideExperienceCategor
       const response = await fetch('/data/telluride-experience-categories.json');
       if (response.ok) {
         const categoriesData = await response.json();
-        console.log('[Category Mapper] Loaded category data:', categoriesData.length, 'experiences');
         if (Array.isArray(categoriesData)) {
           categoriesData.forEach((exp: any) => {
             if (exp.categories && Array.isArray(exp.categories) && exp.categories.length > 0) {
               categoryMap!.set(exp.productCode, exp.categories as TellurideExperienceCategory[]);
             }
           });
-          console.log('[Category Mapper] Category map size:', categoryMap!.size);
         }
-      } else {
-        console.warn('[Category Mapper] Failed to fetch categories, status:', response.status);
       }
     } catch (error) {
       // File doesn't exist yet or is invalid - that's okay, will be empty map

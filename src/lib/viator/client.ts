@@ -99,8 +99,8 @@ export function formatDuration(duration?: ViatorDuration | null): string {
     const hours = Math.floor(fixedDurationInMinutes / 60);
     const mins = fixedDurationInMinutes % 60;
     if (hours > 0 && mins > 0) return `${hours}h ${mins}m`;
-    if (hours > 0) return `${hours} hour${hours > 1 ? 's' : ''}`;
-    return `${mins} min`;
+    if (hours > 0) return `${hours}h`;
+    return `${mins}m`;
   }
   
   if (
@@ -110,9 +110,9 @@ export function formatDuration(duration?: ViatorDuration | null): string {
     const fromHours = Math.floor(variableDurationFromMinutes / 60);
     const toHours = Math.floor(variableDurationToMinutes / 60);
     if (fromHours === toHours) {
-      return `${fromHours} hour${fromHours > 1 ? 's' : ''}`;
+      return `${fromHours}h`;
     }
-    return `${fromHours}-${toHours} hours`;
+    return `${fromHours}-${toHours}h`;
   }
 
   if (typeof variableDurationFromMinutes === 'number' && variableDurationFromMinutes > 0) {

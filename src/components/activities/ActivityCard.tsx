@@ -1,10 +1,12 @@
 /**
  * Activity Card Component
  * Displays a single Viator activity/tour
+ * Pixel-perfect implementation per design audit
  */
 
 import type { ViatorProductSummary } from '@/lib/viator/types';
 import { formatDuration, formatPrice } from '@/lib/viator/client';
+import { getExperienceCategoriesSync, getCategoryLabel } from '@/lib/category-mapper';
 
 interface ActivityCardProps {
   activity: ViatorProductSummary;
@@ -19,6 +21,7 @@ export function ActivityCard({ activity, className = '' }: ActivityCardProps) {
   const hasReviews = activity.reviews && activity.reviews.totalReviews > 0;
   const durationText = formatDuration(activity.duration);
   const priceText = formatPrice(activity.pricing);
+  const categories = getExperienceCategoriesSync(activity.productCode);
 
   const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
     // Cache pricing data for details page
@@ -31,19 +34,25 @@ export function ActivityCard({ activity, className = '' }: ActivityCardProps) {
     }
   };
 
+  // Get rating for star display
+  const rating = hasReviews && activity.reviews 
+    ? activity.reviews.combinedAverageRating 
+    : 0;
+  const fullStars = Math.round(rating);
+
   return (
     <a 
       href={detailsUrl}
       onClick={handleClick}
-      className={`group bg-white rounded-2xl overflow-hidden border border-neutral-200 shadow-card hover:shadow-card-hover transition-all duration-300 hover:-translate-y-1 flex flex-col ${className}`}
+      className={`group bg-white rounded-xl overflow-hidden border border-[#E5E5E5] shadow-[0_2px_12px_rgba(0,0,0,0.06)] hover:shadow-[0_8px_24px_rgba(0,0,0,0.12)] hover:-translate-y-1 hover:border-[#D5D5D5] transition-all duration-200 flex flex-col cursor-pointer ${className}`}
     >
-      {/* Image */}
-      <div className="relative h-56 overflow-hidden bg-neutral-100 flex-shrink-0">
+      {/* Image - BUG #2: Fixed aspect ratio */}
+      <div className="relative w-full h-[200px] overflow-hidden bg-neutral-100 flex-shrink-0">
         {imageUrl ? (
           <img
             src={imageUrl}
             alt={activity.title}
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+            className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-300"
             loading="lazy"
           />
         ) : (
@@ -54,30 +63,31 @@ export function ActivityCard({ activity, className = '' }: ActivityCardProps) {
           </div>
         )}
         
-        {/* Duration Badge */}
-        <div className="absolute top-4 left-4 bg-white/95 backdrop-blur-sm px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-900 shadow-card">
+        {/* Duration Badge - BUG #1: Pixel-perfect positioning and styling */}
+        <div 
+          className="absolute top-4 left-4 bg-[rgba(255,255,255,0.95)] px-2 py-1.5 rounded-[20px] text-[13px] font-semibold text-[#2C2C2C] shadow-[0_2px_8px_rgba(0,0,0,0.1)]"
+          style={{ top: '16px', left: '16px' }}
+        >
           {durationText}
         </div>
       </div>
 
       {/* Content - flex-grow pushes footer to bottom */}
-      <div className="p-6 flex flex-col flex-grow min-h-0">
-        {/* Title */}
-        <h3 className="text-lg font-bold text-neutral-900 mb-3 line-clamp-2 group-hover:text-primary-600 transition-colors min-h-[3.5rem]">
+      <div className="p-5 flex flex-col flex-grow min-h-0">
+        {/* Title - BUG #3: 2-line clamping */}
+        <h3 className="text-[18px] font-bold text-[#2C2C2C] mb-3 group-hover:text-[#2D5F4F] transition-colors leading-[1.3] min-h-[47px] line-clamp-2">
           {activity.title}
         </h3>
 
-        {/* Reviews */}
+        {/* Reviews - BUG #4: Star rating alignment */}
         {hasReviews && activity.reviews && (
-          <div className="flex items-center gap-2 mb-3 flex-shrink-0">
-            <div className="flex items-center">
+          <div className="flex items-center gap-2 mb-4 flex-shrink-0">
+            <div className="flex items-center gap-[3px]">
               {[...Array(5)].map((_, i) => (
                 <svg
                   key={i}
                   className={`w-4 h-4 ${
-                    i < Math.round(activity.reviews!.combinedAverageRating)
-                      ? 'text-accent-500'
-                      : 'text-neutral-300'
+                    i < fullStars ? 'text-[#F4A460]' : 'text-[#E5E5E5]'
                   }`}
                   fill="currentColor"
                   viewBox="0 0 20 20"
@@ -86,26 +96,43 @@ export function ActivityCard({ activity, className = '' }: ActivityCardProps) {
                 </svg>
               ))}
             </div>
-            <span className="text-sm text-neutral-600">
-              {activity.reviews.combinedAverageRating.toFixed(1)} ({activity.reviews.totalReviews.toLocaleString()})
+            <span className="text-[15px] font-semibold text-[#2C2C2C] leading-none">
+              {activity.reviews.combinedAverageRating.toFixed(1)}
+            </span>
+            <span className="text-[15px] font-normal text-[#999999] leading-none">
+              ({activity.reviews.totalReviews.toLocaleString()})
             </span>
           </div>
         )}
 
-        {/* Description */}
+        {/* Categories - Display category badges */}
+        {categories.length > 0 && (
+          <div className="flex flex-wrap gap-2 mb-4 flex-shrink-0">
+            {categories.slice(0, 2).map(category => (
+              <span
+                key={category}
+                className="px-3 py-1 bg-[#E8F2ED] text-[#2D5F4F] text-[11px] font-semibold uppercase rounded-[4px] border border-[#D5E8DD] tracking-[0.5px] leading-none"
+              >
+                {getCategoryLabel(category)}
+              </span>
+            ))}
+          </div>
+        )}
+
+        {/* Description - BUG #5: 3-line clamping */}
         {activity.description && (
-          <p className="text-neutral-600 text-sm mb-4 line-clamp-3 leading-relaxed flex-shrink-0">
+          <p className="text-[14px] font-normal text-[#666666] mb-4 leading-[1.6] min-h-[67px] line-clamp-3">
             {activity.description}
           </p>
         )}
 
-        {/* Flags */}
+        {/* Feature Tags - BUG #6: Brand colors */}
         {activity.flags && activity.flags.length > 0 && (
-          <div className="flex flex-wrap gap-2 mb-4 flex-shrink-0">
-            {activity.flags.slice(0, 2).map((flag) => (
+          <div className="flex flex-wrap gap-2 mb-5 flex-shrink-0">
+            {activity.flags.slice(0, 3).map((flag) => (
               <span
                 key={flag}
-                className="px-2.5 py-1 bg-primary-50 text-primary-700 text-xs font-medium rounded-lg"
+                className="px-3 py-1.5 bg-[#E8F2ED] text-[#2D5F4F] text-[11px] font-semibold uppercase rounded-[4px] border border-[#D5E8DD] tracking-[0.5px] leading-none"
               >
                 {flag.replace(/_/g, ' ')}
               </span>
@@ -116,15 +143,15 @@ export function ActivityCard({ activity, className = '' }: ActivityCardProps) {
         {/* Spacer to push footer to bottom */}
         <div className="flex-grow min-h-[1rem]"></div>
 
-        {/* Price and CTA - Always at bottom */}
-        <div className="flex items-center justify-between pt-4 border-t border-neutral-200 mt-4 flex-shrink-0">
-          <div className="flex-shrink-0">
-            <div className="text-xs text-neutral-600 mb-0.5">From</div>
-            <div className="text-2xl font-bold text-primary-600">
+        {/* Price and CTA - BUG #7: Perfect layout */}
+        <div className="flex items-center justify-between pt-5 border-t border-[#E5E5E5] mt-5 flex-shrink-0">
+          <div className="flex flex-col items-start">
+            <div className="text-[13px] font-normal text-[#999999] mb-1 leading-none">From</div>
+            <div className="text-[24px] font-bold text-[#2D5F4F] leading-none">
               {priceText}
             </div>
           </div>
-          <div className="inline-flex items-center gap-2 bg-primary-600 text-white px-4 py-2 rounded-xl font-semibold text-sm shadow-card group-hover:shadow-card-hover group-hover:bg-primary-700 transition-all duration-300 flex-shrink-0">
+          <div className="inline-flex items-center gap-1.5 bg-[#2D5F4F] hover:bg-[#1F4436] text-white px-5 py-2.5 rounded-md font-semibold text-[14px] shadow-[0_4px_8px_rgba(45,95,79,0.2)] hover:shadow-[0_4px_12px_rgba(45,95,79,0.3)] hover:-translate-y-[1px] active:scale-[0.98] transition-all duration-200 whitespace-nowrap flex-shrink-0">
             View Details
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -132,7 +159,7 @@ export function ActivityCard({ activity, className = '' }: ActivityCardProps) {
           </div>
         </div>
       </div>
+
     </a>
   );
 }
-
