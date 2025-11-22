@@ -3,6 +3,7 @@ import tailwind from '@astrojs/tailwind';
 import react from '@astrojs/react';
 import sitemap from '@astrojs/sitemap';
 import netlify from '@astrojs/netlify';
+import mdx from '@astrojs/mdx';
 
 export default defineConfig({
   site: 'https://tellurideskihotels.com',
@@ -11,6 +12,7 @@ export default defineConfig({
   integrations: [
     tailwind({ applyBaseStyles: false }),
     react(),
+    mdx(),
     sitemap({
       filter: (page) => !page.includes('/admin/') && !page.includes('/api/'),
       changefreq: 'weekly',

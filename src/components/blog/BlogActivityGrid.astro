@@ -1,0 +1,74 @@
+---
+import { searchTellurideActivities } from '@/lib/viator/client';
+import BlogActivityCard from './BlogActivityCard.astro';
+
+interface Props {
+  productCodes?: string[];
+  category?: 'winter' | 'summer' | 'adventure' | 'family' | 'tours';
+  limit?: number;
+  title?: string;
+}
+
+const { productCodes, category, limit = 3, title } = Astro.props;
+
+let activities: any[] = [];
+
+try {
+  if (productCodes && productCodes.length > 0) {
+    // Fetch specific activities by product code
+    const { getProductDetails } = await import('@/lib/viator/client');
+    const activityPromises = productCodes.slice(0, limit).map(code => getProductDetails(code));
+    const results = await Promise.allSettled(activityPromises);
+    activities = results
+      .filter(r => r.status === 'fulfilled' && r.value)
+      .map(r => (r as PromiseFulfilledResult<any>).value);
+  } else {
+    // Search activities based on category
+    const categoryTerms: Record<string, string> = {
+      winter: 'skiing snowboarding winter',
+      summer: 'hiking biking outdoor',
+      adventure: 'adventure climbing rafting',
+      family: 'family friendly kids',
+      tours: 'tours sightseeing',
+    };
+    
+    const searchText = category ? categoryTerms[category] : undefined;
+    const response = await searchTellurideActivities({
+      text: searchText,
+      pagination: { start: 0, count: limit },
+    });
+    activities = response.products || [];
+  }
+} catch (error) {
+  console.error('[BlogActivityGrid] Failed to fetch activities:', error);
+}
+---
+
+{activities.length > 0 && (
+  <div class="blog-activity-grid my-10">
+    {title && (
+      <h3 class="text-2xl font-bold text-[#2C2C2C] mb-6">{title}</h3>
+    )}
+    <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+      {activities.map((activity) => (
+        <BlogActivityCard 
+          productCode={activity.productCode} 
+          variant="default"
+        />
+      ))}
+    </div>
+  </div>
+)}
+
+{activities.length === 0 && (
+  <div class="my-8 p-4 bg-neutral-50 border border-neutral-200 rounded-lg text-neutral-600 text-sm">
+    <p>No activities found. <a href="/things-to-do" class="text-primary-600 underline">Browse all activities</a></p>
+  </div>
+)}
+
+<style>
+  .blog-activity-grid {
+    /* Ensure proper spacing in prose */
+  }
+</style>
+

@@ -1,0 +1,69 @@
+---
+import { searchHotels } from '@/lib/liteapi/hotels';
+import BlogHotelCard from './BlogHotelCard.astro';
+
+interface Props {
+  hotelIds?: string[];
+  location?: 'downtown' | 'mountain-village';
+  filter?: 'ski-in-ski-out' | 'luxury' | 'budget' | 'family-friendly';
+  limit?: number;
+  title?: string;
+}
+
+const { hotelIds, location, filter, limit = 3, title } = Astro.props;
+
+let hotels: any[] = [];
+
+try {
+  if (hotelIds && hotelIds.length > 0) {
+    // Fetch specific hotels by ID
+    const { getHotelDetails } = await import('@/lib/liteapi/hotels');
+    const hotelPromises = hotelIds.slice(0, limit).map(id => getHotelDetails(id));
+    const results = await Promise.allSettled(hotelPromises);
+    hotels = results
+      .filter(r => r.status === 'fulfilled' && r.value)
+      .map(r => (r as PromiseFulfilledResult<any>).value);
+  } else {
+    // Search hotels based on filters
+    const searchParams: any = {
+      cityName: location === 'mountain-village' ? 'Mountain Village' : 'Telluride',
+      countryCode: 'US',
+    };
+    
+    const response = await searchHotels(searchParams);
+    hotels = response.data.slice(0, limit);
+  }
+} catch (error) {
+  console.error('[BlogHotelGrid] Failed to fetch hotels:', error);
+}
+---
+
+{hotels.length > 0 && (
+  <div class="blog-hotel-grid my-10">
+    {title && (
+      <h3 class="text-2xl font-bold text-[#2C2C2C] mb-6">{title}</h3>
+    )}
+    <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+      {hotels.map((hotel) => (
+        <BlogHotelCard 
+          hotelId={hotel.hotel_id || hotel.id} 
+          variant="default"
+          showPrice={true}
+        />
+      ))}
+    </div>
+  </div>
+)}
+
+{hotels.length === 0 && (
+  <div class="my-8 p-4 bg-neutral-50 border border-neutral-200 rounded-lg text-neutral-600 text-sm">
+    <p>No hotels found. <a href="/places-to-stay" class="text-primary-600 underline">Browse all hotels</a></p>
+  </div>
+)}
+
+<style>
+  .blog-hotel-grid {
+    /* Ensure proper spacing in prose */
+  }
+</style>
+
