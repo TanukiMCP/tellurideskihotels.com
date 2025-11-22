@@ -22,8 +22,8 @@ try {
   console.error(`[BlogActivityCard] Failed to fetch activity ${productCode}:`, error);
 }
 
-const hasReviews = activity?.reviews && activity.reviews.totalReviews > 0;
-const rating = hasReviews && activity.reviews ? activity.reviews.combinedAverageRating : 0;
+const hasReviews = activity && activity.reviews && activity.reviews.totalReviews > 0;
+const rating = hasReviews && activity && activity.reviews ? activity.reviews.combinedAverageRating : 0;
 const fullStars = Math.round(rating);
 const activityUrl = `/things-to-do/${productCode}`;
 
@@ -97,7 +97,6 @@ if (activity?.pricing?.summary?.fromPrice) {
             <div class="flex items-center gap-[3px]">
               {[...Array(5)].map((_, i) => (
                 <svg
-                  key={i}
                   class={`w-4 h-4 ${i < fullStars ? 'text-[#F4A460]' : 'text-[#E5E5E5]'}`}
                   fill="currentColor"
                   viewBox="0 0 20 20"

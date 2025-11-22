@@ -3,8 +3,6 @@
  * Processes component tags in markdown and replaces them with actual components
  */
 
-import type { ComponentInstance } from 'astro/runtime/server/index.js';
-
 export interface ComponentTag {
   name: string;
   props: Record<string, any>;
@@ -40,12 +38,17 @@ export function parseComponentTags(content: string): ComponentTag[] {
     
     while ((propMatch = propRegex.exec(propsString)) !== null) {
       const key = propMatch[1];
-      let value = propMatch[2];
+      const stringValue = propMatch[2];
+      let value: string | boolean | number = stringValue;
       
       // Try to parse as boolean, number, or keep as string
-      if (value === 'true') value = true;
-      else if (value === 'false') value = false;
-      else if (!isNaN(Number(value)) && value !== '') value = Number(value);
+      if (stringValue === 'true') {
+        value = true;
+      } else if (stringValue === 'false') {
+        value = false;
+      } else if (!isNaN(Number(stringValue)) && stringValue !== '') {
+        value = Number(stringValue);
+      }
       
       props[key] = value;
     }
