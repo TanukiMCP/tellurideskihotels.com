@@ -50,7 +50,7 @@ export function HotelCard({
       onMouseLeave={onMouseLeave}
     >
       <div 
-        className="relative h-56 overflow-hidden cursor-pointer" 
+        className="relative h-64 overflow-hidden cursor-pointer" 
         onClick={() => onSelect(hotel.hotel_id)}
       >
         {imageUrl ? (
@@ -59,10 +59,14 @@ export function HotelCard({
             alt={hotel.name || 'Property'}
             className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
             loading="lazy"
+            onError={(e) => {
+              // Fallback if image fails to load
+              (e.target as HTMLImageElement).style.display = 'none';
+            }}
           />
         ) : (
-          <div className="w-full h-full bg-gray-100 flex items-center justify-center">
-            <p className="text-gray-500 text-sm font-medium">No images available</p>
+          <div className="w-full h-full bg-gradient-to-br from-neutral-100 to-neutral-200 flex items-center justify-center">
+            <p className="text-neutral-400 text-sm font-medium">No image available</p>
           </div>
         )}
         
@@ -84,15 +88,15 @@ export function HotelCard({
         )}
       </div>
       
-      <CardContent className="p-5">
-        <h3 className="font-bold text-xl mb-2 line-clamp-1 text-neutral-900">
+      <CardContent className="p-6">
+        <h3 className="font-bold text-xl mb-2 line-clamp-2 text-neutral-900 min-h-[3rem]">
           {hotel.name}
         </h3>
         
         {address && (
           <div className="flex items-start text-sm text-neutral-600 mb-3">
             <MapPin className="h-4 w-4 mr-1.5 flex-shrink-0 mt-0.5" />
-            <span className="truncate flex-1 min-w-0" title={address}>{address}</span>
+            <span className="line-clamp-1 flex-1 min-w-0" title={address}>{address}</span>
           </div>
         )}
         
@@ -103,21 +107,21 @@ export function HotelCard({
         )}
         
         {checkInDate && checkOutDate && (
-          <div className="mb-3">
+          <div className="mb-4">
             <SnowAlertBadge checkIn={checkInDate} checkOut={checkOutDate} />
           </div>
         )}
         
         {minPrice !== undefined && minPrice > 0 ? (
           <>
-            <div className="mb-4 pb-4 border-b border-neutral-200">
+            <div className="mb-5 pb-5 border-b border-neutral-200">
               <div className="flex flex-col">
-                <span className="text-xs text-neutral-500 uppercase tracking-wide mb-1">From</span>
+                <span className="text-xs text-neutral-500 uppercase tracking-wide mb-2">From</span>
                 <div className="flex items-baseline gap-1">
-                  <span className="text-2xl font-bold text-primary-600">
+                  <span className="text-3xl font-bold text-primary-600">
                     {formatCurrency(minPrice, currency)}
                   </span>
-                  <span className="text-sm text-neutral-600">/ night</span>
+                  <span className="text-base text-neutral-600">/ night</span>
                 </div>
               </div>
             </div>
@@ -130,7 +134,7 @@ export function HotelCard({
                   onSelect(hotel.hotel_id);
                 }
               }}
-              className="w-full bg-primary-600 hover:bg-primary-700 text-white font-semibold py-3 px-4 rounded-lg transition-colors duration-200"
+              className="w-full bg-neutral-900 hover:bg-neutral-800 text-white font-semibold py-3.5 px-4 rounded-lg transition-colors duration-200 shadow-md hover:shadow-lg"
               type="button"
             >
               Check Availability
@@ -138,9 +142,9 @@ export function HotelCard({
           </>
         ) : (
           <>
-            <div className="mb-4 pb-4 border-b border-neutral-200">
+            <div className="mb-5 pb-5 border-b border-neutral-200">
               <div className="flex flex-col">
-                <span className="text-xs text-neutral-500 uppercase tracking-wide mb-1">Pricing</span>
+                <span className="text-xs text-neutral-500 uppercase tracking-wide mb-2">Pricing</span>
                 <p className="text-sm text-neutral-600 leading-relaxed">
                   Check availability to view current rates for this property.
                 </p>
@@ -155,7 +159,7 @@ export function HotelCard({
                   onSelect(hotel.hotel_id);
                 }
               }}
-              className="w-full bg-primary-600 hover:bg-primary-700 text-white font-semibold py-3 px-4 rounded-lg transition-colors duration-200"
+              className="w-full bg-neutral-900 hover:bg-neutral-800 text-white font-semibold py-3.5 px-4 rounded-lg transition-colors duration-200 shadow-md hover:shadow-lg"
               type="button"
             >
               View Details

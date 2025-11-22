@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { HotelCard } from '@/components/lodging/HotelCard';
 import type { LiteAPIHotel } from '@/lib/liteapi/types';
 import { format, addDays } from 'date-fns';
@@ -74,6 +74,11 @@ export function HotelGrid({
     fetchHotels();
   }, [filter, limit]);
 
+  // Create stable hotel IDs string for dependency
+  const hotelIdsString = useMemo(() => {
+    return hotels.map(h => h.hotel_id).sort().join(',');
+  }, [hotels]);
+
   // Fetch min-rates separately once dates are computed AND hotels are loaded
   useEffect(() => {
     if (!computedCheckIn || !computedCheckOut || hotels.length === 0) {
@@ -88,9 +93,20 @@ export function HotelGrid({
       adults: '2',
     });
     
+    console.log('[HotelGrid] Fetching min-rates:', {
+      hotelIds: hotelIds.length,
+      checkIn: computedCheckIn,
+      checkOut: computedCheckOut,
+      url: `/api/hotels/min-rates?${ratesParams.toString()}`,
+    });
+    
     fetch(`/api/hotels/min-rates?${ratesParams.toString()}`)
-      .then(res => res.ok ? res.json() : null)
+      .then(res => {
+        console.log('[HotelGrid] Min-rates response status:', res.status);
+        return res.ok ? res.json() : null;
+      })
       .then(ratesData => {
+        console.log('[HotelGrid] Min-rates data received:', ratesData);
         if (ratesData?.data && Array.isArray(ratesData.data)) {
           const prices: Record<string, number> = {};
           const nights = Math.ceil((new Date(computedCheckOut).getTime() - new Date(computedCheckIn).getTime()) / (1000 * 60 * 60 * 24));
@@ -101,13 +117,16 @@ export function HotelGrid({
             }
           });
           
+          console.log('[HotelGrid] Processed prices:', prices);
           setMinPrices(prices);
+        } else {
+          console.warn('[HotelGrid] Unexpected rates data structure:', ratesData);
         }
       })
       .catch(err => {
         console.error('[HotelGrid] Error fetching min rates:', err);
       });
-  }, [computedCheckIn, computedCheckOut, hotels]);
+  }, [computedCheckIn, computedCheckOut, hotelIdsString]);
 
   // Render nothing if no hotels available
   if (hotels.length === 0) {
@@ -119,7 +138,7 @@ export function HotelGrid({
       {title && (
         <h3 className="text-2xl font-bold text-neutral-900 mb-6">{title}</h3>
       )}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {hotels.map((hotel) => (
           <HotelCard
             key={hotel.hotel_id}

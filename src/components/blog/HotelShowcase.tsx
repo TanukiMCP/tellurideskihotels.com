@@ -22,11 +22,11 @@ export function HotelShowcase({
 
   useEffect(() => {
     // Calculate default dates on client side only to avoid hydration mismatch
-    const defaultCheckIn = new Date();
-    defaultCheckIn.setDate(defaultCheckIn.getDate() + 7);
-    const defaultCheckOut = new Date(defaultCheckIn);
-    defaultCheckOut.setDate(defaultCheckOut.getDate() + 7);
-    
+        const defaultCheckIn = new Date();
+        defaultCheckIn.setDate(defaultCheckIn.getDate() + 7);
+        const defaultCheckOut = new Date(defaultCheckIn);
+        defaultCheckOut.setDate(defaultCheckOut.getDate() + 7);
+        
     setComputedCheckIn(checkIn || defaultCheckIn.toISOString().split('T')[0]);
     setComputedCheckOut(checkOut || defaultCheckOut.toISOString().split('T')[0]);
   }, [checkIn, checkOut]);
