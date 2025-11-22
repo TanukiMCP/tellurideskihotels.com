@@ -4,6 +4,8 @@
  * Redesigned with cleaner layout and refined styling
  */
 
+import React, { useState, useEffect } from 'react';
+
 interface Event {
   id: string;
   name: string;
@@ -93,14 +95,29 @@ const TELLURIDE_EVENTS: Event[] = [
 ];
 
 export function EventsWidget() {
-  // Automatically filter for upcoming events only, sort by date, and get next 2-3
+  // Detect screen size to show different number of events
+  const [isDesktop, setIsDesktop] = useState(false);
+
+  useEffect(() => {
+    const checkScreenSize = () => {
+      setIsDesktop(window.innerWidth >= 1024); // lg breakpoint
+    };
+    
+    checkScreenSize();
+    window.addEventListener('resize', checkScreenSize);
+    return () => window.removeEventListener('resize', checkScreenSize);
+  }, []);
+
+  // Automatically filter for upcoming events only, sort by date
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   
-  const upcomingEvents = [...TELLURIDE_EVENTS]
+  const allUpcomingEvents = [...TELLURIDE_EVENTS]
     .filter(event => new Date(event.date) >= today)
-    .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
-    .slice(0, 3); // Show max 3 events
+    .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+  
+  // Show 5 on desktop, 3 on mobile
+  const upcomingEvents = allUpcomingEvents.slice(0, isDesktop ? 5 : 3);
 
   const getMonthDay = (dateStr: string) => {
     const date = new Date(dateStr);
