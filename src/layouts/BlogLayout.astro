@@ -138,7 +138,33 @@ const categoryName = data.category.replace(/-/g, ' ');
             prose-blockquote:bg-[#F8F6F3] prose-blockquote:pl-6 prose-blockquote:py-6
             prose-blockquote:italic prose-blockquote:text-[19px] prose-blockquote:my-8
             prose-blockquote:text-[#2C2C2C]
+            [&>*]:not-prose
+            [&>div]:not-prose
+            [&>section]:not-prose
             ">
+            <style>
+              /* Break components out of prose constraints */
+              .prose > div:has([class*="Card"]),
+              .prose > div:has([class*="HotelGrid"]),
+              .prose > div:has([class*="GroupCostCalculator"]),
+              .prose > div:has([class*="HotelSplitCalculator"]),
+              .prose > div:has([class*="CostPerPersonRanking"]),
+              .prose > div:has([class*="ActivityShowcase"]),
+              .prose > div:has([class*="ArticleBookingWidget"]) {
+                max-width: 100% !important;
+                margin-left: 0 !important;
+                margin-right: 0 !important;
+                margin-top: 2.5rem !important;
+                margin-bottom: 2.5rem !important;
+              }
+              
+              /* Ensure React components render properly */
+              .prose [data-astro-cid-*] {
+                max-width: 100% !important;
+                margin-left: 0 !important;
+                margin-right: 0 !important;
+              }
+            </style>
             <Content 
               components={{
                 ArticleBookingWidget,
