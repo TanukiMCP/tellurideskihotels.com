@@ -8,6 +8,7 @@ import { useState, useEffect } from 'react';
 import type { ViatorProduct } from '@/lib/viator/types';
 import { formatDuration, formatPrice, buildViatorBookingUrl } from '@/lib/viator/client';
 import { LoadingSpinner } from '@/components/shared/LoadingSpinner';
+import { getExperienceAddress, type ExperienceAddress } from '@/lib/experience-addresses';
 import { X } from 'lucide-react';
 
 interface ProductDetailsProps {
@@ -20,6 +21,7 @@ export function ProductDetails({ productCode }: ProductDetailsProps) {
   const [error, setError] = useState<string | null>(null);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [fullImageView, setFullImageView] = useState<string | null>(null);
+  const [address, setAddress] = useState<ExperienceAddress | null>(null);
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -27,13 +29,17 @@ export function ProductDetails({ productCode }: ProductDetailsProps) {
         setLoading(true);
         setError(null);
         
-        const response = await fetch(`/api/viator/product/${productCode}`);
+        // Load product and address data in parallel
+        const [productResponse, addressData] = await Promise.all([
+          fetch(`/api/viator/product/${productCode}`),
+          getExperienceAddress(productCode),
+        ]);
         
-        if (!response.ok) {
+        if (!productResponse.ok) {
           throw new Error('Failed to load product details');
         }
         
-        const data = await response.json();
+        const data = await productResponse.json();
         const productData = data.product;
         
         // If API didn't return pricing, try to get from cache (search results)
@@ -50,6 +56,7 @@ export function ProductDetails({ productCode }: ProductDetailsProps) {
         }
         
         setProduct(productData);
+        setAddress(addressData);
       } catch (err) {
         console.error('Error fetching product:', err);
         setError(err instanceof Error ? err.message : 'Failed to load product details');
@@ -348,6 +355,62 @@ export function ProductDetails({ productCode }: ProductDetailsProps) {
                   )}
                 </div>
               )}
+            </div>
+          )}
+
+          {/* Location/Address Information */}
+          {address && (
+            <div className="bg-white rounded-2xl border border-neutral-200 p-8 shadow-card">
+              <div className="flex items-start gap-3 mb-6">
+                <div className="p-2 bg-primary-100 rounded-lg">
+                  <svg className="w-6 h-6 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                  </svg>
+                </div>
+                <div>
+                  <h2 className="text-2xl font-bold text-neutral-900 mb-2">Location & Meeting Point</h2>
+                  <p className="text-sm text-neutral-600">Where to meet for this experience</p>
+                </div>
+              </div>
+              
+              <div className="space-y-4">
+                <div>
+                  <h3 className="text-sm font-semibold text-neutral-700 mb-1">Meeting Point</h3>
+                  <p className="text-neutral-900 font-medium">{address.meetingPoint}</p>
+                </div>
+                
+                <div className="pt-4 border-t border-neutral-200">
+                  <h3 className="text-sm font-semibold text-neutral-700 mb-2">Address</h3>
+                  <p className="text-neutral-900">
+                    {address.address}
+                    <br />
+                    {address.city}, {address.state} {address.zip}
+                  </p>
+                </div>
+
+                {address.location && (
+                  <div className="pt-4 border-t border-neutral-200">
+                    <h3 className="text-sm font-semibold text-neutral-700 mb-1">Location</h3>
+                    <p className="text-neutral-600">{address.location}</p>
+                  </div>
+                )}
+
+                {/* Map Link */}
+                <div className="pt-4 border-t border-neutral-200">
+                  <a
+                    href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address.latitude)},${encodeURIComponent(address.longitude)}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 text-primary-600 hover:text-primary-700 font-medium transition-colors"
+                  >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                    </svg>
+                    Open in Google Maps
+                  </a>
+                </div>
+              </div>
             </div>
           )}
 

@@ -4,6 +4,7 @@ import type { MapRef } from 'react-map-gl/mapbox';
 import type { ViatorProduct } from '@/lib/viator/types';
 import { MAPBOX_TOKEN, TELLURIDE_CENTER } from '@/lib/mapbox-utils';
 import { formatPrice } from '@/lib/viator/client';
+import { getExperienceAddress, getAllAddresses, type ExperienceAddress } from '@/lib/experience-addresses';
 import 'mapbox-gl/dist/mapbox-gl.css';
 
 interface ExperienceMapProps {
@@ -18,11 +19,24 @@ export default function ExperienceMap({ experiences, onSelectExperience }: Exper
   const mapRef = useRef<MapRef>(null);
   const [selectedExperience, setSelectedExperience] = useState<string | null>(null);
   const [popupInfo, setPopupInfo] = useState<{ productCode: string; lng: number; lat: number } | null>(null);
+  const [addressMap, setAddressMap] = useState<Map<string, ExperienceAddress>>(new Map());
+  const [addressesLoaded, setAddressesLoaded] = useState(false);
 
-  // Since Viator experiences don't have location data, we'll use Telluride center for all
-  // In a real implementation, you'd get coordinates from the experience data
+  // Load address data on mount
+  useEffect(() => {
+    getAllAddresses().then((map) => {
+      setAddressMap(map);
+      setAddressesLoaded(true);
+    });
+  }, []);
+
+  // Get experience location from address data, fallback to Telluride center
   const getExperienceLocation = (productCode: string): [number, number] => {
-    // For now, distribute markers around Telluride center with slight offsets
+    const address = addressMap.get(productCode);
+    if (address) {
+      return [address.longitude, address.latitude];
+    }
+    // Fallback: distribute markers around Telluride center with slight offsets
     const index = experiences.findIndex(exp => exp.productCode === productCode);
     const offset = (index % 10) * 0.01; // Spread markers slightly
     return [DEFAULT_CENTER[0] + offset, DEFAULT_CENTER[1] + offset];
@@ -109,37 +123,49 @@ export default function ExperienceMap({ experiences, onSelectExperience }: Exper
         })}
 
         {/* Popup */}
-        {popupInfo && selectedExp && (
-          <Popup
-            longitude={popupInfo.lng}
-            latitude={popupInfo.lat}
-            anchor="bottom"
-            onClose={handleClosePopup}
-            closeButton={true}
-            closeOnClick={false}
-            className="experience-popup"
-          >
-            <div className="w-64 p-2">
-              <h3 className="font-bold text-sm mb-1 line-clamp-2">{selectedExp.title}</h3>
-              {selectedExp.reviews && selectedExp.reviews.totalReviews > 0 && (
-                <div className="flex items-center gap-1 mb-2">
-                  <span className="text-xs text-gray-600">
-                    ⭐ {selectedExp.reviews.combinedAverageRating.toFixed(1)} ({selectedExp.reviews.totalReviews})
-                  </span>
+        {popupInfo && selectedExp && (() => {
+          const address = addressMap.get(selectedExp.productCode);
+          return (
+            <Popup
+              longitude={popupInfo.lng}
+              latitude={popupInfo.lat}
+              anchor="bottom"
+              onClose={handleClosePopup}
+              closeButton={true}
+              closeOnClick={false}
+              className="experience-popup"
+            >
+              <div className="w-64 p-2">
+                <h3 className="font-bold text-sm mb-1 line-clamp-2">{selectedExp.title}</h3>
+                {address && (
+                  <div className="text-xs text-gray-600 mb-2">
+                    <svg className="w-3 h-3 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                    {address.city}, {address.state}
+                  </div>
+                )}
+                {selectedExp.reviews && selectedExp.reviews.totalReviews > 0 && (
+                  <div className="flex items-center gap-1 mb-2">
+                    <span className="text-xs text-gray-600">
+                      ⭐ {selectedExp.reviews.combinedAverageRating.toFixed(1)} ({selectedExp.reviews.totalReviews})
+                    </span>
+                  </div>
+                )}
+                <div className="text-lg font-bold text-primary-600 mb-2">
+                  {formatPrice(selectedExp.pricing)}
                 </div>
-              )}
-              <div className="text-lg font-bold text-primary-600 mb-2">
-                {formatPrice(selectedExp.pricing)}
+                <a
+                  href={`/things-to-do/${selectedExp.productCode}`}
+                  className="inline-block w-full text-center bg-primary-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-primary-700 transition-colors"
+                >
+                  View Details
+                </a>
               </div>
-              <a
-                href={`/things-to-do/${selectedExp.productCode}`}
-                className="inline-block w-full text-center bg-primary-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-primary-700 transition-colors"
-              >
-                View Details
-              </a>
-            </div>
-          </Popup>
-        )}
+            </Popup>
+          );
+        })()}
       </Map>
     </div>
   );
