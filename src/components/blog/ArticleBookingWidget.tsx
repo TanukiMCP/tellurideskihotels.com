@@ -17,6 +17,16 @@ export interface ArticleBookingWidgetProps {
   filter?: string;
   /** Display variant */
   variant?: 'default' | 'compact' | 'featured';
+  /** Check-in date (YYYY-MM-DD) to pass to search */
+  checkIn?: string;
+  /** Check-out date (YYYY-MM-DD) to pass to search */
+  checkOut?: string;
+  /** Number of guests to pass to search */
+  guests?: number;
+  /** Number of nights to pass to search */
+  nights?: number;
+  /** Maximum price per night to filter by */
+  maxPrice?: number;
 }
 
 export function ArticleBookingWidget({
@@ -27,16 +37,30 @@ export function ArticleBookingWidget({
   location,
   filter,
   variant = 'default',
+  checkIn,
+  checkOut,
+  guests,
+  nights,
+  maxPrice,
 }: ArticleBookingWidgetProps) {
-  // Build the link based on props
+  // Build the link based on props - NOW WITH CONTEXT!
   const buildLink = () => {
     if (hotelId) {
       return `/places-to-stay/${hotelId}`;
     }
     
     const params = new URLSearchParams();
+    
+    // Location and filter
     if (location) params.set('location', location);
     if (filter) params.set('filter', filter);
+    
+    // Search context from parent components
+    if (checkIn) params.set('checkin', checkIn);
+    if (checkOut) params.set('checkout', checkOut);
+    if (guests) params.set('guests', guests.toString());
+    if (nights) params.set('nights', nights.toString());
+    if (maxPrice) params.set('maxPrice', maxPrice.toString());
     
     const queryString = params.toString();
     return queryString ? `/places-to-stay?${queryString}` : '/places-to-stay';
@@ -89,7 +113,7 @@ export function ArticleBookingWidget({
     return (
       <a
         href={link}
-        className="block my-6 p-4 border-2 border-primary-200 rounded-lg bg-gradient-to-r from-primary-50 to-blue-50 hover:border-primary-400 hover:shadow-lg transition-all duration-300 group"
+        className="block my-6 p-4 border-2 border-primary-300 rounded-lg bg-white hover:border-primary-500 hover:shadow-lg transition-all duration-300 group"
       >
         <div className="flex items-center justify-between gap-4">
           <div className="flex items-center gap-3">
@@ -97,18 +121,18 @@ export function ArticleBookingWidget({
               {hotelName ? <MapPin className="w-5 h-5 text-white" /> : <Search className="w-5 h-5 text-white" />}
             </div>
             <div>
-              <div className="font-semibold text-neutral-900 group-hover:text-primary-700 transition-colors">
+              <div className="font-bold text-neutral-900 group-hover:text-primary-700 transition-colors">
                 {widgetTitle}
               </div>
               {variant !== 'compact' && (
-                <div className="text-sm text-neutral-600 mt-0.5">
+                <div className="text-sm text-neutral-700 mt-0.5">
                   {widgetDescription}
                 </div>
               )}
             </div>
           </div>
           <div className="flex-shrink-0">
-            <div className="px-4 py-2 bg-primary-600 text-white rounded-md font-semibold group-hover:bg-primary-700 transition-colors">
+            <div className="px-5 py-2.5 bg-primary-600 text-white rounded-lg font-bold group-hover:bg-primary-700 transition-colors shadow-md">
               {hotelName ? 'View Rates →' : 'Search →'}
             </div>
           </div>
@@ -120,7 +144,7 @@ export function ArticleBookingWidget({
   // Featured variant for prominent placement
   if (variant === 'featured') {
     return (
-      <Card className="my-8 border-2 border-primary-300 shadow-xl bg-gradient-to-br from-white via-primary-50 to-blue-50">
+      <Card className="my-8 border-2 border-primary-400 shadow-xl bg-white">
         <CardContent className="p-8">
           <div className="flex flex-col md:flex-row gap-6 items-center">
             <div className="flex-shrink-0">
@@ -133,18 +157,18 @@ export function ArticleBookingWidget({
               </div>
             </div>
             <div className="flex-1 text-center md:text-left">
-              <h3 className="text-2xl font-bold text-neutral-900 mb-2">
+              <h3 className="text-2xl font-extrabold text-neutral-900 mb-2">
                 {widgetTitle}
               </h3>
-              <p className="text-neutral-700 text-lg mb-4">
+              <p className="text-neutral-800 text-lg mb-4 font-medium">
                 {widgetDescription}
               </p>
-              <div className="flex flex-wrap gap-2 justify-center md:justify-start text-sm text-neutral-600">
+              <div className="flex flex-wrap gap-2 justify-center md:justify-start text-sm text-neutral-700 font-medium">
                 <div className="flex items-center gap-1">
                   <TrendingUp className="w-4 h-4 text-primary-600" />
                   <span>Real-time pricing</span>
                 </div>
-                <span className="text-neutral-300">•</span>
+                <span className="text-neutral-400">•</span>
                 <div className="flex items-center gap-1">
                   <Calendar className="w-4 h-4 text-primary-600" />
                   <span>Instant confirmation</span>
@@ -167,7 +191,7 @@ export function ArticleBookingWidget({
 
   // Default variant
   return (
-    <Card className="my-6 border-2 border-primary-200 hover:border-primary-400 hover:shadow-lg transition-all duration-300 bg-gradient-to-r from-white to-primary-50">
+    <Card className="my-6 border-2 border-primary-300 hover:border-primary-500 hover:shadow-lg transition-all duration-300 bg-white">
       <CardContent className="p-6">
         <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
           <div className="flex-shrink-0">
@@ -183,14 +207,14 @@ export function ArticleBookingWidget({
             <h3 className="text-lg font-bold text-neutral-900 mb-1">
               {widgetTitle}
             </h3>
-            <p className="text-neutral-600 text-sm">
+            <p className="text-neutral-700 text-sm font-medium">
               {widgetDescription}
             </p>
           </div>
           <div className="flex-shrink-0 w-full sm:w-auto">
             <a
               href={link}
-              className="inline-flex items-center justify-center w-full sm:w-auto bg-primary-600 hover:bg-primary-700 text-white font-semibold px-6 py-3 rounded-lg transition-colors"
+              className="inline-flex items-center justify-center w-full sm:w-auto bg-primary-600 hover:bg-primary-700 text-white font-bold px-6 py-3 rounded-lg transition-colors shadow-md"
             >
               {ctaText}
             </a>

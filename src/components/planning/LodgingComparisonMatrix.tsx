@@ -99,8 +99,8 @@ export function LodgingComparisonMatrix({
       const hotelComparisons: HotelComparison[] = hotels.map((hotel) => {
         const price = hotel.min_rate || (hotel.star_rating || 3) * 150;
         const totalCost = price * nightsCount;
-        const costPerPerson = totalCost / guests;
-        
+      const costPerPerson = totalCost / guests;
+
         const location = hotel.address?.city || 'Telluride';
         const amenities = hotel.amenities?.slice(0, 4).map(a => a.name || a) || ['Mountain views'];
         const rating = hotel.review_score || 4.0;
@@ -112,10 +112,10 @@ export function LodgingComparisonMatrix({
         const amenityScore = amenities.length * 10;
         const locationScore = location.includes('Mountain Village') ? 90 : 70;
         const spaceScore = 75; // Default since we don't have room count
-        
-        const score = (priceScore + ratingScore + amenityScore + locationScore + spaceScore) / 5;
 
-        return {
+      const score = (priceScore + ratingScore + amenityScore + locationScore + spaceScore) / 5;
+
+      return {
           hotelId: hotel.hotel_id,
           name: hotel.name || 'Hotel',
           price,
@@ -123,17 +123,17 @@ export function LodgingComparisonMatrix({
           amenities,
           rating,
           space: `${hotel.star_rating || 3}-star`,
-          score,
+        score,
           imageUrl,
-        };
+      };
       });
 
       hotelComparisons.sort((a, b) => {
-        if (sortBy === 'price') return a.price - b.price;
-        if (sortBy === 'score') return b.score - a.score;
-        if (sortBy === 'rating') return b.rating - a.rating;
-        return 0;
-      });
+      if (sortBy === 'price') return a.price - b.price;
+      if (sortBy === 'score') return b.score - a.score;
+      if (sortBy === 'rating') return b.rating - a.rating;
+      return 0;
+    });
 
       setComparisons(hotelComparisons.slice(0, 5));
       setError(null);
@@ -265,9 +265,13 @@ export function LodgingComparisonMatrix({
                   </thead>
                   <tbody>
                     {comparisons.map((hotel) => (
-                      <tr key={hotel.hotelId} className="border-b border-neutral-100">
+                      <tr 
+                        key={hotel.hotelId} 
+                        onClick={() => window.location.href = `/places-to-stay/${hotel.hotelId}`}
+                        className="border-b border-neutral-100 cursor-pointer hover:bg-primary-50 transition-colors"
+                      >
                         <td className="p-3">
-                          <div className="font-semibold text-neutral-900">{hotel.name}</div>
+                          <div className="font-semibold text-neutral-900 group-hover:text-primary-700">{hotel.name}</div>
                           <div className="text-sm text-neutral-600">{hotel.space}</div>
                         </td>
                         <td className="p-3">
@@ -324,17 +328,13 @@ export function LodgingComparisonMatrix({
               </div>
             </div>
 
-            {comparisons[0] && (
-              <div className="border-t border-neutral-200 pt-4">
-                <ArticleBookingWidget
-                  hotelId={comparisons[0].hotelId}
-                  hotelName={comparisons[0].name}
-                  variant="default"
-                  title={`Book ${comparisons[0].name}`}
-                  description="Compare rates and availability"
-                />
+            <div className="border-t border-neutral-200 pt-4">
+              <div className="p-4 bg-neutral-50 border-2 border-neutral-200 rounded-lg">
+                <p className="text-sm text-neutral-600 text-center">
+                  💡 <strong>Tip:</strong> Click any hotel row above to view full details and book
+                </p>
               </div>
-            )}
+            </div>
           </div>
         )}
       </CardContent>

@@ -3,10 +3,11 @@
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Input } from '@/components/ui/Input';
-import { ArticleBookingWidget } from '@/components/blog/ArticleBookingWidget';
+import { HotelGrid } from '@/components/blog/HotelGrid';
 import { Calculator, Users, Calendar } from 'lucide-react';
 import { LoadingSpinner } from '@/components/shared/LoadingSpinner';
 import type { LiteAPIHotel } from '@/lib/liteapi/types';
+import { addDays, format } from 'date-fns';
 
 export interface GroupCostCalculatorProps {
   groupType?: 'family' | 'friends' | 'couples' | 'corporate' | 'solo';
@@ -263,12 +264,20 @@ export function GroupCostCalculator({
               </div>
             </div>
 
-            <div className="border-t border-neutral-200 pt-4">
-              <ArticleBookingWidget
+            <div className="border-t border-neutral-200 pt-6">
+              <h3 className="text-xl font-bold text-neutral-900 mb-4">
+                Hotels Matching Your Mid-Range Budget
+              </h3>
+              <p className="text-neutral-600 mb-6">
+                Based on your {guests} guests for {nights} nights, here are available hotels around {formatCurrency(lodgingRates.midRange)}/night:
+              </p>
+              <HotelGrid
                 filter={getFilterForBudget(breakdown.midRange)}
-                variant="default"
-                title={`Find Hotels Under ${formatCurrency(breakdown.midRange)}/person`}
-                description="Search available properties that fit your budget"
+                limit={6}
+                checkIn={checkIn || format(addDays(new Date(), 7), 'yyyy-MM-dd')}
+                checkOut={checkOut || format(addDays(new Date(), 14), 'yyyy-MM-dd')}
+                title=""
+                client:load
               />
             </div>
           </div>

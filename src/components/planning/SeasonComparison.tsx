@@ -2,10 +2,11 @@
 
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
-import { ArticleBookingWidget } from '@/components/blog/ArticleBookingWidget';
+import { HotelGrid } from '@/components/blog/HotelGrid';
 import { Calendar, TrendingDown } from 'lucide-react';
 import { LoadingSpinner } from '@/components/shared/LoadingSpinner';
 import type { LiteAPIHotel } from '@/lib/liteapi/types';
+import { addDays, format } from 'date-fns';
 
 export interface SeasonComparisonProps {
   peakDates: string;
@@ -105,14 +106,14 @@ export function SeasonComparison({
       }
       
       const peak: SeasonData = {
-        name: 'Peak Season',
-        dates: peakDates,
+    name: 'Peak Season',
+    dates: peakDates,
         hotelCost: peakHotelCost,
-        liftTicketCost: BASE_LIFT_COST,
-        crowdLevel: 'High',
-        conditions: 'Excellent',
+    liftTicketCost: BASE_LIFT_COST,
+    crowdLevel: 'High',
+    conditions: 'Excellent',
         totalCost: (peakHotelCost + BASE_LIFT_COST) * 4 * groupSize,
-      };
+  };
 
       const offPeak: SeasonData = {
         name: 'Off-Peak Season',
@@ -140,12 +141,12 @@ export function SeasonComparison({
       };
 
       const offPeak: SeasonData = {
-        name: 'Off-Peak Season',
-        dates: offPeakDates,
+    name: 'Off-Peak Season',
+    dates: offPeakDates,
         hotelCost: 280,
-        liftTicketCost: BASE_LIFT_COST,
-        crowdLevel: 'Low',
-        conditions: 'Good to Excellent',
+    liftTicketCost: BASE_LIFT_COST,
+    crowdLevel: 'Low',
+    conditions: 'Good to Excellent',
         totalCost: (280 + BASE_LIFT_COST) * 4 * groupSize,
       };
       
@@ -277,12 +278,29 @@ export function SeasonComparison({
           </div>
         </div>
 
-        <div className="border-t border-neutral-200 pt-4">
-          <ArticleBookingWidget
+        <div className="border-t border-neutral-200 pt-6">
+          <h3 className="text-xl font-bold text-neutral-900 mb-4">
+            Available Hotels for {selectedSeason === 'offpeak' ? 'Off-Peak' : 'Peak'} Season
+          </h3>
+          <p className="text-neutral-600 mb-6">
+            {selectedSeason === 'offpeak' 
+              ? `Save ${savingsPercent}% with these off-peak season hotels (${offPeakDates})`
+              : `Premium availability for peak season (${peakDates})`
+            }
+          </p>
+          <HotelGrid
             filter={selectedSeason === 'offpeak' ? undefined : 'luxury'}
-            variant="default"
-            title={selectedSeason === 'offpeak' ? 'See Off-Peak Deals' : 'View Peak Season Availability'}
-            description={`Compare rates for ${selectedSeason === 'offpeak' ? 'off-peak' : 'peak'} season dates`}
+            limit={6}
+            checkIn={selectedSeason === 'offpeak' 
+              ? (offPeakCheckIn || format(addDays(new Date(), 7), 'yyyy-MM-dd'))
+              : (peakCheckIn || format(addDays(new Date(), 7), 'yyyy-MM-dd'))
+            }
+            checkOut={selectedSeason === 'offpeak'
+              ? (offPeakCheckOut || format(addDays(new Date(), 14), 'yyyy-MM-dd'))
+              : (peakCheckOut || format(addDays(new Date(), 14), 'yyyy-MM-dd'))
+            }
+            title=""
+            client:load
           />
         </div>
       </CardContent>

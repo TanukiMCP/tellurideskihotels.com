@@ -93,23 +93,23 @@ export function CostPerPersonRanking({
       const hotelRankings: HotelRanking[] = hotels.map((hotel) => {
         // Use actual min_rate if available, otherwise estimate based on star rating
         const costPerNight = hotel.min_rate || (hotel.star_rating || 3) * 150;
-        const totalCost = costPerNight * nightsCount;
-        const costPerPerson = totalCost / guests;
+      const totalCost = costPerNight * nightsCount;
+      const costPerPerson = totalCost / guests;
         
         // Get main image
         const imageUrl = hotel.images?.[0]?.url || hotel.images?.[0]?.thumbnail || '';
 
-        return {
+      return {
           hotelId: hotel.hotel_id,
           name: hotel.name || 'Hotel',
-          costPerNight,
-          totalCost,
-          costPerPerson,
+        costPerNight,
+        totalCost,
+        costPerPerson,
           rating: hotel.review_score,
           amenities: hotel.amenities?.slice(0, 3).map(a => a.name || a) || ['Ski access', 'Mountain views'],
           imageUrl,
-        };
-      });
+      };
+    });
 
       hotelRankings.sort((a, b) => a.costPerPerson - b.costPerPerson);
       setRankings(hotelRankings.slice(0, 5));
@@ -226,43 +226,43 @@ export function CostPerPersonRanking({
                         </div>
                       )}
                       <div className="flex-1 p-4">
-                        <div className="flex items-start justify-between mb-2">
-                          <div className="flex-1">
-                            <div className="flex items-center gap-2 mb-1">
-                              <span className="font-bold text-primary-600 text-lg">#{index + 1}</span>
-                              <span className="font-semibold text-neutral-900">{hotel.name}</span>
-                              {index === 0 && (
-                                <span className="text-xs bg-primary-600 text-white px-2 py-1 rounded">
-                                  Best Value
-                                </span>
-                              )}
-                            </div>
-                            <div className="text-sm text-neutral-600">
-                              {hotel.amenities.slice(0, 2).join(' • ')}
-                            </div>
+                    <div className="flex items-start justify-between mb-2">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-1">
+                          <span className="font-bold text-primary-600 text-lg">#{index + 1}</span>
+                          <span className="font-semibold text-neutral-900">{hotel.name}</span>
+                          {index === 0 && (
+                            <span className="text-xs bg-primary-600 text-white px-2 py-1 rounded">
+                              Best Value
+                            </span>
+                          )}
+                        </div>
+                        <div className="text-sm text-neutral-600">
+                          {hotel.amenities.slice(0, 2).join(' • ')}
+                        </div>
                             {hotel.rating && (
                               <div className="text-sm text-neutral-600 mt-1">
                                 ⭐ {hotel.rating.toFixed(1)} rating
                               </div>
                             )}
-                          </div>
-                          <div className="text-right ml-4">
-                            <div className="text-lg font-bold text-primary-600">
-                              {formatCurrency(hotel.costPerPerson)}
-                            </div>
-                            <div className="text-xs text-neutral-500">per person</div>
-                            <div className="text-xs text-neutral-500 mt-1">
-                              {formatCurrency(hotel.totalCost)} total
-                            </div>
-                          </div>
+                      </div>
+                      <div className="text-right ml-4">
+                        <div className="text-lg font-bold text-primary-600">
+                          {formatCurrency(hotel.costPerPerson)}
                         </div>
-                        <div className="mt-3 pt-3 border-t border-neutral-200">
-                          <a
-                            href={`/places-to-stay/${hotel.hotelId}`}
-                            className="text-sm text-primary-600 hover:text-primary-700 font-medium"
-                          >
-                            View Rooms & Rates →
-                          </a>
+                        <div className="text-xs text-neutral-500">per person</div>
+                        <div className="text-xs text-neutral-500 mt-1">
+                          {formatCurrency(hotel.totalCost)} total
+                        </div>
+                      </div>
+                    </div>
+                    <div className="mt-3 pt-3 border-t border-neutral-200">
+                      <a
+                        href={`/places-to-stay/${hotel.hotelId}`}
+                        className="text-sm text-primary-600 hover:text-primary-700 font-medium"
+                      >
+                        View Rooms & Rates →
+                      </a>
                         </div>
                       </div>
                     </div>

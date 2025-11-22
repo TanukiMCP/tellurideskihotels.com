@@ -3,10 +3,11 @@
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Input } from '@/components/ui/Input';
-import { ArticleBookingWidget } from '@/components/blog/ArticleBookingWidget';
+import { HotelGrid } from '@/components/blog/HotelGrid';
 import { Building2, Users, Calendar, TrendingUp } from 'lucide-react';
 import { LoadingSpinner } from '@/components/shared/LoadingSpinner';
 import type { LiteAPIHotel } from '@/lib/liteapi/types';
+import { addDays, format } from 'date-fns';
 
 export interface HotelSplitCalculatorProps {
   hotelIds?: string[];
@@ -279,12 +280,20 @@ export function HotelSplitCalculator({
             </div>
 
             {getBestOption() && (
-              <div className="border-t border-neutral-200 pt-4">
-                <ArticleBookingWidget
+              <div className="border-t border-neutral-200 pt-6">
+                <h3 className="text-xl font-bold text-neutral-900 mb-4">
+                  Available {getBestOption()?.type === 'condo' ? 'Condos & Suites' : 'Hotels'} for Your Group
+                </h3>
+                <p className="text-neutral-600 mb-6">
+                  Best value option: {getBestOption()?.name} at {formatCurrency(getBestOption()?.costPerPerson || 0)} per person
+                </p>
+                <HotelGrid
                   filter={getBestOption()?.type === 'condo' ? undefined : 'family-friendly'}
-                  variant="default"
-                  title={`View ${getBestOption()?.name} Options`}
-                  description={`Best value at ${formatCurrency(getBestOption()?.costPerPerson || 0)} per person`}
+                  limit={6}
+                  checkIn={checkIn || format(addDays(new Date(), 7), 'yyyy-MM-dd')}
+                  checkOut={checkOut || format(addDays(new Date(), 14), 'yyyy-MM-dd')}
+                  title=""
+                  client:load
                 />
               </div>
             )}
