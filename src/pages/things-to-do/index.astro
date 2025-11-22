@@ -39,15 +39,15 @@ const optimizedCtaUrl = ctaImage ? optimizePexelsImage(ctaImage.url, { width: 19
   <section class="relative min-h-[60vh] flex items-center justify-center overflow-hidden">
     <div class="absolute inset-0">
       {heroImage && optimizedHeroUrl ? (
-        <img
-          src={optimizedHeroUrl}
-          alt="Telluride Activities"
+      <img 
+        src={optimizedHeroUrl}
+        alt="Telluride Activities" 
           class="w-full h-full object-cover object-center"
-          loading="eager"
-        />
-      ) : (
-        <div class="w-full h-full bg-gradient-to-br from-primary-600 via-primary-700 to-primary-800"></div>
-      )}
+        loading="eager"
+      />
+    ) : (
+      <div class="w-full h-full bg-gradient-to-br from-primary-600 via-primary-700 to-primary-800"></div>
+    )}
       <div class="absolute inset-0 bg-gradient-to-br from-gray-900/80 via-gray-800/75 to-gray-900/80"></div>
     </div>
     <Container class="relative z-10">
@@ -63,7 +63,7 @@ const optimizedCtaUrl = ctaImage ? optimizePexelsImage(ctaImage.url, { width: 19
   </section>
   <Container class="py-8 sm:py-12">
     <ExperienceSearchWidget client:visible />
-  </Container>
+    </Container>
 
   <!-- Why Book With Us Section -->
   <div class="bg-gradient-to-b from-white to-neutral-50 py-20 lg:py-28">

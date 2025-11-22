@@ -66,38 +66,38 @@ function ExperienceSearchWidgetContent({ onExperienceSelect }: ExperienceSearchW
       }
 
       try {
-        const response = await fetch('/api/things-to-do/search-all', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({}),
-        });
+        // Load the manually categorized experiences directly from JSON
+        const response = await fetch('/data/telluride-experience-categories.json');
         
-        const data = await response.json();
-        if (data.success && data.experiences) {
-          // Load category map first, then assign categories
-          await getExperienceCategories(''); // Trigger category map load
+        if (response.ok) {
+          const categorizedExperiences = await response.json();
           
-          // Load categories asynchronously for each experience
-          const productsWithCategories = await Promise.all(
-            data.experiences.map(async (exp: ViatorProduct) => ({
-              ...exp,
-              categories: await getExperienceCategories(exp.productCode),
-            }))
-          );
+          // Fetch full details from Viator API for each experience
+          const apiResponse = await fetch('/api/things-to-do/search-all', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({}),
+          });
           
-          const withCategories = productsWithCategories.filter(e => e.categories && e.categories.length > 0);
-          console.log('[Experience Widget] Loaded', productsWithCategories.length, 'experiences');
-          console.log('[Experience Widget]', withCategories.length, 'experiences have categories');
-          if (withCategories.length === 0) {
-            console.warn('[Experience Widget] No categories loaded! Sample product codes:', productsWithCategories.slice(0, 5).map(e => e.productCode));
+          const apiData = await apiResponse.json();
+          
+          if (apiData.success && apiData.experiences) {
+            // Match API experiences with our categorized data
+            const productsWithCategories = apiData.experiences.map((exp: ViatorProduct) => {
+              const categorized = categorizedExperiences.find((cat: any) => cat.productCode === exp.productCode);
+              return {
+                ...exp,
+                categories: categorized?.categories || [],
+              };
+            });
+            
+            setAllExperiences(productsWithCategories);
+            setCategoriesLoaded(true);
           } else {
-            console.log('[Experience Widget] Sample categories:', productsWithCategories.slice(0, 5).map(e => ({ code: e.productCode, cats: e.categories?.length || 0 })));
+            setError(apiData.error?.message || 'Failed to load experiences');
           }
-          
-          setAllExperiences(productsWithCategories);
-          setCategoriesLoaded(true);
         } else {
-          setError(data.error?.message || 'Failed to load experiences');
+          setError('Failed to load category data');
         }
       } catch (err) {
         console.error('[Experience Widget] Load error:', err);
