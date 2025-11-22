@@ -1,9 +1,12 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { ArticleBookingWidget } from '@/components/blog/ArticleBookingWidget';
+import { HotelCard } from '@/components/lodging/HotelCard';
 import { Calendar, TrendingDown } from 'lucide-react';
+import type { LiteAPIHotel } from '@/lib/liteapi/types';
+import { LoadingSpinner } from '@/components/shared/LoadingSpinner';
 
 export interface SeasonComparisonProps {
   peakDates: string;
@@ -19,11 +22,10 @@ interface SeasonData {
   crowdLevel: string;
   conditions: string;
   totalCost: number;
+  hotels: LiteAPIHotel[];
+  hotelPrices: Record<string, number>;
 }
 
-const PEAK_MULTIPLIER = 2.5;
-const OFF_PEAK_MULTIPLIER = 0.7;
-const BASE_HOTEL_COST = 400;
 const BASE_LIFT_COST = 180;
 
 export function SeasonComparison({
@@ -32,29 +34,157 @@ export function SeasonComparison({
   groupSize = 4,
 }: SeasonComparisonProps) {
   const [selectedSeason, setSelectedSeason] = useState<'peak' | 'offpeak'>('peak');
+  const [peakData, setPeakData] = useState<SeasonData | null>(null);
+  const [offPeakData, setOffPeakData] = useState<SeasonData | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  const peakData: SeasonData = {
-    name: 'Peak Season',
-    dates: peakDates,
-    hotelCost: BASE_HOTEL_COST * PEAK_MULTIPLIER,
-    liftTicketCost: BASE_LIFT_COST,
-    crowdLevel: 'High',
-    conditions: 'Excellent',
-    totalCost: 0,
-  };
+  useEffect(() => {
+    async function fetchSeasonPricing() {
+      try {
+        setLoading(true);
+        setError(null);
 
-  const offPeakData: SeasonData = {
-    name: 'Off-Peak Season',
-    dates: offPeakDates,
-    hotelCost: BASE_HOTEL_COST * OFF_PEAK_MULTIPLIER,
-    liftTicketCost: BASE_LIFT_COST,
-    crowdLevel: 'Low',
-    conditions: 'Good to Excellent',
-    totalCost: 0,
-  };
+        // Parse dates (assuming format like "Dec 15 - Jan 5" or "Mar 1 - Mar 15")
+        const parseDateRange = (dateStr: string) => {
+          // Simple parsing - extract first date mentioned
+          const parts = dateStr.split(/[-–]/);
+          if (parts.length >= 2) {
+            const startStr = parts[0].trim();
+            const endStr = parts[1].trim();
+            // Try to parse dates (this is simplified - you may need more robust parsing)
+            const currentYear = new Date().getFullYear();
+            const startDate = new Date(`${startStr} ${currentYear}`);
+            const endDate = new Date(`${endStr} ${currentYear}`);
+            return { startDate, endDate };
+          }
+          return null;
+        };
 
-  peakData.totalCost = (peakData.hotelCost + peakData.liftTicketCost) * 4 * groupSize;
-  offPeakData.totalCost = (offPeakData.hotelCost + offPeakData.liftTicketCost) * 4 * groupSize;
+        const peakRange = parseDateRange(peakDates);
+        const offPeakRange = parseDateRange(offPeakDates);
+
+        // Fetch hotels for comparison
+        const params = new URLSearchParams({
+          cityName: 'Telluride',
+          countryCode: 'US',
+          limit: '20',
+        });
+
+        const response = await fetch(`/api/liteapi/search?${params.toString()}`);
+        if (!response.ok) {
+          throw new Error('Failed to load hotels');
+        }
+
+        const data = await response.json();
+        const hotels: LiteAPIHotel[] = (data.data || [])
+          .sort((a: LiteAPIHotel, b: LiteAPIHotel) => (b.review_score || 0) - (a.review_score || 0))
+          .slice(0, 5);
+
+        const fetchPrices = async (hotels: LiteAPIHotel[], checkIn: string, checkOut: string) => {
+          const prices: Record<string, number> = {};
+          const checkInDate = new Date(checkIn);
+          const checkOutDate = new Date(checkOut);
+          const nights = Math.ceil((checkOutDate.getTime() - checkInDate.getTime()) / (1000 * 60 * 60 * 24));
+
+          const pricePromises = hotels.map(async (hotel) => {
+            try {
+              const params = new URLSearchParams({
+                hotelId: hotel.hotel_id,
+                checkIn,
+                checkOut,
+                adults: '2',
+                children: '0',
+              });
+              
+              const response = await fetch(`/api/hotels/rates?${params.toString()}`);
+              if (response.ok) {
+                const data = await response.json();
+                if (data.rates && data.rates.length > 0) {
+                  const ratePrices = data.rates
+                    .map((rate: any) => {
+                      const total = rate.total?.amount || rate.net?.amount;
+                      return total && nights > 0 ? total / nights : null;
+                    })
+                    .filter((p: number | null): p is number => p !== null && p > 0);
+                  
+                  if (ratePrices.length > 0) {
+                    return { hotelId: hotel.hotel_id, price: Math.min(...ratePrices) };
+                  }
+                }
+              }
+            } catch (err) {
+              console.warn(`Failed to fetch pricing for ${hotel.hotel_id}:`, err);
+            }
+            return null;
+          });
+
+          const priceResults = await Promise.all(pricePromises);
+          priceResults.forEach((result) => {
+            if (result) {
+              prices[result.hotelId] = result.price;
+            }
+          });
+
+          return prices;
+        };
+
+        // Use sample dates if parsing fails
+        const peakCheckIn = peakRange?.startDate.toISOString().split('T')[0] || '2024-12-20';
+        const peakCheckOut = peakRange?.endDate.toISOString().split('T')[0] || '2024-12-24';
+        const offPeakCheckIn = offPeakRange?.startDate.toISOString().split('T')[0] || '2024-03-01';
+        const offPeakCheckOut = offPeakRange?.endDate.toISOString().split('T')[0] || '2024-03-05';
+
+        const [peakPrices, offPeakPrices] = await Promise.all([
+          fetchPrices(hotels, peakCheckIn, peakCheckOut),
+          fetchPrices(hotels, offPeakCheckIn, offPeakCheckOut),
+        ]);
+
+        // Calculate average prices
+        const getAveragePrice = (prices: Record<string, number>) => {
+          const validPrices = Object.values(prices).filter(p => p > 0);
+          if (validPrices.length === 0) return 0;
+          return validPrices.reduce((a, b) => a + b, 0) / validPrices.length;
+        };
+
+        const avgPeakPrice = getAveragePrice(peakPrices) || 800;
+        const avgOffPeakPrice = getAveragePrice(offPeakPrices) || 300;
+
+        const peakTotalCost = (avgPeakPrice + BASE_LIFT_COST) * 4 * groupSize;
+        const offPeakTotalCost = (avgOffPeakPrice + BASE_LIFT_COST) * 4 * groupSize;
+
+        setPeakData({
+          name: 'Peak Season',
+          dates: peakDates,
+          hotelCost: avgPeakPrice,
+          liftTicketCost: BASE_LIFT_COST,
+          crowdLevel: 'High',
+          conditions: 'Excellent',
+          totalCost: peakTotalCost,
+          hotels: hotels.slice(0, 3),
+          hotelPrices: peakPrices,
+        });
+
+        setOffPeakData({
+          name: 'Off-Peak Season',
+          dates: offPeakDates,
+          hotelCost: avgOffPeakPrice,
+          liftTicketCost: BASE_LIFT_COST,
+          crowdLevel: 'Low',
+          conditions: 'Good to Excellent',
+          totalCost: offPeakTotalCost,
+          hotels: hotels.slice(0, 3),
+          hotelPrices: offPeakPrices,
+        });
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Failed to load pricing data');
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchSeasonPricing();
+  }, [peakDates, offPeakDates, groupSize]);
 
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('en-US', {
@@ -64,8 +194,33 @@ export function SeasonComparison({
     }).format(amount);
   };
 
+  if (loading) {
+    return (
+      <Card className="my-8 border-2 border-primary-200">
+        <CardContent className="py-12">
+          <div className="flex justify-center items-center">
+            <LoadingSpinner size="lg" />
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  if (error || !peakData || !offPeakData) {
+    return (
+      <Card className="my-8 border-2 border-primary-200">
+        <CardContent className="p-6">
+          <p className="text-neutral-600 text-center">
+            {error || 'Unable to load pricing comparison.'}
+          </p>
+        </CardContent>
+      </Card>
+    );
+  }
+
   const savings = peakData.totalCost - offPeakData.totalCost;
-  const savingsPercent = ((savings / peakData.totalCost) * 100).toFixed(0);
+  const savingsPercent = peakData.totalCost > 0 ? ((savings / peakData.totalCost) * 100).toFixed(0) : '0';
+  const selectedData = selectedSeason === 'peak' ? peakData : offPeakData;
 
   return (
     <Card className="my-8 border-2 border-primary-200">
@@ -159,6 +314,26 @@ export function SeasonComparison({
             </div>
           </div>
         </div>
+
+        {selectedData.hotels.length > 0 && (
+          <div className="border-t border-neutral-200 pt-4">
+            <h3 className="text-lg font-semibold text-neutral-900 mb-4">
+              {selectedData.name} Hotels
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {selectedData.hotels.map((hotel) => (
+                <HotelCard
+                  key={hotel.hotel_id}
+                  hotel={hotel}
+                  minPrice={selectedData.hotelPrices[hotel.hotel_id]}
+                  onSelect={(id) => {
+                    window.location.href = `/places-to-stay/${id}`;
+                  }}
+                />
+              ))}
+            </div>
+          </div>
+        )}
 
         <div className="border-t border-neutral-200 pt-4">
           <ArticleBookingWidget

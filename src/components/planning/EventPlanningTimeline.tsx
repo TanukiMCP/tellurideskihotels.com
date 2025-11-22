@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Input } from '@/components/ui/Input';
 import { ArticleBookingWidget } from '@/components/blog/ArticleBookingWidget';
+import { HotelGrid } from '@/components/blog/HotelGrid';
 import { Calendar, Clock, Users } from 'lucide-react';
 
 export interface EventPlanningTimelineProps {
@@ -173,12 +174,22 @@ export function EventPlanningTimeline({
                 <p className="text-neutral-700 text-sm mb-3">
                   Start by booking group lodging for {size} guests. Early booking ensures availability and better rates.
                 </p>
-                <ArticleBookingWidget
-                  variant="default"
-                  title="Reserve Group Lodging Now"
-                  description={`Find accommodations for ${size} guests`}
-                />
               </div>
+            </div>
+
+            <div className="border-t border-neutral-200 pt-4">
+              <HotelGrid
+                limit={3}
+                title="Group Lodging Options"
+              />
+            </div>
+
+            <div className="border-t border-neutral-200 pt-4">
+              <ArticleBookingWidget
+                variant="default"
+                title="Reserve Group Lodging Now"
+                description={`Find accommodations for ${size} guests`}
+              />
             </div>
           </div>
         )}
