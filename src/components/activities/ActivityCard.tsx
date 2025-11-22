@@ -61,15 +61,15 @@ export function ActivityCard({ activity, className = '' }: ActivityCardProps) {
       </div>
 
       {/* Content - flex-grow pushes footer to bottom */}
-      <div className="p-6 flex flex-col flex-grow">
+      <div className="p-6 flex flex-col flex-grow min-h-0">
         {/* Title */}
-        <h3 className="text-lg font-bold text-neutral-900 mb-2 line-clamp-2 group-hover:text-primary-600 transition-colors">
+        <h3 className="text-lg font-bold text-neutral-900 mb-3 line-clamp-2 group-hover:text-primary-600 transition-colors min-h-[3.5rem]">
           {activity.title}
         </h3>
 
         {/* Reviews */}
         {hasReviews && activity.reviews && (
-          <div className="flex items-center gap-2 mb-3">
+          <div className="flex items-center gap-2 mb-3 flex-shrink-0">
             <div className="flex items-center">
               {[...Array(5)].map((_, i) => (
                 <svg
@@ -94,14 +94,14 @@ export function ActivityCard({ activity, className = '' }: ActivityCardProps) {
 
         {/* Description */}
         {activity.description && (
-          <p className="text-neutral-600 text-sm mb-4 line-clamp-3 leading-relaxed">
+          <p className="text-neutral-600 text-sm mb-4 line-clamp-3 leading-relaxed flex-shrink-0">
             {activity.description}
           </p>
         )}
 
         {/* Flags */}
         {activity.flags && activity.flags.length > 0 && (
-          <div className="flex flex-wrap gap-2 mb-4">
+          <div className="flex flex-wrap gap-2 mb-4 flex-shrink-0">
             {activity.flags.slice(0, 2).map((flag) => (
               <span
                 key={flag}
@@ -114,17 +114,17 @@ export function ActivityCard({ activity, className = '' }: ActivityCardProps) {
         )}
 
         {/* Spacer to push footer to bottom */}
-        <div className="flex-grow"></div>
+        <div className="flex-grow min-h-[1rem]"></div>
 
         {/* Price and CTA - Always at bottom */}
-        <div className="flex items-center justify-between pt-4 border-t border-neutral-200 mt-auto">
-          <div>
+        <div className="flex items-center justify-between pt-4 border-t border-neutral-200 mt-4 flex-shrink-0">
+          <div className="flex-shrink-0">
             <div className="text-xs text-neutral-600 mb-0.5">From</div>
             <div className="text-2xl font-bold text-primary-600">
               {priceText}
             </div>
           </div>
-          <div className="inline-flex items-center gap-2 bg-primary-600 text-white px-6 py-3 rounded-xl font-semibold text-sm shadow-card group-hover:shadow-card-hover group-hover:bg-primary-700 transition-all duration-300">
+          <div className="inline-flex items-center gap-2 bg-primary-600 text-white px-4 py-2 rounded-xl font-semibold text-sm shadow-card group-hover:shadow-card-hover group-hover:bg-primary-700 transition-all duration-300 flex-shrink-0">
             View Details
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />

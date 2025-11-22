@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import ExperienceGrid from './ExperienceGrid';
+import ExperienceMap from './ExperienceMap';
 import type { ViatorProduct } from '@/lib/viator/types';
 import { ErrorBoundary } from '@/components/shared/ErrorBoundary';
-import { getExperienceCategoriesSync, getCategoryLabel, type TellurideExperienceCategory } from '@/lib/category-mapper';
+import { getExperienceCategories, getExperienceCategoriesSync, getCategoryLabel, type TellurideExperienceCategory } from '@/lib/category-mapper';
 import PriceRangeFilter from '@/components/shared/PriceRangeFilter';
 
 interface ExperienceSearchWidgetProps {
@@ -72,10 +73,13 @@ function ExperienceSearchWidgetContent({ onExperienceSelect }: ExperienceSearchW
         
         const data = await response.json();
         if (data.success && data.experiences) {
-          const productsWithCategories = data.experiences.map((exp: ViatorProduct) => ({
-            ...exp,
-            categories: getExperienceCategoriesSync(exp.productCode),
-          }));
+          // Load categories asynchronously for each experience
+          const productsWithCategories = await Promise.all(
+            data.experiences.map(async (exp: ViatorProduct) => ({
+              ...exp,
+              categories: await getExperienceCategories(exp.productCode),
+            }))
+          );
           setAllExperiences(productsWithCategories);
         } else {
           setError(data.error?.message || 'Failed to load experiences');
@@ -249,9 +253,23 @@ function ExperienceSearchWidgetContent({ onExperienceSelect }: ExperienceSearchW
                     ? 'bg-white text-primary-600 shadow-sm'
                     : 'text-gray-600 hover:text-gray-900'
                 }`}
+                title="Grid View"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+                </svg>
+              </button>
+              <button
+                onClick={() => setViewMode('map')}
+                className={`px-3 py-2 rounded-md transition-all ${
+                  viewMode === 'map'
+                    ? 'bg-white text-primary-600 shadow-sm'
+                    : 'text-gray-600 hover:text-gray-900'
+                }`}
+                title="Map View"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
                 </svg>
               </button>
             </div>
@@ -427,7 +445,14 @@ function ExperienceSearchWidgetContent({ onExperienceSelect }: ExperienceSearchW
                     </div>
                   )}
                 </div>
-              ) : null}
+              ) : (
+                <div className="h-full w-full">
+                  <ExperienceMap
+                    experiences={filteredAndSortedExperiences}
+                    onSelectExperience={handleExperienceSelect}
+                  />
+                </div>
+              )}
             </>
           )}
         </main>
