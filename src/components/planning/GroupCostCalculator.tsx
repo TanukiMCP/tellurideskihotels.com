@@ -50,19 +50,26 @@ export function GroupCostCalculator({
   });
 
   useEffect(() => {
-    fetchRatesAndCalculate();
-  }, [guests, nights, checkIn, checkOut]);
+    fetchRates();
+  }, [checkIn, checkOut, nights]);
 
-  const fetchRatesAndCalculate = async () => {
+  useEffect(() => {
+    if (!loading) {
+      calculateCosts();
+    }
+  }, [guests, lodgingRates, loading]);
+
+  const fetchRates = async () => {
     try {
       setLoading(true);
       
-      // Default dates: 1 week out from today, 1 week duration
-      const defaultCheckIn = format(addDays(new Date(), 7), 'yyyy-MM-dd');
-      const defaultCheckOut = format(addDays(new Date(), 14), 'yyyy-MM-dd');
+      // Default dates: 45 days out to ensure availability
+      const defaultCheckIn = format(addDays(new Date(), 45), 'yyyy-MM-dd');
+      const defaultCheckOut = format(addDays(new Date(), 45 + nights), 'yyyy-MM-dd');
       
       const checkInDate = checkIn || defaultCheckIn;
-      const checkOutDate = checkOut || defaultCheckOut;
+      // If checkIn is provided but not checkOut, calculate based on nights
+      const checkOutDate = checkOut || (checkIn ? format(addDays(new Date(checkIn), nights), 'yyyy-MM-dd') : defaultCheckOut);
       
       // STEP 1: Fetch hotels
       const searchParams = new URLSearchParams({
@@ -81,7 +88,7 @@ export function GroupCostCalculator({
       const hotels: LiteAPIHotel[] = hotelsData.data || [];
       
       if (hotels.length === 0) {
-        calculateCosts({ budget: 150, midRange: 350, luxury: 800 }); // Use default rates
+        setLodgingRates({ budget: 150, midRange: 350, luxury: 800 });
         return;
       }
       
@@ -97,12 +104,11 @@ export function GroupCostCalculator({
       const ratesResponse = await fetch(`/api/hotels/min-rates?${ratesParams.toString()}`);
       
       if (!ratesResponse.ok) {
-        calculateCosts({ budget: 150, midRange: 350, luxury: 800 }); // Use default rates if rates API fails
+        setLodgingRates({ budget: 150, midRange: 350, luxury: 800 });
         return;
       }
       
       const ratesData = await ratesResponse.json();
-      const nights = Math.ceil((new Date(checkOutDate).getTime() - new Date(checkInDate).getTime()) / (1000 * 60 * 60 * 24));
       
       // Build price map
       const prices: Record<string, number> = {};
@@ -122,7 +128,7 @@ export function GroupCostCalculator({
       const newRates = {
         budget: budgetHotels.length > 0 
           ? budgetHotels.reduce((sum, h) => sum + prices[h.hotel_id], 0) / budgetHotels.length 
-          : 150, // Fallback only if no data at all
+          : 150,
         midRange: midRangeHotels.length > 0 
           ? midRangeHotels.reduce((sum, h) => sum + prices[h.hotel_id], 0) / midRangeHotels.length 
           : 350,
@@ -132,10 +138,10 @@ export function GroupCostCalculator({
       };
       
       setLodgingRates(newRates);
-      calculateCosts(newRates); // Pass rates directly instead of relying on state
+      // calculateCosts will be triggered by useEffect dependency on lodgingRates
     } catch (err) {
       // Fall back to default rates if API fails
-      calculateCosts({ budget: 150, midRange: 350, luxury: 800 });
+      setLodgingRates({ budget: 150, midRange: 350, luxury: 800 });
     } finally {
       setLoading(false);
     }
@@ -252,42 +258,42 @@ export function GroupCostCalculator({
               <div className="grid gap-4 md:grid-cols-3">
                 <button
                   onClick={() => setSelectedTier('budget')}
-                  className={`p-4 border-2 rounded-lg text-left transition-all cursor-pointer hover:shadow-md ${
+                  className={`w-full p-4 border-2 rounded-lg text-left transition-all cursor-pointer hover:shadow-md break-words ${
                     selectedTier === 'budget'
                       ? 'border-primary-500 bg-primary-50 shadow-sm'
                       : 'border-neutral-200 hover:border-primary-200'
                   }`}
                 >
                   <div className="text-sm text-neutral-600 mb-1">Budget</div>
-                  <div className="text-2xl font-bold text-primary-600">
+                  <div className="text-xl md:text-2xl font-bold text-primary-600">
                     {formatCurrency(breakdown.budget)}
                   </div>
                   <div className="text-xs text-neutral-500 mt-1">per person</div>
                 </button>
                 <button
                   onClick={() => setSelectedTier('midRange')}
-                  className={`p-4 border-2 rounded-lg text-left transition-all cursor-pointer hover:shadow-md ${
+                  className={`w-full p-4 border-2 rounded-lg text-left transition-all cursor-pointer hover:shadow-md break-words ${
                     selectedTier === 'midRange'
                       ? 'border-primary-500 bg-primary-50 shadow-sm'
                       : 'border-neutral-200 hover:border-primary-200'
                   }`}
                 >
                   <div className="text-sm text-neutral-600 mb-1">Mid-Range</div>
-                  <div className="text-2xl font-bold text-primary-700">
+                  <div className="text-xl md:text-2xl font-bold text-primary-700">
                     {formatCurrency(breakdown.midRange)}
                   </div>
                   <div className="text-xs text-neutral-500 mt-1">per person</div>
                 </button>
                 <button
                   onClick={() => setSelectedTier('luxury')}
-                  className={`p-4 border-2 rounded-lg text-left transition-all cursor-pointer hover:shadow-md ${
+                  className={`w-full p-4 border-2 rounded-lg text-left transition-all cursor-pointer hover:shadow-md break-words ${
                     selectedTier === 'luxury'
                       ? 'border-primary-500 bg-primary-50 shadow-sm'
                       : 'border-neutral-200 hover:border-primary-200'
                   }`}
                 >
                   <div className="text-sm text-neutral-600 mb-1">Luxury</div>
-                  <div className="text-2xl font-bold text-primary-600">
+                  <div className="text-xl md:text-2xl font-bold text-primary-600">
                     {formatCurrency(breakdown.luxury)}
                   </div>
                   <div className="text-xs text-neutral-500 mt-1">per person</div>

@@ -29,9 +29,9 @@ export function HotelGrid({
       try {
         setLoading(true);
         
-        // Default dates: 1 week out from today, 1 week duration (SAME AS HOMEPAGE)
-        const defaultCheckIn = format(addDays(new Date(), 7), 'yyyy-MM-dd');
-        const defaultCheckOut = format(addDays(new Date(), 14), 'yyyy-MM-dd');
+        // Default dates: 45 days out to ensure availability (aligned with calculators)
+        const defaultCheckIn = format(addDays(new Date(), 45), 'yyyy-MM-dd');
+        const defaultCheckOut = format(addDays(new Date(), 52), 'yyyy-MM-dd');
         
         const checkInDate = checkIn || defaultCheckIn;
         const checkOutDate = checkOut || defaultCheckOut;
@@ -177,7 +177,7 @@ export function HotelGrid({
       <div className="mt-6 text-center">
         <a
           href={`/places-to-stay${filter ? `?filter=${filter}` : ''}`}
-          className="inline-flex items-center gap-2 bg-primary-600 hover:bg-primary-700 text-white font-semibold px-6 py-3 rounded-lg transition-colors"
+          className="inline-flex w-full md:w-auto justify-center items-center gap-2 bg-primary-600 hover:bg-primary-700 text-white font-semibold px-6 py-3 rounded-lg transition-colors"
         >
           View All Properties
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

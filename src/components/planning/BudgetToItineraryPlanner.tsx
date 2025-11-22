@@ -49,16 +49,22 @@ export function BudgetToItineraryPlanner({
   const [avgHotelRate, setAvgHotelRate] = useState(0);
 
   useEffect(() => {
-    fetchRatesAndCalculate();
-  }, [budget, length, size, checkIn, checkOut]);
+    fetchRates();
+  }, [checkIn, checkOut]);
 
-  const fetchRatesAndCalculate = async () => {
+  useEffect(() => {
+    if (!loading) {
+      calculateBreakdown(avgHotelRate);
+    }
+  }, [budget, length, size, avgHotelRate, loading]);
+
+  const fetchRates = async () => {
     try {
       setLoading(true);
       
-      // Default dates: 1 week out from today, 1 week duration
-      const defaultCheckIn = format(addDays(new Date(), 7), 'yyyy-MM-dd');
-      const defaultCheckOut = format(addDays(new Date(), 14), 'yyyy-MM-dd');
+      // Default dates: 45 days out to ensure availability
+      const defaultCheckIn = format(addDays(new Date(), 45), 'yyyy-MM-dd');
+      const defaultCheckOut = format(addDays(new Date(), 45 + 7), 'yyyy-MM-dd');
       
       const checkInDate = checkIn || defaultCheckIn;
       const checkOutDate = checkOut || defaultCheckOut;
@@ -80,7 +86,7 @@ export function BudgetToItineraryPlanner({
       const hotels: LiteAPIHotel[] = hotelsData.data || [];
       
       if (hotels.length === 0) {
-        calculateBreakdown(avgHotelRate); // Use existing rate
+        setAvgHotelRate(350);
         return;
       }
       
@@ -96,11 +102,12 @@ export function BudgetToItineraryPlanner({
       const ratesResponse = await fetch(`/api/hotels/min-rates?${ratesParams.toString()}`);
       
       if (!ratesResponse.ok) {
-        calculateBreakdown(avgHotelRate); // Use existing rate if rates API fails
+        setAvgHotelRate(350);
         return;
       }
       
       const ratesData = await ratesResponse.json();
+      // Calculate nights properly
       const nights = Math.ceil((new Date(checkOutDate).getTime() - new Date(checkInDate).getTime()) / (1000 * 60 * 60 * 24));
       
       // Calculate average rate from actual prices
@@ -116,13 +123,12 @@ export function BudgetToItineraryPlanner({
         });
       }
       
-      const hotelRate = rateCount > 0 ? totalRate / rateCount : 350; // Fallback only if no data
-      
+      const hotelRate = rateCount > 0 ? totalRate / rateCount : 350;
       setAvgHotelRate(hotelRate);
-      calculateBreakdown(hotelRate);
+      // Calculation triggered by useEffect
     } catch (err) {
       // Fall back to existing rate if API fails
-      calculateBreakdown(avgHotelRate);
+      setAvgHotelRate(350);
     } finally {
       setLoading(false);
     }
@@ -233,7 +239,13 @@ export function BudgetToItineraryPlanner({
           </div>
         </div>
 
-        {breakdown && (
+        {loading && (
+          <div className="flex justify-center items-center py-12">
+            <LoadingSpinner size="lg" />
+          </div>
+        )}
+
+        {!loading && breakdown && (
           <div className="mt-6 space-y-4">
             <div className="border-t border-neutral-200 pt-4">
               <h3 className="text-lg font-semibold text-neutral-900 mb-4">

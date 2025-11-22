@@ -16,7 +16,6 @@ import { HotelSplitCalculator } from '@/components/planning/HotelSplitCalculator
 import { BudgetToItineraryPlanner } from '@/components/planning/BudgetToItineraryPlanner';
 import { SeasonComparison } from '@/components/planning/SeasonComparison';
 import { GroupTypeRecommender } from '@/components/planning/GroupTypeRecommender';
-import { CostPerPersonRanking } from '@/components/planning/CostPerPersonRanking';
 
 interface Props {
   article: CollectionEntry<'blog'>;
@@ -139,33 +138,7 @@ const categoryName = data.category.replace(/-/g, ' ');
             prose-blockquote:bg-[#F8F6F3] prose-blockquote:pl-6 prose-blockquote:py-6
             prose-blockquote:italic prose-blockquote:text-[19px] prose-blockquote:my-8
             prose-blockquote:text-[#2C2C2C]
-            [&>*]:not-prose
-            [&>div]:not-prose
-            [&>section]:not-prose
             ">
-            <style>
-              /* Break React components out of prose constraints */
-              .prose > *:has(> [class*="Card"]),
-              .prose > *:has(> [class*="HotelGrid"]),
-              .prose > *:has(> [class*="GroupCostCalculator"]),
-              .prose > *:has(> [class*="HotelSplitCalculator"]),
-              .prose > *:has(> [class*="CostPerPersonRanking"]),
-              .prose > *:has(> [class*="ActivityShowcase"]),
-              .prose > *:has(> [class*="ArticleBookingWidget"]),
-              .prose [data-astro-cid-*] {
-                max-width: 100% !important;
-                margin-left: 0 !important;
-                margin-right: 0 !important;
-                margin-top: 2.5rem !important;
-                margin-bottom: 2.5rem !important;
-              }
-              
-              /* Ensure proper spacing for embedded components */
-              .prose > div[class*="astro"] {
-                margin-top: 2.5rem;
-                margin-bottom: 2.5rem;
-              }
-            </style>
             <Content 
               components={{
                 ArticleBookingWidget,
@@ -177,7 +150,6 @@ const categoryName = data.category.replace(/-/g, ' ');
                 BudgetToItineraryPlanner,
                 SeasonComparison,
                 GroupTypeRecommender,
-                CostPerPersonRanking,
               }}
             />
           </div>
