@@ -4,6 +4,7 @@
   to = "/.netlify/functions/booking-prebook"
   status = 200
 
+# Catch-all redirect for SPA routing (excludes static files like sitemap.xml)
 [[redirects]]
   from = "/*"
   to = "/index.html"

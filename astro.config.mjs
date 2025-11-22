@@ -15,6 +15,8 @@ export default defineConfig({
       filter: (page) => !page.includes('/admin/') && !page.includes('/api/'),
       changefreq: 'weekly',
       priority: 0.7,
+      createLinkInHead: true,
+      entryLimit: 45000,
     }),
   ],
   image: {
