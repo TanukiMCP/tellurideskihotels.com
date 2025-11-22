@@ -41,43 +41,45 @@ export function ActivityCard({ activity, className = '' }: ActivityCardProps) {
   const fullStars = Math.round(rating);
 
   return (
-    <a 
-      href={detailsUrl}
-      onClick={handleClick}
-      className={`group bg-white rounded-xl overflow-hidden border border-[#E5E5E5] shadow-[0_2px_12px_rgba(0,0,0,0.06)] hover:shadow-[0_8px_24px_rgba(0,0,0,0.12)] hover:-translate-y-1 hover:border-[#D5D5D5] transition-all duration-200 flex flex-col cursor-pointer ${className}`}
+    <div 
+      className={`group bg-white rounded-xl overflow-hidden border border-[#E5E5E5] shadow-[0_2px_12px_rgba(0,0,0,0.06)] hover:shadow-[0_8px_24px_rgba(0,0,0,0.12)] hover:-translate-y-1 hover:border-[#D5D5D5] transition-all duration-200 flex flex-col cursor-pointer h-full ${className}`}
     >
       {/* Image - BUG #2: Fixed aspect ratio */}
-      <div className="relative w-full h-[200px] overflow-hidden bg-neutral-100 flex-shrink-0">
-        {imageUrl ? (
-          <img
-            src={imageUrl}
-            alt={activity.title}
-            className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-300"
-            loading="lazy"
-          />
-        ) : (
-          <div className="w-full h-full flex items-center justify-center text-neutral-400">
-            <svg className="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-            </svg>
+      <a href={detailsUrl} onClick={handleClick} className="block">
+        <div className="relative w-full h-[200px] overflow-hidden bg-neutral-100 flex-shrink-0">
+          {imageUrl ? (
+            <img
+              src={imageUrl}
+              alt={activity.title}
+              className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-300"
+              loading="lazy"
+            />
+          ) : (
+            <div className="w-full h-full flex items-center justify-center text-neutral-400">
+              <svg className="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+            </div>
+          )}
+          
+          {/* Duration Badge - BUG #1: Pixel-perfect positioning and styling */}
+          <div 
+            className="absolute top-4 left-4 bg-[rgba(255,255,255,0.95)] px-2 py-1.5 rounded-[20px] text-[13px] font-semibold text-[#2C2C2C] shadow-[0_2px_8px_rgba(0,0,0,0.1)]"
+            style={{ top: '16px', left: '16px' }}
+          >
+            {durationText}
           </div>
-        )}
-        
-        {/* Duration Badge - BUG #1: Pixel-perfect positioning and styling */}
-        <div 
-          className="absolute top-4 left-4 bg-[rgba(255,255,255,0.95)] px-2 py-1.5 rounded-[20px] text-[13px] font-semibold text-[#2C2C2C] shadow-[0_2px_8px_rgba(0,0,0,0.1)]"
-          style={{ top: '16px', left: '16px' }}
-        >
-          {durationText}
         </div>
-      </div>
+      </a>
 
       {/* Content - flex-grow pushes footer to bottom */}
       <div className="p-5 flex flex-col flex-grow min-h-0">
         {/* Title - BUG #3: 2-line clamping */}
-        <h3 className="text-[18px] font-bold text-[#2C2C2C] mb-3 group-hover:text-[#2D5F4F] transition-colors leading-[1.3] min-h-[47px] line-clamp-2">
-          {activity.title}
-        </h3>
+        <a href={detailsUrl} onClick={handleClick} className="block">
+          <h3 className="text-[18px] font-bold text-[#2C2C2C] mb-3 group-hover:text-[#2D5F4F] transition-colors leading-[1.3] min-h-[47px] line-clamp-2">
+            {activity.title}
+          </h3>
+        </a>
 
         {/* Reviews - BUG #4: Star rating alignment */}
         {hasReviews && activity.reviews && (
@@ -144,22 +146,29 @@ export function ActivityCard({ activity, className = '' }: ActivityCardProps) {
         <div className="flex-grow min-h-[1rem]"></div>
 
         {/* Price and CTA - BUG #7: Perfect layout */}
-        <div className="flex items-center justify-between pt-5 border-t border-[#E5E5E5] mt-5 flex-shrink-0">
-          <div className="flex flex-col items-start">
+        <div className="flex items-center justify-between gap-4 pt-5 border-t border-[#E5E5E5] mt-5 flex-shrink-0">
+          <div className="flex flex-col items-start min-w-0 flex-shrink">
             <div className="text-[13px] font-normal text-[#999999] mb-1 leading-none">From</div>
             <div className="text-[24px] font-bold text-[#2D5F4F] leading-none">
               {priceText}
             </div>
           </div>
-          <div className="inline-flex items-center gap-1.5 bg-[#2D5F4F] hover:bg-[#1F4436] text-white px-5 py-2.5 rounded-md font-semibold text-[14px] shadow-[0_4px_8px_rgba(45,95,79,0.2)] hover:shadow-[0_4px_12px_rgba(45,95,79,0.3)] hover:-translate-y-[1px] active:scale-[0.98] transition-all duration-200 whitespace-nowrap flex-shrink-0">
+          <a
+            href={detailsUrl}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleClick(e);
+            }}
+            className="inline-flex items-center gap-1.5 bg-[#2D5F4F] hover:bg-[#1F4436] text-white px-4 py-2.5 rounded-md font-semibold text-[14px] shadow-[0_4px_8px_rgba(45,95,79,0.2)] hover:shadow-[0_4px_12px_rgba(45,95,79,0.3)] hover:-translate-y-[1px] active:scale-[0.98] transition-all duration-200 whitespace-nowrap flex-shrink-0"
+          >
             View Details
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
             </svg>
-          </div>
+          </a>
         </div>
       </div>
 
-    </a>
+    </div>
   );
 }

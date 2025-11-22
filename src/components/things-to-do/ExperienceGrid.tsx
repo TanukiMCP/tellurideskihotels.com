@@ -23,7 +23,7 @@ export default function ExperienceGrid({ experiences, onSelectExperience }: Expe
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5 lg:gap-6 max-w-[1400px] mx-auto px-5 md:px-10">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
       {experiences.map((experience) => (
         <ActivityCard key={experience.productCode} activity={experience} />
       ))}
