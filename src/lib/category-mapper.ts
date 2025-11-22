@@ -99,16 +99,20 @@ async function loadCategoryMap(): Promise<Map<string, TellurideExperienceCategor
       if (response.ok) {
         const categoriesData = await response.json();
         if (Array.isArray(categoriesData)) {
+          console.log('[Category Mapper] Loading categories for', categoriesData.length, 'experiences');
           categoriesData.forEach((exp: any) => {
             if (exp.categories && Array.isArray(exp.categories) && exp.categories.length > 0) {
               categoryMap!.set(exp.productCode, exp.categories as TellurideExperienceCategory[]);
             }
           });
+          console.log('[Category Mapper] Loaded', categoryMap.size, 'category mappings');
         }
+      } else {
+        console.warn('[Category Mapper] Failed to fetch categories file:', response.status, response.statusText);
       }
     } catch (error) {
       // File doesn't exist yet or is invalid - that's okay, will be empty map
-      console.warn('[Category Mapper] Could not load category mappings:', error);
+      console.error('[Category Mapper] Could not load category mappings:', error);
     }
 
     return categoryMap;
@@ -119,7 +123,11 @@ async function loadCategoryMap(): Promise<Map<string, TellurideExperienceCategor
 
 export async function getExperienceCategories(productCode: string): Promise<TellurideExperienceCategory[]> {
   const map = await loadCategoryMap();
-  return map.get(productCode) || [];
+  const categories = map.get(productCode) || [];
+  if (categories.length === 0 && productCode) {
+    console.warn('[Category Mapper] No categories found for product code:', productCode);
+  }
+  return categories;
 }
 
 // Synchronous version for use in components (will return empty array until loaded)

@@ -74,6 +74,9 @@ function ExperienceSearchWidgetContent({ onExperienceSelect }: ExperienceSearchW
         
         const data = await response.json();
         if (data.success && data.experiences) {
+          // Load category map first, then assign categories
+          await getExperienceCategories(''); // Trigger category map load
+          
           // Load categories asynchronously for each experience
           const productsWithCategories = await Promise.all(
             data.experiences.map(async (exp: ViatorProduct) => ({
@@ -81,6 +84,11 @@ function ExperienceSearchWidgetContent({ onExperienceSelect }: ExperienceSearchW
               categories: await getExperienceCategories(exp.productCode),
             }))
           );
+          
+          console.log('[Experience Widget] Loaded experiences:', productsWithCategories.length);
+          console.log('[Experience Widget] Experiences with categories:', productsWithCategories.filter(e => e.categories && e.categories.length > 0).length);
+          console.log('[Experience Widget] Sample categories:', productsWithCategories.slice(0, 3).map(e => ({ code: e.productCode, cats: e.categories })));
+          
           setAllExperiences(productsWithCategories);
           setCategoriesLoaded(true);
         } else {
