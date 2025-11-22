@@ -32,18 +32,18 @@ export function HotelShowcase({
       try {
         const params = new URLSearchParams({
           hotelId,
-          checkin: checkInDate,
-          checkout: checkOutDate,
         });
         
-        const response = await fetch(`/api/liteapi/hotel?${params.toString()}`);
+        // Use /api/hotels/details for consistency and caching (same as other components)
+        const response = await fetch(`/api/hotels/details?${params.toString()}`);
         
         if (!response.ok) {
           return; // Silently fail, render nothing
         }
         
         const data = await response.json();
-        setHotel(data);
+        // /api/hotels/details returns { data: hotel }, extract hotel
+        setHotel(data.data);
       } catch (err) {
         // Silently fail, render nothing
         console.error('[HotelShowcase] Error fetching hotel:', err);
