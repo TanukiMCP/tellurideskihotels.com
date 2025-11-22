@@ -131,5 +131,26 @@
     transform: translateY(-4px);
     box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
   }
+  
+  /* Hero Section Responsive Heights */
+  .hero-section {
+    height: auto;
+    min-height: auto;
+  }
+  
+  @media (min-width: 768px) {
+    .hero-section {
+      height: 65vh;
+      min-height: 550px;
+    }
+  }
+  
+  @media (min-width: 1024px) {
+    .hero-section {
+      height: 75vh;
+      min-height: 600px;
+      max-height: 800px;
+    }
+  }
 }
 

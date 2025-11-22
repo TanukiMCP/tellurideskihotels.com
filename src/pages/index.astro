@@ -3,7 +3,7 @@ export const prerender = false;
 
 import PageLayout from '@/components/layout/PageLayout.astro';
 import Container from '@/components/layout/Container.astro';
-import HeroMapSearch from '@/components/lodging/HeroMapSearch';
+import SplitHero from '@/components/lodging/SplitHero';
 import { FeaturedHotels } from '@/components/lodging/FeaturedHotels';
 import { CurrentConditions } from '@/components/weather/CurrentConditions';
 import { FeaturedActivities } from '@/components/activities/FeaturedActivities';
@@ -177,17 +177,8 @@ try {
   description={SITE_DESCRIPTION}
   image={heroImage?.url}
 >
-  <!-- Interactive Hero Map + Search Section -->
-  <HeroMapSearch 
-    client:load 
-    initialHotels={topHotelsData}
-    featuredHotelIds={featuredHotelsData.map(h => h.hotel_id)}
-    minPrices={minPrices}
-    currency="USD"
-      />
-
-  <!-- Section Transition -->
-  <div class="relative h-20 bg-gradient-to-b from-transparent via-white/50 to-white"></div>
+  <!-- Split Hero Section -->
+  <SplitHero client:load heroImage={heroImage} />
 
   <!-- Trust Strip / Feature Boxes -->
   <div class="bg-[#F8F6F3] py-12 lg:py-16">
