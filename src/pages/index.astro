@@ -178,7 +178,11 @@ try {
   image={heroImage?.url}
 >
   <!-- Split Hero Section -->
-  <SplitHero client:load heroImage={heroImage} />
+  <div class="bg-neutral-50 py-16 lg:py-20">
+    <Container>
+      <SplitHero client:load heroImage={heroImage} />
+    </Container>
+  </div>
 
   <!-- Trust Strip / Feature Boxes -->
   <div class="bg-[#F8F6F3] py-12 lg:py-16">

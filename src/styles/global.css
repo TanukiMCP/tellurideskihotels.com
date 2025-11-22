@@ -132,24 +132,20 @@
     box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
   }
   
-  /* Hero Section Responsive Heights */
-  .hero-section {
+  /* Hero Card Heights */
+  .hero-card-height {
     height: auto;
-    min-height: auto;
   }
   
   @media (min-width: 768px) {
-    .hero-section {
-      height: 65vh;
-      min-height: 550px;
+    .hero-card-height {
+      height: 550px;
     }
   }
   
   @media (min-width: 1024px) {
-    .hero-section {
-      height: 75vh;
-      min-height: 600px;
-      max-height: 800px;
+    .hero-card-height {
+      height: 600px;
     }
   }
 }

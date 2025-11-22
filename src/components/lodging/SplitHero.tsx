@@ -41,9 +41,9 @@ export default function SplitHero({ heroImage }: SplitHeroProps) {
   const formattedCheckOut = format(new Date(checkOut), 'MM/dd/yyyy');
 
   return (
-    <section className="relative w-full flex flex-col lg:flex-row hero-section overflow-hidden">
+    <div className="relative w-full max-w-[1400px] mx-auto rounded-2xl shadow-[0_4px_24px_rgba(0,0,0,0.08)] overflow-hidden flex flex-col md:flex-row hero-card-height">
       {/* Left Column - Content Side */}
-      <div className="w-full lg:w-[55%] xl:w-[55%] md:w-[50%] bg-[#2D5F4F] flex items-center justify-center p-6 md:p-10 lg:p-16 xl:p-20 flex-shrink-0">
+      <div className="w-full lg:w-[55%] md:w-[50%] bg-[#2D5F4F] flex items-center justify-center p-8 md:p-12 lg:p-16 flex-shrink-0">
         <div className="w-full max-w-[540px]">
           {/* Headline */}
           <h1 
@@ -185,19 +185,19 @@ export default function SplitHero({ heroImage }: SplitHeroProps) {
       </div>
 
       {/* Right Column - Image Side */}
-      <div className="w-full md:w-[50%] lg:w-[45%] h-[400px] md:h-auto relative overflow-hidden flex-shrink-0">
+      <div className="w-full md:w-[50%] lg:w-[45%] h-[350px] md:h-auto relative overflow-hidden flex-shrink-0">
         {heroImageUrl ? (
           <img
             src={heroImageUrl}
             alt="Telluride luxury accommodation"
-            className="w-full h-full object-cover absolute inset-0"
+            className="w-full h-full object-cover"
             loading="eager"
           />
         ) : (
           <div className="w-full h-full bg-[#2D5F4F]" />
         )}
       </div>
-    </section>
+    </div>
   );
 }
 
