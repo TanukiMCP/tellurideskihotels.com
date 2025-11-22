@@ -112,11 +112,6 @@ export function HotelCard({
           <>
             <div className="mb-4 pb-4 border-b border-neutral-200">
               <div className="flex flex-col">
-                {checkInDate && (
-                  <span className="text-xs text-neutral-500 mb-1">
-                    Next available: {format(new Date(checkInDate), 'MMM d')}
-                  </span>
-                )}
                 <span className="text-xs text-neutral-500 uppercase tracking-wide mb-1">From</span>
                 <div className="flex items-baseline gap-1">
                   <span className="text-2xl font-bold text-primary-600">
@@ -131,18 +126,14 @@ export function HotelCard({
               onClick={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
-                console.log('Button clicked for hotel:', hotel.hotel_id);
                 if (onSelect) {
-                  console.log('Calling onSelect handler');
                   onSelect(hotel.hotel_id);
-                } else {
-                  console.error('onSelect handler is not defined');
                 }
               }}
               className="w-full bg-primary-600 hover:bg-primary-700 text-white font-semibold py-3 px-4 rounded-lg transition-colors duration-200"
               type="button"
             >
-              See Available Rooms
+              Check Availability
             </button>
           </>
         ) : (
@@ -151,7 +142,7 @@ export function HotelCard({
               <div className="flex flex-col">
                 <span className="text-xs text-neutral-500 uppercase tracking-wide mb-1">Pricing</span>
                 <p className="text-sm text-neutral-600 leading-relaxed">
-                  Select dates to view current rates and availability for this property.
+                  Check availability to view current rates for this property.
                 </p>
               </div>
             </div>
@@ -167,7 +158,7 @@ export function HotelCard({
               className="w-full bg-primary-600 hover:bg-primary-700 text-white font-semibold py-3 px-4 rounded-lg transition-colors duration-200"
               type="button"
             >
-              View Available Rooms
+              View Details
             </button>
           </>
         )}

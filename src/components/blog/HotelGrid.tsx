@@ -32,18 +32,13 @@ export function HotelGrid({
   }, [checkIn, checkOut]);
 
   useEffect(() => {
-    if (!computedCheckIn || !computedCheckOut) return; // Wait for dates to be computed
-    
     async function fetchHotels() {
-      const checkInDate = computedCheckIn;
-      const checkOutDate = computedCheckOut;
-      
       try {
         // STEP 1: Fetch hotels list
         const searchParams = new URLSearchParams({
           cityName: 'Telluride',
           countryCode: 'US',
-          limit: Math.max(limit * 2, 6).toString(),
+          limit: limit.toString(),
         });
         
         const hotelsResponse = await fetch(`/api/liteapi/search?${searchParams.toString()}`);
@@ -64,49 +59,45 @@ export function HotelGrid({
           candidateHotels = candidateHotels.filter((h) => (h.star_rating || 0) >= 4);
         }
         
-        candidateHotels = candidateHotels.slice(0, Math.max(limit * 2, 6));
+        candidateHotels = candidateHotels.slice(0, limit);
         
         if (candidateHotels.length === 0) {
           return; // No hotels, render nothing
         }
         
-        // STEP 2: Fetch min rates for candidate hotels
-        const hotelIds = candidateHotels.map(h => h.hotel_id);
-        const ratesParams = new URLSearchParams({
-          hotelIds: hotelIds.join(','),
-          checkIn: checkInDate,
-          checkOut: checkOutDate,
-          adults: '2',
-        });
+        setHotels(candidateHotels);
         
-        const ratesResponse = await fetch(`/api/hotels/min-rates?${ratesParams.toString()}`);
-        
-        if (!ratesResponse.ok) {
-          return; // Silently fail, render nothing
-        }
-        
-        const ratesData = await ratesResponse.json();
-        const prices: Record<string, number> = {};
-        
-        // Calculate nights for per-night pricing
-        const nights = Math.ceil((new Date(checkOutDate).getTime() - new Date(checkInDate).getTime()) / (1000 * 60 * 60 * 24));
-        
-        // Extract prices from rates response
-        if (ratesData.data && Array.isArray(ratesData.data)) {
-          ratesData.data.forEach((item: any) => {
-            if (item.hotelId && item.price) {
-              prices[item.hotelId] = nights > 0 ? item.price / nights : item.price;
-            }
+        // STEP 2: Fetch min rates for "from" pricing (optional - don't block render if it fails)
+        if (computedCheckIn && computedCheckOut) {
+          const hotelIds = candidateHotels.map(h => h.hotel_id);
+          const ratesParams = new URLSearchParams({
+            hotelIds: hotelIds.join(','),
+            checkIn: computedCheckIn,
+            checkOut: computedCheckOut,
+            adults: '2',
           });
+          
+          fetch(`/api/hotels/min-rates?${ratesParams.toString()}`)
+            .then(res => res.ok ? res.json() : null)
+            .then(ratesData => {
+              if (ratesData?.data && Array.isArray(ratesData.data)) {
+                const prices: Record<string, number> = {};
+                const nights = Math.ceil((new Date(computedCheckOut).getTime() - new Date(computedCheckIn).getTime()) / (1000 * 60 * 60 * 24));
+                
+                ratesData.data.forEach((item: any) => {
+                  if (item.hotelId && item.price) {
+                    prices[item.hotelId] = nights > 0 ? item.price / nights : item.price;
+                  }
+                });
+                
+                setMinPrices(prices);
+              }
+            })
+            .catch(err => {
+              // Silently fail - prices just won't show
+              console.error('[HotelGrid] Error fetching min rates:', err);
+            });
         }
-        
-        // STEP 3: Filter to only hotels with availability
-        const hotelsWithAvailability = candidateHotels.filter(hotel => {
-          return prices[hotel.hotel_id] !== undefined && prices[hotel.hotel_id] > 0;
-        });
-        
-        setHotels(hotelsWithAvailability.slice(0, limit));
-        setMinPrices(prices);
       } catch (err) {
         // Silently fail, render nothing
         console.error('[HotelGrid] Error fetching hotels:', err);
@@ -116,8 +107,8 @@ export function HotelGrid({
     fetchHotels();
   }, [filter, limit, computedCheckIn, computedCheckOut]);
 
-  // Render nothing if no hotels available (like search results) or dates not computed yet
-  if (hotels.length === 0 || !computedCheckIn || !computedCheckOut) {
+  // Render nothing if no hotels available
+  if (hotels.length === 0) {
     return null;
   }
 
