@@ -12,7 +12,6 @@ export default defineConfig({
   integrations: [
     tailwind({ applyBaseStyles: false }),
     react(),
-    mdx(),
     sitemap({
       filter: (page) => !page.includes('/admin/') && !page.includes('/api/'),
       changefreq: 'weekly',
@@ -20,6 +19,7 @@ export default defineConfig({
       createLinkInHead: true,
       entryLimit: 45000,
     }),
+    mdx(),
   ],
   image: {
     domains: ['images.pexels.com'],

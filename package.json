@@ -6,7 +6,7 @@
     "dev": "astro dev",
     "start": "astro dev",
     "validate-content": "node scripts/validate-blog-content.js",
-    "build": "npm run validate-content && NODE_OPTIONS=--max_old_space_size=4096 astro check && astro build && npx pagefind --site dist",
+    "build": "npm run validate-content && astro check --minimumSeverity warning && astro build && npx pagefind --site dist",
     "preview": "astro preview",
     "setup-admin": "tsx scripts/setup-admin.ts",
     "create-admin": "tsx scripts/create-admin.ts",

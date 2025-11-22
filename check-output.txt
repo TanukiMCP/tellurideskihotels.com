@@ -1,0 +1,1 @@
+00:26:12 [WARN] [config] The adapter @astrojs/netlify provides experimental support for "assets". You may experience issues or breaking changes until this feature is fully supported by the adapter.
