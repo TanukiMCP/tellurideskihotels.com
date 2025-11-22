@@ -1,0 +1,203 @@
+[
+  {
+    "productCode": "259640P7",
+    "title": "Million Dollar Highway Self-Guided Driving Audio Tour",
+    "description": "Recommended: Purchase one tour per vehicle. Everyone can listen at the same time!\n\nStrikeout for the wild west with this self-guided driving tour of Colorado's Million Dollar Highway. This remote, jaw",
+    "duration": "2-3 hour",
+    "rating": 4.4,
+    "reviewCount": 90,
+    "price": 15.29,
+    "categories": ["driving-tours", "tours-sightseeing"]
+  },
+  {
+    "productCode": "259640P6",
+    "title": "Ultimate Colorado Bundle: Self-Guided Driving & Walking Tours",
+    "description": "Explore Colorado's diverse beauty with this self-guided tour bundle! Uncover ancient Puebloan cliff dwellings at Mesa Verde, then navigate the breathtaking vistas of the Million Dollar Highway. Advent",
+    "duration": "20 hour",
+    "rating": 4.4,
+    "reviewCount": 5,
+    "price": 26.99,
+    "categories": ["driving-tours", "tours-sightseeing", "experiences"]
+  },
+  {
+    "productCode": "22803P7",
+    "title": "Telluride Morning Half Day Rafting Trip - San Miguel River",
+    "description": "When it comes to Colorado whitewater, hardly anyone knows about the San Miguel River. Which is kind of a surprise! Given how much fun it is, on top of being in proximity to bougie and beloved Tellurid",
+    "duration": "2h 30m",
+    "rating": 5,
+    "reviewCount": 66,
+    "price": 156.87,
+    "categories": ["water-activities", "summer-adventures", "adventure"]
+  },
+  {
+    "productCode": "22803P28",
+    "title": "Telluride Afternoon Half Day Rafting Trip - San Miguel River",
+    "description": "When it comes to Colorado whitewater, hardly anyone knows about the San Miguel River. Which is kind of a surprise! Given how much fun it is, on top of being in proximity to bougie and beloved Tellurid",
+    "duration": "2h 30m",
+    "rating": 5,
+    "reviewCount": 34,
+    "price": 156.87,
+    "categories": ["water-activities", "summer-adventures", "adventure"]
+  },
+  {
+    "productCode": "128730P3",
+    "title": "Half-Day Ice Climbing - Telluride",
+    "description": "If you're on a ski vacation and looking to mix it up, ice climbing is a great adventure. Doing this activity with a guide will give you the opportunity to experience something out of your comfort zone",
+    "duration": "5 hour",
+    "rating": 5,
+    "reviewCount": 13,
+    "price": 259,
+    "categories": ["climbing", "winter-sports", "adventure"]
+  },
+  {
+    "productCode": "22803P5",
+    "title": "Telluride 1 Day Rafting Trip with Lunch - San Miguel River",
+    "description": "When it comes to Colorado whitewater, hardly anyone knows about the San Miguel River. Which is kind of a surprise! Given how much fun it is, on top of being in proximity to bougie and beloved Tellurid",
+    "duration": "5h 45m",
+    "rating": 5,
+    "reviewCount": 55,
+    "price": 233.17,
+    "categories": ["water-activities", "summer-adventures", "adventure"]
+  },
+  {
+    "productCode": "22803P39",
+    "title": "Telluride Half Day Jeep Tours",
+    "description": "Our Telluride Jeep Tours explore a variety of remarkably beautiful, historical, and technical off-roading trails, including the famed Imogene Pass, as well as other notable routes like Ophir Pass and ",
+    "duration": "4 hour",
+    "rating": 4.3,
+    "reviewCount": 3,
+    "price": 140.61,
+    "categories": ["land-activities", "tours-sightseeing", "family-friendly"]
+  },
+  {
+    "productCode": "128730P4",
+    "title": "Half-Day Ice Climbing - Ouray Ice Park",
+    "description": "If you're on a ski vacation and looking to mix it up, ice climbing is a great adventure. Doing this activity with a guide will give you the opportunity to experience something out of your comfort zone",
+    "duration": "5 hour",
+    "rating": 5,
+    "reviewCount": 4,
+    "price": 279,
+    "categories": ["climbing", "winter-sports", "adventure"]
+  },
+  {
+    "productCode": "128730P5",
+    "title": "Full-Day Ice Climbing - Ouray Ice Park",
+    "description": "Discover the thrill of world-class ice climbing with, a trusted guide service since 1973. Whether you're a first-timer or an experienced climber, our full-day adventure is tailored to your skill level",
+    "duration": "8 hour",
+    "rating": 5,
+    "reviewCount": 3,
+    "price": 389,
+    "categories": ["climbing", "winter-sports", "adventure"]
+  },
+  {
+    "productCode": "259640P25",
+    "title": "Black Canyon of the Gunnison NP Self-Guided Driving Audio Tour",
+    "description": "Marvel at the awe-inspiring depths of Black Canyon of the Gunnison in Colorado with this self-guided driving tour. This drive features stunning views along the canyon's south rim, from Gunnison Point ",
+    "duration": "2-3 hour",
+    "rating": 3.4,
+    "reviewCount": 7,
+    "price": 16.99,
+    "categories": ["driving-tours", "tours-sightseeing"]
+  },
+  {
+    "productCode": "200006P131",
+    "title": "Telluride Tirade Scavenger Hunt",
+    "description": "Our very unique, immersive adventures are the only ones of their kind. We, unlike other companies, provide your very own remote, interactive, live host to assist and encourage you along through your p",
+    "duration": "2 hour",
+    "rating": null,
+    "reviewCount": null,
+    "price": 23.2,
+    "categories": ["experiences", "family-friendly"]
+  },
+  {
+    "productCode": "102020P169",
+    "title": "Black Canyon of the Gunnison Self-Guided Audio Driving Tour",
+    "description": "Experience the jaw-dropping cliffs and narrow canyons of Black Canyon of the Gunnison National Park with this self-guided audio driving tour. A friendly narrator shares stories of daring explorers, ca",
+    "duration": "6-7 hour",
+    "rating": null,
+    "reviewCount": null,
+    "price": 8.99,
+    "categories": ["driving-tours", "tours-sightseeing"]
+  },
+  {
+    "productCode": "22803P50",
+    "title": "Telluride Paddleboard and Kayak Tours",
+    "description": "Half-day kayaking and paddle boarding tours offer an accessible and unforgettable way to experience the San Juan Mountains from the water. Glide across crystal-clear, calm waters, perfect for all skil",
+    "duration": "3 hour",
+    "rating": null,
+    "reviewCount": null,
+    "price": 151.51,
+    "categories": ["water-activities", "summer-adventures"]
+  },
+  {
+    "productCode": "128730P20",
+    "title": "Full-Day Rock Climbing - Ouray",
+    "description": "If you are looking for a full day of climbing variety, Ouray offers it all. From volcanic walls and steep sport routes to classic trad lines and even rappelling into a canyon to climb above a roaring ",
+    "duration": "8 hour",
+    "rating": null,
+    "reviewCount": null,
+    "price": 285,
+    "categories": ["climbing", "adventure", "summer-adventures"]
+  },
+  {
+    "productCode": "128730P9",
+    "title": "Guided Backcountry Skiing - Telluride",
+    "description": "Guided Backcountry Skiing in the San Juan Mountains of Colorado stands out as a truly unique and unforgettable experience. Since 1973, we've been trusted by adventurers seeking personalized and exhila",
+    "duration": "8 hour",
+    "rating": 5,
+    "reviewCount": 1,
+    "price": 425,
+    "categories": ["winter-sports", "adventure"]
+  },
+  {
+    "productCode": "128730P18",
+    "title": "Half-Day Rock Climbing - Ouray",
+    "description": "If you're curious about climbing or just want an unforgettable way to explore Ouray's natural beauty, this half-day guided trip is a perfect way to get on the rock. Learn new skills, challenge yoursel",
+    "duration": "4 hour",
+    "rating": null,
+    "reviewCount": null,
+    "price": 235,
+    "categories": ["climbing", "adventure", "summer-adventures"]
+  },
+  {
+    "productCode": "353772P1",
+    "title": "Stand Up Paddle Board Rentals",
+    "description": "For the best use of your time and money when you rent with us. Rent today, Play tomorrow and Return the following day by noon. By receiving your rental the afternoon before your reserved day and not r",
+    "duration": "44 hour",
+    "rating": null,
+    "reviewCount": null,
+    "price": 35,
+    "categories": ["water-activities", "summer-adventures"]
+  },
+  {
+    "productCode": "128730P14",
+    "title": "Half-Day Rock Climbing - Telluride",
+    "description": "If you're visiting Telluride and looking to break away from the usual vacation routine, rock climbing is an unforgettable way to experience the mountains. Climbing with a guide gives you the chance to",
+    "duration": "4 hour",
+    "rating": null,
+    "reviewCount": null,
+    "price": 470,
+    "categories": ["climbing", "adventure", "summer-adventures"]
+  },
+  {
+    "productCode": "128730P8",
+    "title": "Backcountry Ice Climbing - Ouray & Telluride",
+    "description": "Experience the thrill of backcountry ice climbing with Mountain Trip, where adventure meets expertise in the San Juan Mountains of Colorado. Since 1973, our AMGA certified or trained guides have deliv",
+    "duration": "8 hour",
+    "rating": null,
+    "reviewCount": null,
+    "price": 419,
+    "categories": ["climbing", "winter-sports", "adventure"]
+  },
+  {
+    "productCode": "16649P9",
+    "title": "Telluride ~ \"Half-Day\" Rafting Lower San Miguel River",
+    "description": "Join us on a trip down the San Miguel river near Telluride Colorado. In the spring and early summer, this river rushes from the high peaks of the San Juan Mountains.",
+    "duration": "4 hour",
+    "rating": 5,
+    "reviewCount": 1,
+    "price": 119,
+    "categories": ["water-activities", "summer-adventures", "adventure"]
+  }
+]
+
