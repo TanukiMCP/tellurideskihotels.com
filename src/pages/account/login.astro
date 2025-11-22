@@ -21,36 +21,20 @@ const errorMessages: Record<string, string> = {
 };
 ---
 
-<PageLayout title="Sign in | Telluride Ski Hotels" description="Access your Telluride bookings anywhere.">
-  <!-- Hero Section -->
-  <div class="bg-gradient-to-br from-primary-600 via-primary-700 to-primary-900 py-32 lg:py-40">
-    <Container class="text-white">
-      <div class="max-w-3xl mx-auto space-y-4">
-        <p class="text-sm uppercase tracking-[0.2em] text-white/70 font-semibold">My Account</p>
-        <h1 class="text-4xl lg:text-5xl font-black tracking-tight">
-          Manage bookings across every device
-        </h1>
-        <p class="text-lg text-white/80">
-          Sign in to view upcoming stays, download confirmations, and convert guest bookings into a full
-          account experience.
-        </p>
-      </div>
-    </Container>
-  </div>
-
-  <Container class="py-16 lg:py-20">
-    <div class="max-w-lg mx-auto space-y-6">
+<PageLayout title="Sign in | Telluride Ski Hotels" description="Sign in to your account to access your bookings and manage your trips.">
+  <div class="bg-neutral-50 min-h-[calc(100vh-200px)]">
+    <Container class="pt-10 md:pt-20 pb-20 md:pb-24">
       {error && errorMessages[error] && (
-        <div class="bg-rose-50 border border-rose-200 text-rose-700 px-4 py-3 rounded-xl text-sm">
+        <div class="max-w-[440px] mx-auto mb-6 bg-red-50 border-2 border-red-500 rounded-lg px-4 py-3 text-sm text-red-700 flex items-start gap-2">
+          <svg class="w-4 h-4 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+          </svg>
           {errorMessages[error]}
         </div>
       )}
       <AccountLogin client:load redirectTo={redirect} />
-      <div class="text-center text-sm text-neutral-600">
-        Don't have an account? <a href="/account/join" class="text-primary-600 font-semibold">Create one in seconds</a>.
-      </div>
-    </div>
-  </Container>
+    </Container>
+  </div>
 </PageLayout>
 
 

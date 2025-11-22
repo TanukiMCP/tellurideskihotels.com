@@ -4,72 +4,22 @@ import PageLayout from '@/components/layout/PageLayout.astro';
 import Container from '@/components/layout/Container.astro';
 import { AccountSignup } from '@/components/account/AccountSignup';
 import { getSessionFromRequest } from '@/lib/auth';
-import { getImagesByCategory } from '@/lib/image-library';
-import { optimizePexelsImage, generateSrcSet } from '@/lib/image-optimizer';
 
 const session = await getSessionFromRequest(Astro.request);
 if (session) {
   return Astro.redirect('/account');
 }
-
-const heroImages = getImagesByCategory('resort');
-const heroImage = heroImages?.[0];
-const heroImageUrl = heroImage
-  ? optimizePexelsImage(heroImage.url, { width: 1920, quality: 85 })
-  : null;
-const heroSrcSet = heroImage
-  ? generateSrcSet(heroImage.url, [640, 960, 1280, 1600, 1920])
-  : null;
-const heroImageAlt = heroImage
-  ? `Telluride resort view by ${heroImage.photographer}`
-  : 'Telluride mountains';
 ---
 
 <PageLayout
   title="Create an Account | Telluride Ski Hotels"
-  description="Unlock synced bookings, loyalty perks, and stress-free management for every Telluride stay."
+  description="Create your account to manage bookings and unlock faster checkout."
 >
-  <!-- Hero Section with Background Image -->
-  <Container class="py-16 lg:py-20">
-    <div class="relative rounded-3xl overflow-hidden">
-      {heroImageUrl ? (
-        <>
-          <img 
-            src={heroImageUrl}
-            srcset={heroSrcSet || undefined}
-            sizes="(max-width: 1280px) 100vw, 1280px"
-            alt={heroImageAlt}
-            class="absolute inset-0 w-full h-full object-cover"
-            loading="eager"
-          />
-          <div class="absolute inset-0 bg-neutral-950/70 backdrop-blur-[1px]"></div>
-        </>
-      ) : (
-        <div class="absolute inset-0 bg-neutral-950"></div>
-      )}
-      
-      <div class="relative py-32 lg:py-40">
-        <div class="max-w-4xl mx-auto px-8 text-center text-white space-y-5">
-          <p class="text-sm uppercase tracking-[0.25em] text-white/80 font-semibold">Telluride insider access</p>
-          <h1 class="text-4xl lg:text-6xl font-black tracking-tight">
-            Sync every reservation. Keep every stay connected.
-          </h1>
-          <p class="text-lg text-white/80 max-w-3xl mx-auto">
-            Create a Telluride Ski Hotels account to convert guest bookings, store confirmations, and unlock lightning-fast checkout for every future trip.
-          </p>
-        </div>
-      </div>
-    </div>
-  </Container>
-
-  <Container class="py-16 lg:py-20">
-    <div class="max-w-2xl mx-auto space-y-8">
+  <div class="bg-neutral-50 min-h-[calc(100vh-200px)]">
+    <Container class="pt-10 md:pt-20 pb-20 md:pb-24">
       <AccountSignup client:load />
-      <div class="text-center text-sm text-neutral-600">
-        Already have an account? <a href="/account/login" class="text-primary-600 font-semibold">Sign in</a>.
-      </div>
-    </div>
-  </Container>
+    </Container>
+  </div>
 </PageLayout>
 
 
