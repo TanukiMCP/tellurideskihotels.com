@@ -1,5 +1,3 @@
-'use client';
-
 import { useState, useEffect } from 'react';
 import { ActivityCard } from '@/components/activities/ActivityCard';
 import type { ViatorProductSummary } from '@/lib/viator/types';
@@ -24,7 +22,6 @@ export function ActivityShowcase({
     async function fetchActivities() {
       try {
         setLoading(true);
-        setError(null);
         
         const params = new URLSearchParams({
           destination: 'Telluride',
@@ -42,19 +39,7 @@ export function ActivityShowcase({
         }
         
         const data = await response.json();
-        const products = data.products || [];
-        
-        // Sort by review count/rating (best first)
-        products.sort((a: ViatorProductSummary, b: ViatorProductSummary) => {
-          const aReviews = a.reviews?.totalReviews || 0;
-          const bReviews = b.reviews?.totalReviews || 0;
-          if (bReviews !== aReviews) return bReviews - aReviews;
-          const aRating = a.reviews?.combinedAverageRating || 0;
-          const bRating = b.reviews?.combinedAverageRating || 0;
-          return bRating - aRating;
-        });
-        
-        setActivities(products.slice(0, limit));
+        setActivities(data.products || []);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to load activities');
       } finally {
@@ -67,7 +52,7 @@ export function ActivityShowcase({
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center py-12 my-8">
+      <div className="flex justify-center items-center py-12">
         <LoadingSpinner size="lg" />
       </div>
     );
@@ -86,7 +71,7 @@ export function ActivityShowcase({
   return (
     <div className="my-8">
       {title && (
-        <h3 className="text-2xl font-bold text-neutral-900 mb-6 font-serif">{title}</h3>
+        <h3 className="text-2xl font-bold text-neutral-900 mb-6">{title}</h3>
       )}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {activities.map((activity) => (
@@ -99,7 +84,7 @@ export function ActivityShowcase({
       <div className="mt-6 text-center">
         <a
           href="/things-to-do"
-          className="inline-flex items-center gap-2 bg-primary-600 hover:bg-primary-700 text-white font-semibold px-6 py-3 rounded-lg transition-colors shadow-md hover:shadow-lg"
+          className="inline-flex items-center gap-2 bg-primary-600 hover:bg-primary-700 text-white font-semibold px-6 py-3 rounded-lg transition-colors"
         >
           Explore All Activities
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -110,3 +95,4 @@ export function ActivityShowcase({
     </div>
   );
 }
+

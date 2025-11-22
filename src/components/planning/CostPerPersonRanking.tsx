@@ -4,25 +4,28 @@ import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Input } from '@/components/ui/Input';
 import { ArticleBookingWidget } from '@/components/blog/ArticleBookingWidget';
-import { HotelCard } from '@/components/lodging/HotelCard';
-import { TrendingUp, Users, Calendar, Star } from 'lucide-react';
-import type { LiteAPIHotel } from '@/lib/liteapi/types';
+import { TrendingUp, Users, Calendar } from 'lucide-react';
 import { LoadingSpinner } from '@/components/shared/LoadingSpinner';
+import type { LiteAPIHotel } from '@/lib/liteapi/types';
 
 export interface CostPerPersonRankingProps {
-  hotelIds: string[];
+  hotelIds?: string[];
   groupSize?: number;
   nights?: number;
   checkIn?: string;
   checkOut?: string;
+  filter?: 'luxury' | 'budget' | 'ski-in-ski-out';
 }
 
 interface HotelRanking {
-  hotel: LiteAPIHotel;
+  hotelId: string;
+  name: string;
   costPerNight: number;
   totalCost: number;
   costPerPerson: number;
-  minPrice?: number;
+  rating?: number;
+  amenities: string[];
+  imageUrl?: string;
 }
 
 export function CostPerPersonRanking({
@@ -31,6 +34,7 @@ export function CostPerPersonRanking({
   nights = 5,
   checkIn,
   checkOut,
+  filter,
 }: CostPerPersonRankingProps) {
   const [guests, setGuests] = useState(groupSize);
   const [nightsCount, setNightsCount] = useState(nights);
@@ -39,106 +43,75 @@ export function CostPerPersonRanking({
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    async function fetchHotelsAndPrices() {
-      try {
-        setLoading(true);
-        setError(null);
+    fetchAndCalculateRankings();
+  }, [guests, nightsCount, hotelIds, checkIn, checkOut, filter]);
 
-        // Fetch hotel details for all IDs
-        const hotelPromises = hotelIds.map(async (id) => {
-          try {
-            const response = await fetch(`/api/liteapi/hotel?hotelId=${id}`);
-            if (response.ok) {
-              return await response.json();
-            }
-            return null;
-          } catch (err) {
-            console.warn(`Failed to fetch hotel ${id}:`, err);
-            return null;
-          }
-        });
+  const fetchAndCalculateRankings = async () => {
+    try {
+      setLoading(true);
+      
+      // Build query params
+      const params = new URLSearchParams({
+        cityName: 'Telluride',
+        countryCode: 'US',
+        limit: '10',
+      });
 
-        const hotels = (await Promise.all(hotelPromises)).filter(Boolean) as LiteAPIHotel[];
-
-        // Fetch pricing if dates provided
-        const prices: Record<string, number> = {};
-        if (checkIn && checkOut && hotels.length > 0) {
-          try {
-            const checkInDate = new Date(checkIn);
-            const checkOutDate = new Date(checkOut);
-            const calculatedNights = Math.ceil((checkOutDate.getTime() - checkInDate.getTime()) / (1000 * 60 * 60 * 24));
-
-            const pricePromises = hotels.map(async (hotel) => {
-              try {
-                const params = new URLSearchParams({
-                  hotelId: hotel.hotel_id,
-                  checkIn,
-                  checkOut,
-                  adults: '2',
-                  children: '0',
-                });
-                
-                const response = await fetch(`/api/hotels/rates?${params.toString()}`);
-                if (response.ok) {
-                  const data = await response.json();
-                  if (data.rates && data.rates.length > 0) {
-                    const ratePrices = data.rates
-                      .map((rate: any) => {
-                        const total = rate.total?.amount || rate.net?.amount;
-                        return total && calculatedNights > 0 ? total / calculatedNights : null;
-                      })
-                      .filter((p: number | null): p is number => p !== null && p > 0);
-                    
-                    if (ratePrices.length > 0) {
-                      return { hotelId: hotel.hotel_id, price: Math.min(...ratePrices) };
-                    }
-                  }
-                }
-              } catch (err) {
-                console.warn(`Failed to fetch pricing for ${hotel.hotel_id}:`, err);
-              }
-              return null;
-            });
-
-            const priceResults = await Promise.all(pricePromises);
-            priceResults.forEach((result) => {
-              if (result) {
-                prices[result.hotelId] = result.price;
-              }
-            });
-          } catch (priceError) {
-            console.warn('Failed to fetch pricing:', priceError);
-          }
-        }
-
-        // Calculate rankings
-        const hotelRankings: HotelRanking[] = hotels.map((hotel) => {
-          const costPerNight = prices[hotel.hotel_id] || 400; // Fallback if no pricing
-          const totalCost = costPerNight * nightsCount;
-          const costPerPerson = totalCost / guests;
-
-          return {
-            hotel,
-            costPerNight,
-            totalCost,
-            costPerPerson,
-            minPrice: prices[hotel.hotel_id],
-          };
-        });
-
-        hotelRankings.sort((a, b) => a.costPerPerson - b.costPerPerson);
-        setRankings(hotelRankings);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to load hotel data');
-      } finally {
-        setLoading(false);
+      if (checkIn) params.set('checkin', checkIn);
+      if (checkOut) params.set('checkout', checkOut);
+      
+      const response = await fetch(`/api/liteapi/search?${params.toString()}`);
+      
+      if (!response.ok) {
+        throw new Error('Failed to load hotels');
       }
-    }
+      
+      const data = await response.json();
+      let hotels: LiteAPIHotel[] = data.data || [];
+      
+      // Apply filters
+      if (filter === 'luxury') {
+        hotels = hotels.filter(h => (h.star_rating || 0) >= 4);
+      } else if (filter === 'budget') {
+        hotels = hotels.filter(h => (h.star_rating || 0) <= 3);
+      }
+      
+      // If specific hotel IDs provided, filter to those
+      if (hotelIds && hotelIds.length > 0) {
+        hotels = hotels.filter(h => hotelIds.includes(h.hotel_id));
+      }
+      
+      // Calculate rankings with real pricing data
+      const hotelRankings: HotelRanking[] = hotels.map((hotel) => {
+        // Use actual min_rate if available, otherwise estimate based on star rating
+        const costPerNight = hotel.min_rate || (hotel.star_rating || 3) * 150;
+        const totalCost = costPerNight * nightsCount;
+        const costPerPerson = totalCost / guests;
+        
+        // Get main image
+        const imageUrl = hotel.images?.[0]?.url || hotel.images?.[0]?.thumbnail || '';
 
-    if (hotelIds.length > 0) {
-      fetchHotelsAndPrices();
+        return {
+          hotelId: hotel.hotel_id,
+          name: hotel.name || 'Hotel',
+          costPerNight,
+          totalCost,
+          costPerPerson,
+          rating: hotel.review_score,
+          amenities: hotel.amenities?.slice(0, 3).map(a => a.name || a) || ['Ski access', 'Mountain views'],
+          imageUrl,
+        };
+      });
+
+      hotelRankings.sort((a, b) => a.costPerPerson - b.costPerPerson);
+      setRankings(hotelRankings.slice(0, 5));
+      setError(null);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to load hotel rankings');
+    } finally {
+      setLoading(false);
     }
-  }, [hotelIds, checkIn, checkOut, nightsCount, guests]);
+  };
 
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('en-US', {
@@ -150,26 +123,28 @@ export function CostPerPersonRanking({
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center py-12 my-8">
-        <LoadingSpinner size="lg" />
-      </div>
+      <Card className="my-8 border-2 border-primary-200">
+        <CardContent className="py-12">
+          <div className="flex justify-center items-center">
+            <LoadingSpinner size="lg" />
+          </div>
+        </CardContent>
+      </Card>
     );
   }
 
-  if (error || rankings.length === 0) {
+  if (error) {
     return (
       <Card className="my-8 border-2 border-primary-200">
-        <CardContent className="p-6">
-          <p className="text-neutral-600 text-center">
-            {error || 'Unable to load hotel comparisons.'}
-          </p>
+        <CardContent className="py-8">
+          <p className="text-neutral-600 text-center">{error}</p>
         </CardContent>
       </Card>
     );
   }
 
   return (
-    <Card className="my-8 border-2 border-primary-200 shadow-lg">
+    <Card className="my-8 border-2 border-primary-200">
       <CardHeader>
         <div className="flex items-center gap-3">
           <div className="w-12 h-12 bg-primary-600 rounded-lg flex items-center justify-center">
@@ -183,109 +158,126 @@ export function CostPerPersonRanking({
           </div>
         </div>
       </CardHeader>
-      <CardContent>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-          <div className="flex items-center gap-2">
-            <Users className="w-5 h-5 text-primary-600" />
-            <label className="text-sm font-medium text-neutral-700">Group Size</label>
+      <CardContent className="space-y-6">
+        <div className="grid gap-4 md:grid-cols-2">
+          <div>
+            <label className="block text-sm font-semibold text-neutral-900 mb-2">
+              <Users className="w-4 h-4 inline mr-2" />
+              Number of Guests
+            </label>
             <Input
               type="number"
-              min="1"
+              min="2"
+              max="20"
               value={guests}
-              onChange={(e) => setGuests(Math.max(1, parseInt(e.target.value) || 1))}
-              className="w-20"
+              onChange={(e) => setGuests(parseInt(e.target.value) || 2)}
+              className="w-full"
             />
           </div>
-          <div className="flex items-center gap-2">
-            <Calendar className="w-5 h-5 text-primary-600" />
-            <label className="text-sm font-medium text-neutral-700">Nights</label>
+          <div>
+            <label className="block text-sm font-semibold text-neutral-900 mb-2">
+              <Calendar className="w-4 h-4 inline mr-2" />
+              Number of Nights
+            </label>
             <Input
               type="number"
               min="1"
+              max="14"
               value={nightsCount}
-              onChange={(e) => setNightsCount(Math.max(1, parseInt(e.target.value) || 1))}
-              className="w-20"
+              onChange={(e) => setNightsCount(parseInt(e.target.value) || 1)}
+              className="w-full"
             />
           </div>
         </div>
 
-        <div className="space-y-4">
-          {rankings.map((ranking, index) => (
-            <div
-              key={ranking.hotel.hotel_id}
-              className="border border-neutral-200 rounded-lg p-4 hover:shadow-md transition-shadow"
-            >
-              <div className="flex items-start justify-between mb-3">
-                <div className="flex-1">
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className="text-lg font-bold text-primary-600">#{index + 1}</span>
-                    <h4 className="text-lg font-bold text-neutral-900">{ranking.hotel.name}</h4>
-                    {ranking.hotel.star_rating && (
-                      <div className="flex items-center gap-1">
-                        <Star className="w-4 h-4 fill-accent-500 text-accent-500" />
-                        <span className="text-sm text-neutral-600">{ranking.hotel.star_rating}</span>
+        {rankings.length > 0 && (
+          <div className="mt-6 space-y-4">
+            <div className="border-t border-neutral-200 pt-4">
+              <h3 className="text-lg font-semibold text-neutral-900 mb-4">
+                Rankings for {guests} Guests, {nightsCount} Nights
+              </h3>
+              <div className="space-y-3">
+                {rankings.map((hotel, index) => (
+                  <div
+                    key={hotel.hotelId}
+                    className={`overflow-hidden border-2 rounded-lg ${
+                      index === 0
+                        ? 'border-primary-400 bg-primary-50'
+                        : 'border-neutral-200 bg-white'
+                    }`}
+                  >
+                    <div className="flex gap-4">
+                      {hotel.imageUrl && (
+                        <div className="w-32 h-32 flex-shrink-0">
+                          <img
+                            src={hotel.imageUrl}
+                            alt={hotel.name}
+                            className="w-full h-full object-cover"
+                            loading="lazy"
+                          />
+                        </div>
+                      )}
+                      <div className="flex-1 p-4">
+                        <div className="flex items-start justify-between mb-2">
+                          <div className="flex-1">
+                            <div className="flex items-center gap-2 mb-1">
+                              <span className="font-bold text-primary-600 text-lg">#{index + 1}</span>
+                              <span className="font-semibold text-neutral-900">{hotel.name}</span>
+                              {index === 0 && (
+                                <span className="text-xs bg-primary-600 text-white px-2 py-1 rounded">
+                                  Best Value
+                                </span>
+                              )}
+                            </div>
+                            <div className="text-sm text-neutral-600">
+                              {hotel.amenities.slice(0, 2).join(' • ')}
+                            </div>
+                            {hotel.rating && (
+                              <div className="text-sm text-neutral-600 mt-1">
+                                ⭐ {hotel.rating.toFixed(1)} rating
+                              </div>
+                            )}
+                          </div>
+                          <div className="text-right ml-4">
+                            <div className="text-lg font-bold text-primary-600">
+                              {formatCurrency(hotel.costPerPerson)}
+                            </div>
+                            <div className="text-xs text-neutral-500">per person</div>
+                            <div className="text-xs text-neutral-500 mt-1">
+                              {formatCurrency(hotel.totalCost)} total
+                            </div>
+                          </div>
+                        </div>
+                        <div className="mt-3 pt-3 border-t border-neutral-200">
+                          <a
+                            href={`/places-to-stay/${hotel.hotelId}`}
+                            className="text-sm text-primary-600 hover:text-primary-700 font-medium"
+                          >
+                            View Rooms & Rates →
+                          </a>
+                        </div>
                       </div>
-                    )}
+                    </div>
                   </div>
-                  {ranking.hotel.review_score && (
-                    <p className="text-sm text-neutral-600">
-                      Rating: {ranking.hotel.review_score.toFixed(1)}/10
-                      {ranking.hotel.review_count && ` (${ranking.hotel.review_count.toLocaleString()} reviews)`}
-                    </p>
-                  )}
-                </div>
-                <div className="text-right">
-                  <div className="text-2xl font-bold text-primary-600">
-                    {formatCurrency(ranking.costPerPerson)}
-                  </div>
-                  <div className="text-sm text-neutral-600">per person</div>
-                </div>
-              </div>
-              
-              <div className="grid grid-cols-3 gap-4 mt-4 pt-4 border-t border-neutral-200">
-                <div>
-                  <div className="text-xs text-neutral-500 uppercase tracking-wide mb-1">Per Night</div>
-                  <div className="text-lg font-semibold text-neutral-900">
-                    {formatCurrency(ranking.costPerNight)}
-                  </div>
-                </div>
-                <div>
-                  <div className="text-xs text-neutral-500 uppercase tracking-wide mb-1">Total Stay</div>
-                  <div className="text-lg font-semibold text-neutral-900">
-                    {formatCurrency(ranking.totalCost)}
-                  </div>
-                </div>
-                <div>
-                  <div className="text-xs text-neutral-500 uppercase tracking-wide mb-1">Per Person</div>
-                  <div className="text-lg font-semibold text-primary-600">
-                    {formatCurrency(ranking.costPerPerson)}
-                  </div>
-                </div>
-              </div>
-
-              <div className="mt-4">
-                <HotelCard
-                  hotel={ranking.hotel}
-                  minPrice={ranking.minPrice}
-                  checkInDate={checkIn}
-                  checkOutDate={checkOut}
-                  onSelect={(id) => {
-                    window.location.href = `/places-to-stay/${id}${checkIn && checkOut ? `?checkIn=${checkIn}&checkOut=${checkOut}` : ''}`;
-                  }}
-                />
+                ))}
               </div>
             </div>
-          ))}
-        </div>
 
-        <div className="mt-6">
-          <ArticleBookingWidget
-            title="Book Your Group Stay"
-            description="Compare rates and availability for your group"
-            variant="default"
-          />
-        </div>
+            {rankings[0] && (
+              <div className="border-t border-neutral-200 pt-4">
+                <ArticleBookingWidget
+                  hotelId={rankings[0].hotelId}
+                  hotelName={rankings[0].name}
+                  variant="default"
+                  title={`Book ${rankings[0].name}`}
+                  description={`Best value at ${formatCurrency(rankings[0].costPerPerson)} per person`}
+                />
+              </div>
+            )}
+          </div>
+        )}
       </CardContent>
     </Card>
   );
 }
+

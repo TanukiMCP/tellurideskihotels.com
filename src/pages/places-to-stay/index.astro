@@ -107,7 +107,7 @@ const nights = checkIn && checkOut
       </p>
       
       <HotelSearchWidget
-        client:load
+        client:idle
         initialLocation={location}
         initialDates={checkIn && checkOut ? {
           checkIn: new Date(checkIn),

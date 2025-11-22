@@ -53,11 +53,14 @@ if (isSkiSeason) {
     {heroImage ? (
       <>
         <img 
-          src={optimizePexelsImage(heroImage.url, { width: 1920, quality: 85 })}
+          src={optimizePexelsImage(heroImage.url, { width: 1920, quality: 80 })}
           srcset={generateSrcSet(heroImage.url, [640, 768, 1024, 1280, 1536, 1920])}
           sizes="100vw"
           alt="Telluride Mountain Conditions" 
           class="absolute inset-0 w-full h-full object-cover"
+          loading="eager"
+          fetchpriority="high"
+          decoding="async"
         />
         <div class="absolute inset-0 bg-gradient-to-br from-sky-900/85 via-sky-800/80 to-sky-900/85"></div>
       </>
@@ -132,7 +135,7 @@ if (isSkiSeason) {
                 Live snow report updated throughout the day
               </p>
             </div>
-            <SkiConditionsWidget client:load initialConditions={skiConditions} />
+            <SkiConditionsWidget client:visible initialConditions={skiConditions} />
           </section>
 
           <!-- Weather Forecast & Webcams -->
@@ -147,12 +150,12 @@ if (isSkiSeason) {
             <div class="grid lg:grid-cols-3 gap-8">
               <!-- Weather Forecast (takes 2 columns) -->
               <div class="lg:col-span-2">
-                <CurrentConditions client:load />
+                <CurrentConditions client:visible />
               </div>
 
               <!-- Webcam Links (takes 1 column) -->
               <div class="lg:col-span-1">
-                <WebcamLinks client:load />
+                <WebcamLinks client:visible />
               </div>
             </div>
           </section>
@@ -160,7 +163,7 @@ if (isSkiSeason) {
       ) : (
         <!-- Off-Season Countdown -->
         <section class="mb-16">
-          <OffSeasonCountdown client:load seasonStartDate={nextSeasonStart} />
+          <OffSeasonCountdown client:visible seasonStartDate={nextSeasonStart} />
         </section>
       )}
 
@@ -206,12 +209,13 @@ if (isSkiSeason) {
     {ctaImage ? (
       <>
         <img 
-          src={optimizePexelsImage(ctaImage.url, { width: 1920, quality: 85 })}
+          src={optimizePexelsImage(ctaImage.url, { width: 1920, quality: 75 })}
           srcset={generateSrcSet(ctaImage.url, [640, 768, 1024, 1280, 1536, 1920])}
           sizes="100vw"
           alt="Telluride Ski Slopes" 
           class="absolute inset-0 w-full h-full object-cover"
           loading="lazy"
+          decoding="async"
         />
         <div class="absolute inset-0 bg-gradient-to-r from-sky-900/90 via-sky-800/85 to-sky-900/90"></div>
       </>

@@ -31,7 +31,7 @@ export function optimizePexelsImage(
   
   if (width) params.set('w', width.toString());
   if (height) params.set('h', height.toString());
-    if (quality && quality !== 75) params.set('q', quality.toString());
+  if (quality && quality !== 75) params.set('q', quality.toString());
   
   // Add fit parameter for better cropping
   if (width || height) {

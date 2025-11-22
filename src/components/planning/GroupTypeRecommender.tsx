@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { ArticleBookingWidget } from '@/components/blog/ArticleBookingWidget';
-import { HotelGrid } from '@/components/blog/HotelGrid';
 import { Users, Heart, Briefcase, User, Home } from 'lucide-react';
 
 export type GroupType = 'family' | 'couples' | 'friends' | 'solo' | 'corporate';
@@ -129,12 +128,6 @@ export function GroupTypeRecommender() {
                 </a>
               )}
             </div>
-
-            <HotelGrid
-              filter={selectedOption.filter as any}
-              limit={3}
-              title={`Top Hotels for ${selectedOption.label}`}
-            />
 
             <ArticleBookingWidget
               filter={selectedOption.filter}

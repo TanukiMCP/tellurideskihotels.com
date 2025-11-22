@@ -5,11 +5,11 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Input } from '@/components/ui/Input';
 import { ArticleBookingWidget } from '@/components/blog/ArticleBookingWidget';
 import { Building2, Users, Calendar, TrendingUp } from 'lucide-react';
-import type { LiteAPIHotel } from '@/lib/liteapi/types';
 import { LoadingSpinner } from '@/components/shared/LoadingSpinner';
+import type { LiteAPIHotel } from '@/lib/liteapi/types';
 
 export interface HotelSplitCalculatorProps {
-  hotelIds: string[];
+  hotelIds?: string[];
   scenario?: string;
   defaultNights?: number;
   defaultGuests?: number;
@@ -25,8 +25,8 @@ interface ComparisonOption {
   costPerNight: number;
   totalCost: number;
   costPerPerson: number;
-  hotel?: LiteAPIHotel;
-  minPrice?: number;
+  amenities: string[];
+  imageUrl?: string;
 }
 
 export function HotelSplitCalculator({
@@ -42,134 +42,118 @@ export function HotelSplitCalculator({
   const [comparisons, setComparisons] = useState<ComparisonOption[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [avgHotelRate, setAvgHotelRate] = useState(350);
 
   useEffect(() => {
-    async function fetchHotelsAndCalculate() {
-      try {
-        setLoading(true);
-        setError(null);
+    fetchRatesAndCalculate();
+  }, [guests, nights, checkIn, checkOut]);
 
-        // Fetch hotel details
-        const hotelPromises = hotelIds.map(async (id) => {
-          try {
-            const response = await fetch(`/api/liteapi/hotel?hotelId=${id}`);
-            if (response.ok) {
-              return await response.json();
-            }
-            return null;
-          } catch (err) {
-            console.warn(`Failed to fetch hotel ${id}:`, err);
-            return null;
-          }
-        });
+  const fetchRatesAndCalculate = async () => {
+    try {
+      setLoading(true);
+      
+      // Fetch actual hotel rates
+      const params = new URLSearchParams({
+        cityName: 'Telluride',
+        countryCode: 'US',
+        limit: '5',
+      });
 
-        const hotels = (await Promise.all(hotelPromises)).filter(Boolean) as LiteAPIHotel[];
-
-        // Fetch pricing if dates provided
-        const prices: Record<string, number> = {};
-        if (checkIn && checkOut && hotels.length > 0) {
-          try {
-            const checkInDate = new Date(checkIn);
-            const checkOutDate = new Date(checkOut);
-            const calculatedNights = Math.ceil((checkOutDate.getTime() - checkInDate.getTime()) / (1000 * 60 * 60 * 24));
-
-            const pricePromises = hotels.map(async (hotel) => {
-              try {
-                const params = new URLSearchParams({
-                  hotelId: hotel.hotel_id,
-                  checkIn,
-                  checkOut,
-                  adults: '2',
-                  children: '0',
-                });
-                
-                const response = await fetch(`/api/hotels/rates?${params.toString()}`);
-                if (response.ok) {
-                  const data = await response.json();
-                  if (data.rates && data.rates.length > 0) {
-                    const ratePrices = data.rates
-                      .map((rate: any) => {
-                        const total = rate.total?.amount || rate.net?.amount;
-                        return total && calculatedNights > 0 ? total / calculatedNights : null;
-                      })
-                      .filter((p: number | null): p is number => p !== null && p > 0);
-                    
-                    if (ratePrices.length > 0) {
-                      return { hotelId: hotel.hotel_id, price: Math.min(...ratePrices) };
-                    }
-                  }
-                }
-              } catch (err) {
-                console.warn(`Failed to fetch pricing for ${hotel.hotel_id}:`, err);
-              }
-              return null;
-            });
-
-            const priceResults = await Promise.all(pricePromises);
-            priceResults.forEach((result) => {
-              if (result) {
-                prices[result.hotelId] = result.price;
-              }
-            });
-          } catch (priceError) {
-            console.warn('Failed to fetch pricing:', priceError);
-          }
-        }
-
-        // Calculate comparisons based on hotel data
-        const options: ComparisonOption[] = [];
-
-        // Add hotel room options
-        hotels.forEach((hotel, index) => {
-          const costPerNight = prices[hotel.hotel_id] || 350;
-          const roomsNeeded = Math.ceil(guests / 2); // Assume 2 per room
-          const totalCost = costPerNight * roomsNeeded * nights;
-          const costPerPerson = totalCost / guests;
-
-          options.push({
-            id: `hotel-${hotel.hotel_id}`,
-            name: hotel.name,
-            type: 'hotel',
-            rooms: roomsNeeded,
-            costPerNight: costPerNight * roomsNeeded,
-            totalCost,
-            costPerPerson,
-            hotel,
-            minPrice: prices[hotel.hotel_id],
-          });
-        });
-
-        // Add condo option if we have pricing data
+      if (checkIn) params.set('checkin', checkIn);
+      if (checkOut) params.set('checkout', checkOut);
+      
+      const response = await fetch(`/api/liteapi/search?${params.toString()}`);
+      
+      if (response.ok) {
+        const data = await response.json();
+        const hotels: LiteAPIHotel[] = data.data || [];
+        
+        // Calculate average hotel rate from real data
         if (hotels.length > 0) {
-          const avgPrice = Object.values(prices).reduce((a, b) => a + b, 0) / Object.keys(prices).length || 400;
-          const condoPrice = avgPrice * 1.5; // Condos typically cost more but sleep more
-          const totalCost = condoPrice * nights;
-          const costPerPerson = totalCost / guests;
-
-          options.push({
-            id: 'condo-option',
-            name: '3-Bedroom Condo',
-            type: 'condo',
-            rooms: 3,
-            costPerNight: condoPrice,
-            totalCost,
-            costPerPerson,
-          });
+          const avgRate = hotels.reduce((sum, h) => sum + (h.min_rate || 350), 0) / hotels.length;
+          setAvgHotelRate(avgRate);
         }
-
-        options.sort((a, b) => a.costPerPerson - b.costPerPerson);
-        setComparisons(options);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to load comparison data');
-      } finally {
-        setLoading(false);
       }
+      
+      calculateComparisons(avgHotelRate);
+      setError(null);
+    } catch (err) {
+      // Fall back to estimated rates if API fails
+      calculateComparisons(avgHotelRate);
+      setError(null); // Don't show error, just use estimates
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const calculateComparisons = (hotelRate: number) => {
+    const options: ComparisonOption[] = [];
+    
+    // Estimate condo/suite rates based on hotel rates
+    const condoRate = hotelRate * 1.7; // Condos typically 70% more than hotel room
+    const suiteRate = hotelRate * 2.3; // Suites typically 130% more than hotel room
+
+    if (guests <= 4) {
+      options.push({
+        id: 'hotel-2-rooms',
+        name: '2 Hotel Rooms',
+        type: 'hotel',
+        rooms: 2,
+        costPerNight: hotelRate * 2,
+        totalCost: 0,
+        costPerPerson: 0,
+        amenities: ['Daily housekeeping', 'Hotel amenities', 'Separate rooms'],
+      });
     }
 
-    if (hotelIds.length > 0) {
-      fetchHotelsAndCalculate();
+    if (guests <= 6) {
+      options.push({
+        id: 'condo-3br',
+        name: '3-Bedroom Condo',
+        type: 'condo',
+        rooms: 3,
+        costPerNight: condoRate,
+        totalCost: 0,
+        costPerPerson: 0,
+        amenities: ['Full kitchen', 'Living room', 'More space', 'Privacy'],
+      });
     }
-  }, [hotelIds, checkIn, checkOut, nights, guests]);
+
+    if (guests <= 8) {
+      options.push({
+        id: 'hotel-4-rooms',
+        name: '4 Hotel Rooms',
+        type: 'hotel',
+        rooms: 4,
+        costPerNight: hotelRate * 4,
+        totalCost: 0,
+        costPerPerson: 0,
+        amenities: ['Daily housekeeping', 'Hotel amenities', 'Separate rooms'],
+      });
+    }
+
+    if (guests <= 4) {
+      options.push({
+        id: 'suite-2br',
+        name: '2-Bedroom Suite',
+        type: 'suite',
+        rooms: 2,
+        costPerNight: suiteRate,
+        totalCost: 0,
+        costPerPerson: 0,
+        amenities: ['More space', 'Kitchenette', 'Hotel amenities', 'Privacy'],
+      });
+    }
+
+    const calculated = options.map((opt) => {
+      const totalCost = opt.costPerNight * nights;
+      const costPerPerson = totalCost / guests;
+      return { ...opt, totalCost, costPerPerson };
+    });
+
+    calculated.sort((a, b) => a.costPerPerson - b.costPerPerson);
+    setComparisons(calculated);
+  };
 
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('en-US', {
@@ -179,131 +163,127 @@ export function HotelSplitCalculator({
     }).format(amount);
   };
 
+  const getBestOption = () => {
+    return comparisons[0];
+  };
+
   if (loading) {
     return (
-      <div className="flex justify-center items-center py-12 my-8">
-        <LoadingSpinner size="lg" />
-      </div>
-    );
-  }
-
-  if (error || comparisons.length === 0) {
-    return (
       <Card className="my-8 border-2 border-primary-200">
-        <CardContent className="p-6">
-          <p className="text-neutral-600 text-center">
-            {error || 'Unable to load comparison data.'}
-          </p>
+        <CardContent className="py-12">
+          <div className="flex justify-center items-center">
+            <LoadingSpinner size="lg" />
+          </div>
         </CardContent>
       </Card>
     );
   }
 
   return (
-    <Card className="my-8 border-2 border-primary-200 shadow-lg">
+    <Card className="my-8 border-2 border-primary-200">
       <CardHeader>
         <div className="flex items-center gap-3">
           <div className="w-12 h-12 bg-primary-600 rounded-lg flex items-center justify-center">
             <Building2 className="w-6 h-6 text-white" />
           </div>
           <div>
-            <CardTitle className="text-2xl">Compare Hotel vs Condo Options</CardTitle>
+            <CardTitle className="text-2xl">Accommodation Cost Comparison</CardTitle>
             <p className="text-neutral-600 mt-1">
-              See how splitting costs changes per-person pricing
+              Compare costs for different lodging options for your group
             </p>
           </div>
         </div>
       </CardHeader>
-      <CardContent>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-          <div className="flex items-center gap-2">
-            <Users className="w-5 h-5 text-primary-600" />
-            <label className="text-sm font-medium text-neutral-700">Group Size</label>
+      <CardContent className="space-y-6">
+        <div className="grid gap-4 md:grid-cols-2">
+          <div>
+            <label className="block text-sm font-semibold text-neutral-900 mb-2">
+              <Users className="w-4 h-4 inline mr-2" />
+              Number of Guests
+            </label>
             <Input
               type="number"
-              min="1"
+              min="2"
+              max="20"
               value={guests}
-              onChange={(e) => setGuests(Math.max(1, parseInt(e.target.value) || 1))}
-              className="w-20"
+              onChange={(e) => setGuests(parseInt(e.target.value) || 2)}
+              className="w-full"
             />
           </div>
-          <div className="flex items-center gap-2">
-            <Calendar className="w-5 h-5 text-primary-600" />
-            <label className="text-sm font-medium text-neutral-700">Nights</label>
+          <div>
+            <label className="block text-sm font-semibold text-neutral-900 mb-2">
+              <Calendar className="w-4 h-4 inline mr-2" />
+              Number of Nights
+            </label>
             <Input
               type="number"
               min="1"
+              max="14"
               value={nights}
-              onChange={(e) => setNights(Math.max(1, parseInt(e.target.value) || 1))}
-              className="w-20"
+              onChange={(e) => setNights(parseInt(e.target.value) || 1)}
+              className="w-full"
             />
           </div>
         </div>
 
-        <div className="space-y-4">
-          {comparisons.map((option) => (
-            <div
-              key={option.id}
-              className="border border-neutral-200 rounded-lg p-4 hover:shadow-md transition-shadow"
-            >
-              <div className="flex items-start justify-between mb-3">
-                <div className="flex-1">
-                  <h4 className="text-lg font-bold text-neutral-900 mb-1">{option.name}</h4>
-                  <p className="text-sm text-neutral-600">
-                    {option.rooms} {option.rooms === 1 ? 'room' : 'rooms'} • {option.type}
-                  </p>
-                </div>
-                <div className="text-right">
-                  <div className="text-2xl font-bold text-primary-600">
-                    {formatCurrency(option.costPerPerson)}
-                  </div>
-                  <div className="text-sm text-neutral-600">per person</div>
-                </div>
-              </div>
-              
-              <div className="grid grid-cols-3 gap-4 mt-4 pt-4 border-t border-neutral-200">
-                <div>
-                  <div className="text-xs text-neutral-500 uppercase tracking-wide mb-1">Per Night</div>
-                  <div className="text-lg font-semibold text-neutral-900">
-                    {formatCurrency(option.costPerNight)}
-                  </div>
-                </div>
-                <div>
-                  <div className="text-xs text-neutral-500 uppercase tracking-wide mb-1">Total Stay</div>
-                  <div className="text-lg font-semibold text-neutral-900">
-                    {formatCurrency(option.totalCost)}
-                  </div>
-                </div>
-                <div>
-                  <div className="text-xs text-neutral-500 uppercase tracking-wide mb-1">Per Person</div>
-                  <div className="text-lg font-semibold text-primary-600">
-                    {formatCurrency(option.costPerPerson)}
-                  </div>
-                </div>
-              </div>
-
-              {option.hotel && (
-                <div className="mt-4">
-                  <a
-                    href={`/places-to-stay/${option.hotel.hotel_id}${checkIn && checkOut ? `?checkIn=${checkIn}&checkOut=${checkOut}` : ''}`}
-                    className="inline-flex items-center text-primary-600 hover:text-primary-700 font-semibold text-sm"
+        {comparisons.length > 0 && (
+          <div className="mt-6 space-y-4">
+            <div className="border-t border-neutral-200 pt-4">
+              <h3 className="text-lg font-semibold text-neutral-900 mb-4">
+                Cost Comparison for {guests} Guests, {nights} Nights
+              </h3>
+              <div className="space-y-3">
+                {comparisons.map((option, index) => (
+                  <div
+                    key={option.id}
+                    className={`p-4 border-2 rounded-lg ${
+                      index === 0
+                        ? 'border-primary-400 bg-primary-50'
+                        : 'border-neutral-200 bg-white'
+                    }`}
                   >
-                    View Hotel Details →
-                  </a>
-                </div>
-              )}
+                    <div className="flex items-start justify-between mb-2">
+                      <div>
+                        <div className="font-semibold text-neutral-900">{option.name}</div>
+                        <div className="text-sm text-neutral-600 mt-1">
+                          {option.amenities.slice(0, 2).join(' • ')}
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <div className="text-lg font-bold text-primary-600">
+                          {formatCurrency(option.costPerPerson)}
+                        </div>
+                        <div className="text-xs text-neutral-500">per person</div>
+                      </div>
+                    </div>
+                    <div className="text-sm text-neutral-600 mt-2">
+                      Total: {formatCurrency(option.totalCost)} • {option.rooms} {option.type === 'condo' ? 'bedrooms' : 'rooms'}
+                    </div>
+                    {index === 0 && (
+                      <div className="mt-2 flex items-center gap-1 text-sm text-primary-600 font-medium">
+                        <TrendingUp className="w-4 h-4" />
+                        Best Value
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
             </div>
-          ))}
-        </div>
 
-        <div className="mt-6">
-          <ArticleBookingWidget
-            title="Book Your Group Stay"
-            description="Compare rates and availability for your group"
-            variant="default"
-          />
-        </div>
+            {getBestOption() && (
+              <div className="border-t border-neutral-200 pt-4">
+                <ArticleBookingWidget
+                  filter={getBestOption()?.type === 'condo' ? undefined : 'family-friendly'}
+                  variant="default"
+                  title={`View ${getBestOption()?.name} Options`}
+                  description={`Best value at ${formatCurrency(getBestOption()?.costPerPerson || 0)} per person`}
+                />
+              </div>
+            )}
+          </div>
+        )}
       </CardContent>
     </Card>
   );
 }
+

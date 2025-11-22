@@ -34,7 +34,7 @@ export default function SplitHero({ heroImage }: SplitHeroProps) {
   };
 
   const heroImageUrl = heroImage
-    ? optimizePexelsImage(heroImage.url, { width: 1200, quality: 90 })
+    ? optimizePexelsImage(heroImage.url, { width: 1200, quality: 80 })
     : null;
 
   const formattedCheckIn = format(new Date(checkIn), 'MM/dd/yyyy');
