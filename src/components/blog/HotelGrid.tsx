@@ -29,9 +29,9 @@ export function HotelGrid({
       try {
         setLoading(true);
         
-        // Default dates: 45 days out to ensure availability (aligned with calculators)
-        const defaultCheckIn = format(addDays(new Date(), 45), 'yyyy-MM-dd');
-        const defaultCheckOut = format(addDays(new Date(), 52), 'yyyy-MM-dd');
+        // Default dates: 7 days out for check-in, 14 days out for check-out (7-night trip)
+        const defaultCheckIn = format(addDays(new Date(), 7), 'yyyy-MM-dd');
+        const defaultCheckOut = format(addDays(new Date(), 14), 'yyyy-MM-dd');
         
         const checkInDate = checkIn || defaultCheckIn;
         const checkOutDate = checkOut || defaultCheckOut;

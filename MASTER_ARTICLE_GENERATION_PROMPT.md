@@ -323,28 +323,28 @@ The hotel delivers a full resort experience with an outdoor heated pool and mult
 
 **Step 1: Web Research (REQUIRED)**
 
-You **MUST** use the `mcp_cursor-browser-extension_browser_navigate` tool (or equivalent browser tool) to verify ALL factual claims before writing. **Do not rely on training data.**
+Use web search tools to verify ALL factual claims before writing:
 
 1. **Official Statistics & Data**
-   - Visit `telluride.com` for current stats.
-   - Verify: acreage, lifts count, trails count, vertical drop, elevation.
-   - Verify: snowfall averages, season dates, operating hours.
-   - ❌ NEVER guess or use outdated data.
-   - ✅ ALWAYS cite current official sources found via browser.
+   - Telluride Ski Resort official website for current stats
+   - Verify: acreage, lifts count, trails count, vertical drop, elevation
+   - Verify: snowfall averages, season dates, operating hours
+   - ❌ NEVER guess or use outdated data
+   - ✅ ALWAYS cite current official sources
 
 2. **Current Pricing & Availability**
-   - Visit booking sites or official hotel pages.
-   - Verify lift ticket prices from official resort site.
-   - Restaurant pricing from menus or recent reviews.
-   - ❌ NEVER make up price ranges.
-   - ✅ ALWAYS provide price ranges or state "prices vary, check official site".
+   - Check hotel booking sites for actual price ranges
+   - Verify lift ticket prices from official resort
+   - Restaurant pricing from menus or recent reviews
+   - ❌ NEVER make up price ranges
+   - ✅ ALWAYS provide price ranges or state "prices vary, check official site"
 
 3. **Verify Names & Existence**
-   - Confirm hotel names, restaurants, and businesses actually exist.
-   - Check if properties are still operating (not closed/rebranded).
-   - Verify trail names, lift names from official trail maps.
-   - ❌ NEVER invent hotel or restaurant names.
-   - ✅ ALWAYS verify via official sources or recent reviews.
+   - Confirm hotel names, restaurants, and businesses actually exist
+   - Check if properties are still operating (not closed/rebranded)
+   - Verify trail names, lift names from official trail maps
+   - ❌ NEVER invent hotel or restaurant names
+   - ✅ ALWAYS verify via official sources or recent reviews
 
 4. **Current Events & Dates**
    - Festival dates from official festival websites
@@ -842,44 +842,29 @@ For the ultimate convenience, consider staying at a [ski-in/ski-out hotel](/lodg
 - Mix of wide shots and details
 - Professional quality
 
+**⚠️ CRITICAL: LANDSCAPE ORIENTATION ONLY**
+
+**Vertical/Portrait images look broken in our blog layout. You must ONLY select landscape/horizontal images.**
+
+**Selection Rules:**
+1. When reading the CSV files, look for `width` and `height` columns.
+2. **ONLY select images where `width` > `height`.**
+3. If dimensions are not available, look for descriptive keywords like "panoramic", "wide", "landscape", "view".
+4. **REJECT** images described as "portrait", "vertical", "tall", or "close-up" if they imply vertical orientation.
+5. **REJECT** images where the `medium_url` has parameters implying vertical crops (e.g. `h=650` is fine, but check if it looks like a vertical phone shot).
+
 **⚠️ CRITICAL: REAL PRODUCT IMAGES FOR ACTUAL HOTELS**
 
 **NEVER use generic stock photos for hotels we actually sell on our platform.**
 
 When writing reviews or mentions of specific hotels that are bookable through our site:
-- Use REAL images from LiteAPI hotel data when available
-- Check the hotel's actual images in our system first
-- Only use generic Pexels images for atmospheric/contextual shots (trails, weather, general mountain scenes)
-- NEVER show a tropical resort in Hawaii for a Telluride ski hotel
-- NEVER show a generic hotel that doesn't match the property being discussed
-- If we don't have real images for a specific property, either:
-  - Don't include an image in that section, OR
-  - Use a relevant Telluride landscape/ski scene instead (not a hotel)
-
-**Example of WRONG usage:**
-```markdown
-### The Madeline Hotel
-[Description of The Madeline]
-![Tropical resort with palm trees](pexels-image.jpg)  ❌ WRONG
-```
-
-**Example of CORRECT usage:**
-```markdown
-### The Madeline Hotel  
-[Description of The Madeline]
-![The Madeline Hotel exterior in Telluride with ski slopes](liteapi-hotel-image.jpg) ✓ CORRECT
-
-OR if no real hotel image available:
-
-### The Madeline Hotel
-[Description of The Madeline]  
-![Ski-in/ski-out access in Mountain Village Telluride](pexels-ski-village.jpg) ✓ ACCEPTABLE
-*Generic ski village scene, not specific hotel*
-```
+- **Option 1 (Preferred):** Use the `<HotelShowcase hotelId="..." />` component. This fetches REAL images dynamically from our API.
+- **Option 2:** Use `ArticleBookingWidget` with `hotelName` prop (no image, but high conversion).
+- **Option 3:** Use generic atmospheric shots (Pexels) for context, but NEVER label them as a specific hotel if they are not.
 
 **Image Sources Priority:**
-1. **Real hotel images from LiteAPI** (when writing about bookable properties)
-2. Pexels media library (for atmospheric/contextual content)
+1. **Real hotel images via `HotelShowcase` component** (see Component Reference)
+2. Pexels media library (for atmospheric/contextual content - LANDSCAPE ONLY)
 3. Official Telluride resort images
 4. Original photography when available
 
@@ -933,20 +918,17 @@ id,original_url,large_url,medium_url,small_url,width,height,photographer,photogr
 **STEP 1: READ THE CSV FILES** (Do this BEFORE writing the article)
 - Use the `read_file` tool to open relevant CSV files from `media-library/`
 - Example: For a hotel review article, read `luxury-ski-hotels.csv`, `hotel-rooms.csv`, `hotel-pools.csv`
-- Review the available images, their URLs, alt text, photographers, AND DIMENSIONS (`width`, `height`)
+- Review the available images, their URLs, alt text, and photographers
 
-**STEP 2: SELECT 5-8 IMAGES (LANDSCAPE ONLY)**
-- **⚠️ CRITICAL: You MUST calculate the aspect ratio for every image.**
-- **RULE: ONLY select images where `width` > `height` (Landscape orientation).**
-- **DO NOT use vertical/portrait images** (where `height` > `width`) as they break the blog layout.
-- Choose images that match your article sections.
-- Select diverse images (don't use all from one CSV).
-- Note the `medium_url` and `photographer` info for each.
+**STEP 2: SELECT 5-8 IMAGES**
+- Choose images that match your article sections
+- Select diverse images (don't use all from one CSV)
+- Note the `medium_url` and `photographer` info for each
 
 **STEP 3: PLAN IMAGE PLACEMENT**
-- Place images every 300-400 words throughout the article.
-- Match image content to the surrounding text.
-- First image should appear after 2-3 paragraphs.
+- Place images every 300-400 words throughout the article
+- Match image content to the surrounding text
+- First image should appear after 2-3 paragraphs
 
 **STEP 4: EMBED USING CORRECT SYNTAX**
 
@@ -1172,29 +1154,23 @@ Internal linking is MANDATORY but must be intelligent and accurate. You MUST res
 
 **STEP 1: RESEARCH THE CODEBASE (Do this BEFORE writing)**
 
-You **MUST** use the `read_file` tool to access and study these system files at the start of every session:
+Use these tools to understand what exists:
 
 1. **Read the Linking Plan:**
    ```
    read_file tool → INTERNAL_EXTERNAL_LINKING_PLAN.md
    ```
-   This shows all article relationships and linking strategies. You MUST follow the specific links assigned to your topic.
+   This shows all article relationships and linking strategies.
 
-2. **Read the SEO Masterlist:**
-   ```
-   read_file tool → SEO_KEYWORDS_MASTERLIST.md
-   ```
-   Use this to find your primary keyword, secondary keywords, and LSI keywords based on real data. Do not guess keywords.
-
-3. **Check Existing Articles:**
+2. **Check Existing Articles:**
    ```
    list_dir tool → src/content/blog/
    ```
    See what blog posts actually exist with their exact slugs.
 
-4. **Check Available Pages:**
+3. **Check Available Pages:**
    ```
-   codebase_search → Find pages like /lodging, /things-to-do, /ski-conditions
+   grep tool or codebase_search → Find pages like /lodging, /things-to-do, /ski-conditions
    ```
    Verify main site pages exist before linking.
 
@@ -1354,11 +1330,73 @@ The [National Weather Service Grand Junction office](https://www.weather.gov/gjt
 
 ---
 
-## LiteAPI Hotel Booking Widgets
+## Component Reference Library & LiteAPI Widgets
 
-### ⚠️ MANDATORY: ArticleBookingWidget Integration
+### ⚠️ MANDATORY: Interactive Component Integration
 
-**CRITICAL REQUIREMENT:** Every accommodation-related article MUST include ArticleBookingWidget components. These are not optional - they are essential conversion tools that drive bookings and revenue.
+**CRITICAL REQUIREMENT:** Every article MUST include interactive components. These are not optional - they are essential conversion tools that drive bookings and revenue.
+
+### 1. HotelShowcase (Premier Conversion Tool)
+
+**Use Case:** Featuring a specific hotel with rich details, real-time price, and IMAGE GALLERY.
+**Best For:** "Top 10" lists, Hotel Reviews, "Best For" recommendations.
+
+**Syntax:**
+```markdown
+<HotelShowcase 
+  hotelId="lp4b27f" 
+  showGallery={true} 
+  checkIn="2025-12-20"
+/>
+```
+
+**Props:**
+- `hotelId` (Required): The LiteAPI ID of the hotel. **Refer to `src/data/telluride-hotels.json` for valid IDs.**
+- `showGallery` (Optional): `true` to show a swipeable image gallery.
+- `checkIn` (Optional): Default check-in date (YYYY-MM-DD).
+
+**Strategy:**
+- Use this INSTEAD of static images for specific hotels.
+- It fetches **REAL landscape images** from the API automatically.
+- If you don't know the ID, look it up in `src/data/telluride-hotels.json`. If not found, use `ArticleBookingWidget`.
+
+### 2. ArticleBookingWidget (Flexible CTA)
+
+**Use Case:** General CTAs, filtered searches, or specific hotels when ID is unknown.
+
+**Syntax:**
+```markdown
+<ArticleBookingWidget 
+  variant="featured"
+  filter="ski-in-ski-out"
+  title="Custom Title"
+/>
+```
+
+**Props:**
+- `hotelId`: Specific hotel ID (if known).
+- `hotelName`: Hotel name (for fuzzy search if ID unknown).
+- `location`: `downtown` | `mountain-village`
+- `filter`: `ski-in-ski-out` | `luxury` | `budget` | `family-friendly`
+- `variant`: `default` | `compact` | `featured`
+
+### 3. Planning Tools (Calculators & Interactive)
+
+**Use Case:** Engagement and utility. Every planning article needs one.
+
+**Available Tools:**
+- `<GroupCostCalculator />`: For family/group budget articles.
+- `<HotelSplitCalculator />`: For condo vs hotel comparisons.
+- `<BudgetToItineraryPlanner />`: For cost breakdown articles.
+- `<SeasonComparison />`: For peak vs off-season guides.
+- `<GroupTypeRecommender />`: For general planning.
+- `<CostPerPersonRanking />`: For value-focused lists.
+- `<EventPlanningTimeline />`: For weddings/events.
+- `<LodgingComparisonMatrix />`: For head-to-head comparisons.
+
+---
+
+## LiteAPI Hotel Booking Widgets (Legacy Reference)
 
 ### ArticleBookingWidget Component
 
@@ -2166,7 +2204,11 @@ Before publishing any group planning article, verify:
 
 **Technical:**
 - [ ] Proper frontmatter JSON with all fields
+- [ ] `metaDescription` is 150 chars or less
 - [ ] Images compressed and optimized
+- [ ] **ALL images are LANDSCAPE orientation**
+- [ ] **At least 3 interactive components used**
+- [ ] Real Hotel IDs used in `HotelShowcase` (checked `src/data/telluride-hotels.json`)
 - [ ] No broken links (internal or external)
 - [ ] Mobile-friendly format verified
 - [ ] Schema markup fields completed
@@ -2263,9 +2305,9 @@ status: "scheduled"
 category: "destination-guides"
 author: "Telluride Ski Hotels Team"
 publishDate: "2025-11-15T14:00:00Z"
-  seo:
+seo:
   metaTitle: "Meta Title (50-60 chars)"
-  metaDescription: "Meta description MUST be under 160 characters. Concise, keyword-rich, with CTA."
+  metaDescription: "Meta description MUST be 150 characters or less. Include primary keyword and CTA."
   keywords: ["primary keyword", "secondary keyword 1", "secondary keyword 2"]
   canonical: "https://tellurideskihotels.com/blog/category/article-slug"
 featured: false
@@ -2280,6 +2322,11 @@ tags: ["telluride", "skiing", "hotels"]
 seasonalRelevance: ["winter"]
 ---
 ```
+
+**⚠️ CRITICAL: METADATA VALIDATION**
+- `metaDescription`: **MAXIMUM 150 CHARACTERS**. The build will fail if longer.
+- `metaTitle`: Maximum 60 characters.
+- `slug`: Lowercase, hyphens only, no special chars.
 
 ---
 

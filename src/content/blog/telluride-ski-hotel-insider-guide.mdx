@@ -54,6 +54,7 @@
 ---
 
 import { HotelGrid } from '@/components/blog/HotelGrid';
+import { ArticleBookingWidget } from '@/components/blog/ArticleBookingWidget';
 
 
 # Telluride Ski Hotel Insider's Guide: Which Hotel for Which Skier
@@ -284,6 +285,13 @@ For comparing the fundamental Mountain Village versus downtown decision that und
 <HotelGrid 
     limit={3}
   title="Find Your Perfect Ski Hotel Match"
+  client:load
+/>
+
+<ArticleBookingWidget 
+  title="Book Your Perfect Ski Hotel"
+  description="Find the ideal Telluride ski hotel for your skiing style with real-time availability."
+  variant="featured"
   client:load
 />
 

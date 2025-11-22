@@ -1,6 +1,7 @@
 import { Card, CardContent } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Calendar, MapPin, Search, TrendingUp } from 'lucide-react';
+import { format, addDays } from 'date-fns';
 
 export interface ArticleBookingWidgetProps {
   /** Widget title - defaults to generic if not provided */
@@ -49,15 +50,19 @@ export function ArticleBookingWidget({
       return `/places-to-stay/${hotelId}`;
     }
     
+    // Default dates: 7 days out for check-in, 14 days out for check-out (7-night trip)
+    const defaultCheckIn = format(addDays(new Date(), 7), 'yyyy-MM-dd');
+    const defaultCheckOut = format(addDays(new Date(), 14), 'yyyy-MM-dd');
+    
     const params = new URLSearchParams();
     
     // Location and filter
     if (location) params.set('location', location);
     if (filter) params.set('filter', filter);
     
-    // Search context from parent components
-    if (checkIn) params.set('checkin', checkIn);
-    if (checkOut) params.set('checkout', checkOut);
+    // Search context from parent components - use defaults if not provided
+    params.set('checkin', checkIn || defaultCheckIn);
+    params.set('checkout', checkOut || defaultCheckOut);
     if (guests) params.set('guests', guests.toString());
     if (nights) params.set('nights', nights.toString());
     if (maxPrice) params.set('maxPrice', maxPrice.toString());

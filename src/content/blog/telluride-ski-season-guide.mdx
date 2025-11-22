@@ -45,7 +45,23 @@ Understanding Telluride's seasonal patterns helps you choose the optimal time ba
 
 For detailed information about the resort itself, see our [Telluride ski resort guide](/blog/ski-guides/telluride-ski-resort-guide). To understand where to stay during your chosen season, check our [best hotels in Telluride](/blog/hotel-reviews/best-hotels-telluride) for accommodation options across all price ranges.
 
+import { HotelGrid } from '@/components/blog/HotelGrid';
+import { ArticleBookingWidget } from '@/components/blog/ArticleBookingWidget';
+
 **Note:** Prices, dates, and conditions mentioned reflect historical patterns and current season projections. Always verify specific information with official sources at [telluride.com](https://www.telluride.com) before booking your trip, as conditions and schedules change based on snowfall and operational decisions.
+
+<HotelGrid 
+  limit={3}
+  title="Book Your Ski Season Stay"
+  client:load
+/>
+
+<HotelGrid 
+  filter="ski-in-ski-out"
+  limit={3}
+  title="Ski-In/Ski-Out Hotels for Peak Season"
+  client:load
+/>
 
 ## 2024-2025 Season Key Dates
 
@@ -60,7 +76,7 @@ Spring closing dates depend entirely on snow year quality and business decisions
 
 ## Average Snowfall & Conditions
 
-Telluride averages approximately 131 inches of snowfall annually, translating to about 11 feet of natural accumulation. This relatively modest total by Colorado standards belies the quality of snow that falls here. The resort's location in the southwest San Juan Mountains produces characteristically dry, light "champagne powder" that skis beautifully even when total accumulation falls below northern resort averages.
+Telluride averages approximately 309 inches of snowfall annually, translating to about 26 feet of natural accumulation. This total by Colorado standards benefits from drier, lighter snow quality due to its southern San Juan location. The resort's location in the southwest San Juan Mountains produces characteristically dry, light "champagne powder" that skis beautifully even when total accumulation falls below northern resort averages. For detailed skiing strategies, see our [complete skiing guide](/blog/ski-guides/telluride-skiing-complete-guide). To understand terrain and lifts, check our [ski resort guide](/blog/ski-guides/telluride-ski-resort-guide).
 
 Monthly snowfall patterns show November delivering roughly 20 inches as early season storms begin. December averages 45 inches, providing the base depth necessary for full operations. January typically brings 50 inches and represents one of two peak snow months. February maintains strong storm cycles with 45 inches on average. March delivers the season's highest accumulation at 55 inches as spring storm patterns intensify. April contributes 35 inches, though rising temperatures increasingly produce rain at lower elevations while maintaining snow up high.
 
@@ -142,7 +158,7 @@ For those who enjoy spring skiing and corn snow, April delivers uncrowded slopes
 
 **For Families:** Late February (after Presidents Day) balances good snow conditions with warmer temperatures of 15-30°F that keep children comfortable. Early March (first week) continues family-friendly weather with full terrain access and solid snow conditions. Christmas week works if budget allows, offering festive atmosphere and holiday activities, though crowds and pricing are substantial.
 
-**For Beginners:** Mid-March delivers warm temperatures making learning more comfortable, softer snow cushioning falls, full terrain providing plenty of beginner areas, and longer days reducing pressure to maximize short winter daylight. Late February provides similar benefits with slightly colder temperatures and better snow quality.
+**For Beginners:** Mid-March delivers warm temperatures making learning more comfortable, softer snow cushioning falls, full terrain providing plenty of beginner areas, and longer days reducing pressure to maximize short winter daylight. Late February provides similar benefits with slightly colder temperatures and better snow quality. For beginner skiing strategies and lesson information, see our [complete skiing guide](/blog/ski-guides/telluride-skiing-complete-guide). To find accommodations, check our [best hotels guide](/blog/hotel-reviews/best-hotels-telluride).
 
 ## Periods to Avoid
 
@@ -184,3 +200,10 @@ Understanding Telluride's seasonal patterns allows you to choose timing matching
 *Photo by [Nitin Yadav](https://www.pexels.com/@niksbro2404) via Pexels*
 
 Check current snow forecasts at [OpenSnow Telluride](https://opensnow.com/location/telluride) for real-time predictions, and explore our [complete guide to Telluride activities](/blog/activity-guides/things-to-do-telluride) for planning beyond skiing. The box canyon's legendary powder and diverse terrain await—choose your timing wisely to maximize your Telluride ski adventure.
+
+<ArticleBookingWidget 
+  title="Book Your Ski Season Trip"
+  description="Find accommodations for your Telluride ski season visit with real-time availability."
+  variant="featured"
+  client:load
+/>

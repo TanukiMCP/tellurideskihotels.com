@@ -26,20 +26,22 @@ seasonalRelevance: ["winter", "spring", "summer", "fall"]
 ---
 
 import { HotelGrid } from '@/components/blog/HotelGrid';
+import { ArticleBookingWidget } from '@/components/blog/ArticleBookingWidget';
 
-The drive from Colorado Springs to Telluride covers roughly 300 miles through some of Colorado's most dramatic landscapes. This isn't a quick highway jaunt—it's a legitimate mountain road trip that rewards proper planning and realistic time expectations. I've made this drive in both summer and winter conditions, and the experience varies dramatically based on route selection, season, and how much time you allocate for stops.
+The drive from Colorado Springs to Telluride covers roughly 300 miles through some of Colorado's most dramatic landscapes. This isn't a quick highway jaunt—it's a legitimate mountain road trip that rewards proper planning and realistic time expectations. I've made this drive in both summer and winter conditions, and the experience varies dramatically based on route selection, season, and how much time you allocate for stops. For winter driving safety, see our [winter driving guide](/blog/planning-tips/winter-driving-telluride-safety). To plan your Telluride activities, check our [complete guide](/blog/destination-guides/complete-guide-telluride).
 
 Most navigation apps default to routing through US-285 and US-50, crossing Monarch Pass before heading southwest. This represents the most direct route, but "direct" in Colorado mountain driving doesn't mean fast. You'll spend 6-7 hours behind the wheel under ideal conditions, with winter weather or stops easily extending that to 8-9 hours. Understanding your route options and planning accordingly transforms this from a tedious necessity into one of the highlights of your Telluride trip.
 
 <HotelGrid 
   limit={3}
-  checkIn="2025-01-15"
-  checkOut="2025-01-20"
   title="Hotels in Telluride"
   client:load
 />
 
 ## The Primary Route: US-285 to US-50 via Monarch Pass
+
+![Colorado mountain highway winding through scenic mountain passes](https://images.pexels.com/photos/30729302/pexels-photo-30729302.jpeg?auto=compress&cs=tinysrgb&h=350)
+*Photo by [Telluride Ski Hotels](https://www.pexels.com) via Pexels*
 
 The most common route from Colorado Springs to Telluride follows US-24 west to US-285 south, then US-50 west over Monarch Pass before connecting to US-550 south toward Telluride. This 300-mile journey typically takes 6-7 hours in good conditions, though winter weather and traffic can extend that significantly.
 
@@ -49,18 +51,28 @@ The junction with US-285 near Antero Junction marks your turn south toward Ponch
 
 Poncha Springs represents a critical decision point. Here, US-285 continues south toward Alamosa, while US-50 heads west toward Monarch Pass and Gunnison. You want US-50 west. This is where the drive becomes genuinely mountainous, with the road climbing 2,000 feet over 20 miles to reach Monarch Pass at 11,312 feet elevation.
 
+![Monarch Pass mountain road with snow-covered peaks in background](https://images.pexels.com/photos/7443420/pexels-photo-7443420.jpeg?auto=compress&cs=tinysrgb&h=350)
+*Photo by [Telluride Ski Hotels](https://www.pexels.com) via Pexels*
+
 Monarch Pass demands respect, especially in winter. The road is well-engineered with gentle grades and good sight lines, but elevation, weather, and traffic all create challenges. In summer, expect slow-moving RVs and tourists stopping for photos. In winter, expect snow, ice, and the possibility of temporary closures during severe storms. The pass typically remains open year-round, but chains or four-wheel drive may be required during active weather. Always check [COtrip.org](https://www.cotrip.org) for current road conditions before attempting this section.
+
+![Scenic descent from Monarch Pass toward Gunnison with mountain views](https://images.pexels.com/photos/29991568/pexels-photo-29991568.jpeg?auto=compress&cs=tinysrgb&h=350)
+*Photo by [Telluride Ski Hotels](https://www.pexels.com) via Pexels*
 
 The descent from Monarch Pass into Gunnison offers spectacular views of the Sawatch Range and the upper Gunnison River valley. The road drops quickly, requiring attention to speed and brake management. Gunnison itself makes an excellent stop for fuel, food, and a break from driving. The town offers numerous restaurant options and serves as the last significant services before the final push to Telluride.
 
+![High desert terrain on US-50 approaching Montrose with San Juan Mountains in distance](https://images.pexels.com/photos/29991568/pexels-photo-29991568.jpeg?auto=compress&cs=tinysrgb&h=350)
+*Photo by [Telluride Ski Hotels](https://www.pexels.com) via Pexels*
+
 West of Gunnison, US-50 continues through increasingly remote terrain toward Montrose. This 65-mile section is relatively flat and fast by mountain standards, following the Gunnison River through sagebrush-covered valleys. The landscape shifts from alpine forests to high desert, with the dramatic peaks of the San Juan Mountains visible to the south.
+
+![Million Dollar Highway scenic mountain road approaching Telluride](https://images.pexels.com/photos/29991568/pexels-photo-29991568.jpeg?auto=compress&cs=tinysrgb&h=350)
+*Photo by [Telluride Ski Hotels](https://www.pexels.com) via Pexels*
 
 Montrose marks your final turn south onto US-550, the beginning of the famous Million Dollar Highway. The 65-mile drive from Montrose to Telluride via Ridgway and Placerville takes 90 minutes in good conditions, following the San Miguel River through increasingly dramatic canyon scenery. The final approach to Telluride through the box canyon reveals the town in spectacular fashion, with 14,000-foot peaks rising directly above the valley floor.
 
 <HotelGrid 
     limit={3}
-  checkIn="2025-02-10"
-  checkOut="2025-02-15"
   title="Plan Your Mountain Escape"
   client:load
 />
@@ -148,8 +160,13 @@ Consider the drive as part of your Telluride experience rather than an obstacle 
 
 <HotelGrid 
     limit={3}
-  checkIn="2025-03-10"
-  checkOut="2025-03-15"
   title="Book Your Telluride Accommodation"
+  client:load
+/>
+
+<ArticleBookingWidget 
+  title="Book Your Telluride Stay"
+  description="Find accommodations for your Colorado Springs to Telluride road trip with real-time availability."
+  variant="featured"
   client:load
 />

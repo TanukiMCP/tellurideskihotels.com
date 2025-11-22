@@ -56,6 +56,7 @@
 ---
 
 import { HotelGrid } from '@/components/blog/HotelGrid';
+import { ArticleBookingWidget } from '@/components/blog/ArticleBookingWidget';
 
 
 # Telluride Gondola Guide: Free Transportation & Views (2025)
@@ -114,6 +115,9 @@ Loading etiquette is straightforward: allow exiting passengers to disembark befo
 
 The 13-minute ride provides some of Colorado's most spectacular mountain views, climbing 1,700 vertical feet while traversing 3 miles across the San Juan Mountains. The journey begins in downtown Telluride's box canyon, where you'll see historic Victorian buildings, Main Street's colorful storefronts, and the surrounding 13,000-foot peaks creating the dramatic canyon walls. As you ascend, the perspective shifts to reveal the full scope of Telluride's geography: the Uncompahgre National Forest stretching toward Utah, the San Miguel River winding through the valley, and the ski resort's terrain spreading across multiple peaks.
 
+![Mid-journey gondola views of Telluride's ski terrain and mountain peaks](https://images.pexels.com/photos/22006721/pexels-photo-22006721.jpeg?auto=compress&cs=tinysrgb&h=350)
+*Photo by [Ellie Burgin](https://www.pexels.com/@ellie-burgin-1661546) via Pexels*
+
 Mid-journey views showcase the resort's ski terrain, with trails visible across the mountain faces and lifts operating during winter months. Summer reveals the same terrain covered in wildflowers, aspen groves, and hiking trails. The elevation gain becomes apparent as you watch the landscape transform from town-level vegetation to alpine environments, with tree lines clearly visible and rock formations emerging from forested slopes.
 
 The approach to Mountain Village provides aerial views of the resort's base area, with hotels, condominiums, and ski infrastructure spread across the mountainside. You'll see the ski area's lift network, terrain parks, and base facilities from an angle impossible to achieve from ground level. This perspective helps orient first-time visitors to Mountain Village's layout, making navigation easier once you disembark.
@@ -127,7 +131,7 @@ Best viewing occurs during clear weather, when visibility extends 50+ miles acro
 
 The gondola's practical value extends far beyond scenic transportation. Skiers staying downtown can upload early to Mountain Village, store equipment in lockers or hotel ski valets, then ski all day without returning to town until evening. This eliminates the need to drive between areas, find parking twice daily, or carry equipment through town. Many visitors choose downtown accommodations specifically for the gondola access, enjoying historic charm while maintaining ski convenience.
 
-Dining becomes significantly easier with gondola access. You can have breakfast downtown, ride to Mountain Village for skiing, return downtown for lunch, ride back for afternoon skiing, then choose dinner in either location based on preferences rather than transportation limitations. This flexibility enhances the Telluride experience, allowing you to sample restaurants in both areas without committing to one base for your entire stay.
+Dining becomes significantly easier with gondola access. You can have breakfast downtown, ride to Mountain Village for skiing, return downtown for lunch, ride back for afternoon skiing, then choose dinner in either location based on preferences rather than transportation limitations. This flexibility enhances the Telluride experience, allowing you to sample restaurants in both areas without committing to one base for your entire stay. For restaurant recommendations, see our [things to do guide](/blog/activity-guides/things-to-do-telluride). To compare Mountain Village and downtown locations, check our [slopeside vs town hotels guide](/blog/hotel-reviews/slopeside-vs-town-hotels-telluride).
 
 Summer visitors use the gondola to access Mountain Village's hiking trails, which begin near the upper station and provide routes into the surrounding wilderness. The elevation gain accomplished by gondola means you start hikes at higher elevations, accessing alpine terrain faster than hiking from downtown. Mountain Village's summer events—concerts, festivals, farmers markets—become easily accessible via gondola, eliminating parking concerns and allowing you to enjoy events without driving.
 
@@ -245,6 +249,13 @@ The system's year-round operation, accessibility, and efficiency make it essenti
 <HotelGrid 
     limit={3}
   title="Plan Your Telluride Stay"
+  client:load
+/>
+
+<ArticleBookingWidget 
+  title="Book Your Telluride Stay"
+  description="Find hotels near gondola access in downtown Telluride and Mountain Village."
+  variant="featured"
   client:load
 />
 
