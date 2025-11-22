@@ -12,10 +12,10 @@ export function GondolaWidget() {
     <article className="bg-white rounded-2xl p-8 border border-[#E8E8E8] shadow-[0_4px_20px_rgba(0,0,0,0.08)] hover:shadow-[0_8px_24px_rgba(0,0,0,0.12)] hover:-translate-y-1 transition-all duration-200 flex flex-col h-full">
       {/* Header Section */}
       <div className="flex items-start justify-between mb-6">
-        <div className="flex items-start gap-3 flex-1">
+        <div className="flex items-start gap-4 flex-1">
           {/* Icon */}
           <div className="w-14 h-14 rounded-xl bg-[#E8F2ED] flex items-center justify-center flex-shrink-0">
-            <svg className="w-6 h-6 text-[#2D5F4F]" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">
+            <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">
               <path strokeLinecap="round" strokeLinejoin="round" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
             </svg>
           </div>
@@ -27,28 +27,28 @@ export function GondolaWidget() {
           </div>
         </div>
 
-        {/* Status Indicator */}
+        {/* Status Indicator - Fixed positioning */}
         {isOperating && (
-          <div className="flex items-center gap-2 flex-shrink-0">
+          <div className="flex items-center gap-1.5 flex-shrink-0 mt-0.5" style={{ marginRight: '24px' }}>
             <div className="w-2 h-2 bg-[#8BA888] rounded-full animate-pulse"></div>
             <span className="text-xs font-medium text-[#666]">Operating Now</span>
           </div>
         )}
       </div>
 
-      {/* Quick Stats Section */}
+      {/* Quick Stats Section - Fixed backgrounds */}
       <div className="grid grid-cols-3 gap-3 mb-6">
-        <div className="text-center p-4 bg-[#F8F9F8] rounded-lg border border-[#E8E8E8]">
+        <div className="text-center rounded-lg border border-[#E8E8E8]" style={{ padding: '16px 12px', backgroundColor: '#F8F9F8' }}>
           <div className="text-[28px] font-bold text-[#2C2C2C] mb-1 leading-none">FREE</div>
-          <div className="text-xs text-[#666] font-medium">No Ticket</div>
+          <div className="text-xs text-[#999] font-medium">No Ticket</div>
         </div>
-        <div className="text-center p-4 bg-[#F8F9F8] rounded-lg border border-[#E8E8E8]">
+        <div className="text-center rounded-lg border border-[#E8E8E8]" style={{ padding: '16px 12px', backgroundColor: '#F8F9F8' }}>
           <div className="text-[28px] font-bold text-[#2C2C2C] mb-1 leading-none">13min</div>
-          <div className="text-xs text-[#666] font-medium">Ride Time</div>
+          <div className="text-xs text-[#999] font-medium">Ride Time</div>
         </div>
-        <div className="text-center p-4 bg-[#F8F9F8] rounded-lg border border-[#E8E8E8]">
+        <div className="text-center rounded-lg border border-[#E8E8E8]" style={{ padding: '16px 12px', backgroundColor: '#F8F9F8' }}>
           <div className="text-[28px] font-bold text-[#2C2C2C] mb-1 leading-none">24/7</div>
-          <div className="text-xs text-[#666] font-medium">Year-Round</div>
+          <div className="text-xs text-[#999] font-medium">Year-Round</div>
         </div>
       </div>
 
@@ -119,12 +119,12 @@ export function GondolaWidget() {
         </div>
       </div>
 
-      {/* Button */}
+      {/* Button - Fixed border consistency */}
       <a
         href="https://www.telluride.com/discover/the-gondola/"
         target="_blank"
         rel="noopener noreferrer"
-        className="mt-auto w-full text-center border-2 border-[#2D5F4F] bg-transparent text-[#2D5F4F] px-6 py-3.5 rounded-lg font-semibold text-[15px] hover:bg-[#2D5F4F] hover:text-white transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#2D5F4F] focus:ring-offset-2"
+        className="mt-auto w-full text-center border-2 border-[#2D5F4F] bg-transparent text-[#2D5F4F] px-6 py-3.5 rounded-lg font-semibold text-[15px] hover:bg-[#2D5F4F] hover:text-white transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#2D5F4F] focus:ring-offset-2 cursor-pointer"
       >
         View Full Gondola Info
       </a>
