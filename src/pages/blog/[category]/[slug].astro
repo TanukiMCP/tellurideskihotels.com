@@ -2,12 +2,6 @@
 import { getCollection } from 'astro:content';
 import type { CollectionEntry } from 'astro:content';
 import BlogLayout from '@/layouts/BlogLayout.astro';
-import BlogBookingWidget from '@/components/blog/BlogBookingWidget.astro';
-import BlogHotelCard from '@/components/blog/BlogHotelCard.astro';
-import BlogHotelShowcase from '@/components/blog/BlogHotelShowcase.astro';
-import BlogActivityCard from '@/components/blog/BlogActivityCard.astro';
-import BlogHotelGrid from '@/components/blog/BlogHotelGrid.astro';
-import BlogActivityGrid from '@/components/blog/BlogActivityGrid.astro';
 
 export async function getStaticPaths() {
   const allArticles = await getCollection('blog', ({ data }) => {

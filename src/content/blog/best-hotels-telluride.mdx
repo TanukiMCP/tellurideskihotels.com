@@ -25,25 +25,21 @@ tags: ["hotels", "luxury", "ski-in-ski-out", "boutique hotels"]
 seasonalRelevance: ["winter", "spring", "summer", "fall"]
 ---
 
-import BlogBookingWidget from '@/components/blog/BlogBookingWidget.astro';
-import BlogHotelCard from '@/components/blog/BlogHotelCard.astro';
-import BlogHotelShowcase from '@/components/blog/BlogHotelShowcase.astro';
-
 Choosing where to stay in Telluride isn't just about finding a bed—it's about selecting your home base for an unforgettable mountain experience. Whether you're chasing fresh powder at first light, seeking a romantic escape in a Victorian-era boutique hotel, or planning a family ski vacation with all the amenities, Telluride's accommodation scene delivers sophistication without sacrificing the town's authentic mountain character.
 
 The best hotels here understand that luxury means more than thread count and marble bathrooms. It's about waking up to views of 14,000-foot peaks, stepping directly onto ski runs, and returning to spaces that feel both refined and genuinely welcoming. After spending countless days exploring Telluride's lodging landscape, I've identified the properties that consistently exceed expectations across service, location, amenities, and that intangible quality that makes a hotel truly special.
 
-<BlogBookingWidget 
+<ArticleBookingWidget 
+  checkIn="2025-01-15"
+  checkOut="2025-01-20"
+  guests={2}
   title="Find Your Perfect Telluride Hotel"
   description="Compare rates across all Telluride properties"
-  variant="featured"
 />
 
 ## The Peaks Resort & Spa: Telluride's Premier Ski-In/Ski-Out Destination
 
 When travelers ask me for the single best combination of location, amenities, and consistent quality in Telluride, The Peaks Resort & Spa tops the list. This isn't just marketing—the property's position at Mountain Village delivers genuine ski-in/ski-out access that saves you precious morning minutes when powder days arrive.
-
-<BlogHotelShowcase hotelId="peaks-resort" showGallery={true} />
 
 The resort's 174 rooms and suites range from comfortable standard accommodations to sprawling multi-bedroom residences with full kitchens and private balconies. What sets The Peaks apart is how thoughtfully each space is designed. Floor-to-ceiling windows frame the San Juan Mountains, creating that quintessential Colorado experience where you're never quite sure if you're looking at reality or a postcard.
 
@@ -51,19 +47,17 @@ The 42,000-square-foot Golden Door Spa deserves its reputation as one of Colorad
 
 Dining at The Peaks reflects Telluride's evolution from mining town to culinary destination. Altezza at The Peaks serves contemporary Italian cuisine with mountain views, while Legends Lounge offers more casual fare without compromising quality. The resort's proximity to Mountain Village's restaurant scene means you're never limited to on-property options, though you may find yourself reluctant to leave.
 
-<BlogBookingWidget 
-  hotelId="peaks-resort"
-  hotelName="The Peaks Resort & Spa"
+<ArticleBookingWidget 
+  checkIn="2025-02-01"
+  checkOut="2025-02-05"
+  guests={4}
   title="Book The Peaks Resort & Spa"
   description="Ski-in/ski-out luxury with world-class spa"
-  variant="default"
 />
 
 ## The Hotel Telluride: Boutique Elegance in the Heart of Downtown
 
 Some hotels feel like they've always been part of a town's fabric, and The Hotel Telluride achieves this despite opening in 2010. Located on Telluride's main street, this 59-room boutique property captures the town's Victorian heritage while delivering thoroughly modern comfort and service.
-
-<BlogHotelCard hotelId="hotel-telluride" variant="default" showPrice={true} />
 
 The rooms here embrace a sophisticated mountain aesthetic—think reclaimed wood, leather accents, and custom furnishings that feel both luxurious and livable. Many rooms feature private balconies overlooking Colorado Avenue or the surrounding peaks, perfect for morning coffee or evening wine. The attention to detail extends to thoughtful touches like Sferra linens, Molton Brown bath products, and in-room fireplaces in select accommodations.
 
@@ -77,20 +71,18 @@ Location matters in Telluride, and The Hotel Telluride's position on Colorado Av
 
 The Madeline Hotel represents Mountain Village's most recent addition to the luxury hotel category, and it sets a new standard for contemporary mountain design. This isn't your grandfather's ski lodge—the property embraces clean lines, expansive glass, and a sophisticated aesthetic that appeals to travelers seeking modern luxury without traditional mountain kitsch.
 
-<BlogHotelShowcase hotelId="madeline-hotel" showGallery={true} />
-
 The hotel's 87 rooms and suites feature floor-to-ceiling windows, custom Italian furnishings, and technology integration that feels intuitive rather than overwhelming. Heated bathroom floors, deep soaking tubs, and private balconies come standard, while suites add full kitchens and separate living areas. The residences take luxury further with multiple bedrooms, chef's kitchens, and spaces designed for extended stays or family gatherings.
 
 The Madeline's true ski-in/ski-out access means you can literally step from the property onto Telluride's slopes. The ski valet service handles equipment storage and preparation, allowing you to focus on skiing rather than logistics. After skiing, the heated outdoor pool and hot tubs provide the perfect recovery environment, with mountain views that remind you why you came to Telluride in the first place.
 
 Dining at The Madeline centers on Timber Room, where Chef de Cuisine creates dishes that honor Colorado's agricultural heritage while incorporating global techniques. The restaurant's wine program features an impressive collection of both domestic and international bottles, with a sommelier team that makes selections accessible rather than intimidating.
 
-<BlogBookingWidget 
-  hotelId="madeline-hotel"
-  hotelName="Madeline Hotel & Residences"
+<ArticleBookingWidget 
+  checkIn="2025-03-10"
+  checkOut="2025-03-15"
+  guests={2}
   title="Experience Madeline Hotel"
   description="Contemporary luxury with true ski-in/ski-out access"
-  variant="default"
 />
 
 ## The New Sheridan Hotel: Historic Charm on Colorado Avenue
@@ -123,10 +115,12 @@ What sets Hotel Columbia apart is its commitment to genuine hospitality. The sma
 
 The hotel's location on San Juan Avenue puts you in downtown Telluride's quieter residential area, away from Colorado Avenue's bustle but still within easy walking distance of restaurants, shops, and the gondola. This positioning appeals to travelers seeking a more residential feel while maintaining access to everything that makes Telluride special.
 
-<BlogBookingWidget 
+<ArticleBookingWidget 
+  checkIn="2025-01-20"
+  checkOut="2025-01-25"
+  guests={2}
   title="Explore More Telluride Hotels"
   description="Compare boutique properties and luxury resorts"
-  variant="default"
 />
 
 ## Choosing Your Telluride Hotel: Practical Considerations
@@ -184,8 +178,10 @@ The best hotel in Telluride is ultimately the one that aligns with your specific
 
 Don't underestimate the value of genuine hospitality and service culture. Telluride's best hotels understand that luxury means more than high-end finishes—it's about creating experiences that make you want to return year after year. Whether you choose a historic boutique property or a contemporary mountain resort, prioritize places where staff demonstrate genuine care and local knowledge.
 
-<BlogBookingWidget 
+<ArticleBookingWidget 
+  checkIn="2025-02-15"
+  checkOut="2025-02-20"
+  guests={2}
   title="Book Your Telluride Hotel Today"
   description="Secure the best rates for your mountain getaway"
-  variant="featured"
 />

@@ -7,12 +7,15 @@ import TableOfContents from '@/components/blog/TableOfContents';
 import RelatedArticles from '@/components/blog/RelatedArticles';
 import BlogCTA from '@/components/blog/BlogCTA';
 import { formatDate, formatDateShort } from '@/lib/utils';
-import BlogBookingWidget from '@/components/blog/BlogBookingWidget.astro';
-import BlogHotelCard from '@/components/blog/BlogHotelCard.astro';
-import BlogHotelShowcase from '@/components/blog/BlogHotelShowcase.astro';
-import BlogActivityCard from '@/components/blog/BlogActivityCard.astro';
-import BlogHotelGrid from '@/components/blog/BlogHotelGrid.astro';
-import BlogActivityGrid from '@/components/blog/BlogActivityGrid.astro';
+import { ArticleBookingWidget } from '@/components/blog/ArticleBookingWidget';
+import { HotelShowcase } from '@/components/blog/HotelShowcase';
+import { HotelGrid } from '@/components/blog/HotelGrid';
+import { ActivityShowcase } from '@/components/blog/ActivityShowcase';
+import { GroupCostCalculator } from '@/components/planning/GroupCostCalculator';
+import { HotelSplitCalculator } from '@/components/planning/HotelSplitCalculator';
+import { BudgetToItineraryPlanner } from '@/components/planning/BudgetToItineraryPlanner';
+import { SeasonComparison } from '@/components/planning/SeasonComparison';
+import { GroupTypeRecommender } from '@/components/planning/GroupTypeRecommender';
 
 interface Props {
   article: CollectionEntry<'blog'>;
@@ -22,20 +25,23 @@ interface Props {
 
 const { article, relatedArticles = [], headings = [] } = Astro.props;
 const { data, render } = article;
-const { Content } = await render();
-
-// Make components available to MDX content
-const components = {
-  BlogBookingWidget,
-  BlogHotelCard,
-  BlogHotelShowcase,
-  BlogActivityCard,
-  BlogHotelGrid,
-  BlogActivityGrid,
-};
+const { Content, components } = await render();
 
 const fullUrl = `${Astro.site}blog/${data.category}/${article.slug}`;
 const categoryName = data.category.replace(/-/g, ' ');
+
+// Make components available to MDX
+const mdxComponents = {
+  ArticleBookingWidget,
+  HotelShowcase,
+  HotelGrid,
+  ActivityShowcase,
+  GroupCostCalculator,
+  HotelSplitCalculator,
+  BudgetToItineraryPlanner,
+  SeasonComparison,
+  GroupTypeRecommender,
+};
 ---
 
 <PageLayout
@@ -146,7 +152,7 @@ const categoryName = data.category.replace(/-/g, ' ');
             prose-blockquote:italic prose-blockquote:text-[19px] prose-blockquote:my-8
             prose-blockquote:text-[#2C2C2C]
             ">
-            <Content />
+            <Content components={mdxComponents} />
           </div>
 
           <!-- Tags -->
