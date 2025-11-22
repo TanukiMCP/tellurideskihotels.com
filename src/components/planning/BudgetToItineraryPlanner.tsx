@@ -46,7 +46,7 @@ export function BudgetToItineraryPlanner({
   const [size, setSize] = useState(groupSize);
   const [breakdown, setBreakdown] = useState<BudgetBreakdown | null>(null);
   const [loading, setLoading] = useState(true);
-  const [avgHotelRate, setAvgHotelRate] = useState(350);
+  const [avgHotelRate, setAvgHotelRate] = useState(0);
 
   useEffect(() => {
     fetchRatesAndCalculate();
@@ -116,7 +116,7 @@ export function BudgetToItineraryPlanner({
         });
       }
       
-      const hotelRate = rateCount > 0 ? totalRate / rateCount : avgHotelRate;
+      const hotelRate = rateCount > 0 ? totalRate / rateCount : 350; // Fallback only if no data
       
       setAvgHotelRate(hotelRate);
       calculateBreakdown(hotelRate);

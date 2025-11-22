@@ -43,9 +43,9 @@ export function GroupCostCalculator({
   const [breakdown, setBreakdown] = useState<CostBreakdown | null>(null);
   const [loading, setLoading] = useState(true);
   const [lodgingRates, setLodgingRates] = useState({
-    budget: 150,
-    midRange: 350,
-    luxury: 800,
+    budget: 0,
+    midRange: 0,
+    luxury: 0,
   });
 
   useEffect(() => {
@@ -121,13 +121,13 @@ export function GroupCostCalculator({
       const newRates = {
         budget: budgetHotels.length > 0 
           ? budgetHotels.reduce((sum, h) => sum + prices[h.hotel_id], 0) / budgetHotels.length 
-          : lodgingRates.budget, // Keep existing if no data
+          : 150, // Fallback only if no data at all
         midRange: midRangeHotels.length > 0 
           ? midRangeHotels.reduce((sum, h) => sum + prices[h.hotel_id], 0) / midRangeHotels.length 
-          : lodgingRates.midRange,
+          : 350,
         luxury: luxuryHotels.length > 0 
           ? luxuryHotels.reduce((sum, h) => sum + prices[h.hotel_id], 0) / luxuryHotels.length 
-          : lodgingRates.luxury,
+          : 800,
       };
       
       setLodgingRates(newRates);
