@@ -16,6 +16,7 @@ import { HotelSplitCalculator } from '@/components/planning/HotelSplitCalculator
 import { BudgetToItineraryPlanner } from '@/components/planning/BudgetToItineraryPlanner';
 import { SeasonComparison } from '@/components/planning/SeasonComparison';
 import { GroupTypeRecommender } from '@/components/planning/GroupTypeRecommender';
+import { CostPerPersonRanking } from '@/components/planning/CostPerPersonRanking';
 
 interface Props {
   article: CollectionEntry<'blog'>;
@@ -143,14 +144,15 @@ const categoryName = data.category.replace(/-/g, ' ');
             [&>section]:not-prose
             ">
             <style>
-              /* Break components out of prose constraints */
-              .prose > div:has([class*="Card"]),
-              .prose > div:has([class*="HotelGrid"]),
-              .prose > div:has([class*="GroupCostCalculator"]),
-              .prose > div:has([class*="HotelSplitCalculator"]),
-              .prose > div:has([class*="CostPerPersonRanking"]),
-              .prose > div:has([class*="ActivityShowcase"]),
-              .prose > div:has([class*="ArticleBookingWidget"]) {
+              /* Break React components out of prose constraints */
+              .prose > *:has(> [class*="Card"]),
+              .prose > *:has(> [class*="HotelGrid"]),
+              .prose > *:has(> [class*="GroupCostCalculator"]),
+              .prose > *:has(> [class*="HotelSplitCalculator"]),
+              .prose > *:has(> [class*="CostPerPersonRanking"]),
+              .prose > *:has(> [class*="ActivityShowcase"]),
+              .prose > *:has(> [class*="ArticleBookingWidget"]),
+              .prose [data-astro-cid-*] {
                 max-width: 100% !important;
                 margin-left: 0 !important;
                 margin-right: 0 !important;
@@ -158,11 +160,10 @@ const categoryName = data.category.replace(/-/g, ' ');
                 margin-bottom: 2.5rem !important;
               }
               
-              /* Ensure React components render properly */
-              .prose [data-astro-cid-*] {
-                max-width: 100% !important;
-                margin-left: 0 !important;
-                margin-right: 0 !important;
+              /* Ensure proper spacing for embedded components */
+              .prose > div[class*="astro"] {
+                margin-top: 2.5rem;
+                margin-bottom: 2.5rem;
               }
             </style>
             <Content 
@@ -176,6 +177,7 @@ const categoryName = data.category.replace(/-/g, ' ');
                 BudgetToItineraryPlanner,
                 SeasonComparison,
                 GroupTypeRecommender,
+                CostPerPersonRanking,
               }}
             />
           </div>
