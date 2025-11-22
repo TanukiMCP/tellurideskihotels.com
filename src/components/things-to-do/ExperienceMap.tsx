@@ -4,7 +4,7 @@ import type { MapRef } from 'react-map-gl/mapbox';
 import type { ViatorProduct } from '@/lib/viator/types';
 import { MAPBOX_TOKEN, TELLURIDE_CENTER } from '@/lib/mapbox-utils';
 import { formatPrice } from '@/lib/viator/client';
-import { getExperienceAddress, getAllAddresses, type ExperienceAddress } from '@/lib/experience-addresses';
+import { getAllAddresses, type ExperienceAddress } from '@/lib/experience-addresses';
 import 'mapbox-gl/dist/mapbox-gl.css';
 
 interface ExperienceMapProps {
@@ -19,7 +19,7 @@ export default function ExperienceMap({ experiences, onSelectExperience }: Exper
   const mapRef = useRef<MapRef>(null);
   const [selectedExperience, setSelectedExperience] = useState<string | null>(null);
   const [popupInfo, setPopupInfo] = useState<{ productCode: string; lng: number; lat: number } | null>(null);
-  const [addressMap, setAddressMap] = useState<Map<string, ExperienceAddress>>(new Map());
+  const [addressMap, setAddressMap] = useState<Map<string, ExperienceAddress>>(new Map<string, ExperienceAddress>());
   const [addressesLoaded, setAddressesLoaded] = useState(false);
 
   // Load address data on mount
