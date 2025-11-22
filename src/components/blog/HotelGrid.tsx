@@ -31,10 +31,10 @@ export function HotelGrid({
     setComputedCheckOut(checkOut || defaultCheckOut);
   }, [checkIn, checkOut]);
 
+  // Fetch hotels - don't wait for dates
   useEffect(() => {
     async function fetchHotels() {
       try {
-        // STEP 1: Fetch hotels list
         const searchParams = new URLSearchParams({
           cityName: 'Telluride',
           countryCode: 'US',
@@ -44,7 +44,7 @@ export function HotelGrid({
         const hotelsResponse = await fetch(`/api/liteapi/search?${searchParams.toString()}`);
         
         if (!hotelsResponse.ok) {
-          return; // Silently fail, render nothing
+          return;
         }
         
         const hotelsData = await hotelsResponse.json();
@@ -62,50 +62,52 @@ export function HotelGrid({
         candidateHotels = candidateHotels.slice(0, limit);
         
         if (candidateHotels.length === 0) {
-          return; // No hotels, render nothing
+          return;
         }
         
         setHotels(candidateHotels);
-        
-        // STEP 2: Fetch min rates for "from" pricing (optional - don't block render if it fails)
-        if (computedCheckIn && computedCheckOut) {
-          const hotelIds = candidateHotels.map(h => h.hotel_id);
-          const ratesParams = new URLSearchParams({
-            hotelIds: hotelIds.join(','),
-            checkIn: computedCheckIn,
-            checkOut: computedCheckOut,
-            adults: '2',
-          });
-          
-          fetch(`/api/hotels/min-rates?${ratesParams.toString()}`)
-            .then(res => res.ok ? res.json() : null)
-            .then(ratesData => {
-              if (ratesData?.data && Array.isArray(ratesData.data)) {
-                const prices: Record<string, number> = {};
-                const nights = Math.ceil((new Date(computedCheckOut).getTime() - new Date(computedCheckIn).getTime()) / (1000 * 60 * 60 * 24));
-                
-                ratesData.data.forEach((item: any) => {
-                  if (item.hotelId && item.price) {
-                    prices[item.hotelId] = nights > 0 ? item.price / nights : item.price;
-                  }
-                });
-                
-                setMinPrices(prices);
-              }
-            })
-            .catch(err => {
-              // Silently fail - prices just won't show
-              console.error('[HotelGrid] Error fetching min rates:', err);
-            });
-        }
       } catch (err) {
-        // Silently fail, render nothing
         console.error('[HotelGrid] Error fetching hotels:', err);
       }
     }
 
     fetchHotels();
-  }, [filter, limit, computedCheckIn, computedCheckOut]);
+  }, [filter, limit]);
+
+  // Fetch min-rates separately once dates are computed AND hotels are loaded
+  useEffect(() => {
+    if (!computedCheckIn || !computedCheckOut || hotels.length === 0) {
+      return; // Wait for both dates and hotels
+    }
+
+    const hotelIds = hotels.map(h => h.hotel_id);
+    const ratesParams = new URLSearchParams({
+      hotelIds: hotelIds.join(','),
+      checkIn: computedCheckIn,
+      checkOut: computedCheckOut,
+      adults: '2',
+    });
+    
+    fetch(`/api/hotels/min-rates?${ratesParams.toString()}`)
+      .then(res => res.ok ? res.json() : null)
+      .then(ratesData => {
+        if (ratesData?.data && Array.isArray(ratesData.data)) {
+          const prices: Record<string, number> = {};
+          const nights = Math.ceil((new Date(computedCheckOut).getTime() - new Date(computedCheckIn).getTime()) / (1000 * 60 * 60 * 24));
+          
+          ratesData.data.forEach((item: any) => {
+            if (item.hotelId && item.price) {
+              prices[item.hotelId] = nights > 0 ? item.price / nights : item.price;
+            }
+          });
+          
+          setMinPrices(prices);
+        }
+      })
+      .catch(err => {
+        console.error('[HotelGrid] Error fetching min rates:', err);
+      });
+  }, [computedCheckIn, computedCheckOut, hotels]);
 
   // Render nothing if no hotels available
   if (hotels.length === 0) {
@@ -124,10 +126,12 @@ export function HotelGrid({
             hotel={hotel}
             minPrice={minPrices[hotel.hotel_id]}
             currency="USD"
-            checkInDate={computedCheckIn}
-            checkOutDate={computedCheckOut}
+            checkInDate={computedCheckIn || undefined}
+            checkOutDate={computedCheckOut || undefined}
             onSelect={(id) => {
-              window.location.href = `/places-to-stay/${id}?checkIn=${computedCheckIn}&checkOut=${computedCheckOut}&adults=2&rooms=1`;
+              const checkInDate = computedCheckIn || format(addDays(new Date(), 7), 'yyyy-MM-dd');
+              const checkOutDate = computedCheckOut || format(addDays(new Date(), 14), 'yyyy-MM-dd');
+              window.location.href = `/places-to-stay/${id}?checkIn=${checkInDate}&checkOut=${checkOutDate}&adults=2&rooms=1`;
             }}
           />
         ))}
