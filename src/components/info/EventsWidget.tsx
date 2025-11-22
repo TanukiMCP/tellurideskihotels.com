@@ -96,7 +96,13 @@ const TELLURIDE_EVENTS: Event[] = [
 
 export function EventsWidget() {
   // Detect screen size to show different number of events
-  const [isDesktop, setIsDesktop] = useState(false);
+  // Initialize with window width check if available (client-side)
+  const [isDesktop, setIsDesktop] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return window.innerWidth >= 1024; // lg breakpoint
+    }
+    return false; // Default to mobile on server-side
+  });
 
   useEffect(() => {
     const checkScreenSize = () => {
