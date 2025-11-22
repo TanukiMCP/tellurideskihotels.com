@@ -78,11 +78,6 @@ const faqCategories: FAQCategory[] = [
         answer: 'Yes! The total price shown includes all taxes and fees. There are no hidden charges. The breakdown will show the nightly rate, taxes, and any applicable fees before you complete your booking.',
       },
       {
-        id: 'price-matching',
-        question: 'Do you offer price matching?',
-        answer: 'We strive to offer the best rates available. If you find a lower rate for the same property and dates elsewhere, contact us and we\'ll do our best to match it. Terms and conditions apply.',
-      },
-      {
         id: 'split-payment',
         question: 'Can I split payment between multiple cards?',
         answer: 'Unfortunately, we don\'t support split payments online. If you need to split payment, please contact us before booking and we can arrange this manually.',

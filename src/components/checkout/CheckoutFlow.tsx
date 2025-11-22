@@ -319,10 +319,6 @@ export function CheckoutFlow({ hotelId, hotelName, room, addons = [], onComplete
               <span className="font-semibold">Instant Confirmation</span>
             </div>
             <div className="flex items-center gap-2 text-primary-900">
-              <CheckCircle2 className="w-5 h-5" />
-              <span className="font-semibold">Best Price Guarantee</span>
-            </div>
-            <div className="flex items-center gap-2 text-primary-900">
               <Mail className="w-5 h-5" />
               <span className="font-semibold">Email Support</span>
             </div>

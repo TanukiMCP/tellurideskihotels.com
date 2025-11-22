@@ -149,8 +149,6 @@ export function ArticleBookingWidget({
                   <Calendar className="w-4 h-4 text-primary-600" />
                   <span>Instant confirmation</span>
                 </div>
-                <span className="text-neutral-300">•</span>
-                <span>Best rate guarantee</span>
               </div>
             </div>
             <div className="flex-shrink-0">
