@@ -34,12 +34,12 @@ The challenge is making a weekend trip work logistically. The 330-mile drive fro
 
 After making this trip dozens of times from Denver, I've refined the formula for squeezing maximum value from a Telluride weekend. The key is treating Friday as a travel day, Saturday as your full adventure day, and Sunday as a bonus half-day before the drive home. This framework works whether you're skiing in winter, hiking in summer, or attending festivals.
 
-<ArticleBookingWidget 
+<HotelGrid 
+    limit={3}
   checkIn="2025-01-17"
   checkOut="2025-01-19"
-  guests={2}
   title="Book Your Weekend Escape"
-  description="Secure your Telluride weekend accommodation"
+  client:load
 />
 
 ## Realistic Drive Times and Departure Strategy
@@ -54,12 +54,12 @@ The alternative—leaving Friday morning or midday—only works if you can take 
 
 Saturday morning departures make sense only for three-day weekends or when Friday departure is impossible. Leaving Denver at 6 AM gets you to Telluride by 1-2 PM, salvaging half of Saturday. But you've sacrificed Friday evening in Telluride and the psychological benefit of waking up in the mountains Saturday morning.
 
-<ArticleBookingWidget 
+<HotelGrid 
+    limit={3}
   checkIn="2025-02-14"
   checkOut="2025-02-16"
-  guests={4}
   title="Plan Your Presidents Day Weekend"
-  description="Book early for holiday weekends"
+  client:load
 />
 
 ## The Two-Day Weekend Itinerary
@@ -86,12 +86,12 @@ Sunday's second full day allows for activities you couldn't fit Saturday. Skiers
 
 Monday morning becomes your departure day, leaving by 9-10 AM to reach the Front Range by 4-6 PM. This timing avoids the worst of Monday afternoon traffic while getting you home with evening to spare. Some people push departure to Monday afternoon, but this risks hitting Denver rush hour and arriving home exhausted with work the next day.
 
-<ArticleBookingWidget 
+<HotelGrid 
+    limit={3}
   checkIn="2025-05-23"
   checkOut="2025-05-26"
-  guests={2}
   title="Book Your Memorial Day Weekend"
-  description="Secure three-day weekend dates early"
+  client:load
 />
 
 ## Where to Stay for Weekend Trips
@@ -165,10 +165,10 @@ Build relationships with specific hotels by returning to properties you like. Ma
 
 Learn the drive's rhythm and optimal stopping points. After a few trips, you'll know which gas stations have clean bathrooms, which restaurants serve quick quality meals, and where traffic typically backs up. This knowledge makes each subsequent trip smoother and less stressful.
 
-<ArticleBookingWidget 
+<HotelGrid 
+    limit={3}
   checkIn="2025-03-14"
   checkOut="2025-03-16"
-  guests={2}
   title="Book Your Next Weekend Escape"
-  description="Start planning your Telluride weekend getaway"
+  client:load
 />
