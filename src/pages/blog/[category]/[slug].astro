@@ -59,7 +59,16 @@ if (relatedArticles.length < 3) {
 
 // Extract headings from content for table of contents
 const { render } = article;
-const { Content, headings } = await render();
+const { Content, headings } = await render({
+  components: {
+    BlogBookingWidget,
+    BlogHotelCard,
+    BlogHotelShowcase,
+    BlogActivityCard,
+    BlogHotelGrid,
+    BlogActivityGrid,
+  }
+});
 
 // Filter to only H2 and H3 headings
 const tocHeadings = headings
