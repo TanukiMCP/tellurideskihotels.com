@@ -126,11 +126,27 @@ export function HotelGrid({
     );
   }
 
-  if (error || hotels.length === 0) {
+  if (error) {
     return (
-      <div className="my-8 p-6 bg-neutral-50 border border-neutral-200 rounded-lg">
-        <p className="text-neutral-600 text-center">
-          {error || 'No hotels available at this time.'}
+      <div className="my-8 p-6 bg-red-50 border border-red-200 rounded-lg">
+        <p className="text-red-800 text-center font-semibold mb-2">
+          Unable to load hotels
+        </p>
+        <p className="text-red-600 text-center text-sm">
+          {error}
+        </p>
+      </div>
+    );
+  }
+
+  if (hotels.length === 0) {
+    return (
+      <div className="my-8 p-6 bg-amber-50 border border-amber-200 rounded-lg">
+        <p className="text-amber-900 text-center font-semibold mb-2">
+          No hotels available for selected dates
+        </p>
+        <p className="text-amber-700 text-center text-sm">
+          Try adjusting your dates or <a href="/places-to-stay" className="underline hover:text-amber-900">browse all properties</a>
         </p>
       </div>
     );
