@@ -42,6 +42,7 @@ export function GroupCostCalculator({
   const [calculated, setCalculated] = useState(false);
   const [breakdown, setBreakdown] = useState<CostBreakdown | null>(null);
   const [loading, setLoading] = useState(true);
+  const [selectedTier, setSelectedTier] = useState<'budget' | 'midRange' | 'luxury'>('midRange');
   const [lodgingRates, setLodgingRates] = useState({
     budget: 0,
     midRange: 0,
@@ -80,7 +81,7 @@ export function GroupCostCalculator({
       const hotels: LiteAPIHotel[] = hotelsData.data || [];
       
       if (hotels.length === 0) {
-        calculateCosts(); // Use default rates
+        calculateCosts({ budget: 150, midRange: 350, luxury: 800 }); // Use default rates
         return;
       }
       
@@ -96,7 +97,7 @@ export function GroupCostCalculator({
       const ratesResponse = await fetch(`/api/hotels/min-rates?${ratesParams.toString()}`);
       
       if (!ratesResponse.ok) {
-        calculateCosts(); // Use default rates if rates API fails
+        calculateCosts({ budget: 150, midRange: 350, luxury: 800 }); // Use default rates if rates API fails
         return;
       }
       
@@ -131,19 +132,19 @@ export function GroupCostCalculator({
       };
       
       setLodgingRates(newRates);
-      calculateCosts();
+      calculateCosts(newRates); // Pass rates directly instead of relying on state
     } catch (err) {
-      // Fall back to existing rates if API fails
-      calculateCosts();
+      // Fall back to default rates if API fails
+      calculateCosts({ budget: 150, midRange: 350, luxury: 800 });
     } finally {
       setLoading(false);
     }
   };
 
-  const calculateCosts = () => {
-    const lodgingBudget = lodgingRates.budget * nights;
-    const lodgingMidRange = lodgingRates.midRange * nights;
-    const lodgingLuxury = lodgingRates.luxury * nights;
+  const calculateCosts = (rates: { budget: number; midRange: number; luxury: number } = lodgingRates) => {
+    const lodgingBudget = rates.budget * nights;
+    const lodgingMidRange = rates.midRange * nights;
+    const lodgingLuxury = rates.luxury * nights;
 
     const liftTickets = LIFT_TICKET_COST * nights * guests;
     const activities = ACTIVITIES_COST_PER_DAY * nights * guests;
@@ -249,27 +250,48 @@ export function GroupCostCalculator({
                 Cost Per Person
               </h3>
               <div className="grid gap-4 md:grid-cols-3">
-                <div className="p-4 border-2 border-neutral-200 rounded-lg">
+                <button
+                  onClick={() => setSelectedTier('budget')}
+                  className={`p-4 border-2 rounded-lg text-left transition-all cursor-pointer hover:shadow-md ${
+                    selectedTier === 'budget'
+                      ? 'border-primary-500 bg-primary-50 shadow-sm'
+                      : 'border-neutral-200 hover:border-primary-200'
+                  }`}
+                >
                   <div className="text-sm text-neutral-600 mb-1">Budget</div>
                   <div className="text-2xl font-bold text-primary-600">
                     {formatCurrency(breakdown.budget)}
                   </div>
                   <div className="text-xs text-neutral-500 mt-1">per person</div>
-                </div>
-                <div className="p-4 border-2 border-primary-300 rounded-lg bg-primary-50">
+                </button>
+                <button
+                  onClick={() => setSelectedTier('midRange')}
+                  className={`p-4 border-2 rounded-lg text-left transition-all cursor-pointer hover:shadow-md ${
+                    selectedTier === 'midRange'
+                      ? 'border-primary-500 bg-primary-50 shadow-sm'
+                      : 'border-neutral-200 hover:border-primary-200'
+                  }`}
+                >
                   <div className="text-sm text-neutral-600 mb-1">Mid-Range</div>
                   <div className="text-2xl font-bold text-primary-700">
                     {formatCurrency(breakdown.midRange)}
                   </div>
                   <div className="text-xs text-neutral-500 mt-1">per person</div>
-                </div>
-                <div className="p-4 border-2 border-neutral-200 rounded-lg">
+                </button>
+                <button
+                  onClick={() => setSelectedTier('luxury')}
+                  className={`p-4 border-2 rounded-lg text-left transition-all cursor-pointer hover:shadow-md ${
+                    selectedTier === 'luxury'
+                      ? 'border-primary-500 bg-primary-50 shadow-sm'
+                      : 'border-neutral-200 hover:border-primary-200'
+                  }`}
+                >
                   <div className="text-sm text-neutral-600 mb-1">Luxury</div>
                   <div className="text-2xl font-bold text-primary-600">
                     {formatCurrency(breakdown.luxury)}
                   </div>
                   <div className="text-xs text-neutral-500 mt-1">per person</div>
-                </div>
+                </button>
               </div>
             </div>
 
@@ -295,13 +317,13 @@ export function GroupCostCalculator({
 
             <div className="border-t border-neutral-200 pt-6">
               <h3 className="text-xl font-bold text-neutral-900 mb-4">
-                Hotels Matching Your Mid-Range Budget
+                Hotels Matching Your {selectedTier === 'budget' ? 'Budget' : selectedTier === 'midRange' ? 'Mid-Range' : 'Luxury'} Budget
               </h3>
               <p className="text-neutral-600 mb-6">
-                Based on your {guests} guests for {nights} nights, here are available hotels around {formatCurrency(lodgingRates.midRange)}/night:
+                Based on your {guests} guests for {nights} nights, here are available hotels around {formatCurrency(lodgingRates[selectedTier])}/night:
               </p>
               <HotelGrid
-                filter={getFilterForBudget(breakdown.midRange)}
+                filter={selectedTier === 'budget' ? 'budget' : selectedTier === 'luxury' ? 'luxury' : 'family-friendly'}
                 limit={3}
                 checkIn={checkIn || format(addDays(new Date(), 7), 'yyyy-MM-dd')}
                 checkOut={checkOut || format(addDays(new Date(), 14), 'yyyy-MM-dd')}
