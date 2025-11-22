@@ -415,7 +415,7 @@ function ExperienceSearchWidgetContent({ onExperienceSelect }: ExperienceSearchW
           {!loading && (
             <>
               {viewMode === 'grid' ? (
-                <div className="p-4 sm:p-6">
+                <div className="px-4 sm:px-6 lg:px-8 py-4">
                   <ExperienceGrid
                     experiences={paginatedExperiences}
                     onSelectExperience={handleExperienceSelect}
