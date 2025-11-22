@@ -1,0 +1,396 @@
+[
+  {
+    "id": "2",
+    "name": "Turkey Trot",
+    "date": "2025-11-27",
+    "type": "sports",
+    "description": "Nov 27, 2025",
+    "url": "https://www.telluride.com/event/san-miguel-county-turkey-trot/"
+  },
+  {
+    "id": "3",
+    "name": "Thanksgiving Buffet at The View",
+    "date": "2025-11-27",
+    "type": "community",
+    "description": "Nov 27, 2025",
+    "url": "https://www.telluride.com/event/thanksgiving-buffet-at-the-view/"
+  },
+  {
+    "id": "4",
+    "name": "Thanksgiving Feast at Madeline Hotel & Residences",
+    "date": "2025-11-27",
+    "type": "community",
+    "description": "Nov 27, 2025",
+    "url": "https://www.telluride.com/event/thanksgiving-feast-at-madeline-hotel-residences/"
+  },
+  {
+    "id": "6",
+    "name": "Sno-ciety",
+    "date": "2025-11-28",
+    "type": "community",
+    "description": "Nov 28, 2025",
+    "url": "https://www.telluride.com/event/sno-ciety/"
+  },
+  {
+    "id": "7",
+    "name": "Electric Love",
+    "date": "2025-11-29",
+    "type": "community",
+    "description": "Nov 29, 2025",
+    "url": "https://www.telluride.com/event/electric-love-1/"
+  },
+  {
+    "id": "8",
+    "name": "Hugh Phillips",
+    "date": "2025-12-04",
+    "type": "community",
+    "description": "Dec 4, 2025",
+    "url": "https://www.telluride.com/event/hugh-phillips/"
+  },
+  {
+    "id": "9",
+    "name": "Mountain Sprouts Preschool Holiday Fundraiser",
+    "date": "2025-12-04",
+    "type": "community",
+    "description": "Dec 4, 2025",
+    "url": "https://www.telluride.com/event/mountain-sprouts-preschool-holiday-fundraiser/"
+  },
+  {
+    "id": "10",
+    "name": "Telluride Nordic Season Kick-Off",
+    "date": "2025-12-04",
+    "type": "community",
+    "description": "Dec 4, 2025",
+    "url": "https://www.telluride.com/event/telluride-nordic-season-kick-off/"
+  },
+  {
+    "id": "11",
+    "name": "Moontour",
+    "date": "2025-12-05",
+    "type": "community",
+    "description": "Dec 5, 2025",
+    "url": "https://www.telluride.com/event/moontour/"
+  },
+  {
+    "id": "14",
+    "name": "TAB World AIDS Day Dance Party",
+    "date": "2025-12-05",
+    "type": "art",
+    "description": "Dec 5, 2025",
+    "url": "https://www.telluride.com/event/tab-world-aids-day-dance-party/"
+  },
+  {
+    "id": "15",
+    "name": "Telluride Ski Resort Opening Day 2025",
+    "date": "2025-12-06",
+    "type": "community",
+    "description": "Dec 6, 2025",
+    "url": "https://www.telluride.com/event/telluride-ski-resort-opening-day/"
+  },
+  {
+    "id": "16",
+    "name": "Safety Meeting",
+    "date": "2025-12-06",
+    "type": "community",
+    "description": "Dec 6, 2025",
+    "url": "https://www.telluride.com/event/safety-meeting/"
+  },
+  {
+    "id": "18",
+    "name": "Noel Night",
+    "date": "2025-12-10",
+    "type": "community",
+    "description": "Dec 10, 2025",
+    "url": "https://www.telluride.com/event/noel-night/"
+  },
+  {
+    "id": "19",
+    "name": "Noel Night Photos With Santa",
+    "date": "2025-12-10",
+    "type": "community",
+    "description": "Dec 10, 2025",
+    "url": "https://www.telluride.com/event/noel-night-photos-with-santa/"
+  },
+  {
+    "id": "23",
+    "name": "Chanukah in Telluride",
+    "date": "2025-12-18",
+    "type": "community",
+    "description": "Dec 18, 2025",
+    "url": "https://www.telluride.com/event/chanukah-in-telluride/"
+  },
+  {
+    "id": "26",
+    "name": "Alpine Chapel Christmas Eve Services",
+    "date": "2025-12-24",
+    "type": "community",
+    "description": "Dec 24, 2025",
+    "url": "https://www.telluride.com/event/alpine-chapel-christmas-eve-services/"
+  },
+  {
+    "id": "27",
+    "name": "Christmas Eve Torchlight Parade",
+    "date": "2025-12-24",
+    "type": "community",
+    "description": "Dec 24, 2025",
+    "url": "https://www.telluride.com/event/christmas-eve-torchlight-parade/"
+  },
+  {
+    "id": "30",
+    "name": "Jane Monheit",
+    "date": "2025-12-28",
+    "type": "community",
+    "description": "Dec 28, 2025",
+    "url": "https://www.telluride.com/event/jane-monheit/"
+  },
+  {
+    "id": "31",
+    "name": "Yesterday",
+    "date": "2025-12-29",
+    "type": "community",
+    "description": "Dec 29, 2025",
+    "url": "https://www.telluride.com/event/yesterday/"
+  },
+  {
+    "id": "32",
+    "name": "Larkin Poe",
+    "date": "2025-12-31",
+    "type": "community",
+    "description": "Dec 31, 2025",
+    "url": "https://www.telluride.com/event/larkin-poe/"
+  },
+  {
+    "id": "33",
+    "name": "New Year's Eve Torchlight Parade & Fireworks",
+    "date": "2025-12-31",
+    "type": "community",
+    "description": "Dec 31, 2025",
+    "url": "https://www.telluride.com/event/new-years-eve-torchlight-parade-fireworks/"
+  },
+  {
+    "id": "34",
+    "name": "Telluride Foundation's Volunteer of the Year Celebration",
+    "date": "2026-01-08",
+    "type": "community",
+    "description": "Jan 8, 2026",
+    "url": "https://www.telluride.com/event/telluride-foundations-volunteer-of-the-year-celebration/"
+  },
+  {
+    "id": "35",
+    "name": "Neal Francis",
+    "date": "2026-01-08",
+    "type": "community",
+    "description": "Jan 8, 2026",
+    "url": "https://www.telluride.com/event/neal-francis/"
+  },
+  {
+    "id": "36",
+    "name": "The Motet",
+    "date": "2026-01-09",
+    "type": "community",
+    "description": "Jan 9, 2026",
+    "url": "https://www.telluride.com/event/the-motet/"
+  },
+  {
+    "id": "38",
+    "name": "Late Night Radio",
+    "date": "2026-01-17",
+    "type": "community",
+    "description": "Jan 17, 2026",
+    "url": "https://www.telluride.com/event/late-night-radio/"
+  },
+  {
+    "id": "39",
+    "name": "Ridgeliners",
+    "date": "2026-01-18",
+    "type": "community",
+    "description": "Jan 18, 2026",
+    "url": "https://www.telluride.com/event/ridgeliners/"
+  },
+  {
+    "id": "40",
+    "name": "Jason Leech w/Future Joy and Michael Wilbur of Moon Hooch",
+    "date": "2026-01-18",
+    "type": "community",
+    "description": "Jan 18, 2026",
+    "url": "https://www.telluride.com/event/jason-leech-w-future-joy-and-michael-wilbur-of-moon-hooch/"
+  },
+  {
+    "id": "43",
+    "name": "YOPE",
+    "date": "2026-01-22",
+    "type": "community",
+    "description": "Jan 22, 2026",
+    "url": "https://www.telluride.com/event/yope/"
+  },
+  {
+    "id": "44",
+    "name": "Drew Emmitt, John Cowan and Eli Emmitt",
+    "date": "2026-01-22",
+    "type": "community",
+    "description": "Jan 22, 2026",
+    "url": "https://www.telluride.com/event/drew-emmitt-john-cowan-and-eli-emmitt/"
+  },
+  {
+    "id": "45",
+    "name": "Andy Frasco & The U.N.",
+    "date": "2026-01-23",
+    "type": "community",
+    "description": "Jan 23, 2026",
+    "url": "https://www.telluride.com/event/andy-frasco-the-u.n/"
+  },
+  {
+    "id": "46",
+    "name": "Harlem Quartet",
+    "date": "2026-01-24",
+    "type": "art",
+    "description": "Jan 24, 2026",
+    "url": "https://www.telluride.com/event/harlem-quartet/"
+  },
+  {
+    "id": "47",
+    "name": "Pressure Drop",
+    "date": "2026-01-29",
+    "type": "community",
+    "description": "Jan 29, 2026",
+    "url": "https://www.telluride.com/event/pressure-drop/"
+  },
+  {
+    "id": "49",
+    "name": "Cousin Curtiss",
+    "date": "2026-01-30",
+    "type": "community",
+    "description": "Jan 30, 2026",
+    "url": "https://www.telluride.com/event/cousin-curtiss/"
+  },
+  {
+    "id": "50",
+    "name": "The Last Class With Robert Reich",
+    "date": "2026-01-30",
+    "type": "community",
+    "description": "Jan 30, 2026",
+    "url": "https://www.telluride.com/event/the-last-class-with-robert-reich/"
+  },
+  {
+    "id": "51",
+    "name": "Emily Scott Robinson",
+    "date": "2026-01-31",
+    "type": "community",
+    "description": "Jan 31, 2026",
+    "url": "https://www.telluride.com/event/emily-scott-robinson/"
+  },
+  {
+    "id": "52",
+    "name": "May Erlewine",
+    "date": "2026-02-03",
+    "type": "community",
+    "description": "Feb 3, 2026",
+    "url": "https://www.telluride.com/event/may-erlewine/"
+  },
+  {
+    "id": "53",
+    "name": "Discognition",
+    "date": "2026-02-05",
+    "type": "community",
+    "description": "Feb 5, 2026",
+    "url": "https://www.telluride.com/event/discognition/"
+  },
+  {
+    "id": "55",
+    "name": "Briscoe",
+    "date": "2026-02-06",
+    "type": "community",
+    "description": "Feb 6, 2026",
+    "url": "https://www.telluride.com/event/briscoe/"
+  },
+  {
+    "id": "58",
+    "name": "Western Medicine",
+    "date": "2026-02-19",
+    "type": "community",
+    "description": "Feb 19, 2026",
+    "url": "https://www.telluride.com/event/western-medicine/"
+  },
+  {
+    "id": "60",
+    "name": "Black Pistol Fire",
+    "date": "2026-02-25",
+    "type": "community",
+    "description": "Feb 25, 2026",
+    "url": "https://www.telluride.com/event/black-pistol-fire/"
+  },
+  {
+    "id": "61",
+    "name": "The Brothers Comatose",
+    "date": "2026-02-26",
+    "type": "community",
+    "description": "Feb 26, 2026",
+    "url": "https://www.telluride.com/event/the-brothers-comatose/"
+  },
+  {
+    "id": "64",
+    "name": "Birds of Play",
+    "date": "2026-03-04",
+    "type": "community",
+    "description": "Mar 4, 2026",
+    "url": "https://www.telluride.com/event/birds-of-play/"
+  },
+  {
+    "id": "65",
+    "name": "The Polish Ambassador",
+    "date": "2026-03-07",
+    "type": "community",
+    "description": "Mar 7, 2026",
+    "url": "https://www.telluride.com/event/the-polish-ambassador/"
+  },
+  {
+    "id": "67",
+    "name": "ZOSO",
+    "date": "2026-03-14",
+    "type": "community",
+    "description": "Mar 14, 2026",
+    "url": "https://www.telluride.com/event/zoso/"
+  },
+  {
+    "id": "68",
+    "name": "Grieves",
+    "date": "2026-03-15",
+    "type": "community",
+    "description": "Mar 15, 2026",
+    "url": "https://www.telluride.com/event/grieves/"
+  },
+  {
+    "id": "69",
+    "name": "Galvin Cello Quartet",
+    "date": "2026-03-19",
+    "type": "art",
+    "description": "March 19, 2026",
+    "url": "https://www.telluride.com/event/galvin-cello-quartet/"
+  },
+  {
+    "id": "73",
+    "name": "Huck Finn & Becky Thatcher Day",
+    "date": "2026-06-06",
+    "type": "community",
+    "description": "June 6, 2026",
+    "url": "https://www.telluride.com/event/huck-finn-becky-thatcher-day/"
+  },
+  {
+    "id": "79",
+    "name": "Telluride Fourth of July Parade",
+    "date": "2026-07-04",
+    "type": "community",
+    "description": "July 4, 2026",
+    "url": "https://www.telluride.com/event/telluride-4th-of-july-parade/"
+  },
+  {
+    "id": "80",
+    "name": "Hardrock Hundred Endurance Run",
+    "date": "2026-07-10",
+    "type": "sports",
+    "description": "July 10, 2026",
+    "url": "https://www.telluride.com/event/hardrock-100/"
+  }
+]
+
+Total events: 49
