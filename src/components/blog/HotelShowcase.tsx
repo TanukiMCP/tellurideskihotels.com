@@ -17,18 +17,24 @@ export function HotelShowcase({
   checkOut 
 }: HotelShowcaseProps) {
   const [hotel, setHotel] = useState<LiteAPIHotel | null>(null);
+  const [computedCheckIn, setComputedCheckIn] = useState<string>('');
+  const [computedCheckOut, setComputedCheckOut] = useState<string>('');
 
   useEffect(() => {
+    // Calculate default dates on client side only to avoid hydration mismatch
+    const defaultCheckIn = new Date();
+    defaultCheckIn.setDate(defaultCheckIn.getDate() + 7);
+    const defaultCheckOut = new Date(defaultCheckIn);
+    defaultCheckOut.setDate(defaultCheckOut.getDate() + 7);
+    
+    setComputedCheckIn(checkIn || defaultCheckIn.toISOString().split('T')[0]);
+    setComputedCheckOut(checkOut || defaultCheckOut.toISOString().split('T')[0]);
+  }, [checkIn, checkOut]);
+
+  useEffect(() => {
+    if (!hotelId) return;
+    
     async function fetchHotel() {
-      // Default dates: 1 week out from today, 1 week duration
-      const defaultCheckIn = new Date();
-      defaultCheckIn.setDate(defaultCheckIn.getDate() + 7);
-      const defaultCheckOut = new Date(defaultCheckIn);
-      defaultCheckOut.setDate(defaultCheckOut.getDate() + 7);
-      
-      const checkInDate = checkIn || defaultCheckIn.toISOString().split('T')[0];
-      const checkOutDate = checkOut || defaultCheckOut.toISOString().split('T')[0];
-      
       try {
         const params = new URLSearchParams({
           hotelId,
@@ -51,10 +57,10 @@ export function HotelShowcase({
     }
 
     fetchHotel();
-  }, [hotelId, checkIn, checkOut]);
+  }, [hotelId]);
 
-  // Render nothing if hotel not available
-  if (!hotel) {
+  // Render nothing if hotel not available or dates not computed yet
+  if (!hotel || !computedCheckIn || !computedCheckOut) {
     return null;
   }
 
@@ -66,8 +72,8 @@ export function HotelShowcase({
       
       <HotelCard
         hotel={hotel}
-        checkInDate={checkIn}
-        checkOutDate={checkOut}
+        checkInDate={computedCheckIn}
+        checkOutDate={computedCheckOut}
         onSelect={(id) => {
           window.location.href = `/places-to-stay/${id}`;
         }}

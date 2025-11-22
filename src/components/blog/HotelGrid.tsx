@@ -20,15 +20,23 @@ export function HotelGrid({
 }: HotelGridProps) {
   const [hotels, setHotels] = useState<LiteAPIHotel[]>([]);
   const [minPrices, setMinPrices] = useState<Record<string, number>>({});
+  const [computedCheckIn, setComputedCheckIn] = useState<string>('');
+  const [computedCheckOut, setComputedCheckOut] = useState<string>('');
 
   useEffect(() => {
+    // Calculate default dates on client side only to avoid hydration mismatch
+    const defaultCheckIn = format(addDays(new Date(), 7), 'yyyy-MM-dd');
+    const defaultCheckOut = format(addDays(new Date(), 14), 'yyyy-MM-dd');
+    setComputedCheckIn(checkIn || defaultCheckIn);
+    setComputedCheckOut(checkOut || defaultCheckOut);
+  }, [checkIn, checkOut]);
+
+  useEffect(() => {
+    if (!computedCheckIn || !computedCheckOut) return; // Wait for dates to be computed
+    
     async function fetchHotels() {
-      // Default dates: 7 days out for check-in, 14 days out for check-out (7-night trip)
-      const defaultCheckIn = format(addDays(new Date(), 7), 'yyyy-MM-dd');
-      const defaultCheckOut = format(addDays(new Date(), 14), 'yyyy-MM-dd');
-      
-      const checkInDate = checkIn || defaultCheckIn;
-      const checkOutDate = checkOut || defaultCheckOut;
+      const checkInDate = computedCheckIn;
+      const checkOutDate = computedCheckOut;
       
       try {
         // STEP 1: Fetch hotels list
@@ -106,10 +114,10 @@ export function HotelGrid({
     }
 
     fetchHotels();
-  }, [filter, limit, checkIn, checkOut]);
+  }, [filter, limit, computedCheckIn, computedCheckOut]);
 
-  // Render nothing if no hotels available (like search results)
-  if (hotels.length === 0) {
+  // Render nothing if no hotels available (like search results) or dates not computed yet
+  if (hotels.length === 0 || !computedCheckIn || !computedCheckOut) {
     return null;
   }
 
@@ -125,12 +133,10 @@ export function HotelGrid({
             hotel={hotel}
             minPrice={minPrices[hotel.hotel_id]}
             currency="USD"
-            checkInDate={checkIn || format(addDays(new Date(), 7), 'yyyy-MM-dd')}
-            checkOutDate={checkOut || format(addDays(new Date(), 14), 'yyyy-MM-dd')}
+            checkInDate={computedCheckIn}
+            checkOutDate={computedCheckOut}
             onSelect={(id) => {
-              const checkInDate = checkIn || format(addDays(new Date(), 7), 'yyyy-MM-dd');
-              const checkOutDate = checkOut || format(addDays(new Date(), 14), 'yyyy-MM-dd');
-              window.location.href = `/places-to-stay/${id}?checkIn=${checkInDate}&checkOut=${checkOutDate}&adults=2&rooms=1`;
+              window.location.href = `/places-to-stay/${id}?checkIn=${computedCheckIn}&checkOut=${computedCheckOut}&adults=2&rooms=1`;
             }}
           />
         ))}
