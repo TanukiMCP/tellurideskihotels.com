@@ -5,12 +5,17 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Input } from '@/components/ui/Input';
 import { ArticleBookingWidget } from '@/components/blog/ArticleBookingWidget';
 import { Building2, Star, Users, Calendar } from 'lucide-react';
+import { LoadingSpinner } from '@/components/shared/LoadingSpinner';
+import type { LiteAPIHotel } from '@/lib/liteapi/types';
 
 export interface LodgingComparisonMatrixProps {
-  compareIds: string[];
+  compareIds?: string[];
   criteria?: string[];
   groupSize?: number;
   nights?: number;
+  checkIn?: string;
+  checkOut?: string;
+  filter?: 'luxury' | 'budget' | 'ski-in-ski-out';
 }
 
 interface HotelComparison {
@@ -22,37 +27,8 @@ interface HotelComparison {
   rating: number;
   space: string;
   score: number;
+  imageUrl?: string;
 }
-
-const HOTEL_DATA: Record<string, Omit<HotelComparison, 'score'>> = {
-  'hotel-1': {
-    hotelId: 'hotel-1',
-    name: 'The Madeline Hotel',
-    price: 450,
-    location: 'Mountain Village',
-    amenities: ['Ski-in/ski-out', 'Spa', 'Pool', 'Restaurant'],
-    rating: 4.8,
-    space: '89 rooms',
-  },
-  'hotel-2': {
-    hotelId: 'hotel-2',
-    name: 'Peaks Resort & Spa',
-    price: 350,
-    location: 'Mountain Village',
-    amenities: ['Ski-in/ski-out', 'Spa', 'Pool', 'Fitness'],
-    rating: 4.6,
-    space: '175 rooms',
-  },
-  'hotel-3': {
-    hotelId: 'hotel-3',
-    name: 'Capella Telluride',
-    price: 600,
-    location: 'Mountain Village',
-    amenities: ['Ski-in/ski-out', 'Spa', 'Fine Dining', 'Concierge'],
-    rating: 4.9,
-    space: '100 rooms',
-  },
-};
 
 const DEFAULT_CRITERIA = ['price', 'location', 'amenities', 'reviews', 'space'];
 
@@ -61,46 +37,111 @@ export function LodgingComparisonMatrix({
   criteria = DEFAULT_CRITERIA,
   groupSize = 6,
   nights = 4,
+  checkIn,
+  checkOut,
+  filter,
 }: LodgingComparisonMatrixProps) {
   const [guests, setGuests] = useState(groupSize);
   const [nightsCount, setNightsCount] = useState(nights);
   const [sortBy, setSortBy] = useState<string>('score');
   const [comparisons, setComparisons] = useState<HotelComparison[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    calculateComparisons();
-  }, [guests, nightsCount, compareIds]);
+    fetchAndCalculateComparisons();
+  }, [guests, nightsCount, compareIds, checkIn, checkOut, filter]);
 
-  const calculateComparisons = () => {
-    const hotels: HotelComparison[] = compareIds.map((id) => {
-      const data = HOTEL_DATA[id];
-      if (!data) return null;
+  const fetchAndCalculateComparisons = async () => {
+    try {
+      setLoading(true);
+      
+      // Default dates: 1 week out from today, 1 week duration
+      const defaultCheckIn = new Date();
+      defaultCheckIn.setDate(defaultCheckIn.getDate() + 7);
+      const defaultCheckOut = new Date(defaultCheckIn);
+      defaultCheckOut.setDate(defaultCheckOut.getDate() + 7);
+      
+      const checkInDate = checkIn || defaultCheckIn.toISOString().split('T')[0];
+      const checkOutDate = checkOut || defaultCheckOut.toISOString().split('T')[0];
+      
+      // Build query params
+      const params = new URLSearchParams({
+        cityName: 'Telluride',
+        countryCode: 'US',
+        limit: compareIds && compareIds.length > 0 ? compareIds.length.toString() : '5',
+        checkin: checkInDate,
+        checkout: checkOutDate,
+      });
+      
+      const response = await fetch(`/api/liteapi/search?${params.toString()}`);
+      
+      if (!response.ok) {
+        throw new Error('Failed to load hotels');
+      }
+      
+      const data = await response.json();
+      let hotels: LiteAPIHotel[] = data.data || [];
+      
+      // Apply filters
+      if (filter === 'luxury') {
+        hotels = hotels.filter(h => (h.star_rating || 0) >= 4);
+      } else if (filter === 'budget') {
+        hotels = hotels.filter(h => (h.star_rating || 0) <= 3);
+      }
+      
+      // If specific hotel IDs provided, filter to those
+      if (compareIds && compareIds.length > 0) {
+        hotels = hotels.filter(h => compareIds.includes(h.hotel_id));
+      }
+      
+      // Calculate comparisons with real data
+      const hotelComparisons: HotelComparison[] = hotels.map((hotel) => {
+        const price = hotel.min_rate || (hotel.star_rating || 3) * 150;
+        const totalCost = price * nightsCount;
+        const costPerPerson = totalCost / guests;
+        
+        const location = hotel.address?.city || 'Telluride';
+        const amenities = hotel.amenities?.slice(0, 4).map(a => a.name || a) || ['Mountain views'];
+        const rating = hotel.review_score || 4.0;
+        const imageUrl = hotel.images?.[0]?.url || hotel.images?.[0]?.thumbnail || '';
+        
+        // Calculate score
+        const priceScore = 100 - (price / 10);
+        const ratingScore = rating * 20;
+        const amenityScore = amenities.length * 10;
+        const locationScore = location.includes('Mountain Village') ? 90 : 70;
+        const spaceScore = 75; // Default since we don't have room count
+        
+        const score = (priceScore + ratingScore + amenityScore + locationScore + spaceScore) / 5;
 
-      const totalCost = data.price * nightsCount;
-      const costPerPerson = totalCost / guests;
+        return {
+          hotelId: hotel.hotel_id,
+          name: hotel.name || 'Hotel',
+          price,
+          location,
+          amenities,
+          rating,
+          space: `${hotel.star_rating || 3}-star`,
+          score,
+          imageUrl,
+        };
+      });
 
-      const priceScore = 100 - (data.price / 10);
-      const ratingScore = data.rating * 20;
-      const amenityScore = data.amenities.length * 10;
-      const locationScore = data.location === 'Mountain Village' ? 90 : 70;
-      const spaceScore = parseInt(data.space) > 100 ? 80 : 60;
+      hotelComparisons.sort((a, b) => {
+        if (sortBy === 'price') return a.price - b.price;
+        if (sortBy === 'score') return b.score - a.score;
+        if (sortBy === 'rating') return b.rating - a.rating;
+        return 0;
+      });
 
-      const score = (priceScore + ratingScore + amenityScore + locationScore + spaceScore) / 5;
-
-      return {
-        ...data,
-        score,
-      };
-    }).filter((h): h is HotelComparison => h !== null);
-
-    hotels.sort((a, b) => {
-      if (sortBy === 'price') return a.price - b.price;
-      if (sortBy === 'score') return b.score - a.score;
-      if (sortBy === 'rating') return b.rating - a.rating;
-      return 0;
-    });
-
-    setComparisons(hotels);
+      setComparisons(hotelComparisons.slice(0, 5));
+      setError(null);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to load hotel comparisons');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const formatCurrency = (amount: number) => {
@@ -126,6 +167,28 @@ export function LodgingComparisonMatrix({
     return comparisons[0];
   };
 
+  if (loading) {
+    return (
+      <Card className="my-8 border-2 border-primary-200">
+        <CardContent className="py-12">
+          <div className="flex justify-center items-center">
+            <LoadingSpinner size="lg" />
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  if (error) {
+    return (
+      <Card className="my-8 border-2 border-primary-200">
+        <CardContent className="py-8">
+          <p className="text-neutral-600 text-center">{error}</p>
+        </CardContent>
+      </Card>
+    );
+  }
+
   return (
     <Card className="my-8 border-2 border-primary-200">
       <CardHeader>
@@ -136,7 +199,7 @@ export function LodgingComparisonMatrix({
           <div>
             <CardTitle className="text-2xl">Hotel Comparison Matrix</CardTitle>
             <p className="text-neutral-600 mt-1">
-              Compare hotels side-by-side across multiple criteria
+              Compare hotels side-by-side with real-time pricing
             </p>
           </div>
         </div>

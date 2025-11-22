@@ -25,7 +25,23 @@ export function HotelShowcase({
     async function fetchHotel() {
       try {
         setLoading(true);
-        const response = await fetch(`/api/liteapi/hotel?hotelId=${hotelId}`);
+        
+        // Default dates: 1 week out from today, 1 week duration
+        const defaultCheckIn = new Date();
+        defaultCheckIn.setDate(defaultCheckIn.getDate() + 7);
+        const defaultCheckOut = new Date(defaultCheckIn);
+        defaultCheckOut.setDate(defaultCheckOut.getDate() + 7);
+        
+        const checkInDate = checkIn || defaultCheckIn.toISOString().split('T')[0];
+        const checkOutDate = checkOut || defaultCheckOut.toISOString().split('T')[0];
+        
+        const params = new URLSearchParams({
+          hotelId,
+          checkin: checkInDate,
+          checkout: checkOutDate,
+        });
+        
+        const response = await fetch(`/api/liteapi/hotel?${params.toString()}`);
         
         if (!response.ok) {
           throw new Error('Failed to load hotel');

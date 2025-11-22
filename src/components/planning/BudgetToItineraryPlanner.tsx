@@ -5,6 +5,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Input } from '@/components/ui/Input';
 import { ArticleBookingWidget } from '@/components/blog/ArticleBookingWidget';
 import { DollarSign, Calendar, Users, PieChart } from 'lucide-react';
+import { LoadingSpinner } from '@/components/shared/LoadingSpinner';
+import type { LiteAPIHotel } from '@/lib/liteapi/types';
 
 export interface BudgetToItineraryPlannerProps {
   budgetPerPerson?: number;
@@ -24,6 +26,7 @@ interface BudgetBreakdown {
   liftPercent: number;
   activitiesPercent: number;
   diningPercent: number;
+  avgHotelRate: number;
 }
 
 const LIFT_TICKET_COST = 180;
@@ -41,12 +44,59 @@ export function BudgetToItineraryPlanner({
   const [length, setLength] = useState(tripLength);
   const [size, setSize] = useState(groupSize);
   const [breakdown, setBreakdown] = useState<BudgetBreakdown | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [avgHotelRate, setAvgHotelRate] = useState(350);
 
   useEffect(() => {
-    calculateBreakdown();
-  }, [budget, length, size]);
+    fetchRatesAndCalculate();
+  }, [budget, length, size, checkIn, checkOut]);
 
-  const calculateBreakdown = () => {
+  const fetchRatesAndCalculate = async () => {
+    try {
+      setLoading(true);
+      
+      // Default dates: 1 week out from today, 1 week duration
+      const defaultCheckIn = new Date();
+      defaultCheckIn.setDate(defaultCheckIn.getDate() + 7);
+      const defaultCheckOut = new Date(defaultCheckIn);
+      defaultCheckOut.setDate(defaultCheckOut.getDate() + 7);
+      
+      const checkInDate = checkIn || defaultCheckIn.toISOString().split('T')[0];
+      const checkOutDate = checkOut || defaultCheckOut.toISOString().split('T')[0];
+      
+      // Fetch actual hotel rates
+      const params = new URLSearchParams({
+        cityName: 'Telluride',
+        countryCode: 'US',
+        limit: '10',
+        checkin: checkInDate,
+        checkout: checkOutDate,
+      });
+      
+      const response = await fetch(`/api/liteapi/search?${params.toString()}`);
+      
+      let hotelRate = 350; // Default fallback
+      
+      if (response.ok) {
+        const data = await response.json();
+        const hotels: LiteAPIHotel[] = data.data || [];
+        
+        if (hotels.length > 0) {
+          hotelRate = hotels.reduce((sum, h) => sum + (h.min_rate || 350), 0) / hotels.length;
+        }
+      }
+      
+      setAvgHotelRate(hotelRate);
+      calculateBreakdown(hotelRate);
+    } catch (err) {
+      // Fall back to default rate if API fails
+      calculateBreakdown(avgHotelRate);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const calculateBreakdown = (hotelRate: number) => {
     const liftTickets = LIFT_TICKET_COST * length;
     const activities = ACTIVITIES_COST_PER_DAY * length;
     const dining = DINING_COST_PER_DAY * length;
@@ -70,6 +120,7 @@ export function BudgetToItineraryPlanner({
       liftPercent,
       activitiesPercent,
       diningPercent,
+      avgHotelRate: hotelRate,
     });
   };
 

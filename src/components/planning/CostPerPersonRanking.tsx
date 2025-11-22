@@ -50,15 +50,23 @@ export function CostPerPersonRanking({
     try {
       setLoading(true);
       
+      // Default dates: 1 week out from today, 1 week duration
+      const defaultCheckIn = new Date();
+      defaultCheckIn.setDate(defaultCheckIn.getDate() + 7);
+      const defaultCheckOut = new Date(defaultCheckIn);
+      defaultCheckOut.setDate(defaultCheckOut.getDate() + 7);
+      
+      const checkInDate = checkIn || defaultCheckIn.toISOString().split('T')[0];
+      const checkOutDate = checkOut || defaultCheckOut.toISOString().split('T')[0];
+      
       // Build query params
       const params = new URLSearchParams({
         cityName: 'Telluride',
         countryCode: 'US',
         limit: '10',
+        checkin: checkInDate,
+        checkout: checkOutDate,
       });
-
-      if (checkIn) params.set('checkin', checkIn);
-      if (checkOut) params.set('checkout', checkOut);
       
       const response = await fetch(`/api/liteapi/search?${params.toString()}`);
       
