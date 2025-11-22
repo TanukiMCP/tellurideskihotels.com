@@ -89,10 +89,41 @@ export function CostPerPersonRanking({
         hotels = hotels.filter(h => hotelIds.includes(h.hotel_id));
       }
       
-      // Calculate rankings with real pricing data
+      if (hotels.length === 0) {
+        setRankings([]);
+        setLoading(false);
+        return;
+      }
+      
+      // Fetch min rates for hotels
+      const hotelIdsList = hotels.map(h => h.hotel_id);
+      const ratesParams = new URLSearchParams({
+        hotelIds: hotelIdsList.join(','),
+        checkIn: checkInDate,
+        checkOut: checkOutDate,
+        adults: '2',
+      });
+      
+      const ratesResponse = await fetch(`/api/hotels/min-rates?${ratesParams.toString()}`);
+      const nights = Math.ceil((new Date(checkOutDate).getTime() - new Date(checkInDate).getTime()) / (1000 * 60 * 60 * 24));
+      
+      // Build price map
+      const prices: Record<string, number> = {};
+      if (ratesResponse.ok) {
+        const ratesData = await ratesResponse.json();
+        if (ratesData.data && Array.isArray(ratesData.data)) {
+          ratesData.data.forEach((item: any) => {
+            if (item.hotelId && item.price) {
+              prices[item.hotelId] = nights > 0 ? item.price / nights : item.price;
+            }
+          });
+        }
+      }
+      
+      // Calculate rankings with REAL pricing data
       const hotelRankings: HotelRanking[] = hotels.map((hotel) => {
-        // Use actual min_rate if available, otherwise estimate based on star rating
-        const costPerNight = hotel.min_rate || (hotel.star_rating || 3) * 150;
+        // Use actual fetched price, fallback only if no rate available
+        const costPerNight = prices[hotel.hotel_id] || (hotel.star_rating || 3) * 150;
       const totalCost = costPerNight * nightsCount;
       const costPerPerson = totalCost / guests;
         
