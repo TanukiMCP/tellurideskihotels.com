@@ -37,7 +37,7 @@ export default defineConfig({
   compressHTML: true,
   vite: {
     build: {
-      minify: 'terser',
+      minify: 'esbuild',
       cssCodeSplit: true,
       rollupOptions: {
         output: {
