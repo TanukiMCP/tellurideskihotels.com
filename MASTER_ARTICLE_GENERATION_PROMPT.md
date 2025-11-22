@@ -323,28 +323,28 @@ The hotel delivers a full resort experience with an outdoor heated pool and mult
 
 **Step 1: Web Research (REQUIRED)**
 
-Use web search tools to verify ALL factual claims before writing:
+You **MUST** use the `mcp_cursor-browser-extension_browser_navigate` tool (or equivalent browser tool) to verify ALL factual claims before writing. **Do not rely on training data.**
 
 1. **Official Statistics & Data**
-   - Telluride Ski Resort official website for current stats
-   - Verify: acreage, lifts count, trails count, vertical drop, elevation
-   - Verify: snowfall averages, season dates, operating hours
-   - ❌ NEVER guess or use outdated data
-   - ✅ ALWAYS cite current official sources
+   - Visit `telluride.com` for current stats.
+   - Verify: acreage, lifts count, trails count, vertical drop, elevation.
+   - Verify: snowfall averages, season dates, operating hours.
+   - ❌ NEVER guess or use outdated data.
+   - ✅ ALWAYS cite current official sources found via browser.
 
 2. **Current Pricing & Availability**
-   - Check hotel booking sites for actual price ranges
-   - Verify lift ticket prices from official resort
-   - Restaurant pricing from menus or recent reviews
-   - ❌ NEVER make up price ranges
-   - ✅ ALWAYS provide price ranges or state "prices vary, check official site"
+   - Visit booking sites or official hotel pages.
+   - Verify lift ticket prices from official resort site.
+   - Restaurant pricing from menus or recent reviews.
+   - ❌ NEVER make up price ranges.
+   - ✅ ALWAYS provide price ranges or state "prices vary, check official site".
 
 3. **Verify Names & Existence**
-   - Confirm hotel names, restaurants, and businesses actually exist
-   - Check if properties are still operating (not closed/rebranded)
-   - Verify trail names, lift names from official trail maps
-   - ❌ NEVER invent hotel or restaurant names
-   - ✅ ALWAYS verify via official sources or recent reviews
+   - Confirm hotel names, restaurants, and businesses actually exist.
+   - Check if properties are still operating (not closed/rebranded).
+   - Verify trail names, lift names from official trail maps.
+   - ❌ NEVER invent hotel or restaurant names.
+   - ✅ ALWAYS verify via official sources or recent reviews.
 
 4. **Current Events & Dates**
    - Festival dates from official festival websites
@@ -933,17 +933,20 @@ id,original_url,large_url,medium_url,small_url,width,height,photographer,photogr
 **STEP 1: READ THE CSV FILES** (Do this BEFORE writing the article)
 - Use the `read_file` tool to open relevant CSV files from `media-library/`
 - Example: For a hotel review article, read `luxury-ski-hotels.csv`, `hotel-rooms.csv`, `hotel-pools.csv`
-- Review the available images, their URLs, alt text, and photographers
+- Review the available images, their URLs, alt text, photographers, AND DIMENSIONS (`width`, `height`)
 
-**STEP 2: SELECT 5-8 IMAGES**
-- Choose images that match your article sections
-- Select diverse images (don't use all from one CSV)
-- Note the `medium_url` and `photographer` info for each
+**STEP 2: SELECT 5-8 IMAGES (LANDSCAPE ONLY)**
+- **⚠️ CRITICAL: You MUST calculate the aspect ratio for every image.**
+- **RULE: ONLY select images where `width` > `height` (Landscape orientation).**
+- **DO NOT use vertical/portrait images** (where `height` > `width`) as they break the blog layout.
+- Choose images that match your article sections.
+- Select diverse images (don't use all from one CSV).
+- Note the `medium_url` and `photographer` info for each.
 
 **STEP 3: PLAN IMAGE PLACEMENT**
-- Place images every 300-400 words throughout the article
-- Match image content to the surrounding text
-- First image should appear after 2-3 paragraphs
+- Place images every 300-400 words throughout the article.
+- Match image content to the surrounding text.
+- First image should appear after 2-3 paragraphs.
 
 **STEP 4: EMBED USING CORRECT SYNTAX**
 
@@ -1169,23 +1172,29 @@ Internal linking is MANDATORY but must be intelligent and accurate. You MUST res
 
 **STEP 1: RESEARCH THE CODEBASE (Do this BEFORE writing)**
 
-Use these tools to understand what exists:
+You **MUST** use the `read_file` tool to access and study these system files at the start of every session:
 
 1. **Read the Linking Plan:**
    ```
    read_file tool → INTERNAL_EXTERNAL_LINKING_PLAN.md
    ```
-   This shows all article relationships and linking strategies.
+   This shows all article relationships and linking strategies. You MUST follow the specific links assigned to your topic.
 
-2. **Check Existing Articles:**
+2. **Read the SEO Masterlist:**
+   ```
+   read_file tool → SEO_KEYWORDS_MASTERLIST.md
+   ```
+   Use this to find your primary keyword, secondary keywords, and LSI keywords based on real data. Do not guess keywords.
+
+3. **Check Existing Articles:**
    ```
    list_dir tool → src/content/blog/
    ```
    See what blog posts actually exist with their exact slugs.
 
-3. **Check Available Pages:**
+4. **Check Available Pages:**
    ```
-   grep tool or codebase_search → Find pages like /lodging, /things-to-do, /ski-conditions
+   codebase_search → Find pages like /lodging, /things-to-do, /ski-conditions
    ```
    Verify main site pages exist before linking.
 
@@ -2254,9 +2263,9 @@ status: "scheduled"
 category: "destination-guides"
 author: "Telluride Ski Hotels Team"
 publishDate: "2025-11-15T14:00:00Z"
-seo:
+  seo:
   metaTitle: "Meta Title (50-60 chars)"
-  metaDescription: "Meta description 150-160 characters with primary keyword and compelling CTA."
+  metaDescription: "Meta description MUST be under 160 characters. Concise, keyword-rich, with CTA."
   keywords: ["primary keyword", "secondary keyword 1", "secondary keyword 2"]
   canonical: "https://tellurideskihotels.com/blog/category/article-slug"
 featured: false
