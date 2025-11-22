@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import ExperienceGrid from './ExperienceGrid';
 import type { ViatorProduct } from '@/lib/viator/types';
 import { ErrorBoundary } from '@/components/shared/ErrorBoundary';
-import { getExperienceCategoriesSync, getCategoryLabel, CATEGORY_INFO, type TellurideExperienceCategory } from '@/lib/category-mapper';
+import { getExperienceCategoriesSync, getCategoryLabel, type TellurideExperienceCategory } from '@/lib/category-mapper';
 import PriceRangeFilter from '@/components/shared/PriceRangeFilter';
 
 interface ExperienceSearchWidgetProps {
@@ -140,15 +140,15 @@ function ExperienceSearchWidgetContent({ onExperienceSelect }: ExperienceSearchW
     }
 
     filtered = filtered.filter(exp => {
-      const price = exp.pricing?.summary?.displayPrice || exp.pricing?.summary?.fromPrice || 0;
+      const price = exp.pricing?.summary?.fromPrice || 0;
       return price >= priceRange[0] && price <= priceRange[1];
     });
 
     filtered.sort((a, b) => {
       switch (sortBy) {
         case 'price':
-          const priceA = a.pricing?.summary?.displayPrice || a.pricing?.summary?.fromPrice || 0;
-          const priceB = b.pricing?.summary?.displayPrice || b.pricing?.summary?.fromPrice || 0;
+          const priceA = a.pricing?.summary?.fromPrice || 0;
+          const priceB = b.pricing?.summary?.fromPrice || 0;
           return priceA - priceB;
         case 'rating':
           const ratingA = a.reviews?.combinedAverageRating || 0;
