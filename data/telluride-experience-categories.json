@@ -198,6 +198,25 @@
     "reviewCount": 1,
     "price": 119,
     "categories": ["water-activities", "summer-adventures", "adventure"]
+  },
+  {
+    "productCode": "128730P21",
+    "title": "One-Day Peak Ascents - Telluride & Ouray",
+    "description": "If you are looking for a big mountain adventure in just one day, this guided ascent packs in serious elevation, alpine exposure, and unmatched scenery without the need for camping. Climb a legendary Colorado peak with local experienced mountain guides since 1973!",
+    "duration": "8 hours",
+    "rating": null,
+    "reviewCount": null,
+    "price": 449,
+    "categories": ["adventure", "summer-adventures", "climbing"]
+  },
+  {
+    "productCode": "128730P22",
+    "title": "Guided Backcountry Skiing - Ouray",
+    "description": "Mountain Trip's Guided Backcountry Skiing adventures stand out as a truly unique and unforgettable experience in the San Juan Mountains of Colorado. Since 1973, we've been trusted by adventurers seeking personalized and exhilarating journeys into untouched terrain.",
+    "duration": "8 hours",
+    "rating": null,
+    "reviewCount": null,
+    "price": 425,
+    "categories": ["winter-sports", "adventure"]
   }
 ]
-
