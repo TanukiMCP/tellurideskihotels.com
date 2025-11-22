@@ -19,7 +19,7 @@ export default function ExperienceMap({ experiences, onSelectExperience }: Exper
   const mapRef = useRef<MapRef>(null);
   const [selectedExperience, setSelectedExperience] = useState<string | null>(null);
   const [popupInfo, setPopupInfo] = useState<{ productCode: string; lng: number; lat: number } | null>(null);
-  const [addressMap, setAddressMap] = useState<Map<string, ExperienceAddress>>(new Map<string, ExperienceAddress>());
+  const [addressMap, setAddressMap] = useState<Map<string, ExperienceAddress>>(() => new Map());
   const [addressesLoaded, setAddressesLoaded] = useState(false);
 
   // Load address data on mount
