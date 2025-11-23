@@ -15,6 +15,12 @@ const MAP_STYLES = {
   satellite: 'mapbox://styles/mapbox/satellite-streets-v12',
 };
 
+// Seasonal map styles - winter shows terrain/snow conditions, summer shows actual terrain
+const SEASONAL_STYLES = {
+  winter: 'mapbox://styles/mapbox/outdoors-v12', // Terrain style - good for snow/ski conditions
+  summer: 'mapbox://styles/mapbox/satellite-streets-v12', // Satellite style - shows actual terrain/vegetation
+};
+
 // Telluride Ski Resort bounds for better framing - updated to show all trails
 const TELLURIDE_BOUNDS: [[number, number], [number, number]] = [
   [-107.88, 37.885], // Southwest coordinates - includes lower mountain trails
@@ -62,6 +68,7 @@ export default function InteractiveTrailMap() {
   const [popupInfo, setPopupInfo] = useState<any>(null);
   const [terrainEnabled, setTerrainEnabled] = useState(false);
   const [mapStyle, setMapStyle] = useState<keyof typeof MAP_STYLES>('outdoors');
+  const [season, setSeason] = useState<'winter' | 'summer'>('winter'); // Default to winter view
   const [showTrails, setShowTrails] = useState(true);
   const [showLifts, setShowLifts] = useState(true);
   const [showPOIs, setShowPOIs] = useState(true);
@@ -113,7 +120,31 @@ export default function InteractiveTrailMap() {
     }
   }, [isMapLoaded]); // Only run once when map loads
 
+  // Handle season changes - switch map style based on season
+  useEffect(() => {
+    if (!mapRef.current || !isMapLoaded) return;
+    
+    const map = mapRef.current.getMap();
+    const seasonalStyle = SEASONAL_STYLES[season];
+    
+    // Check if we need to change the style
+    // Compare the style URL to avoid unnecessary changes
+    const currentStyle = map.getStyle();
+    const currentStyleUrl = currentStyle?.metadata?.['mapbox:autocomposite'] 
+      ? currentStyle.name 
+      : map.getStyle().sprite; // Fallback check
+      
+    // Only change if different (Mapbox will optimize this, but we can be explicit)
+    try {
+      map.setStyle(seasonalStyle);
+      console.log('[InteractiveTrailMap] Switched to', season, 'view');
+    } catch (error) {
+      console.error('[InteractiveTrailMap] Error switching season style:', error);
+    }
+  }, [season, isMapLoaded]);
+
   // Handle style changes - preserve terrain state and restore after style loads
+  // This runs when season changes (which changes the style)
   useEffect(() => {
     if (!mapRef.current || !isMapLoaded) return;
     
@@ -138,17 +169,19 @@ export default function InteractiveTrailMap() {
             }
           }
           
-          console.log('[InteractiveTrailMap] Restored 3D terrain after style change to', mapStyle);
+          console.log('[InteractiveTrailMap] Restored 3D terrain after style change');
         }
       }, 400); // Wait for sources to be added
     };
     
-    if (!map.isStyleLoaded()) {
-      map.once('style.load', handleStyleChange);
-    } else {
+    // Listen for style.load event when season changes
+    map.once('style.load', handleStyleChange);
+    
+    // Also run immediately if style is already loaded
+    if (map.isStyleLoaded()) {
       handleStyleChange();
     }
-  }, [mapStyle, isMapLoaded, terrainEnabled]);
+  }, [season, isMapLoaded, terrainEnabled]);
 
   // Load all map data (trails, lifts, POIs) after map is loaded and on style/visibility changes
   useEffect(() => {
@@ -596,7 +629,7 @@ export default function InteractiveTrailMap() {
     } else {
       map.once('style.load', addTerrainAndLayers);
     }
-  }, [isMapLoaded, mapStyle, showTrails, showLifts, showPOIs, terrainEnabled]);
+  }, [isMapLoaded, season, showTrails, showLifts, showPOIs, terrainEnabled]);
 
   // Note: POI markers are now symbol-based and automatically billboard in 3D
   // No need for dynamic updates - they always face the camera!
@@ -762,7 +795,7 @@ export default function InteractiveTrailMap() {
           bearing: 0
         }}
         mapboxAccessToken={MAPBOX_TOKEN}
-        mapStyle={MAP_STYLES[mapStyle]}
+        mapStyle={SEASONAL_STYLES[season]}
         style={{ width: '100%', height: '100%' }}
         onLoad={handleMapLoad}
         onClick={handleMapClick}
@@ -822,37 +855,40 @@ export default function InteractiveTrailMap() {
             </div>
             
             <div className="p-5 pt-4 overflow-y-auto flex-1">
-            {/* Map Style Toggle */}
+            {/* Season Toggle */}
             <div className="mb-4 pb-4 border-b border-neutral-300">
-              <h4 className="text-sm font-black text-neutral-900 mb-3 uppercase tracking-wide">Map Style</h4>
+              <h4 className="text-sm font-black text-neutral-900 mb-3 uppercase tracking-wide">Season View</h4>
               <div className="flex gap-2">
                 <button
-                  onClick={() => setMapStyle('outdoors')}
+                  onClick={() => setSeason('winter')}
                   className={`flex-1 px-3 py-2 text-xs font-black uppercase tracking-wide transition-all border-2 ${
-                    mapStyle === 'outdoors'
+                    season === 'winter'
                       ? 'bg-primary-600 text-white border-neutral-800'
                       : 'bg-white text-neutral-700 border-neutral-400 hover:border-neutral-800'
                   }`}
                 >
                   <svg className="w-4 h-4 mx-auto mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z" />
                   </svg>
-                  Terrain
+                  Winter
                 </button>
                 <button
-                  onClick={() => setMapStyle('satellite')}
+                  onClick={() => setSeason('summer')}
                   className={`flex-1 px-3 py-2 text-xs font-black uppercase tracking-wide transition-all border-2 ${
-                    mapStyle === 'satellite'
+                    season === 'summer'
                       ? 'bg-primary-600 text-white border-neutral-800'
                       : 'bg-white text-neutral-700 border-neutral-400 hover:border-neutral-800'
                   }`}
                 >
                   <svg className="w-4 h-4 mx-auto mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
                   </svg>
-                  Satellite
+                  Summer
                 </button>
               </div>
+              <p className="text-[10px] text-neutral-500 mt-2 text-center">
+                {season === 'winter' ? 'Terrain view for snow conditions' : 'Satellite view for summer terrain'}
+              </p>
             </div>
 
             {/* Resort Stats */}
