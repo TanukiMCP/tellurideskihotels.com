@@ -29,6 +29,22 @@ export function HotelSearchWidget({
   );
   const [adults, setAdults] = useState(initialGuests.adults.toString());
 
+  // Sync state when initialDates prop changes (e.g., from URL params)
+  useEffect(() => {
+    if (initialDates?.checkIn) {
+      const newCheckIn = format(initialDates.checkIn, 'yyyy-MM-dd');
+      if (newCheckIn !== checkIn) {
+        setCheckIn(newCheckIn);
+      }
+    }
+    if (initialDates?.checkOut) {
+      const newCheckOut = format(initialDates.checkOut, 'yyyy-MM-dd');
+      if (newCheckOut !== checkOut) {
+        setCheckOut(newCheckOut);
+      }
+    }
+  }, [initialDates?.checkIn, initialDates?.checkOut]);
+
   // Track previous values to only call onDatesChange when dates actually change
   const prevCheckInRef = useRef<string>(checkIn);
   const prevCheckOutRef = useRef<string>(checkOut);
