@@ -250,17 +250,37 @@ function PlacesToStaySearchWidgetContent({
     setError('');
     
     try {
-      const { searchHotelsWithRates } = await import('@/lib/liteapi/rates');
-      const result = await searchHotelsWithRates({
+      // Use server-side API route instead of calling LiteAPI directly
+      const params = new URLSearchParams({
         cityName: newLocation,
         countryCode: 'US',
-        checkIn: newCheckIn,
-        checkOut: newCheckOut,
-        adults: newAdults,
+        checkin: newCheckIn,
+        checkout: newCheckOut,
+        adults: newAdults.toString(),
+        limit: '5000', // Get all properties
       });
       
-      setAllHotels(result.hotels || []);
-      setMinPrices(result.minPrices || {});
+      const response = await fetch(`/api/liteapi/search-with-rates?${params.toString()}`);
+      
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error || 'Failed to search hotels');
+      }
+      
+      const data = await response.json();
+      
+      // Transform API response to match our expected format
+      const hotels = data.data || [];
+      const minPricesMap: Record<string, number> = {};
+      
+      hotels.forEach((hotel: any) => {
+        if (hotel.minPrice) {
+          minPricesMap[hotel.hotel_id] = hotel.minPrice;
+        }
+      });
+      
+      setAllHotels(hotels);
+      setMinPrices(minPricesMap);
     } catch (err) {
       console.error('[Places to Stay Widget] Search error:', err);
       setError('Failed to search hotels');
