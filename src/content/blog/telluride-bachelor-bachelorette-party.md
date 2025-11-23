@@ -8,8 +8,8 @@
   "author": "Telluride Ski Hotels Team",
   "publishDate": "2025-11-22T15:00:00Z",
   "seo": {
-    "metaTitle": "Telluride Bachelor Bachelorette Party Guide 2025 | Planning & Costs",
-    "metaDescription": "Complete guide to planning a Telluride bachelor or bachelorette party: event timeline, group lodging, activity recommendations, cost breakdowns, and tips for memorable celebrations.",
+    "metaTitle": "Telluride Bachelor/Bachelorette Party Guide 2025",
+    "metaDescription": "Complete guide to planning a Telluride bachelor or bachelorette party: event timeline, group lodging, activity recommendations, and cost breakdowns.",
     "keywords": [
       "telluride bachelorette party",
       "telluride bachelor party",
