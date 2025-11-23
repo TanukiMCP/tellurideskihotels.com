@@ -5,6 +5,7 @@ import { format, addDays } from 'date-fns';
 
 interface HotelGridProps {
   filter?: 'ski-in-ski-out' | 'luxury' | 'budget' | 'downtown' | 'mountain-village' | 'family-friendly';
+  hotelIds?: string[]; // Manual curation: specific hotel IDs to display
   limit?: number;
   checkIn?: string;
   checkOut?: string;
@@ -13,6 +14,7 @@ interface HotelGridProps {
 
 export function HotelGrid({ 
   filter,
+  hotelIds,
   limit = 3,
   checkIn,
   checkOut,
@@ -41,6 +43,34 @@ export function HotelGrid({
       setIsLoadingHotels(true);
       
       try {
+        // If hotelIds are provided, fetch those specific hotels
+        if (hotelIds && hotelIds.length > 0) {
+          // Fetch each hotel by ID using the details endpoint
+          const hotelPromises = hotelIds.map(async (hotelId) => {
+            try {
+              const response = await fetch(`/api/hotels/details?hotelId=${hotelId}`);
+              if (response.ok) {
+                const data = await response.json();
+                return data.data || data;
+              }
+              return null;
+            } catch (err) {
+              console.error(`[HotelGrid] Error fetching hotel ${hotelId}:`, err);
+              return null;
+            }
+          });
+          
+          const fetchedHotels = await Promise.all(hotelPromises);
+          const validHotels = fetchedHotels.filter((h): h is LiteAPIHotel => h !== null);
+          
+          if (isMounted) {
+            setHotels(validHotels);
+            setIsLoadingHotels(false);
+          }
+          return;
+        }
+        
+        // Otherwise, use filter-based search
         const searchParams = new URLSearchParams({
           cityName: 'Telluride',
           countryCode: 'US',
@@ -94,7 +124,7 @@ export function HotelGrid({
     return () => {
       isMounted = false;
     };
-  }, [filter, limit]);
+  }, [filter, hotelIds, limit]);
 
   // Create stable hotel IDs string for dependency
   const hotelIdsString = useMemo(() => {
