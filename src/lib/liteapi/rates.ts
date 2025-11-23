@@ -1,7 +1,7 @@
 import { liteAPIClient, liteAPIStreamClient, type StreamCallback } from './client';
 import { LITEAPI_MARKUP_PERCENT } from './config';
 import type { LiteAPIRate, LiteAPIRateSearchParams, LiteAPIHotel } from './types';
-import { getHotelDetails } from './hotels';
+import { getPropertyType } from './hotels';
 
 export interface RateSearchResponse {
   data: Array<{
@@ -545,24 +545,49 @@ export async function searchHotelsWithRates(params: {
     })),
   });
 
-  // Fetch full details only for hotels with availability
-  const hotelDetailsPromises = hotelIdsWithRates.map(id =>
-    getHotelDetails(id).catch(err => {
-      console.error(`[LiteAPI Rates] Error fetching details for ${id}:`, err);
-      return null;
-    })
-  );
-
-  const hotelDetails = (await Promise.all(hotelDetailsPromises))
-    .filter((h): h is LiteAPIHotel => h !== null);
+  // Use the hotel data from search results instead of fetching full details
+  // The /data/hotels endpoint already provides enough metadata for listings
+  // Full details should only be fetched when user views a specific hotel
+  
+  const hotelsWithAvailability = hotelsData
+    .filter((hotel: any) => hotelIdsWithRates.includes(hotel.id))
+    .map((hotel: any): LiteAPIHotel => ({
+      hotel_id: hotel.id,
+      name: hotel.name,
+      star_rating: hotel.stars,
+      review_score: hotel.rating,
+      review_count: hotel.reviewCount,
+      hotel_type_id: hotel.hotelTypeId,
+      property_type: getPropertyType(hotel.hotelTypeId, hotel.name),
+      address: {
+        line1: hotel.address,
+        city: hotel.city,
+        state: hotel.state,
+        postal_code: hotel.zip,
+        country: hotel.country,
+      },
+      location: {
+        latitude: hotel.latitude,
+        longitude: hotel.longitude,
+      },
+      images: hotel.main_photo ? [{
+        type: 'main' as const,
+        url: hotel.main_photo,
+        description: '',
+      }] : [],
+      amenities: [], // Not included in search results
+      description: hotel.hotelDescription ? {
+        text: hotel.hotelDescription,
+      } : undefined,
+    }));
 
   console.log('[LiteAPI Rates] Search complete:', {
-    hotelsWithAvailability: hotelDetails.length,
+    hotelsWithAvailability: hotelsWithAvailability.length,
     hotelsWithPrices: Object.keys(minPrices).length,
   });
 
   return {
-    hotels: hotelDetails,
+    hotels: hotelsWithAvailability,
     minPrices,
   };
 }

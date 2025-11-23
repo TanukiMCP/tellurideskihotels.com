@@ -91,7 +91,7 @@ export async function searchHotels(params: LiteAPIHotelSearchParams): Promise<Ho
   const hotelsData = Array.from(uniqueHotelsMap.values());
   
   // Helper function to determine property type from hotelTypeId and name
-  const getPropertyType = (hotelTypeId: number | undefined, name: string): LiteAPIHotel['property_type'] => {
+  export function getPropertyType(hotelTypeId: number | undefined, name: string): LiteAPIHotel['property_type'] {
     const nameLower = name.toLowerCase();
     
     // Map LiteAPI hotelTypeId to property types
