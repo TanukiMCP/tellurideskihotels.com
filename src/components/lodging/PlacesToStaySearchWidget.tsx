@@ -4,7 +4,9 @@ import { HotelGridWithMap } from './HotelGridWithMap';
 import type { LiteAPIHotel } from '@/lib/liteapi/types';
 import { ErrorBoundary } from '@/components/shared/ErrorBoundary';
 import PriceRangeFilter from '@/components/shared/PriceRangeFilter';
-import { HotelSearchWidget } from './HotelSearchWidget';
+import { Button } from '@/components/ui/Button';
+import { Input } from '@/components/ui/Input';
+import { Search, Calendar, Users } from 'lucide-react';
 
 type PropertyType = 'all' | 'hotel' | 'condo' | 'resort' | 'lodge' | 'cabin' | 'vacation_rental' | 'apartment' | 'home';
 type LocationFilter = 'all' | 'telluride' | 'mountain-village';
@@ -317,17 +319,97 @@ function PlacesToStaySearchWidgetContent({}: PlacesToStaySearchWidgetProps) {
           </div>
         </div>
 
-        {/* Search Widget - READ ONLY, no onDatesChange */}
+        {/* Search Form - Inline, read-only display of URL params */}
         <div className="mb-4">
-          <HotelSearchWidget
-            initialLocation={location}
-            initialDates={checkIn && checkOut ? {
-              checkIn: new Date(checkIn),
-              checkOut: new Date(checkOut),
-            } : undefined}
-            initialGuests={{ adults, children: 0 }}
-            onDatesChange={undefined} // No callback - widget is read-only
-          />
+          <div className="bg-white rounded-2xl shadow-elevated p-6 lg:p-8">
+            <form onSubmit={(e) => {
+              e.preventDefault();
+              const params = new URLSearchParams({
+                location,
+                checkIn,
+                checkOut,
+                adults: adults.toString(),
+              });
+              if (typeof window !== 'undefined') {
+                window.location.href = `/places-to-stay?${params.toString()}`;
+              }
+            }}>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                <div>
+                  <label htmlFor="checkIn" className="block text-sm font-medium text-neutral-700 mb-2">
+                    Check-in
+                  </label>
+                  <div className="relative">
+                    <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-neutral-400 pointer-events-none" />
+                    <Input
+                      id="checkIn"
+                      type="date"
+                      value={checkIn}
+                      onChange={(e) => {
+                        const params = new URLSearchParams(window.location.search);
+                        params.set('checkIn', e.target.value);
+                        window.location.href = `/places-to-stay?${params.toString()}`;
+                      }}
+                      min={format(new Date(), 'yyyy-MM-dd')}
+                      className="pl-11 h-12"
+                      required
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label htmlFor="checkOut" className="block text-sm font-medium text-neutral-700 mb-2">
+                    Check-out
+                  </label>
+                  <div className="relative">
+                    <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-neutral-400 pointer-events-none" />
+                    <Input
+                      id="checkOut"
+                      type="date"
+                      value={checkOut}
+                      onChange={(e) => {
+                        const params = new URLSearchParams(window.location.search);
+                        params.set('checkOut', e.target.value);
+                        window.location.href = `/places-to-stay?${params.toString()}`;
+                      }}
+                      min={checkIn}
+                      className="pl-11 h-12"
+                      required
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label htmlFor="adults" className="block text-sm font-medium text-neutral-700 mb-2">
+                    Guests
+                  </label>
+                  <div className="relative">
+                    <Users className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-neutral-400 pointer-events-none" />
+                    <Input
+                      id="adults"
+                      type="number"
+                      value={adults}
+                      onChange={(e) => {
+                        const params = new URLSearchParams(window.location.search);
+                        params.set('adults', e.target.value);
+                        window.location.href = `/places-to-stay?${params.toString()}`;
+                      }}
+                      min="1"
+                      max="10"
+                      className="pl-11 h-12"
+                      required
+                    />
+                  </div>
+                </div>
+              </div>
+              <Button
+                type="submit"
+                size="lg"
+                className="w-full"
+              >
+                <Search className="mr-2 h-5 w-5" />
+                Search Places to Stay
+              </Button>
+            </form>
+          </div>
         </div>
       </div>
 
