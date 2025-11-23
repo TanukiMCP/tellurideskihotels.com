@@ -55,10 +55,14 @@ export function getExcerpt(content: string, maxLength: number = 200): string {
 }
 
 export function formatCurrency(amount: number, currency: string = 'USD'): string {
+  // Round up to nearest dollar for cleaner display
+  const roundedAmount = Math.ceil(amount);
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: currency.toUpperCase(),
-  }).format(amount);
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  }).format(roundedAmount);
 }
 
 export function calculateNights(checkIn: string, checkOut: string): number {

@@ -71,6 +71,9 @@ export function calculateBounds(
 export function formatMapPrice(price: number, currency: string = 'USD'): string {
   if (price === 0) return 'View Rates';
   
+  // Round up to nearest dollar for cleaner display
+  const roundedPrice = Math.ceil(price);
+  
   const formatter = new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency,
@@ -78,7 +81,7 @@ export function formatMapPrice(price: number, currency: string = 'USD'): string 
     maximumFractionDigits: 0,
   });
   
-  return formatter.format(price);
+  return formatter.format(roundedPrice);
 }
 
 // Padding for bounds fitting - increased for better view
