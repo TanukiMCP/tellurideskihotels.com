@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from 'react';
+import { useState, type FormEvent, useEffect } from 'react';
 import { Search, Calendar, Users } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
@@ -17,41 +17,32 @@ export function HotelSearchWidget({
   initialGuests = { adults: 2, children: 0 },
   onDatesChange,
 }: HotelSearchWidgetProps) {
-  // Simple state - initialized from props, updated by user input
-  const getDateString = (date: Date | undefined, defaultDays: number) => {
-    if (date) {
-      try {
-        return format(date, 'yyyy-MM-dd');
-      } catch {
-        return format(addDays(new Date(), defaultDays), 'yyyy-MM-dd');
-      }
-    }
-    return format(addDays(new Date(), defaultDays), 'yyyy-MM-dd');
-  };
-
-  const [checkIn, setCheckIn] = useState(() =>
-    getDateString(initialDates?.checkIn, 7)
+  const [checkIn, setCheckIn] = useState(
+    initialDates?.checkIn
+      ? format(initialDates.checkIn, 'yyyy-MM-dd')
+      : format(addDays(new Date(), 7), 'yyyy-MM-dd')
   );
-  const [checkOut, setCheckOut] = useState(() =>
-    getDateString(initialDates?.checkOut, 14)
+  const [checkOut, setCheckOut] = useState(
+    initialDates?.checkOut
+      ? format(initialDates.checkOut, 'yyyy-MM-dd')
+      : format(addDays(new Date(), 14), 'yyyy-MM-dd')
   );
   const [adults, setAdults] = useState(initialGuests.adults.toString());
+  const [hasInitialized, setHasInitialized] = useState(false);
 
-  // If onDatesChange is provided, call it when dates change (user input only)
-  // If not provided, widget is read-only (just displays dates from URL)
-  const handleDateChange = (field: 'checkIn' | 'checkOut', value: string) => {
-    if (field === 'checkIn') {
-      setCheckIn(value);
-    } else {
-      setCheckOut(value);
+  // Notify parent when dates change (but not on initial mount)
+  useEffect(() => {
+    if (!hasInitialized) {
+      setHasInitialized(true);
+      return;
     }
-    // Only call onDatesChange if provided (for interactive mode)
-    // In read-only mode (onDatesChange is undefined), this widget just displays dates
-  };
+    if (onDatesChange) {
+      onDatesChange(checkIn, checkOut);
+    }
+  }, [checkIn, checkOut]); // Removed onDatesChange from deps to prevent infinite loop
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    // Always navigate to new URL on form submit - this is the source of truth
     const params = new URLSearchParams({
       location: initialLocation,
       checkIn,
@@ -77,14 +68,14 @@ export function HotelSearchWidget({
                 id="checkIn"
                 type="date"
                 value={checkIn}
-                onChange={(e) => handleDateChange('checkIn', e.target.value)}
+                onChange={(e) => setCheckIn(e.target.value)}
                 min={format(new Date(), 'yyyy-MM-dd')}
                 className="pl-11 h-12"
                 required
               />
             </div>
           </div>
-
+          
           <div>
             <label htmlFor="checkOut" className="block text-sm font-medium text-neutral-700 mb-2">
               Check-out
@@ -95,14 +86,14 @@ export function HotelSearchWidget({
                 id="checkOut"
                 type="date"
                 value={checkOut}
-                onChange={(e) => handleDateChange('checkOut', e.target.value)}
+                onChange={(e) => setCheckOut(e.target.value)}
                 min={checkIn}
                 className="pl-11 h-12"
                 required
               />
             </div>
           </div>
-
+          
           <div>
             <label htmlFor="adults" className="block text-sm font-medium text-neutral-700 mb-2">
               Guests
@@ -122,7 +113,7 @@ export function HotelSearchWidget({
             </div>
           </div>
         </div>
-
+        
         <Button
           type="submit"
           size="lg"

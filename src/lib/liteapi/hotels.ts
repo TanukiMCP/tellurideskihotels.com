@@ -7,31 +7,6 @@ export interface HotelSearchResponse {
   total?: number;
 }
 
-// Helper function to determine property type from hotelTypeId and name
-export function getPropertyType(hotelTypeId: number | undefined, name: string): LiteAPIHotel['property_type'] {
-  const nameLower = name.toLowerCase();
-  
-  // Map LiteAPI hotelTypeId to property types
-  // Common IDs: 204=Hotel, 206=Resort, 229=Condo, 230=Cabin/Cottage, 250=Lodge
-  if (hotelTypeId === 206) return 'resort';
-  if (hotelTypeId === 204) return 'hotel';
-  if (hotelTypeId === 229) return 'condo';
-  if (hotelTypeId === 230) return 'cabin';
-  if (hotelTypeId === 250) return 'lodge';
-  
-  // Fallback to name-based detection
-  if (nameLower.includes('resort')) return 'resort';
-  if (nameLower.includes('hotel')) return 'hotel';
-  if (nameLower.includes('condo') || nameLower.includes('condominium')) return 'condo';
-  if (nameLower.includes('lodge')) return 'lodge';
-  if (nameLower.includes('cabin') || nameLower.includes('cottage')) return 'cabin';
-  if (nameLower.includes('rental') || nameLower.includes('vacation')) return 'vacation_rental';
-  if (nameLower.includes('apartment') || nameLower.includes('apt') || nameLower.includes('suite')) return 'apartment';
-  if (nameLower.includes('home') || nameLower.includes('house') || nameLower.includes('townhouse')) return 'home';
-  
-  return 'other';
-}
-
 export async function searchHotels(params: LiteAPIHotelSearchParams): Promise<HotelSearchResponse> {
   console.log('[LiteAPI Hotels] Starting hotel search:', {
     cityName: params.cityName,
@@ -114,6 +89,31 @@ export async function searchHotels(params: LiteAPIHotelSearchParams): Promise<Ho
     }
   });
   const hotelsData = Array.from(uniqueHotelsMap.values());
+  
+  // Helper function to determine property type from hotelTypeId and name
+  const getPropertyType = (hotelTypeId: number | undefined, name: string): LiteAPIHotel['property_type'] => {
+    const nameLower = name.toLowerCase();
+    
+    // Map LiteAPI hotelTypeId to property types
+    // Common IDs: 204=Hotel, 206=Resort, 229=Condo, 230=Cabin/Cottage, 250=Lodge
+    if (hotelTypeId === 206) return 'resort';
+    if (hotelTypeId === 204) return 'hotel';
+    if (hotelTypeId === 229) return 'condo';
+    if (hotelTypeId === 230) return 'cabin';
+    if (hotelTypeId === 250) return 'lodge';
+    
+    // Fallback to name-based detection
+    if (nameLower.includes('resort')) return 'resort';
+    if (nameLower.includes('hotel')) return 'hotel';
+    if (nameLower.includes('condo') || nameLower.includes('condominium')) return 'condo';
+    if (nameLower.includes('lodge')) return 'lodge';
+    if (nameLower.includes('cabin') || nameLower.includes('cottage')) return 'cabin';
+    if (nameLower.includes('rental') || nameLower.includes('vacation')) return 'vacation_rental';
+    if (nameLower.includes('apartment') || nameLower.includes('apt') || nameLower.includes('suite')) return 'apartment';
+    if (nameLower.includes('home') || nameLower.includes('house') || nameLower.includes('townhouse')) return 'home';
+    
+    return 'other';
+  };
   
   // Transform API response to our format
   const validHotels: LiteAPIHotel[] = hotelsData.map((hotel: any) => ({

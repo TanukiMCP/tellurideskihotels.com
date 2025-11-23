@@ -1,7 +1,7 @@
 import { liteAPIClient, liteAPIStreamClient, type StreamCallback } from './client';
 import { LITEAPI_MARKUP_PERCENT } from './config';
 import type { LiteAPIRate, LiteAPIRateSearchParams, LiteAPIHotel } from './types';
-import { getPropertyType } from './hotels';
+import { getHotelDetails } from './hotels';
 
 export interface RateSearchResponse {
   data: Array<{
@@ -479,32 +479,61 @@ export async function searchHotelsWithRates(params: {
     return { hotels: [], minPrices: {} };
   }
 
-  // Use the optimized min-rates endpoint for listings - much faster!
-  // This endpoint is specifically designed for displaying price comparisons
-  // and returns only the cheapest rate per hotel, not all rate options
-  console.log('[LiteAPI Rates] Using min-rates endpoint for fast price lookup:', hotelIds.length, 'hotels');
+  // Use streaming for bulk searches (10+ hotels) to reduce load times
+  const useStreaming = hotelIds.length >= 10;
+  const minPrices: Record<string, number> = {};
+
+  if (useStreaming) {
+    console.log('[LiteAPI Rates] Using streaming for bulk search:', hotelIds.length, 'hotels');
     
-  const nights = Math.ceil((new Date(params.checkOut).getTime() - new Date(params.checkIn).getTime()) / (1000 * 60 * 60 * 24));
-  
-  const minRatesData = await getMinRates({
-    hotelIds,
+    // Collect rates as they stream in
+    await searchRatesStream(
+      {
+        hotelIds: hotelIds.join(','),
         checkIn: params.checkIn,
         checkOut: params.checkOut,
         adults: params.adults,
-    currency: 'USD',
-    guestNationality: 'US',
-    timeout: 10, // Increased timeout for large batches
-  });
+        rooms: 1,
+      },
+      async (ratesChunk) => {
+        // Process each chunk as it arrives
+        ratesChunk.forEach((hotel: any) => {
+          const hotelMinPrice = hotel.rooms?.flatMap((r: any) =>
+            r.rates?.map((rate: any) => rate.net?.amount || Infinity)
+          ).filter((p: number) => p !== Infinity);
 
-  // Transform min-rates response to per-night prices
-  // Min-rates returns TOTAL price for the stay, we need per-night for listings
-  const minPrices: Record<string, number> = {};
-  Object.entries(minRatesData).forEach(([hotelId, rateData]) => {
-    if (rateData.price) {
-      // Convert total price to per-night price
-      minPrices[hotelId] = nights > 0 ? rateData.price / nights : rateData.price;
+          if (hotelMinPrice && hotelMinPrice.length > 0) {
+            const currentMin = minPrices[hotel.hotel_id];
+            const newMin = Math.min(...hotelMinPrice);
+            minPrices[hotel.hotel_id] = currentMin ? Math.min(currentMin, newMin) : newMin;
+          }
+        });
+      }
+    );
+  } else {
+    // Use regular API for small searches (faster for single/few hotels)
+    console.log('[LiteAPI Rates] Using regular API for small search:', hotelIds.length, 'hotels');
+    
+    const ratesResponse = await searchRates({
+      hotelIds: hotelIds.join(','),
+      checkIn: params.checkIn,
+      checkOut: params.checkOut,
+      adults: params.adults,
+      rooms: 1, // Default to 1 room
+    });
+
+    if (ratesResponse.data && ratesResponse.data.length > 0) {
+      ratesResponse.data.forEach((hotel: any) => {
+        const hotelMinPrice = hotel.rooms?.flatMap((r: any) =>
+          r.rates?.map((rate: any) => rate.net?.amount || Infinity)
+        ).filter((p: number) => p !== Infinity);
+
+        if (hotelMinPrice && hotelMinPrice.length > 0) {
+          minPrices[hotel.hotel_id] = Math.min(...hotelMinPrice);
         }
       });
+    }
+  }
 
   const hotelIdsWithRates = Object.keys(minPrices);
   console.log('[LiteAPI Rates] Hotels with availability:', {
@@ -516,49 +545,24 @@ export async function searchHotelsWithRates(params: {
     })),
   });
 
-  // Use the hotel data from search results instead of fetching full details
-  // The /data/hotels endpoint already provides enough metadata for listings
-  // Full details should only be fetched when user views a specific hotel
-  
-  const hotelsWithAvailability = hotelsData
-    .filter((hotel: any) => hotelIdsWithRates.includes(hotel.id))
-    .map((hotel: any): LiteAPIHotel => ({
-      hotel_id: hotel.id,
-      name: hotel.name,
-      star_rating: hotel.stars,
-      review_score: hotel.rating,
-      review_count: hotel.reviewCount,
-      hotel_type_id: hotel.hotelTypeId,
-      property_type: getPropertyType(hotel.hotelTypeId, hotel.name),
-      address: {
-        line1: hotel.address,
-        city: hotel.city,
-        state: hotel.state,
-        postal_code: hotel.zip,
-        country: hotel.country,
-      },
-      location: {
-        latitude: hotel.latitude,
-        longitude: hotel.longitude,
-      },
-      images: hotel.main_photo ? [{
-        type: 'main' as const,
-        url: hotel.main_photo,
-        description: '',
-      }] : [],
-      amenities: [], // Not included in search results
-      description: hotel.hotelDescription ? {
-        text: hotel.hotelDescription,
-      } : undefined,
-    }));
+  // Fetch full details only for hotels with availability
+  const hotelDetailsPromises = hotelIdsWithRates.map(id =>
+    getHotelDetails(id).catch(err => {
+      console.error(`[LiteAPI Rates] Error fetching details for ${id}:`, err);
+      return null;
+    })
+  );
+
+  const hotelDetails = (await Promise.all(hotelDetailsPromises))
+    .filter((h): h is LiteAPIHotel => h !== null);
 
   console.log('[LiteAPI Rates] Search complete:', {
-    hotelsWithAvailability: hotelsWithAvailability.length,
+    hotelsWithAvailability: hotelDetails.length,
     hotelsWithPrices: Object.keys(minPrices).length,
   });
 
   return {
-    hotels: hotelsWithAvailability,
+    hotels: hotelDetails,
     minPrices,
   };
 }
@@ -566,7 +570,6 @@ export async function searchHotelsWithRates(params: {
 /**
  * Get minimum rates for hotels - optimized for map markers and listing pages
  * Much faster than full rates endpoint, returns only the cheapest price per hotel
- * Automatically batches large requests to avoid API limits
  */
 export async function getMinRates(params: MinRateSearchParams): Promise<Record<string, MinRateResult>> {
   console.log('[LiteAPI Min Rates] Fetching minimum rates:', {
@@ -576,122 +579,58 @@ export async function getMinRates(params: MinRateSearchParams): Promise<Record<s
     adults: params.adults,
   });
 
-  // LiteAPI min-rates endpoint has a limit (typically 100-200 hotels per request)
-  // Batch large requests to avoid timeouts and errors
-  const BATCH_SIZE = 100;
-  const allMinRates: Record<string, MinRateResult> = {};
+  // Build request body
+  const requestBody = {
+    hotelIds: params.hotelIds,
+    checkin: params.checkIn,
+    checkout: params.checkOut,
+    occupancies: [{
+      adults: params.adults,
+      children: [],
+    }],
+    currency: params.currency || 'USD',
+    guestNationality: params.guestNationality || 'US',
+    timeout: params.timeout || 6,
+    margin: LITEAPI_MARKUP_PERCENT,
+  };
 
-  // If we have fewer hotels than batch size, process in one request
-  if (params.hotelIds.length <= BATCH_SIZE) {
-    try {
-      const requestBody = {
-        hotelIds: params.hotelIds,
-        checkin: params.checkIn,
-        checkout: params.checkOut,
-        occupancies: [{
-          adults: params.adults,
-          children: [],
-        }],
-        currency: params.currency || 'USD',
-        guestNationality: params.guestNationality || 'US',
-        timeout: params.timeout || 6,
-        margin: LITEAPI_MARKUP_PERCENT,
-      };
+  try {
+    const response = await liteAPIClient<any>('/hotels/min-rates', {
+      method: 'POST',
+      body: JSON.stringify(requestBody),
+    });
 
-      const response = await liteAPIClient<any>('/hotels/min-rates', {
-        method: 'POST',
-        body: JSON.stringify(requestBody),
-      });
-
-      if (response.data && Array.isArray(response.data)) {
-        response.data.forEach((item: any) => {
-          if (item.hotelId && item.price) {
-            allMinRates[item.hotelId] = {
-              hotelId: item.hotelId,
-              price: item.price,
-              suggestedSellingPrice: item.suggestedSellingPrice,
-              currency: item.currency || params.currency || 'USD',
-            };
-          }
-        });
-      }
-    } catch (error) {
-      console.error('[LiteAPI Min Rates] Error fetching min rates (single batch):', error);
-      // Return empty object on error - don't throw, let caller handle empty results
-    }
-  } else {
-    // Batch the requests
-    console.log(`[LiteAPI Min Rates] Batching ${params.hotelIds.length} hotels into chunks of ${BATCH_SIZE}`);
+    // Transform response into a map of hotel_id -> MinRateResult
+    const minRates: Record<string, MinRateResult> = {};
     
-    const batches: string[][] = [];
-    for (let i = 0; i < params.hotelIds.length; i += BATCH_SIZE) {
-      batches.push(params.hotelIds.slice(i, i + BATCH_SIZE));
+    if (response.data && Array.isArray(response.data)) {
+      response.data.forEach((item: any) => {
+        if (item.hotelId) {
+          minRates[item.hotelId] = {
+            hotelId: item.hotelId,
+            price: item.price,
+            suggestedSellingPrice: item.suggestedSellingPrice,
+            currency: item.currency || params.currency || 'USD',
+          };
+        }
+      });
     }
 
-    console.log(`[LiteAPI Min Rates] Processing ${batches.length} batches`);
-
-    // Process batches in parallel (but limit concurrency to avoid overwhelming the API)
-    const CONCURRENT_BATCHES = 3;
-    for (let i = 0; i < batches.length; i += CONCURRENT_BATCHES) {
-      const concurrentBatches = batches.slice(i, i + CONCURRENT_BATCHES);
-      
-      await Promise.all(
-        concurrentBatches.map(async (batch, batchIndex) => {
-          try {
-            const requestBody = {
-              hotelIds: batch,
-              checkin: params.checkIn,
-              checkout: params.checkOut,
-              occupancies: [{
-                adults: params.adults,
-                children: [],
-              }],
-              currency: params.currency || 'USD',
-              guestNationality: params.guestNationality || 'US',
-              timeout: params.timeout || 6,
-              margin: LITEAPI_MARKUP_PERCENT,
-            };
-
-            const response = await liteAPIClient<any>('/hotels/min-rates', {
-              method: 'POST',
-              body: JSON.stringify(requestBody),
-            });
-
-            if (response.data && Array.isArray(response.data)) {
-              response.data.forEach((item: any) => {
-                if (item.hotelId && item.price) {
-                  allMinRates[item.hotelId] = {
-                    hotelId: item.hotelId,
-                    price: item.price,
-                    suggestedSellingPrice: item.suggestedSellingPrice,
-                    currency: item.currency || params.currency || 'USD',
-                  };
-                }
-              });
-            }
-
-            console.log(`[LiteAPI Min Rates] Batch ${i + batchIndex + 1}/${batches.length} complete: ${batch.length} hotels, ${Object.keys(allMinRates).length} total rates found`);
-          } catch (error) {
-            console.error(`[LiteAPI Min Rates] Error in batch ${i + batchIndex + 1}:`, error);
-            // Continue with other batches even if one fails
-          }
-        })
-      );
-    }
+    console.log('[LiteAPI Min Rates] Fetched min rates for hotels:', {
+      totalHotels: Object.keys(minRates).length,
+      hotelIds: Object.keys(minRates),
+      sampleRates: Object.entries(minRates).slice(0, 3).map(([id, rate]) => ({
+        hotelId: id,
+        price: rate.price,
+        suggestedSellingPrice: rate.suggestedSellingPrice,
+        currency: rate.currency,
+      })),
+    });
+    
+    return minRates;
+  } catch (error) {
+    console.error('[LiteAPI Min Rates] Error fetching min rates:', error);
+    return {};
   }
-
-  console.log('[LiteAPI Min Rates] Fetched min rates for hotels:', {
-    totalHotels: Object.keys(allMinRates).length,
-    requestedHotels: params.hotelIds.length,
-    hotelIds: Object.keys(allMinRates).slice(0, 10), // Log first 10 IDs
-    sampleRates: Object.entries(allMinRates).slice(0, 3).map(([id, rate]) => ({
-      hotelId: id,
-      price: rate.price,
-      suggestedSellingPrice: rate.suggestedSellingPrice,
-      currency: rate.currency,
-    })),
-  });
-  
-  return allMinRates;
 }
 
