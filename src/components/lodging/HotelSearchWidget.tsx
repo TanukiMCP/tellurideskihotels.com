@@ -1,4 +1,4 @@
-import { useState, type FormEvent, useEffect } from 'react';
+import { useState, type FormEvent, useEffect, useRef } from 'react';
 import { Search, Calendar, Users } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
@@ -29,12 +29,37 @@ export function HotelSearchWidget({
   );
   const [adults, setAdults] = useState(initialGuests.adults.toString());
 
-  // Notify parent when dates change
+  // Track previous values to only call onDatesChange when dates actually change
+  const prevCheckInRef = useRef<string>(checkIn);
+  const prevCheckOutRef = useRef<string>(checkOut);
+  const onDatesChangeRef = useRef(onDatesChange);
+  const isInitialMount = useRef(true);
+
+  // Update ref when callback changes (but don't trigger effect)
   useEffect(() => {
-    if (onDatesChange) {
-      onDatesChange(checkIn, checkOut);
+    onDatesChangeRef.current = onDatesChange;
+  }, [onDatesChange]);
+
+  // Notify parent when dates change (but not on initial mount)
+  useEffect(() => {
+    // Skip on initial mount - parent will handle initial search
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+      prevCheckInRef.current = checkIn;
+      prevCheckOutRef.current = checkOut;
+      return;
     }
-  }, [checkIn, checkOut, onDatesChange]);
+
+    // Only call if dates actually changed
+    if (
+      onDatesChangeRef.current &&
+      (prevCheckInRef.current !== checkIn || prevCheckOutRef.current !== checkOut)
+    ) {
+      prevCheckInRef.current = checkIn;
+      prevCheckOutRef.current = checkOut;
+      onDatesChangeRef.current(checkIn, checkOut);
+    }
+  }, [checkIn, checkOut]);
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();

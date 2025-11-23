@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { format, addDays } from 'date-fns';
 import { HotelGridWithMap } from './HotelGridWithMap';
 import type { LiteAPIHotel } from '@/lib/liteapi/types';
 import { ErrorBoundary } from '@/components/shared/ErrorBoundary';
@@ -241,7 +242,20 @@ function PlacesToStaySearchWidgetContent({
     setPriceRange([0, 2000]);
   };
 
-  const handleSearch = async (newCheckIn: string, newCheckOut: string, newAdults: number, newLocation: string) => {
+  // Track last search params to prevent duplicate searches
+  const lastSearchRef = React.useRef<string>('');
+
+  const handleSearch = React.useCallback(async (newCheckIn: string, newCheckOut: string, newAdults: number, newLocation: string) => {
+    // Create a unique key for this search
+    const searchKey = `${newCheckIn}-${newCheckOut}-${newAdults}-${newLocation}`;
+    
+    // Prevent duplicate searches
+    if (lastSearchRef.current === searchKey || loading) {
+      return;
+    }
+    
+    lastSearchRef.current = searchKey;
+    
     setCheckIn(newCheckIn);
     setCheckOut(newCheckOut);
     setAdults(newAdults);
@@ -284,10 +298,48 @@ function PlacesToStaySearchWidgetContent({
     } catch (err) {
       console.error('[Places to Stay Widget] Search error:', err);
       setError('Failed to search hotels');
+      lastSearchRef.current = ''; // Reset on error so user can retry
     } finally {
       setLoading(false);
     }
-  };
+  }, [loading]);
+
+  // Initial search on mount - parse URL params and search
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    
+    const urlParams = new URLSearchParams(window.location.search);
+    const checkInParam = urlParams.get('checkIn');
+    const checkOutParam = urlParams.get('checkOut');
+    const adultsParam = urlParams.get('adults');
+    const locationParam = urlParams.get('location');
+    
+    // Use URL params if available, otherwise use defaults
+    const defaultCheckIn = format(addDays(new Date(), 7), 'yyyy-MM-dd');
+    const defaultCheckOut = format(addDays(new Date(), 14), 'yyyy-MM-dd');
+    
+    const finalCheckIn = checkInParam || checkIn || defaultCheckIn;
+    const finalCheckOut = checkOutParam || checkOut || defaultCheckOut;
+    const finalAdults = adultsParam ? parseInt(adultsParam, 10) : adults;
+    const finalLocation = locationParam || location;
+    
+    // Only search if we have valid dates
+    if (finalCheckIn && finalCheckOut) {
+      handleSearch(finalCheckIn, finalCheckOut, finalAdults, finalLocation);
+    }
+  }, []); // Only run once on mount
+
+  // Memoize the onDatesChange handler to prevent infinite loops
+  const handleDatesChange = useCallback((checkInDateStr: string, checkOutDateStr: string) => {
+    if (checkInDateStr && checkOutDateStr && !loading) {
+      handleSearch(
+        checkInDateStr,
+        checkOutDateStr,
+        adults,
+        location
+      );
+    }
+  }, [handleSearch, adults, location, loading]);
 
   const nights = checkIn && checkOut 
     ? Math.ceil((new Date(checkOut).getTime() - new Date(checkIn).getTime()) / (1000 * 60 * 60 * 24))
@@ -380,16 +432,7 @@ function PlacesToStaySearchWidgetContent({
               checkOut: new Date(checkOut),
             } : undefined}
             initialGuests={{ adults, children: 0 }}
-            onDatesChange={(checkInDateStr, checkOutDateStr) => {
-              if (checkInDateStr && checkOutDateStr) {
-                handleSearch(
-                  checkInDateStr,
-                  checkOutDateStr,
-                  adults,
-                  location
-                );
-              }
-            }}
+            onDatesChange={handleDatesChange}
           />
         </div>
       </div>
