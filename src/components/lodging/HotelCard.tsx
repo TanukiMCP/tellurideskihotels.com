@@ -55,11 +55,8 @@ export function HotelCard({
       .trim();
   };
 
-  // Get clean description text
+  // Get clean description text (no truncation - let CSS handle it)
   const descriptionText = hotel.description?.text ? stripHTML(hotel.description.text) : '';
-  const truncatedDescription = descriptionText.length > 140 
-    ? descriptionText.substring(0, 140).trim() + '...'
-    : descriptionText;
 
   // Rating color logic - using Telluride sage green palette
   const getRatingStyle = (score: number) => {
@@ -134,11 +131,11 @@ export function HotelCard({
           </div>
         )}
         
-        {/* Address - Tight spacing */}
+        {/* Address - Tight spacing with consistent truncation */}
         {address && (
           <div className="flex items-start gap-1.5 text-sm text-neutral-500 mb-1.5">
             <MapPin className="w-3.5 h-3.5 flex-shrink-0 mt-0.5 text-neutral-400" />
-            <span className="line-clamp-1">{address}</span>
+            <span className="line-clamp-1 overflow-hidden text-ellipsis whitespace-nowrap">{address}</span>
           </div>
         )}
         
@@ -149,23 +146,36 @@ export function HotelCard({
           </p>
         )}
         
-        {/* Description Preview - Fixed height, HTML stripped */}
+        {/* Description Preview - Fixed height with proper CSS truncation */}
         {descriptionText && (
-          <div className={`text-neutral-600 leading-relaxed mb-3 ${
-            variant === 'compact' ? 'text-xs h-[3rem]' : 'text-sm h-[3.5rem]'
+          <div className={`text-neutral-600 mb-4 flex-shrink-0 overflow-hidden ${
+            variant === 'compact' 
+              ? 'text-xs h-[3.5rem]' 
+              : 'text-sm h-[4rem]'
           }`}>
-            <p className="line-clamp-2 overflow-hidden">
-              {truncatedDescription}
+            <p 
+              className="leading-[1.5rem] break-words"
+              style={{
+                display: '-webkit-box',
+                WebkitLineClamp: 3,
+                WebkitBoxOrient: 'vertical',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                wordBreak: 'break-word',
+                lineHeight: '1.5rem'
+              }}
+            >
+              {descriptionText}
             </p>
           </div>
         )}
         
-        {/* Spacer to push CTA to bottom - Minimal gap */}
-        <div className="flex-grow min-h-[8px]"></div>
+        {/* Spacer to push price/button to bottom */}
+        <div className="flex-grow"></div>
         
         {/* Price (if available) - Compact inline display */}
         {minPrice && minPrice > 0 && (
-          <div className="mb-2">
+          <div className="mb-3">
             <div className="flex items-baseline gap-1.5">
               <span className={`font-bold text-primary-600 tracking-tight ${
                 variant === 'compact' ? 'text-lg' : 'text-xl'
@@ -177,13 +187,13 @@ export function HotelCard({
           </div>
         )}
         
-        {/* CTA Button - Reduced top spacing */}
+        {/* CTA Button - Proper spacing from description */}
         <button
           onClick={(e) => {
             e.stopPropagation();
             onSelect(hotel.hotel_id);
           }}
-          className={`w-full bg-primary-600 hover:bg-primary-700 text-white font-semibold rounded-lg transition-all duration-200 shadow-sm hover:shadow-md hover:scale-[1.02] active:scale-[0.98] ${
+          className={`w-full bg-primary-600 hover:bg-primary-700 text-white font-semibold rounded-lg transition-all duration-200 shadow-sm hover:shadow-md hover:scale-[1.02] active:scale-[0.98] flex-shrink-0 ${
             variant === 'compact' ? 'py-2.5 px-3 text-sm' : 'py-3 px-4'
           }`}
           type="button"
