@@ -50,7 +50,7 @@ export function HotelGridWithMap({
 
   if (viewMode === 'map') {
     return (
-      <div className="w-full h-[600px] lg:h-[800px]">
+      <div className="w-full h-[600px] lg:h-[800px]" key="map-view">
         <LodgingMap
           hotels={hotels}
           minPrices={minPrices}
