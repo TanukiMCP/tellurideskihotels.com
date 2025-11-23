@@ -1431,10 +1431,16 @@ The [National Weather Service Grand Junction office](https://www.weather.gov/gjt
 
 **CRITICAL REQUIREMENT:** Every article MUST include interactive components. These are not optional - they are essential conversion tools that drive bookings and revenue.
 
-### 1. HotelShowcase (Premier Conversion Tool)
+### 1. HotelShowcase (Single Hotel Display - For Listicles)
 
-**Use Case:** Featuring a specific hotel with rich details, real-time price, and IMAGE GALLERY.
-**Best For:** "Top 10" lists, Hotel Reviews, "Best For" recommendations.
+**Use Case:** Featuring ONE specific hotel with rich details, real-time price, and IMAGE GALLERY in a dedicated section.
+**Best For:** Listicles ("Top 10 Hotels", "Best Hotels for Families"), individual hotel reviews, when each hotel gets its own section.
+
+**⚠️ CRITICAL: When to Use HotelShowcase**
+- **LISTICLES:** When writing numbered/ranked lists where each hotel has its own section (e.g., "### 1. The Madeline Hotel")
+- **INDIVIDUAL SECTIONS:** When a single hotel is featured in its own dedicated section with descriptive text
+- **ONE PER SECTION:** Each hotel entry in a listicle gets its own `<HotelShowcase />` widget placed after the hotel description
+- **TRAVEL BLOG STYLE:** This is the typical travel blog pattern - one showcase widget per hotel entry
 
 **Syntax:**
 ```markdown
@@ -1450,30 +1456,42 @@ The [National Weather Service Grand Junction office](https://www.weather.gov/gjt
 - `showGallery` (Optional): `true` to show a swipeable image gallery.
 - `checkIn` (Optional): Default check-in date (YYYY-MM-DD).
 
-**Strategy:**
-- **MANDATORY FOR LISTICLES:** When creating "Top 10" lists or hotel reviews, you MUST use this component for each entry.
-- **ID LOOKUP:** Consult `src/data/telluride-hotels.csv` to find the correct `hotelId` for each property name. The CSV is lightweight (49KB) and contains 769 hotels with id and name columns.
-- **NO GUESSING:** If a hotel is not in the CSV, do NOT invent an ID. Use `ArticleBookingWidget` with `hotelName` instead.
-- **REAL IMAGES:** This component fetches real images from the API. Do NOT manually embed images for these specific hotels.
-
 **Listicle Workflow:**
-1. Identify the hotel name (e.g., "The Madeline").
+1. Identify the hotel name in your listicle (e.g., "### 1. The Madeline Hotel & Residences").
 2. Search the CSV file (`src/data/telluride-hotels.csv`) for the hotel name to find its ID.
 3. Use `grep` or read the CSV to find: `lp4b27f,"Madeline Hotel & Residences, Auberge Collection"`
-4. Embed:
+4. Write the hotel description (150-200 words).
+5. Embed the showcase widget AFTER the description:
    ```markdown
    ### 1. The Madeline Hotel & Residences
    
-   [Description of the hotel...]
+   The Madeline sets the standard for luxury ski hotels in Telluride. Located steps from Lift 10, this AAA Four Diamond property offers true ski-in/ski-out convenience paired with impeccable service and world-class amenities. The hotel features 89 elegant rooms and suites, each with mountain views and contemporary mountain design...
    
    <HotelShowcase hotelId="lp4b27f" showGallery={true} />
+   
+   ### 2. Peaks Resort & Spa
+   
+   [Next hotel description...]
+   
+   <HotelShowcase hotelId="lp3e47f" showGallery={true} />
    ```
 
-### 2. HotelGrid (Manual Curation Widget)
+**Important Notes:**
+- **ID LOOKUP REQUIRED:** Consult `src/data/telluride-hotels.csv` to find the correct `hotelId` for each property name. The CSV is lightweight (49KB) and contains 769 hotels with id and name columns.
+- **NO GUESSING:** If a hotel is not in the CSV, do NOT invent an ID. Use `ArticleBookingWidget` with `hotelName` instead.
+- **REAL IMAGES:** This component fetches real images from the API. Do NOT manually embed images for these specific hotels.
+- **ONE WIDGET PER HOTEL:** In listicles, each numbered entry gets ONE HotelShowcase widget, not multiple.
 
-**Use Case:** Displaying a curated selection of hotels that match the content context. **MANDATORY for manual curation** - when hotels are mentioned in the article, use specific hotel IDs.
+### 2. HotelGrid (Multiple Hotels Display - For Sections)
 
-**Best For:** Section-specific hotel displays, matching hotels mentioned in text, curated recommendations.
+**Use Case:** Displaying MULTIPLE hotels together in a grid layout when several specific properties are mentioned in the same section.
+**Best For:** When a section discusses multiple hotels together, comparison sections, category overviews where multiple hotels are listed.
+
+**⚠️ CRITICAL: When to Use HotelGrid**
+- **MULTIPLE HOTELS IN ONE SECTION:** When your text mentions several hotels together (e.g., "The Madeline, Peaks Resort, and Capella all offer ski valets...")
+- **SECTION SUMMARIES:** After describing a category where multiple hotels are listed together
+- **NOT FOR LISTICLES:** Do NOT use HotelGrid in listicles - use HotelShowcase for each individual entry instead
+- **GRID DISPLAY:** Shows 3-6 hotel cards in a responsive grid layout
 
 **Syntax:**
 ```markdown
@@ -1486,7 +1504,7 @@ The [National Weather Service Grand Junction office](https://www.weather.gov/gjt
 ```
 
 **Props:**
-- `hotelIds` (Optional but Recommended): Array of specific hotel IDs for manual curation. **When hotels are mentioned in the article, you MUST use their actual IDs.**
+- `hotelIds` (Required for manual curation): Array of specific hotel IDs. **When hotels are mentioned in the article text, you MUST use their actual IDs.**
 - `filter` (Optional): Fallback filter if hotelIds not provided: `ski-in-ski-out` | `luxury` | `budget` | `downtown` | `mountain-village` | `family-friendly`
 - `limit` (Optional): Number of hotels to display (default: 3)
 - `title` (Optional): Custom title for the widget
@@ -1495,23 +1513,34 @@ The [National Weather Service Grand Junction office](https://www.weather.gov/gjt
 
 **⚠️ CRITICAL: Manual Curation Workflow**
 
-**When hotels are mentioned in your article, you MUST manually curate the widget with their actual IDs:**
+**When multiple hotels are mentioned together in your article text, you MUST manually curate the widget with their actual IDs:**
 
-1. **Identify mentioned hotels** in your article text (e.g., "The Madeline, Peaks Resort, and Hotel Columbia")
+1. **Identify mentioned hotels** in your article text (e.g., "The Madeline, Peaks Resort, and Hotel Columbia all feature...")
 2. **Search the CSV file** (`src/data/telluride-hotels.csv`) for each hotel name
 3. **Extract the hotel IDs** from the CSV (format: `id,name`)
-4. **Use those IDs** in the `hotelIds` prop
+4. **Use those IDs** in the `hotelIds` prop array
 
 **Example Workflow:**
 ```markdown
 ## Luxury Ski-In/Ski-Out Resorts
 
-These properties command top pricing... The Madeline, Peaks Resort, and Capella offer ski valets...
+These properties command top pricing and deliver comprehensive resort experiences. The Madeline, Peaks Resort, and Capella all offer ski valets who store your equipment, full-service spas, and multiple dining venues. These properties justify premium pricing through convenience and comprehensive amenities.
 
 <HotelGrid 
-  hotelIds={["lp4b27f", "lp3e47f"]}
+  hotelIds={["lp4b27f", "lp3e47f", "lp2ff71"]}
   limit={3}
   title="Featured Luxury Ski-In/Ski-Out Properties"
+  client:load
+/>
+
+## Downtown Boutique Hotels
+
+Mid-range downtown properties like Hotel Telluride, New Sheridan, and Hotel Columbia balance character, service, and pricing...
+
+<HotelGrid 
+  hotelIds={["lp2ff71", "lp35ebc", "lp7924d"]}
+  limit={3}
+  title="Top Downtown Boutique Hotels"
   client:load
 />
 ```
@@ -1528,9 +1557,63 @@ These properties command top pricing... The Madeline, Peaks Resort, and Capella 
 - CSV format: `id,name` (e.g., `lp4b27f,"Madeline Hotel & Residences, Auberge Collection"`)
 
 **When to Use Filters vs hotelIds:**
-- **Use `hotelIds`**: When specific hotels are mentioned in the article text
-- **Use `filter`**: When discussing a category but not naming specific hotels
+- **Use `hotelIds`**: When specific hotels are mentioned in the article text (MANDATORY)
+- **Use `filter`**: Only when discussing a category but NOT naming specific hotels
 - **Use both**: `hotelIds` takes priority, `filter` is ignored when `hotelIds` is provided
+
+---
+
+### ⚠️ CRITICAL: HotelShowcase vs HotelGrid Decision Guide
+
+**Use HotelShowcase (Single Hotel Widget) When:**
+- ✅ Writing a **listicle** ("Top 10 Hotels", "15 Best Hotels")
+- ✅ Each hotel has its **own numbered section** (### 1. Hotel Name, ### 2. Hotel Name)
+- ✅ Each hotel gets **individual descriptive text** (150-200 words per hotel)
+- ✅ **One widget per hotel entry** - typical travel blog pattern
+- ✅ Example: "### 1. The Madeline Hotel" [description] `<HotelShowcase hotelId="lp4b27f" />`
+
+**Use HotelGrid (Multiple Hotels Widget) When:**
+- ✅ A **section mentions multiple hotels together** in the same paragraph
+- ✅ **No individual sections** for each hotel - they're discussed as a group
+- ✅ Example: "The Madeline, Peaks Resort, and Capella all offer ski valets..."
+- ✅ **After category descriptions** where multiple hotels are listed together
+- ✅ Example: "Luxury properties include The Madeline, Peaks Resort, and Capella..." `<HotelGrid hotelIds={[...]} />`
+
+**❌ DO NOT:**
+- Use HotelGrid in listicles (use HotelShowcase for each entry instead)
+- Use HotelShowcase when multiple hotels are mentioned together (use HotelGrid instead)
+- Mix both in the same section (choose one pattern and stick with it)
+
+**Example: Correct Usage in a Listicle:**
+```markdown
+## 15 Best Hotels in Telluride
+
+### 1. The Madeline Hotel & Residences
+
+The Madeline sets the standard for luxury ski hotels in Telluride. Located steps from Lift 10, this AAA Four Diamond property offers true ski-in/ski-out convenience...
+
+<HotelShowcase hotelId="lp4b27f" showGallery={true} />
+
+### 2. Peaks Resort & Spa
+
+The Peaks Resort provides family-friendly features with ski-in/ski-out access and comprehensive resort amenities...
+
+<HotelShowcase hotelId="lp3e47f" showGallery={true} />
+```
+
+**Example: Correct Usage in a Category Section:**
+```markdown
+## Luxury Ski-In/Ski-Out Resorts
+
+These properties command top pricing but deliver comprehensive resort experiences. The Madeline, Peaks Resort, and Capella all offer ski valets, full-service spas, and multiple dining venues. These properties justify premium pricing through convenience and comprehensive amenities.
+
+<HotelGrid 
+  hotelIds={["lp4b27f", "lp3e47f", "lp2ff71"]}
+  limit={3}
+  title="Featured Luxury Ski-In/Ski-Out Properties"
+  client:load
+/>
+```
 
 ### 3. ActivityShowcase (Experience Highlighter)
 
