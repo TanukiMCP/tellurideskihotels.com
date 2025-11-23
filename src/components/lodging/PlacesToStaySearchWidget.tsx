@@ -4,6 +4,7 @@ import type { LiteAPIHotel } from '@/lib/liteapi/types';
 import { ErrorBoundary } from '@/components/shared/ErrorBoundary';
 import PriceRangeFilter from '@/components/shared/PriceRangeFilter';
 import { HotelSearchWidget } from './HotelSearchWidget';
+import { calculateDistance, MOUNTAIN_VILLAGE_CENTER, TELLURIDE_CENTER } from '@/lib/mapbox-utils';
 
 type PropertyType = 'all' | 'hotel' | 'condo' | 'resort' | 'lodge' | 'cabin' | 'vacation_rental' | 'apartment' | 'home';
 type LocationFilter = 'all' | 'telluride' | 'mountain-village';
@@ -149,12 +150,46 @@ function PlacesToStaySearchWidgetContent({
         const address = hotel.address?.line1?.toLowerCase() || '';
         const name = hotel.name?.toLowerCase() || '';
         
+        // Check if property is explicitly Mountain Village (prioritize address/name over city)
+        // Address and name are more reliable indicators than city field
+        const isMountainVillage = 
+          address.includes('mountain village') || 
+          name.includes('mountain village') ||
+          (city.includes('mountain village') && !city.includes('telluride'));
+        
+        // Use coordinates if available to determine location (more accurate)
+        let isNearMountainVillage = false;
+        let isNearTelluride = false;
+        
+        if (hotel.location?.latitude && hotel.location?.longitude) {
+          const distToMountainVillage = calculateDistance(
+            MOUNTAIN_VILLAGE_CENTER[1], // lat
+            MOUNTAIN_VILLAGE_CENTER[0], // lng
+            hotel.location.latitude,
+            hotel.location.longitude
+          );
+          
+          const distToTelluride = calculateDistance(
+            TELLURIDE_CENTER[1], // lat
+            TELLURIDE_CENTER[0], // lng
+            hotel.location.latitude,
+            hotel.location.longitude
+          );
+          
+          // If closer to Mountain Village center, it's Mountain Village
+          // Use 1.5km threshold to account for the ~2km distance between centers
+          isNearMountainVillage = distToMountainVillage < distToTelluride && distToMountainVillage < 1.5;
+          isNearTelluride = distToTelluride < distToMountainVillage && distToTelluride < 1.5;
+        }
+        
+        // Determine location: explicit text check first (most reliable), then coordinates
+        const isMountainVillageProperty = isMountainVillage || isNearMountainVillage;
+        const isTellurideProperty = !isMountainVillageProperty && (isNearTelluride || (city.includes('telluride') && !isMountainVillage));
+        
         if (locationFilter === 'telluride') {
-          return city.includes('telluride') && !city.includes('mountain village') && 
-                 !address.includes('mountain village') && !name.includes('mountain village');
+          return isTellurideProperty && !isMountainVillageProperty;
         } else if (locationFilter === 'mountain-village') {
-          return city.includes('mountain village') || address.includes('mountain village') || 
-                 name.includes('mountain village');
+          return isMountainVillageProperty;
         }
         return true;
       });
