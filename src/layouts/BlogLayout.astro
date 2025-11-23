@@ -11,11 +11,11 @@ import { ArticleBookingWidget } from '@/components/blog/ArticleBookingWidget';
 import { HotelShowcase } from '@/components/blog/HotelShowcase';
 import { HotelGrid } from '@/components/blog/HotelGrid';
 import { ActivityShowcase } from '@/components/blog/ActivityShowcase';
-import { GroupCostCalculator } from '@/components/planning/GroupCostCalculator';
-import { HotelSplitCalculator } from '@/components/planning/HotelSplitCalculator';
-import { BudgetToItineraryPlanner } from '@/components/planning/BudgetToItineraryPlanner';
+import { TripCalculator } from '@/components/planning/TripCalculator';
+import { HotelComparison } from '@/components/planning/HotelComparison';
 import { SeasonComparison } from '@/components/planning/SeasonComparison';
 import { GroupTypeRecommender } from '@/components/planning/GroupTypeRecommender';
+import { EventPlanningTimeline } from '@/components/planning/EventPlanningTimeline';
 
 interface Props {
   article: CollectionEntry<'blog'>;
@@ -145,11 +145,11 @@ const categoryName = data.category.replace(/-/g, ' ');
                 HotelShowcase,
                 HotelGrid,
                 ActivityShowcase,
-                GroupCostCalculator,
-                HotelSplitCalculator,
-                BudgetToItineraryPlanner,
+                TripCalculator,
+                HotelComparison,
                 SeasonComparison,
                 GroupTypeRecommender,
+                EventPlanningTimeline,
               }}
             />
           </div>
