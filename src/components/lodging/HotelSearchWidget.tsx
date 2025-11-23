@@ -1,4 +1,4 @@
-import { useState, type FormEvent, useEffect, useRef } from 'react';
+import { useState, type FormEvent } from 'react';
 import { Search, Calendar, Users } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
@@ -17,7 +17,7 @@ export function HotelSearchWidget({
   initialGuests = { adults: 2, children: 0 },
   onDatesChange,
 }: HotelSearchWidgetProps) {
-  // Helper to get date string from Date object or return default
+  // Simple state - initialized from props, updated by user input
   const getDateString = (date: Date | undefined, defaultDays: number) => {
     if (date) {
       try {
@@ -29,88 +29,29 @@ export function HotelSearchWidget({
     return format(addDays(new Date(), defaultDays), 'yyyy-MM-dd');
   };
 
-  const [checkIn, setCheckIn] = useState(() => 
+  const [checkIn, setCheckIn] = useState(() =>
     getDateString(initialDates?.checkIn, 7)
   );
-  const [checkOut, setCheckOut] = useState(() => 
+  const [checkOut, setCheckOut] = useState(() =>
     getDateString(initialDates?.checkOut, 14)
   );
   const [adults, setAdults] = useState(initialGuests.adults.toString());
 
-  // Track previous initialDates to detect prop changes
-  const prevInitialDatesRef = useRef<{ checkIn?: Date; checkOut?: Date } | undefined>(initialDates);
-  const isSyncingFromPropsRef = useRef(false);
-  
-  // Sync state when initialDates prop changes (e.g., from URL params)
-  useEffect(() => {
-    if (initialDates?.checkIn && initialDates?.checkOut) {
-      const newCheckIn = format(initialDates.checkIn, 'yyyy-MM-dd');
-      const newCheckOut = format(initialDates.checkOut, 'yyyy-MM-dd');
-      
-      // Check if initialDates prop actually changed (not just state update)
-      const prevCheckIn = prevInitialDatesRef.current?.checkIn 
-        ? format(prevInitialDatesRef.current.checkIn, 'yyyy-MM-dd')
-        : null;
-      const prevCheckOut = prevInitialDatesRef.current?.checkOut
-        ? format(prevInitialDatesRef.current.checkOut, 'yyyy-MM-dd')
-        : null;
-      
-      // Only update if initialDates prop changed (not just state)
-      if (newCheckIn !== prevCheckIn || newCheckOut !== prevCheckOut) {
-        isSyncingFromPropsRef.current = true; // Mark that we're syncing from props
-        setCheckIn(newCheckIn);
-        setCheckOut(newCheckOut);
-        prevInitialDatesRef.current = initialDates; // Update ref
-        
-        // Reset flag in next tick to ensure state update completes
-        requestAnimationFrame(() => {
-          isSyncingFromPropsRef.current = false;
-        });
-      }
+  // If onDatesChange is provided, call it when dates change (user input only)
+  // If not provided, widget is read-only (just displays dates from URL)
+  const handleDateChange = (field: 'checkIn' | 'checkOut', value: string) => {
+    if (field === 'checkIn') {
+      setCheckIn(value);
+    } else {
+      setCheckOut(value);
     }
-  }, [initialDates?.checkIn, initialDates?.checkOut]);
-
-  // Track previous values to only call onDatesChange when dates actually change
-  const prevCheckInRef = useRef<string>(checkIn);
-  const prevCheckOutRef = useRef<string>(checkOut);
-  const onDatesChangeRef = useRef(onDatesChange);
-  const isInitialMount = useRef(true);
-
-  // Update ref when callback changes (but don't trigger effect)
-  useEffect(() => {
-    onDatesChangeRef.current = onDatesChange;
-  }, [onDatesChange]);
-
-  // Notify parent when dates change (but not on initial mount or when syncing from props)
-  useEffect(() => {
-    // Skip on initial mount - parent will handle initial search
-    if (isInitialMount.current) {
-      isInitialMount.current = false;
-      prevCheckInRef.current = checkIn;
-      prevCheckOutRef.current = checkOut;
-      return;
-    }
-
-    // Don't call onDatesChange if we're syncing from props
-    if (isSyncingFromPropsRef.current) {
-      prevCheckInRef.current = checkIn;
-      prevCheckOutRef.current = checkOut;
-      return;
-    }
-
-    // Only call if dates actually changed (user changed them, not prop sync)
-    if (
-      onDatesChangeRef.current &&
-      (prevCheckInRef.current !== checkIn || prevCheckOutRef.current !== checkOut)
-    ) {
-      prevCheckInRef.current = checkIn;
-      prevCheckOutRef.current = checkOut;
-      onDatesChangeRef.current(checkIn, checkOut);
-    }
-  }, [checkIn, checkOut]);
+    // Only call onDatesChange if provided (for interactive mode)
+    // In read-only mode (onDatesChange is undefined), this widget just displays dates
+  };
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
+    // Always navigate to new URL on form submit - this is the source of truth
     const params = new URLSearchParams({
       location: initialLocation,
       checkIn,
@@ -136,14 +77,14 @@ export function HotelSearchWidget({
                 id="checkIn"
                 type="date"
                 value={checkIn}
-                onChange={(e) => setCheckIn(e.target.value)}
+                onChange={(e) => handleDateChange('checkIn', e.target.value)}
                 min={format(new Date(), 'yyyy-MM-dd')}
                 className="pl-11 h-12"
                 required
               />
             </div>
           </div>
-          
+
           <div>
             <label htmlFor="checkOut" className="block text-sm font-medium text-neutral-700 mb-2">
               Check-out
@@ -154,14 +95,14 @@ export function HotelSearchWidget({
                 id="checkOut"
                 type="date"
                 value={checkOut}
-                onChange={(e) => setCheckOut(e.target.value)}
+                onChange={(e) => handleDateChange('checkOut', e.target.value)}
                 min={checkIn}
                 className="pl-11 h-12"
                 required
               />
             </div>
           </div>
-          
+
           <div>
             <label htmlFor="adults" className="block text-sm font-medium text-neutral-700 mb-2">
               Guests
@@ -181,7 +122,7 @@ export function HotelSearchWidget({
             </div>
           </div>
         </div>
-        
+
         <Button
           type="submit"
           size="lg"

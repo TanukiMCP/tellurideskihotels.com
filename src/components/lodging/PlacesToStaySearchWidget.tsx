@@ -37,19 +37,36 @@ const LOCATION_FILTERS: { value: LocationFilter; label: string }[] = [
   { value: 'mountain-village', label: 'Mountain Village' },
 ];
 
-function PlacesToStaySearchWidgetContent({
-  initialHotels = [],
-  initialMinPrices = {},
-  initialCheckIn,
-  initialCheckOut,
-  initialAdults = 2,
-  initialLocation = 'Telluride',
-}: PlacesToStaySearchWidgetProps) {
-  const [allHotels, setAllHotels] = useState<LiteAPIHotel[]>(initialHotels);
-  const [minPrices, setMinPrices] = useState<Record<string, number>>(initialMinPrices);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+function PlacesToStaySearchWidgetContent({}: PlacesToStaySearchWidgetProps) {
+  // Parse URL params ONCE on mount - single source of truth
+  const getSearchParams = useCallback(() => {
+    if (typeof window === 'undefined') {
+      return {
+        checkIn: format(addDays(new Date(), 7), 'yyyy-MM-dd'),
+        checkOut: format(addDays(new Date(), 14), 'yyyy-MM-dd'),
+        adults: 2,
+        location: 'Telluride',
+      };
+    }
+    
+    const urlParams = new URLSearchParams(window.location.search);
+    return {
+      checkIn: urlParams.get('checkIn') || format(addDays(new Date(), 7), 'yyyy-MM-dd'),
+      checkOut: urlParams.get('checkOut') || format(addDays(new Date(), 14), 'yyyy-MM-dd'),
+      adults: parseInt(urlParams.get('adults') || '2', 10),
+      location: urlParams.get('location') || 'Telluride',
+    };
+  }, []);
+
+  const searchParams = getSearchParams();
   
+  // Search params from URL - these are READ-ONLY and come from URL
+  const [checkIn] = useState(searchParams.checkIn);
+  const [checkOut] = useState(searchParams.checkOut);
+  const [adults] = useState(searchParams.adults);
+  const [location] = useState(searchParams.location);
+
+  // Filter state - local UI state, doesn't trigger searches
   const [selectedPropertyTypes, setSelectedPropertyTypes] = useState<PropertyType[]>(['all']);
   const [locationFilter, setLocationFilter] = useState<LocationFilter>('all');
   const [sortBy, setSortBy] = useState<SortOption>('popularity');
@@ -57,133 +74,71 @@ function PlacesToStaySearchWidgetContent({
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 2000]);
   const [viewMode, setViewMode] = useState<'grid' | 'map'>('grid');
   const [showFilters, setShowFilters] = useState(false);
-  
-  // Parse URL params synchronously on mount to get initial dates
-  const getInitialParams = () => {
-    if (typeof window === 'undefined') {
-      return {
-        checkIn: initialCheckIn || format(addDays(new Date(), 7), 'yyyy-MM-dd'),
-        checkOut: initialCheckOut || format(addDays(new Date(), 14), 'yyyy-MM-dd'),
-        adults: initialAdults,
-        location: initialLocation,
-      };
+
+  // Data state
+  const [allHotels, setAllHotels] = useState<LiteAPIHotel[]>([]);
+  const [minPrices, setMinPrices] = useState<Record<string, number>>({});
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+
+  // Track if we've done the initial search
+  const hasSearchedRef = useRef(false);
+
+  // Single search function - called ONCE on mount
+  const performSearch = useCallback(async () => {
+    if (hasSearchedRef.current) return; // Only search once
+    hasSearchedRef.current = true;
+
+    setLoading(true);
+    setError('');
+
+    try {
+      const params = new URLSearchParams({
+        cityName: location,
+        countryCode: 'US',
+        checkin: checkIn,
+        checkout: checkOut,
+        adults: adults.toString(),
+        limit: '5000',
+      });
+
+      const response = await fetch(`/api/liteapi/search-with-rates?${params.toString()}`);
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error || 'Failed to search hotels');
+      }
+
+      const data = await response.json();
+      const hotels = data.data || [];
+      const minPricesMap: Record<string, number> = {};
+
+      hotels.forEach((hotel: any) => {
+        if (hotel.minPrice) {
+          minPricesMap[hotel.hotel_id] = hotel.minPrice;
+        }
+      });
+
+      setAllHotels(hotels);
+      setMinPrices(minPricesMap);
+    } catch (err) {
+      console.error('[Places to Stay Widget] Search error:', err);
+      setError('Failed to search hotels');
+      hasSearchedRef.current = false; // Allow retry on error
+    } finally {
+      setLoading(false);
     }
-    
-    const urlParams = new URLSearchParams(window.location.search);
-    const checkInParam = urlParams.get('checkIn');
-    const checkOutParam = urlParams.get('checkOut');
-    const adultsParam = urlParams.get('adults');
-    const locationParam = urlParams.get('location');
-    
-    return {
-      checkIn: checkInParam || initialCheckIn || format(addDays(new Date(), 7), 'yyyy-MM-dd'),
-      checkOut: checkOutParam || initialCheckOut || format(addDays(new Date(), 14), 'yyyy-MM-dd'),
-      adults: adultsParam ? parseInt(adultsParam, 10) : initialAdults,
-      location: locationParam || initialLocation,
-    };
-  };
+  }, [checkIn, checkOut, adults, location]);
 
-  const initialParams = getInitialParams();
-  
-  const [checkIn, setCheckIn] = useState(initialParams.checkIn);
-  const [checkOut, setCheckOut] = useState(initialParams.checkOut);
-  const [adults, setAdults] = useState(initialParams.adults);
-  const [location, setLocation] = useState(initialParams.location);
-
-  const parseUrlParams = useCallback(() => {
-    if (typeof window === 'undefined') return {};
-    const urlParams = new URLSearchParams(window.location.search);
-    const propertyTypes = urlParams.get('propertyType');
-    const locationParam = urlParams.get('locationFilter');
-    const minPrice = urlParams.get('minPrice');
-    const maxPrice = urlParams.get('maxPrice');
-    const minRatingParam = urlParams.get('minRating');
-    const sortParam = urlParams.get('sortBy');
-    
-    return {
-      propertyTypes: propertyTypes ? (propertyTypes.includes(',') ? propertyTypes.split(',') : [propertyTypes]) : ['all'],
-      locationFilter: (locationParam || 'all') as LocationFilter,
-      minPrice: minPrice ? parseFloat(minPrice) : undefined,
-      maxPrice: maxPrice ? parseFloat(maxPrice) : undefined,
-      minRating: minRatingParam ? parseFloat(minRatingParam) : undefined,
-      sortBy: (sortParam || 'popularity') as SortOption,
-    };
-  }, []);
-
+  // Single search on mount - that's it
   useEffect(() => {
-    const urlParams = parseUrlParams();
-    if (urlParams.propertyTypes && urlParams.propertyTypes.length > 0) {
-      setSelectedPropertyTypes(urlParams.propertyTypes as PropertyType[]);
-    }
-    if (urlParams.locationFilter) {
-      setLocationFilter(urlParams.locationFilter);
-    }
-    if (urlParams.minPrice !== undefined) {
-      setPriceRange([urlParams.minPrice, priceRange[1]]);
-    }
-    if (urlParams.maxPrice !== undefined) {
-      setPriceRange([priceRange[0], urlParams.maxPrice]);
-    }
-    if (urlParams.minRating !== undefined) {
-      setMinRating(urlParams.minRating);
-    }
-    if (urlParams.sortBy) {
-      setSortBy(urlParams.sortBy);
-    }
-  }, []);
+    performSearch();
+  }, [performSearch]);
 
-  // Sync URL params when filters change - PRESERVE checkIn, checkOut, adults, location
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
-    
-    // Start with existing URL params to preserve checkIn, checkOut, adults, location
-    const params = new URLSearchParams(window.location.search);
-    
-    // Update filter params
-    if (selectedPropertyTypes.length > 0 && !selectedPropertyTypes.includes('all')) {
-      params.set('propertyType', selectedPropertyTypes.join(','));
-    } else {
-      params.delete('propertyType');
-    }
-    if (locationFilter !== 'all') {
-      params.set('locationFilter', locationFilter);
-    } else {
-      params.delete('locationFilter');
-    }
-    if (priceRange[0] > 0) {
-      params.set('minPrice', priceRange[0].toString());
-    } else {
-      params.delete('minPrice');
-    }
-    if (priceRange[1] < 2000) {
-      params.set('maxPrice', priceRange[1].toString());
-    } else {
-      params.delete('maxPrice');
-    }
-    if (minRating > 0) {
-      params.set('minRating', minRating.toString());
-    } else {
-      params.delete('minRating');
-    }
-    if (sortBy !== 'popularity') {
-      params.set('sortBy', sortBy);
-    } else {
-      params.delete('sortBy');
-    }
-    
-    // Ensure checkIn, checkOut, adults, location are preserved
-    if (checkIn) params.set('checkIn', checkIn);
-    if (checkOut) params.set('checkOut', checkOut);
-    if (adults) params.set('adults', adults.toString());
-    if (location) params.set('location', location);
-    
-    const newUrl = params.toString() ? `${window.location.pathname}?${params}` : window.location.pathname;
-    window.history.replaceState({}, '', newUrl);
-  }, [selectedPropertyTypes, locationFilter, priceRange, minRating, sortBy, checkIn, checkOut, adults, location]);
-
+  // Filter and sort hotels - pure computation, no side effects
   const filteredAndSortedHotels = React.useMemo(() => {
     let filtered = [...allHotels];
-    
+
     // Filter by property type
     if (selectedPropertyTypes.length > 0 && !selectedPropertyTypes.includes('all')) {
       filtered = filtered.filter(hotel => {
@@ -198,12 +153,12 @@ function PlacesToStaySearchWidgetContent({
         const city = hotel.address?.city?.toLowerCase() || '';
         const address = hotel.address?.line1?.toLowerCase() || '';
         const name = hotel.name?.toLowerCase() || '';
-        
+
         if (locationFilter === 'telluride') {
-          return city.includes('telluride') && !city.includes('mountain village') && 
+          return city.includes('telluride') && !city.includes('mountain village') &&
                  !address.includes('mountain village') && !name.includes('mountain village');
         } else if (locationFilter === 'mountain-village') {
-          return city.includes('mountain village') || address.includes('mountain village') || 
+          return city.includes('mountain village') || address.includes('mountain village') ||
                  name.includes('mountain village');
         }
         return true;
@@ -228,27 +183,18 @@ function PlacesToStaySearchWidgetContent({
     filtered.sort((a, b) => {
       switch (sortBy) {
         case 'price-low':
-          const priceA = minPrices[a.hotel_id] || 0;
-          const priceB = minPrices[b.hotel_id] || 0;
-          return priceA - priceB;
+          return (minPrices[a.hotel_id] || 0) - (minPrices[b.hotel_id] || 0);
         case 'price-high':
-          const priceA2 = minPrices[a.hotel_id] || 0;
-          const priceB2 = minPrices[b.hotel_id] || 0;
-          return priceB2 - priceA2;
+          return (minPrices[b.hotel_id] || 0) - (minPrices[a.hotel_id] || 0);
         case 'rating':
-          const ratingA = a.review_score || 0;
-          const ratingB = b.review_score || 0;
-          return ratingB - ratingA;
+          return (b.review_score || 0) - (a.review_score || 0);
         case 'name':
           return (a.name || '').localeCompare(b.name || '');
         default:
-          // Popularity: by review count, then rating
           const reviewsA = a.review_count || 0;
           const reviewsB = b.review_count || 0;
           if (reviewsB !== reviewsA) return reviewsB - reviewsA;
-          const ratingA2 = a.review_score || 0;
-          const ratingB2 = b.review_score || 0;
-          return ratingB2 - ratingA2;
+          return (b.review_score || 0) - (a.review_score || 0);
       }
     });
 
@@ -257,12 +203,10 @@ function PlacesToStaySearchWidgetContent({
 
   const availablePropertyTypes = React.useMemo(() => {
     const typeCounts = new Map<PropertyType, number>();
-    
     allHotels.forEach(hotel => {
       const propertyType = (hotel.property_type || 'other') as PropertyType;
       typeCounts.set(propertyType, (typeCounts.get(propertyType) || 0) + 1);
     });
-    
     return Array.from(typeCounts.entries())
       .map(([type, count]) => ({ type, count }))
       .sort((a, b) => b.count - a.count);
@@ -291,108 +235,7 @@ function PlacesToStaySearchWidgetContent({
     setPriceRange([0, 2000]);
   };
 
-  // Track last search params to prevent duplicate searches
-  const lastSearchRef = React.useRef<string>('');
-  const initialSearchCompletedRef = React.useRef(false);
-
-  const handleSearch = React.useCallback(async (newCheckIn: string, newCheckOut: string, newAdults: number, newLocation: string) => {
-    // Create a unique key for this search
-    const searchKey = `${newCheckIn}-${newCheckOut}-${newAdults}-${newLocation}`;
-    
-    // Prevent duplicate searches
-    if (lastSearchRef.current === searchKey || loading) {
-      return;
-    }
-    
-    lastSearchRef.current = searchKey;
-    
-    setCheckIn(newCheckIn);
-    setCheckOut(newCheckOut);
-    setAdults(newAdults);
-    setLocation(newLocation);
-    setLoading(true);
-    setError('');
-    
-    try {
-      // Use server-side API route instead of calling LiteAPI directly
-      const params = new URLSearchParams({
-        cityName: newLocation,
-        countryCode: 'US',
-        checkin: newCheckIn,
-        checkout: newCheckOut,
-        adults: newAdults.toString(),
-        limit: '5000', // Get all properties
-      });
-      
-      const response = await fetch(`/api/liteapi/search-with-rates?${params.toString()}`);
-      
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.error || 'Failed to search hotels');
-      }
-      
-      const data = await response.json();
-      
-      // Transform API response to match our expected format
-      const hotels = data.data || [];
-      const minPricesMap: Record<string, number> = {};
-      
-      hotels.forEach((hotel: any) => {
-        if (hotel.minPrice) {
-          minPricesMap[hotel.hotel_id] = hotel.minPrice;
-        }
-      });
-      
-      setAllHotels(hotels);
-      setMinPrices(minPricesMap);
-      initialSearchCompletedRef.current = true; // Mark initial search as complete
-    } catch (err) {
-      console.error('[Places to Stay Widget] Search error:', err);
-      setError('Failed to search hotels');
-      lastSearchRef.current = ''; // Reset on error so user can retry
-    } finally {
-      setLoading(false);
-    }
-  }, [loading]);
-
-  // Initial search on mount - use the initial params we already parsed
-  useEffect(() => {
-    // Only search if we have valid dates
-    if (initialParams.checkIn && initialParams.checkOut) {
-      handleSearch(
-        initialParams.checkIn,
-        initialParams.checkOut,
-        initialParams.adults,
-        initialParams.location
-      );
-    }
-  }, []); // Only run once on mount
-
-  // Memoize the onDatesChange handler to prevent infinite loops
-  const handleDatesChange = useCallback((checkInDateStr: string, checkOutDateStr: string) => {
-    // Don't search if:
-    // 1. Initial search hasn't completed yet
-    // 2. Currently loading
-    // 3. Dates match what we already searched for
-    if (!initialSearchCompletedRef.current || loading) {
-      return;
-    }
-    
-    const currentSearchKey = `${checkIn}-${checkOut}-${adults}-${location}`;
-    const newSearchKey = `${checkInDateStr}-${checkOutDateStr}-${adults}-${location}`;
-    
-    // Only search if dates actually changed
-    if (currentSearchKey !== newSearchKey && checkInDateStr && checkOutDateStr) {
-      handleSearch(
-        checkInDateStr,
-        checkOutDateStr,
-        adults,
-        location
-      );
-    }
-  }, [handleSearch, adults, location, loading, checkIn, checkOut]);
-
-  const nights = checkIn && checkOut 
+  const nights = checkIn && checkOut
     ? Math.ceil((new Date(checkOut).getTime() - new Date(checkIn).getTime()) / (1000 * 60 * 60 * 24))
     : 1;
 
@@ -423,12 +266,12 @@ function PlacesToStaySearchWidgetContent({
             <h2 className="text-xl sm:text-2xl font-bold text-gray-900">
               {filteredAndSortedHotels.length} Propert{filteredAndSortedHotels.length !== 1 ? 'ies' : 'y'} Found
             </h2>
-            {(selectedPropertyTypes.length > 0 && !selectedPropertyTypes.includes('all')) || 
+            {(selectedPropertyTypes.length > 0 && !selectedPropertyTypes.includes('all')) ||
              locationFilter !== 'all' || minRating > 0 || priceRange[0] > 0 || priceRange[1] < 2000 ? (
               <p className="text-sm text-gray-600 mt-1">
-                {((selectedPropertyTypes.length > 0 && !selectedPropertyTypes.includes('all')) ? 1 : 0) + 
-                 (locationFilter !== 'all' ? 1 : 0) + 
-                 (minRating > 0 ? 1 : 0) + 
+                {((selectedPropertyTypes.length > 0 && !selectedPropertyTypes.includes('all')) ? 1 : 0) +
+                 (locationFilter !== 'all' ? 1 : 0) +
+                 (minRating > 0 ? 1 : 0) +
                  (priceRange[0] > 0 || priceRange[1] < 2000 ? 1 : 0)} filter{((selectedPropertyTypes.length > 0 && !selectedPropertyTypes.includes('all')) ? 1 : 0) + (locationFilter !== 'all' ? 1 : 0) + (minRating > 0 ? 1 : 0) + (priceRange[0] > 0 || priceRange[1] < 2000 ? 1 : 0) !== 1 ? 's' : ''} active
               </p>
             ) : null}
@@ -473,8 +316,8 @@ function PlacesToStaySearchWidgetContent({
             </div>
           </div>
         </div>
-        
-        {/* Search Widget */}
+
+        {/* Search Widget - READ ONLY, no onDatesChange */}
         <div className="mb-4">
           <HotelSearchWidget
             initialLocation={location}
@@ -483,7 +326,7 @@ function PlacesToStaySearchWidgetContent({
               checkOut: new Date(checkOut),
             } : undefined}
             initialGuests={{ adults, children: 0 }}
-            onDatesChange={handleDatesChange}
+            onDatesChange={undefined} // No callback - widget is read-only
           />
         </div>
       </div>
@@ -491,13 +334,13 @@ function PlacesToStaySearchWidgetContent({
       <div className="flex flex-col lg:flex-row min-h-[600px]">
         <aside className={`
           ${showFilters ? 'block' : 'hidden'} lg:block
-          w-full lg:w-80 xl:w-96 
-          border-b lg:border-b-0 lg:border-r border-gray-200 
+          w-full lg:w-80 xl:w-96
+          border-b lg:border-b-0 lg:border-r border-gray-200
           bg-gray-50 overflow-y-auto
           max-h-[600px] lg:max-h-[800px]
         `}>
           <div className="p-4 sm:p-6 space-y-6">
-            {((selectedPropertyTypes.length > 0 && !selectedPropertyTypes.includes('all')) || 
+            {((selectedPropertyTypes.length > 0 && !selectedPropertyTypes.includes('all')) ||
                locationFilter !== 'all' || minRating > 0 || priceRange[0] > 0 || priceRange[1] < 2000) && (
               <div className="pb-4 border-b border-gray-200">
                 <div className="flex items-center justify-between mb-3">
@@ -654,7 +497,7 @@ function PlacesToStaySearchWidgetContent({
                 <div className="h-full w-full">
                   <HotelGridWithMap
                     hotels={filteredAndSortedHotels}
-                    loading={loading}
+                    loading={false}
                     minPrices={minPrices}
                     currency="USD"
                     nights={nights}
@@ -668,7 +511,7 @@ function PlacesToStaySearchWidgetContent({
                 <div className="h-full w-full">
                   <HotelGridWithMap
                     hotels={filteredAndSortedHotels}
-                    loading={loading}
+                    loading={false}
                     minPrices={minPrices}
                     currency="USD"
                     nights={nights}
@@ -694,4 +537,3 @@ export default function PlacesToStaySearchWidget(props: PlacesToStaySearchWidget
     </ErrorBoundary>
   );
 }
-
