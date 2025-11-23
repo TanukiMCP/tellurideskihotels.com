@@ -29,7 +29,8 @@ export function HotelSearchWidget({
   );
   const [adults, setAdults] = useState(initialGuests.adults.toString());
 
-  // Track if we're syncing from props (to prevent onDatesChange from firing)
+  // Track previous initialDates to detect prop changes
+  const prevInitialDatesRef = useRef<{ checkIn?: Date; checkOut?: Date } | undefined>(initialDates);
   const isSyncingFromPropsRef = useRef(false);
   
   // Sync state when initialDates prop changes (e.g., from URL params)
@@ -38,18 +39,28 @@ export function HotelSearchWidget({
       const newCheckIn = format(initialDates.checkIn, 'yyyy-MM-dd');
       const newCheckOut = format(initialDates.checkOut, 'yyyy-MM-dd');
       
-      // Only update if dates actually changed
-      if (newCheckIn !== checkIn || newCheckOut !== checkOut) {
+      // Check if initialDates prop actually changed (not just state update)
+      const prevCheckIn = prevInitialDatesRef.current?.checkIn 
+        ? format(prevInitialDatesRef.current.checkIn, 'yyyy-MM-dd')
+        : null;
+      const prevCheckOut = prevInitialDatesRef.current?.checkOut
+        ? format(prevInitialDatesRef.current.checkOut, 'yyyy-MM-dd')
+        : null;
+      
+      // Only update if initialDates prop changed (not just state)
+      if (newCheckIn !== prevCheckIn || newCheckOut !== prevCheckOut) {
         isSyncingFromPropsRef.current = true; // Mark that we're syncing from props
         setCheckIn(newCheckIn);
         setCheckOut(newCheckOut);
-        // Reset flag after state update
-        setTimeout(() => {
+        prevInitialDatesRef.current = initialDates; // Update ref
+        
+        // Reset flag in next tick to ensure state update completes
+        requestAnimationFrame(() => {
           isSyncingFromPropsRef.current = false;
-        }, 0);
+        });
       }
     }
-  }, [initialDates?.checkIn, initialDates?.checkOut, checkIn, checkOut]);
+  }, [initialDates?.checkIn, initialDates?.checkOut]);
 
   // Track previous values to only call onDatesChange when dates actually change
   const prevCheckInRef = useRef<string>(checkIn);
