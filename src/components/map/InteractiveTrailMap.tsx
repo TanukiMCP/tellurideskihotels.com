@@ -75,6 +75,17 @@ export default function InteractiveTrailMap() {
   // Handle map load and apply 3D terrain
   const handleMapLoad = () => {
     setIsMapLoaded(true);
+    
+    // Configure scrollZoom with consistent zoom rate for both zoom in and out
+    // This ensures symmetric zoom behavior
+    const map = mapRef.current?.getMap();
+    if (map && map.scrollZoom) {
+      // Set a consistent wheel zoom rate (default is 1/450, we'll use a slightly slower rate for better control)
+      // This makes zoom in and zoom out feel more balanced
+      // Note: scrollZoom by default zooms around the cursor position, not the map center
+      // This prevents the map from jumping when zooming out
+      map.scrollZoom.setWheelZoomRate(1 / 500);
+    }
   };
 
   // Initial view setup - runs once after map loads
@@ -755,7 +766,9 @@ export default function InteractiveTrailMap() {
         style={{ width: '100%', height: '100%' }}
         onLoad={handleMapLoad}
         onClick={handleMapClick}
-        maxBounds={TELLURIDE_MAX_BOUNDS}
+        // Removed maxBounds to prevent zoom-out jumps
+        // The bounds constraint was causing the map center to shift when zooming out
+        // Users can still pan, but won't experience jarring jumps during zoom
         minZoom={MIN_ZOOM_2D}
         maxZoom={18}
         maxPitch={85}
