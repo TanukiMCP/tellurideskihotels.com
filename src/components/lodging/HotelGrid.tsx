@@ -2,7 +2,7 @@ import { useState, useMemo } from 'react';
 import { HotelCard } from './HotelCard';
 import { LoadingSpinner } from '@/components/shared/LoadingSpinner';
 import type { LiteAPIHotel } from '@/lib/liteapi/types';
-import { ChevronLeft, ChevronRight, ArrowUpDown } from 'lucide-react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 
 export interface HotelGridProps {
@@ -21,8 +21,6 @@ export interface HotelGridProps {
 
 const ITEMS_PER_PAGE = 12;
 
-type SortOption = 'name' | 'price-low' | 'price-high' | 'rating';
-
 export function HotelGrid({
   hotels,
   loading = false,
@@ -37,46 +35,10 @@ export function HotelGrid({
   onHotelHover,
 }: HotelGridProps) {
   const [currentPage, setCurrentPage] = useState(1);
-  const [sortBy, setSortBy] = useState<SortOption>('rating');
 
-  const sortedHotels = useMemo(() => {
-    const sorted = [...hotels];
-    
-    switch (sortBy) {
-      case 'name':
-        return sorted.sort((a, b) => a.name.localeCompare(b.name));
-      case 'price-low':
-        return sorted.sort((a, b) => {
-          const priceA = minPrices[a.hotel_id] || Infinity;
-          const priceB = minPrices[b.hotel_id] || Infinity;
-          return priceA - priceB;
-        });
-      case 'price-high':
-        return sorted.sort((a, b) => {
-          const priceA = minPrices[a.hotel_id] || 0;
-          const priceB = minPrices[b.hotel_id] || 0;
-          return priceB - priceA;
-        });
-      case 'rating':
-      default:
-        return sorted.sort((a, b) => {
-          const ratingA = a.review_score || 0;
-          const ratingB = b.review_score || 0;
-          const countA = a.review_count || 0;
-          const countB = b.review_count || 0;
-          
-          // Push hotels without ratings to the end
-          if (ratingA === 0 && ratingB > 0) return 1;
-          if (ratingB === 0 && ratingA > 0) return -1;
-          
-          // Both have ratings: sort by weighted score
-          const scoreA = ratingA * Math.log(countA + 1);
-          const scoreB = ratingB * Math.log(countB + 1);
-          
-          return scoreB - scoreA;
-        });
-    }
-  }, [hotels, sortBy, minPrices]);
+  // Hotels are already sorted by the parent component (PlacesToStaySearchWidget)
+  // No need to sort again here
+  const sortedHotels = hotels;
 
   const totalPages = Math.ceil(sortedHotels.length / ITEMS_PER_PAGE);
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
@@ -126,31 +88,15 @@ export function HotelGrid({
 
   return (
     <div>
-      {/* Sort Controls */}
-      <div className="flex items-center justify-between mb-6 pb-4 border-b border-neutral-200">
-        <p className="text-neutral-600">
-          Showing {startIndex + 1}-{Math.min(startIndex + ITEMS_PER_PAGE, sortedHotels.length)} of {sortedHotels.length} places
+      {/* Results Count - Removed duplicate sort, it's in sidebar */}
+      <div className="mb-10">
+        <p className="text-neutral-600 text-sm">
+          Showing <span className="font-semibold text-neutral-900">{startIndex + 1}-{Math.min(startIndex + ITEMS_PER_PAGE, sortedHotels.length)}</span> of <span className="font-semibold text-neutral-900">{sortedHotels.length}</span> places
         </p>
-        <div className="flex items-center gap-2">
-          <ArrowUpDown className="w-4 h-4 text-neutral-500" />
-          <select
-            value={sortBy}
-            onChange={(e) => {
-              setSortBy(e.target.value as SortOption);
-              setCurrentPage(1);
-            }}
-            className="px-4 py-2 rounded-lg border border-neutral-300 bg-white text-neutral-900 focus:outline-none focus:ring-2 focus:ring-primary-500"
-          >
-            <option value="rating">Highest Rated</option>
-            <option value="price-low">Price: Low to High</option>
-            <option value="price-high">Price: High to Low</option>
-            <option value="name">Name: A to Z</option>
-          </select>
-        </div>
       </div>
 
       {/* Hotel Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-10 mb-12">
         {paginatedHotels.map((hotel) => (
             <HotelCard
               key={hotel.hotel_id}
@@ -171,7 +117,7 @@ export function HotelGrid({
 
       {/* Pagination */}
       {totalPages > 1 && (
-        <div className="flex items-center justify-center gap-2">
+        <div className="flex items-center justify-center gap-2 mt-12">
           <Button
             variant="outline"
             size="sm"

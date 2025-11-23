@@ -68,9 +68,9 @@ export function HotelGridWithMap({
   }
 
   return (
-    <div className="lg:flex lg:gap-6">
+    <div className="lg:flex lg:gap-8">
       {/* Hotel List (Left/Bottom) */}
-      <div className="lg:w-3/5 mb-8 lg:mb-0">
+      <div className="lg:w-[58%] mb-8 lg:mb-0">
         <HotelGrid
           hotels={hotels}
           loading={loading}
@@ -87,7 +87,7 @@ export function HotelGridWithMap({
       </div>
 
       {/* Map (Right/Top) - Sticky on Desktop */}
-      <div className="lg:w-2/5">
+      <div className="lg:w-[42%]">
         <div className="lg:sticky lg:top-24">
           <LodgingMap
             hotels={hotels}
