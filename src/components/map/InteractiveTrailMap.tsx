@@ -4,7 +4,7 @@
  * Leverages OpenStreetMap ski piste data already in Mapbox
  * Integrates Threebox for 3D POI models
  */
-import { useRef, useState, useEffect } from 'react';
+import { useRef, useState, useEffect, useCallback } from 'react';
 import Map, { NavigationControl, Popup } from 'react-map-gl/mapbox';
 import type { MapRef, MapMouseEvent } from 'react-map-gl/mapbox';
 import { MAPBOX_TOKEN, TELLURIDE_CENTER } from '@/lib/mapbox-utils';
@@ -80,6 +80,46 @@ export default function InteractiveTrailMap() {
   const [isMapLoaded, setIsMapLoaded] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
+  // Helper function to apply/remove snow effect
+  // This can be called from multiple places to ensure snow persists
+  const applySnowEffect = useCallback(() => {
+    if (!mapRef.current || !isMapLoaded) return;
+    
+    const map = mapRef.current.getMap();
+    
+    // Check if setSnow method is available (v3.9+)
+    if (typeof (map as any).setSnow !== 'function') {
+      console.warn('[InteractiveTrailMap] ⚠️ setSnow() method not available. Mapbox GL JS v3.9+ required.');
+      return;
+    }
+
+    // Only apply snow for winter satellite view
+    if (mapStyle === 'satellite' && season === 'winter') {
+      try {
+        (map as any).setSnow({
+          density: ['interpolate', ['linear'], ['zoom'], 10, 0.4, 15, 0.7, 20, 1.0],
+          intensity: ['interpolate', ['linear'], ['zoom'], 10, 0.5, 15, 0.8, 20, 1.0],
+          direction: 180, // Snow falling downward (degrees)
+          opacity: ['interpolate', ['linear'], ['zoom'], 10, 0.6, 15, 0.8, 20, 0.95],
+          color: '#ffffff', // White snow
+          'flake-size': ['interpolate', ['linear'], ['zoom'], 10, 0.8, 15, 1.2, 20, 1.8],
+          vignette: true // Add vignette effect for atmosphere
+        });
+        console.log('[InteractiveTrailMap] ✅ Applied snow effect for winter satellite view');
+      } catch (snowError) {
+        console.warn('[InteractiveTrailMap] ⚠️ Snow effect failed:', snowError);
+      }
+    } else {
+      // Disable snow effect for summer or terrain views
+      try {
+        (map as any).setSnow(null);
+        console.log('[InteractiveTrailMap] ❄️ Disabled snow effect');
+      } catch (snowError) {
+        // Silently ignore errors when disabling snow
+      }
+    }
+  }, [mapStyle, season, isMapLoaded]);
+
   // Handle map load and apply 3D terrain
   const handleMapLoad = () => {
     setIsMapLoaded(true);
@@ -140,50 +180,19 @@ export default function InteractiveTrailMap() {
       map.setStyle(styleToUse);
       console.log('[InteractiveTrailMap] Switched to', mapStyle, mapStyle === 'satellite' ? `(${season})` : '');
       
-      // Apply snow effect for winter satellite view
-      // Wait for style to load before applying snow (Mapbox requirement)
-      const applySnowEffect = () => {
-        // Check if setSnow method is available (v3.9+)
-        if (typeof (map as any).setSnow === 'function') {
-          if (mapStyle === 'satellite' && season === 'winter') {
-            // Enable snow effect for winter satellite view
-            // Using Mapbox's setSnow() method with realistic parameters
-            try {
-              (map as any).setSnow({
-                density: ['interpolate', ['linear'], ['zoom'], 10, 0.4, 15, 0.7, 20, 1.0],
-                intensity: ['interpolate', ['linear'], ['zoom'], 10, 0.5, 15, 0.8, 20, 1.0],
-                direction: 180, // Snow falling downward (degrees)
-                opacity: ['interpolate', ['linear'], ['zoom'], 10, 0.6, 15, 0.8, 20, 0.95],
-                color: '#ffffff', // White snow
-                'flake-size': ['interpolate', ['linear'], ['zoom'], 10, 0.8, 15, 1.2, 20, 1.8],
-                vignette: true // Add vignette effect for atmosphere
-              });
-              console.log('[InteractiveTrailMap] ✅ Applied snow effect for winter satellite view');
-            } catch (snowError) {
-              console.warn('[InteractiveTrailMap] ⚠️ Snow effect failed:', snowError);
-            }
-          } else {
-            // Disable snow effect for summer or terrain views
-            try {
-              (map as any).setSnow(null);
-              console.log('[InteractiveTrailMap] ❄️ Disabled snow effect');
-            } catch (snowError) {
-              // Silently ignore errors when disabling snow
-            }
-          }
-        } else {
-          console.warn('[InteractiveTrailMap] ⚠️ setSnow() method not available. Mapbox GL JS v3.9+ required.');
-        }
+      // Apply snow effect after style loads (required by Mapbox)
+      // Wait for style to load before applying snow
+      const applySnowAfterStyleLoad = () => {
+        // Small delay to ensure style is fully ready
+        setTimeout(() => {
+          applySnowEffect();
+        }, 200);
       };
       
-      // Wait for style to load before applying snow (required by Mapbox)
       if (map.isStyleLoaded()) {
-        // Small delay to ensure style is fully ready
-        setTimeout(applySnowEffect, 100);
+        applySnowAfterStyleLoad();
       } else {
-        map.once('style.load', () => {
-          setTimeout(applySnowEffect, 100);
-        });
+        map.once('style.load', applySnowAfterStyleLoad);
       }
     } catch (error) {
       console.error('[InteractiveTrailMap] Error switching map style:', error);
@@ -204,9 +213,10 @@ export default function InteractiveTrailMap() {
         if (terrainEnabled && map.getSource('mapbox-dem')) {
           map.setTerrain({ source: 'mapbox-dem', exaggeration: 2.0 });
           
-          // If terrain was enabled, restore 3D camera position
+          // If terrain was enabled, restore 3D camera position (preserve current state)
           if (terrainEnabled) {
             const currentPitch = map.getPitch();
+            // Only adjust pitch if it's too low, otherwise preserve current 3D view
             if (currentPitch < 45) {
               map.easeTo({
                 pitch: SUMMIT_3D_VIEWPOINT.pitch,
@@ -216,7 +226,17 @@ export default function InteractiveTrailMap() {
             }
           }
           
+          // Reapply snow effect after terrain is restored
+          setTimeout(() => {
+            applySnowEffect();
+          }, 100);
+          
           console.log('[InteractiveTrailMap] Restored 3D terrain after style change');
+        } else {
+          // Even if terrain is disabled, reapply snow effect
+          setTimeout(() => {
+            applySnowEffect();
+          }, 100);
         }
       }, 400); // Wait for sources to be added
     };
@@ -228,7 +248,7 @@ export default function InteractiveTrailMap() {
     if (map.isStyleLoaded()) {
       handleStyleChange();
     }
-  }, [mapStyle, season, isMapLoaded, terrainEnabled]);
+  }, [mapStyle, season, isMapLoaded, terrainEnabled, applySnowEffect]);
 
   // Load all map data (trails, lifts, POIs) after map is loaded and on style/visibility changes
   useEffect(() => {
@@ -732,17 +752,31 @@ export default function InteractiveTrailMap() {
         }
       }
       
-      // Set camera position first (no animation, instant)
-      map.jumpTo({
-        center: [SUMMIT_3D_VIEWPOINT.longitude, SUMMIT_3D_VIEWPOINT.latitude],
-        zoom: SUMMIT_3D_VIEWPOINT.zoom,
-        pitch: SUMMIT_3D_VIEWPOINT.pitch,
-        bearing: SUMMIT_3D_VIEWPOINT.bearing
-      });
+      // Get current camera state to preserve it if already in 3D
+      const currentPitch = map.getPitch();
+      const currentZoom = map.getZoom();
+      const currentCenter = map.getCenter();
+      const currentBearing = map.getBearing();
+      
+      // Only jump to 3D viewpoint if not already in 3D (pitch < 45)
+      if (currentPitch < 45) {
+        // Set camera position first (no animation, instant)
+        map.jumpTo({
+          center: [SUMMIT_3D_VIEWPOINT.longitude, SUMMIT_3D_VIEWPOINT.latitude],
+          zoom: SUMMIT_3D_VIEWPOINT.zoom,
+          pitch: SUMMIT_3D_VIEWPOINT.pitch,
+          bearing: SUMMIT_3D_VIEWPOINT.bearing
+        });
+      }
       
       // Then enable terrain (works for both outdoors and satellite styles)
       map.setTerrain({ source: 'mapbox-dem', exaggeration: 2.0 });
       setTerrainEnabled(true);
+      
+      // Reapply snow effect after 3D terrain is enabled
+      setTimeout(() => {
+        applySnowEffect();
+      }, 200);
       
     } else {
       // Disable 3D terrain first
@@ -761,6 +795,11 @@ export default function InteractiveTrailMap() {
       });
       
       setTerrainEnabled(false);
+      
+      // Reapply snow effect after 3D terrain is disabled
+      setTimeout(() => {
+        applySnowEffect();
+      }, 200);
     }
   };
 
