@@ -38,6 +38,7 @@ seasonalRelevance: ["winter", "spring", "summer", "fall"]
 
 import { ArticleBookingWidget } from '@/components/blog/ArticleBookingWidget';
 import { HotelGrid } from '@/components/blog/HotelGrid';
+import { CostPerPersonRanking } from '@/components/planning/CostPerPersonRanking';
 
 # Telluride Hotels: Complete Accommodation Guide (2025)
 
@@ -124,9 +125,9 @@ Service ranges from minimal to friendly-but-basic depending on property. Don't e
 
 Budget properties work well for solo travelers, ski bums, backpackers, and anyone spending minimal time in their room. If you're skiing dawn to dusk and exploring town evenings, paying for luxury amenities you won't use makes little sense. These properties allocate your budget toward experiences rather than accommodations, allowing you to afford better dining, activities, or extra vacation days.
 
-<HotelGrid 
-    limit={3}
-  title="Find Your Perfect Telluride Hotel"
+<CostPerPersonRanking 
+  groupSize={2}
+  nights={4}
   client:load
 />
 

@@ -74,7 +74,7 @@ export function HotelShowcase({
     <div className="my-8 space-y-6">
       {showGallery && hotel.images && hotel.images.length > 0 && (
         <div className="border-2 border-neutral-200 rounded-lg overflow-hidden">
-          <ImageGallery images={hotel.images.map(img => img.url || '')} />
+        <ImageGallery images={hotel.images.map(img => img.url || '')} />
         </div>
       )}
       

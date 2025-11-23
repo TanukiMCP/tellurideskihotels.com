@@ -42,6 +42,8 @@ seasonalRelevance: ["winter", "spring", "summer", "fall"]
 
 import { ArticleBookingWidget } from '@/components/blog/ArticleBookingWidget';
 import { HotelGrid } from '@/components/blog/HotelGrid';
+import { HotelSplitCalculator } from '@/components/planning/HotelSplitCalculator';
+import { CostPerPersonRanking } from '@/components/planning/CostPerPersonRanking';
 
 # Where to Stay in Telluride: Complete Lodging Guide (2025)
 
@@ -267,6 +269,8 @@ Telluride's free gondola is North America's only complimentary public transporta
 
 **Best For:** Large groups, families, budget-conscious travelers willing to cook, longer stays (week+)
 
+<HotelSplitCalculator client:load />
+
 **Where to Book:**
 - VRBO
 - Airbnb
@@ -397,13 +401,6 @@ Telluride's free gondola is North America's only complimentary public transporta
 
 **Worth It If:** You want comfort and convenience without luxury pricing, spend most time outside hotel, value location over amenities
 
-<HotelGrid 
-  filter="downtown"
-  limit={3}
-  title="Downtown Telluride Hotels"
-  client:load
-/>
-
 ### Budget ($100-200/night)
 
 **What You Get:**
@@ -489,6 +486,12 @@ Trade-off: Cook some meals, no daily housekeeping
 **3. Visit Shoulder Season**
 Savings: 30-50% vs peak season
 Trade-off: Potentially variable conditions early/late season
+
+<CostPerPersonRanking 
+  groupSize={2}
+  nights={4}
+  client:load
+/>
 
 **4. Book Direct with Hotels**
 Savings: 10-15% plus perks

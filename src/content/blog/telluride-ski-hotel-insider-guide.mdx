@@ -55,6 +55,9 @@
 
 import { HotelGrid } from '@/components/blog/HotelGrid';
 import { ArticleBookingWidget } from '@/components/blog/ArticleBookingWidget';
+import { GroupTypeRecommender } from '@/components/planning/GroupTypeRecommender';
+import { HotelComparison } from '@/components/planning/HotelComparison';
+import { CostPerPersonRanking } from '@/components/planning/CostPerPersonRanking';
 
 
 # Telluride Ski Hotel Insider's Guide: Which Hotel for Which Skier
@@ -63,16 +66,12 @@ Where you stay in Telluride should match how you ski. The powder hound chasing f
 
 We've analyzed skiing patterns, interviewed guests, and evaluated properties specifically through the lens of different skier types. Whether you're maximizing vertical feet, teaching kids, recovering from injuries, or simply want to ski in the morning and explore town at night, this guide identifies your perfect Telluride basecamp based on what actually matters for your skiing style.
 
+<GroupTypeRecommender client:load />
+
 ![Skier enjoying fresh powder snow at Telluride ski resort with mountain peaks in background](https://images.pexels.com/photos/2405649/pexels-photo-2405649.jpeg?auto=compress&cs=tinysrgb&h=350)
 *Photo by [Melvin Wahlin](https://www.pexels.com/@melvinwahlin) via Pexels*
 
 For comprehensive hotel reviews across all properties, see our [complete guide to the best hotels in Telluride](/blog/hotel-reviews/best-hotels-telluride). To understand Telluride's skiing terrain and conditions, review our [complete skiing guide](/blog/ski-guides/telluride-skiing-guide). For comparing Mountain Village versus downtown locations specifically, check our [slopeside vs town hotels comparison](/blog/hotel-reviews/slopeside-vs-town-hotels-telluride).
-
-<HotelGrid 
-    limit={3}
-  title="Find Your Perfect Ski Hotel"
-  client:load
-/>
 
 ## For Powder Hounds: Chasing First Tracks
 
@@ -108,6 +107,12 @@ Downtown's Mountain Lodge puts you two blocks from the gondola while offering fu
 
 The rooftop hot tub becomes essential for maintaining multi-day powder skiing stamina. Your legs need recovery to perform on day three and four of a storm cycle.
 
+<CostPerPersonRanking 
+  groupSize={2}
+  nights={4}
+  client:load
+/>
+
 ## For Groomers & Cruisers: Maximizing Mileage
 
 If you prioritize racking up vertical feet on perfectly groomed corduroy, your hotel needs differ from powder hounds. You value efficient lift access, mid-mountain lunch convenience, and amenities for recovering from high-mileage days rather than first-tracks positioning.
@@ -128,12 +133,6 @@ The Deluxe Spa Suites provide direct spa access and oversized soaking tubs—cri
 Downtown's Hotel Telluride works well for cruisers who split days between skiing and exploring town. The three-block gondola walk is manageable even with tired legs, while the rooftop hot tubs provide recovery without needing spa appointments. The complimentary breakfast fuels high-mileage days without restaurant waits.
 
 The location enables variety—ski all day, then walk Main Street for dinner and drinks without needing transportation. The diverse restaurant options downtown prevent menu fatigue during week-long stays.
-
-<HotelGrid 
-    limit={3}
-  title="Search Mountain Village Hotels"
-  client:load
-/>
 
 ### For Afternoon Après: The New Sheridan Hotel
 
@@ -281,12 +280,6 @@ Your skiing style should drive your hotel selection more than rankings, reviews,
 Consider your actual skiing behavior: How many hours do you ski daily? Do you take afternoon breaks? How important is first tracks versus comfortable recovery? Do you explore town or stay at the hotel? Are you traveling solo, as a couple, or with family? Your honest answers reveal your ideal match more accurately than generic "best hotel" lists.
 
 For comparing the fundamental Mountain Village versus downtown decision that underlies many of these recommendations, see our detailed [slopeside vs town hotels analysis](/blog/hotel-reviews/slopeside-vs-town-hotels-telluride). For comprehensive information on all properties regardless of skiing style, review our [complete hotel rankings](/blog/hotel-reviews/best-hotels-telluride). To search current availability and rates across all these properties for your specific dates, visit our [places to stay search](/places-to-stay).
-
-<HotelGrid 
-    limit={3}
-  title="Find Your Perfect Ski Hotel Match"
-  client:load
-/>
 
 <ArticleBookingWidget 
   title="Book Your Perfect Ski Hotel"

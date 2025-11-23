@@ -27,12 +27,15 @@ seasonalRelevance: ["winter", "spring", "summer", "fall"]
 
 import { HotelGrid } from '@/components/blog/HotelGrid';
 import { ArticleBookingWidget } from '@/components/blog/ArticleBookingWidget';
+import { SeasonComparison } from '@/components/planning/SeasonComparison';
 
 Asking when to visit Telluride is like asking which season is best in the mountains—the answer depends entirely on what you're chasing. This former mining town tucked into a box canyon in Colorado's San Juan Mountains transforms dramatically throughout the year, each season revealing a different character and appeal. For detailed information about Telluride's skiing conditions, see our [ski season guide](/blog/planning-tips/telluride-ski-season-guide). To understand the resort's terrain and lifts, check our [ski resort guide](/blog/ski-guides/telluride-ski-resort-guide).
 
 I've experienced Telluride across all twelve months, from January powder days when the town feels like a snow globe to September's golden aspen groves and summer's festival energy. The "best" time isn't universal—it's deeply personal, shaped by whether you prioritize skiing, avoiding crowds, festival experiences, hiking, or simply finding the best value for your budget.
 
 Understanding Telluride's seasonal rhythms helps you align your visit with your priorities. The town operates on a dual calendar: winter's ski season brings the biggest crowds and highest prices, while summer's festival season creates its own peaks of activity and cost. Between these marquee seasons lie shoulder periods offering remarkable value and unique experiences for travelers willing to time their visits strategically.
+
+<SeasonComparison client:load />
 
 <HotelGrid 
   limit={3}
@@ -165,12 +168,6 @@ Telluride rewards travelers who understand its seasonal rhythms and plan accordi
 Don't let peak season FOMO drive your decisions. While Christmas week and major festivals offer unique energy, Telluride's magic persists year-round. Some of my most memorable visits have occurred during quiet shoulder seasons when the town reveals its authentic character beyond the tourist veneer.
 
 Consider splitting the difference—visit during the shoulder periods immediately before or after peak seasons. Early December, late March, early June, and late September offer much of peak season's appeal with significantly fewer crowds and lower costs. You might sacrifice a few degrees of temperature or inches of snow, but you'll gain a more authentic and affordable Telluride experience. For hotel recommendations by season, see our [best hotels guide](/blog/hotel-reviews/best-hotels-telluride). To plan your activities, check our [things to do guide](/blog/activity-guides/things-to-do-telluride).
-
-<HotelGrid 
-    limit={3}
-  title="Book Your Telluride Adventure"
-  client:load
-/>
 
 <ArticleBookingWidget 
   title="Book Your Telluride Stay"

@@ -47,8 +47,11 @@ For detailed information about the resort itself, see our [Telluride ski resort 
 
 import { HotelGrid } from '@/components/blog/HotelGrid';
 import { ArticleBookingWidget } from '@/components/blog/ArticleBookingWidget';
+import { SeasonComparison } from '@/components/planning/SeasonComparison';
 
 **Note:** Prices, dates, and conditions mentioned reflect historical patterns and current season projections. Always verify specific information with official sources at [telluride.com](https://www.telluride.com) before booking your trip, as conditions and schedules change based on snowfall and operational decisions.
+
+<SeasonComparison client:load />
 
 <HotelGrid 
   limit={3}

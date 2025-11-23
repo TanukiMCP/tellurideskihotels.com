@@ -1356,11 +1356,45 @@ The [National Weather Service Grand Junction office](https://www.weather.gov/gjt
 - `checkIn` (Optional): Default check-in date (YYYY-MM-DD).
 
 **Strategy:**
-- Use this INSTEAD of static images for specific hotels.
-- It fetches **REAL landscape images** from the API automatically.
-- If you don't know the ID, look it up in `src/data/telluride-hotels.json`. If not found, use `ArticleBookingWidget`.
+- **MANDATORY FOR LISTICLES:** When creating "Top 10" lists or hotel reviews, you MUST use this component for each entry.
+- **ID LOOKUP:** Consult `src/data/telluride-hotels.json` to find the correct `hotelId` for each property name.
+- **NO GUESSING:** If a hotel is not in the JSON, do NOT invent an ID. Use `ArticleBookingWidget` with `hotelName` instead.
+- **REAL IMAGES:** This component fetches real images from the API. Do NOT manually embed images for these specific hotels.
 
-### 2. ArticleBookingWidget (Flexible CTA)
+**Listicle Workflow:**
+1. Identify the hotel name (e.g., "The Madeline").
+2. Look up the ID in `src/data/telluride-hotels.json` (`lp4b27f`).
+3. Embed:
+   ```markdown
+   ### 1. The Madeline Hotel & Residences
+   
+   [Description of the hotel...]
+   
+   <HotelShowcase hotelId="lp4b27f" showGallery={true} />
+   ```
+
+### 2. ActivityShowcase (Experience Highlighter)
+
+**Use Case:** Highlighting specific activities like skiing, hiking, or dining categories.
+**Best For:** "Things to Do" guides, Activity comparisons.
+
+**Syntax:**
+```markdown
+<ActivityShowcase 
+  category="skiing" 
+  title="World-Class Skiing"
+  description="Explore 2,000 acres of legendary terrain."
+  image="/images/activities/skiing.jpg"
+/>
+```
+
+**Props:**
+- `category`: "skiing" | "hiking" | "dining" | "events" | "family" | "nightlife"
+- `title` (Optional): Custom title.
+- `description` (Optional): Custom description.
+- `image` (Optional): Specific image URL (if not using default).
+
+### 3. ArticleBookingWidget (Flexible CTA)
 
 **Use Case:** General CTAs, filtered searches, or specific hotels when ID is unknown.
 
@@ -2223,9 +2257,24 @@ Before publishing any group planning article, verify:
 
 ### Step-by-Step Process
 
+**Step 0: Select Next Article (CRITICAL)**
+
+1. **Read the Schedule:**
+   ```
+   read_file tool → CONTENT_PUBLISHING_SCHEDULE.md
+   ```
+2. **Find the Next Article:**
+   - Scan down the list day by day.
+   - Look for the **FIRST** entry that does **NOT** have `✅ COMPLETE`.
+   - This is your target article.
+   - **Example:** If Day 31 and 32 are complete, but Day 33 is not, you MUST write Day 33.
+3. **Verify Status:**
+   - Check `src/content/drafts/` or `src/content/blog/` to ensure it hasn't already been started.
+   - If a draft exists but isn't marked complete, resume work on it.
+
 **Step 1: Receive Article Brief**
 
-You'll be provided with:
+You'll be provided with (or extract from the schedule):
 - Article title
 - Primary keyword and search volume
 - Target word count
@@ -2237,12 +2286,18 @@ You'll be provided with:
 **Step 2: Research & Planning**
 
 Before writing:
-1. Analyze search intent for primary keyword
-2. Review top 5 ranking articles
-3. Identify content gaps and opportunities
-4. Gather current facts and data
-5. Note internal linking opportunities
-6. Plan article structure
+1. **Consult the SEO Masterlist:**
+   ```
+   read_file tool → SEO_KEYWORDS_MASTERLIST.md
+   ```
+   - Find your primary keyword row to get current volume, CPC, and intent.
+   - Identify "Secondary Keywords" and "LSI Keywords" from the list to include.
+2. **Analyze search intent** for primary keyword
+3. **Review top 5 ranking articles**
+4. **Identify content gaps** and opportunities
+5. **Gather current facts and data**
+6. **Note internal linking opportunities** (from `INTERNAL_EXTERNAL_LINKING_PLAN.md`)
+7. **Plan article structure**
 
 **Step 3: Create Outline**
 

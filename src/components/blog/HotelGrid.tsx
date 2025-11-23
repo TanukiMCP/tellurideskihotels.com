@@ -186,48 +186,48 @@ export function HotelGrid({
         </div>
       ) : (
         <>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {hotels.map((hotel) => (
-              <HotelCard
-                key={hotel.hotel_id}
-                hotel={hotel}
-                minPrice={minPrices[hotel.hotel_id]}
-                currency="USD"
-                nights={nights}
-                checkInDate={computedCheckIn || undefined}
-                checkOutDate={computedCheckOut || undefined}
-                onSelect={(id) => {
-                  const checkInDate = computedCheckIn || format(addDays(new Date(), 7), 'yyyy-MM-dd');
-                  const checkOutDate = computedCheckOut || format(addDays(new Date(), 14), 'yyyy-MM-dd');
-                  window.location.href = `/places-to-stay/${id}?checkIn=${checkInDate}&checkOut=${checkOutDate}&adults=2&rooms=1`;
-                }}
-              />
-            ))}
-          </div>
-          
-          <div className="mt-8 text-center">
-            <a
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        {hotels.map((hotel) => (
+          <HotelCard
+            key={hotel.hotel_id}
+            hotel={hotel}
+            minPrice={minPrices[hotel.hotel_id]}
+            currency="USD"
+            nights={nights}
+            checkInDate={computedCheckIn || undefined}
+            checkOutDate={computedCheckOut || undefined}
+            onSelect={(id) => {
+              const checkInDate = computedCheckIn || format(addDays(new Date(), 7), 'yyyy-MM-dd');
+              const checkOutDate = computedCheckOut || format(addDays(new Date(), 14), 'yyyy-MM-dd');
+              window.location.href = `/places-to-stay/${id}?checkIn=${checkInDate}&checkOut=${checkOutDate}&adults=2&rooms=1`;
+            }}
+          />
+        ))}
+      </div>
+      
+        <div className="mt-8 text-center">
+        <a
               href={`/places-to-stay${filter ? `?filter=${filter}` : ''}${computedCheckIn ? `&checkin=${computedCheckIn}` : ''}${computedCheckOut ? `&checkout=${computedCheckOut}` : ''}`}
               className="inline-flex items-center justify-center gap-2 bg-primary-600 hover:bg-primary-700 !text-white font-semibold px-6 py-3 rounded-lg transition-colors duration-200 shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2"
-              aria-label="View all properties in Telluride"
-            >
-              View All Properties
-              <svg 
+            aria-label="View all properties in Telluride"
+        >
+          View All Properties
+            <svg 
                 className="w-5 h-5 !text-white" 
-                fill="none" 
-                stroke="currentColor" 
-                viewBox="0 0 24 24"
-                aria-hidden="true"
-              >
-                <path 
-                  strokeLinecap="round" 
-                  strokeLinejoin="round" 
-                  strokeWidth={2} 
-                  d="M9 5l7 7-7 7" 
-                />
-              </svg>
-            </a>
-          </div>
+              fill="none" 
+              stroke="currentColor" 
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+            >
+              <path 
+                strokeLinecap="round" 
+                strokeLinejoin="round" 
+                strokeWidth={2} 
+                d="M9 5l7 7-7 7" 
+              />
+          </svg>
+        </a>
+      </div>
         </>
       )}
     </div>

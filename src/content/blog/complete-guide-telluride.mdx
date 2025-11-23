@@ -27,10 +27,14 @@ seasonalRelevance: ["winter", "spring", "summer", "fall"]
 
 import { HotelGrid } from '@/components/blog/HotelGrid';
 import { ArticleBookingWidget } from '@/components/blog/ArticleBookingWidget';
+import { TripCalculator } from '@/components/planning/TripCalculator';
+import { ActivityShowcase } from '@/components/blog/ActivityShowcase';
 
 Telluride occupies a box canyon at 8,750 feet elevation in Colorado's San Juan Mountains, surrounded on three sides by 13,000-foot peaks that create one of skiing's most dramatic settings. This former mining town has evolved into a world-class ski destination without sacrificing the authentic mountain character that makes it special. You won't find the sprawling development of Vail or the celebrity scene of Aspen—instead, Telluride delivers challenging terrain, manageable crowds, and a Victorian downtown that feels genuinely preserved rather than theme-park manufactured. For detailed skiing information, see our [ski resort guide](/blog/ski-guides/telluride-ski-resort-guide). To find the perfect place to stay, check our [where to stay guide](/blog/destination-guides/where-to-stay-telluride).
 
 Understanding Telluride requires grasping its dual nature: the historic town on the canyon floor and Mountain Village on the mesa above, connected by North America's only free public gondola. This geography shapes everything from where you stay to how you experience the resort. First-time visitors often struggle with this layout, but once you understand the system, Telluride reveals itself as remarkably accessible and well-designed.
+
+<TripCalculator client:load />
 
 <HotelGrid 
   limit={3}
@@ -108,12 +112,6 @@ Revelation Bowl, Telluride's highest terrain at 12,570 feet, requires a short hi
 
 Lift infrastructure includes 19 lifts ranging from the free gondola to high-speed quads and older fixed-grip chairs. The gondola provides the primary access from downtown, while the Village Express and Coonskin chairs serve as the main uploaders from Mountain Village. Lift lines are generally manageable compared to larger Colorado resorts, though popular chairs can develop 10-15 minute waits during peak season mornings.
 
-<HotelGrid 
-    limit={3}
-  title="Book Your Ski Trip to Telluride"
-  client:load
-/>
-
 ## Dining in Telluride: From Casual to Fine Dining
 
 ![Upscale restaurant in Telluride with mountain views and elegant dining atmosphere](https://images.pexels.com/photos/1267320/pexels-photo-1267320.jpeg?auto=compress&cs=tinysrgb&h=350)
@@ -138,6 +136,8 @@ Mountain Village dining centers on hotel restaurants and a handful of independen
 
 Telluride's appeal extends well beyond ski season, with summer and fall attracting visitors for festivals, hiking, mountain biking, and the simple pleasure of being in the mountains without winter's logistical challenges. For seasonal timing advice, see our [best time to visit guide](/blog/seasonal-guides/best-time-visit-telluride). To explore year-round activities, check our [things to do guide](/blog/activity-guides/things-to-do-telluride).
 
+<ActivityShowcase client:load />
+
 Summer transforms the ski resort into a hiking and mountain biking destination. The gondola operates daily, providing free access to high-elevation trails without the climb. From the top of the gondola, you can access trails ranging from gentle nature walks to challenging alpine routes. Bear Creek Trail, starting from town, leads to a spectacular waterfall and continues into high alpine terrain. Jud Wiebe Trail offers a moderate loop with excellent views of the box canyon and surrounding peaks.
 
 Mountain biking has grown significantly in recent years, with the resort developing dedicated downhill trails and the surrounding area offering extensive cross-country options. The lift-served downhill trails range from flowy intermediate runs to technical expert terrain. Cross-country riders can access hundreds of miles of trails in the surrounding national forest, with options for all skill levels.
@@ -155,12 +155,6 @@ Weather in the mountains changes rapidly. Morning sunshine can give way to after
 The free gondola is Telluride's secret weapon, but understanding its operation maximizes its value. It runs from approximately 7 AM to midnight daily, with extended hours during special events. Morning lines develop during peak season, especially 8:30-10 AM when everyone heads to the slopes. Arriving at 8 AM or waiting until 10:30 AM avoids the worst crowds. The gondola stops at multiple stations—know which one serves your destination to avoid unnecessary walking.
 
 Parking in downtown Telluride is limited and often challenging during peak season. Most hotels offer parking, but public lots fill quickly. The town operates free shuttle buses connecting parking areas with the downtown core. In Mountain Village, parking is more abundant but still requires planning during busy periods. Many visitors find they don't need cars once they arrive, using the gondola and shuttles for all transportation.
-
-<HotelGrid 
-    limit={3}
-  title="Experience Telluride Year-Round"
-  client:load
-/>
 
 ## Frequently Asked Questions
 
@@ -206,12 +200,6 @@ Telluride rewards travelers who understand its unique character and plan accordi
 Start planning early, especially for peak periods. Hotels book months in advance for Christmas week, major festivals, and prime ski season weekends. Flights to Montrose fill quickly, and ground transportation requires advance arrangement. Restaurant reservations become essential during busy periods, with popular spots booking days or weeks ahead.
 
 But don't let the planning requirements deter you. Telluride delivers an experience that justifies the effort—dramatic scenery, challenging skiing, authentic mountain town character, and a sense that you've discovered something special. Unlike larger resorts that can feel corporate and manufactured, Telluride maintains a genuine connection to its mining town heritage while delivering world-class amenities and experiences.
-
-<HotelGrid 
-    limit={3}
-  title="Start Your Telluride Adventure"
-  client:load
-/>
 
 <ArticleBookingWidget 
   title="Ready to Book Your Telluride Stay?"

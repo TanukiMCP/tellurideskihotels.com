@@ -60,17 +60,17 @@ export function ActivityShowcase({
           </a>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {activities.map((activity) => (
-            <ActivityCard
-              key={activity.productCode}
-              activity={activity}
-            />
-          ))}
-        </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {activities.map((activity) => (
+          <ActivityCard
+            key={activity.productCode}
+            activity={activity}
+          />
+        ))}
+      </div>
       )}
       {activities.length > 0 && (
-        <div className="mt-6 text-center">
+      <div className="mt-6 text-center">
         <a
           href={`/things-to-do${category ? `?category=${category}` : ''}`}
           className="inline-flex items-center justify-center gap-2 bg-primary-600 hover:bg-primary-700 !text-white font-semibold px-6 py-3 rounded-lg transition-colors duration-200 shadow-md hover:shadow-lg"
@@ -80,7 +80,7 @@ export function ActivityShowcase({
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
           </svg>
         </a>
-        </div>
+      </div>
       )}
     </div>
   );
