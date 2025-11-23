@@ -319,17 +319,17 @@ function PlacesToStaySearchWidgetContent({}: PlacesToStaySearchWidgetProps) {
           </div>
         </div>
 
-        {/* Search Form - Inline, read-only display of URL params */}
+        {/* Search Form - Inline, displays URL params, navigates on submit */}
         <div className="mb-4">
           <div className="bg-white rounded-2xl shadow-elevated p-6 lg:p-8">
             <form onSubmit={(e) => {
               e.preventDefault();
-              const params = new URLSearchParams({
-                location,
-                checkIn,
-                checkOut,
-                adults: adults.toString(),
-              });
+              const formData = new FormData(e.currentTarget);
+              const params = new URLSearchParams();
+              params.set('location', location);
+              params.set('checkIn', formData.get('checkIn') as string || checkIn);
+              params.set('checkOut', formData.get('checkOut') as string || checkOut);
+              params.set('adults', formData.get('adults') as string || adults.toString());
               if (typeof window !== 'undefined') {
                 window.location.href = `/places-to-stay?${params.toString()}`;
               }
@@ -343,13 +343,9 @@ function PlacesToStaySearchWidgetContent({}: PlacesToStaySearchWidgetProps) {
                     <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-neutral-400 pointer-events-none" />
                     <Input
                       id="checkIn"
+                      name="checkIn"
                       type="date"
-                      value={checkIn}
-                      onChange={(e) => {
-                        const params = new URLSearchParams(window.location.search);
-                        params.set('checkIn', e.target.value);
-                        window.location.href = `/places-to-stay?${params.toString()}`;
-                      }}
+                      defaultValue={checkIn}
                       min={format(new Date(), 'yyyy-MM-dd')}
                       className="pl-11 h-12"
                       required
@@ -364,13 +360,9 @@ function PlacesToStaySearchWidgetContent({}: PlacesToStaySearchWidgetProps) {
                     <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-neutral-400 pointer-events-none" />
                     <Input
                       id="checkOut"
+                      name="checkOut"
                       type="date"
-                      value={checkOut}
-                      onChange={(e) => {
-                        const params = new URLSearchParams(window.location.search);
-                        params.set('checkOut', e.target.value);
-                        window.location.href = `/places-to-stay?${params.toString()}`;
-                      }}
+                      defaultValue={checkOut}
                       min={checkIn}
                       className="pl-11 h-12"
                       required
@@ -385,13 +377,9 @@ function PlacesToStaySearchWidgetContent({}: PlacesToStaySearchWidgetProps) {
                     <Users className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-neutral-400 pointer-events-none" />
                     <Input
                       id="adults"
+                      name="adults"
                       type="number"
-                      value={adults}
-                      onChange={(e) => {
-                        const params = new URLSearchParams(window.location.search);
-                        params.set('adults', e.target.value);
-                        window.location.href = `/places-to-stay?${params.toString()}`;
-                      }}
+                      defaultValue={adults}
                       min="1"
                       max="10"
                       className="pl-11 h-12"
