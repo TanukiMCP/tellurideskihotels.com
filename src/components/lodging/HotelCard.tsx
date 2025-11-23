@@ -61,24 +61,24 @@ export function HotelCard({
           <img
             src={imageUrl}
             alt={hotel.name || 'Property'}
-            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+            className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
             loading="lazy"
             onError={(e) => {
               (e.target as HTMLImageElement).src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="300"%3E%3Crect fill="%23f5f5f5" width="400" height="300"/%3E%3Ctext fill="%23999" font-family="sans-serif" font-size="18" dy="10.5" font-weight="bold" x="50%25" y="50%25" text-anchor="middle"%3ENo Image%3C/text%3E%3C/svg%3E';
             }}
           />
         ) : (
-          <div className="w-full h-full bg-gradient-to-br from-neutral-100 to-neutral-200 flex items-center justify-center">
+          <div className="absolute inset-0 w-full h-full bg-gradient-to-br from-neutral-100 to-neutral-200 flex items-center justify-center">
             <p className="text-neutral-400 text-sm font-medium">No image available</p>
           </div>
         )}
         
         {/* Subtle gradient overlay for depth */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/5 via-transparent to-transparent pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/5 via-transparent to-transparent pointer-events-none z-10" />
         
-        {/* Rating Badge - Refined sage green styling */}
+        {/* Rating Badge - Refined sage green styling - Overlay on top of image */}
         {rating > 0 && (
-          <div className={`absolute top-4 right-4 ${getRatingStyle(rating)} px-3 py-1.5 rounded-md shadow-md backdrop-blur-sm font-semibold text-sm tracking-tight`}>
+          <div className={`absolute top-4 right-4 z-20 ${getRatingStyle(rating)} px-3 py-1.5 rounded-md shadow-md backdrop-blur-sm font-semibold text-sm tracking-tight`}>
             {rating.toFixed(1)}
           </div>
         )}
