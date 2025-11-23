@@ -1351,20 +1351,21 @@ The [National Weather Service Grand Junction office](https://www.weather.gov/gjt
 ```
 
 **Props:**
-- `hotelId` (Required): The LiteAPI ID of the hotel. **Refer to `src/data/telluride-hotels.json` for valid IDs.**
+- `hotelId` (Required): The LiteAPI ID of the hotel. **Refer to `src/data/telluride-hotels.csv` for valid IDs.**
 - `showGallery` (Optional): `true` to show a swipeable image gallery.
 - `checkIn` (Optional): Default check-in date (YYYY-MM-DD).
 
 **Strategy:**
 - **MANDATORY FOR LISTICLES:** When creating "Top 10" lists or hotel reviews, you MUST use this component for each entry.
-- **ID LOOKUP:** Consult `src/data/telluride-hotels.json` to find the correct `hotelId` for each property name.
-- **NO GUESSING:** If a hotel is not in the JSON, do NOT invent an ID. Use `ArticleBookingWidget` with `hotelName` instead.
+- **ID LOOKUP:** Consult `src/data/telluride-hotels.csv` to find the correct `hotelId` for each property name. The CSV is lightweight (49KB) and contains 769 hotels with id and name columns.
+- **NO GUESSING:** If a hotel is not in the CSV, do NOT invent an ID. Use `ArticleBookingWidget` with `hotelName` instead.
 - **REAL IMAGES:** This component fetches real images from the API. Do NOT manually embed images for these specific hotels.
 
 **Listicle Workflow:**
 1. Identify the hotel name (e.g., "The Madeline").
-2. Look up the ID in `src/data/telluride-hotels.json` (`lp4b27f`).
-3. Embed:
+2. Search the CSV file (`src/data/telluride-hotels.csv`) for the hotel name to find its ID.
+3. Use `grep` or read the CSV to find: `lp4b27f,"Madeline Hotel & Residences, Auberge Collection"`
+4. Embed:
    ```markdown
    ### 1. The Madeline Hotel & Residences
    
@@ -1373,7 +1374,70 @@ The [National Weather Service Grand Junction office](https://www.weather.gov/gjt
    <HotelShowcase hotelId="lp4b27f" showGallery={true} />
    ```
 
-### 2. ActivityShowcase (Experience Highlighter)
+### 2. HotelGrid (Manual Curation Widget)
+
+**Use Case:** Displaying a curated selection of hotels that match the content context. **MANDATORY for manual curation** - when hotels are mentioned in the article, use specific hotel IDs.
+
+**Best For:** Section-specific hotel displays, matching hotels mentioned in text, curated recommendations.
+
+**Syntax:**
+```markdown
+<HotelGrid 
+  hotelIds={["lp4b27f", "lp3e47f", "lp2ff71"]}
+  limit={3}
+  title="Featured Luxury Ski-In/Ski-Out Properties"
+  client:load
+/>
+```
+
+**Props:**
+- `hotelIds` (Optional but Recommended): Array of specific hotel IDs for manual curation. **When hotels are mentioned in the article, you MUST use their actual IDs.**
+- `filter` (Optional): Fallback filter if hotelIds not provided: `ski-in-ski-out` | `luxury` | `budget` | `downtown` | `mountain-village` | `family-friendly`
+- `limit` (Optional): Number of hotels to display (default: 3)
+- `title` (Optional): Custom title for the widget
+- `checkIn` (Optional): Default check-in date (YYYY-MM-DD)
+- `checkOut` (Optional): Default check-out date (YYYY-MM-DD)
+
+**⚠️ CRITICAL: Manual Curation Workflow**
+
+**When hotels are mentioned in your article, you MUST manually curate the widget with their actual IDs:**
+
+1. **Identify mentioned hotels** in your article text (e.g., "The Madeline, Peaks Resort, and Hotel Columbia")
+2. **Search the CSV file** (`src/data/telluride-hotels.csv`) for each hotel name
+3. **Extract the hotel IDs** from the CSV (format: `id,name`)
+4. **Use those IDs** in the `hotelIds` prop
+
+**Example Workflow:**
+```markdown
+## Luxury Ski-In/Ski-Out Resorts
+
+These properties command top pricing... The Madeline, Peaks Resort, and Capella offer ski valets...
+
+<HotelGrid 
+  hotelIds={["lp4b27f", "lp3e47f"]}
+  limit={3}
+  title="Featured Luxury Ski-In/Ski-Out Properties"
+  client:load
+/>
+```
+
+**Why Manual Curation Matters:**
+- Ensures widgets display hotels actually mentioned in the text
+- Creates intentional, relevant user experience
+- Drives higher conversion by showing contextually relevant properties
+- Avoids random hotel displays that confuse readers
+
+**Finding Hotel IDs:**
+- Read `src/data/telluride-hotels.csv` (lightweight, 49KB, 769 hotels)
+- Use `grep` to search: `grep -i "madeline\|peaks\|columbia" src/data/telluride-hotels.csv`
+- CSV format: `id,name` (e.g., `lp4b27f,"Madeline Hotel & Residences, Auberge Collection"`)
+
+**When to Use Filters vs hotelIds:**
+- **Use `hotelIds`**: When specific hotels are mentioned in the article text
+- **Use `filter`**: When discussing a category but not naming specific hotels
+- **Use both**: `hotelIds` takes priority, `filter` is ignored when `hotelIds` is provided
+
+### 3. ActivityShowcase (Experience Highlighter)
 
 **Use Case:** Highlighting specific activities like skiing, hiking, or dining categories.
 **Best For:** "Things to Do" guides, Activity comparisons.
@@ -1394,7 +1458,7 @@ The [National Weather Service Grand Junction office](https://www.weather.gov/gjt
 - `description` (Optional): Custom description.
 - `image` (Optional): Specific image URL (if not using default).
 
-### 3. ArticleBookingWidget (Flexible CTA)
+### 4. ArticleBookingWidget (Flexible CTA)
 
 **Use Case:** General CTAs, filtered searches, or specific hotels when ID is unknown.
 
@@ -2242,7 +2306,9 @@ Before publishing any group planning article, verify:
 - [ ] Images compressed and optimized
 - [ ] **ALL images are LANDSCAPE orientation**
 - [ ] **At least 3 interactive components used**
-- [ ] Real Hotel IDs used in `HotelShowcase` (checked `src/data/telluride-hotels.json`)
+- [ ] Real Hotel IDs used in `HotelShowcase` (checked `src/data/telluride-hotels.csv`)
+- [ ] HotelGrid widgets manually curated with `hotelIds` prop when hotels are mentioned in article text
+- [ ] Hotel IDs verified in CSV file before using in widgets
 - [ ] No broken links (internal or external)
 - [ ] Mobile-friendly format verified
 - [ ] Schema markup fields completed
@@ -2331,8 +2397,23 @@ After initial draft:
 - Plan internal and external links
 - Write image alt text
 
-**Step 6: Add Conversion Elements**
+**Step 6: Add Conversion Elements & Manual Widget Curation**
 
+- **Manual Hotel Widget Curation (CRITICAL):**
+  1. Scan article for hotel names mentioned in text
+  2. For each mentioned hotel, search `src/data/telluride-hotels.csv` for its ID
+  3. Use `grep` command: `grep -i "hotel-name" src/data/telluride-hotels.csv`
+  4. Extract hotel IDs and add to `HotelGrid` components with `hotelIds` prop
+  5. Ensure widgets display hotels that match the surrounding text context
+  6. Example: If article mentions "The Madeline and Peaks Resort", use:
+     ```markdown
+     <HotelGrid 
+       hotelIds={["lp4b27f", "lp3e47f"]}
+       limit={3}
+       title="Featured Luxury Properties"
+       client:load
+     />
+     ```
 - Insert natural CTAs in content
 - Identify hotel linking opportunities
 - Add related hotels to frontmatter
