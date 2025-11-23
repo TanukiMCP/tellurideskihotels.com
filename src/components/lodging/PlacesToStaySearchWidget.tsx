@@ -58,10 +58,37 @@ function PlacesToStaySearchWidgetContent({
   const [viewMode, setViewMode] = useState<'grid' | 'map'>('grid');
   const [showFilters, setShowFilters] = useState(false);
   
-  const [checkIn, setCheckIn] = useState(initialCheckIn || '');
-  const [checkOut, setCheckOut] = useState(initialCheckOut || '');
-  const [adults, setAdults] = useState(initialAdults);
-  const [location, setLocation] = useState(initialLocation);
+  // Parse URL params synchronously on mount to get initial dates
+  const getInitialParams = () => {
+    if (typeof window === 'undefined') {
+      return {
+        checkIn: initialCheckIn || format(addDays(new Date(), 7), 'yyyy-MM-dd'),
+        checkOut: initialCheckOut || format(addDays(new Date(), 14), 'yyyy-MM-dd'),
+        adults: initialAdults,
+        location: initialLocation,
+      };
+    }
+    
+    const urlParams = new URLSearchParams(window.location.search);
+    const checkInParam = urlParams.get('checkIn');
+    const checkOutParam = urlParams.get('checkOut');
+    const adultsParam = urlParams.get('adults');
+    const locationParam = urlParams.get('location');
+    
+    return {
+      checkIn: checkInParam || initialCheckIn || format(addDays(new Date(), 7), 'yyyy-MM-dd'),
+      checkOut: checkOutParam || initialCheckOut || format(addDays(new Date(), 14), 'yyyy-MM-dd'),
+      adults: adultsParam ? parseInt(adultsParam, 10) : initialAdults,
+      location: locationParam || initialLocation,
+    };
+  };
+
+  const initialParams = getInitialParams();
+  
+  const [checkIn, setCheckIn] = useState(initialParams.checkIn);
+  const [checkOut, setCheckOut] = useState(initialParams.checkOut);
+  const [adults, setAdults] = useState(initialParams.adults);
+  const [location, setLocation] = useState(initialParams.location);
 
   const parseUrlParams = useCallback(() => {
     if (typeof window === 'undefined') return {};
@@ -304,28 +331,16 @@ function PlacesToStaySearchWidgetContent({
     }
   }, [loading]);
 
-  // Initial search on mount - parse URL params and search
+  // Initial search on mount - use the initial params we already parsed
   useEffect(() => {
-    if (typeof window === 'undefined') return;
-    
-    const urlParams = new URLSearchParams(window.location.search);
-    const checkInParam = urlParams.get('checkIn');
-    const checkOutParam = urlParams.get('checkOut');
-    const adultsParam = urlParams.get('adults');
-    const locationParam = urlParams.get('location');
-    
-    // Use URL params if available, otherwise use defaults
-    const defaultCheckIn = format(addDays(new Date(), 7), 'yyyy-MM-dd');
-    const defaultCheckOut = format(addDays(new Date(), 14), 'yyyy-MM-dd');
-    
-    const finalCheckIn = checkInParam || checkIn || defaultCheckIn;
-    const finalCheckOut = checkOutParam || checkOut || defaultCheckOut;
-    const finalAdults = adultsParam ? parseInt(adultsParam, 10) : adults;
-    const finalLocation = locationParam || location;
-    
     // Only search if we have valid dates
-    if (finalCheckIn && finalCheckOut) {
-      handleSearch(finalCheckIn, finalCheckOut, finalAdults, finalLocation);
+    if (initialParams.checkIn && initialParams.checkOut) {
+      handleSearch(
+        initialParams.checkIn,
+        initialParams.checkOut,
+        initialParams.adults,
+        initialParams.location
+      );
     }
   }, []); // Only run once on mount
 
