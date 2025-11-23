@@ -76,20 +76,19 @@ export function HotelCard({
       onMouseLeave={onMouseLeave}
       onClick={() => onSelect(hotel.hotel_id)}
     >
-      {/* Image Section - Full width, fixed height, badge overlays */}
-      <div className={`relative w-full overflow-hidden bg-gradient-to-br from-neutral-50 to-neutral-100 ${
+      {/* Image Section - No padding, image starts at top edge */}
+      <div className={`relative w-full overflow-hidden ${
         variant === 'compact' ? 'h-[200px]' : 'h-56'
       }`}>
         {imageUrl ? (
           <img
             src={imageUrl}
             alt={hotel.name || 'Property'}
-            className="absolute inset-0 w-full h-full object-cover object-center transition-transform duration-700 group-hover:scale-105"
+            className="w-full h-full object-cover object-center transition-transform duration-700 group-hover:scale-105"
             style={{ 
               objectFit: 'cover', 
               objectPosition: 'center',
-              width: '100%',
-              height: '100%'
+              display: 'block'
             }}
             loading="lazy"
             onError={(e) => {
@@ -97,7 +96,7 @@ export function HotelCard({
             }}
           />
         ) : (
-          <div className="absolute inset-0 w-full h-full bg-gradient-to-br from-neutral-100 to-neutral-200 flex items-center justify-center">
+          <div className="w-full h-full bg-gradient-to-br from-neutral-100 to-neutral-200 flex items-center justify-center">
             <p className="text-neutral-400 text-sm font-medium">No image available</p>
           </div>
         )}
@@ -113,16 +112,16 @@ export function HotelCard({
         )}
       </div>
       
-      {/* Content Section - Tight spacing, consistent heights */}
+      {/* Content Section - Compact, proper spacing */}
       <div className={`flex flex-col flex-grow bg-white ${variant === 'compact' ? 'p-4' : 'p-4'}`}>
-        {/* Property Name - Reduced top spacing */}
+        {/* Property Name - Compact spacing */}
         <h3 className={`font-bold text-neutral-900 leading-tight line-clamp-2 tracking-tight group-hover:text-primary-700 transition-colors ${
           variant === 'compact' ? 'text-lg mb-1.5' : 'text-xl mb-1.5'
         }`}>
           {hotel.name}
         </h3>
         
-        {/* Star Rating - Tight spacing */}
+        {/* Star Rating - Compact spacing */}
         {starRating > 0 && (
           <div className="flex items-center gap-0.5 mb-1.5">
             {[...Array(starRating)].map((_, i) => (
@@ -131,7 +130,7 @@ export function HotelCard({
           </div>
         )}
         
-        {/* Address - Tight spacing with consistent truncation */}
+        {/* Address - Compact spacing with consistent truncation */}
         {address && (
           <div className="flex items-start gap-1.5 text-sm text-neutral-500 mb-1.5">
             <MapPin className="w-3.5 h-3.5 flex-shrink-0 mt-0.5 text-neutral-400" />
@@ -139,16 +138,16 @@ export function HotelCard({
           </div>
         )}
         
-        {/* Review Count - Tight spacing */}
+        {/* Review Count - Compact spacing */}
         {reviewCount > 0 && (
           <p className="text-xs text-neutral-500 mb-2">
             <span className="font-semibold text-neutral-700">{reviewCount.toLocaleString()}</span> {reviewCount === 1 ? 'review' : 'reviews'}
           </p>
         )}
         
-        {/* Description Preview - Fixed height with proper CSS truncation */}
+        {/* Description Preview - Fixed height, proper spacing from button */}
         {descriptionText && (
-          <div className={`text-neutral-600 mb-4 flex-shrink-0 overflow-hidden ${
+          <div className={`text-neutral-600 mb-3 flex-shrink-0 overflow-hidden ${
             variant === 'compact' 
               ? 'text-xs h-[3.5rem]' 
               : 'text-sm h-[4rem]'
@@ -171,11 +170,11 @@ export function HotelCard({
         )}
         
         {/* Spacer to push price/button to bottom */}
-        <div className="flex-grow"></div>
+        <div className="flex-grow min-h-[4px]"></div>
         
         {/* Price (if available) - Compact inline display */}
         {minPrice && minPrice > 0 && (
-          <div className="mb-3">
+          <div className="mb-2.5">
             <div className="flex items-baseline gap-1.5">
               <span className={`font-bold text-primary-600 tracking-tight ${
                 variant === 'compact' ? 'text-lg' : 'text-xl'
@@ -187,7 +186,7 @@ export function HotelCard({
           </div>
         )}
         
-        {/* CTA Button - Proper spacing from description */}
+        {/* CTA Button - Proper spacing from description/price */}
         <button
           onClick={(e) => {
             e.stopPropagation();
