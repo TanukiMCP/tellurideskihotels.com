@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
-import { ArticleBookingWidget } from '@/components/blog/ArticleBookingWidget';
 import { Users, Heart, Briefcase, User, Home } from 'lucide-react';
 
 export type GroupType = 'family' | 'couples' | 'friends' | 'solo' | 'corporate';
@@ -87,15 +86,15 @@ export function GroupTypeRecommender() {
             <button
               key={type.id}
               onClick={() => setSelectedType(type.id)}
-              className={`p-4 border-2 rounded-lg text-left transition-all ${
+              className={`p-4 border-2 rounded-lg text-left transition-all hover:shadow-md ${
                 selectedType === type.id
-                  ? 'border-primary-400 bg-primary-50'
+                  ? 'border-primary-400 bg-primary-50 shadow-sm'
                   : 'border-neutral-200 hover:border-primary-200 hover:bg-neutral-50'
               }`}
             >
               <div className="flex items-center gap-3 mb-2">
                 <div
-                  className={`w-10 h-10 rounded-lg flex items-center justify-center ${
+                  className={`w-10 h-10 rounded-lg flex items-center justify-center transition-colors ${
                     selectedType === type.id
                       ? 'bg-primary-600 text-white'
                       : 'bg-neutral-100 text-neutral-600'
@@ -129,12 +128,12 @@ export function GroupTypeRecommender() {
               )}
             </div>
 
-            <ArticleBookingWidget
-              filter={selectedOption.filter}
-              variant="featured"
-              title={`Start Planning Your ${selectedOption.label}`}
-              description="Find the perfect accommodations for your trip type"
-            />
+            <a
+              href={`/places-to-stay${selectedOption.filter ? `?filter=${selectedOption.filter}` : ''}`}
+              className="inline-flex items-center justify-center gap-2 bg-primary-600 hover:bg-primary-700 !text-white font-bold px-8 py-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 w-full md:w-auto"
+            >
+              Start Planning Your {selectedOption.label} →
+            </a>
           </div>
         )}
       </CardContent>

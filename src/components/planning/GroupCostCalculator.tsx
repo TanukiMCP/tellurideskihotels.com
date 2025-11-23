@@ -3,7 +3,6 @@
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Input } from '@/components/ui/Input';
-import { ArticleBookingWidget } from '@/components/blog/ArticleBookingWidget';
 import { Calculator, Users, Calendar, DollarSign, TrendingUp } from 'lucide-react';
 import { LoadingSpinner } from '@/components/shared/LoadingSpinner';
 import { addDays, format } from 'date-fns';
@@ -29,6 +28,8 @@ export function GroupCostCalculator({
 }: GroupCostCalculatorProps) {
   const [guests, setGuests] = useState(defaultGuests);
   const [nights, setNights] = useState(defaultNights);
+  const [checkInDate, setCheckInDate] = useState(checkIn || format(addDays(new Date(), 7), 'yyyy-MM-dd'));
+  const [checkOutDate, setCheckOutDate] = useState(checkOut || format(addDays(new Date(), 7 + defaultNights), 'yyyy-MM-dd'));
   const [loading, setLoading] = useState(true);
   const [lodgingRate, setLodgingRate] = useState(350);
   const [totalCost, setTotalCost] = useState(0);
@@ -36,7 +37,7 @@ export function GroupCostCalculator({
 
   useEffect(() => {
     fetchRates();
-  }, [checkIn, checkOut, nights]);
+  }, [checkInDate, checkOutDate, nights]);
 
   useEffect(() => {
     if (!loading) {
@@ -48,11 +49,8 @@ export function GroupCostCalculator({
     try {
       setLoading(true);
       
-      const defaultCheckIn = format(addDays(new Date(), 7), 'yyyy-MM-dd');
-      const defaultCheckOut = format(addDays(new Date(), 7 + nights), 'yyyy-MM-dd');
-      
-      const checkInDate = checkIn || defaultCheckIn;
-      const checkOutDate = checkOut || (checkIn ? format(addDays(new Date(checkIn), nights), 'yyyy-MM-dd') : defaultCheckOut);
+      const checkInDateToUse = checkInDate;
+      const checkOutDateToUse = checkOutDate;
       
       const searchParams = new URLSearchParams({
         cityName: 'Telluride',
@@ -78,9 +76,9 @@ export function GroupCostCalculator({
       const hotelIds = hotels.map((h: any) => h.hotel_id);
       const ratesParams = new URLSearchParams({
         hotelIds: hotelIds.join(','),
-        checkIn: checkInDate,
-        checkOut: checkOutDate,
-        adults: '2',
+        checkIn: checkInDateToUse,
+        checkOut: checkOutDateToUse,
+        adults: guests.toString(),
       });
       
       const ratesResponse = await fetch(`/api/hotels/min-rates?${ratesParams.toString()}`);
@@ -164,7 +162,7 @@ export function GroupCostCalculator({
         </div>
       </CardHeader>
       <CardContent className="space-y-6">
-        <div className="grid gap-4 md:grid-cols-2">
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           <div>
             <label className="block text-sm font-semibold text-neutral-900 mb-2">
               <Users className="w-4 h-4 inline mr-2" />
@@ -190,6 +188,46 @@ export function GroupCostCalculator({
               max="14"
               value={nights}
               onChange={(e) => setNights(parseInt(e.target.value) || 1)}
+              className="w-full"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-semibold text-neutral-900 mb-2">
+              <Calendar className="w-4 h-4 inline mr-2" />
+              Check-In Date
+            </label>
+            <Input
+              type="date"
+              value={checkInDate}
+              onChange={(e) => {
+                if (e.target.value) {
+                  setCheckInDate(e.target.value);
+                  const newCheckOut = format(addDays(new Date(e.target.value), nights), 'yyyy-MM-dd');
+                  setCheckOutDate(newCheckOut);
+                }
+              }}
+              min={format(new Date(), 'yyyy-MM-dd')}
+              className="w-full"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-semibold text-neutral-900 mb-2">
+              <Calendar className="w-4 h-4 inline mr-2" />
+              Check-Out Date
+            </label>
+            <Input
+              type="date"
+              value={checkOutDate}
+              onChange={(e) => {
+                if (e.target.value) {
+                  setCheckOutDate(e.target.value);
+                  const daysDiff = Math.ceil((new Date(e.target.value).getTime() - new Date(checkInDate).getTime()) / (1000 * 60 * 60 * 24));
+                  if (daysDiff > 0) {
+                    setNights(daysDiff);
+                  }
+                }
+              }}
+              min={checkInDate}
               className="w-full"
             />
           </div>
@@ -237,15 +275,12 @@ export function GroupCostCalculator({
         </div>
 
         <div className="border-t border-neutral-200 pt-6">
-          <ArticleBookingWidget
-            variant="default"
-            title="Find Hotels for Your Group"
-            description={`Search accommodations for ${guests} guests, ${nights} nights`}
-            guests={guests}
-            nights={nights}
-            checkIn={checkIn || format(addDays(new Date(), 7), 'yyyy-MM-dd')}
-            checkOut={checkOut || format(addDays(new Date(), 7 + nights), 'yyyy-MM-dd')}
-          />
+          <a
+            href={`/places-to-stay?guests=${guests}&nights=${nights}&checkin=${checkInDate}&checkout=${checkOutDate}`}
+            className="inline-flex items-center justify-center gap-2 bg-primary-600 hover:bg-primary-700 !text-white font-semibold px-6 py-3 rounded-lg transition-colors duration-200 shadow-md hover:shadow-lg w-full md:w-auto"
+          >
+            Find Hotels for {guests} Guests, {nights} Nights →
+          </a>
         </div>
       </CardContent>
     </Card>

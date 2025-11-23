@@ -3,7 +3,6 @@
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Input } from '@/components/ui/Input';
-import { ArticleBookingWidget } from '@/components/blog/ArticleBookingWidget';
 import { TrendingUp, Users, Calendar, Star } from 'lucide-react';
 import { LoadingSpinner } from '@/components/shared/LoadingSpinner';
 import { addDays, format } from 'date-fns';
@@ -84,7 +83,7 @@ export function CostPerPersonRanking({
         hotelIds: hotelIdsToFetch.join(','),
         checkIn: checkInDate,
         checkOut: checkOutDate,
-        adults: '2',
+        adults: guests.toString(),
       });
       
       const ratesResponse = await fetch(`/api/hotels/min-rates?${ratesParams.toString()}`);
@@ -206,52 +205,64 @@ export function CostPerPersonRanking({
               Hotels Ranked by Value ({guests} guests, {nightsCount} nights)
             </h3>
             <div className="space-y-3">
-              {rankings.map((hotel, index) => (
-                <div
-                  key={hotel.hotelId}
-                  className={`p-4 border-2 rounded-lg ${
-                    index === 0
-                      ? 'border-primary-400 bg-primary-50'
-                      : 'border-neutral-200 bg-white'
-                  }`}
-                >
-                  <div className="flex items-start justify-between mb-2">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2 mb-1">
-                        <span className="font-semibold text-neutral-900">{hotel.name}</span>
-                        {hotel.starRating > 0 && (
-                          <div className="flex items-center gap-1">
-                            {Array.from({ length: hotel.starRating }).map((_, i) => (
-                              <Star key={i} className="w-4 h-4 fill-primary-600 text-primary-600" />
-                            ))}
-                          </div>
-                        )}
+              {rankings.map((hotel, index) => {
+                const checkInDate = checkIn || format(addDays(new Date(), 7), 'yyyy-MM-dd');
+                const checkOutDate = checkOut || format(addDays(new Date(), 7 + nightsCount), 'yyyy-MM-dd');
+                const hotelUrl = `/places-to-stay/${hotel.hotelId}?checkIn=${checkInDate}&checkOut=${checkOutDate}&adults=${guests}`;
+                
+                return (
+                  <a
+                    key={hotel.hotelId}
+                    href={hotelUrl}
+                    className={`block p-4 border-2 rounded-lg transition-all hover:shadow-md ${
+                      index === 0
+                        ? 'border-primary-400 bg-primary-50 hover:bg-primary-100'
+                        : 'border-neutral-200 bg-white hover:bg-neutral-50'
+                    }`}
+                  >
+                    <div className="flex items-start justify-between mb-2">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-1">
+                          <span className="font-semibold text-neutral-900">{hotel.name}</span>
+                          {hotel.starRating > 0 && (
+                            <div className="flex items-center gap-1">
+                              {Array.from({ length: hotel.starRating }).map((_, i) => (
+                                <Star key={i} className="w-4 h-4 fill-primary-600 text-primary-600" />
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                        <div className="text-sm text-neutral-600">
+                          {hotel.location} {hotel.rating > 0 && `• ${hotel.rating.toFixed(1)}/10`}
+                        </div>
                       </div>
-                      <div className="text-sm text-neutral-600">
-                        {hotel.location} {hotel.rating > 0 && `• ${hotel.rating.toFixed(1)}/10`}
+                      <div className="text-right ml-4">
+                        <div className="text-lg font-bold text-primary-600">
+                          {formatCurrency(hotel.costPerPerson)}
+                        </div>
+                        <div className="text-xs text-neutral-500">per person</div>
+                        <div className="text-xs text-neutral-500 mt-1">
+                          {formatCurrency(hotel.price)}/night
+                        </div>
                       </div>
                     </div>
-                    <div className="text-right ml-4">
-                      <div className="text-lg font-bold text-primary-600">
-                        {formatCurrency(hotel.costPerPerson)}
-                      </div>
-                      <div className="text-xs text-neutral-500">per person</div>
-                      <div className="text-xs text-neutral-500 mt-1">
-                        {formatCurrency(hotel.price)}/night
-                      </div>
+                    <div className="text-sm text-neutral-600 mb-2">
+                      Total: {formatCurrency(hotel.totalCost)} for {nightsCount} nights
                     </div>
-                  </div>
-                  <div className="text-sm text-neutral-600">
-                    Total: {formatCurrency(hotel.totalCost)} for {nightsCount} nights
-                  </div>
-                  {index === 0 && (
-                    <div className="mt-2 text-sm text-primary-600 font-medium flex items-center gap-1">
-                      <TrendingUp className="w-4 h-4" />
-                      Best Value
+                    {index === 0 && (
+                      <div className="mt-2 mb-2 text-sm text-primary-600 font-medium flex items-center gap-1">
+                        <TrendingUp className="w-4 h-4" />
+                        Best Value
+                      </div>
+                    )}
+                    <div className="mt-3 pt-3 border-t border-neutral-200">
+                      <span className="text-sm text-primary-600 hover:text-primary-700 font-medium">
+                        View Rates & Availability →
+                      </span>
                     </div>
-                  )}
-                </div>
-              ))}
+                  </a>
+                );
+              })}
             </div>
           </div>
         ) : (
@@ -263,15 +274,12 @@ export function CostPerPersonRanking({
         )}
 
         <div className="border-t border-neutral-200 pt-6">
-          <ArticleBookingWidget
-            variant="default"
-            title="Book Your Hotel"
-            description={`Compare and book hotels for ${guests} guests`}
-            guests={guests}
-            nights={nightsCount}
-            checkIn={checkIn || format(addDays(new Date(), 7), 'yyyy-MM-dd')}
-            checkOut={checkOut || format(addDays(new Date(), 7 + nightsCount), 'yyyy-MM-dd')}
-          />
+          <a
+            href={`/places-to-stay?guests=${guests}&nights=${nightsCount}${checkIn ? `&checkin=${checkIn}` : ''}${checkOut ? `&checkout=${checkOut}` : ''}`}
+            className="inline-flex items-center justify-center gap-2 bg-primary-600 hover:bg-primary-700 !text-white font-semibold px-6 py-3 rounded-lg transition-colors duration-200 shadow-md hover:shadow-lg w-full md:w-auto"
+          >
+            Compare & Book Hotels for {guests} Guests →
+          </a>
         </div>
       </CardContent>
     </Card>

@@ -3,7 +3,6 @@
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Input } from '@/components/ui/Input';
-import { ArticleBookingWidget } from '@/components/blog/ArticleBookingWidget';
 import { Building2, Users, Calendar, DollarSign, TrendingDown } from 'lucide-react';
 import { LoadingSpinner } from '@/components/shared/LoadingSpinner';
 import { addDays, format } from 'date-fns';
@@ -88,7 +87,7 @@ export function HotelSplitCalculator({
         hotelIds: hotelIdsToUse.join(','),
         checkIn: checkInDate,
         checkOut: checkOutDate,
-        adults: '2',
+        adults: guests.toString(),
       });
       
       const ratesResponse = await fetch(`/api/hotels/min-rates?${ratesParams.toString()}`);
@@ -258,54 +257,63 @@ export function HotelSplitCalculator({
               Accommodation Options for {guests} Guests, {nights} Nights
             </h3>
             <div className="space-y-3">
-              {splitOptions.map((option, index) => (
-                <div
-                  key={option.id}
-                  className={`p-4 border-2 rounded-lg ${
-                    index === 0
-                      ? 'border-primary-400 bg-primary-50'
-                      : 'border-neutral-200 bg-white'
-                  }`}
-                >
-                  <div className="flex items-start justify-between mb-2">
-                    <div>
-                      <div className="font-semibold text-neutral-900">{option.name}</div>
-                      <div className="text-sm text-neutral-600 mt-1">
-                        {option.type === 'hotel' ? 'Hotel rooms' : 'Vacation rental'} • {option.rooms} {option.type === 'condo' ? 'bedrooms' : 'rooms'}
+              {splitOptions.map((option, index) => {
+                const checkInDate = checkIn || format(addDays(new Date(), 7), 'yyyy-MM-dd');
+                const checkOutDate = checkOut || format(addDays(new Date(), 7 + nights), 'yyyy-MM-dd');
+                const searchUrl = `/places-to-stay?guests=${guests}&nights=${nights}&checkin=${checkInDate}&checkout=${checkOutDate}${option.type === 'condo' ? '&filter=vacation-rental' : ''}`;
+                
+                return (
+                  <a
+                    key={option.id}
+                    href={searchUrl}
+                    className={`block p-4 border-2 rounded-lg transition-all hover:shadow-md ${
+                      index === 0
+                        ? 'border-primary-400 bg-primary-50 hover:bg-primary-100'
+                        : 'border-neutral-200 bg-white hover:bg-neutral-50'
+                    }`}
+                  >
+                    <div className="flex items-start justify-between mb-2">
+                      <div>
+                        <div className="font-semibold text-neutral-900">{option.name}</div>
+                        <div className="text-sm text-neutral-600 mt-1">
+                          {option.type === 'hotel' ? 'Hotel rooms' : 'Vacation rental'} • {option.rooms} {option.type === 'condo' ? 'bedrooms' : 'rooms'}
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <div className="text-lg font-bold text-primary-600">
+                          {formatCurrency(option.costPerPerson)}
+                        </div>
+                        <div className="text-xs text-neutral-500">per person</div>
                       </div>
                     </div>
-                    <div className="text-right">
-                      <div className="text-lg font-bold text-primary-600">
-                        {formatCurrency(option.costPerPerson)}
+                    <div className="text-sm text-neutral-600 mb-2">
+                      Total: {formatCurrency(option.totalCost)} • {formatCurrency(option.costPerNight)}/night
+                    </div>
+                    {index === 0 && (
+                      <div className="mt-2 text-sm text-primary-600 font-medium flex items-center gap-1">
+                        <TrendingDown className="w-4 h-4" />
+                        Best Value
                       </div>
-                      <div className="text-xs text-neutral-500">per person</div>
+                    )}
+                    <div className="mt-3 pt-3 border-t border-neutral-200">
+                      <span className="text-sm text-primary-600 hover:text-primary-700 font-medium">
+                        View Available {option.type === 'hotel' ? 'Rooms' : 'Properties'} →
+                      </span>
                     </div>
-                  </div>
-                  <div className="text-sm text-neutral-600">
-                    Total: {formatCurrency(option.totalCost)} • {formatCurrency(option.costPerNight)}/night
-                  </div>
-                  {index === 0 && (
-                    <div className="mt-2 text-sm text-primary-600 font-medium flex items-center gap-1">
-                      <TrendingDown className="w-4 h-4" />
-                      Best Value
-                    </div>
-                  )}
-                </div>
-              ))}
+                  </a>
+                );
+              })}
             </div>
           </div>
         )}
 
         <div className="border-t border-neutral-200 pt-6">
-          <ArticleBookingWidget
-            variant="default"
-            title="Find Group Accommodations"
-            description={`Search hotels and condos for ${guests} guests`}
-            guests={guests}
-            nights={nights}
-            checkIn={checkIn || format(addDays(new Date(), 7), 'yyyy-MM-dd')}
-            checkOut={checkOut || format(addDays(new Date(), 7 + nights), 'yyyy-MM-dd')}
-          />
+          <a
+            href={`/places-to-stay?guests=${guests}&nights=${nights}${checkIn ? `&checkin=${checkIn}` : ''}${checkOut ? `&checkout=${checkOut}` : ''}`}
+            className="inline-flex items-center justify-center gap-2 bg-primary-600 hover:bg-primary-700 !text-white font-semibold px-6 py-3 rounded-lg transition-colors duration-200 shadow-md hover:shadow-lg w-full md:w-auto"
+          >
+            Find Group Accommodations for {guests} Guests →
+          </a>
         </div>
       </CardContent>
     </Card>

@@ -55,6 +55,9 @@
 
 import { HotelGrid } from '@/components/blog/HotelGrid';
 import { ArticleBookingWidget } from '@/components/blog/ArticleBookingWidget';
+import { HotelComparison } from '@/components/planning/HotelComparison';
+import { CostPerPersonRanking } from '@/components/planning/CostPerPersonRanking';
+import { HotelSplitCalculator } from '@/components/planning/HotelSplitCalculator';
 
 
 # Slopeside vs Town Hotels in Telluride: Complete Comparison Guide
@@ -63,16 +66,7 @@ Telluride forces every visitor into a fundamental decision: stay slopeside in Mo
 
 This comprehensive comparison provides honest analysis of both locations across every dimension that actually matters—ski access timing, pricing reality, dining options, atmosphere, convenience factors, and transportation. We'll cut through marketing hype to help you make the right choice based on your specific priorities, skiing style, and how you actually spend vacation time beyond just skiing.
 
-![Alpine mountain village with snow-covered peaks and lodging properties in scenic Colorado setting](https://images.pexels.com/photos/4969872/pexels-photo-4969872.jpeg?auto=compress&cs=tinysrgb&h=350)
-*Photo by [Maria Orlova](https://www.pexels.com/@orlovamaria) via Pexels*
-
 For detailed reviews of specific properties in both areas, see our [complete guide to Telluride's best hotels](/blog/hotel-reviews/best-hotels-telluride). To match hotels with your skiing style, review our [insider's guide organized by skier type](/blog/hotel-reviews/telluride-ski-hotel-insider-guide). For understanding Telluride's skiing terrain and conditions, check our [complete skiing guide](/blog/ski-guides/telluride-skiing-guide).
-
-<HotelGrid 
-    limit={3}
-  title="Compare Both Locations"
-  client:load
-/>
 
 ## The Two Areas: Quick Overview
 
@@ -88,6 +82,11 @@ Downtown Telluride sits at 8,750 feet on the box canyon floor, with Main Street 
 
 Properties include Hotel Telluride, New Sheridan Hotel, Hotel Columbia, Mountain Lodge, and various boutique inns. Expect historic character, walkable restaurant access, authentic Western atmosphere, and 13-minute gondola rides to skiing. The free gondola departs from the south end of town.
 
+<HotelComparison 
+  filter="ski-in-ski-out"
+  client:load
+/>
+
 ## Ski Access: The Convenience Reality
 
 ### Mountain Village: Immediate Slope Access
@@ -97,13 +96,6 @@ True ski-in/ski-out properties like The Madeline and Peaks Resort put you on sno
 End-of-day convenience equally matters. Ski until lifts close at 4:00 PM, return to your hotel by 4:10 PM, and you're in the hot tub by 4:20 PM. No waiting for gondolas, no standing in lift lines, no walking through parking lots. For serious skiers maximizing mountain time, these minutes compound across a week into hours of additional skiing or recovery time.
 
 Not all Mountain Village properties offer true ski-in/ski-out despite marketing claims. Properties requiring 5-10 minute walks to lifts sacrifice much of the convenience advantage. Always verify exact slope-to-property distance and whether you'll be walking or skiing that connection.
-
-<HotelGrid 
-    limit={3}
-  filter="ski-in-ski-out"
-  title="Browse Ski-In/Ski-Out Properties"
-  client:load
-/>
 
 ### Downtown: Gondola Dependency
 
@@ -131,9 +123,7 @@ A week downtown at Hotel Telluride ($300/night average) costs $2,100 versus $5,6
 
 Downtown value extends beyond room rates. Restaurant variety provides more affordable dining options than resort restaurants. Walking to bars eliminates ride-share costs. Free street parking exists in some areas (though limited). The sum of these savings compounds significantly across week-long stays.
 
-<HotelGrid 
-    limit={3}
-  title="Search Downtown Hotels"
+<CostPerPersonRanking 
   client:load
 />
 
@@ -141,7 +131,7 @@ Downtown value extends beyond room rates. Restaurant variety provides more affor
 
 ### Mountain Village: Modern Resort Environment
 
-![Modern Mountain Village resort with ski-in/ski-out hotels and contemporary architecture](https://images.pexels.com/photos/4969872/pexels-photo-4969872.jpeg?auto=compress&cs=tinysrgb&h=350)
+![Modern Mountain Village resort with ski-in/ski-out hotels and contemporary architecture](https://images.pexels.com/photos/4969872/pexels-photo-4969872.jpeg?auto=compress&cs=tinysrgb&w=1200&h=800&fit=crop)
 *Photo by [Maria Orlova](https://www.pexels.com/@orlovamaria) via Pexels*
 
 Mountain Village delivers polished resort experiences—modern architecture, planned amenities, hotel efficiency, and convenience-focused design. The area feels purpose-built for skiing, which it is. Everything works smoothly, looks contemporary, and functions efficiently. You're in a ski resort, not a mountain town.
@@ -158,7 +148,7 @@ Main Street comes alive evenings with locals and visitors mixing at bars, restau
 
 The character and charm come with trade-offs. Buildings show age, streets lack pristine planning, parking challenges persist, and not everything functions with resort efficiency. But for many visitors, this authentic character delivers the "Colorado ski town" experience that Mountain Village's modern development cannot replicate.
 
-![Historic Victorian Main Street with red brick buildings and mountain backdrop showing downtown atmosphere](https://images.pexels.com/photos/13639247/pexels-photo-13639247.jpeg?auto=compress&cs=tinysrgb&h=350)
+![Historic Victorian Main Street with red brick buildings and mountain backdrop showing downtown atmosphere](https://images.pexels.com/photos/13639247/pexels-photo-13639247.jpeg?auto=compress&cs=tinysrgb&w=1200&h=800&fit=crop)
 *Photo by [Laura Paredis](https://www.pexels.com/@laura-paredis-1047081) via Pexels*
 
 ## Dining & Nightlife: Completely Different Options
@@ -178,12 +168,6 @@ Downtown Telluride delivers 40+ restaurants spanning price points, cuisines, and
 Breakfast options particularly shine downtown—coffee shops, bakeries, cafes, and diners provide variety hotel buffets cannot match. Lunch runs from quick sandwiches to sit-down meals. Dinner ranges from casual pub food to upscale contemporary cuisine. This dining diversity matters significantly on week-long+ trips.
 
 Nightlife thrives downtown with historic bars like Last Dollar Saloon and New Sheridan Bar, live music venues, breweries, and cocktail lounges. The compact geography enables easy bar hopping—walk between venues in minutes without transportation. The scene stays active until midnight+ on weekends, later during festivals. Solo travelers and social groups find far more evening entertainment downtown.
-
-<HotelGrid 
-    limit={3}
-  title="Book Based on Your Priorities"
-  client:load
-/>
 
 ## Practical Considerations: Day-to-Day Reality
 
@@ -215,7 +199,7 @@ Nightlife thrives downtown with historic bars like Last Dollar Saloon and New Sh
 
 ### Mountain Village Benefits
 
-![Cold weather skiing conditions favoring Mountain Village ski-in/ski-out access](https://images.pexels.com/photos/2405649/pexels-photo-2405649.jpeg?auto=compress&cs=tinysrgb&h=350)
+![Cold weather skiing conditions favoring Mountain Village ski-in/ski-out access](https://images.pexels.com/photos/2405649/pexels-photo-2405649.jpeg?auto=compress&cs=tinysrgb&w=1200&h=800&fit=crop)
 *Photo by [Melvin Wahlin](https://www.pexels.com/@melvinwahlin) via Pexels*
 
 Cold weather and storms amplify Mountain Village's convenience advantage. Walking 100 yards from hotel to slopes in -15°F temperatures beats waiting for gondolas and riding exposed chairlifts before reaching ski terrain. Powder days favor Mountain Village through quicker access to fresh snow.
@@ -226,7 +210,7 @@ Spring skiing and warmer conditions favor downtown's atmospheric advantages with
 
 ## Who Should Stay Where: Honest Recommendations
 
-![Ski-in/ski-out convenience at Mountain Village with direct slope access](https://images.pexels.com/photos/2405649/pexels-photo-2405649.jpeg?auto=compress&cs=tinysrgb&h=350)
+![Ski-in/ski-out convenience at Mountain Village with direct slope access](https://images.pexels.com/photos/2405649/pexels-photo-2405649.jpeg?auto=compress&cs=tinysrgb&w=1200&h=800&fit=crop)
 *Photo by [Melvin Wahlin](https://www.pexels.com/@melvinwahlin) via Pexels*
 
 ### Stay Mountain Village Slopeside If You:
@@ -255,12 +239,6 @@ Spring skiing and warmer conditions favor downtown's atmospheric advantages with
 - Are on extended trips where daily gondola time matters less
 - Want the "Colorado mining town" experience beyond just skiing
 
-<HotelGrid 
-    limit={3}
-  title="Browse Mountain Village Properties"
-  client:load
-/>
-
 ## The Split-Stay Strategy
 
 Many experienced Telluride visitors split their stay between both areas, sampling advantages of each while avoiding single-location commitments. A typical strategy: 3-4 nights in Mountain Village for skiing-focused days, then 2-3 nights downtown for town exploration and social evenings.
@@ -268,6 +246,10 @@ Many experienced Telluride visitors split their stay between both areas, samplin
 This approach works particularly well for week-long trips. Front-load your skiing intensity with Mountain Village convenience when you're fresh and energetic. Back-end your trip with downtown charm when your legs need recovery and you're ready for restaurant exploration and nightlife. The logistics of switching hotels mid-week proves manageable with advance planning.
 
 The split-stay compromise lets you experience both Telluride dimensions—the skiing-focused resort experience and the authentic mountain town atmosphere. You'll spend more on total accommodations versus single-location weeks, but the variety prevents location fatigue while delivering both convenience and character.
+
+<HotelSplitCalculator 
+  client:load
+/>
 
 ## The Verdict: It Depends (But Here's How to Decide)
 
@@ -288,12 +270,6 @@ If you answered: Shorter ski days, budget matters, want nightlife, extended trip
 
 For everything in between, consider the split-stay strategy or default to downtown for value with the understanding that you're trading some convenience for cost savings and atmosphere.
 
-<HotelGrid 
-    limit={3}
-  title="Ready to Book Your Telluride Stay?"
-  client:load
-/>
-
 ## Final Thoughts: Make the Choice That Matches Your Reality
 
 Telluride's slopeside versus town decision matters more than at most ski resorts due to the genuine differences between areas. The free gondola connects them, but it doesn't eliminate the fundamental trade-offs: convenience versus value, modern versus historic, resort versus town.
@@ -303,7 +279,7 @@ Most first-time visitors choose Mountain Village for skiing convenience, then di
 For comprehensive reviews of specific properties in both locations, see our [complete hotel rankings](/blog/hotel-reviews/best-hotels-telluride). To match accommodations with your specific skiing style beyond just location, review our [insider's guide organized by skier type](/blog/hotel-reviews/telluride-ski-hotel-insider-guide). To search current availability and rates across both areas for your specific dates, visit our [places to stay search](/places-to-stay).
 
 <HotelGrid 
-    limit={3}
+    limit={6}
   title="Compare Mountain Village & Downtown Hotels"
   client:load
 />

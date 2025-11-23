@@ -92,7 +92,7 @@ export function SeasonComparison({
         hotelIds: hotelIds.join(','),
         checkIn: peakCheckInDate,
         checkOut: peakCheckOutDate,
-        adults: '2',
+        adults: groupSize.toString(),
       });
       
       const peakRatesResponse = await fetch(`/api/hotels/min-rates?${peakRatesParams.toString()}`);
@@ -102,7 +102,7 @@ export function SeasonComparison({
         hotelIds: hotelIds.join(','),
         checkIn: offPeakCheckInDate,
         checkOut: offPeakCheckOutDate,
-        adults: '2',
+        adults: groupSize.toString(),
       });
       
       const offPeakRatesResponse = await fetch(`/api/hotels/min-rates?${offPeakRatesParams.toString()}`);
@@ -147,7 +147,7 @@ export function SeasonComparison({
     liftTicketCost: BASE_LIFT_COST,
     crowdLevel: 'High',
     conditions: 'Excellent',
-        totalCost: (peakHotelCost + BASE_LIFT_COST) * 4 * groupSize,
+        totalCost: (peakHotelCost * nights + BASE_LIFT_COST * nights) * groupSize,
   };
 
       const offPeak: SeasonData = {
@@ -157,7 +157,7 @@ export function SeasonComparison({
     liftTicketCost: BASE_LIFT_COST,
     crowdLevel: 'Low',
     conditions: 'Good to Excellent',
-        totalCost: (offPeakHotelCost + BASE_LIFT_COST) * 4 * groupSize,
+        totalCost: (offPeakHotelCost * nights + BASE_LIFT_COST * nights) * groupSize,
       };
       
       setPeakData(peak);
@@ -216,6 +216,74 @@ export function SeasonComparison({
         </div>
       </CardHeader>
       <CardContent className="space-y-6">
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+          <div>
+            <label className="block text-sm font-semibold text-neutral-900 mb-2">
+              <Users className="w-4 h-4 inline mr-2" />
+              Group Size
+            </label>
+            <input
+              type="number"
+              min="1"
+              max="20"
+              value={groupSize}
+              onChange={(e) => {
+                const newSize = parseInt(e.target.value) || 4;
+                window.location.href = window.location.pathname + `?groupSize=${newSize}`;
+              }}
+              className="flex h-12 w-full rounded-md border border-neutral-300 bg-white px-3 py-2.5 text-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-semibold text-neutral-900 mb-2">
+              <Calendar className="w-4 h-4 inline mr-2" />
+              Peak Check-In
+            </label>
+            <input
+              type="date"
+              value={peakCheckIn || format(addDays(new Date(), 7), 'yyyy-MM-dd')}
+              onChange={(e) => {
+                if (e.target.value) {
+                  window.location.href = window.location.pathname + `?peakCheckIn=${e.target.value}`;
+                }
+              }}
+              min={format(new Date(), 'yyyy-MM-dd')}
+              className="flex h-12 w-full rounded-md border border-neutral-300 bg-white px-3 py-2.5 text-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-semibold text-neutral-900 mb-2">
+              <Calendar className="w-4 h-4 inline mr-2" />
+              Off-Peak Check-In
+            </label>
+            <input
+              type="date"
+              value={offPeakCheckIn || format(addDays(new Date(), 7), 'yyyy-MM-dd')}
+              onChange={(e) => {
+                if (e.target.value) {
+                  window.location.href = window.location.pathname + `?offPeakCheckIn=${e.target.value}`;
+                }
+              }}
+              min={format(new Date(), 'yyyy-MM-dd')}
+              className="flex h-12 w-full rounded-md border border-neutral-300 bg-white px-3 py-2.5 text-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-semibold text-neutral-900 mb-2">
+              <Calendar className="w-4 h-4 inline mr-2" />
+              Nights
+            </label>
+            <input
+              type="number"
+              min="1"
+              max="14"
+              value={Math.ceil((new Date(peakCheckOut || format(addDays(new Date(), 14), 'yyyy-MM-dd')).getTime() - new Date(peakCheckIn || format(addDays(new Date(), 7), 'yyyy-MM-dd')).getTime()) / (1000 * 60 * 60 * 24))}
+              readOnly
+              className="flex h-12 w-full rounded-md border border-neutral-300 bg-neutral-50 px-3 py-2.5 text-base"
+            />
+          </div>
+        </div>
+        
         <div className="grid gap-4 md:grid-cols-2">
           <div
             className={`p-6 border-2 rounded-lg cursor-pointer transition-all ${
@@ -288,7 +356,7 @@ export function SeasonComparison({
               {formatCurrency(savings)}
             </div>
             <div className="text-sm text-neutral-600">
-              Save {savingsPercent}% by choosing off-peak dates for {groupSize} people, 4 nights
+              Save {savingsPercent}% by choosing off-peak dates for {groupSize} people, {nights} nights
             </div>
           </div>
         </div>

@@ -125,7 +125,7 @@ export function TripCalculator({
         hotelIds: hotelIds.join(','),
         checkIn: checkInDate,
         checkOut: checkOutDate,
-        adults: '2',
+        adults: guests.toString(),
       });
       
       const ratesResponse = await fetch(`/api/hotels/min-rates?${ratesParams.toString()}`);
@@ -370,7 +370,7 @@ export function TripCalculator({
         </div>
 
         {/* Inputs */}
-        <div className="grid gap-4 md:grid-cols-3">
+        <div className={`grid gap-4 ${activeTab === 'budget' ? 'md:grid-cols-2 lg:grid-cols-5' : 'md:grid-cols-2 lg:grid-cols-4'}`}>
           <div>
             <label className="block text-sm font-semibold text-neutral-900 mb-2">
               <Users className="w-4 h-4 inline mr-2" />
@@ -396,6 +396,44 @@ export function TripCalculator({
               max="14"
               value={nights}
               onChange={(e) => setNights(parseInt(e.target.value) || 1)}
+              className="w-full"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-semibold text-neutral-900 mb-2">
+              <Calendar className="w-4 h-4 inline mr-2" />
+              Check-In Date
+            </label>
+            <Input
+              type="date"
+              value={checkIn || format(addDays(new Date(), 45), 'yyyy-MM-dd')}
+              onChange={(e) => {
+                if (e.target.value) {
+                  const newCheckIn = e.target.value;
+                  const newCheckOut = checkOut || format(addDays(new Date(newCheckIn), nights), 'yyyy-MM-dd');
+                  window.location.href = `/places-to-stay?guests=${guests}&nights=${nights}&checkin=${newCheckIn}&checkout=${newCheckOut}`;
+                }
+              }}
+              min={format(new Date(), 'yyyy-MM-dd')}
+              className="w-full"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-semibold text-neutral-900 mb-2">
+              <Calendar className="w-4 h-4 inline mr-2" />
+              Check-Out Date
+            </label>
+            <Input
+              type="date"
+              value={checkOut || format(addDays(new Date(), 45 + nights), 'yyyy-MM-dd')}
+              onChange={(e) => {
+                if (e.target.value) {
+                  const newCheckOut = e.target.value;
+                  const newCheckIn = checkIn || format(addDays(new Date(), 45), 'yyyy-MM-dd');
+                  window.location.href = `/places-to-stay?guests=${guests}&nights=${nights}&checkin=${newCheckIn}&checkout=${newCheckOut}`;
+                }
+              }}
+              min={checkIn || format(addDays(new Date(), 45), 'yyyy-MM-dd')}
               className="w-full"
             />
           </div>

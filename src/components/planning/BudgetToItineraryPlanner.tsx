@@ -3,7 +3,6 @@
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Input } from '@/components/ui/Input';
-import { ArticleBookingWidget } from '@/components/blog/ArticleBookingWidget';
 import { PieChart, DollarSign, Users, Calendar } from 'lucide-react';
 import { LoadingSpinner } from '@/components/shared/LoadingSpinner';
 import { addDays, format } from 'date-fns';
@@ -86,7 +85,7 @@ export function BudgetToItineraryPlanner({
         hotelIds: hotelIds.join(','),
         checkIn: checkInDate,
         checkOut: checkOutDate,
-        adults: '2',
+        adults: guests.toString(),
       });
       
       const ratesResponse = await fetch(`/api/hotels/min-rates?${ratesParams.toString()}`);
@@ -122,13 +121,22 @@ export function BudgetToItineraryPlanner({
   };
 
   const calculateBreakdown = () => {
-    const liftTickets = LIFT_TICKET_COST * nights;
-    const activities = ACTIVITIES_COST_PER_DAY * nights;
-    const dining = DINING_COST_PER_DAY * nights;
-    const fixedCosts = liftTickets + activities + dining;
+    // Budget is per person per night
+    // Fixed costs per person per night
+    const liftTicketsPerNight = LIFT_TICKET_COST;
+    const activitiesPerNight = ACTIVITIES_COST_PER_DAY;
+    const diningPerNight = DINING_COST_PER_DAY;
+    const fixedCostsPerNight = liftTicketsPerNight + activitiesPerNight + diningPerNight;
     
-    const lodging = Math.max(0, budget - fixedCosts);
-    const total = lodging + fixedCosts;
+    // Lodging per person per night = budget - fixed costs per night
+    const lodgingPerNight = Math.max(0, budget - fixedCostsPerNight);
+    
+    // Total for the trip (per person)
+    const liftTickets = liftTicketsPerNight * nights;
+    const activities = activitiesPerNight * nights;
+    const dining = diningPerNight * nights;
+    const lodging = lodgingPerNight * nights;
+    const total = lodging + liftTickets + activities + dining;
     
     setBreakdown({
       lodging,
@@ -179,11 +187,11 @@ export function BudgetToItineraryPlanner({
         </div>
       </CardHeader>
       <CardContent className="space-y-6">
-        <div className="grid gap-4 md:grid-cols-3">
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-5">
           <div>
             <label className="block text-sm font-semibold text-neutral-900 mb-2">
               <DollarSign className="w-4 h-4 inline mr-2" />
-              Budget Per Person
+              Budget Per Person Per Night
             </label>
             <Input
               type="number"
@@ -220,6 +228,44 @@ export function BudgetToItineraryPlanner({
               max="20"
               value={guests}
               onChange={(e) => setGuests(parseInt(e.target.value) || 2)}
+              className="w-full"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-semibold text-neutral-900 mb-2">
+              <Calendar className="w-4 h-4 inline mr-2" />
+              Check-In Date
+            </label>
+            <Input
+              type="date"
+              value={checkIn || format(addDays(new Date(), 7), 'yyyy-MM-dd')}
+              onChange={(e) => {
+                if (e.target.value) {
+                  const newCheckIn = e.target.value;
+                  const newCheckOut = checkOut || format(addDays(new Date(newCheckIn), nights), 'yyyy-MM-dd');
+                  window.location.href = `/places-to-stay?guests=${guests}&nights=${nights}&maxPrice=${Math.round(breakdown.lodging / nights)}&checkin=${newCheckIn}&checkout=${newCheckOut}`;
+                }
+              }}
+              min={format(new Date(), 'yyyy-MM-dd')}
+              className="w-full"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-semibold text-neutral-900 mb-2">
+              <Calendar className="w-4 h-4 inline mr-2" />
+              Check-Out Date
+            </label>
+            <Input
+              type="date"
+              value={checkOut || format(addDays(new Date(), 7 + nights), 'yyyy-MM-dd')}
+              onChange={(e) => {
+                if (e.target.value) {
+                  const newCheckOut = e.target.value;
+                  const newCheckIn = checkIn || format(addDays(new Date(), 7), 'yyyy-MM-dd');
+                  window.location.href = `/places-to-stay?guests=${guests}&nights=${nights}&maxPrice=${Math.round(breakdown.lodging / nights)}&checkin=${newCheckIn}&checkout=${newCheckOut}`;
+                }
+              }}
+              min={checkIn || format(addDays(new Date(), 7), 'yyyy-MM-dd')}
               className="w-full"
             />
           </div>
@@ -266,7 +312,7 @@ export function BudgetToItineraryPlanner({
               </span>
             </div>
             <div className="text-sm text-neutral-600 mt-1">
-              Per person for {nights} days
+              Per person for {nights} nights ({formatCurrency(budget)}/night)
             </div>
           </div>
         </div>
@@ -279,16 +325,12 @@ export function BudgetToItineraryPlanner({
             <p className="text-neutral-600 mb-4">
               Based on your {formatCurrency(budget)} per person budget, here are hotels around {formatCurrency(breakdown.lodging / nights)}/night:
             </p>
-            <ArticleBookingWidget
-              variant="default"
-              title="Find Hotels Within Your Budget"
-              description={`Search hotels around ${formatCurrency(breakdown.lodging / nights)}/night`}
-              guests={guests}
-              nights={nights}
-              maxPrice={Math.round(breakdown.lodging / nights)}
-              checkIn={checkIn || format(addDays(new Date(), 7), 'yyyy-MM-dd')}
-              checkOut={checkOut || format(addDays(new Date(), 7 + nights), 'yyyy-MM-dd')}
-            />
+            <a
+              href={`/places-to-stay?guests=${guests}&nights=${nights}&maxPrice=${Math.round(breakdown.lodging / nights)}${checkIn ? `&checkin=${checkIn}` : ''}${checkOut ? `&checkout=${checkOut}` : ''}`}
+              className="inline-flex items-center justify-center gap-2 bg-primary-600 hover:bg-primary-700 !text-white font-semibold px-6 py-3 rounded-lg transition-colors duration-200 shadow-md hover:shadow-lg w-full md:w-auto"
+            >
+              Find Hotels Around {formatCurrency(breakdown.lodging / nights)}/Night →
+            </a>
           </div>
         )}
       </CardContent>

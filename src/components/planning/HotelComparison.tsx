@@ -3,10 +3,10 @@
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Input } from '@/components/ui/Input';
-import { ArticleBookingWidget } from '@/components/blog/ArticleBookingWidget';
 import { Building2, Star, Users, Calendar, TrendingUp, List, Table } from 'lucide-react';
 import { LoadingSpinner } from '@/components/shared/LoadingSpinner';
 import type { LiteAPIHotel } from '@/lib/liteapi/types';
+import { addDays, format } from 'date-fns';
 
 export interface HotelComparisonProps {
   /** Specific hotel IDs to compare */
@@ -58,6 +58,7 @@ export function HotelComparison({
 
   useEffect(() => {
     fetchAndCalculateHotels();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [guests, nightsCount, hotelIds, checkIn, checkOut, filter]);
 
   const fetchAndCalculateHotels = async () => {
@@ -94,6 +95,16 @@ export function HotelComparison({
         hotelsData = hotelsData.filter(h => (h.star_rating || 0) >= 4);
       } else if (filter === 'budget') {
         hotelsData = hotelsData.filter(h => (h.star_rating || 0) <= 3);
+      } else if (filter === 'ski-in-ski-out') {
+        // Filter for ski-in/ski-out properties (typically Mountain Village)
+        hotelsData = hotelsData.filter(h => {
+          const name = (h.name || '').toLowerCase();
+          const address = (h.address?.full || '').toLowerCase();
+          return name.includes('mountain village') || 
+                 address.includes('mountain village') ||
+                 name.includes('slopeside') ||
+                 address.includes('slopeside');
+        });
       }
       
       // If specific hotel IDs provided, filter to those
@@ -113,7 +124,7 @@ export function HotelComparison({
         hotelIds: hotelIdsList.join(','),
         checkIn: checkInDate,
         checkOut: checkOutDate,
-        adults: '2',
+        adults: guests.toString(),
       });
       
       const ratesResponse = await fetch(`/api/hotels/min-rates?${ratesParams.toString()}`);
@@ -268,7 +279,7 @@ export function HotelComparison({
         </div>
 
         {/* Inputs */}
-        <div className="grid gap-4 md:grid-cols-2">
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           <div>
             <label className="block text-sm font-semibold text-neutral-900 mb-2">
               <Users className="w-4 h-4 inline mr-2" />
@@ -297,7 +308,51 @@ export function HotelComparison({
               className="w-full"
             />
           </div>
+          <div>
+            <label className="block text-sm font-semibold text-neutral-900 mb-2">
+              <Calendar className="w-4 h-4 inline mr-2" />
+              Check-In Date
+            </label>
+            <Input
+              type="date"
+              value={checkIn || format(addDays(new Date(), 7), 'yyyy-MM-dd')}
+              onChange={(e) => {
+                if (e.target.value) {
+                  const newCheckIn = e.target.value;
+                  const newCheckOut = checkOut || format(addDays(new Date(newCheckIn), nightsCount), 'yyyy-MM-dd');
+                  window.location.href = `/places-to-stay?guests=${guests}&nights=${nightsCount}&checkin=${newCheckIn}&checkout=${newCheckOut}`;
+                }
+              }}
+              min={format(new Date(), 'yyyy-MM-dd')}
+              className="w-full"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-semibold text-neutral-900 mb-2">
+              <Calendar className="w-4 h-4 inline mr-2" />
+              Check-Out Date
+            </label>
+            <Input
+              type="date"
+              value={checkOut || format(addDays(new Date(), 7 + nightsCount), 'yyyy-MM-dd')}
+              onChange={(e) => {
+                if (e.target.value) {
+                  const newCheckOut = e.target.value;
+                  const newCheckIn = checkIn || format(addDays(new Date(), 7), 'yyyy-MM-dd');
+                  window.location.href = `/places-to-stay?guests=${guests}&nights=${nightsCount}&checkin=${newCheckIn}&checkout=${newCheckOut}`;
+                }
+              }}
+              min={checkIn || format(addDays(new Date(), 7), 'yyyy-MM-dd')}
+              className="w-full"
+            />
+          </div>
         </div>
+
+        {hotels.length === 0 && !loading && (
+          <div className="mt-6 text-center py-8">
+            <p className="text-neutral-600">No hotels found matching your criteria. Try adjusting your filters.</p>
+          </div>
+        )}
 
         {hotels.length > 0 && (
           <div className="mt-6 space-y-4">
@@ -312,7 +367,17 @@ export function HotelComparison({
                     value={sortBy}
                     onChange={(e) => {
                       setSortBy(e.target.value);
-                      fetchAndCalculateHotels();
+                      // Re-sort existing hotels instead of re-fetching
+                      setHotels(prev => {
+                        const sorted = [...prev].sort((a, b) => {
+                          if (e.target.value === 'price') return a.price - b.price;
+                          if (e.target.value === 'score') return b.score - a.score;
+                          if (e.target.value === 'rating') return b.rating - a.rating;
+                          if (e.target.value === 'costPerPerson') return a.costPerPerson - b.costPerPerson;
+                          return 0;
+                        });
+                        return sorted;
+                      });
                     }}
                     className="px-3 py-2 border-2 border-neutral-300 rounded-lg text-sm"
                   >
@@ -403,7 +468,17 @@ export function HotelComparison({
                     value={sortBy}
                     onChange={(e) => {
                       setSortBy(e.target.value);
-                      fetchAndCalculateHotels();
+                      // Re-sort existing hotels instead of re-fetching
+                      setHotels(prev => {
+                        const sorted = [...prev].sort((a, b) => {
+                          if (e.target.value === 'price') return a.price - b.price;
+                          if (e.target.value === 'score') return b.score - a.score;
+                          if (e.target.value === 'rating') return b.rating - a.rating;
+                          if (e.target.value === 'costPerPerson') return a.costPerPerson - b.costPerPerson;
+                          return 0;
+                        });
+                        return sorted;
+                      });
                     }}
                     className="px-3 py-2 border-2 border-neutral-300 rounded-lg text-sm"
                   >
@@ -501,13 +576,12 @@ export function HotelComparison({
             {/* CTA */}
             {hotels[0] && (
               <div className="border-t border-neutral-200 pt-4">
-                <ArticleBookingWidget
-                  hotelId={hotels[0].hotelId}
-                  hotelName={hotels[0].name}
-                  variant="default"
-                  title={`Book ${hotels[0].name}`}
-                  description={`Best value at ${formatCurrency(hotels[0].costPerPerson)} per person`}
-                />
+                <a
+                  href={`/places-to-stay/${hotels[0].hotelId}`}
+                  className="inline-flex items-center justify-center gap-2 bg-primary-600 hover:bg-primary-700 !text-white font-semibold px-6 py-3 rounded-lg transition-colors duration-200 shadow-md hover:shadow-lg w-full md:w-auto"
+                >
+                  View {hotels[0].name} Rates & Availability →
+                </a>
               </div>
             )}
           </div>

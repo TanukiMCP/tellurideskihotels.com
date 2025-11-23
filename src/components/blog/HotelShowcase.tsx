@@ -59,15 +59,23 @@ export function HotelShowcase({
     fetchHotel();
   }, [hotelId]);
 
-  // Render nothing if hotel not available or dates not computed yet
+  // Show loading state
   if (!hotel || !computedCheckIn || !computedCheckOut) {
-    return null;
+    return (
+      <div className="my-8">
+        <div className="border-2 border-neutral-200 rounded-lg p-8 text-center bg-neutral-50">
+          <p className="text-neutral-600">Loading hotel information...</p>
+        </div>
+      </div>
+    );
   }
 
   return (
     <div className="my-8 space-y-6">
       {showGallery && hotel.images && hotel.images.length > 0 && (
-        <ImageGallery images={hotel.images.map(img => img.url || '')} />
+        <div className="border-2 border-neutral-200 rounded-lg overflow-hidden">
+          <ImageGallery images={hotel.images.map(img => img.url || '')} />
+        </div>
       )}
       
       <HotelCard
@@ -75,7 +83,7 @@ export function HotelShowcase({
         checkInDate={computedCheckIn}
         checkOutDate={computedCheckOut}
         onSelect={(id) => {
-          window.location.href = `/places-to-stay/${id}`;
+          window.location.href = `/places-to-stay/${id}?checkIn=${computedCheckIn}&checkOut=${computedCheckOut}`;
         }}
       />
     </div>

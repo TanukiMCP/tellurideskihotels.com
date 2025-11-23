@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Input } from '@/components/ui/Input';
-import { ArticleBookingWidget } from '@/components/blog/ArticleBookingWidget';
 import { Calendar, Clock, Users } from 'lucide-react';
 
 export interface EventPlanningTimelineProps {
@@ -173,12 +172,20 @@ export function EventPlanningTimeline({
                 <p className="text-neutral-700 text-sm mb-3">
                   Start by booking group lodging for {size} guests. Early booking ensures availability and better rates.
                 </p>
-                <ArticleBookingWidget
-                  variant="default"
-                  title="Reserve Group Lodging Now"
-                  description={`Find accommodations for ${size} guests`}
-                />
+                <a
+                  href={`/places-to-stay?guests=${size}`}
+                  className="inline-flex items-center justify-center gap-2 bg-primary-600 hover:bg-primary-700 text-white font-semibold px-6 py-3 rounded-lg transition-colors duration-200 shadow-md hover:shadow-lg w-full md:w-auto"
+                >
+                  Reserve Group Lodging for {size} Guests →
+                </a>
               </div>
+            </div>
+          </div>
+        ) : (
+          <div className="border-t border-neutral-200 pt-4">
+            <div className="p-4 bg-neutral-50 border-2 border-neutral-200 rounded-lg text-center">
+              <p className="text-neutral-600 mb-2">Enter an event date to see your planning timeline</p>
+              <p className="text-sm text-neutral-500">Select a date above to get started with your planning milestones</p>
             </div>
           </div>
         )}
