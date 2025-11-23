@@ -70,11 +70,18 @@ function serializeFrontmatter(frontmatter, body) {
 
 /**
  * Check if article should be published
+ * Compares dates only (ignoring time) to avoid timezone issues
  */
 function shouldPublish(publishDate) {
   const now = new Date();
   const pubDate = new Date(publishDate);
-  return pubDate <= now;
+  
+  // Compare dates only (year, month, day) - ignore time
+  const nowDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const pubDateOnly = new Date(pubDate.getFullYear(), pubDate.getMonth(), pubDate.getDate());
+  
+  // Publish if the publish date is today or in the past
+  return pubDateOnly <= nowDate;
 }
 
 /**
