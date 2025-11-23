@@ -415,11 +415,13 @@ export async function searchHotelsWithRates(params: {
     willSearchMountainVillage: shouldIncludeMountainVillage
   });
 
-  // Search Telluride - no limit, get all results
+  // Search Telluride - request maximum results (5000) to check ALL properties for availability
+  // This ensures we check all 577 properties, not just the first 200 (API default)
   const searchParams = new URLSearchParams();
   searchParams.append('cityName', params.cityName);
   searchParams.append('countryCode', params.countryCode);
-  // Don't set limit - let API return all results
+  // Request maximum to get all property types (hotels, condos, vacation rentals, etc.)
+  searchParams.append('limit', '5000');
 
   const hotelSearchEndpoint = `/data/hotels?${searchParams.toString()}`;
   const tellurideResponse = await liteAPIClient<any>(hotelSearchEndpoint);
@@ -437,7 +439,8 @@ export async function searchHotelsWithRates(params: {
       const mvSearchParams = new URLSearchParams();
       mvSearchParams.append('cityName', 'Mountain Village');
       mvSearchParams.append('countryCode', params.countryCode);
-      // No limit - get all Mountain Village hotels too
+      // Request maximum to get all Mountain Village properties
+      mvSearchParams.append('limit', '5000');
 
       const mvEndpoint = `/data/hotels?${mvSearchParams.toString()}`;
       console.log('[LiteAPI Rates] Searching Mountain Village hotels...');
