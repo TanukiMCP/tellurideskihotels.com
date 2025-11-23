@@ -19,7 +19,9 @@ const {
   noindex = false,
 } = Astro.props;
 
-const session = await getSessionFromRequest(Astro.request);
+// Use session from middleware (locals) if available, otherwise get it from request
+// This ensures consistent session handling across all pages
+const session = Astro.locals.session ?? await getSessionFromRequest(Astro.request);
 ---
 
 <!doctype html>
