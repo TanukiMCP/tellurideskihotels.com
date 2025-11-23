@@ -7,7 +7,9 @@ export const GET: APIRoute = async ({ request }) => {
     const url = new URL(request.url);
     const cityName = url.searchParams.get('cityName') || 'Telluride';
     const countryCode = url.searchParams.get('countryCode') || 'US';
-    const limit = parseInt(url.searchParams.get('limit') || '500', 10);
+    // Default to 5000 to get ALL property types (hotels, condos, vacation rentals, etc.)
+    // LiteAPI's /data/hotels endpoint returns all accommodation types, not just hotels
+    const limit = parseInt(url.searchParams.get('limit') || '5000', 10);
 
     console.log('[API Hotels Search] Request:', { cityName, countryCode, limit });
 

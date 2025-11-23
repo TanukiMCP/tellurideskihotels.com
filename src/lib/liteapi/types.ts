@@ -4,6 +4,8 @@ export interface LiteAPIHotel {
   star_rating?: number;
   review_score?: number;
   review_count?: number;
+  hotel_type_id?: number; // LiteAPI hotelTypeId: 204=Hotel, 229=Condo, 230=Cabin/Cottage, 250=Lodge, etc.
+  property_type?: 'hotel' | 'condo' | 'resort' | 'lodge' | 'cabin' | 'vacation_rental' | 'apartment' | 'home' | 'other'; // Derived from hotelTypeId and name
   address?: {
     line1?: string;
     city?: string;
