@@ -57,9 +57,9 @@ export function HotelCard({
       onMouseLeave={onMouseLeave}
       onClick={() => onSelect(hotel.hotel_id)}
     >
-      {/* Image Section with seamless connection to content */}
-      <div className={`relative overflow-hidden bg-gradient-to-br from-neutral-50 to-neutral-100 ${
-        variant === 'compact' ? 'h-[200px] aspect-[16/9]' : 'h-56'
+      {/* Image Section - Full width, proper aspect ratio */}
+      <div className={`relative w-full overflow-hidden bg-gradient-to-br from-neutral-50 to-neutral-100 ${
+        variant === 'compact' ? 'h-[200px]' : 'h-56'
       }`}>
         {imageUrl ? (
           <img
@@ -80,107 +80,92 @@ export function HotelCard({
         {/* Subtle gradient overlay for depth */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/5 via-transparent to-transparent pointer-events-none z-10" />
         
-        {/* Rating Badge - Refined sage green styling - Overlay on top of image */}
+        {/* Rating Badge - Absolutely positioned overlay at top-right */}
         {rating > 0 && (
-          <div className={`absolute top-4 right-4 z-20 ${getRatingStyle(rating)} px-3 py-1.5 rounded-md shadow-md backdrop-blur-sm font-semibold text-sm tracking-tight`}>
+          <div className={`absolute top-3 right-3 z-20 ${getRatingStyle(rating)} px-2.5 py-1 rounded-md shadow-md backdrop-blur-sm font-semibold text-sm tracking-tight`}>
             {rating.toFixed(1)}
           </div>
         )}
       </div>
       
-      {/* Content Section - Enhanced hierarchy and spacing */}
-      <div className={`flex flex-col flex-grow bg-white ${variant === 'compact' ? 'p-4' : 'p-6'}`}>
-        {/* Hotel Name - Hero element with confident typography */}
-        <h3 className={`font-bold text-neutral-900 mb-2.5 leading-tight line-clamp-2 tracking-tight group-hover:text-primary-700 transition-colors ${
-          variant === 'compact' ? 'text-lg' : 'text-2xl'
+      {/* Content Section - Optimized spacing and information density */}
+      <div className={`flex flex-col flex-grow bg-white ${variant === 'compact' ? 'p-4' : 'p-5'}`}>
+        {/* Property Name */}
+        <h3 className={`font-bold text-neutral-900 leading-tight line-clamp-2 tracking-tight group-hover:text-primary-700 transition-colors ${
+          variant === 'compact' ? 'text-lg mb-2' : 'text-xl mb-2'
         }`}>
           {hotel.name}
         </h3>
         
-        {/* Star Rating - Subtle, refined */}
+        {/* Star Rating */}
         {starRating > 0 && (
-          <div className="flex items-center gap-0.5 mb-3">
+          <div className="flex items-center gap-0.5 mb-2">
             {[...Array(starRating)].map((_, i) => (
               <Star key={i} className="w-4 h-4 fill-amber-400 text-amber-400" />
             ))}
           </div>
         )}
         
-        {/* Address - Secondary information, softer styling */}
+        {/* Address */}
         {address && (
-          <div className="flex items-start gap-1.5 text-sm text-neutral-500 mb-3">
+          <div className="flex items-start gap-1.5 text-sm text-neutral-500 mb-2">
             <MapPin className="w-3.5 h-3.5 flex-shrink-0 mt-0.5 text-neutral-400" />
-            <span className="line-clamp-1 leading-relaxed">{address}</span>
+            <span className="line-clamp-1">{address}</span>
           </div>
         )}
         
-        {/* Review Count - Tertiary, subtle */}
+        {/* Review Count */}
         {reviewCount > 0 && (
-          <p className="text-xs text-neutral-500 mb-5 font-medium">
+          <p className="text-xs text-neutral-500 mb-3">
             <span className="font-semibold text-neutral-700">{reviewCount.toLocaleString()}</span> {reviewCount === 1 ? 'review' : 'reviews'}
           </p>
         )}
         
-        {/* Spacer to push pricing to bottom */}
+        {/* Description Preview */}
+        {hotel.description?.text && (
+          <p className={`text-neutral-600 leading-relaxed mb-3 line-clamp-3 ${
+            variant === 'compact' ? 'text-xs' : 'text-sm'
+          }`}>
+            {hotel.description.text.length > 140 
+              ? hotel.description.text.substring(0, 140).trim() + '...'
+              : hotel.description.text
+            }
+          </p>
+        )}
+        
+        {/* Spacer to push CTA to bottom */}
         <div className="flex-grow"></div>
         
-        {/* Pricing Section - Refined with better visual connection */}
-        <div className={`mt-auto border-t border-neutral-200/80 ${variant === 'compact' ? 'pt-3' : 'pt-5'}`}>
-          {minPrice && minPrice > 0 ? (
-            <>
-              <div className={variant === 'compact' ? 'mb-3' : 'mb-4'}>
-                <p className="text-xs text-neutral-500 uppercase tracking-wider font-medium mb-1.5">From</p>
-                <div className="flex items-baseline gap-1.5">
-                  <span className={`font-bold text-primary-600 tracking-tight ${
-                    variant === 'compact' ? 'text-xl' : 'text-2xl'
-                  }`}>
-                    {formatCurrency(minPrice, currency)}
-                  </span>
-                  <span className="text-sm text-neutral-500 font-normal">/ night</span>
-                </div>
-              </div>
-              
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onSelect(hotel.hotel_id);
-                }}
-                className={`w-full bg-primary-600 hover:bg-primary-700 text-white font-semibold rounded-lg transition-all duration-200 shadow-sm hover:shadow-md hover:scale-[1.02] active:scale-[0.98] ${
-                  variant === 'compact' ? 'py-2 px-3 text-sm' : 'py-3 px-4'
-                }`}
-                type="button"
-              >
-                {variant === 'compact' ? 'View Rates' : 'Check Availability'}
-              </button>
-            </>
-          ) : (
-            <>
-              <div className={variant === 'compact' ? 'mb-3' : 'mb-4'}>
-                <p className="text-xs text-neutral-500 uppercase tracking-wider font-medium mb-2">
-                  Pricing Available
-                </p>
-                <p className={`text-neutral-600 leading-relaxed font-normal ${
-                  variant === 'compact' ? 'text-xs' : 'text-sm'
-                }`}>
-                  Select dates to view rates
-                </p>
-              </div>
-              
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onSelect(hotel.hotel_id);
-                }}
-                className={`w-full bg-primary-600 hover:bg-primary-700 text-white font-semibold rounded-lg transition-all duration-200 shadow-sm hover:shadow-md hover:scale-[1.02] active:scale-[0.98] ${
-                  variant === 'compact' ? 'py-2 px-3 text-sm' : 'py-3 px-4'
-                }`}
-                type="button"
-              >
-                View Details & Rates
-              </button>
-            </>
-          )}
-        </div>
+        {/* Price (if available) - Compact inline display */}
+        {minPrice && minPrice > 0 && (
+          <div className="mb-3">
+            <div className="flex items-baseline gap-1.5">
+              <span className={`font-bold text-primary-600 tracking-tight ${
+                variant === 'compact' ? 'text-lg' : 'text-xl'
+              }`}>
+                {formatCurrency(minPrice, currency)}
+              </span>
+              <span className="text-xs text-neutral-500">/ night</span>
+            </div>
+          </div>
+        )}
+        
+        {/* CTA Button */}
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            onSelect(hotel.hotel_id);
+          }}
+          className={`w-full bg-primary-600 hover:bg-primary-700 text-white font-semibold rounded-lg transition-all duration-200 shadow-sm hover:shadow-md hover:scale-[1.02] active:scale-[0.98] ${
+            variant === 'compact' ? 'py-2.5 px-3 text-sm' : 'py-3 px-4'
+          }`}
+          type="button"
+        >
+          {minPrice && minPrice > 0 
+            ? (variant === 'compact' ? 'View Rates' : 'Check Availability')
+            : 'View Details & Rates'
+          }
+        </button>
       </div>
     </Card>
   );
