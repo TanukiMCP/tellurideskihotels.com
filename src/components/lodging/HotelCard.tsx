@@ -69,25 +69,27 @@ export function HotelCard({
 
   return (
     <Card 
-      className={`flex flex-col h-full overflow-hidden hover:shadow-2xl transition-all duration-300 group cursor-pointer border border-neutral-200/60 ${
+      className={`flex flex-col h-full overflow-hidden hover:shadow-2xl transition-all duration-300 group cursor-pointer border border-neutral-200/60 p-0 ${
         isSelected ? 'ring-2 ring-primary-500 shadow-2xl border-primary-300' : ''
       } ${isHovered ? 'shadow-2xl border-primary-200' : ''}`}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
       onClick={() => onSelect(hotel.hotel_id)}
     >
-      {/* Image Section - No padding, image starts at top edge */}
+      {/* Image Section - Flush to top, no padding, badge overlays */}
       <div className={`relative w-full overflow-hidden ${
         variant === 'compact' ? 'h-[200px]' : 'h-56'
-      }`}>
+      } ${!imageUrl ? 'bg-gradient-to-br from-neutral-100 to-neutral-200' : ''}`}>
         {imageUrl ? (
           <img
             src={imageUrl}
             alt={hotel.name || 'Property'}
-            className="w-full h-full object-cover object-center transition-transform duration-700 group-hover:scale-105"
+            className="absolute inset-0 w-full h-full object-cover object-center transition-transform duration-700 group-hover:scale-105"
             style={{ 
               objectFit: 'cover', 
               objectPosition: 'center',
+              width: '100%',
+              height: '100%',
               display: 'block'
             }}
             loading="lazy"
@@ -96,7 +98,7 @@ export function HotelCard({
             }}
           />
         ) : (
-          <div className="w-full h-full bg-gradient-to-br from-neutral-100 to-neutral-200 flex items-center justify-center">
+          <div className="absolute inset-0 w-full h-full bg-gradient-to-br from-neutral-100 to-neutral-200 flex items-center justify-center">
             <p className="text-neutral-400 text-sm font-medium">No image available</p>
           </div>
         )}
@@ -112,97 +114,97 @@ export function HotelCard({
         )}
       </div>
       
-      {/* Content Section - Compact, proper spacing */}
-      <div className={`flex flex-col flex-grow bg-white ${variant === 'compact' ? 'p-4' : 'p-4'}`}>
-        {/* Property Name - Compact spacing */}
-        <h3 className={`font-bold text-neutral-900 leading-tight line-clamp-2 tracking-tight group-hover:text-primary-700 transition-colors ${
-          variant === 'compact' ? 'text-lg mb-1.5' : 'text-xl mb-1.5'
-        }`}>
-          {hotel.name}
-        </h3>
-        
-        {/* Star Rating - Compact spacing */}
-        {starRating > 0 && (
-          <div className="flex items-center gap-0.5 mb-1.5">
-            {[...Array(starRating)].map((_, i) => (
-              <Star key={i} className="w-4 h-4 fill-amber-400 text-amber-400" />
-            ))}
-          </div>
-        )}
-        
-        {/* Address - Compact spacing with consistent truncation */}
-        {address && (
-          <div className="flex items-start gap-1.5 text-sm text-neutral-500 mb-1.5">
-            <MapPin className="w-3.5 h-3.5 flex-shrink-0 mt-0.5 text-neutral-400" />
-            <span className="line-clamp-1 overflow-hidden text-ellipsis whitespace-nowrap">{address}</span>
-          </div>
-        )}
-        
-        {/* Review Count - Compact spacing */}
-        {reviewCount > 0 && (
-          <p className="text-xs text-neutral-500 mb-2">
-            <span className="font-semibold text-neutral-700">{reviewCount.toLocaleString()}</span> {reviewCount === 1 ? 'review' : 'reviews'}
-          </p>
-        )}
-        
-        {/* Description Preview - Fixed height, proper spacing from button */}
-        {descriptionText && (
-          <div className={`text-neutral-600 mb-3 flex-shrink-0 overflow-hidden ${
-            variant === 'compact' 
-              ? 'text-xs h-[3.5rem]' 
-              : 'text-sm h-[4rem]'
-          }`}>
-            <p 
-              className="leading-[1.5rem] break-words"
-              style={{
-                display: '-webkit-box',
-                WebkitLineClamp: 3,
-                WebkitBoxOrient: 'vertical',
-                overflow: 'hidden',
-                textOverflow: 'ellipsis',
-                wordBreak: 'break-word',
-                lineHeight: '1.5rem'
-              }}
-            >
-              {descriptionText}
-            </p>
-          </div>
-        )}
-        
-        {/* Spacer to push price/button to bottom */}
-        <div className="flex-grow min-h-[4px]"></div>
-        
-        {/* Price (if available) - Compact inline display */}
-        {minPrice && minPrice > 0 && (
-          <div className="mb-2.5">
-            <div className="flex items-baseline gap-1.5">
-              <span className={`font-bold text-primary-600 tracking-tight ${
-                variant === 'compact' ? 'text-lg' : 'text-xl'
-              }`}>
-                {formatCurrency(minPrice, currency)}
-              </span>
-              <span className="text-xs text-neutral-500">/ night</span>
-            </div>
-          </div>
-        )}
-        
-        {/* CTA Button - Proper spacing from description/price */}
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            onSelect(hotel.hotel_id);
-          }}
-          className={`w-full bg-primary-600 hover:bg-primary-700 text-white font-semibold rounded-lg transition-all duration-200 shadow-sm hover:shadow-md hover:scale-[1.02] active:scale-[0.98] flex-shrink-0 ${
-            variant === 'compact' ? 'py-2.5 px-3 text-sm' : 'py-3 px-4'
-          }`}
-          type="button"
-        >
-          {minPrice && minPrice > 0 
-            ? (variant === 'compact' ? 'View Rates' : 'Check Availability')
-            : 'View Details & Rates'
-          }
-        </button>
-      </div>
+       {/* Content Section - Compact spacing, no overlap */}
+       <div className={`flex flex-col flex-grow bg-white ${variant === 'compact' ? 'p-4' : 'p-4'}`}>
+         {/* Property Name - 16px from image */}
+         <h3 className={`font-bold text-neutral-900 leading-tight line-clamp-2 tracking-tight group-hover:text-primary-700 transition-colors ${
+           variant === 'compact' ? 'text-lg mb-3' : 'text-xl mb-3'
+         }`}>
+           {hotel.name}
+         </h3>
+         
+         {/* Star Rating - 12px spacing */}
+         {starRating > 0 && (
+           <div className="flex items-center gap-0.5 mb-3">
+             {[...Array(starRating)].map((_, i) => (
+               <Star key={i} className="w-4 h-4 fill-amber-400 text-amber-400" />
+             ))}
+           </div>
+         )}
+         
+         {/* Address - 12px spacing */}
+         {address && (
+           <div className="flex items-start gap-1.5 text-sm text-neutral-500 mb-3">
+             <MapPin className="w-3.5 h-3.5 flex-shrink-0 mt-0.5 text-neutral-400" />
+             <span className="line-clamp-1 overflow-hidden text-ellipsis whitespace-nowrap">{address}</span>
+           </div>
+         )}
+         
+         {/* Review Count - 12px spacing */}
+         {reviewCount > 0 && (
+           <p className="text-xs text-neutral-500 mb-3">
+             <span className="font-semibold text-neutral-700">{reviewCount.toLocaleString()}</span> {reviewCount === 1 ? 'review' : 'reviews'}
+           </p>
+         )}
+         
+         {/* Description Preview - Fixed height, 16px bottom margin */}
+         {descriptionText && (
+           <div className={`text-neutral-600 mb-4 flex-shrink-0 overflow-hidden ${
+             variant === 'compact' 
+               ? 'text-xs h-[3.5rem]' 
+               : 'text-sm h-[4rem]'
+           }`}>
+             <p 
+               className="leading-[1.5rem] break-words"
+               style={{
+                 display: '-webkit-box',
+                 WebkitLineClamp: 3,
+                 WebkitBoxOrient: 'vertical',
+                 overflow: 'hidden',
+                 textOverflow: 'ellipsis',
+                 wordBreak: 'break-word',
+                 lineHeight: '1.5rem'
+               }}
+             >
+               {descriptionText}
+             </p>
+           </div>
+         )}
+         
+         {/* Spacer to push price/button to bottom */}
+         <div className="flex-grow min-h-0"></div>
+         
+         {/* Price (if available) - 12px spacing */}
+         {minPrice && minPrice > 0 && (
+           <div className="mb-3">
+             <div className="flex items-baseline gap-1.5">
+               <span className={`font-bold text-primary-600 tracking-tight ${
+                 variant === 'compact' ? 'text-lg' : 'text-xl'
+               }`}>
+                 {formatCurrency(minPrice, currency)}
+               </span>
+               <span className="text-xs text-neutral-500">/ night</span>
+             </div>
+           </div>
+         )}
+         
+         {/* CTA Button - 12px from price or 16px from description if no price */}
+         <button
+           onClick={(e) => {
+             e.stopPropagation();
+             onSelect(hotel.hotel_id);
+           }}
+           className={`w-full bg-primary-600 hover:bg-primary-700 text-white font-semibold rounded-lg transition-all duration-200 shadow-sm hover:shadow-md hover:scale-[1.02] active:scale-[0.98] flex-shrink-0 ${
+             variant === 'compact' ? 'py-2.5 px-3 text-sm' : 'py-3 px-4'
+           }`}
+           type="button"
+         >
+           {minPrice && minPrice > 0 
+             ? (variant === 'compact' ? 'View Rates' : 'Check Availability')
+             : 'View Details & Rates'
+           }
+         </button>
+       </div>
     </Card>
   );
 }
