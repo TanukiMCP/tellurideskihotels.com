@@ -3,7 +3,7 @@
   "id": "telluride-bachelor-bachelorette-party",
   "title": "Telluride Bachelor/Bachelorette Party: Ultimate Planning Guide (2025)",
   "slug": "telluride-bachelor-bachelorette-party",
-  "status": "scheduled",
+  "status": "published",
   "category": "planning-tips",
   "author": "Telluride Ski Hotels Team",
   "publishDate": "2025-11-22T15:00:00Z",
@@ -48,7 +48,8 @@
     "spring",
     "summer",
     "fall"
-  ]
+  ],
+  "updatedDate": "2025-11-23T14:08:06.075Z"
 }
 ---
 
