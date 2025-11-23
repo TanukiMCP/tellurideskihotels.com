@@ -29,21 +29,27 @@ export function HotelSearchWidget({
   );
   const [adults, setAdults] = useState(initialGuests.adults.toString());
 
+  // Track if we're syncing from props (to prevent onDatesChange from firing)
+  const isSyncingFromPropsRef = useRef(false);
+  
   // Sync state when initialDates prop changes (e.g., from URL params)
   useEffect(() => {
-    if (initialDates?.checkIn) {
+    if (initialDates?.checkIn && initialDates?.checkOut) {
       const newCheckIn = format(initialDates.checkIn, 'yyyy-MM-dd');
-      if (newCheckIn !== checkIn) {
-        setCheckIn(newCheckIn);
-      }
-    }
-    if (initialDates?.checkOut) {
       const newCheckOut = format(initialDates.checkOut, 'yyyy-MM-dd');
-      if (newCheckOut !== checkOut) {
+      
+      // Only update if dates actually changed
+      if (newCheckIn !== checkIn || newCheckOut !== checkOut) {
+        isSyncingFromPropsRef.current = true; // Mark that we're syncing from props
+        setCheckIn(newCheckIn);
         setCheckOut(newCheckOut);
+        // Reset flag after state update
+        setTimeout(() => {
+          isSyncingFromPropsRef.current = false;
+        }, 0);
       }
     }
-  }, [initialDates?.checkIn, initialDates?.checkOut]);
+  }, [initialDates?.checkIn, initialDates?.checkOut, checkIn, checkOut]);
 
   // Track previous values to only call onDatesChange when dates actually change
   const prevCheckInRef = useRef<string>(checkIn);
@@ -56,7 +62,7 @@ export function HotelSearchWidget({
     onDatesChangeRef.current = onDatesChange;
   }, [onDatesChange]);
 
-  // Notify parent when dates change (but not on initial mount)
+  // Notify parent when dates change (but not on initial mount or when syncing from props)
   useEffect(() => {
     // Skip on initial mount - parent will handle initial search
     if (isInitialMount.current) {
@@ -66,7 +72,14 @@ export function HotelSearchWidget({
       return;
     }
 
-    // Only call if dates actually changed
+    // Don't call onDatesChange if we're syncing from props
+    if (isSyncingFromPropsRef.current) {
+      prevCheckInRef.current = checkIn;
+      prevCheckOutRef.current = checkOut;
+      return;
+    }
+
+    // Only call if dates actually changed (user changed them, not prop sync)
     if (
       onDatesChangeRef.current &&
       (prevCheckInRef.current !== checkIn || prevCheckOutRef.current !== checkOut)
