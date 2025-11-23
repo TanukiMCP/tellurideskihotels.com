@@ -17,15 +17,23 @@ export function HotelSearchWidget({
   initialGuests = { adults: 2, children: 0 },
   onDatesChange,
 }: HotelSearchWidgetProps) {
-  const [checkIn, setCheckIn] = useState(
-    initialDates?.checkIn
-      ? format(initialDates.checkIn, 'yyyy-MM-dd')
-      : format(addDays(new Date(), 7), 'yyyy-MM-dd')
+  // Helper to get date string from Date object or return default
+  const getDateString = (date: Date | undefined, defaultDays: number) => {
+    if (date) {
+      try {
+        return format(date, 'yyyy-MM-dd');
+      } catch {
+        return format(addDays(new Date(), defaultDays), 'yyyy-MM-dd');
+      }
+    }
+    return format(addDays(new Date(), defaultDays), 'yyyy-MM-dd');
+  };
+
+  const [checkIn, setCheckIn] = useState(() => 
+    getDateString(initialDates?.checkIn, 7)
   );
-  const [checkOut, setCheckOut] = useState(
-    initialDates?.checkOut
-      ? format(initialDates.checkOut, 'yyyy-MM-dd')
-      : format(addDays(new Date(), 14), 'yyyy-MM-dd')
+  const [checkOut, setCheckOut] = useState(() => 
+    getDateString(initialDates?.checkOut, 14)
   );
   const [adults, setAdults] = useState(initialGuests.adults.toString());
 
