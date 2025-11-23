@@ -16,6 +16,10 @@ import { HotelComparison } from '@/components/planning/HotelComparison';
 import { SeasonComparison } from '@/components/planning/SeasonComparison';
 import { GroupTypeRecommender } from '@/components/planning/GroupTypeRecommender';
 import { EventPlanningTimeline } from '@/components/planning/EventPlanningTimeline';
+import { GroupCostCalculator } from '@/components/planning/GroupCostCalculator';
+import { HotelSplitCalculator } from '@/components/planning/HotelSplitCalculator';
+import { CostPerPersonRanking } from '@/components/planning/CostPerPersonRanking';
+import { BudgetToItineraryPlanner } from '@/components/planning/BudgetToItineraryPlanner';
 
 interface Props {
   article: CollectionEntry<'blog'>;
@@ -150,6 +154,10 @@ const categoryName = data.category.replace(/-/g, ' ');
                 SeasonComparison,
                 GroupTypeRecommender,
                 EventPlanningTimeline,
+                GroupCostCalculator,
+                HotelSplitCalculator,
+                CostPerPersonRanking,
+                BudgetToItineraryPlanner,
               }}
             />
           </div>
