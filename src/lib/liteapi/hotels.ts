@@ -18,14 +18,21 @@ export async function searchHotels(params: LiteAPIHotelSearchParams): Promise<Ho
   
   let allHotelsData: any[] = [];
   
-  // Search Telluride - no limit, get all results
+  // Search Telluride - request maximum results (5000 is API max) to get ALL property types
+  // LiteAPI's /data/hotels endpoint returns all accommodation types: hotels, condos, vacation rentals, lodges, cabins, etc.
   const searchParams = new URLSearchParams();
   if (params.cityName) searchParams.append('cityName', params.cityName);
   if (params.countryCode) searchParams.append('countryCode', params.countryCode);
   if (params.latitude) searchParams.append('latitude', params.latitude.toString());
   if (params.longitude) searchParams.append('longitude', params.longitude.toString());
   if (params.radius) searchParams.append('radius', params.radius.toString());
-  // Don't set limit or offset - let API return all results
+  // Request maximum results to ensure we get all property types (not just hotels)
+  // This includes: hotels, condos, vacation rentals, lodges, cabins, apartments, homes, etc.
+  if (!params.limit || params.limit > 5000) {
+    searchParams.append('limit', '5000');
+  } else {
+    searchParams.append('limit', params.limit.toString());
+  }
 
   const queryString = searchParams.toString();
   const endpoint = `/data/hotels${queryString ? `?${queryString}` : ''}`;
