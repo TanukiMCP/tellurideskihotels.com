@@ -216,22 +216,24 @@ export function HotelGrid({
         </div>
       ) : (
         <>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6">
         {hotels.map((hotel) => (
-          <HotelCard
-            key={hotel.hotel_id}
-            hotel={hotel}
-            minPrice={minPrices[hotel.hotel_id]}
-            currency="USD"
-            nights={nights}
-            checkInDate={computedCheckIn || undefined}
-            checkOutDate={computedCheckOut || undefined}
-            onSelect={(id) => {
-              const checkInDate = computedCheckIn || format(addDays(new Date(), 7), 'yyyy-MM-dd');
-              const checkOutDate = computedCheckOut || format(addDays(new Date(), 14), 'yyyy-MM-dd');
-              window.location.href = `/places-to-stay/${id}?checkIn=${checkInDate}&checkOut=${checkOutDate}&adults=2&rooms=1`;
-            }}
-          />
+          <div key={hotel.hotel_id} className="max-w-[320px] mx-auto lg:mx-0">
+            <HotelCard
+              hotel={hotel}
+              minPrice={minPrices[hotel.hotel_id]}
+              currency="USD"
+              nights={nights}
+              checkInDate={computedCheckIn || undefined}
+              checkOutDate={computedCheckOut || undefined}
+              variant="compact"
+              onSelect={(id) => {
+                const checkInDate = computedCheckIn || format(addDays(new Date(), 7), 'yyyy-MM-dd');
+                const checkOutDate = computedCheckOut || format(addDays(new Date(), 14), 'yyyy-MM-dd');
+                window.location.href = `/places-to-stay/${id}?checkIn=${checkInDate}&checkOut=${checkOutDate}&adults=2&rooms=1`;
+              }}
+            />
+          </div>
         ))}
       </div>
       

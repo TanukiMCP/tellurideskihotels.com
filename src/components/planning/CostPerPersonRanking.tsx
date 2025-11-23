@@ -1,9 +1,9 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
+import { useState, useRef } from 'react';
+import { Card, CardContent } from '@/components/ui/Card';
 import { Input } from '@/components/ui/Input';
-import { TrendingUp, Users, Calendar, Star } from 'lucide-react';
+import { Users, Calendar, ArrowRight } from 'lucide-react';
 import { LoadingSpinner } from '@/components/shared/LoadingSpinner';
 import { addDays, format } from 'date-fns';
 import type { LiteAPIHotel } from '@/lib/liteapi/types';
@@ -29,45 +29,43 @@ interface HotelRanking {
 
 export function CostPerPersonRanking({
   hotelIds = [],
-  groupSize = 4,
+  groupSize = 2,
   nights = 4,
   checkIn,
   checkOut,
 }: CostPerPersonRankingProps) {
   const [guests, setGuests] = useState(groupSize);
   const [nightsCount, setNightsCount] = useState(nights);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [rankings, setRankings] = useState<HotelRanking[]>([]);
   const [error, setError] = useState<string | null>(null);
-  const hotelIdsRef = useRef<string>(hotelIds.join(','));
-
-  useEffect(() => {
-    // Only run on client side
-    if (typeof window === 'undefined') return;
-    
-    const currentHotelIds = hotelIds.join(',');
-    if (hotelIdsRef.current !== currentHotelIds) {
-      hotelIdsRef.current = currentHotelIds;
-    }
-    
-    fetchAndRankHotels();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [guests, nightsCount, checkIn, checkOut]);
-  
-  // Separate effect for hotelIds changes
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
-    const currentHotelIds = hotelIds.join(',');
-    if (hotelIdsRef.current !== currentHotelIds) {
-      hotelIdsRef.current = currentHotelIds;
-      fetchAndRankHotels();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [hotelIds.join(',')]);
+  const [hasSearched, setHasSearched] = useState(false);
+  const [guestsError, setGuestsError] = useState<string | null>(null);
+  const [nightsError, setNightsError] = useState<string | null>(null);
 
   const fetchAndRankHotels = async () => {
+    // Validation
+    let isValid = true;
+    if (guests < 1 || guests > 20) {
+      setGuestsError('Group size must be between 1 and 20');
+      isValid = false;
+    } else {
+      setGuestsError(null);
+    }
+
+    if (nightsCount < 1 || nightsCount > 14) {
+      setNightsError('Number of nights must be between 1 and 14');
+      isValid = false;
+    } else {
+      setNightsError(null);
+    }
+
+    if (!isValid) return;
+
     try {
       setLoading(true);
+      setError(null);
+      setHasSearched(true);
       
       const defaultCheckIn = format(addDays(new Date(), 7), 'yyyy-MM-dd');
       const defaultCheckOut = format(addDays(new Date(), 7 + nightsCount), 'yyyy-MM-dd');
@@ -99,6 +97,7 @@ export function CostPerPersonRanking({
       
       if (hotels.length === 0) {
         setRankings([]);
+        setLoading(false);
         return;
       }
       
@@ -151,7 +150,6 @@ export function CostPerPersonRanking({
       
       hotelRankings.sort((a, b) => a.costPerPerson - b.costPerPerson);
       setRankings(hotelRankings);
-      setError(null);
     } catch (err) {
       console.error('Error fetching hotel rankings:', err);
       setError(err instanceof Error ? err.message : 'An error occurred while loading hotels.');
@@ -169,155 +167,157 @@ export function CostPerPersonRanking({
     }).format(amount);
   };
 
-  if (loading) {
-    return (
-      <Card className="my-8 border-2 border-primary-200">
-        <CardContent className="py-12">
-          <div className="flex justify-center items-center">
-            <LoadingSpinner size="lg" />
-          </div>
-        </CardContent>
-      </Card>
-    );
-  }
+  const handleInputChange = (field: 'guests' | 'nights', value: number) => {
+    if (field === 'guests') {
+      setGuests(value);
+      if (value >= 1 && value <= 20) setGuestsError(null);
+    } else {
+      setNightsCount(value);
+      if (value >= 1 && value <= 14) setNightsError(null);
+    }
+  };
+
+  const visibleRankings = rankings.slice(0, 8);
 
   return (
-    <Card className="my-8 border-2 border-primary-200">
-      <CardHeader>
-        <div className="flex items-center gap-3">
-          <div className="w-12 h-12 bg-primary-600 rounded-lg flex items-center justify-center">
-            <TrendingUp className="w-6 h-6 text-white" />
-          </div>
-          <div>
-            <CardTitle className="text-2xl">Cost Per Person Ranking</CardTitle>
-            <p className="text-neutral-600 mt-1">
-              Compare hotels ranked by cost per person
-            </p>
-          </div>
-        </div>
-      </CardHeader>
-      <CardContent className="space-y-6">
-        <div className="grid gap-4 md:grid-cols-2">
-          <div>
-            <label className="block text-sm font-semibold text-neutral-900 mb-2">
-              <Users className="w-4 h-4 inline mr-2" />
-              Group Size
-            </label>
-            <Input
-              type="number"
-              min="1"
-              max="20"
-              value={guests}
-              onChange={(e) => setGuests(parseInt(e.target.value) || 1)}
-              className="w-full"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-semibold text-neutral-900 mb-2">
-              <Calendar className="w-4 h-4 inline mr-2" />
-              Number of Nights
-            </label>
-            <Input
-              type="number"
-              min="1"
-              max="14"
-              value={nightsCount}
-              onChange={(e) => setNightsCount(parseInt(e.target.value) || 1)}
-              className="w-full"
-            />
-          </div>
-        </div>
-
-        {rankings.length > 0 ? (
-          <div className="border-t border-neutral-200 pt-4">
-            <h3 className="text-lg font-semibold text-neutral-900 mb-4">
-              Hotels Ranked by Value ({guests} guests, {nightsCount} nights)
-            </h3>
-            <div className="space-y-3">
-              {rankings.map((hotel, index) => {
-                const checkInDate = checkIn || format(addDays(new Date(), 7), 'yyyy-MM-dd');
-                const checkOutDate = checkOut || format(addDays(new Date(), 7 + nightsCount), 'yyyy-MM-dd');
-                const hotelUrl = `/places-to-stay/${hotel.hotelId}?checkIn=${checkInDate}&checkOut=${checkOutDate}&adults=${guests}`;
-                
-                return (
-                  <a
-                    key={hotel.hotelId}
-                    href={hotelUrl}
-                    className={`block p-4 border-2 rounded-lg transition-all hover:shadow-md ${
-                      index === 0
-                        ? 'border-primary-400 bg-primary-50 hover:bg-primary-100'
-                        : 'border-neutral-200 bg-white hover:bg-neutral-50'
-                    }`}
-                  >
-                    <div className="flex items-start justify-between mb-2">
-                      <div className="flex-1">
-                        <div className="flex items-center gap-2 mb-1">
-                          <span className="font-semibold text-neutral-900">{hotel.name}</span>
-                          {hotel.starRating > 0 && (
-                            <div className="flex items-center gap-1">
-                              {Array.from({ length: hotel.starRating }).map((_, i) => (
-                                <Star key={i} className="w-4 h-4 fill-primary-600 text-primary-600" />
-                              ))}
-                            </div>
-                          )}
-                        </div>
-                        <div className="text-sm text-neutral-600">
-                          {hotel.location} {hotel.rating > 0 && `• ${hotel.rating.toFixed(1)}/10`}
-                        </div>
-                      </div>
-                      <div className="text-right ml-4">
-                        <div className="text-lg font-bold text-primary-600">
-                          {formatCurrency(hotel.costPerPerson)}
-                        </div>
-                        <div className="text-xs text-neutral-500">per person</div>
-                        <div className="text-xs text-neutral-500 mt-1">
-                          {formatCurrency(hotel.price)}/night
-                        </div>
-                      </div>
-                    </div>
-                    <div className="text-sm text-neutral-600 mb-2">
-                      Total: {formatCurrency(hotel.totalCost)} for {nightsCount} nights
-                    </div>
-                    {index === 0 && (
-                      <div className="mt-2 mb-2 text-sm text-primary-600 font-medium flex items-center gap-1">
-                        <TrendingUp className="w-4 h-4" />
-                        Best Value
-                      </div>
-                    )}
-                    <div className="mt-3 pt-3 border-t border-neutral-200">
-                      <span className="text-sm text-primary-600 hover:text-primary-700 font-medium">
-                        View Rates & Availability →
-                      </span>
-                    </div>
-                  </a>
-                );
-              })}
-            </div>
-          </div>
-        ) : (
-          <div className="border-t border-neutral-200 pt-4">
-            {error ? (
-              <div className="text-center py-8">
-                <p className="text-red-600 font-medium mb-2">{error}</p>
-                <p className="text-neutral-600 text-sm">Please try refreshing the page or adjusting your search criteria.</p>
+    <div className="my-8 flex justify-center">
+      <Card className="w-full max-w-[700px] border border-primary-200">
+        <CardContent className="p-6">
+          {/* Input Section */}
+          <div className="space-y-6">
+            <div className="grid gap-4 md:grid-cols-2">
+              <div>
+                <label className="block text-sm font-medium text-neutral-700 mb-2">
+                  <div className="flex items-center gap-1.5">
+                    <Users className="w-4 h-4 text-neutral-500" />
+                    <span>Group Size</span>
+                  </div>
+                </label>
+                <Input
+                  type="number"
+                  min="1"
+                  max="20"
+                  value={guests}
+                  onChange={(e) => handleInputChange('guests', parseInt(e.target.value) || 1)}
+                  className={`w-full ${guestsError ? 'border-red-300' : ''}`}
+                />
+                {guestsError && (
+                  <p className="mt-1 text-xs text-red-600">{guestsError}</p>
+                )}
               </div>
-            ) : (
-              <p className="text-neutral-600 text-center py-8">
-                No hotels available for the selected dates. Try adjusting your dates or group size.
-              </p>
-            )}
-          </div>
-        )}
+              <div>
+                <label className="block text-sm font-medium text-neutral-700 mb-2">
+                  <div className="flex items-center gap-1.5">
+                    <Calendar className="w-4 h-4 text-neutral-500" />
+                    <span>Number of Nights</span>
+                  </div>
+                </label>
+                <Input
+                  type="number"
+                  min="1"
+                  max="14"
+                  value={nightsCount}
+                  onChange={(e) => handleInputChange('nights', parseInt(e.target.value) || 1)}
+                  className={`w-full ${nightsError ? 'border-red-300' : ''}`}
+                />
+                {nightsError && (
+                  <p className="mt-1 text-xs text-red-600">{nightsError}</p>
+                )}
+              </div>
+            </div>
 
-        <div className="border-t border-neutral-200 pt-6">
-          <a
-            href={`/places-to-stay?guests=${guests}&nights=${nightsCount}${checkIn ? `&checkin=${checkIn}` : ''}${checkOut ? `&checkout=${checkOut}` : ''}`}
-            className="inline-flex items-center justify-center gap-2 bg-primary-600 hover:bg-primary-700 !text-white font-semibold px-6 py-3 rounded-lg transition-colors duration-200 shadow-md hover:shadow-lg w-full md:w-auto"
-          >
-            Compare & Book Hotels for {guests} Guests →
-          </a>
-        </div>
-      </CardContent>
-    </Card>
+            <button
+              onClick={fetchAndRankHotels}
+              disabled={loading}
+              className="w-full bg-primary-600 hover:bg-primary-700 text-white font-medium py-3 px-6 rounded-lg transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {loading ? (
+                <span className="flex items-center justify-center gap-2">
+                  <LoadingSpinner size="sm" />
+                  Calculating...
+                </span>
+              ) : (
+                'Compare Prices'
+              )}
+            </button>
+          </div>
+
+          {/* Results Section */}
+          {hasSearched && !loading && (
+            <div className="mt-8 space-y-4" style={{ opacity: 0, animation: 'fadeIn 0.3s ease-in-out forwards' }}>
+              {rankings.length > 0 ? (
+                <>
+                  <div className="text-sm text-neutral-600 mb-4">
+                    Sorted by lowest cost per person
+                  </div>
+                  <div className="space-y-4">
+                    {visibleRankings.map((hotel, index) => {
+                      const checkInDate = checkIn || format(addDays(new Date(), 7), 'yyyy-MM-dd');
+                      const checkOutDate = checkOut || format(addDays(new Date(), 7 + nightsCount), 'yyyy-MM-dd');
+                      const hotelUrl = `/places-to-stay/${hotel.hotelId}?checkIn=${checkInDate}&checkOut=${checkOutDate}&adults=${guests}`;
+                      
+                      return (
+                        <a
+                          key={hotel.hotelId}
+                          href={hotelUrl}
+                          className="block p-4 border border-neutral-200 rounded-lg hover:border-primary-300 hover:bg-neutral-50 transition-all duration-200"
+                        >
+                          <div className="flex items-start justify-between gap-4">
+                            <div className="flex-1 min-w-0">
+                              <h4 className="font-semibold text-neutral-900 mb-1 truncate">
+                                {hotel.name}
+                              </h4>
+                              <p className="text-sm text-neutral-600">
+                                {hotel.location}
+                                {hotel.rating > 0 && ` • ${hotel.rating.toFixed(1)}/10`}
+                              </p>
+                            </div>
+                            <div className="text-right flex-shrink-0">
+                              <div className="text-2xl font-bold text-primary-600 mb-0.5">
+                                {formatCurrency(hotel.costPerPerson)}
+                              </div>
+                              <div className="text-xs text-neutral-500">per person</div>
+                              <div className="text-xs text-neutral-500 mt-1">
+                                {formatCurrency(hotel.totalCost)} total
+                              </div>
+                            </div>
+                          </div>
+                          <div className="mt-3 pt-3 border-t border-neutral-100">
+                            <span className="text-sm text-primary-600 font-medium flex items-center gap-1">
+                              View Details
+                              <ArrowRight className="w-3 h-3" />
+                            </span>
+                          </div>
+                        </a>
+                      );
+                    })}
+                  </div>
+                  {rankings.length > 8 && (
+                    <div className="text-sm text-neutral-500 text-center pt-2">
+                      Showing 8 of {rankings.length} properties
+                    </div>
+                  )}
+                </>
+              ) : (
+                <div className="text-center py-8">
+                  {error ? (
+                    <>
+                      <p className="text-neutral-700 font-medium mb-2">{error}</p>
+                      <p className="text-sm text-neutral-600">
+                        Please try adjusting your dates or group size.
+                      </p>
+                    </>
+                  ) : (
+                    <p className="text-neutral-600">
+                      No hotels available for the selected dates. Try adjusting your dates or group size.
+                    </p>
+                  )}
+                </div>
+              )}
+            </div>
+          )}
+        </CardContent>
+      </Card>
+    </div>
   );
 }

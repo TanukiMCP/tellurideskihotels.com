@@ -16,6 +16,7 @@ export interface HotelCardProps {
   isHovered?: boolean;
   onMouseEnter?: () => void;
   onMouseLeave?: () => void;
+  variant?: 'default' | 'compact'; // 'compact' for blog/article context
 }
 
 export function HotelCard({ 
@@ -30,6 +31,7 @@ export function HotelCard({
   isHovered = false,
   onMouseEnter,
   onMouseLeave,
+  variant = 'default',
 }: HotelCardProps) {
   const imageUrl = getHotelMainImage(hotel);
   const address = formatHotelAddress(hotel);
@@ -56,7 +58,9 @@ export function HotelCard({
       onClick={() => onSelect(hotel.hotel_id)}
     >
       {/* Image Section with seamless connection to content */}
-      <div className="relative h-56 overflow-hidden bg-gradient-to-br from-neutral-50 to-neutral-100">
+      <div className={`relative overflow-hidden bg-gradient-to-br from-neutral-50 to-neutral-100 ${
+        variant === 'compact' ? 'h-[200px] aspect-[16/9]' : 'h-56'
+      }`}>
         {imageUrl ? (
           <img
             src={imageUrl}
@@ -85,9 +89,11 @@ export function HotelCard({
       </div>
       
       {/* Content Section - Enhanced hierarchy and spacing */}
-      <div className="flex flex-col flex-grow p-6 bg-white">
+      <div className={`flex flex-col flex-grow bg-white ${variant === 'compact' ? 'p-4' : 'p-6'}`}>
         {/* Hotel Name - Hero element with confident typography */}
-        <h3 className="font-bold text-2xl text-neutral-900 mb-2.5 leading-tight line-clamp-2 tracking-tight group-hover:text-primary-700 transition-colors">
+        <h3 className={`font-bold text-neutral-900 mb-2.5 leading-tight line-clamp-2 tracking-tight group-hover:text-primary-700 transition-colors ${
+          variant === 'compact' ? 'text-lg' : 'text-2xl'
+        }`}>
           {hotel.name}
         </h3>
         
@@ -119,13 +125,15 @@ export function HotelCard({
         <div className="flex-grow"></div>
         
         {/* Pricing Section - Refined with better visual connection */}
-        <div className="mt-auto pt-5 border-t border-neutral-200/80">
+        <div className={`mt-auto border-t border-neutral-200/80 ${variant === 'compact' ? 'pt-3' : 'pt-5'}`}>
           {minPrice && minPrice > 0 ? (
             <>
-              <div className="mb-4">
+              <div className={variant === 'compact' ? 'mb-3' : 'mb-4'}>
                 <p className="text-xs text-neutral-500 uppercase tracking-wider font-medium mb-1.5">From</p>
                 <div className="flex items-baseline gap-1.5">
-                  <span className="text-2xl font-bold text-primary-600 tracking-tight">
+                  <span className={`font-bold text-primary-600 tracking-tight ${
+                    variant === 'compact' ? 'text-xl' : 'text-2xl'
+                  }`}>
                     {formatCurrency(minPrice, currency)}
                   </span>
                   <span className="text-sm text-neutral-500 font-normal">/ night</span>
@@ -137,19 +145,23 @@ export function HotelCard({
                   e.stopPropagation();
                   onSelect(hotel.hotel_id);
                 }}
-                className="w-full bg-primary-600 hover:bg-primary-700 text-white font-semibold py-3 px-4 rounded-lg transition-all duration-200 shadow-sm hover:shadow-md hover:scale-[1.02] active:scale-[0.98]"
+                className={`w-full bg-primary-600 hover:bg-primary-700 text-white font-semibold rounded-lg transition-all duration-200 shadow-sm hover:shadow-md hover:scale-[1.02] active:scale-[0.98] ${
+                  variant === 'compact' ? 'py-2 px-3 text-sm' : 'py-3 px-4'
+                }`}
                 type="button"
               >
-                Check Availability
+                {variant === 'compact' ? 'View Rates' : 'Check Availability'}
               </button>
             </>
           ) : (
             <>
-              <div className="mb-4">
+              <div className={variant === 'compact' ? 'mb-3' : 'mb-4'}>
                 <p className="text-xs text-neutral-500 uppercase tracking-wider font-medium mb-2">
                   Pricing Available
                 </p>
-                <p className="text-sm text-neutral-600 leading-relaxed font-normal">
+                <p className={`text-neutral-600 leading-relaxed font-normal ${
+                  variant === 'compact' ? 'text-xs' : 'text-sm'
+                }`}>
                   Select dates to view rates
                 </p>
               </div>
@@ -159,7 +171,9 @@ export function HotelCard({
                   e.stopPropagation();
                   onSelect(hotel.hotel_id);
                 }}
-                className="w-full bg-primary-600 hover:bg-primary-700 text-white font-semibold py-3 px-4 rounded-lg transition-all duration-200 shadow-sm hover:shadow-md hover:scale-[1.02] active:scale-[0.98]"
+                className={`w-full bg-primary-600 hover:bg-primary-700 text-white font-semibold rounded-lg transition-all duration-200 shadow-sm hover:shadow-md hover:scale-[1.02] active:scale-[0.98] ${
+                  variant === 'compact' ? 'py-2 px-3 text-sm' : 'py-3 px-4'
+                }`}
                 type="button"
               >
                 View Details & Rates

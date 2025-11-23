@@ -1066,6 +1066,101 @@ dining-telluride-restaurant-interior.jpg
 **Optimal Placement:**
 1. Hero image at top (before content)
 2. First body image after 2-3 paragraphs
+
+---
+
+## Hotel Card Design Standards for Blog Content
+
+### Critical Design Principles
+
+**Visual Hierarchy:**
+- In blog articles, written content leads and imagery enhances
+- Hotel cards are supporting elements, not primary focal points
+- Cards should complement text flow, not dominate the page
+- Reader's eye should go to content first, cards second
+
+### Card Dimensions & Layout
+
+**Desktop:**
+- **Card width:** 280-320px maximum per card
+- **Image height:** 180-220px (not 224px/h-56)
+- **Aspect ratio:** 16:9 for images (maintains consistency and quality)
+- **Grid layout:** 3 cards per row with 20-24px gutters (gap-5 or gap-6)
+- **Three cards must fit comfortably in one row** - no awkward wrapping
+
+**Tablet/Mobile:**
+- Stack to single column on mobile
+- Two columns on tablet (md breakpoint)
+- Maintain same card width constraints
+
+**Responsive Breakpoints:**
+```css
+grid-cols-1          /* Mobile: single column */
+md:grid-cols-2       /* Tablet: two columns */
+lg:grid-cols-3       /* Desktop: three columns */
+gap-5 md:gap-6       /* 20px mobile, 24px desktop */
+```
+
+### Image Quality Standards
+
+**Prevent Over-Scaling:**
+- Images displayed at 30-40% of full-resolution dimensions
+- Use `object-cover` with proper aspect ratio containers
+- Never stretch images beyond native resolution
+- Select hero shots that work at smaller dimensions (280-320px width)
+- Avoid forcing full-resolution lifestyle photos into card thumbnails
+
+**Aspect Ratio Control:**
+- Use `aspect-[16/9]` or `aspect-[3/2]` containers
+- Intentional cropping maintains visual consistency
+- Prevents image degradation and compression artifacts
+
+### Component Implementation
+
+**HotelGrid Component (Blog Context):**
+- Uses `variant="compact"` prop on HotelCard
+- Grid: `grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6`
+- Each card wrapped in `max-w-[320px] mx-auto lg:mx-0` container
+
+**HotelCard Variants:**
+- `variant="default"`: Full-size cards for main listing pages (h-56 images)
+- `variant="compact"`: Blog/article context (h-[200px] images, smaller padding, reduced typography)
+
+### Visual Restraint
+
+**Design Philosophy:**
+- Minimal decoration, focus on function
+- Cards should feel like professional planning tools
+- Not flashy booking engines
+- Clean, editorial aesthetic
+- Subtle hover states, not aggressive animations
+
+**What to Avoid:**
+- Cards wider than 320px in blog content
+- Images taller than 220px in blog context
+- Forcing 2-column layouts when 3 should fit
+- Over-scaling images causing blur/artifacts
+- Cards that dominate over text content
+- Inconsistent spacing or gutters
+
+### Example Correct Implementation
+
+```tsx
+// Blog HotelGrid - Correct sizing
+<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6">
+  {hotels.map((hotel) => (
+    <div key={hotel.id} className="max-w-[320px] mx-auto lg:mx-0">
+      <HotelCard
+        hotel={hotel}
+        variant="compact"  // Critical for blog sizing
+        // ... other props
+      />
+    </div>
+  ))}
+</div>
+```
+
+### Image Placement Strategy
 3. Images every 300-400 words thereafter
 4. Image before/after comparison tables
 5. Image in FAQ section (if relevant)
