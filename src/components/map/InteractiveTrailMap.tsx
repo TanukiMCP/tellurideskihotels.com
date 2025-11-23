@@ -121,7 +121,7 @@ export default function InteractiveTrailMap() {
     }
   }, [isMapLoaded]); // Only run once when map loads
 
-  // Handle map style changes (terrain vs satellite)
+  // Handle map style changes (terrain vs satellite) and apply snow effect for winter satellite
   useEffect(() => {
     if (!mapRef.current || !isMapLoaded) return;
     
@@ -139,6 +139,52 @@ export default function InteractiveTrailMap() {
     try {
       map.setStyle(styleToUse);
       console.log('[InteractiveTrailMap] Switched to', mapStyle, mapStyle === 'satellite' ? `(${season})` : '');
+      
+      // Apply snow effect for winter satellite view
+      // Wait for style to load before applying snow (Mapbox requirement)
+      const applySnowEffect = () => {
+        // Check if setSnow method is available (v3.9+)
+        if (typeof (map as any).setSnow === 'function') {
+          if (mapStyle === 'satellite' && season === 'winter') {
+            // Enable snow effect for winter satellite view
+            // Using Mapbox's setSnow() method with realistic parameters
+            try {
+              (map as any).setSnow({
+                density: ['interpolate', ['linear'], ['zoom'], 10, 0.4, 15, 0.7, 20, 1.0],
+                intensity: ['interpolate', ['linear'], ['zoom'], 10, 0.5, 15, 0.8, 20, 1.0],
+                direction: 180, // Snow falling downward (degrees)
+                opacity: ['interpolate', ['linear'], ['zoom'], 10, 0.6, 15, 0.8, 20, 0.95],
+                color: '#ffffff', // White snow
+                'flake-size': ['interpolate', ['linear'], ['zoom'], 10, 0.8, 15, 1.2, 20, 1.8],
+                vignette: true // Add vignette effect for atmosphere
+              });
+              console.log('[InteractiveTrailMap] ✅ Applied snow effect for winter satellite view');
+            } catch (snowError) {
+              console.warn('[InteractiveTrailMap] ⚠️ Snow effect failed:', snowError);
+            }
+          } else {
+            // Disable snow effect for summer or terrain views
+            try {
+              (map as any).setSnow(null);
+              console.log('[InteractiveTrailMap] ❄️ Disabled snow effect');
+            } catch (snowError) {
+              // Silently ignore errors when disabling snow
+            }
+          }
+        } else {
+          console.warn('[InteractiveTrailMap] ⚠️ setSnow() method not available. Mapbox GL JS v3.9+ required.');
+        }
+      };
+      
+      // Wait for style to load before applying snow (required by Mapbox)
+      if (map.isStyleLoaded()) {
+        // Small delay to ensure style is fully ready
+        setTimeout(applySnowEffect, 100);
+      } else {
+        map.once('style.load', () => {
+          setTimeout(applySnowEffect, 100);
+        });
+      }
     } catch (error) {
       console.error('[InteractiveTrailMap] Error switching map style:', error);
     }
