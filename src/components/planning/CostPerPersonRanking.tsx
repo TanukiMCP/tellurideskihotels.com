@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Input } from '@/components/ui/Input';
 import { TrendingUp, Users, Calendar, Star } from 'lucide-react';
@@ -38,10 +38,32 @@ export function CostPerPersonRanking({
   const [nightsCount, setNightsCount] = useState(nights);
   const [loading, setLoading] = useState(true);
   const [rankings, setRankings] = useState<HotelRanking[]>([]);
+  const [error, setError] = useState<string | null>(null);
+  const hotelIdsRef = useRef<string>(hotelIds.join(','));
 
   useEffect(() => {
+    // Only run on client side
+    if (typeof window === 'undefined') return;
+    
+    const currentHotelIds = hotelIds.join(',');
+    if (hotelIdsRef.current !== currentHotelIds) {
+      hotelIdsRef.current = currentHotelIds;
+    }
+    
     fetchAndRankHotels();
-  }, [guests, nightsCount, hotelIds, checkIn, checkOut]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [guests, nightsCount, checkIn, checkOut]);
+  
+  // Separate effect for hotelIds changes
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const currentHotelIds = hotelIds.join(',');
+    if (hotelIdsRef.current !== currentHotelIds) {
+      hotelIdsRef.current = currentHotelIds;
+      fetchAndRankHotels();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [hotelIds.join(',')]);
 
   const fetchAndRankHotels = async () => {
     try {
@@ -62,7 +84,9 @@ export function CostPerPersonRanking({
       const hotelsResponse = await fetch(`/api/liteapi/search?${searchParams.toString()}`);
       
       if (!hotelsResponse.ok) {
+        setError('Failed to load hotels. Please try again later.');
         setRankings([]);
+        setLoading(false);
         return;
       }
       
@@ -89,7 +113,9 @@ export function CostPerPersonRanking({
       const ratesResponse = await fetch(`/api/hotels/min-rates?${ratesParams.toString()}`);
       
       if (!ratesResponse.ok) {
+        setError('Failed to load hotel rates. Please try again later.');
         setRankings([]);
+        setLoading(false);
         return;
       }
       
@@ -125,7 +151,10 @@ export function CostPerPersonRanking({
       
       hotelRankings.sort((a, b) => a.costPerPerson - b.costPerPerson);
       setRankings(hotelRankings);
+      setError(null);
     } catch (err) {
+      console.error('Error fetching hotel rankings:', err);
+      setError(err instanceof Error ? err.message : 'An error occurred while loading hotels.');
       setRankings([]);
     } finally {
       setLoading(false);
@@ -267,9 +296,16 @@ export function CostPerPersonRanking({
           </div>
         ) : (
           <div className="border-t border-neutral-200 pt-4">
-            <p className="text-neutral-600 text-center py-8">
-              No hotels available for the selected dates. Try adjusting your dates or group size.
-            </p>
+            {error ? (
+              <div className="text-center py-8">
+                <p className="text-red-600 font-medium mb-2">{error}</p>
+                <p className="text-neutral-600 text-sm">Please try refreshing the page or adjusting your search criteria.</p>
+              </div>
+            ) : (
+              <p className="text-neutral-600 text-center py-8">
+                No hotels available for the selected dates. Try adjusting your dates or group size.
+              </p>
+            )}
           </div>
         )}
 
