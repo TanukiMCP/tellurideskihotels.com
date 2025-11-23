@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Input } from '@/components/ui/Input';
-import { Calculator, Users, Calendar, DollarSign, TrendingUp } from 'lucide-react';
+import { Calculator, Users, Calendar, DollarSign, TrendingUp, Hotel, Snowflake, Target, Utensils } from 'lucide-react';
 import { LoadingSpinner } from '@/components/shared/LoadingSpinner';
 import { addDays, format } from 'date-fns';
 
@@ -35,15 +35,21 @@ export function GroupCostCalculator({
   const [totalCost, setTotalCost] = useState(0);
   const [costPerPerson, setCostPerPerson] = useState(0);
 
+  // Initial calculation on mount
+  useEffect(() => {
+    calculateCosts();
+    fetchRates();
+  }, []); // Run once on mount
+
+  // Recalculate when inputs change
+  useEffect(() => {
+    calculateCosts();
+  }, [guests, nights, lodgingRate]);
+
+  // Re-fetch rates when dates change
   useEffect(() => {
     fetchRates();
-  }, [checkInDate, checkOutDate, nights]);
-
-  useEffect(() => {
-    if (!loading) {
-      calculateCosts();
-    }
-  }, [guests, nights, lodgingRate, loading]);
+  }, [checkInDate, checkOutDate]);
 
   const fetchRates = async () => {
     try {
@@ -120,7 +126,7 @@ export function GroupCostCalculator({
     const dining = DINING_COST_PER_DAY * nights * guests;
     
     const total = lodging + liftTickets + activities + dining;
-    const perPerson = total / guests;
+    const perPerson = guests > 0 ? total / guests : 0;
     
     setTotalCost(total);
     setCostPerPerson(perPerson);
@@ -134,30 +140,22 @@ export function GroupCostCalculator({
     }).format(amount);
   };
 
-  if (loading) {
-    return (
-      <Card className="my-8 border-2 border-primary-200">
-        <CardContent className="py-12">
-          <div className="flex justify-center items-center">
-            <LoadingSpinner size="lg" />
-          </div>
-        </CardContent>
-      </Card>
-    );
-  }
-
+  // Show content immediately, loading indicator only for rate updates
   return (
-    <Card className="my-8 border-2 border-primary-200">
+    <Card className="my-8 border-2 border-primary-200 shadow-sm">
       <CardHeader>
         <div className="flex items-center gap-3">
-          <div className="w-12 h-12 bg-primary-600 rounded-lg flex items-center justify-center">
+          <div className="w-12 h-12 bg-primary-600 rounded-lg flex items-center justify-center shadow-md">
             <Calculator className="w-6 h-6 text-white" />
           </div>
-          <div>
+          <div className="flex-1">
             <CardTitle className="text-2xl">Group Cost Calculator</CardTitle>
-            <p className="text-neutral-600 mt-1">
-              Estimate total trip expenses for your group
-            </p>
+            <div className="flex items-center justify-between">
+              <p className="text-neutral-600 mt-1">
+                Estimate total trip expenses for your group
+              </p>
+              {loading && <span className="text-xs text-primary-600 animate-pulse flex items-center gap-1"><LoadingSpinner size="sm" /> Updating rates...</span>}
+            </div>
           </div>
         </div>
       </CardHeader>
@@ -239,14 +237,14 @@ export function GroupCostCalculator({
           </h3>
           <div className="space-y-3">
             {[
-              { label: 'Lodging', amount: lodgingRate * nights, icon: '🏨' },
-              { label: 'Lift Tickets', amount: LIFT_TICKET_COST * nights * guests, icon: '🎿' },
-              { label: 'Activities', amount: ACTIVITIES_COST_PER_DAY * nights * guests, icon: '🎯' },
-              { label: 'Dining', amount: DINING_COST_PER_DAY * nights * guests, icon: '🍽️' },
+              { label: 'Lodging', amount: lodgingRate * nights, icon: Hotel },
+              { label: 'Lift Tickets', amount: LIFT_TICKET_COST * nights * guests, icon: Snowflake },
+              { label: 'Activities', amount: ACTIVITIES_COST_PER_DAY * nights * guests, icon: Target },
+              { label: 'Dining', amount: DINING_COST_PER_DAY * nights * guests, icon: Utensils },
             ].map((item) => (
               <div key={item.label} className="flex justify-between items-center p-3 bg-neutral-50 rounded-lg">
                 <span className="font-medium text-neutral-900 flex items-center gap-2">
-                  <span>{item.icon}</span>
+                  <item.icon className="w-4 h-4 text-primary-600" />
                   {item.label}
                 </span>
                 <span className="font-bold text-primary-600">

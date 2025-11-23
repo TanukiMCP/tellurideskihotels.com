@@ -111,10 +111,12 @@ const categoryName = data.category.replace(/-/g, ' ');
 
       <div class="grid gap-8 lg:grid-cols-[1fr_280px] py-12">
         <!-- Main Content -->
-        <div class="max-w-[720px] mx-auto lg:mx-0">
-          <!-- Social Share - Floating Left (Desktop) -->
-          <div class="hidden lg:block fixed left-8 top-1/2 transform -translate-y-1/2 z-10">
-            <ShareButtons client:load url={fullUrl} title={data.title} />
+        <div class="max-w-[720px] mx-auto lg:mx-0 relative">
+          <!-- Social Share - Sticky in Column (Desktop) -->
+          <div class="hidden lg:block absolute -left-24 top-0 h-full">
+            <div class="sticky top-24">
+              <ShareButtons client:load url={fullUrl} title={data.title} />
+            </div>
           </div>
 
           <!-- Social Share - Above Content (Mobile/Tablet) -->
