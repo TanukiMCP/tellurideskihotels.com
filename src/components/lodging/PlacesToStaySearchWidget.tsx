@@ -86,56 +86,54 @@ function PlacesToStaySearchWidgetContent({}: PlacesToStaySearchWidgetProps) {
   // Track if we've done the initial search
   const hasSearchedRef = useRef(false);
 
-  // Single search function - called ONCE on mount
-  const performSearch = useCallback(async () => {
+  // Single search on mount - that's it, no dependencies that change
+  useEffect(() => {
     if (hasSearchedRef.current) return; // Only search once
     hasSearchedRef.current = true;
 
     setLoading(true);
     setError('');
 
-    try {
-      const params = new URLSearchParams({
-        cityName: location,
-        countryCode: 'US',
-        checkin: checkIn,
-        checkout: checkOut,
-        adults: adults.toString(),
-        limit: '5000',
-      });
+    const params = new URLSearchParams({
+      cityName: location,
+      countryCode: 'US',
+      checkin: checkIn,
+      checkout: checkOut,
+      adults: adults.toString(),
+      limit: '5000',
+    });
 
-      const response = await fetch(`/api/liteapi/search-with-rates?${params.toString()}`);
-
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.error || 'Failed to search hotels');
-      }
-
-      const data = await response.json();
-      const hotels = data.data || [];
-      const minPricesMap: Record<string, number> = {};
-
-      hotels.forEach((hotel: any) => {
-        if (hotel.minPrice) {
-          minPricesMap[hotel.hotel_id] = hotel.minPrice;
+    fetch(`/api/liteapi/search-with-rates?${params.toString()}`)
+      .then(response => {
+        if (!response.ok) {
+          return response.json().then(errorData => {
+            throw new Error(errorData.error || 'Failed to search hotels');
+          });
         }
+        return response.json();
+      })
+      .then(data => {
+        const hotels = data.data || [];
+        const minPricesMap: Record<string, number> = {};
+
+        hotels.forEach((hotel: any) => {
+          if (hotel.minPrice) {
+            minPricesMap[hotel.hotel_id] = hotel.minPrice;
+          }
+        });
+
+        setAllHotels(hotels);
+        setMinPrices(minPricesMap);
+      })
+      .catch(err => {
+        console.error('[Places to Stay Widget] Search error:', err);
+        setError('Failed to search hotels');
+        hasSearchedRef.current = false; // Allow retry on error
+      })
+      .finally(() => {
+        setLoading(false);
       });
-
-      setAllHotels(hotels);
-      setMinPrices(minPricesMap);
-    } catch (err) {
-      console.error('[Places to Stay Widget] Search error:', err);
-      setError('Failed to search hotels');
-      hasSearchedRef.current = false; // Allow retry on error
-    } finally {
-      setLoading(false);
-    }
-  }, [checkIn, checkOut, adults, location]);
-
-  // Single search on mount - that's it
-  useEffect(() => {
-    performSearch();
-  }, [performSearch]);
+  }, []); // Empty deps - only run once on mount
 
   // Filter and sort hotels - pure computation, no side effects
   const filteredAndSortedHotels = React.useMemo(() => {
