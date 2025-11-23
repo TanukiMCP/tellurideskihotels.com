@@ -479,61 +479,32 @@ export async function searchHotelsWithRates(params: {
     return { hotels: [], minPrices: {} };
   }
 
-  // Use streaming for bulk searches (10+ hotels) to reduce load times
-  const useStreaming = hotelIds.length >= 10;
+  // Use the optimized min-rates endpoint for listings - much faster!
+  // This endpoint is specifically designed for displaying price comparisons
+  // and returns only the cheapest rate per hotel, not all rate options
+  console.log('[LiteAPI Rates] Using min-rates endpoint for fast price lookup:', hotelIds.length, 'hotels');
+  
+  const nights = Math.ceil((new Date(params.checkOut).getTime() - new Date(params.checkIn).getTime()) / (1000 * 60 * 60 * 24));
+  
+  const minRatesData = await getMinRates({
+    hotelIds,
+    checkIn: params.checkIn,
+    checkOut: params.checkOut,
+    adults: params.adults,
+    currency: 'USD',
+    guestNationality: 'US',
+    timeout: 10, // Increased timeout for large batches
+  });
+
+  // Transform min-rates response to per-night prices
+  // Min-rates returns TOTAL price for the stay, we need per-night for listings
   const minPrices: Record<string, number> = {};
-
-  if (useStreaming) {
-    console.log('[LiteAPI Rates] Using streaming for bulk search:', hotelIds.length, 'hotels');
-    
-    // Collect rates as they stream in
-    await searchRatesStream(
-      {
-        hotelIds: hotelIds.join(','),
-        checkIn: params.checkIn,
-        checkOut: params.checkOut,
-        adults: params.adults,
-        rooms: 1,
-      },
-      async (ratesChunk) => {
-        // Process each chunk as it arrives
-        ratesChunk.forEach((hotel: any) => {
-          const hotelMinPrice = hotel.rooms?.flatMap((r: any) =>
-            r.rates?.map((rate: any) => rate.net?.amount || Infinity)
-          ).filter((p: number) => p !== Infinity);
-
-          if (hotelMinPrice && hotelMinPrice.length > 0) {
-            const currentMin = minPrices[hotel.hotel_id];
-            const newMin = Math.min(...hotelMinPrice);
-            minPrices[hotel.hotel_id] = currentMin ? Math.min(currentMin, newMin) : newMin;
-          }
-        });
-      }
-    );
-  } else {
-    // Use regular API for small searches (faster for single/few hotels)
-    console.log('[LiteAPI Rates] Using regular API for small search:', hotelIds.length, 'hotels');
-    
-    const ratesResponse = await searchRates({
-      hotelIds: hotelIds.join(','),
-      checkIn: params.checkIn,
-      checkOut: params.checkOut,
-      adults: params.adults,
-      rooms: 1, // Default to 1 room
-    });
-
-    if (ratesResponse.data && ratesResponse.data.length > 0) {
-      ratesResponse.data.forEach((hotel: any) => {
-        const hotelMinPrice = hotel.rooms?.flatMap((r: any) =>
-          r.rates?.map((rate: any) => rate.net?.amount || Infinity)
-        ).filter((p: number) => p !== Infinity);
-
-        if (hotelMinPrice && hotelMinPrice.length > 0) {
-          minPrices[hotel.hotel_id] = Math.min(...hotelMinPrice);
-        }
-      });
+  Object.entries(minRatesData).forEach(([hotelId, rateData]) => {
+    if (rateData.price) {
+      // Convert total price to per-night price
+      minPrices[hotelId] = nights > 0 ? rateData.price / nights : rateData.price;
     }
-  }
+  });
 
   const hotelIdsWithRates = Object.keys(minPrices);
   console.log('[LiteAPI Rates] Hotels with availability:', {
