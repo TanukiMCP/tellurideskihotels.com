@@ -70,7 +70,6 @@ export default function InteractiveTrailMap() {
   const [showLegendPanel, setShowLegendPanel] = useState(true);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [isMapLoaded, setIsMapLoaded] = useState(false);
-  const [terrainWasEnabled, setTerrainWasEnabled] = useState(false); // Track terrain state before style change
   const containerRef = useRef<HTMLDivElement>(null);
 
   // Handle map load and apply 3D terrain
@@ -103,37 +102,34 @@ export default function InteractiveTrailMap() {
     }
   }, [isMapLoaded]); // Only run once when map loads
 
-  // Handle style changes - disable terrain for satellite, restore for outdoors
+  // Handle style changes - preserve terrain state and restore after style loads
   useEffect(() => {
     if (!mapRef.current || !isMapLoaded) return;
     
     const map = mapRef.current.getMap();
     
     const handleStyleChange = () => {
-      if (mapStyle === 'satellite') {
-        // Satellite doesn't support 3D terrain well - disable it
-        if (terrainEnabled) {
-          setTerrainWasEnabled(true); // Remember it was enabled
-          map.setTerrain(null);
-          setTerrainEnabled(false);
-        }
-      } else if (mapStyle === 'outdoors') {
-        // Restore terrain if it was enabled before switching to satellite
-        // Wait a bit for sources to be ready
-        setTimeout(() => {
-          if (terrainWasEnabled && map.getSource('mapbox-dem')) {
-            map.setTerrain({ source: 'mapbox-dem', exaggeration: 2.0 });
-            map.jumpTo({
-              center: [SUMMIT_3D_VIEWPOINT.longitude, SUMMIT_3D_VIEWPOINT.latitude],
-              zoom: SUMMIT_3D_VIEWPOINT.zoom,
-              pitch: SUMMIT_3D_VIEWPOINT.pitch,
-              bearing: SUMMIT_3D_VIEWPOINT.bearing
-            });
-            setTerrainEnabled(true);
-            console.log('[InteractiveTrailMap] Restored 3D terrain after switching back to outdoors');
+      // After style change, restore terrain if it was enabled
+      // Wait for sources to be added by the main effect
+      setTimeout(() => {
+        if (terrainEnabled && map.getSource('mapbox-dem')) {
+          map.setTerrain({ source: 'mapbox-dem', exaggeration: 2.0 });
+          
+          // If terrain was enabled, restore 3D camera position
+          if (terrainEnabled) {
+            const currentPitch = map.getPitch();
+            if (currentPitch < 45) {
+              map.easeTo({
+                pitch: SUMMIT_3D_VIEWPOINT.pitch,
+                bearing: map.getBearing() || SUMMIT_3D_VIEWPOINT.bearing,
+                duration: 500
+              });
+            }
           }
-        }, 300);
-      }
+          
+          console.log('[InteractiveTrailMap] Restored 3D terrain after style change to', mapStyle);
+        }
+      }, 400); // Wait for sources to be added
     };
     
     if (!map.isStyleLoaded()) {
@@ -141,7 +137,7 @@ export default function InteractiveTrailMap() {
     } else {
       handleStyleChange();
     }
-  }, [mapStyle, isMapLoaded, terrainEnabled, terrainWasEnabled]);
+  }, [mapStyle, isMapLoaded, terrainEnabled]);
 
   // Load all map data (trails, lifts, POIs) after map is loaded and on style/visibility changes
   useEffect(() => {
@@ -151,10 +147,10 @@ export default function InteractiveTrailMap() {
 
     // Wait for style to be fully loaded before adding sources
     const addTerrainAndLayers = () => {
-      // Re-add terrain sources if they don't exist (e.g., after style change)
-      // Only add terrain sources for outdoors style (satellite doesn't need them)
-      if (mapStyle === 'outdoors') {
-        if (!map.getSource('local-terrain')) {
+      // Add terrain sources for BOTH styles - satellite can have 3D terrain too!
+      // This allows 3D satellite view with custom layers overlaid
+      if (!map.getSource('local-terrain')) {
+        try {
           map.addSource('local-terrain', {
             type: 'raster-dem',
             tiles: [window.location.origin + '/tiles/terrain/{z}/{x}/{y}.png'],
@@ -163,38 +159,45 @@ export default function InteractiveTrailMap() {
             maxzoom: 14,
             encoding: 'terrarium'
           });
+        } catch (err) {
+          console.log('[InteractiveTrailMap] Local terrain source already exists or error:', err);
         }
-        
-        if (!map.getSource('mapbox-dem')) {
+      }
+      
+      if (!map.getSource('mapbox-dem')) {
+        try {
           map.addSource('mapbox-dem', {
             type: 'raster-dem',
             url: 'mapbox://mapbox.mapbox-terrain-dem-v1',
             tileSize: 512,
             maxzoom: 14
           });
+        } catch (err) {
+          console.log('[InteractiveTrailMap] Mapbox DEM source already exists or error:', err);
         }
-        
-        // Re-apply terrain if it was previously enabled (e.g., after style change)
-        if (terrainEnabled && mapStyle === 'outdoors') {
-          // Small delay to ensure source is ready
-          setTimeout(() => {
-            if (map.getSource('mapbox-dem')) {
-              // First restore the 3D camera position
-              const currentPitch = map.getPitch();
-              const currentBearing = map.getBearing();
-              
+      }
+      
+      // Re-apply terrain if it was previously enabled (works for both styles)
+      if (terrainEnabled) {
+        // Small delay to ensure source is ready
+        setTimeout(() => {
+          if (map.getSource('mapbox-dem')) {
+            // Apply terrain to current style (outdoors or satellite)
+            map.setTerrain({ source: 'mapbox-dem', exaggeration: 2.0 });
+            
+            // Restore 3D camera position if needed
+            const currentPitch = map.getPitch();
+            if (currentPitch < 45) {
               map.easeTo({
-                pitch: currentPitch < 45 ? SUMMIT_3D_VIEWPOINT.pitch : currentPitch,
-                bearing: currentBearing,
+                pitch: SUMMIT_3D_VIEWPOINT.pitch,
+                bearing: map.getBearing() || SUMMIT_3D_VIEWPOINT.bearing,
                 duration: 500
               });
-              
-              // Then apply terrain
-              map.setTerrain({ source: 'mapbox-dem', exaggeration: 2.0 });
-              console.log('[InteractiveTrailMap] Re-applied 3D terrain and camera after style change');
             }
-          }, 100);
-        }
+            
+            console.log('[InteractiveTrailMap] Re-applied 3D terrain to', mapStyle, 'style');
+          }
+        }, 200);
       }
 
     // Hide default Mapbox trail layers
@@ -617,20 +620,25 @@ export default function InteractiveTrailMap() {
     const map = mapRef.current?.getMap();
     if (!map || !map.isStyleLoaded()) return;
 
-    // 3D terrain is not supported in satellite mode
-    if (mapStyle === 'satellite') {
-      console.warn('[InteractiveTrailMap] 3D terrain not available in satellite mode');
-      return;
-    }
-
     const newTerrainState = !terrainEnabled;
     
     if (newTerrainState) {
       // Enable 3D terrain - ensure source exists first
       const demSource = map.getSource('mapbox-dem');
       if (!demSource) {
-        console.warn('[InteractiveTrailMap] mapbox-dem source not found');
-        return;
+        console.warn('[InteractiveTrailMap] mapbox-dem source not found, adding it...');
+        // Try to add it if it doesn't exist
+        try {
+          map.addSource('mapbox-dem', {
+            type: 'raster-dem',
+            url: 'mapbox://mapbox.mapbox-terrain-dem-v1',
+            tileSize: 512,
+            maxzoom: 14
+          });
+        } catch (err) {
+          console.error('[InteractiveTrailMap] Failed to add mapbox-dem source:', err);
+          return;
+        }
       }
       
       // Set camera position first (no animation, instant)
@@ -641,10 +649,9 @@ export default function InteractiveTrailMap() {
         bearing: SUMMIT_3D_VIEWPOINT.bearing
       });
       
-      // Then enable terrain
+      // Then enable terrain (works for both outdoors and satellite styles)
       map.setTerrain({ source: 'mapbox-dem', exaggeration: 2.0 });
       setTerrainEnabled(true);
-      setTerrainWasEnabled(true);
       
     } else {
       // Disable 3D terrain first
@@ -663,7 +670,6 @@ export default function InteractiveTrailMap() {
       });
       
       setTerrainEnabled(false);
-      setTerrainWasEnabled(false);
     }
   };
 
@@ -872,24 +878,16 @@ export default function InteractiveTrailMap() {
               <h4 className="text-sm font-black text-neutral-900 mb-3 uppercase tracking-wide">Terrain View</h4>
               <button
                 onClick={toggle3D}
-                disabled={mapStyle === 'satellite'}
                 className={`w-full flex items-center justify-center gap-2 px-4 py-3 text-sm font-black uppercase tracking-wide transition-all border-2 ${
-                  mapStyle === 'satellite'
-                    ? 'bg-neutral-200 text-neutral-500 border-neutral-300 cursor-not-allowed'
-                    : terrainEnabled
+                  terrainEnabled
                     ? 'bg-primary-600 text-white border-neutral-800'
                     : 'bg-white text-neutral-700 border-neutral-400 hover:border-neutral-800'
                 }`}
-                title={mapStyle === 'satellite' ? '3D terrain not available in satellite mode' : undefined}
               >
                 <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
                 </svg>
-                {mapStyle === 'satellite' 
-                  ? '3D Not Available' 
-                  : terrainEnabled 
-                    ? '3D Terrain Active' 
-                    : 'Enable 3D Terrain'}
+                {terrainEnabled ? '3D Terrain Active' : 'Enable 3D Terrain'}
               </button>
             </div>
             
