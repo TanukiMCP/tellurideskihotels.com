@@ -16,6 +16,7 @@ interface HotelGridWithMapProps {
   checkIn?: string;
   checkOut?: string;
   adults?: number;
+  viewMode?: 'grid' | 'map';
   defaultView?: 'grid' | 'map';
 }
 
@@ -28,9 +29,11 @@ export function HotelGridWithMap({
   checkIn,
   checkOut,
   adults,
+  viewMode: controlledViewMode,
   defaultView = 'grid',
 }: HotelGridWithMapProps) {
-  const [viewMode, setViewMode] = useState<'grid' | 'map'>(defaultView);
+  const [internalViewMode, setInternalViewMode] = useState<'grid' | 'map'>(defaultView);
+  const viewMode = controlledViewMode ?? internalViewMode;
   const [selectedHotelId, setSelectedHotelId] = useState<string | null>(null);
   const [hoveredHotelId, setHoveredHotelId] = useState<string | null>(null);
 
@@ -67,42 +70,22 @@ export function HotelGridWithMap({
     );
   }
 
+  // Grid view - show only the grid, no map
   return (
-    <div className="lg:flex lg:gap-8">
-      {/* Hotel List (Left/Bottom) */}
-      <div className="lg:w-[58%] mb-8 lg:mb-0">
-        <HotelGrid
-          hotels={hotels}
-          loading={loading}
-          minPrices={minPrices}
-          currency={currency}
-          nights={nights}
-          checkIn={checkIn}
-          checkOut={checkOut}
-          adults={adults}
-          selectedHotelId={selectedHotelId}
-          hoveredHotelId={hoveredHotelId}
-          onHotelHover={setHoveredHotelId}
-        />
-      </div>
-
-      {/* Map (Right/Top) - Sticky on Desktop */}
-      <div className="lg:w-[42%]">
-        <div className="lg:sticky lg:top-24">
-          <LodgingMap
-            hotels={hotels}
-            minPrices={minPrices}
-            currency={currency}
-            checkInDate={checkIn}
-            height="600px"
-            selectedHotelId={selectedHotelId}
-            hoveredHotelId={hoveredHotelId}
-            onHotelClick={handleHotelClick}
-            onHotelHover={setHoveredHotelId}
-            onViewDetails={handleViewDetails}
-          />
-        </div>
-      </div>
+    <div className="w-full">
+      <HotelGrid
+        hotels={hotels}
+        loading={loading}
+        minPrices={minPrices}
+        currency={currency}
+        nights={nights}
+        checkIn={checkIn}
+        checkOut={checkOut}
+        adults={adults}
+        selectedHotelId={selectedHotelId}
+        hoveredHotelId={hoveredHotelId}
+        onHotelHover={setHoveredHotelId}
+      />
     </div>
   );
 }

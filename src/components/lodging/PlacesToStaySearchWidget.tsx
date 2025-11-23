@@ -598,37 +598,19 @@ function PlacesToStaySearchWidgetContent({
           )}
 
           {!loading && (
-            <>
-              {viewMode === 'map' ? (
-                <div className="h-full w-full">
-                  <HotelGridWithMap
-                    hotels={filteredAndSortedHotels}
-                    loading={loading}
-                    minPrices={minPrices}
-                    currency="USD"
-                    nights={nights}
-                    checkIn={checkIn || ''}
-                    checkOut={checkOut || ''}
-                    adults={adults}
-                    defaultView="map"
-                  />
-                </div>
-              ) : (
-                <div className="h-full w-full">
-                  <HotelGridWithMap
-                    hotels={filteredAndSortedHotels}
-                    loading={loading}
-                    minPrices={minPrices}
-                    currency="USD"
-                    nights={nights}
-                    checkIn={checkIn || ''}
-                    checkOut={checkOut || ''}
-                    adults={adults}
-                    defaultView="grid"
-                  />
-                </div>
-              )}
-            </>
+            <div className="h-full w-full">
+              <HotelGridWithMap
+                hotels={filteredAndSortedHotels}
+                loading={loading}
+                minPrices={minPrices}
+                currency="USD"
+                nights={nights}
+                checkIn={checkIn || ''}
+                checkOut={checkOut || ''}
+                adults={adults}
+                viewMode={viewMode}
+              />
+            </div>
           )}
         </main>
       </div>
