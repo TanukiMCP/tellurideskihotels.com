@@ -132,32 +132,54 @@ function PlacesToStaySearchWidgetContent({
     }
   }, []);
 
+  // Sync URL params when filters change - PRESERVE checkIn, checkOut, adults, location
   useEffect(() => {
     if (typeof window === 'undefined') return;
     
-    const params = new URLSearchParams();
+    // Start with existing URL params to preserve checkIn, checkOut, adults, location
+    const params = new URLSearchParams(window.location.search);
+    
+    // Update filter params
     if (selectedPropertyTypes.length > 0 && !selectedPropertyTypes.includes('all')) {
       params.set('propertyType', selectedPropertyTypes.join(','));
+    } else {
+      params.delete('propertyType');
     }
     if (locationFilter !== 'all') {
       params.set('locationFilter', locationFilter);
+    } else {
+      params.delete('locationFilter');
     }
     if (priceRange[0] > 0) {
       params.set('minPrice', priceRange[0].toString());
+    } else {
+      params.delete('minPrice');
     }
     if (priceRange[1] < 2000) {
       params.set('maxPrice', priceRange[1].toString());
+    } else {
+      params.delete('maxPrice');
     }
     if (minRating > 0) {
       params.set('minRating', minRating.toString());
+    } else {
+      params.delete('minRating');
     }
     if (sortBy !== 'popularity') {
       params.set('sortBy', sortBy);
+    } else {
+      params.delete('sortBy');
     }
+    
+    // Ensure checkIn, checkOut, adults, location are preserved
+    if (checkIn) params.set('checkIn', checkIn);
+    if (checkOut) params.set('checkOut', checkOut);
+    if (adults) params.set('adults', adults.toString());
+    if (location) params.set('location', location);
     
     const newUrl = params.toString() ? `${window.location.pathname}?${params}` : window.location.pathname;
     window.history.replaceState({}, '', newUrl);
-  }, [selectedPropertyTypes, locationFilter, priceRange, minRating, sortBy]);
+  }, [selectedPropertyTypes, locationFilter, priceRange, minRating, sortBy, checkIn, checkOut, adults, location]);
 
   const filteredAndSortedHotels = React.useMemo(() => {
     let filtered = [...allHotels];
