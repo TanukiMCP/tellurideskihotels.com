@@ -360,11 +360,11 @@ function PlacesToStaySearchWidgetContent({
               checkOut: new Date(checkOut),
             } : undefined}
             initialGuests={{ adults, children: 0 }}
-            onDatesChange={(checkInDate, checkOutDate) => {
-              if (checkInDate && checkOutDate) {
+            onDatesChange={(checkInDateStr, checkOutDateStr) => {
+              if (checkInDateStr && checkOutDateStr) {
                 handleSearch(
-                  checkInDate.toISOString().split('T')[0],
-                  checkOutDate.toISOString().split('T')[0],
+                  checkInDateStr,
+                  checkOutDateStr,
                   adults,
                   location
                 );
