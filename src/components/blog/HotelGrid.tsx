@@ -118,9 +118,18 @@ export function HotelGrid({
       adults: '2',
     });
     
-    fetch(`/api/hotels/min-rates?${ratesParams.toString()}`)
+    const url = `/api/hotels/min-rates?${ratesParams.toString()}`;
+    console.log('[HotelGrid] Fetching min-rates:', {
+      url,
+      hotelIds: hotelIds.length,
+      checkIn: computedCheckIn,
+      checkOut: computedCheckOut,
+    });
+    
+    fetch(url)
       .then(res => {
         if (!res.ok) {
+          console.error('[HotelGrid] Min-rates API error:', res.status, res.statusText);
           return null;
         }
         return res.json();
@@ -128,17 +137,37 @@ export function HotelGrid({
       .then(ratesData => {
         if (!isMounted) return;
         
+        console.log('[HotelGrid] Min-rates response:', {
+          hasData: !!ratesData?.data,
+          dataLength: ratesData?.data?.length || 0,
+          sampleItem: ratesData?.data?.[0],
+          fullResponse: ratesData,
+        });
+        
         if (ratesData?.data && Array.isArray(ratesData.data)) {
           const prices: Record<string, number> = {};
           
           // min-rates API returns per-night prices already - no division needed
           ratesData.data.forEach((item: { hotelId?: string; price?: number }) => {
-            if (item.hotelId && item.price && item.price > 0) {
+            if (item.hotelId && item.price !== undefined && item.price !== null && item.price > 0) {
               prices[item.hotelId] = item.price;
+            } else {
+              console.warn('[HotelGrid] Skipping item with missing/invalid price:', {
+                hotelId: item.hotelId,
+                price: item.price,
+              });
             }
           });
           
+          console.log('[HotelGrid] Processed prices:', {
+            count: Object.keys(prices).length,
+            prices,
+            hotelIds: hotelIds,
+          });
+          
           setMinPrices(prices);
+        } else {
+          console.warn('[HotelGrid] Unexpected rates data structure:', ratesData);
         }
         setIsLoadingRates(false);
       })
