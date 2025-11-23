@@ -65,7 +65,7 @@ export function EventPlanningTimeline({
   // Initialize timeline on mount or type change
   useEffect(() => {
     const baseItems = EVENT_TIMELINES[eventType] || EVENT_TIMELINES.celebration;
-    
+
     // Try to load from local storage
     const savedState = localStorage.getItem(`event-timeline-${eventType}`);
     if (savedState) {
@@ -208,7 +208,7 @@ export function EventPlanningTimeline({
             const dueDate = calculateDueDate(item.monthsOut);
             const statusClass = getStatusColor(item.monthsOut, item.completed);
             
-            return (
+                  return (
               <div 
                 key={item.id}
                 onClick={() => toggleItem(item.id)}
@@ -222,8 +222,8 @@ export function EventPlanningTimeline({
                     <CheckCircle2 className="w-8 h-8 text-green-500 fill-green-50" />
                   ) : (
                     <Circle className="w-8 h-8 text-neutral-300 group-hover:text-primary-500 transition-colors" />
-                  )}
-                </div>
+                          )}
+                        </div>
 
                 <div className="flex-1">
                   <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-1">
@@ -237,26 +237,26 @@ export function EventPlanningTimeline({
                   <p className="text-sm mt-1 opacity-90">
                     {item.description}
                   </p>
-                </div>
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
-            );
-          })}
-        </div>
 
         {/* Action Footer */}
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-6 border-t border-neutral-200">
           <div className="flex items-center gap-2 text-sm text-neutral-500">
             <Save className="w-4 h-4" />
             <span>Your progress is saved automatically</span>
-          </div>
-          
+            </div>
+
           <a
             href={`/places-to-stay?guests=${size}`}
             className="inline-flex items-center justify-center gap-2 bg-primary-600 hover:bg-primary-700 text-white font-bold px-8 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 w-full sm:w-auto"
           >
             Start Booking for {size} Guests →
           </a>
-        </div>
+          </div>
       </CardContent>
     </Card>
   );

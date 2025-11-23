@@ -16,6 +16,7 @@ interface HotelGridWithMapProps {
   checkIn?: string;
   checkOut?: string;
   adults?: number;
+  defaultView?: 'grid' | 'map';
 }
 
 export function HotelGridWithMap({
@@ -27,7 +28,9 @@ export function HotelGridWithMap({
   checkIn,
   checkOut,
   adults,
+  defaultView = 'grid',
 }: HotelGridWithMapProps) {
+  const [viewMode, setViewMode] = useState<'grid' | 'map'>(defaultView);
   const [selectedHotelId, setSelectedHotelId] = useState<string | null>(null);
   const [hoveredHotelId, setHoveredHotelId] = useState<string | null>(null);
 
@@ -44,6 +47,25 @@ export function HotelGridWithMap({
       window.location.href = `/places-to-stay/${hotelId}?${params.toString()}`;
     }
   };
+
+  if (viewMode === 'map') {
+    return (
+      <div className="w-full h-[600px] lg:h-[800px]">
+        <LodgingMap
+          hotels={hotels}
+          minPrices={minPrices}
+          currency={currency}
+          checkInDate={checkIn}
+          height="100%"
+          selectedHotelId={selectedHotelId}
+          hoveredHotelId={hoveredHotelId}
+          onHotelClick={handleHotelClick}
+          onHotelHover={setHoveredHotelId}
+          onViewDetails={handleViewDetails}
+        />
+      </div>
+    );
+  }
 
   return (
     <div className="lg:flex lg:gap-6">

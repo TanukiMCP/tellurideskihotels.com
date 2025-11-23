@@ -3,12 +3,31 @@ export const prerender = false;
 
 import PageLayout from '@/components/layout/PageLayout.astro';
 import Container from '@/components/layout/Container.astro';
-import { HotelGridWithMap } from '@/components/lodging/HotelGridWithMap';
-import { HotelSearchWidget } from '@/components/lodging/HotelSearchWidget';
-import { WeatherWidget } from '@/components/weather/WeatherWidget';
-import Breadcrumbs from '@/components/seo/Breadcrumbs.astro';
+import SEOHead from '@/components/seo/SEOHead.astro';
+import PlacesToStaySearchWidget from '@/components/lodging/PlacesToStaySearchWidget';
+import { getImagesByCategory } from '@/lib/image-library';
+import { optimizePexelsImage, generateSrcSet } from '@/lib/image-optimizer';
 import type { LiteAPIHotel } from '@/lib/liteapi/types';
 import { DEFAULT_LOCATION, DEFAULT_COUNTRY_CODE } from '@/lib/constants';
+
+const pageTitle = 'Places to Stay in Telluride | Hotels, Condos & Vacation Rentals';
+const pageDescription = 'Search and book places to stay in Telluride. Compare prices, read reviews, and book directly with instant confirmation.';
+
+// Get images from our media library - use resort images for accommodations
+const resortImages = getImagesByCategory('resort');
+
+// Hero image - use a scenic mountain/resort image
+const heroImage = resortImages[0]; // First resort image
+const optimizedHeroUrl = heroImage ? optimizePexelsImage(heroImage.url, { width: 1920, quality: 80 }) : null;
+const heroSrcSet = heroImage ? generateSrcSet(heroImage.url, [640, 768, 1024, 1280, 1536, 1920]) : null;
+
+// Why Book section image - use a different resort image
+const whyBookImage = resortImages[2]; // Third resort image
+const optimizedWhyBookUrl = whyBookImage ? optimizePexelsImage(whyBookImage.url, { width: 800, quality: 75 }) : null;
+
+// CTA section background image - use another resort image
+const ctaImage = resortImages[4]; // Fifth resort image
+const optimizedCtaUrl = ctaImage ? optimizePexelsImage(ctaImage.url, { width: 1920, quality: 75 }) : null;
 
 const url = Astro.url;
 const searchParams = url.searchParams;
@@ -90,78 +109,166 @@ const nights = checkIn && checkOut
   : 1;
 ---
 
-<PageLayout
-  title={`Places to Stay in ${location} - Search & Compare Prices`}
-  description={`Search and book places to stay in ${location}. Compare prices, read reviews, and book directly with instant confirmation.`}
->
-  <Container class="py-12 lg:py-16">
-    <Breadcrumbs items={[
-      { label: 'Home', href: '/' },
-      { label: 'Places to Stay', href: '/places-to-stay' },
-    ]} />
-
-    <div class="mb-12">
-      <h1 class="text-display-sm lg:text-display-md text-neutral-900 mb-3">Find Your Perfect Place to Stay</h1>
-      <p class="text-xl text-neutral-600 mb-8 max-w-3xl">
-        Compare prices and availability across all accommodations in {location}. From luxury hotels to cozy mountain lodges, find the perfect base for your Telluride adventure with instant booking confirmation.
-      </p>
-      
-      <HotelSearchWidget
-        client:idle
-        initialLocation={location}
-        initialDates={checkIn && checkOut ? {
-          checkIn: new Date(checkIn),
-          checkOut: new Date(checkOut),
-        } : undefined}
-        initialGuests={{ adults, children: 0 }}
+<PageLayout>
+  <SEOHead
+    slot="head"
+    title={pageTitle}
+    description={pageDescription}
+  />
+  
+  <section class="relative min-h-[60vh] flex items-center justify-center overflow-hidden">
+    <div class="absolute inset-0">
+      {heroImage && optimizedHeroUrl ? (
+      <img 
+        src={optimizedHeroUrl}
+        alt="Telluride Accommodations" 
+          class="w-full h-full object-cover object-center"
+        loading="eager"
       />
-    </div>
-
-    {checkIn && checkOut && (
-      <div class="mb-10">
-        <WeatherWidget client:visible startDate={checkIn} endDate={checkOut} title="Weather for Your Stay" compact={true} />
-      </div>
+    ) : (
+      <div class="w-full h-full bg-gradient-to-br from-primary-600 via-primary-700 to-primary-800"></div>
     )}
-
-    <div class="mb-8">
-      <div class="flex items-end justify-between mb-4">
-        <div>
-          <h2 class="text-2xl font-bold text-neutral-900 mb-1">
-            {hotels.length > 0 ? `${hotels.length} Available Properties` : 'Loading accommodations...'}
-          </h2>
-          {checkIn && checkOut && (
-            <p class="text-neutral-600">
-              {new Date(checkIn).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} - {new Date(checkOut).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })} • {nights} night{nights !== 1 ? 's' : ''} • {adults} guest{adults !== 1 ? 's' : ''}
-            </p>
-          )}
-        </div>
-        {hotels.length > 0 && (
-          <p class="text-sm text-neutral-500">
-            Showing real-time availability and rates
-          </p>
-        )}
-      </div>
-      {hotels.length > 0 && (
-        <div class="bg-primary-50 border border-primary-200 rounded-lg p-4">
-          <p class="text-sm text-neutral-700 leading-relaxed">
-            <strong class="text-neutral-900">All prices shown include taxes and fees.</strong> We partner with local resorts to provide you the best prices, comparable to that of industry leaders. Book with confidence – instant confirmation and free cancellation on most properties. Need help? Our team is available 24/7 to assist with your reservation.
-          </p>
-        </div>
-      )}
+      <div class="absolute inset-0 bg-gradient-to-br from-gray-900/80 via-gray-800/75 to-gray-900/80"></div>
     </div>
-
-    <!-- Split-screen Layout with Map Sync -->
-    <HotelGridWithMap
-      client:idle
-      hotels={hotels}
-      loading={loading}
-      minPrices={minPrices}
-      currency="USD"
-      nights={nights}
-      checkIn={checkIn}
-      checkOut={checkOut}
-      adults={adults}
+    <Container class="relative z-10">
+      <div class="text-center text-white">
+        <h1 class="font-display text-4xl sm:text-5xl lg:text-6xl font-bold mb-6 drop-shadow-2xl leading-tight">
+          Places to Stay in Telluride
+        </h1>
+        <p class="text-xl sm:text-2xl text-white/95 max-w-3xl mx-auto drop-shadow-lg font-light">
+          Find your perfect accommodation • Real-time availability • Instant booking
+        </p>
+      </div>
+    </Container>
+  </section>
+  <Container class="py-8 sm:py-12">
+    <PlacesToStaySearchWidget
+      client:visible
+      initialHotels={hotels}
+      initialMinPrices={minPrices}
+      initialCheckIn={checkIn}
+      initialCheckOut={checkOut}
+      initialAdults={adults}
+      initialLocation={location}
     />
   </Container>
+
+  <!-- Why Book With Us Section -->
+  <div class="bg-gradient-to-b from-white to-neutral-50 py-20 lg:py-28">
+    <Container>
+      <div class="grid lg:grid-cols-2 gap-12 items-center">
+        {/* Left Side - Image */}
+        <div class="relative h-[400px] lg:h-[500px] rounded-2xl overflow-hidden shadow-2xl">
+          {whyBookImage && optimizedWhyBookUrl ? (
+            <img 
+              src={optimizedWhyBookUrl}
+              alt="Telluride Accommodations" 
+              class="w-full h-full object-cover"
+              loading="lazy"
+            />
+          ) : (
+            <div class="w-full h-full bg-gradient-to-br from-primary-100 to-primary-200"></div>
+          )}
+          <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+        </div>
+        
+        {/* Right Side - Content */}
+        <div>
+          <h2 class="text-3xl lg:text-4xl font-extrabold text-neutral-900 mb-6">
+            Why Book Accommodations Through Us
+          </h2>
+          <p class="text-lg text-neutral-600 mb-8 leading-relaxed">
+            We partner with local resorts and properties to provide you the best prices, comparable to that of industry leaders. Book with confidence – instant confirmation and free cancellation on most properties.
+          </p>
+          
+          <div class="space-y-6">
+            <div class="flex items-start gap-4 p-4 bg-white rounded-xl border border-neutral-200 shadow-sm hover:shadow-md transition-shadow">
+              <div class="w-12 h-12 flex-shrink-0 rounded-xl bg-green-100 flex items-center justify-center">
+                <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <div>
+                <h3 class="font-bold text-lg mb-1 text-neutral-900">Instant Confirmation</h3>
+                <p class="text-neutral-600 leading-relaxed">Get immediate booking confirmation. No waiting, no uncertainty – your reservation is secured instantly.</p>
+              </div>
+            </div>
+            
+            <div class="flex items-start gap-4 p-4 bg-white rounded-xl border border-neutral-200 shadow-sm hover:shadow-md transition-shadow">
+              <div class="w-12 h-12 flex-shrink-0 rounded-xl bg-blue-100 flex items-center justify-center">
+                <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <div>
+                <h3 class="font-bold text-lg mb-1 text-neutral-900">Best Price Guarantee</h3>
+                <p class="text-neutral-600 leading-relaxed">We partner with local resorts to provide you the best prices, comparable to that of industry leaders.</p>
+              </div>
+            </div>
+            
+            <div class="flex items-start gap-4 p-4 bg-white rounded-xl border border-neutral-200 shadow-sm hover:shadow-md transition-shadow">
+              <div class="w-12 h-12 flex-shrink-0 rounded-xl bg-amber-100 flex items-center justify-center">
+                <svg class="w-6 h-6 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <div>
+                <h3 class="font-bold text-lg mb-1 text-neutral-900">Free Cancellation</h3>
+                <p class="text-neutral-600 leading-relaxed">Most properties offer free cancellation up to 48-72 hours before check-in. Plans change? No problem.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </Container>
+  </div>
+
+  <!-- CTA Section with Background Image -->
+  <div class="relative py-32 lg:py-40 overflow-hidden">
+    {ctaImage && optimizedCtaUrl ? (
+      <>
+        <img 
+          src={optimizedCtaUrl}
+          alt="Telluride Accommodations" 
+          class="absolute inset-0 w-full h-full object-cover"
+          loading="lazy"
+        />
+        <div class="absolute inset-0 bg-gradient-to-r from-primary-900/95 via-primary-800/90 to-primary-900/95"></div>
+      </>
+    ) : (
+      <div class="absolute inset-0 bg-gradient-to-br from-primary-600 via-primary-700 to-primary-800"></div>
+    )}
+    
+    <Container class="relative">
+      <div class="max-w-4xl mx-auto text-center text-white">
+        <h2 class="text-4xl md:text-5xl lg:text-6xl mb-6 font-extrabold drop-shadow-2xl leading-tight">
+          Ready to Book Your Telluride Stay?
+        </h2>
+        <p class="text-xl lg:text-2xl mb-12 leading-relaxed font-medium text-white/95 max-w-3xl mx-auto drop-shadow-lg">
+          From luxury ski-in/ski-out resorts to cozy downtown hotels, find the perfect accommodation for your Telluride adventure.
+        </p>
+        <div class="flex flex-wrap justify-center gap-6">
+          <a
+            href="#top"
+            class="inline-flex items-center gap-3 bg-white text-primary-600 px-10 py-5 rounded-xl font-bold text-lg shadow-2xl hover:shadow-2xl hover:scale-105 transition-all duration-300"
+          >
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18" />
+            </svg>
+            Browse All Properties
+          </a>
+          <a
+            href="/things-to-do"
+            class="inline-flex items-center gap-3 bg-primary-900/50 backdrop-blur-sm text-white px-10 py-5 rounded-xl font-bold text-lg border-2 border-white/30 hover:bg-primary-900/70 hover:border-white/50 transition-all duration-300"
+          >
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10l-2 1m0 0l-2-1m2 1v2.5M20 7l-2 1m2-1l-2-1m2 1v2.5M14 4l-2-1-2 1M4 7l2-1M4 7l2 1M4 7v2.5M12 21l-2-1m2 1l2-1m-2 1v-2.5M6 18l-2-1v-2.5M18 18l2-1v-2.5" />
+            </svg>
+            Explore Activities
+          </a>
+        </div>
+      </div>
+    </Container>
+  </div>
 </PageLayout>
 

@@ -114,7 +114,7 @@ export async function searchHotels(params: LiteAPIHotelSearchParams): Promise<Ho
     
     return 'other';
   };
-
+  
   // Transform API response to our format
   const validHotels: LiteAPIHotel[] = hotelsData.map((hotel: any) => ({
     hotel_id: hotel.id,
