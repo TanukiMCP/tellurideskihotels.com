@@ -118,18 +118,9 @@ export function HotelGrid({
       adults: '2',
     });
     
-    const url = `/api/hotels/min-rates?${ratesParams.toString()}`;
-    console.log('[HotelGrid] Fetching min-rates:', {
-      url,
-      hotelIds: hotelIds.length,
-      checkIn: computedCheckIn,
-      checkOut: computedCheckOut,
-    });
-    
-    fetch(url)
+    fetch(`/api/hotels/min-rates?${ratesParams.toString()}`)
       .then(res => {
         if (!res.ok) {
-          console.error('[HotelGrid] Min-rates API error:', res.status, res.statusText);
           return null;
         }
         return res.json();
@@ -137,37 +128,17 @@ export function HotelGrid({
       .then(ratesData => {
         if (!isMounted) return;
         
-        console.log('[HotelGrid] Min-rates response:', {
-          hasData: !!ratesData?.data,
-          dataLength: ratesData?.data?.length || 0,
-          sampleItem: ratesData?.data?.[0],
-          fullResponse: ratesData,
-        });
-        
         if (ratesData?.data && Array.isArray(ratesData.data)) {
           const prices: Record<string, number> = {};
           
           // min-rates API returns per-night prices already - no division needed
           ratesData.data.forEach((item: { hotelId?: string; price?: number }) => {
-            if (item.hotelId && item.price !== undefined && item.price !== null && item.price > 0) {
+            if (item.hotelId && item.price && item.price > 0) {
               prices[item.hotelId] = item.price;
-            } else {
-              console.warn('[HotelGrid] Skipping item with missing/invalid price:', {
-                hotelId: item.hotelId,
-                price: item.price,
-              });
             }
           });
           
-          console.log('[HotelGrid] Processed prices:', {
-            count: Object.keys(prices).length,
-            prices,
-            hotelIds: hotelIds,
-          });
-          
           setMinPrices(prices);
-        } else {
-          console.warn('[HotelGrid] Unexpected rates data structure:', ratesData);
         }
         setIsLoadingRates(false);
       })
@@ -209,7 +180,7 @@ export function HotelGrid({
         <h3 className="text-2xl font-bold text-neutral-900 mb-8">{title}</h3>
       )}
       
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         {hotels.map((hotel) => (
           <HotelCard
             key={hotel.hotel_id}
@@ -230,12 +201,12 @@ export function HotelGrid({
       
       {hotels.length > 0 && (
         <div className="mt-8 text-center">
-          <a
-            href={`/places-to-stay${filter ? `?filter=${filter}` : ''}`}
+        <a
+          href={`/places-to-stay${filter ? `?filter=${filter}` : ''}`}
             className="inline-flex items-center justify-center gap-2 bg-primary-600 hover:bg-primary-700 text-white font-semibold px-6 py-3 rounded-lg transition-colors duration-200 shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2"
             aria-label="View all properties in Telluride"
-          >
-            View All Properties
+        >
+          View All Properties
             <svg 
               className="w-5 h-5" 
               fill="none" 
@@ -249,9 +220,9 @@ export function HotelGrid({
                 strokeWidth={2} 
                 d="M9 5l7 7-7 7" 
               />
-            </svg>
-          </a>
-        </div>
+          </svg>
+        </a>
+      </div>
       )}
     </div>
   );

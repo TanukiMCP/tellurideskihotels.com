@@ -56,7 +56,7 @@ export function HotelCard({
       onClick={() => onSelect(hotel.hotel_id)}
     >
       {/* Image Section - Fixed Height */}
-      <div className="relative h-56 overflow-hidden bg-neutral-100">
+      <div className="relative h-48 overflow-hidden bg-neutral-100">
         {imageUrl ? (
           <img
             src={imageUrl}
@@ -82,32 +82,32 @@ export function HotelCard({
       </div>
       
       {/* Content Section - Flex Grow */}
-      <div className="flex flex-col flex-grow p-6">
-        {/* Hotel Name - Fixed Height */}
-        <h3 className="font-bold text-xl text-neutral-900 mb-3 leading-tight h-14 overflow-hidden">
+      <div className="flex flex-col flex-grow p-5">
+        {/* Hotel Name - No Fixed Height */}
+        <h3 className="font-bold text-lg text-neutral-900 mb-2 leading-tight line-clamp-2">
           {hotel.name}
         </h3>
         
         {/* Star Rating */}
         {starRating > 0 && (
-          <div className="flex items-center gap-1 mb-3">
+          <div className="flex items-center gap-0.5 mb-2">
             {[...Array(starRating)].map((_, i) => (
-              <Star key={i} className="w-4 h-4 fill-amber-400 text-amber-400" />
+              <Star key={i} className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
             ))}
           </div>
         )}
         
         {/* Address */}
         {address && (
-          <div className="flex items-start gap-2 text-sm text-neutral-600 mb-3">
-            <MapPin className="w-4 h-4 flex-shrink-0 mt-0.5 text-neutral-400" />
-            <span className="line-clamp-2 leading-relaxed">{address}</span>
+          <div className="flex items-start gap-1.5 text-sm text-neutral-600 mb-2">
+            <MapPin className="w-3.5 h-3.5 flex-shrink-0 mt-0.5 text-neutral-400" />
+            <span className="line-clamp-1 leading-relaxed">{address}</span>
           </div>
         )}
         
         {/* Review Count */}
         {reviewCount > 0 && (
-          <p className="text-sm text-neutral-600 mb-4">
+          <p className="text-sm text-neutral-600 mb-3">
             <span className="font-semibold text-neutral-900">{reviewCount.toLocaleString()}</span> {reviewCount === 1 ? 'review' : 'reviews'}
           </p>
         )}
@@ -116,16 +116,16 @@ export function HotelCard({
         <div className="flex-grow"></div>
         
         {/* Pricing Section */}
-        <div className="mt-auto pt-4 border-t border-neutral-200">
+        <div className="mt-auto pt-3 border-t border-neutral-200">
           {minPrice && minPrice > 0 ? (
             <>
-              <div className="mb-4">
+              <div className="mb-3">
                 <p className="text-xs text-neutral-500 uppercase tracking-wide font-semibold mb-1">From</p>
-                <div className="flex items-baseline gap-2">
-                  <span className="text-3xl font-bold text-primary-600">
+                <div className="flex items-baseline gap-1.5">
+                  <span className="text-2xl font-bold text-primary-600">
                     {formatCurrency(minPrice, currency)}
                   </span>
-                  <span className="text-base text-neutral-600 font-medium">/ night</span>
+                  <span className="text-sm text-neutral-600 font-medium">/ night</span>
                 </div>
               </div>
               
@@ -134,7 +134,7 @@ export function HotelCard({
                   e.stopPropagation();
                   onSelect(hotel.hotel_id);
                 }}
-                className="w-full bg-primary-600 hover:bg-primary-700 text-white font-semibold py-3 px-4 rounded-lg transition-colors duration-200 shadow-sm hover:shadow-md"
+                className="w-full bg-primary-600 hover:bg-primary-700 text-white font-semibold py-2.5 px-4 rounded-lg transition-colors duration-200 shadow-sm hover:shadow-md text-sm"
                 type="button"
               >
                 Check Availability
@@ -142,7 +142,7 @@ export function HotelCard({
             </>
           ) : (
             <>
-              <div className="mb-4">
+              <div className="mb-3">
                 <p className="text-sm text-neutral-600 leading-relaxed">
                   Select dates to view pricing
                 </p>
@@ -153,7 +153,7 @@ export function HotelCard({
                   e.stopPropagation();
                   onSelect(hotel.hotel_id);
                 }}
-                className="w-full bg-neutral-900 hover:bg-neutral-800 text-white font-semibold py-3 px-4 rounded-lg transition-colors duration-200 shadow-sm hover:shadow-md"
+                className="w-full bg-neutral-900 hover:bg-neutral-800 text-white font-semibold py-2.5 px-4 rounded-lg transition-colors duration-200 shadow-sm hover:shadow-md text-sm"
                 type="button"
               >
                 View Details
