@@ -271,6 +271,7 @@ function PlacesToStaySearchWidgetContent({
 
   // Track last search params to prevent duplicate searches
   const lastSearchRef = React.useRef<string>('');
+  const initialSearchCompletedRef = React.useRef(false);
 
   const handleSearch = React.useCallback(async (newCheckIn: string, newCheckOut: string, newAdults: number, newLocation: string) => {
     // Create a unique key for this search
@@ -322,6 +323,7 @@ function PlacesToStaySearchWidgetContent({
       
       setAllHotels(hotels);
       setMinPrices(minPricesMap);
+      initialSearchCompletedRef.current = true; // Mark initial search as complete
     } catch (err) {
       console.error('[Places to Stay Widget] Search error:', err);
       setError('Failed to search hotels');
@@ -346,7 +348,19 @@ function PlacesToStaySearchWidgetContent({
 
   // Memoize the onDatesChange handler to prevent infinite loops
   const handleDatesChange = useCallback((checkInDateStr: string, checkOutDateStr: string) => {
-    if (checkInDateStr && checkOutDateStr && !loading) {
+    // Don't search if:
+    // 1. Initial search hasn't completed yet
+    // 2. Currently loading
+    // 3. Dates match what we already searched for
+    if (!initialSearchCompletedRef.current || loading) {
+      return;
+    }
+    
+    const currentSearchKey = `${checkIn}-${checkOut}-${adults}-${location}`;
+    const newSearchKey = `${checkInDateStr}-${checkOutDateStr}-${adults}-${location}`;
+    
+    // Only search if dates actually changed
+    if (currentSearchKey !== newSearchKey && checkInDateStr && checkOutDateStr) {
       handleSearch(
         checkInDateStr,
         checkOutDateStr,
@@ -354,7 +368,7 @@ function PlacesToStaySearchWidgetContent({
         location
       );
     }
-  }, [handleSearch, adults, location, loading]);
+  }, [handleSearch, adults, location, loading, checkIn, checkOut]);
 
   const nights = checkIn && checkOut 
     ? Math.ceil((new Date(checkOut).getTime() - new Date(checkIn).getTime()) / (1000 * 60 * 60 * 24))
