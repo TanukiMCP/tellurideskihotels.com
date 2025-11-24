@@ -404,7 +404,6 @@ export function HotelGrid({
                   nights={nights}
                   checkInDate={computedCheckIn || undefined}
                   checkOutDate={computedCheckOut || undefined}
-                  variant="compact"
                   onSelect={(id) => {
                     const checkInDate = computedCheckIn || format(addDays(new Date(), 7), 'yyyy-MM-dd');
                     const checkOutDate = computedCheckOut || format(addDays(new Date(), 14), 'yyyy-MM-dd');
@@ -417,24 +416,22 @@ export function HotelGrid({
 
           {/* Triple Hotel Mode - 3 column split */}
           {displayMode === 'triple' && (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {hotels.map((hotel) => (
-                <div key={hotel.hotel_id} className="max-w-[320px] mx-auto lg:mx-0">
-                  <HotelCard
-                    hotel={hotel}
-                    minPrice={minPrices[hotel.hotel_id]}
-                    currency="USD"
-                    nights={nights}
-                    checkInDate={computedCheckIn || undefined}
-                    checkOutDate={computedCheckOut || undefined}
-                    variant="compact"
-                    onSelect={(id) => {
-                      const checkInDate = computedCheckIn || format(addDays(new Date(), 7), 'yyyy-MM-dd');
-                      const checkOutDate = computedCheckOut || format(addDays(new Date(), 14), 'yyyy-MM-dd');
-                      window.location.href = `/places-to-stay/${id}?checkIn=${checkInDate}&checkOut=${checkOutDate}&adults=2&rooms=1`;
-                    }}
-                  />
-                </div>
+                <HotelCard
+                  key={hotel.hotel_id}
+                  hotel={hotel}
+                  minPrice={minPrices[hotel.hotel_id]}
+                  currency="USD"
+                  nights={nights}
+                  checkInDate={computedCheckIn || undefined}
+                  checkOutDate={computedCheckOut || undefined}
+                  onSelect={(id) => {
+                    const checkInDate = computedCheckIn || format(addDays(new Date(), 7), 'yyyy-MM-dd');
+                    const checkOutDate = computedCheckOut || format(addDays(new Date(), 14), 'yyyy-MM-dd');
+                    window.location.href = `/places-to-stay/${id}?checkIn=${checkInDate}&checkOut=${checkOutDate}&adults=2&rooms=1`;
+                  }}
+                />
               ))}
             </div>
           )}
