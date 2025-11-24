@@ -73,7 +73,7 @@ export function HotelCard({
 
   return (
     <Card 
-      className={`flex flex-col h-full overflow-hidden hover:shadow-2xl transition-all duration-300 group cursor-pointer border border-neutral-200/60 p-0 ${
+      className={`flex flex-col h-full overflow-hidden !rounded-t-xl !rounded-b-none hover:shadow-2xl transition-all duration-300 group cursor-pointer border border-neutral-200/60 p-0 ${
         isSelected ? 'ring-2 ring-primary-500 shadow-2xl border-primary-300' : ''
       } ${isHovered ? 'shadow-2xl border-primary-200' : ''}`}
       onMouseEnter={onMouseEnter}
