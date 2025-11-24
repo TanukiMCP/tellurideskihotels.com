@@ -82,7 +82,7 @@ export function HotelCard({
     >
       {/* Image Section - Flush to top edge, badge overlays */}
       <div 
-        className={`relative w-full overflow-hidden ${variant === 'compact' ? 'h-[240px]' : 'h-56'} ${
+        className={`relative w-full overflow-hidden rounded-t-xl ${variant === 'compact' ? 'h-[240px]' : 'h-56'} ${
           !imageUrl ? 'bg-gradient-to-br from-neutral-100 to-neutral-200' : ''
         }`}
         style={{ 
