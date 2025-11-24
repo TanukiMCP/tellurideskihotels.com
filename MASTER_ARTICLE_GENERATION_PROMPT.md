@@ -1482,31 +1482,51 @@ The [National Weather Service Grand Junction office](https://www.weather.gov/gjt
 - **REAL IMAGES:** This component fetches real images from the API. Do NOT manually embed images for these specific hotels.
 - **ONE WIDGET PER HOTEL:** In listicles, each numbered entry gets ONE HotelShowcase widget, not multiple.
 
-### 2. HotelGrid (Multiple Hotels Display - For Sections)
+### 2. HotelGrid (Adaptive Display - 1, 2, or 3 Hotels)
 
-**Use Case:** Displaying MULTIPLE hotels together in a grid layout when several specific properties are mentioned in the same section.
-**Best For:** When a section discusses multiple hotels together, comparison sections, category overviews where multiple hotels are listed.
+**Use Case:** Displaying hotels with automatic layout based on count. HotelGrid adapts to show 1, 2, or 3 hotels with appropriate layouts.
+**Best For:** Single hotel showcases (listicles), two-hotel comparisons, or three-hotel category displays.
 
-**⚠️ CRITICAL: When to Use HotelGrid**
-- **MULTIPLE HOTELS IN ONE SECTION:** When your text mentions several hotels together (e.g., "The Madeline, Peaks Resort, and Capella all offer ski valets...")
-- **SECTION SUMMARIES:** After describing a category where multiple hotels are listed together
-- **NOT FOR LISTICLES:** Do NOT use HotelGrid in listicles - use HotelShowcase for each individual entry instead
-- **GRID DISPLAY:** Shows 3-6 hotel cards in a responsive grid layout
+**⚠️ CRITICAL: Three Display Modes (Auto-Detected)**
+- **SINGLE MODE (1 hotel):** Full-width showcase with rich content - large image, detailed description, prominent CTA. Perfect for listicles where each hotel gets its own section.
+- **DOUBLE MODE (2 hotels):** 2-column grid with even width split, compact cards side-by-side.
+- **TRIPLE MODE (3 hotels):** 3-column grid with compact cards, responsive layout.
 
-**Syntax:**
+**The component automatically detects the mode based on the number of hotel IDs provided.**
+
+**Syntax Examples:**
+
+**Single Hotel (Full-Width Showcase):**
+```markdown
+<HotelGrid 
+  hotelIds={["lp4b27f"]}
+  title="The Madeline Hotel & Residences"
+  client:load
+/>
+```
+
+**Two Hotels (2-Column Split):**
+```markdown
+<HotelGrid 
+  hotelIds={["lp4b27f", "lp3e47f"]}
+  title="Top Luxury Properties"
+  client:load
+/>
+```
+
+**Three Hotels (3-Column Grid):**
 ```markdown
 <HotelGrid 
   hotelIds={["lp4b27f", "lp3e47f", "lp2ff71"]}
-  limit={3}
   title="Featured Luxury Ski-In/Ski-Out Properties"
   client:load
 />
 ```
 
 **Props:**
-- `hotelIds` (Required for manual curation): Array of specific hotel IDs. **When hotels are mentioned in the article text, you MUST use their actual IDs.**
+- `hotelIds` (Required for manual curation): Array of 1-3 specific hotel IDs. **When hotels are mentioned in the article text, you MUST use their actual IDs.**
 - `filter` (Optional): Fallback filter if hotelIds not provided: `ski-in-ski-out` | `luxury` | `budget` | `downtown` | `mountain-village` | `family-friendly`
-- `limit` (Optional): Number of hotels to display (default: 3)
+- `limit` (Optional): Number of hotels to display (default: 3, max: 3)
 - `title` (Optional): Custom title for the widget
 - `checkIn` (Optional): Default check-in date (YYYY-MM-DD)
 - `checkOut` (Optional): Default check-out date (YYYY-MM-DD)
@@ -1565,26 +1585,23 @@ Mid-range downtown properties like Hotel Telluride, New Sheridan, and Hotel Colu
 
 ### ⚠️ CRITICAL: HotelShowcase vs HotelGrid Decision Guide
 
-**Use HotelShowcase (Single Hotel Widget) When:**
-- ✅ Writing a **listicle** ("Top 10 Hotels", "15 Best Hotels")
-- ✅ Each hotel has its **own numbered section** (### 1. Hotel Name, ### 2. Hotel Name)
-- ✅ Each hotel gets **individual descriptive text** (150-200 words per hotel)
-- ✅ **One widget per hotel entry** - typical travel blog pattern
-- ✅ Example: "### 1. The Madeline Hotel" [description] `<HotelShowcase hotelId="lp4b27f" />`
+**Use HotelGrid (Recommended - Handles All Scenarios):**
+- ✅ **Single hotel in listicle:** Use `<HotelGrid hotelIds={["lp4b27f"]} />` - automatically displays full-width showcase with rich content
+- ✅ **Two hotels together:** Use `<HotelGrid hotelIds={["lp4b27f", "lp3e47f"]} />` - automatically displays 2-column split
+- ✅ **Three hotels together:** Use `<HotelGrid hotelIds={["lp4b27f", "lp3e47f", "lp2ff71"]} />` - automatically displays 3-column grid
+- ✅ **Listicles:** Each hotel entry can use HotelGrid with single hotel ID for full-width showcase mode
+- ✅ **Category sections:** Use HotelGrid with 2-3 hotel IDs when multiple hotels are mentioned together
 
-**Use HotelGrid (Multiple Hotels Widget) When:**
-- ✅ A **section mentions multiple hotels together** in the same paragraph
-- ✅ **No individual sections** for each hotel - they're discussed as a group
-- ✅ Example: "The Madeline, Peaks Resort, and Capella all offer ski valets..."
-- ✅ **After category descriptions** where multiple hotels are listed together
-- ✅ Example: "Luxury properties include The Madeline, Peaks Resort, and Capella..." `<HotelGrid hotelIds={[...]} />`
+**Use HotelShowcase (Legacy - Still Supported):**
+- ✅ When you specifically need the image gallery feature (`showGallery={true}`)
+- ✅ When you prefer the explicit single-hotel component syntax
+- ⚠️ **Note:** HotelGrid with 1 hotel ID provides the same full-width showcase experience
 
 **❌ DO NOT:**
-- Use HotelGrid in listicles (use HotelShowcase for each entry instead)
-- Use HotelShowcase when multiple hotels are mentioned together (use HotelGrid instead)
-- Mix both in the same section (choose one pattern and stick with it)
+- Use more than 3 hotel IDs in HotelGrid (component supports max 3)
+- Mix HotelShowcase and HotelGrid unnecessarily (HotelGrid handles all cases)
 
-**Example: Correct Usage in a Listicle:**
+**Example: Correct Usage in a Listicle (Using HotelGrid):**
 ```markdown
 ## 15 Best Hotels in Telluride
 
@@ -1592,13 +1609,18 @@ Mid-range downtown properties like Hotel Telluride, New Sheridan, and Hotel Colu
 
 The Madeline sets the standard for luxury ski hotels in Telluride. Located steps from Lift 10, this AAA Four Diamond property offers true ski-in/ski-out convenience...
 
-<HotelShowcase hotelId="lp4b27f" showGallery={true} />
+<HotelGrid hotelIds={["lp4b27f"]} client:load />
 
 ### 2. Peaks Resort & Spa
 
 The Peaks Resort provides family-friendly features with ski-in/ski-out access and comprehensive resort amenities...
 
-<HotelShowcase hotelId="lp3e47f" showGallery={true} />
+<HotelGrid hotelIds={["lp3e47f"]} client:load />
+```
+
+**Alternative: Using HotelShowcase (Still Supported):**
+```markdown
+<HotelShowcase hotelId="lp4b27f" showGallery={true} />
 ```
 
 **Example: Correct Usage in a Category Section:**
@@ -1609,8 +1631,20 @@ These properties command top pricing but deliver comprehensive resort experience
 
 <HotelGrid 
   hotelIds={["lp4b27f", "lp3e47f", "lp2ff71"]}
-  limit={3}
   title="Featured Luxury Ski-In/Ski-Out Properties"
+  client:load
+/>
+```
+
+**Example: Two Hotels Together:**
+```markdown
+## Top Mountain Village Properties
+
+The Madeline and Peaks Resort both offer exceptional ski-in/ski-out access with comprehensive amenities.
+
+<HotelGrid 
+  hotelIds={["lp4b27f", "lp3e47f"]}
+  title="Mountain Village Luxury Hotels"
   client:load
 />
 ```
