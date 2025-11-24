@@ -190,6 +190,9 @@ export function BlogMap({
   const mapZoom = zoom ?? presetConfig.zoom;
   const showTrails = showTrailsProp ?? presetConfig.showTrails;
   const showLifts = showLiftsProp ?? presetConfig.showLifts;
+  
+  // Auto-enable 3D terrain for trail-focused maps (more useful/cooler for ski content)
+  const enableTerrain = terrain || preset === 'trails' || highlightTrails.length > 0;
 
   // Load trail data
   useEffect(() => {
@@ -252,7 +255,7 @@ export function BlogMap({
   const handleMapLoad = () => {
     setIsMapLoaded(true);
     
-    if (terrain && mapRef.current) {
+    if (enableTerrain && mapRef.current) {
       const map = mapRef.current.getMap();
       
       // Add terrain source
@@ -366,8 +369,8 @@ export function BlogMap({
             longitude: mapCenter[0],
             latitude: mapCenter[1],
             zoom: mapZoom,
-            pitch: terrain ? 45 : 0,
-            bearing: terrain ? -15 : 0,
+            pitch: enableTerrain ? 45 : 0,
+            bearing: enableTerrain ? -15 : 0,
           }}
           mapboxAccessToken={MAPBOX_TOKEN}
           mapStyle={MAP_STYLE}
@@ -375,14 +378,14 @@ export function BlogMap({
           onLoad={handleMapLoad}
           scrollZoom={interactive}
           dragPan={interactive}
-          dragRotate={interactive && terrain}
+          dragRotate={interactive && enableTerrain}
           touchZoomRotate={interactive}
           doubleClickZoom={interactive}
           keyboard={interactive}
-          maxPitch={terrain ? 85 : 0}
+          maxPitch={enableTerrain ? 85 : 0}
         >
           {interactive && (
-            <NavigationControl position="top-right" showCompass={terrain} visualizePitch={terrain} />
+            <NavigationControl position="top-right" showCompass={enableTerrain} visualizePitch={enableTerrain} />
           )}
 
           {/* Trails layer */}
