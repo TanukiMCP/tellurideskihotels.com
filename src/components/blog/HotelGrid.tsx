@@ -359,7 +359,7 @@ export function HotelGrid({
   const displayMode = hotels.length === 1 ? 'single' : hotels.length === 2 ? 'double' : 'triple';
 
   return (
-    <div className="my-12">
+    <div className="my-12 not-prose">
       {title && (
         <h3 className="text-2xl font-bold text-neutral-900 mb-8">{title}</h3>
       )}
