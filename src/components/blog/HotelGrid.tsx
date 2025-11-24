@@ -1,6 +1,10 @@
 import { useState, useEffect, useMemo } from 'react';
 import { HotelCard } from '@/components/lodging/HotelCard';
+import { Card } from '@/components/ui/Card';
+import { Star, MapPin, MessageSquare, Award } from 'lucide-react';
 import type { LiteAPIHotel } from '@/lib/liteapi/types';
+import { getHotelMainImage, formatHotelAddress } from '@/lib/liteapi/utils';
+import { formatCurrency } from '@/lib/utils';
 import { format, addDays } from 'date-fns';
 
 interface HotelGridProps {
@@ -10,6 +14,165 @@ interface HotelGridProps {
   checkIn?: string;
   checkOut?: string;
   title?: string;
+}
+
+// Single Hotel Showcase - Full width, rich content
+function SingleHotelShowcase({ 
+  hotel, 
+  minPrice, 
+  currency, 
+  nights,
+  checkIn,
+  checkOut 
+}: { 
+  hotel: LiteAPIHotel; 
+  minPrice?: number; 
+  currency: string; 
+  nights: number;
+  checkIn: string;
+  checkOut: string;
+}) {
+  const imageUrl = getHotelMainImage(hotel);
+  const address = formatHotelAddress(hotel);
+  const rating = hotel.review_score || 0;
+  const reviewCount = hotel.review_count || 0;
+  const starRating = hotel.star_rating || 0;
+
+  // Strip HTML from description
+  const stripHTML = (html: string): string => {
+    if (!html) return '';
+    let text = html.replace(/<[^>]*>/g, '');
+    text = text
+      .replace(/&nbsp;/g, ' ')
+      .replace(/&amp;/g, '&')
+      .replace(/&lt;/g, '<')
+      .replace(/&gt;/g, '>')
+      .replace(/&quot;/g, '"')
+      .replace(/&#39;/g, "'")
+      .replace(/\|/g, ' • ')
+      .replace(/\s+/g, ' ')
+      .trim();
+    return text;
+  };
+
+  const descriptionText = hotel.description?.text ? stripHTML(hotel.description.text) : '';
+  const truncatedDescription = descriptionText.length > 300 
+    ? descriptionText.substring(0, 300).trim() + '...'
+    : descriptionText;
+
+  const getRatingStyle = (score: number) => {
+    if (score >= 9) return 'bg-primary-600 text-white';
+    if (score >= 8) return 'bg-primary-500 text-white';
+    if (score >= 7) return 'bg-primary-400 text-white';
+    if (score >= 6) return 'bg-accent-500 text-white';
+    return 'bg-neutral-500 text-white';
+  };
+
+  const handleClick = () => {
+    window.location.href = `/places-to-stay/${hotel.hotel_id}?checkIn=${checkIn}&checkOut=${checkOut}&adults=2&rooms=1`;
+  };
+
+  return (
+    <Card className="overflow-hidden border-2 border-neutral-200 hover:shadow-2xl transition-all duration-300 group cursor-pointer">
+      <div className="grid md:grid-cols-2 gap-0">
+        {/* Image Section - Left side, full height */}
+        <div className="relative h-[400px] md:h-auto overflow-hidden bg-gradient-to-br from-neutral-50 to-neutral-100">
+          {imageUrl ? (
+            <img
+              src={imageUrl}
+              alt={hotel.name || 'Property'}
+              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+              loading="lazy"
+            />
+          ) : (
+            <div className="w-full h-full bg-gradient-to-br from-neutral-100 to-neutral-200 flex items-center justify-center">
+              <p className="text-neutral-400 text-sm font-medium">No image available</p>
+            </div>
+          )}
+          
+          {/* Gradient overlay */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/10 via-transparent to-transparent pointer-events-none z-[10]" />
+          
+          {/* Rating Badge */}
+          {rating > 0 && (
+            <div className={`absolute top-4 right-4 z-[20] ${getRatingStyle(rating)} px-3 py-1.5 rounded-lg shadow-lg backdrop-blur-sm font-bold text-base`}>
+              {rating.toFixed(1)}
+            </div>
+          )}
+        </div>
+
+        {/* Content Section - Right side */}
+        <div className="flex flex-col p-8 bg-white">
+          {/* Header */}
+          <div className="mb-6">
+            <h3 className="text-3xl font-bold text-neutral-900 mb-3 leading-tight group-hover:text-primary-700 transition-colors" title={hotel.name}>
+              {hotel.name}
+            </h3>
+            
+            {/* Star Rating & Location */}
+            <div className="flex items-center gap-4 mb-4">
+              {starRating > 0 && (
+                <div className="flex items-center gap-1">
+                  {[...Array(starRating)].map((_, i) => (
+                    <Star key={i} className="w-5 h-5 fill-amber-400 text-amber-400" />
+                  ))}
+                </div>
+              )}
+              {address && (
+                <div className="flex items-center gap-1.5 text-sm text-neutral-600">
+                  <MapPin className="w-4 h-4 text-neutral-400" />
+                  <span className="line-clamp-1">{address}</span>
+                </div>
+              )}
+            </div>
+
+            {/* Reviews */}
+            {reviewCount > 0 && (
+              <div className="flex items-center gap-2 text-sm text-neutral-600">
+                <MessageSquare className="w-4 h-4 text-neutral-400" />
+                <span className="font-semibold text-neutral-700">{reviewCount.toLocaleString()}</span>
+                <span>{reviewCount === 1 ? 'review' : 'reviews'}</span>
+              </div>
+            )}
+          </div>
+
+          {/* Description */}
+          {truncatedDescription && (
+            <div className="mb-6 flex-grow">
+              <p className="text-neutral-700 leading-relaxed text-base line-clamp-4">
+                {truncatedDescription}
+              </p>
+            </div>
+          )}
+
+          {/* Bottom Section - Price & CTA */}
+          <div className="mt-auto pt-6 border-t border-neutral-200">
+            {minPrice && minPrice > 0 && (
+              <div className="mb-4">
+                <div className="flex items-baseline gap-2">
+                  <span className="text-3xl font-bold text-primary-600">
+                    {formatCurrency(minPrice, currency)}
+                  </span>
+                  <span className="text-sm text-neutral-500">/ night</span>
+                </div>
+                <p className="text-xs text-neutral-500 mt-1">
+                  Total: {formatCurrency(minPrice * nights, currency)} for {nights} {nights === 1 ? 'night' : 'nights'}
+                </p>
+              </div>
+            )}
+            
+            <button
+              onClick={handleClick}
+              className="w-full bg-primary-600 hover:bg-primary-700 text-white font-semibold py-4 px-6 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg hover:scale-[1.02] active:scale-[0.98] text-base"
+              type="button"
+            >
+              {minPrice && minPrice > 0 ? 'Check Availability & Book' : 'View Details & Rates'}
+            </button>
+          </div>
+        </div>
+      </div>
+    </Card>
+  );
 }
 
 export function HotelGrid({ 
@@ -45,7 +208,6 @@ export function HotelGrid({
       try {
         // If hotelIds are provided, fetch those specific hotels
         if (hotelIds && hotelIds.length > 0) {
-          // Fetch each hotel by ID using the details endpoint
           const hotelPromises = hotelIds.map(async (hotelId) => {
             try {
               const response = await fetch(`/api/hotels/details?hotelId=${hotelId}`);
@@ -74,7 +236,7 @@ export function HotelGrid({
         const searchParams = new URLSearchParams({
           cityName: 'Telluride',
           countryCode: 'US',
-          limit: '500', // Get all hotels, filter client-side
+          limit: '500',
         });
         
         const hotelsResponse = await fetch(`/api/hotels/search?${searchParams.toString()}`);
@@ -89,7 +251,7 @@ export function HotelGrid({
         const hotelsData = await hotelsResponse.json();
         let candidateHotels: LiteAPIHotel[] = hotelsData.data || [];
         
-        // Apply client-side filtering based on filter prop
+        // Apply client-side filtering
         if (filter === 'luxury') {
           candidateHotels = candidateHotels.filter((h) => (h.star_rating || 0) >= 4);
         } else if (filter === 'budget') {
@@ -145,7 +307,7 @@ export function HotelGrid({
       hotelIds: hotelIds.join(','),
       checkIn: computedCheckIn,
       checkOut: computedCheckOut,
-      adults: '2', // Default to 2 adults for HotelGrid - this is a display widget, not interactive
+      adults: '2',
     });
     
     fetch(`/api/hotels/min-rates?${ratesParams.toString()}`)
@@ -161,7 +323,6 @@ export function HotelGrid({
         if (ratesData?.data && Array.isArray(ratesData.data)) {
           const prices: Record<string, number> = {};
           
-          // min-rates API returns per-night prices already - no division needed
           ratesData.data.forEach((item: { hotelId?: string; price?: number }) => {
             if (item.hotelId && item.price && item.price > 0) {
               prices[item.hotelId] = item.price;
@@ -194,6 +355,9 @@ export function HotelGrid({
     return Math.max(1, diffDays);
   }, [computedCheckIn, computedCheckOut]);
 
+  // Determine display mode based on number of hotels
+  const displayMode = hotels.length === 1 ? 'single' : hotels.length === 2 ? 'double' : 'triple';
+
   return (
     <div className="my-12">
       {title && (
@@ -216,50 +380,88 @@ export function HotelGrid({
         </div>
       ) : (
         <>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6">
-        {hotels.map((hotel) => (
-          <div key={hotel.hotel_id} className="max-w-[320px] mx-auto lg:mx-0">
-            <HotelCard
-              hotel={hotel}
-              minPrice={minPrices[hotel.hotel_id]}
+          {/* Single Hotel Mode - Full width showcase */}
+          {displayMode === 'single' && hotels[0] && (
+            <SingleHotelShowcase
+              hotel={hotels[0]}
+              minPrice={minPrices[hotels[0].hotel_id]}
               currency="USD"
               nights={nights}
-              checkInDate={computedCheckIn || undefined}
-              checkOutDate={computedCheckOut || undefined}
-              variant="compact"
-              onSelect={(id) => {
-                const checkInDate = computedCheckIn || format(addDays(new Date(), 7), 'yyyy-MM-dd');
-                const checkOutDate = computedCheckOut || format(addDays(new Date(), 14), 'yyyy-MM-dd');
-                window.location.href = `/places-to-stay/${id}?checkIn=${checkInDate}&checkOut=${checkOutDate}&adults=2&rooms=1`;
-              }}
+              checkIn={computedCheckIn}
+              checkOut={computedCheckOut}
             />
-          </div>
-        ))}
-      </div>
+          )}
+
+          {/* Double Hotel Mode - 2 column split */}
+          {displayMode === 'double' && (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {hotels.map((hotel) => (
+                <HotelCard
+                  key={hotel.hotel_id}
+                  hotel={hotel}
+                  minPrice={minPrices[hotel.hotel_id]}
+                  currency="USD"
+                  nights={nights}
+                  checkInDate={computedCheckIn || undefined}
+                  checkOutDate={computedCheckOut || undefined}
+                  variant="compact"
+                  onSelect={(id) => {
+                    const checkInDate = computedCheckIn || format(addDays(new Date(), 7), 'yyyy-MM-dd');
+                    const checkOutDate = computedCheckOut || format(addDays(new Date(), 14), 'yyyy-MM-dd');
+                    window.location.href = `/places-to-stay/${id}?checkIn=${checkInDate}&checkOut=${checkOutDate}&adults=2&rooms=1`;
+                  }}
+                />
+              ))}
+            </div>
+          )}
+
+          {/* Triple Hotel Mode - 3 column split */}
+          {displayMode === 'triple' && (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6">
+              {hotels.map((hotel) => (
+                <div key={hotel.hotel_id} className="max-w-[320px] mx-auto lg:mx-0">
+                  <HotelCard
+                    hotel={hotel}
+                    minPrice={minPrices[hotel.hotel_id]}
+                    currency="USD"
+                    nights={nights}
+                    checkInDate={computedCheckIn || undefined}
+                    checkOutDate={computedCheckOut || undefined}
+                    variant="compact"
+                    onSelect={(id) => {
+                      const checkInDate = computedCheckIn || format(addDays(new Date(), 7), 'yyyy-MM-dd');
+                      const checkOutDate = computedCheckOut || format(addDays(new Date(), 14), 'yyyy-MM-dd');
+                      window.location.href = `/places-to-stay/${id}?checkIn=${checkInDate}&checkOut=${checkOutDate}&adults=2&rooms=1`;
+                    }}
+                  />
+                </div>
+              ))}
+            </div>
+          )}
       
-        <div className="mt-8 text-center">
-        <a
+          <div className="mt-8 text-center">
+            <a
               href={`/places-to-stay${filter ? `?filter=${filter}` : ''}${computedCheckIn ? `&checkin=${computedCheckIn}` : ''}${computedCheckOut ? `&checkout=${computedCheckOut}` : ''}`}
               className="inline-flex items-center justify-center gap-2 bg-primary-600 hover:bg-primary-700 !text-white font-semibold px-6 py-3 rounded-lg transition-colors duration-200 shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2"
-            aria-label="View all properties in Telluride"
-        >
-          View All Properties
-            <svg 
-                className="w-5 h-5 !text-white" 
-              fill="none" 
-              stroke="currentColor" 
-              viewBox="0 0 24 24"
-              aria-hidden="true"
+              aria-label="View all properties in Telluride"
             >
-              <path 
-                strokeLinecap="round" 
-                strokeLinejoin="round" 
-                strokeWidth={2} 
-                d="M9 5l7 7-7 7" 
-              />
-          </svg>
-        </a>
-      </div>
+              View All Properties
+              <svg 
+                className="w-5 h-5 !text-white" 
+                fill="none" 
+                stroke="currentColor" 
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+              >
+                <path 
+                  strokeLinecap="round" 
+                  strokeLinejoin="round" 
+                  strokeWidth={2} 
+                  d="M9 5l7 7-7 7" 
+                />
+              </svg>
+            </a>
+          </div>
         </>
       )}
     </div>
