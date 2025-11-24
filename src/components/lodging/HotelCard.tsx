@@ -98,7 +98,7 @@ export function HotelCard({
           <img
             src={imageUrl}
             alt={hotel.name || 'Property'}
-            className="absolute inset-0 w-full h-full object-cover object-center transition-transform duration-700 group-hover:scale-105 rounded-t-xl"
+            className="absolute inset-0 w-full h-full object-cover object-center transition-transform duration-700 group-hover:scale-105"
             style={{ display: 'block', margin: 0, padding: 0, lineHeight: 0 }}
             loading="lazy"
             onError={(e) => {
@@ -106,13 +106,13 @@ export function HotelCard({
             }}
           />
         ) : (
-          <div className="absolute inset-0 w-full h-full bg-gradient-to-br from-neutral-100 to-neutral-200 flex items-center justify-center rounded-t-xl">
+          <div className="absolute inset-0 w-full h-full bg-gradient-to-br from-neutral-100 to-neutral-200 flex items-center justify-center">
             <p className="text-neutral-400 text-sm font-medium">No image available</p>
           </div>
         )}
         
         {/* Subtle gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/5 via-transparent to-transparent pointer-events-none z-[10] rounded-t-xl" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/5 via-transparent to-transparent pointer-events-none z-[10]" />
         
         {/* Rating Badge - Absolutely positioned within image container, overlaying top-right corner */}
         {rating > 0 && (
