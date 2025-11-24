@@ -81,7 +81,7 @@ export function HotelCard({
       onClick={() => onSelect(hotel.hotel_id)}
     >
       {/* Image Section - Flush to top edge, badge overlays */}
-      <div className={`relative w-full overflow-hidden ${variant === 'compact' ? 'h-[200px]' : 'h-56'} ${
+      <div className={`relative w-full overflow-hidden ${variant === 'compact' ? 'h-[240px]' : 'h-56'} ${
         !imageUrl ? 'bg-gradient-to-br from-neutral-100 to-neutral-200' : ''
       }`}>
         {imageUrl ? (
@@ -111,11 +111,11 @@ export function HotelCard({
         )}
       </div>
       
-      {/* Content Section - Proper spacing, no overlap */}
+      {/* Content Section - Tight spacing to maximize description space */}
       <div className="flex flex-col flex-grow bg-white p-4">
         {/* Property Name - Truncates to 2 lines, shows full name on hover */}
         <h3 
-          className={`font-bold text-neutral-900 leading-tight line-clamp-2 tracking-tight group-hover:text-primary-700 transition-colors mb-3 ${
+          className={`font-bold text-neutral-900 leading-tight line-clamp-2 tracking-tight group-hover:text-primary-700 transition-colors mb-1.5 ${
             variant === 'compact' ? 'text-lg' : 'text-xl'
           }`}
           title={hotel.name}
@@ -125,7 +125,7 @@ export function HotelCard({
         
         {/* Star Rating */}
         {starRating > 0 && (
-          <div className="flex items-center gap-0.5 mb-3">
+          <div className="flex items-center gap-0.5 mb-1.5">
             {[...Array(starRating)].map((_, i) => (
               <Star key={i} className="w-4 h-4 fill-amber-400 text-amber-400" />
             ))}
@@ -134,7 +134,7 @@ export function HotelCard({
         
         {/* Address */}
         {address && (
-          <div className="flex items-start gap-1.5 text-sm text-neutral-500 mb-3">
+          <div className="flex items-start gap-1.5 text-sm text-neutral-500 mb-1.5">
             <MapPin className="w-3.5 h-3.5 flex-shrink-0 mt-0.5 text-neutral-400" />
             <span className="line-clamp-1 overflow-hidden text-ellipsis whitespace-nowrap">{address}</span>
           </div>
@@ -142,15 +142,15 @@ export function HotelCard({
         
         {/* Review Count */}
         {reviewCount > 0 && (
-          <p className="text-xs text-neutral-500 mb-3">
+          <p className="text-xs text-neutral-500 mb-2">
             <span className="font-semibold text-neutral-700">{reviewCount.toLocaleString()}</span> {reviewCount === 1 ? 'review' : 'reviews'}
           </p>
         )}
         
-        {/* Description Preview - Fixed height, 16px bottom margin */}
+        {/* Description Preview - More space, better line height */}
         {descriptionText && (
-          <div className={`text-neutral-600 overflow-hidden flex-shrink-0 ${
-            variant === 'compact' ? 'text-xs h-[3.5rem] mb-4' : 'text-sm h-[4rem] mb-4'
+          <div className={`text-neutral-600 overflow-hidden flex-shrink-0 mb-3 ${
+            variant === 'compact' ? 'text-xs min-h-[4rem]' : 'text-sm min-h-[4.5rem]'
           }`}>
             <p 
               style={{
@@ -160,7 +160,7 @@ export function HotelCard({
                 overflow: 'hidden',
                 textOverflow: 'ellipsis',
                 wordBreak: 'break-word',
-                lineHeight: '1.5rem',
+                lineHeight: '1.4rem',
                 margin: 0,
                 padding: 0
               }}
@@ -175,7 +175,7 @@ export function HotelCard({
         
         {/* Price */}
         {minPrice && minPrice > 0 && (
-          <div className="mb-3 flex-shrink-0">
+          <div className="mb-2 flex-shrink-0">
                 <div className="flex items-baseline gap-1.5">
               <span className={`font-bold text-primary-600 tracking-tight ${
                 variant === 'compact' ? 'text-lg' : 'text-xl'
@@ -187,7 +187,7 @@ export function HotelCard({
               </div>
         )}
               
-        {/* CTA Button - Explicit 16px top margin if description exists */}
+        {/* CTA Button */}
               <button
                 onClick={(e) => {
                   e.stopPropagation();
@@ -196,7 +196,6 @@ export function HotelCard({
           className={`w-full bg-primary-600 hover:bg-primary-700 text-white font-semibold rounded-lg transition-all duration-200 shadow-sm hover:shadow-md hover:scale-[1.02] active:scale-[0.98] flex-shrink-0 ${
             variant === 'compact' ? 'py-2.5 px-3 text-sm' : 'py-3 px-4'
           }`}
-          style={{ marginTop: descriptionText ? '16px' : '0px' }}
                 type="button"
               >
           {minPrice && minPrice > 0 
