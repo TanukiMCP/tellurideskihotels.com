@@ -47,6 +47,69 @@
   }
 }
 
+@layer components {
+  /* FAQ Accordion Styling for native details/summary elements */
+  .prose details {
+    @apply border border-neutral-200 rounded-xl overflow-hidden bg-white shadow-sm my-3;
+    transition: box-shadow 0.2s ease;
+  }
+  
+  .prose details:hover {
+    @apply shadow-md;
+  }
+  
+  .prose details summary {
+    @apply px-6 py-4 cursor-pointer list-none flex items-center justify-between;
+    @apply text-lg font-semibold text-neutral-900;
+    @apply hover:bg-neutral-50 transition-colors duration-150;
+  }
+  
+  .prose details summary::-webkit-details-marker {
+    display: none;
+  }
+  
+  .prose details summary::marker {
+    display: none;
+  }
+  
+  .prose details summary::after {
+    content: '';
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+    margin-left: 1rem;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%234b5563'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E");
+    background-size: contain;
+    background-repeat: no-repeat;
+    transition: transform 0.2s ease;
+  }
+  
+  .prose details[open] summary::after {
+    transform: rotate(180deg);
+  }
+  
+  .prose details > *:not(summary) {
+    @apply px-6 pb-4 text-neutral-700 leading-relaxed;
+  }
+  
+  .prose details > p:first-of-type {
+    @apply mt-0;
+  }
+  
+  .prose details > p:last-child {
+    @apply mb-0;
+  }
+  
+  /* FAQ Section wrapper styling */
+  .faq-section {
+    @apply my-12;
+  }
+  
+  .faq-section > h2:first-child {
+    @apply text-3xl font-bold text-neutral-900 mb-6;
+  }
+}
+
 @layer utilities {
   .text-balance {
     text-wrap: balance;

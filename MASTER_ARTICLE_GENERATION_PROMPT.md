@@ -1170,11 +1170,27 @@ gap-5 md:gap-6       /* 20px mobile, 24px desktop */
 
 ## FAQ Accordion Component System
 
-### Implementation
+### Overview
 
-All FAQ sections must use the collapsible accordion component for better UX and SEO.
+FAQ sections use native HTML `<details>` and `<summary>` elements with automatic styling applied via CSS. This approach is:
+- **Accessible** - Works with screen readers and keyboard navigation
+- **Fast** - No JavaScript required for core functionality  
+- **SEO-optimized** - Semantic HTML that search engines understand
+- **Styled automatically** - Renders as polished accordion cards matching site design
 
-**Component Format:**
+### Visual Appearance
+
+When rendered, each FAQ item displays as:
+- Rounded card with subtle border and shadow
+- Question as clickable header with chevron icon
+- Smooth expand/collapse animation
+- Hover state with background highlight
+- Professional spacing and typography
+
+### Syntax
+
+Use this exact format in your MDX files:
+
 ```markdown
 <details>
 <summary>Question goes here?</summary>
@@ -1182,33 +1198,40 @@ All FAQ sections must use the collapsible accordion component for better UX and 
 Answer goes here. Can be multiple paragraphs if needed.
 
 - Can include bullet points
-- Can include internal links
+- Can include [internal links](/blog/category/article)
 - Should be 50-150 words
 
 </details>
 ```
 
-**Best Practices:**
+**⚠️ CRITICAL FORMATTING RULES:**
 
-1. **Question Format:**
-   - Start with question words (How, What, When, Where, Why, Is, Can, Do)
-   - Use natural language from "People Also Ask"
-   - Include keywords naturally
-   - Make it conversational
+1. **Blank line after `<summary>` tag** - Required for proper rendering
+2. **Blank line before closing `</details>`** - Required for proper rendering
+3. **No indentation** - Keep all tags at the start of the line
+4. **Question in summary tag** - Not as a separate heading
 
-2. **Answer Format:**
-   - Start with a direct answer in first sentence
-   - Expand with details in following sentences
-   - Include internal links where relevant
-   - Keep concise but complete (50-150 words)
+### Best Practices
 
-3. **SEO Benefits:**
-   - Schema markup for featured snippets
-   - Expandable = better mobile UX
-   - Keyword-rich questions
-   - Long-tail keyword targets
+**Question Format:**
+- Start with question words (How, What, When, Where, Why, Is, Can, Do)
+- Use natural language from "People Also Ask" results
+- Include keywords naturally
+- Make it conversational, not robotic
 
-**Example FAQ Section:**
+**Answer Format:**
+- Start with a direct answer in the first sentence
+- Expand with details in following sentences
+- Include 1-2 internal links where relevant
+- Keep concise but complete (50-150 words)
+
+**SEO Benefits:**
+- Targets long-tail question keywords
+- Potential for featured snippet capture
+- Better mobile UX with collapsible content
+- Keyword-rich questions improve topical relevance
+
+### Complete Example
 
 ```markdown
 ## Frequently Asked Questions
@@ -1234,6 +1257,13 @@ You don't need a car once you're in Telluride. The free gondola connects downtow
 
 </details>
 ```
+
+### Placement Guidelines
+
+- **Location:** Place FAQ section near the end of the article, before the conclusion
+- **Heading:** Always use `## Frequently Asked Questions` as the section header
+- **Quantity:** Include 5-8 FAQ items per article
+- **Spacing:** No extra spacing needed between FAQ items
 
 ---
 
