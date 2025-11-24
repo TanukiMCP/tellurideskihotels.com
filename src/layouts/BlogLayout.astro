@@ -108,7 +108,7 @@ const categoryName = data.category.replace(/-/g, ' ');
 
     <Container>
 
-      <div class="grid gap-6 lg:gap-8 xl:gap-10 lg:grid-cols-[240px_minmax(0,_1fr)] py-12 max-w-[1400px] mx-auto">
+      <div class="grid gap-6 lg:gap-8 xl:gap-10 lg:grid-cols-[240px_1fr] py-12">
         <!-- Sidebar - Now on LEFT -->
         <aside class="space-y-6 lg:order-1">
           <!-- Table of Contents -->
@@ -166,9 +166,9 @@ const categoryName = data.category.replace(/-/g, ' ');
         </aside>
 
         <!-- Main Content - Now on RIGHT with full width -->
-        <div class="w-full relative lg:order-2">
+        <div class="w-full max-w-none relative lg:order-2">
           <!-- Article Content -->
-          <div class="prose prose-lg w-full 
+          <div class="prose prose-lg max-w-none w-full 
             prose-headings:font-semibold 
             prose-headings:text-[#2C2C2C]
             prose-h2:mt-12 prose-h2:mb-4 prose-h2:text-[32px]
