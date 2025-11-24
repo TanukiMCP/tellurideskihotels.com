@@ -225,6 +225,7 @@ export function HotelGrid({
           const fetchedHotels = await Promise.all(hotelPromises);
           const validHotels = fetchedHotels.filter((h): h is LiteAPIHotel => h !== null);
           
+          // Keep manually curated hotelIds in their original order (intentional curation)
           if (isMounted) {
             setHotels(validHotels);
             setIsLoadingHotels(false);
@@ -260,11 +261,17 @@ export function HotelGrid({
           candidateHotels = candidateHotels.filter((h) => (h.star_rating || 0) >= 4);
         }
         
-        // Sort by rating (highest first) before limiting
+        // Sort by guest review score (highest first), then by review count (most reviews first) as tiebreaker
         candidateHotels.sort((a, b) => {
           const ratingA = a.review_score || 0;
           const ratingB = b.review_score || 0;
-          return ratingB - ratingA;
+          if (ratingB !== ratingA) {
+            return ratingB - ratingA;
+          }
+          // If ratings are equal, sort by review count (more reviews = higher confidence)
+          const countA = a.review_count || 0;
+          const countB = b.review_count || 0;
+          return countB - countA;
         });
         
         candidateHotels = candidateHotels.slice(0, limit);
