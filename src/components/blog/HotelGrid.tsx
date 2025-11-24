@@ -261,17 +261,30 @@ export function HotelGrid({
           candidateHotels = candidateHotels.filter((h) => (h.star_rating || 0) >= 4);
         }
         
-        // Sort by guest review score (highest first), then by review count (most reviews first) as tiebreaker
+        // Sort by combined score: rating × log(review_count + 1)
+        // This prevents hotels with 1 review and perfect rating from dominating
+        // while rewarding hotels with both high ratings AND high review volume
         candidateHotels.sort((a, b) => {
           const ratingA = a.review_score || 0;
           const ratingB = b.review_score || 0;
-          if (ratingB !== ratingA) {
-            return ratingB - ratingA;
-          }
-          // If ratings are equal, sort by review count (more reviews = higher confidence)
           const countA = a.review_count || 0;
           const countB = b.review_count || 0;
-          return countB - countA;
+          
+          // Calculate combined score: rating × log(review_count + 1)
+          // log(1) = 0, log(11) ≈ 1, log(101) ≈ 2, log(1001) ≈ 3
+          // This gives weight to popular hotels without letting volume dominate
+          const scoreA = ratingA * Math.log10(countA + 1);
+          const scoreB = ratingB * Math.log10(countB + 1);
+          
+          // If scores are equal, prefer higher rating, then higher review count
+          if (Math.abs(scoreB - scoreA) < 0.01) {
+            if (ratingB !== ratingA) {
+              return ratingB - ratingA;
+            }
+            return countB - countA;
+          }
+          
+          return scoreB - scoreA;
         });
         
         candidateHotels = candidateHotels.slice(0, limit);

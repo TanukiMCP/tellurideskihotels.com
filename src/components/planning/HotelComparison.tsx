@@ -29,6 +29,7 @@ interface HotelData {
   amenities: string[];
   rating: number;
   starRating: number;
+  reviewCount: number;
   score: number;
   imageUrl?: string;
 }
@@ -143,6 +144,10 @@ export function HotelComparison({
         const reviewCount = hotel.review_count || 0;
         const imageUrl = hotel.images?.[0]?.url || hotel.images?.[0]?.thumbnail || '';
         
+        // Calculate combined score: rating × log(review_count + 1)
+        // This prevents hotels with 1 review and perfect rating from dominating
+        const combinedScore = rating * Math.log10(reviewCount + 1);
+        
         return {
           hotelId: hotel.hotel_id,
           name: hotel.name || 'Hotel',
@@ -153,16 +158,23 @@ export function HotelComparison({
           amenities,
           rating,
           starRating,
-          score: rating, // Use guest review score as the primary ranking metric
+          reviewCount,
+          score: combinedScore, // Combined rating + volume score
           imageUrl,
         };
       });
       
-      // Sort by guest review rating (highest first), then by cost per person
+      // Sort by combined score (rating × volume), then by rating, then by cost per person
       hotelComparisons.sort((a, b) => {
+        // Primary: combined score (rating × log(review_count + 1))
+        if (Math.abs(b.score - a.score) > 0.01) {
+          return b.score - a.score;
+        }
+        // Secondary: if scores are very close, prefer higher rating
         if (b.rating !== a.rating) {
           return b.rating - a.rating;
         }
+        // Tertiary: if ratings are equal, prefer lower cost
         return a.costPerPerson - b.costPerPerson;
       });
       
