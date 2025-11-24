@@ -60,12 +60,10 @@ This comprehensive guide provides everything you need to plan your Telluride mul
 
 Use the cost calculator below to estimate total trip expenses for your multi-family group based on total group size, trip length, and travel dates. Understanding total costs helps groups make informed decisions about accommodations and activities.
 
-<GroupCostCalculator 
-  groupType="family"
+<TripCalculator 
   defaultNights={5}
   defaultGuests={12}
-  checkIn="2025-12-26"
-  checkOut="2025-12-31"
+  title="Multi-Family Trip Cost Calculator"
 />
 
 For information about planning single-family trips, see our [family ski vacation guide](/blog/planning-tips/telluride-family-ski-vacation). For friend group planning, check our [friends ski trip guide](/blog/planning-tips/telluride-friends-ski-trip). For accommodation options, review our [where to stay guide](/blog/destination-guides/where-to-stay-telluride).
@@ -92,11 +90,10 @@ Activity costs (lessons, tours, non-skiing activities) remain individual or fami
 
 Transportation costs split based on usage, with car rentals or shuttles divided among families using the transportation. Groups using personal vehicles typically split gas costs equally among participating families. The key is establishing methods before the trip to prevent awkward conversations during travel. Many multi-family groups designate one family to handle transportation coordination and splitting to streamline logistics.
 
-<HotelSplitCalculator 
+<HotelComparison 
   hotelIds={["lp656c5dd6", "lp21ee2", "lp656c9596"]}
-  scenario="three-families-12-people"
-  defaultNights={5}
-  defaultGuests={12}
+  title="Compare Multi-Family Lodging Options"
+  groupSize={12}
 />
 
 ## Accommodation Options for Multi-Family Groups
@@ -113,10 +110,10 @@ Location considerations matter significantly for multi-family groups. Mountain V
 
 Amenity considerations become important with multi-family groups, as different families may prioritize different features. Large vacation rentals often include hot tubs, game rooms, multiple living areas, and full kitchens that accommodate group needs. Properties with multiple bathrooms prevent morning bottlenecks, while large dining areas enable group meals. Some properties offer additional amenities like home theaters, pool tables, or outdoor spaces that enhance group experiences. Understanding which amenities matter most helps groups choose properties that match priorities.
 
-<EventPlanningTimeline 
-  eventType="celebration"
-  eventDate="2025-12-26"
-  groupSize={12}
+<ArticleBookingWidget 
+  variant="compact"
+  title="Book Large Group Accommodations"
+  description="Find vacation rentals and condos that fit multiple families"
 />
 
 ## Logistics Management for Large Groups
@@ -150,12 +147,10 @@ Group meals create bonding opportunities and simplify logistics for multi-family
 
 Evening activities vary significantly based on group preferences and children's ages. Multi-family groups with young children often prefer quieter evenings with group dinners and games or movies in accommodations. Groups with older children or teenagers may want more active evening activities. Understanding group preferences before the trip helps plan appropriate evening activities. Many groups find that mixing active and relaxed evenings provides good balance for diverse family needs.
 
-<BudgetToItineraryPlanner 
-  budgetPerPerson={1000}
-  tripLength={5}
-  groupSize={12}
-  checkIn="2025-12-26"
-  checkOut="2025-12-31"
+<ActivityShowcase 
+  category="family"
+  limit={3}
+  title="Family-Friendly Activities"
 />
 
 ## Handling Different Family Sizes and Needs

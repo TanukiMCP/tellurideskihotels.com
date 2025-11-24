@@ -62,14 +62,8 @@ You have multiple conversion tools—use them strategically based on content typ
 
 | Widget | When to Use | Best For |
 |--------|-------------|----------|
-| `<GroupCostCalculator groupType="..." />` | Cost breakdown discussions | Family trips, friend groups, budget planning |
-| `<HotelSplitCalculator hotelIds={[...]} />` | Hotel vs condo comparisons | Group lodging decisions, cost splitting |
-| `<BudgetToItineraryPlanner />` | Budget-conscious content | First-timers, budget travelers |
-| `<SeasonComparison />` | Peak vs off-peak discussions | Timing decisions, cost comparisons |
-| `<GroupTypeRecommender />` | General planning content | Undecided travelers, landing sections |
-| `<CostPerPersonRanking hotelIds={[...]} />` | Value/ranking articles | Hotel rankings, price analysis |
-| `<EventPlanningTimeline eventType="..." />` | Event planning content | Weddings, birthdays, corporate retreats |
-| `<HotelComparison hotelIds={[...]} />` | Head-to-head comparisons | Detailed property comparisons |
+| `<TripCalculator defaultNights={4} defaultGuests={2} title="..." />` | Cost estimation sections | Any trip type: couples, families, groups |
+| `<HotelComparison hotelIds={[...]} groupSize={2} title="..." />` | Head-to-head property comparisons | Comparing 2-3 specific hotels/condos |
 
 #### Activity Widget
 
@@ -124,12 +118,9 @@ When using `hotelIds` prop, markers appear on the map. Clicking a marker shows a
    → This is the RIGHT widget for comparison sections!
 
 4. **Is this discussing costs, budgets, or group trip planning?**
-   → Use appropriate planning tool: `GroupCostCalculator`, `BudgetToItineraryPlanner`, `HotelSplitCalculator`
+   → Use `<TripCalculator defaultNights={X} defaultGuests={X} title="..." />`
 
-5. **Is this comparing seasonal timing (peak vs off-peak)?**
-   → Use `SeasonComparison`
-
-6. **Is this a transition point or general CTA without specific properties mentioned?**
+5. **Is this a transition point or general CTA without specific properties mentioned?**
    → Use `<ArticleBookingWidget variant="compact" filter="..." />`
 
 7. **Is this the end of the article?**
@@ -162,14 +153,10 @@ Search the article for ALL widget patterns:
 <HotelGrid
 <HotelShowcase
 <ArticleBookingWidget
-<GroupCostCalculator
-<HotelSplitCalculator
-<BudgetToItineraryPlanner
-<SeasonComparison
-<GroupTypeRecommender
-<CostPerPersonRanking
-<EventPlanningTimeline
+<TripCalculator
 <HotelComparison
+<HotelGrid
+<HotelShowcase
 <ActivityShowcase
 <BlogMap
 ```
@@ -253,7 +240,7 @@ grep -i "hotel telluride" src/data/telluride-hotels.csv
 - **Accommodation-focused articles:** Mix of HotelShowcase/HotelGrid + BlogMap for location context + ArticleBookingWidget
 - **Planning/cost articles:** At least 1-2 planning tools + booking widgets
 - **Activity articles:** ActivityShowcase + relevant booking widgets
-- **Comparison articles:** HotelComparison or HotelSplitCalculator + BlogMap (preset="overview") + booking widgets
+- **Comparison articles:** HotelComparison + BlogMap (preset="overview") + booking widgets
 - **Location-focused articles:** BlogMap is essential - use preset="overview" or preset="hotels"
 - **Ski guides:** BlogMap with preset="trails" for terrain visualization
 
@@ -292,11 +279,11 @@ grep -i "hotel telluride" src/data/telluride-hotels.csv
 ```jsx
 ## Estimating Your Trip Cost
 [Budget discussion...]
-<GroupCostCalculator groupType="family" defaultNights={4} defaultGuests={6} />
+<TripCalculator defaultNights={4} defaultGuests={6} title="Family Trip Cost Estimator" />
 
 ## Hotel vs Condo for Families
 [Comparison discussion...]
-<HotelSplitCalculator scenario="family-of-6" defaultGuests={6} />
+<HotelComparison hotelIds={["lp4b27f", "lp656c95d8"]} title="Compare Hotels and Condos" groupSize={6} />
 ```
 
 **General CTA (Mid-Article Transition):**
@@ -494,7 +481,7 @@ After completing your review, make all necessary edits to the article file. Prov
 1. **Text Polish:** [List specific text improvements made]
 2. **Widget Selection:** [Note any widgets replaced with more appropriate types - e.g., "Changed HotelGrid to HotelShowcase for listicle format"]
 3. **Widget Curation:** [List widgets updated with manually curated hotelIds]
-4. **Planning Tools Added:** [List any GroupCostCalculator, SeasonComparison, etc. added where appropriate]
+4. **Planning Tools Added:** [List any TripCalculator, HotelComparison, etc. added where appropriate]
 5. **Images Updated:** [List any images replaced or added]
 6. **Links Added/Fixed:** [List internal and external links modified]
 7. **FAQ Updated:** [Note any FAQ changes]
@@ -525,6 +512,6 @@ Common Telluride properties (verify in CSV before using):
 - **Every image must be landscape orientation** and contextually relevant to its section
 - **Every internal link must point to a real, existing page** - verify slugs exist
 - **Every mentioned hotel should have a booking path** - either via widget with curated ID or link to filtered search
-- **Planning articles need planning tools** - GroupCostCalculator, BudgetToItineraryPlanner, SeasonComparison, etc.
+- **Planning articles need planning tools** - TripCalculator for cost estimation, HotelComparison for property comparisons
 - **The goal is conversion through intentional, varied content placement**
 

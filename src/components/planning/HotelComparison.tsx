@@ -2,8 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
-import { Input } from '@/components/ui/Input';
-import { Building2, Star, Users, Calendar, MapPin, Wifi, Coffee, Check, AlertCircle } from 'lucide-react';
+import { Building2, Star, Users, Calendar, MapPin, Check, ChevronDown, ChevronUp, Award, TrendingUp, Wallet } from 'lucide-react';
 import { LoadingSpinner } from '@/components/shared/LoadingSpinner';
 import type { LiteAPIHotel } from '@/lib/liteapi/types';
 import { addDays, format } from 'date-fns';
@@ -38,9 +37,8 @@ export function HotelComparison({
   hotelIds,
   filter,
   groupSize = 2,
-  title = 'Compare Top Hotels',
+  title = 'Compare Top Properties',
 }: HotelComparisonProps) {
-  // Default dates: 7 days from today, 7-night stay
   const defaultCheckInDate = format(addDays(new Date(), 7), 'yyyy-MM-dd');
   const defaultCheckOutDate = format(addDays(new Date(), 14), 'yyyy-MM-dd');
   
@@ -144,8 +142,6 @@ export function HotelComparison({
         const reviewCount = hotel.review_count || 0;
         const imageUrl = hotel.images?.[0]?.url || hotel.images?.[0]?.thumbnail || '';
         
-        // Calculate combined score: rating × log(review_count + 1)
-        // This prevents hotels with 1 review and perfect rating from dominating
         const combinedScore = rating * Math.log10(reviewCount + 1);
         
         return {
@@ -159,26 +155,18 @@ export function HotelComparison({
           rating,
           starRating,
           reviewCount,
-          score: combinedScore, // Combined rating + volume score
+          score: combinedScore,
           imageUrl,
         };
       });
       
-      // Sort by combined score (rating × volume), then by rating, then by cost per person
+      // Sort by combined score
       hotelComparisons.sort((a, b) => {
-        // Primary: combined score (rating × log(review_count + 1))
-        if (Math.abs(b.score - a.score) > 0.01) {
-          return b.score - a.score;
-        }
-        // Secondary: if scores are very close, prefer higher rating
-        if (b.rating !== a.rating) {
-          return b.rating - a.rating;
-        }
-        // Tertiary: if ratings are equal, prefer lower cost
+        if (Math.abs(b.score - a.score) > 0.01) return b.score - a.score;
+        if (b.rating !== a.rating) return b.rating - a.rating;
         return a.costPerPerson - b.costPerPerson;
       });
       
-      // Take top 3 for comparison
       setHotels(hotelComparisons.slice(0, 3));
       setError(null);
     } catch (err) {
@@ -198,201 +186,210 @@ export function HotelComparison({
 
   const nightsCount = Math.ceil((new Date(checkOut).getTime() - new Date(checkIn).getTime()) / (1000 * 60 * 60 * 24));
   
-  const getBestValue = () => {
-    if (hotels.length === 0) return null;
-    // Best value = highest rating for the price
-    return hotels.reduce((best, current) => {
-      const bestValueScore = best.rating / best.costPerPerson;
-      const currentValueScore = current.rating / current.costPerPerson;
-      return currentValueScore > bestValueScore ? current : best;
+  // Calculate badges for each hotel
+  const getBadges = () => {
+    if (hotels.length === 0) return {};
+    
+    const highestRated = hotels.reduce((a, b) => a.rating > b.rating ? a : b);
+    const lowestPrice = hotels.reduce((a, b) => a.costPerPerson < b.costPerPerson ? a : b);
+    const bestValue = hotels.reduce((a, b) => {
+      const aValue = a.rating / (a.costPerPerson / 100);
+      const bValue = b.rating / (b.costPerPerson / 100);
+      return aValue > bValue ? a : b;
     });
+    
+    return {
+      [highestRated.hotelId]: { type: 'rating', label: 'Top Rated', icon: Award, color: 'amber' },
+      [lowestPrice.hotelId]: lowestPrice.hotelId !== highestRated.hotelId 
+        ? { type: 'price', label: 'Best Price', icon: Wallet, color: 'emerald' } 
+        : null,
+      [bestValue.hotelId]: bestValue.hotelId !== highestRated.hotelId && bestValue.hotelId !== lowestPrice.hotelId
+        ? { type: 'value', label: 'Best Value', icon: TrendingUp, color: 'blue' }
+        : null,
+    };
   };
 
-  const bestValue = getBestValue();
+  const badges = getBadges();
 
   if (loading) {
     return (
-      <Card className="my-12 not-prose">
+      <Card className="my-12 not-prose border-0 shadow-xl bg-gradient-to-br from-slate-50 to-slate-100">
         <CardContent className="py-12">
-          <div className="flex justify-center items-center">
+          <div className="flex flex-col items-center gap-3">
             <LoadingSpinner size="lg" />
+            <p className="text-sm text-slate-600">Comparing properties...</p>
           </div>
         </CardContent>
       </Card>
     );
   }
 
-  if (error) {
+  if (error || hotels.length === 0) {
     return (
-      <Card className="my-12 not-prose">
-        <CardContent className="py-8">
-          <p className="text-neutral-600 text-center">{error}</p>
-        </CardContent>
-      </Card>
-    );
-  }
-
-  if (hotels.length === 0) {
-    return (
-      <Card className="my-12 not-prose">
-        <CardContent className="py-8">
-          <p className="text-neutral-600 text-center">No hotels found matching your criteria.</p>
+      <Card className="my-12 not-prose border-0 shadow-xl bg-gradient-to-br from-slate-50 to-slate-100">
+        <CardContent className="py-12">
+          <div className="text-center">
+            <Building2 className="w-12 h-12 text-slate-300 mx-auto mb-4" />
+            <p className="text-slate-600 mb-4">{error || 'No properties found matching your criteria.'}</p>
+            <a
+              href="/places-to-stay"
+              className="inline-flex items-center gap-2 bg-slate-800 hover:bg-slate-900 text-white font-semibold px-6 py-3 rounded-xl transition-colors"
+            >
+              Browse All Properties
+            </a>
+          </div>
         </CardContent>
       </Card>
     );
   }
 
   return (
-    <Card className="my-12 not-prose border-2 border-primary-200 shadow-lg">
-      <CardHeader className="bg-gradient-to-r from-primary-50 to-primary-100 border-b border-primary-200">
+    <Card className="my-12 not-prose border-0 shadow-xl bg-gradient-to-br from-slate-50 to-slate-100 overflow-hidden">
+      {/* Header */}
+      <CardHeader className="bg-gradient-to-r from-slate-800 to-slate-900 text-white pb-6">
         <div className="flex items-center justify-between flex-wrap gap-4">
-          <div className="flex items-center gap-3">
-            <div className="w-12 h-12 bg-primary-600 rounded-lg flex items-center justify-center shadow-md">
-              <Building2 className="w-6 h-6 text-white" />
+          <div className="flex items-center gap-4">
+            <div className="w-14 h-14 bg-white/10 backdrop-blur rounded-xl flex items-center justify-center">
+              <Building2 className="w-7 h-7 text-white" />
             </div>
             <div>
-              <CardTitle className="text-2xl font-bold text-neutral-900">{title}</CardTitle>
-              <p className="text-neutral-600 mt-1 text-sm">
-                Top 3 hotels ranked by guest reviews
+              <CardTitle className="text-2xl font-bold text-white">{title}</CardTitle>
+              <p className="text-slate-300 mt-1 text-sm">
+                {nightsCount} nights • {guests} {guests === 1 ? 'guest' : 'guests'} • {format(new Date(checkIn), 'MMM d')} - {format(new Date(checkOut), 'MMM d')}
               </p>
             </div>
           </div>
           <button
             onClick={() => setShowSettings(!showSettings)}
-            className="text-sm text-primary-600 hover:text-primary-700 font-medium underline"
+            className="flex items-center gap-1 text-sm text-slate-300 hover:text-white transition-colors"
           >
-            {showSettings ? 'Hide' : 'Adjust'} Search Settings
+            {showSettings ? 'Hide' : 'Edit'} dates
+            {showSettings ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
           </button>
         </div>
-      </CardHeader>
-      <CardContent className="p-6 space-y-6">
-        {/* Disclaimer */}
-        <div className="flex items-start gap-3 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-          <AlertCircle className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
-          <div className="text-sm text-blue-900">
-            <p className="font-medium mb-1">Pricing Information</p>
-            <p>
-              Rates shown are based on a {nightsCount}-night stay from {format(new Date(checkIn), 'MMM d')} to {format(new Date(checkOut), 'MMM d, yyyy')} for {guests} {guests === 1 ? 'guest' : 'guests'}. 
-              For the most accurate pricing and availability, please click "Check Availability" on your preferred hotel.
-            </p>
-          </div>
-        </div>
-
-        {/* Adjustable Settings */}
+        
+        {/* Expandable Settings */}
         {showSettings && (
-          <div className="p-4 bg-neutral-50 border border-neutral-200 rounded-lg space-y-4">
-            <h4 className="font-semibold text-neutral-900 text-sm">Adjust Search Parameters</h4>
-            <div className="grid gap-4 md:grid-cols-3">
-              <div>
-                <label className="block text-xs font-medium text-neutral-700 mb-1.5">
-                  <Users className="w-3.5 h-3.5 inline mr-1" />
-                  Number of Guests
-                </label>
-                <Input
-                  type="number"
-                  min="1"
-                  max="20"
-                  value={guests}
-                  onChange={(e) => setGuests(parseInt(e.target.value) || 2)}
-                  className="w-full text-sm"
-                />
-              </div>
-              <div>
-                <label className="block text-xs font-medium text-neutral-700 mb-1.5">
-                  <Calendar className="w-3.5 h-3.5 inline mr-1" />
-                  Check-In Date
-                </label>
-                <Input
-                  type="date"
-                  value={checkIn}
-                  onChange={(e) => setCheckIn(e.target.value)}
-                  min={format(new Date(), 'yyyy-MM-dd')}
-                  className="w-full text-sm"
-                />
-              </div>
-              <div>
-                <label className="block text-xs font-medium text-neutral-700 mb-1.5">
-                  <Calendar className="w-3.5 h-3.5 inline mr-1" />
-                  Check-Out Date
-                </label>
-                <Input
-                  type="date"
-                  value={checkOut}
-                  onChange={(e) => setCheckOut(e.target.value)}
-                  min={checkIn}
-                  className="w-full text-sm"
-                />
-              </div>
+          <div className="mt-6 pt-6 border-t border-slate-700 grid gap-4 md:grid-cols-3">
+            <div>
+              <label className="block text-xs text-slate-400 mb-1.5">
+                <Users className="w-3.5 h-3.5 inline mr-1" />
+                Guests
+              </label>
+              <input
+                type="number"
+                min="1"
+                max="20"
+                value={guests}
+                onChange={(e) => setGuests(parseInt(e.target.value) || 2)}
+                className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-white/20"
+              />
+            </div>
+            <div>
+              <label className="block text-xs text-slate-400 mb-1.5">
+                <Calendar className="w-3.5 h-3.5 inline mr-1" />
+                Check-In
+              </label>
+              <input
+                type="date"
+                value={checkIn}
+                onChange={(e) => setCheckIn(e.target.value)}
+                min={format(new Date(), 'yyyy-MM-dd')}
+                className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-white/20"
+              />
+            </div>
+            <div>
+              <label className="block text-xs text-slate-400 mb-1.5">
+                <Calendar className="w-3.5 h-3.5 inline mr-1" />
+                Check-Out
+              </label>
+              <input
+                type="date"
+                value={checkOut}
+                onChange={(e) => setCheckOut(e.target.value)}
+                min={checkIn}
+                className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-white/20"
+              />
             </div>
           </div>
         )}
+      </CardHeader>
 
-        {/* Amazon-Style Comparison Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <CardContent className="p-6">
+        {/* Comparison Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
           {hotels.map((hotel, index) => {
-            const isBestValue = bestValue?.hotelId === hotel.hotelId;
+            const badge = badges[hotel.hotelId];
             
             return (
               <div
                 key={hotel.hotelId}
-                className={`relative border-2 rounded-lg overflow-hidden bg-white hover:shadow-lg transition-shadow ${
-                  isBestValue ? 'border-primary-500 ring-2 ring-primary-200' : 'border-neutral-200'
-                }`}
+                className="group relative bg-white rounded-2xl border-2 border-slate-200 overflow-hidden hover:border-slate-400 hover:shadow-xl transition-all duration-300"
               >
-                {/* Best Value Badge */}
-                {isBestValue && (
-                  <div className="absolute top-0 left-0 right-0 bg-primary-600 text-white text-xs font-bold text-center py-1.5 z-10">
-                    ⭐ BEST VALUE
+                {/* Badge */}
+                {badge && (
+                  <div className={`absolute top-3 left-3 z-10 flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold shadow-lg ${
+                    badge.color === 'amber' ? 'bg-amber-500 text-white' :
+                    badge.color === 'emerald' ? 'bg-emerald-500 text-white' :
+                    'bg-blue-500 text-white'
+                  }`}>
+                    <badge.icon className="w-3 h-3" />
+                    {badge.label}
                   </div>
                 )}
-                
-                {/* Ranking Badge */}
-                <div className={`absolute ${isBestValue ? 'top-8' : 'top-2'} right-2 bg-neutral-900 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold text-sm z-10`}>
+
+                {/* Rank Badge */}
+                <div className="absolute top-3 right-3 z-10 w-8 h-8 bg-slate-900 text-white rounded-full flex items-center justify-center font-bold text-sm shadow-lg">
                   #{index + 1}
                 </div>
 
-                {/* Hotel Image */}
-                <div className={`relative w-full ${isBestValue ? 'h-48 mt-8' : 'h-48'} bg-neutral-100`}>
+                {/* Image */}
+                <div className="relative h-44 bg-slate-100">
                   {hotel.imageUrl ? (
                     <img
                       src={hotel.imageUrl}
                       alt={hotel.name}
-                      className="w-full h-full object-cover"
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                       loading="lazy"
                     />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center">
-                      <Building2 className="w-12 h-12 text-neutral-300" />
+                      <Building2 className="w-12 h-12 text-slate-300" />
                     </div>
                   )}
                   
-                  {/* Guest Rating Badge */}
+                  {/* Rating overlay */}
                   {hotel.rating > 0 && (
-                    <div className="absolute bottom-2 left-2 bg-primary-600 text-white px-2.5 py-1 rounded-md shadow-md font-semibold text-sm">
-                      {hotel.rating.toFixed(1)} ★
+                    <div className="absolute bottom-3 left-3 bg-white/95 backdrop-blur px-2.5 py-1 rounded-lg shadow-lg">
+                      <div className="flex items-center gap-1">
+                        <span className="font-bold text-slate-900">{hotel.rating.toFixed(1)}</span>
+                        <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
+                        {hotel.reviewCount > 0 && (
+                          <span className="text-xs text-slate-500">({hotel.reviewCount})</span>
+                        )}
+                      </div>
                     </div>
                   )}
                 </div>
 
-                {/* Hotel Details */}
+                {/* Content */}
                 <div className="p-4 space-y-3">
-                  {/* Hotel Name */}
-                  <h3 className="font-bold text-neutral-900 text-base leading-tight line-clamp-2 min-h-[2.5rem]">
-                    {hotel.name}
-                  </h3>
-
-                  {/* Star Rating */}
-                  <div className="flex items-center gap-1">
-                    {[...Array(hotel.starRating)].map((_, i) => (
-                      <Star key={i} className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
-                    ))}
-                    <span className="text-xs text-neutral-600 ml-1">({hotel.starRating}-star)</span>
+                  {/* Name & Stars */}
+                  <div>
+                    <h3 className="font-bold text-slate-900 text-base leading-tight line-clamp-2 min-h-[2.5rem] group-hover:text-slate-700 transition-colors">
+                      {hotel.name}
+                    </h3>
+                    <div className="flex items-center gap-0.5 mt-1">
+                      {[...Array(hotel.starRating)].map((_, i) => (
+                        <Star key={i} className="w-3 h-3 fill-amber-400 text-amber-400" />
+                      ))}
+                    </div>
                   </div>
 
                   {/* Location */}
                   {hotel.location && (
-                    <div className="flex items-center gap-1.5 text-xs text-neutral-600">
-                      <MapPin className="w-3.5 h-3.5 flex-shrink-0" />
+                    <div className="flex items-center gap-1.5 text-xs text-slate-600">
+                      <MapPin className="w-3 h-3 flex-shrink-0" />
                       <span className="line-clamp-1">{hotel.location}</span>
                     </div>
                   )}
@@ -401,8 +398,8 @@ export function HotelComparison({
                   {hotel.amenities.length > 0 && (
                     <div className="space-y-1">
                       {hotel.amenities.slice(0, 3).map((amenity, i) => (
-                        <div key={i} className="flex items-center gap-1.5 text-xs text-neutral-700">
-                          <Check className="w-3 h-3 text-green-600 flex-shrink-0" />
+                        <div key={i} className="flex items-center gap-1.5 text-xs text-slate-700">
+                          <Check className="w-3 h-3 text-emerald-600 flex-shrink-0" />
                           <span className="line-clamp-1">{amenity}</span>
                         </div>
                       ))}
@@ -410,41 +407,48 @@ export function HotelComparison({
                   )}
 
                   {/* Pricing */}
-                  <div className="pt-3 border-t border-neutral-200 space-y-1">
-                    <div className="flex items-baseline justify-between">
-                      <span className="text-xs text-neutral-600">Per Person:</span>
-                      <span className="text-xl font-bold text-primary-600">
+                  <div className="pt-3 border-t border-slate-200">
+                    <div className="flex items-baseline justify-between mb-1">
+                      <span className="text-xs text-slate-500">Per Person</span>
+                      <span className="text-2xl font-bold text-slate-900">
                         {formatCurrency(hotel.costPerPerson)}
                       </span>
                     </div>
-                    <div className="flex items-baseline justify-between">
-                      <span className="text-xs text-neutral-600">Total ({nightsCount} {nightsCount === 1 ? 'night' : 'nights'}):</span>
-                      <span className="text-sm font-semibold text-neutral-700">
-                        {formatCurrency(hotel.totalCost)}
-                      </span>
+                    <div className="flex items-baseline justify-between text-xs text-slate-500">
+                      <span>{nightsCount} nights total</span>
+                      <span className="font-semibold">{formatCurrency(hotel.totalCost)}</span>
                     </div>
-                    <div className="flex items-baseline justify-between">
-                      <span className="text-xs text-neutral-600">Per Night:</span>
-                      <span className="text-xs text-neutral-600">
-                        {formatCurrency(hotel.price)}
-                      </span>
+                    <div className="text-xs text-slate-400 text-right mt-0.5">
+                      {formatCurrency(hotel.price)}/night
                     </div>
                   </div>
 
-                  {/* CTA Button */}
+                  {/* CTA */}
                   <a
                     href={`/places-to-stay/${hotel.hotelId}?checkIn=${checkIn}&checkOut=${checkOut}&adults=${guests}&rooms=1`}
-                    className="block w-full bg-primary-600 hover:bg-primary-700 text-white font-semibold py-3 px-4 rounded-lg text-center transition-colors text-sm"
+                    className="block w-full bg-slate-800 hover:bg-slate-900 text-white font-semibold py-3 px-4 rounded-xl text-center transition-colors text-sm"
                   >
-                    Check Availability
+                    View Details & Book
                   </a>
                 </div>
               </div>
             );
           })}
         </div>
+
+        {/* Compare All CTA */}
+        <div className="mt-6 text-center">
+          <a
+            href={`/places-to-stay?checkin=${checkIn}&checkout=${checkOut}&guests=${guests}`}
+            className="inline-flex items-center gap-2 text-sm font-semibold text-slate-600 hover:text-slate-900 transition-colors"
+          >
+            See all properties in Telluride
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            </svg>
+          </a>
+        </div>
       </CardContent>
     </Card>
   );
 }
-

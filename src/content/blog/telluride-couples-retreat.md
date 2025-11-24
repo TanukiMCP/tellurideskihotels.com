@@ -63,12 +63,10 @@ This comprehensive guide provides everything you need to plan your Telluride cou
 
 Use the budget planner below to allocate your couples retreat budget across lodging, activities, dining, and lift tickets. Understanding where your budget goes helps you prioritize romantic experiences and identify opportunities to optimize spending.
 
-<BudgetToItineraryPlanner 
-  budgetPerPerson={1200}
-  tripLength={4}
-  groupSize={2}
-  checkIn="2025-02-14"
-  checkOut="2025-02-18"
+<TripCalculator 
+  defaultNights={4}
+  defaultGuests={2}
+  title="Couples Retreat Cost Calculator"
 />
 
 For information about seasonal timing and when to visit for optimal conditions, check our [ski season guide](/blog/planning-tips/telluride-ski-season-guide). For accommodation options and recommendations, review our [where to stay guide](/blog/destination-guides/where-to-stay-telluride). For skiing information, see our [complete skiing guide](/blog/ski-guides/telluride-skiing-complete-guide).
@@ -94,9 +92,9 @@ Dining costs accumulate quickly with romantic restaurant experiences, making thi
 
 Activity costs vary based on couple preferences, with skiing representing the primary activity expense for winter visitors. Non-skiing activities like spa experiences, sleigh rides, snowshoeing tours, or private lessons add costs but create memorable romantic experiences. Summer visitors find hiking, mountain biking, and festivals that provide romantic activities without lift ticket expenses. Understanding activity costs helps couples plan experiences that fit budgets while creating special moments.
 
-<SeasonComparison 
-  peakDates="2024-12-20 to 2025-01-05"
-  offPeakDates="2025-01-15 to 2025-02-15"
+<HotelComparison 
+  hotelIds={["lp4b27f", "lp21ee2", "lp4153f"]}
+  title="Compare Romantic Hotels"
   groupSize={2}
 />
 
