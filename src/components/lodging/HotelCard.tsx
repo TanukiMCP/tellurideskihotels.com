@@ -145,9 +145,9 @@ export function HotelCard({
             className={`text-neutral-600 mb-4 line-clamp-3 ${
               variant === 'compact' ? 'text-xs' : 'text-sm'
             }`}
-          >
-            {descriptionText}
-          </p>
+            >
+              {descriptionText}
+            </p>
         )}
         
         {/* Spacer */}
@@ -156,34 +156,35 @@ export function HotelCard({
         {/* Price */}
         {minPrice && minPrice > 0 && (
           <div className="mb-3">
-            <div className="flex items-baseline gap-1.5">
+                <div className="flex items-baseline gap-1.5">
               <span className={`font-bold text-primary-600 ${
                 variant === 'compact' ? 'text-lg' : 'text-xl'
               }`}>
-                {formatCurrency(minPrice, currency)}
-              </span>
+                    {formatCurrency(minPrice, currency)}
+                  </span>
               <span className="text-xs text-neutral-500">/ night</span>
-            </div>
-          </div>
+                </div>
+              </div>
         )}
               
         {/* CTA Button */}
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            onSelect(hotel.hotel_id);
-          }}
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onSelect(hotel.hotel_id);
+                }}
           className={`w-full bg-primary-600 hover:bg-primary-700 text-white font-semibold rounded-lg transition-all duration-200 shadow-sm hover:shadow-md hover:scale-[1.02] active:scale-[0.98] ${
             variant === 'compact' ? 'py-2.5 text-sm' : 'py-3 text-base'
           }`}
-          type="button"
-        >
+                type="button"
+              >
           {minPrice && minPrice > 0 
             ? (variant === 'compact' ? 'View Details & Rates' : 'Check Availability')
             : 'View Details & Rates'
           }
-        </button>
+              </button>
       </div>
     </Card>
   );
 }
+
