@@ -103,9 +103,9 @@ export function HotelCard({
         {/* Subtle gradient overlay */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/5 via-transparent to-transparent pointer-events-none z-[10]" />
         
-        {/* Rating Badge - Absolutely positioned overlay */}
+        {/* Rating Badge - Absolutely positioned overlay, nested within image with proper padding */}
         {rating > 0 && (
-          <div className={`absolute top-3 right-3 z-[20] ${getRatingStyle(rating)} px-2.5 py-1 rounded-md shadow-md backdrop-blur-sm font-semibold text-sm tracking-tight`}>
+          <div className={`absolute top-4 right-4 z-[20] ${getRatingStyle(rating)} px-2.5 py-1 rounded-md shadow-md backdrop-blur-sm font-semibold text-sm tracking-tight`}>
             {rating.toFixed(1)}
           </div>
         )}
