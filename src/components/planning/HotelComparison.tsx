@@ -3,26 +3,20 @@
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Input } from '@/components/ui/Input';
-import { Building2, Star, Users, Calendar, TrendingUp, List, Table } from 'lucide-react';
+import { Building2, Star, Users, Calendar, MapPin, Wifi, Coffee, Check, AlertCircle } from 'lucide-react';
 import { LoadingSpinner } from '@/components/shared/LoadingSpinner';
 import type { LiteAPIHotel } from '@/lib/liteapi/types';
 import { addDays, format } from 'date-fns';
 
 export interface HotelComparisonProps {
-  /** Specific hotel IDs to compare */
+  /** Specific hotel IDs to compare (max 3) */
   hotelIds?: string[];
   /** Filter type */
   filter?: 'luxury' | 'budget' | 'ski-in-ski-out';
-  /** Default view: 'table' | 'ranking' */
-  defaultView?: 'table' | 'ranking';
-  /** Group size for per-person calculations */
+  /** Group size for per-person calculations (default: 2) */
   groupSize?: number;
-  /** Number of nights */
-  nights?: number;
-  /** Check-in date */
-  checkIn?: string;
-  /** Check-out date */
-  checkOut?: string;
+  /** Title for the comparison widget */
+  title?: string;
 }
 
 interface HotelData {
@@ -42,43 +36,38 @@ interface HotelData {
 export function HotelComparison({
   hotelIds,
   filter,
-  defaultView = 'ranking',
-  groupSize = 4,
-  nights = 5,
-  checkIn,
-  checkOut,
+  groupSize = 2,
+  title = 'Compare Top Hotels',
 }: HotelComparisonProps) {
-  const [activeView, setActiveView] = useState<'table' | 'ranking'>(defaultView);
+  // Default dates: 7 days from today, 7-night stay
+  const defaultCheckInDate = format(addDays(new Date(), 7), 'yyyy-MM-dd');
+  const defaultCheckOutDate = format(addDays(new Date(), 14), 'yyyy-MM-dd');
+  
   const [guests, setGuests] = useState(groupSize);
-  const [nightsCount, setNightsCount] = useState(nights);
-  const [sortBy, setSortBy] = useState<string>('score');
+  const [checkIn, setCheckIn] = useState(defaultCheckInDate);
+  const [checkOut, setCheckOut] = useState(defaultCheckOutDate);
   const [hotels, setHotels] = useState<HotelData[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [showSettings, setShowSettings] = useState(false);
 
   useEffect(() => {
     fetchAndCalculateHotels();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [guests, nightsCount, hotelIds, checkIn, checkOut, filter]);
+  }, [guests, checkIn, checkOut, hotelIds, filter]);
 
   const fetchAndCalculateHotels = async () => {
     try {
       setLoading(true);
       
-      const defaultCheckIn = new Date();
-      defaultCheckIn.setDate(defaultCheckIn.getDate() + 7);
-      const defaultCheckOut = new Date(defaultCheckIn);
-      defaultCheckOut.setDate(defaultCheckOut.getDate() + 7);
-      
-      const checkInDate = checkIn || defaultCheckIn.toISOString().split('T')[0];
-      const checkOutDate = checkOut || defaultCheckOut.toISOString().split('T')[0];
+      const nightsCalc = Math.ceil((new Date(checkOut).getTime() - new Date(checkIn).getTime()) / (1000 * 60 * 60 * 24));
       
       const params = new URLSearchParams({
         cityName: 'Telluride',
         countryCode: 'US',
-        limit: hotelIds && hotelIds.length > 0 ? hotelIds.length.toString() : '10',
-        checkin: checkInDate,
-        checkout: checkOutDate,
+        limit: hotelIds && hotelIds.length > 0 ? hotelIds.length.toString() : '20',
+        checkin: checkIn,
+        checkout: checkOut,
       });
       
       const response = await fetch(`/api/liteapi/search?${params.toString()}`);
@@ -96,7 +85,6 @@ export function HotelComparison({
       } else if (filter === 'budget') {
         hotelsData = hotelsData.filter(h => (h.star_rating || 0) <= 3);
       } else if (filter === 'ski-in-ski-out') {
-        // Filter for ski-in/ski-out properties (typically Mountain Village)
         hotelsData = hotelsData.filter(h => {
           const name = (h.name || '').toLowerCase();
           const address = (h.address?.full || '').toLowerCase();
@@ -122,13 +110,12 @@ export function HotelComparison({
       const hotelIdsList = hotelsData.map(h => h.hotel_id);
       const ratesParams = new URLSearchParams({
         hotelIds: hotelIdsList.join(','),
-        checkIn: checkInDate,
-        checkOut: checkOutDate,
+        checkIn: checkIn,
+        checkOut: checkOut,
         adults: guests.toString(),
       });
       
       const ratesResponse = await fetch(`/api/hotels/min-rates?${ratesParams.toString()}`);
-      const nightsCalc = Math.ceil((new Date(checkOutDate).getTime() - new Date(checkInDate).getTime()) / (1000 * 60 * 60 * 24));
       
       // Build price map
       const prices: Record<string, number> = {};
@@ -146,22 +133,15 @@ export function HotelComparison({
       // Calculate hotel data
       const hotelComparisons: HotelData[] = hotelsData.map((hotel) => {
         const costPerNight = prices[hotel.hotel_id] || (hotel.star_rating || 3) * 150;
-        const totalCost = costPerNight * nightsCount;
+        const totalCost = costPerNight * nightsCalc;
         const costPerPerson = totalCost / guests;
         
         const location = hotel.address?.city || 'Telluride';
-        const amenities = hotel.amenities?.slice(0, 4).map(a => a.name || a) || ['Mountain views'];
-        const rating = hotel.review_score || 4.0;
+        const amenities = hotel.amenities?.slice(0, 5).map(a => a.name || a) || [];
+        const rating = hotel.review_score || 0;
         const starRating = hotel.star_rating || 3;
+        const reviewCount = hotel.review_count || 0;
         const imageUrl = hotel.images?.[0]?.url || hotel.images?.[0]?.thumbnail || '';
-        
-        // Calculate score
-        const priceScore = 100 - (costPerNight / 10);
-        const ratingScore = rating * 20;
-        const amenityScore = amenities.length * 10;
-        const locationScore = location.includes('Mountain Village') ? 90 : 70;
-        const spaceScore = 75;
-        const score = (priceScore + ratingScore + amenityScore + locationScore + spaceScore) / 5;
         
         return {
           hotelId: hotel.hotel_id,
@@ -173,20 +153,21 @@ export function HotelComparison({
           amenities,
           rating,
           starRating,
-          score,
+          score: rating, // Use guest review score as the primary ranking metric
           imageUrl,
         };
       });
       
+      // Sort by guest review rating (highest first), then by cost per person
       hotelComparisons.sort((a, b) => {
-        if (sortBy === 'price') return a.price - b.price;
-        if (sortBy === 'score') return b.score - a.score;
-        if (sortBy === 'rating') return b.rating - a.rating;
-        if (sortBy === 'costPerPerson') return a.costPerPerson - b.costPerPerson;
-        return 0;
+        if (b.rating !== a.rating) {
+          return b.rating - a.rating;
+        }
+        return a.costPerPerson - b.costPerPerson;
       });
       
-      setHotels(hotelComparisons.slice(0, 10));
+      // Take top 3 for comparison
+      setHotels(hotelComparisons.slice(0, 3));
       setError(null);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to load hotel comparisons');
@@ -203,20 +184,23 @@ export function HotelComparison({
     }).format(amount);
   };
 
-  const getBestFor = (criteria: 'price' | 'rating' | 'score') => {
+  const nightsCount = Math.ceil((new Date(checkOut).getTime() - new Date(checkIn).getTime()) / (1000 * 60 * 60 * 24));
+  
+  const getBestValue = () => {
     if (hotels.length === 0) return null;
-    if (criteria === 'price') {
-      return hotels.reduce((best, current) => current.price < best.price ? current : best);
-    }
-    if (criteria === 'rating') {
-      return hotels.reduce((best, current) => current.rating > best.rating ? current : best);
-    }
-    return hotels[0];
+    // Best value = highest rating for the price
+    return hotels.reduce((best, current) => {
+      const bestValueScore = best.rating / best.costPerPerson;
+      const currentValueScore = current.rating / current.costPerPerson;
+      return currentValueScore > bestValueScore ? current : best;
+    });
   };
+
+  const bestValue = getBestValue();
 
   if (loading) {
     return (
-      <Card className="my-8 border-2 border-primary-200">
+      <Card className="my-12 not-prose">
         <CardContent className="py-12">
           <div className="flex justify-center items-center">
             <LoadingSpinner size="lg" />
@@ -228,7 +212,7 @@ export function HotelComparison({
 
   if (error) {
     return (
-      <Card className="my-8 border-2 border-primary-200">
+      <Card className="my-12 not-prose">
         <CardContent className="py-8">
           <p className="text-neutral-600 text-center">{error}</p>
         </CardContent>
@@ -236,356 +220,217 @@ export function HotelComparison({
     );
   }
 
+  if (hotels.length === 0) {
+    return (
+      <Card className="my-12 not-prose">
+        <CardContent className="py-8">
+          <p className="text-neutral-600 text-center">No hotels found matching your criteria.</p>
+        </CardContent>
+      </Card>
+    );
+  }
+
   return (
-    <Card className="my-8 border-2 border-primary-200">
-      <CardHeader>
-        <div className="flex items-center gap-3">
-          <div className="w-12 h-12 bg-primary-600 rounded-lg flex items-center justify-center">
-            <Building2 className="w-6 h-6 text-white" />
+    <Card className="my-12 not-prose border-2 border-primary-200 shadow-lg">
+      <CardHeader className="bg-gradient-to-r from-primary-50 to-primary-100 border-b border-primary-200">
+        <div className="flex items-center justify-between flex-wrap gap-4">
+          <div className="flex items-center gap-3">
+            <div className="w-12 h-12 bg-primary-600 rounded-lg flex items-center justify-center shadow-md">
+              <Building2 className="w-6 h-6 text-white" />
+            </div>
+            <div>
+              <CardTitle className="text-2xl font-bold text-neutral-900">{title}</CardTitle>
+              <p className="text-neutral-600 mt-1 text-sm">
+                Top 3 hotels ranked by guest reviews
+              </p>
+            </div>
           </div>
-          <div>
-            <CardTitle className="text-2xl">Hotel Comparison</CardTitle>
-            <p className="text-neutral-600 mt-1">
-              Compare hotels side-by-side with real-time pricing
+          <button
+            onClick={() => setShowSettings(!showSettings)}
+            className="text-sm text-primary-600 hover:text-primary-700 font-medium underline"
+          >
+            {showSettings ? 'Hide' : 'Adjust'} Search Settings
+          </button>
+        </div>
+      </CardHeader>
+      <CardContent className="p-6 space-y-6">
+        {/* Disclaimer */}
+        <div className="flex items-start gap-3 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+          <AlertCircle className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
+          <div className="text-sm text-blue-900">
+            <p className="font-medium mb-1">Pricing Information</p>
+            <p>
+              Rates shown are based on a {nightsCount}-night stay from {format(new Date(checkIn), 'MMM d')} to {format(new Date(checkOut), 'MMM d, yyyy')} for {guests} {guests === 1 ? 'guest' : 'guests'}. 
+              For the most accurate pricing and availability, please click "Check Availability" on your preferred hotel.
             </p>
           </div>
         </div>
-      </CardHeader>
-      <CardContent className="space-y-6">
-        {/* View Toggle */}
-        <div className="flex gap-2 border-b border-neutral-200">
-          <button
-            onClick={() => setActiveView('ranking')}
-            className={`px-4 py-2 font-medium transition-colors ${
-              activeView === 'ranking'
-                ? 'text-primary-600 border-b-2 border-primary-600'
-                : 'text-neutral-600 hover:text-neutral-900'
-            }`}
-          >
-            <List className="w-4 h-4 inline mr-2" />
-            Ranked List
-          </button>
-          <button
-            onClick={() => setActiveView('table')}
-            className={`px-4 py-2 font-medium transition-colors ${
-              activeView === 'table'
-                ? 'text-primary-600 border-b-2 border-primary-600'
-                : 'text-neutral-600 hover:text-neutral-900'
-            }`}
-          >
-            <Table className="w-4 h-4 inline mr-2" />
-            Table View
-          </button>
-        </div>
 
-        {/* Inputs */}
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-          <div>
-            <label className="block text-sm font-semibold text-neutral-900 mb-2">
-              <Users className="w-4 h-4 inline mr-2" />
-              Number of Guests
-            </label>
-            <Input
-              type="number"
-              min="2"
-              max="20"
-              value={guests}
-              onChange={(e) => setGuests(parseInt(e.target.value) || 2)}
-              className="w-full"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-semibold text-neutral-900 mb-2">
-              <Calendar className="w-4 h-4 inline mr-2" />
-              Number of Nights
-            </label>
-            <Input
-              type="number"
-              min="1"
-              max="14"
-              value={nightsCount}
-              onChange={(e) => setNightsCount(parseInt(e.target.value) || 1)}
-              className="w-full"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-semibold text-neutral-900 mb-2">
-              <Calendar className="w-4 h-4 inline mr-2" />
-              Check-In Date
-            </label>
-            <Input
-              type="date"
-              value={checkIn || format(addDays(new Date(), 7), 'yyyy-MM-dd')}
-              onChange={(e) => {
-                if (e.target.value) {
-                  const newCheckIn = e.target.value;
-                  const newCheckOut = checkOut || format(addDays(new Date(newCheckIn), nightsCount), 'yyyy-MM-dd');
-                  window.location.href = `/places-to-stay?guests=${guests}&nights=${nightsCount}&checkin=${newCheckIn}&checkout=${newCheckOut}`;
-                }
-              }}
-              min={format(new Date(), 'yyyy-MM-dd')}
-              className="w-full"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-semibold text-neutral-900 mb-2">
-              <Calendar className="w-4 h-4 inline mr-2" />
-              Check-Out Date
-            </label>
-            <Input
-              type="date"
-              value={checkOut || format(addDays(new Date(), 7 + nightsCount), 'yyyy-MM-dd')}
-              onChange={(e) => {
-                if (e.target.value) {
-                  const newCheckOut = e.target.value;
-                  const newCheckIn = checkIn || format(addDays(new Date(), 7), 'yyyy-MM-dd');
-                  window.location.href = `/places-to-stay?guests=${guests}&nights=${nightsCount}&checkin=${newCheckIn}&checkout=${newCheckOut}`;
-                }
-              }}
-              min={checkIn || format(addDays(new Date(), 7), 'yyyy-MM-dd')}
-              className="w-full"
-            />
-          </div>
-        </div>
-
-        {hotels.length === 0 && !loading && (
-          <div className="mt-6 text-center py-8">
-            <p className="text-neutral-600">No hotels found matching your criteria. Try adjusting your filters.</p>
-          </div>
-        )}
-
-        {hotels.length > 0 && (
-          <div className="mt-6 space-y-4">
-            {/* Ranking View */}
-            {activeView === 'ranking' && (
-              <div className="border-t border-neutral-200 pt-4">
-                <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-lg font-semibold text-neutral-900">
-                    Rankings for {guests} Guests, {nightsCount} Nights
-                  </h3>
-                  <select
-                    value={sortBy}
-                    onChange={(e) => {
-                      setSortBy(e.target.value);
-                      // Re-sort existing hotels instead of re-fetching
-                      setHotels(prev => {
-                        const sorted = [...prev].sort((a, b) => {
-                          if (e.target.value === 'price') return a.price - b.price;
-                          if (e.target.value === 'score') return b.score - a.score;
-                          if (e.target.value === 'rating') return b.rating - a.rating;
-                          if (e.target.value === 'costPerPerson') return a.costPerPerson - b.costPerPerson;
-                          return 0;
-                        });
-                        return sorted;
-                      });
-                    }}
-                    className="px-3 py-2 border-2 border-neutral-300 rounded-lg text-sm"
-                  >
-                    <option value="costPerPerson">Sort by Cost/Person</option>
-                    <option value="score">Sort by Score</option>
-                    <option value="price">Sort by Price</option>
-                    <option value="rating">Sort by Rating</option>
-                  </select>
-                </div>
-                <div className="space-y-3">
-                  {hotels.map((hotel, index) => (
-                    <div
-                      key={hotel.hotelId}
-                      className={`overflow-hidden border-2 rounded-lg ${
-                        index === 0
-                          ? 'border-primary-400 bg-primary-50'
-                          : 'border-neutral-200 bg-white'
-                      }`}
-                    >
-                      <div className="flex gap-4">
-                        {hotel.imageUrl && (
-                          <div className="w-32 h-32 flex-shrink-0">
-                            <img
-                              src={hotel.imageUrl}
-                              alt={hotel.name}
-                              className="w-full h-full object-cover"
-                              loading="lazy"
-                            />
-                          </div>
-                        )}
-                        <div className="flex-1 p-4">
-                          <div className="flex items-start justify-between mb-2">
-                            <div className="flex-1">
-                              <div className="flex items-center gap-2 mb-1">
-                                <span className="font-bold text-primary-600 text-lg">#{index + 1}</span>
-                                <span className="font-semibold text-neutral-900">{hotel.name}</span>
-                                {index === 0 && (
-                                  <span className="text-xs bg-primary-600 text-white px-2 py-1 rounded">
-                                    Best Value
-                                  </span>
-                                )}
-                              </div>
-                              <div className="text-sm text-neutral-600">
-                                {hotel.amenities.slice(0, 2).join(' • ')}
-                              </div>
-                              <div className="flex items-center gap-3 mt-1">
-                                <div className="flex items-center gap-1 text-sm">
-                                  <Star className="w-4 h-4 text-yellow-500 fill-yellow-500" />
-                                  <span>{hotel.rating.toFixed(1)}</span>
-                                </div>
-                                <div className="text-sm text-neutral-600">
-                                  {hotel.starRating}-star
-                                </div>
-                              </div>
-                            </div>
-                            <div className="text-right ml-4">
-                              <div className="text-lg font-bold text-primary-600">
-                                {formatCurrency(hotel.costPerPerson)}
-                              </div>
-                              <div className="text-xs text-neutral-500">per person</div>
-                              <div className="text-xs text-neutral-500 mt-1">
-                                {formatCurrency(hotel.totalCost)} total
-                              </div>
-                            </div>
-                          </div>
-                          <div className="mt-3 pt-3 border-t border-neutral-200">
-                            <a
-                              href={`/places-to-stay/${hotel.hotelId}`}
-                              className="text-sm text-primary-600 hover:text-primary-700 font-medium"
-                            >
-                              View Rooms & Rates →
-                            </a>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
+        {/* Adjustable Settings */}
+        {showSettings && (
+          <div className="p-4 bg-neutral-50 border border-neutral-200 rounded-lg space-y-4">
+            <h4 className="font-semibold text-neutral-900 text-sm">Adjust Search Parameters</h4>
+            <div className="grid gap-4 md:grid-cols-3">
+              <div>
+                <label className="block text-xs font-medium text-neutral-700 mb-1.5">
+                  <Users className="w-3.5 h-3.5 inline mr-1" />
+                  Number of Guests
+                </label>
+                <Input
+                  type="number"
+                  min="1"
+                  max="20"
+                  value={guests}
+                  onChange={(e) => setGuests(parseInt(e.target.value) || 2)}
+                  className="w-full text-sm"
+                />
               </div>
-            )}
-
-            {/* Table View */}
-            {activeView === 'table' && (
-              <div className="border-t border-neutral-200 pt-4">
-                <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-lg font-semibold text-neutral-900">Comparison Table</h3>
-                  <select
-                    value={sortBy}
-                    onChange={(e) => {
-                      setSortBy(e.target.value);
-                      // Re-sort existing hotels instead of re-fetching
-                      setHotels(prev => {
-                        const sorted = [...prev].sort((a, b) => {
-                          if (e.target.value === 'price') return a.price - b.price;
-                          if (e.target.value === 'score') return b.score - a.score;
-                          if (e.target.value === 'rating') return b.rating - a.rating;
-                          if (e.target.value === 'costPerPerson') return a.costPerPerson - b.costPerPerson;
-                          return 0;
-                        });
-                        return sorted;
-                      });
-                    }}
-                    className="px-3 py-2 border-2 border-neutral-300 rounded-lg text-sm"
-                  >
-                    <option value="score">Sort by Score</option>
-                    <option value="price">Sort by Price</option>
-                    <option value="rating">Sort by Rating</option>
-                    <option value="costPerPerson">Sort by Cost/Person</option>
-                  </select>
-                </div>
-
-                <div className="overflow-x-auto">
-                  <table className="w-full border-collapse">
-                    <thead>
-                      <tr className="border-b-2 border-neutral-200">
-                        <th className="text-left p-3 font-semibold text-neutral-900">Hotel</th>
-                        <th className="text-left p-3 font-semibold text-neutral-900">Price/Night</th>
-                        <th className="text-left p-3 font-semibold text-neutral-900">Per Person</th>
-                        <th className="text-left p-3 font-semibold text-neutral-900">Location</th>
-                        <th className="text-left p-3 font-semibold text-neutral-900">Rating</th>
-                        <th className="text-left p-3 font-semibold text-neutral-900">Score</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {hotels.map((hotel) => (
-                        <tr 
-                          key={hotel.hotelId} 
-                          onClick={() => window.location.href = `/places-to-stay/${hotel.hotelId}`}
-                          className="border-b border-neutral-100 cursor-pointer hover:bg-primary-50 transition-colors"
-                        >
-                          <td className="p-3">
-                            <div className="font-semibold text-neutral-900">{hotel.name}</div>
-                            <div className="text-sm text-neutral-600">{hotel.starRating}-star</div>
-                          </td>
-                          <td className="p-3">
-                            <div className="font-semibold text-primary-600">
-                              {formatCurrency(hotel.price)}
-                            </div>
-                          </td>
-                          <td className="p-3">
-                            <div className="font-semibold text-primary-600">
-                              {formatCurrency(hotel.costPerPerson)}
-                            </div>
-                            <div className="text-xs text-neutral-500">
-                              {formatCurrency(hotel.totalCost)} total
-                            </div>
-                          </td>
-                          <td className="p-3 text-sm text-neutral-700">{hotel.location}</td>
-                          <td className="p-3">
-                            <div className="flex items-center gap-1">
-                              <Star className="w-4 h-4 text-yellow-500 fill-yellow-500" />
-                              <span className="font-semibold">{hotel.rating.toFixed(1)}</span>
-                            </div>
-                          </td>
-                          <td className="p-3">
-                            <div className="font-semibold text-primary-600">
-                              {hotel.score.toFixed(0)}/100
-                            </div>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
+              <div>
+                <label className="block text-xs font-medium text-neutral-700 mb-1.5">
+                  <Calendar className="w-3.5 h-3.5 inline mr-1" />
+                  Check-In Date
+                </label>
+                <Input
+                  type="date"
+                  value={checkIn}
+                  onChange={(e) => setCheckIn(e.target.value)}
+                  min={format(new Date(), 'yyyy-MM-dd')}
+                  className="w-full text-sm"
+                />
               </div>
-            )}
-
-            {/* Best Options Summary */}
-            <div className="border-t border-neutral-200 pt-4">
-              <div className="grid gap-3 md:grid-cols-2">
-                {getBestFor('price') && (
-                  <div className="p-4 border-2 border-primary-200 bg-primary-50 rounded-lg">
-                    <div className="font-semibold text-neutral-900 mb-1">Best for Budget</div>
-                    <div className="text-lg font-bold text-primary-600">
-                      {getBestFor('price')?.name}
-                    </div>
-                    <div className="text-sm text-neutral-600 mt-1">
-                      {formatCurrency(getBestFor('price')?.costPerPerson || 0)} per person
-                    </div>
-                  </div>
-                )}
-                {getBestFor('rating') && (
-                  <div className="p-4 border-2 border-primary-200 bg-primary-50 rounded-lg">
-                    <div className="font-semibold text-neutral-900 mb-1">Highest Rated</div>
-                    <div className="text-lg font-bold text-primary-600">
-                      {getBestFor('rating')?.name}
-                    </div>
-                    <div className="text-sm text-neutral-600 mt-1">
-                      {getBestFor('rating')?.rating.toFixed(1)}/5.0 rating
-                    </div>
-                  </div>
-                )}
+              <div>
+                <label className="block text-xs font-medium text-neutral-700 mb-1.5">
+                  <Calendar className="w-3.5 h-3.5 inline mr-1" />
+                  Check-Out Date
+                </label>
+                <Input
+                  type="date"
+                  value={checkOut}
+                  onChange={(e) => setCheckOut(e.target.value)}
+                  min={checkIn}
+                  className="w-full text-sm"
+                />
               </div>
             </div>
-
-            {/* CTA */}
-            {hotels[0] && (
-              <div className="border-t border-neutral-200 pt-4">
-                <a
-                  href={`/places-to-stay/${hotels[0].hotelId}`}
-                  className="inline-flex items-center justify-center gap-2 bg-primary-600 hover:bg-primary-700 !text-white font-semibold px-6 py-3 rounded-lg transition-colors duration-200 shadow-md hover:shadow-lg w-full md:w-auto"
-                >
-                  View {hotels[0].name} Rates & Availability →
-                </a>
-              </div>
-            )}
           </div>
         )}
+
+        {/* Amazon-Style Comparison Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {hotels.map((hotel, index) => {
+            const isBestValue = bestValue?.hotelId === hotel.hotelId;
+            
+            return (
+              <div
+                key={hotel.hotelId}
+                className={`relative border-2 rounded-lg overflow-hidden bg-white hover:shadow-lg transition-shadow ${
+                  isBestValue ? 'border-primary-500 ring-2 ring-primary-200' : 'border-neutral-200'
+                }`}
+              >
+                {/* Best Value Badge */}
+                {isBestValue && (
+                  <div className="absolute top-0 left-0 right-0 bg-primary-600 text-white text-xs font-bold text-center py-1.5 z-10">
+                    ⭐ BEST VALUE
+                  </div>
+                )}
+                
+                {/* Ranking Badge */}
+                <div className={`absolute ${isBestValue ? 'top-8' : 'top-2'} right-2 bg-neutral-900 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold text-sm z-10`}>
+                  #{index + 1}
+                </div>
+
+                {/* Hotel Image */}
+                <div className={`relative w-full ${isBestValue ? 'h-48 mt-8' : 'h-48'} bg-neutral-100`}>
+                  {hotel.imageUrl ? (
+                    <img
+                      src={hotel.imageUrl}
+                      alt={hotel.name}
+                      className="w-full h-full object-cover"
+                      loading="lazy"
+                    />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center">
+                      <Building2 className="w-12 h-12 text-neutral-300" />
+                    </div>
+                  )}
+                  
+                  {/* Guest Rating Badge */}
+                  {hotel.rating > 0 && (
+                    <div className="absolute bottom-2 left-2 bg-primary-600 text-white px-2.5 py-1 rounded-md shadow-md font-semibold text-sm">
+                      {hotel.rating.toFixed(1)} ★
+                    </div>
+                  )}
+                </div>
+
+                {/* Hotel Details */}
+                <div className="p-4 space-y-3">
+                  {/* Hotel Name */}
+                  <h3 className="font-bold text-neutral-900 text-base leading-tight line-clamp-2 min-h-[2.5rem]">
+                    {hotel.name}
+                  </h3>
+
+                  {/* Star Rating */}
+                  <div className="flex items-center gap-1">
+                    {[...Array(hotel.starRating)].map((_, i) => (
+                      <Star key={i} className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
+                    ))}
+                    <span className="text-xs text-neutral-600 ml-1">({hotel.starRating}-star)</span>
+                  </div>
+
+                  {/* Location */}
+                  {hotel.location && (
+                    <div className="flex items-center gap-1.5 text-xs text-neutral-600">
+                      <MapPin className="w-3.5 h-3.5 flex-shrink-0" />
+                      <span className="line-clamp-1">{hotel.location}</span>
+                    </div>
+                  )}
+
+                  {/* Amenities */}
+                  {hotel.amenities.length > 0 && (
+                    <div className="space-y-1">
+                      {hotel.amenities.slice(0, 3).map((amenity, i) => (
+                        <div key={i} className="flex items-center gap-1.5 text-xs text-neutral-700">
+                          <Check className="w-3 h-3 text-green-600 flex-shrink-0" />
+                          <span className="line-clamp-1">{amenity}</span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Pricing */}
+                  <div className="pt-3 border-t border-neutral-200 space-y-1">
+                    <div className="flex items-baseline justify-between">
+                      <span className="text-xs text-neutral-600">Per Person:</span>
+                      <span className="text-xl font-bold text-primary-600">
+                        {formatCurrency(hotel.costPerPerson)}
+                      </span>
+                    </div>
+                    <div className="flex items-baseline justify-between">
+                      <span className="text-xs text-neutral-600">Total ({nightsCount} {nightsCount === 1 ? 'night' : 'nights'}):</span>
+                      <span className="text-sm font-semibold text-neutral-700">
+                        {formatCurrency(hotel.totalCost)}
+                      </span>
+                    </div>
+                    <div className="flex items-baseline justify-between">
+                      <span className="text-xs text-neutral-600">Per Night:</span>
+                      <span className="text-xs text-neutral-600">
+                        {formatCurrency(hotel.price)}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* CTA Button */}
+                  <a
+                    href={`/places-to-stay/${hotel.hotelId}?checkIn=${checkIn}&checkOut=${checkOut}&adults=${guests}&rooms=1`}
+                    className="block w-full bg-primary-600 hover:bg-primary-700 text-white font-semibold py-3 px-4 rounded-lg text-center transition-colors text-sm"
+                  >
+                    Check Availability
+                  </a>
+                </div>
+              </div>
+            );
+          })}
+        </div>
       </CardContent>
     </Card>
   );
