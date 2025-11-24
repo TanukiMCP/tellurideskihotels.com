@@ -86,9 +86,9 @@ For information about planning general friend group trips, see our [friends ski 
 
 Successful bachelor and bachelorette parties require advance planning to secure accommodations, coordinate schedules, and book activities before they sell out. A typical planning timeline spans 3-6 months, with critical decisions made early and final details confirmed closer to the event. Understanding this timeline helps party planners stay organized and avoid last-minute scrambling that increases costs and reduces options.
 
-Six months before the party, establish the guest list, choose dates, and set a budget. Guest list size determines accommodation needs and affects per-person costs significantly. Dates should consider the guest of honor's schedule, wedding timeline, and seasonal factors affecting Telluride (snow conditions, crowds, pricing). Budget discussions should happen early to ensure everyone can participate, with clear communication about expected costs preventing conflicts later.
+Six months before the party, establish the guest list, choose dates, and set a budget. Guest list size determines accommodation needs and affects per-person costs significantly. Dates should consider the guest of honor's schedule, wedding timeline, and [seasonal factors affecting Telluride](/blog/planning-tips/best-time-visit-telluride) (snow conditions, crowds, pricing). Budget discussions should happen early to ensure everyone can participate, with clear communication about expected costs preventing conflicts later.
 
-Four months before the party, book accommodations and major activities. Telluride's popularity means prime properties book early, especially for group sizes requiring multiple rooms or large vacation rentals. Booking accommodations early secures better rates (10-20% discounts for 60+ day advance bookings) and ensures availability for desired properties. Major activities like private lessons, group tours, or special experiences should also be reserved early, as these often have limited capacity.
+Four months before the party, book accommodations and major activities. Telluride's popularity—especially during peak ski season from late December through March—means prime properties book early, especially for group sizes requiring multiple rooms or large vacation rentals. Booking accommodations early secures better rates (10-20% discounts for 60+ day advance bookings) and ensures availability for desired properties. Major activities like private ski lessons through [Telluride Ski Resort](https://www.telluride.com/ski-and-snowboard/lessons), group snowcat tours, or spa days should also be reserved early, as these often have limited capacity.
 
 Two months before the party, finalize activity schedules, make restaurant reservations, and coordinate transportation. Detailed itineraries help groups stay organized while allowing flexibility for spontaneous fun. Restaurant reservations become essential for group dining, especially at popular Telluride restaurants that book weeks in advance. Transportation coordination (car rentals, shuttles) should be finalized, with one person designated to handle logistics.
 
@@ -106,14 +106,19 @@ Accommodation choices significantly impact party experiences, costs, and group d
 
 Vacation rentals work exceptionally well for bachelor and bachelorette parties, providing space for group gatherings, multiple bedrooms for privacy, and common areas for socializing. Large condos or homes accommodating 8-12 people often cost $800-1,500 per night, translating to $100-200 per person compared to $250-400 per person for multiple hotel rooms. The additional space provides areas for group meals, games, and socializing that hotels lack, while kitchen facilities allow group cooking that reduces dining costs and creates bonding experiences.
 
-Mountain Village vacation rentals offer ski-in/ski-out convenience and proximity to après-ski activities, creating seamless experiences from skiing to socializing. Downtown Telluride rentals provide gondola access to skiing plus walkable access to restaurants, bars, and nightlife, creating different atmospheres that some parties prefer. The free gondola connecting both areas means parties can choose either location without sacrificing access to the other.
+Mountain Village vacation rentals offer ski-in/ski-out convenience and direct access to the slopes, creating seamless experiences from morning first tracks to evening socializing at spots like M Bar at The Madeline. Downtown Telluride rentals put you steps from the gondola plus walkable access to Colorado Avenue's restaurants, bars, and late-night venues. The 13-minute free gondola ride connects both areas, meaning parties can choose either location without sacrificing access to the other.
 
-Hotels work well for smaller parties (6-8 people) or groups wanting resort amenities and services. Multiple rooms in the same hotel keep groups together while providing individual privacy, and hotel amenities like pools, hot tubs, and bars create natural gathering spaces. The convenience factor becomes valuable when parties want to focus on activities rather than managing accommodations. Hotels like The Madeline and Peaks Resort offer group-friendly configurations and social spaces.
+Hotels work well for smaller parties (6-8 people) or groups wanting resort amenities and services. Multiple rooms in the same hotel keep groups together while providing individual privacy, and hotel amenities like pools, hot tubs, and bars create natural gathering spaces. The convenience factor becomes valuable when parties want to focus on activities rather than managing accommodations. Hotels like [The Madeline](/lodging) and [The Peaks Resort](/lodging) offer group-friendly configurations and social spaces.
+
+![Scenic view of a snowy ski town with mountain backdrop perfect for group celebrations](https://images.pexels.com/photos/31606084/pexels-photo-31606084.jpeg?auto=compress&cs=tinysrgb&h=350)
+*Photo by [Claudia Solano](https://www.pexels.com/@imagenesclau) via Pexels*
 
 Hybrid options combine space advantages with hotel services. Some properties offer condominium-style units within hotel complexes, providing kitchen facilities and multiple bedrooms while maintaining access to hotel amenities. These options work well for parties wanting both space and services, though they command premium rates that groups should evaluate against their specific needs.
 
+<HotelGrid hotelIds={["lp4b27f", "lp21ee2", "lp35351"]} title="Top Properties for Group Celebrations" client:load />
+
 <HotelSplitCalculator 
-  hotelIds={["mountain-village-condo", "madeline-hotel", "peaks-resort"]}
+  hotelIds={["lp35351", "lp4b27f", "lp21ee2"]}
   scenario="bachelor-party-10"
   defaultNights={3}
   defaultGuests={10}
@@ -123,13 +128,19 @@ Hybrid options combine space advantages with hotel services. Some properties off
 
 Bachelor and bachelorette party activities should balance group experiences with individual flexibility, accommodate different ability levels, and create memorable moments that celebrate the guest of honor. Telluride offers diverse activities spanning skiing, après-ski, and non-skiing options that work well for parties with varying interests and energy levels.
 
-Skiing activities provide core experiences for winter parties, with group skiing creating shared adventures and individual flexibility allowing people to ski at their own pace. Many parties designate specific times for group skiing (morning meet-ups, designated runs) while allowing afternoons for individual exploration or ability-matched groups. This approach accommodates different skill levels while maintaining group connection. Some parties book group lessons or clinics that create shared learning experiences while improving skills.
+Skiing activities provide core experiences for winter parties, with group skiing creating shared adventures and individual flexibility allowing people to ski at their own pace. According to [Telluride Ski Resort](https://www.telluride.com), the mountain offers 2,000+ acres and 148 trails spanning all ability levels—perfect for mixed-ability groups. Many parties designate specific times for group skiing (morning meet-ups, designated runs like the wide-open Galloping Goose) while allowing afternoons for individual exploration or ability-matched groups. This approach accommodates different skill levels while maintaining group connection. Some parties book group lessons or clinics through the resort's ski school that create shared learning experiences while improving skills.
 
-Après-ski activities provide important social time that parties often prioritize. Telluride's après-ski scene includes bars, restaurants, and gathering spots in both Mountain Village and downtown. Many parties establish après-ski meet-up locations and times, creating natural transition points from skiing to socializing. The free gondola between areas means parties can easily move between Mountain Village and downtown for different après-ski atmospheres. Popular spots include Gorrono Ranch at the base of Lift 4, Alpino Vino for wine-focused après-ski, and various downtown bars offering live music and social atmospheres.
+![Skiers enjoying a sunny day on pristine snowy slopes with mountain views](https://images.pexels.com/photos/1603252/pexels-photo-1603252.jpeg?auto=compress&cs=tinysrgb&h=350)
+*Photo by [Jakob Kreinecker](https://www.pexels.com/@jakob-kreinecker-737080) via Pexels*
 
-Non-skiing activities provide variety and accommodate different interests within parties. Telluride offers snowshoeing tours, ice skating, sleigh rides, spa experiences, and other activities that appeal to people wanting breaks from skiing or preferring alternative experiences. Some parties plan one non-ski day for exploring town, trying different activities, or simply relaxing. The key is ensuring activities are optional rather than mandatory, allowing people to participate based on interest and energy levels.
+Après-ski activities provide important social time that parties often prioritize. Telluride's après-ski scene includes bars, restaurants, and gathering spots in both [Mountain Village and downtown](/blog/destination-guides/where-to-stay-telluride). Many parties establish après-ski meet-up locations and times, creating natural transition points from skiing to socializing. The free gondola between areas means parties can easily move between Mountain Village and downtown for different après-ski atmospheres. Popular spots include Gorrono Ranch at the base of Lift 4 (great for on-mountain lunch breaks), Alpino Vino for wine-focused après-ski at 11,966 feet elevation, and downtown favorites like The Last Dollar Saloon and There Bar for live music and dancing.
 
-Evening activities vary significantly based on party preferences and the guest of honor's interests. Some parties prioritize nightlife, exploring Telluride's bars and live music venues. Others prefer group dinners at Telluride's restaurants, followed by games or socializing in accommodations. Understanding party preferences before the trip helps plan appropriate evening activities. Many parties find that mixing active and relaxed evenings provides good balance.
+Non-skiing activities provide variety and accommodate different interests within parties. Telluride offers [snowshoeing tours, ice skating, sleigh rides, spa experiences](/things-to-do), and other activities that appeal to people wanting breaks from skiing or preferring alternative experiences. The Peaks Resort spa offers group packages perfect for bachelorette parties, while downtown's historic Main Street provides excellent shopping and gallery hopping. Some parties plan one non-ski day for exploring town, trying different activities, or simply relaxing. The key is ensuring activities are optional rather than mandatory, allowing people to participate based on interest and energy levels.
+
+![Three people enjoying a warm outdoor hot tub surrounded by snow and string lights at night](https://images.pexels.com/photos/34762260/pexels-photo-34762260.jpeg?auto=compress&cs=tinysrgb&h=350)
+*Photo by [Margarita K](https://www.pexels.com/@margarita-k-105195494) via Pexels*
+
+Evening activities vary significantly based on party preferences and the guest of honor's interests. Some parties prioritize nightlife, exploring Telluride's bars and live music venues—downtown Colorado Avenue comes alive after dark with options from craft cocktails at 221 South Oak to dancing at Telluride Brewing Company. Others prefer group dinners at restaurants like Allred's (accessible by gondola with 360-degree views), Cosmopolitan, or the more casual Brown Dog Pizza. Understanding party preferences before the trip helps plan appropriate evening activities. Many parties find that mixing active and relaxed evenings provides good balance.
 
 Special experiences create memorable moments that distinguish bachelor and bachelorette parties from regular friend trips. Private group lessons, guided backcountry tours, helicopter skiing, or special dining experiences provide unique opportunities that celebrate the occasion. These premium experiences add costs but create memories that extend beyond the trip itself. Parties should balance special experiences with regular activities to manage budgets while ensuring celebration feels special.
 
@@ -172,7 +183,10 @@ Group dynamics require attention when coordinating multiple people with differen
 
 Balancing structure with spontaneity prevents over-planning that kills fun while ensuring important activities happen. Successful parties have frameworks (designated meal times, group activity windows) that guide the trip while allowing flexibility for spontaneous fun. Over-structuring creates stress and prevents natural group dynamics from developing, while under-planning leads to indecision and missed opportunities. The key is creating flexible frameworks rather than rigid schedules.
 
-Budget transparency prevents conflicts about costs and spending. Sharing accommodation costs, expected expenses, and payment schedules before the trip helps everyone plan and prevents surprises. Using cost-splitting apps or spreadsheets that everyone can access creates transparency and accountability. Parties should agree on payment methods and timing before the trip, with clear communication about what's included in shared costs versus individual expenses.
+Budget transparency prevents conflicts about costs and spending. Sharing accommodation costs, expected expenses, and payment schedules before the trip helps everyone plan and prevents surprises. Using cost-splitting apps like Splitwise or shared spreadsheets that everyone can access creates transparency and accountability. Parties should agree on payment methods and timing before the trip, with clear communication about what's included in shared costs versus individual expenses.
+
+![Two women in vibrant ski outfits sharing a joyful moment on a snowy night](https://images.pexels.com/photos/7363842/pexels-photo-7363842.jpeg?auto=compress&cs=tinysrgb&h=350)
+*Photo by [cottonbro studio](https://www.pexels.com/@cottonbro) via Pexels*
 
 Celebration elements distinguish bachelor and bachelorette parties from regular trips. Decorations, special activities, group gifts, or themed experiences create moments that celebrate the occasion appropriately. These elements don't need to be expensive—simple touches like group photos, special toasts, or coordinated outfits can create celebration atmosphere without adding significant costs. The key is ensuring celebration feels special while maintaining budgets that work for all attendees.
 
@@ -191,7 +205,10 @@ Flexibility becomes essential when coordinating multiple people with different s
 
 Emergency planning prevents small issues from derailing celebrations. Having contact information for accommodations, activities, and local services helps resolve problems quickly. Designating one person to handle issues during the trip prevents everyone from trying to solve problems simultaneously. Basic first aid supplies, especially for skiing-related injuries, provide peace of mind even if never used.
 
-Documentation helps preserve memories and settle expenses after the trip. Designating someone to take photos ensures the celebration is captured, while cost-tracking throughout the trip simplifies final expense settlements. Some parties create shared photo albums or use apps that automatically organize group photos, making it easy for everyone to access memories after the trip.
+Documentation helps preserve memories and settle expenses after the trip. Designating someone to take photos ensures the celebration is captured, while cost-tracking throughout the trip simplifies final expense settlements. Some parties create shared photo albums using Google Photos or Apple Shared Albums that automatically organize group photos, making it easy for everyone to access memories after the trip.
+
+![Skiers enjoying a sunny day at a ski resort with cable car and snowy mountains](https://images.pexels.com/photos/880497/pexels-photo-880497.jpeg?auto=compress&cs=tinysrgb&h=350)
+*Photo by [AS Photography](https://www.pexels.com/@asphotography) via Pexels*
 
 <ArticleBookingWidget 
   variant="featured"
@@ -204,7 +221,7 @@ Documentation helps preserve memories and settle expenses after the trip. Design
 <details>
 <summary>How far in advance should we plan a Telluride bachelor/bachelorette party?</summary>
 
-Start planning 3-6 months in advance. Book accommodations 4 months ahead to secure best rates and availability. Finalize activities and restaurant reservations 2 months before. Send final details to attendees 1 month before. This timeline ensures availability while allowing time for coordination and adjustments.
+Start planning 3-6 months in advance. Book accommodations 4 months ahead to secure best rates and availability—check our [lodging guide](/lodging) for group-friendly options. Finalize activities and restaurant reservations 2 months before. Send final details to attendees 1 month before. This timeline ensures availability while allowing time for coordination and adjustments.
 
 </details>
 
@@ -225,14 +242,14 @@ Vacation rentals work exceptionally well for parties, providing space for group 
 <details>
 <summary>What activities work best for bachelor/bachelorette parties in Telluride?</summary>
 
-Skiing provides core experiences, with group skiing creating shared adventures. Après-ski activities offer important social time, with bars and restaurants in both Mountain Village and downtown. Non-skiing activities like snowshoeing, ice skating, and spa experiences provide variety. Evening activities range from nightlife to group dinners, depending on party preferences.
+Skiing provides core experiences, with group skiing creating shared adventures on Telluride's 2,000+ acres of terrain. Après-ski activities offer important social time, with bars and restaurants in both Mountain Village and downtown. Non-skiing activities like snowshoeing, ice skating, and spa experiences at The Peaks provide variety—browse our [activities guide](/things-to-do) for options. Evening activities range from nightlife at downtown bars to group dinners at restaurants like Allred's.
 
 </details>
 
 <details>
 <summary>How do we handle different skiing abilities in our party?</summary>
 
-Use "meet at the bottom" strategies where skiers take different routes but regroup at lift bases. Designate compromise terrain (intermediate runs) for group skiing, and be willing to split when necessary. Consider group lessons for beginners while advanced skiers take clinics. The key is balancing group time with ability-appropriate activities.
+Use "meet at the bottom" strategies where skiers take different routes but regroup at lift bases. Designate compromise terrain like intermediate runs on the front side for group skiing, and be willing to split when necessary. Consider group lessons for beginners while advanced skiers explore expert terrain like Revelation Bowl. Read our [skiing guide](/blog/ski-guides/telluride-skiing-guide) for terrain details.
 
 </details>
 
@@ -261,7 +278,7 @@ Celebration elements like decorations, special activities, group gifts, or theme
 
 Planning a successful Telluride bachelor or bachelorette party requires balancing celebration goals with practical logistics, managing costs fairly, and creating experiences that honor the guest of honor while ensuring all attendees have memorable experiences. The comprehensive planning tools and strategies in this guide help party planners make informed decisions about accommodations, activities, and timelines that work for their specific celebrations.
 
-Telluride's combination of world-class skiing, vibrant social scene, and group-friendly accommodations makes it ideal for pre-wedding celebrations. The free gondola connecting downtown and Mountain Village provides flexibility in choosing accommodations and activities, while the resort's diverse offerings ensure parties with varying interests find engaging experiences.
+Telluride's combination of world-class skiing across 2,000+ acres, vibrant social scene on Colorado Avenue, and group-friendly accommodations makes it ideal for pre-wedding celebrations. The [free gondola connecting downtown and Mountain Village](/blog/destination-guides/complete-guide-telluride) provides flexibility in choosing accommodations and activities, while the resort's diverse offerings ensure parties with varying interests find engaging experiences.
 
 <ArticleBookingWidget 
   variant="featured"
