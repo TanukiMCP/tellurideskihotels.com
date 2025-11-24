@@ -1932,7 +1932,7 @@ Downtown Telluride sits at 8,750 feet in a box canyon, while Mountain Village pe
 - `<GroupTypeRecommender />`: For general planning.
 - `<CostPerPersonRanking />`: For value-focused lists.
 - `<EventPlanningTimeline />`: For weddings/events.
-- `<LodgingComparisonMatrix />`: For head-to-head comparisons.
+- `<HotelComparison />`: For head-to-head comparisons.
 
 ---
 
@@ -2512,17 +2512,16 @@ All planning tools are React components that work in markdown files. Use them di
 
 ---
 
-#### 8. LodgingComparisonMatrix
+#### 8. HotelComparison
 
-**Use Case:** Detailed hotel comparison articles
+**Use Case:** Detailed property comparison articles, hotel vs condo comparisons
 
 **Component Syntax:**
 ```markdown
-<LodgingComparisonMatrix 
-  compareIds={["hotel-1", "hotel-2", "hotel-3"]}
-  criteria={["price", "location", "amenities", "reviews"]}
-  groupSize={6}
-  nights={4}
+<HotelComparison 
+  hotelIds={["hotel-1", "hotel-2", "hotel-3"]}
+  title="Compare Properties"
+  client:load
 />
 ```
 
@@ -2628,7 +2627,7 @@ Here's what changes between seasons...
 **For Event Planning Articles:**
 - EventPlanningTimeline (required)
 - GroupCostCalculator (budget planning)
-- LodgingComparisonMatrix (accommodation decisions)
+- HotelComparison (accommodation decisions)
 
 **For Budget Articles:**
 - BudgetToItineraryPlanner (required)
@@ -2636,21 +2635,21 @@ Here's what changes between seasons...
 - CostPerPersonRanking (value analysis)
 
 **For Comparison Articles:**
-- LodgingComparisonMatrix (REQUIRED for any "vs" or comparison content)
+- HotelComparison (REQUIRED for any "vs" or comparison content)
 - HotelSplitCalculator (accommodation type cost comparison)
 - CostPerPersonRanking (price comparison)
 
-**⚠️ CRITICAL: When to Use LodgingComparisonMatrix vs HotelGrid**
+**⚠️ CRITICAL: When to Use HotelComparison vs HotelGrid**
 
 | Content Type | Use This Widget |
 |--------------|-----------------|
-| "Hotel vs Condo" sections | `LodgingComparisonMatrix` |
-| "Slopeside vs Downtown" articles | `LodgingComparisonMatrix` |
-| "Which is better for X" sections | `LodgingComparisonMatrix` |
+| "Hotel vs Condo" sections | `HotelComparison` |
+| "Slopeside vs Downtown" articles | `HotelComparison` |
+| "Which is better for X" sections | `HotelComparison` |
 | Listing properties in a category | `HotelGrid` |
 | Single property feature | `HotelShowcase` |
 
-**DO NOT use HotelGrid for comparison content!** Use `LodgingComparisonMatrix` with `compareIds` including BOTH property types being compared (e.g., hotel ID + condo ID).
+**DO NOT use HotelGrid for comparison content!** Use `HotelComparison` with `hotelIds` including BOTH property types being compared (e.g., hotel ID + condo ID).
 
 ### Integration with ArticleBookingWidget
 

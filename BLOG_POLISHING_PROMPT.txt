@@ -69,7 +69,7 @@ You have multiple conversion tools—use them strategically based on content typ
 | `<GroupTypeRecommender />` | General planning content | Undecided travelers, landing sections |
 | `<CostPerPersonRanking hotelIds={[...]} />` | Value/ranking articles | Hotel rankings, price analysis |
 | `<EventPlanningTimeline eventType="..." />` | Event planning content | Weddings, birthdays, corporate retreats |
-| `<LodgingComparisonMatrix compareIds={[...]} />` | Head-to-head comparisons | Detailed property comparisons |
+| `<HotelComparison hotelIds={[...]} />` | Head-to-head comparisons | Detailed property comparisons |
 
 #### Activity Widget
 
@@ -119,8 +119,8 @@ When using `hotelIds` prop, markers appear on the map. Clicking a marker shows a
    → **Match property TYPE to content** (hotels vs condos vs rentals)
 
 3. **Is this COMPARING two accommodation types (hotel vs condo, slopeside vs downtown)?**
-   → **USE `<LodgingComparisonMatrix compareIds={[...]} criteria={[...]} />`** (NOT HotelGrid!)
-   → Include BOTH types in compareIds (e.g., one hotel ID + one condo ID)
+   → **USE `<HotelComparison hotelIds={[...]} title="..." />`** (NOT HotelGrid!)
+   → Include BOTH types in hotelIds (e.g., one hotel ID + one condo ID)
    → This is the RIGHT widget for comparison sections!
 
 4. **Is this discussing costs, budgets, or group trip planning?**
@@ -147,10 +147,10 @@ When using `hotelIds` prop, markers appear on the map. Clicking a marker shows a
 11. **Does the article need visual variety (too many hotel widgets in a row)?**
    → Add a `<BlogMap />` between hotel sections to break up the page visually
 
-**⚠️ CRITICAL: When content COMPARES accommodation types, use LodgingComparisonMatrix!**
-- "Hotel vs Condo" sections → LodgingComparisonMatrix
-- "Slopeside vs Downtown" articles → LodgingComparisonMatrix  
-- "Which is better for families" → LodgingComparisonMatrix
+**⚠️ CRITICAL: When content COMPARES accommodation types, use HotelComparison!**
+- "Hotel vs Condo" sections → HotelComparison (with mixed hotelIds)
+- "Slopeside vs Downtown" articles → HotelComparison  
+- "Which is better for families" → HotelComparison
 - DO NOT use HotelGrid for comparison content!
 
 ---
@@ -169,7 +169,7 @@ Search the article for ALL widget patterns:
 <GroupTypeRecommender
 <CostPerPersonRanking
 <EventPlanningTimeline
-<LodgingComparisonMatrix
+<HotelComparison
 <ActivityShowcase
 <BlogMap
 ```
@@ -253,7 +253,7 @@ grep -i "hotel telluride" src/data/telluride-hotels.csv
 - **Accommodation-focused articles:** Mix of HotelShowcase/HotelGrid + BlogMap for location context + ArticleBookingWidget
 - **Planning/cost articles:** At least 1-2 planning tools + booking widgets
 - **Activity articles:** ActivityShowcase + relevant booking widgets
-- **Comparison articles:** LodgingComparisonMatrix or HotelSplitCalculator + BlogMap (preset="overview") + booking widgets
+- **Comparison articles:** HotelComparison or HotelSplitCalculator + BlogMap (preset="overview") + booking widgets
 - **Location-focused articles:** BlogMap is essential - use preset="overview" or preset="hotels"
 - **Ski guides:** BlogMap with preset="trails" for terrain visualization
 

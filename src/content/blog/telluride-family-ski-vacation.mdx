@@ -47,7 +47,7 @@ import { HotelGrid } from '@/components/blog/HotelGrid';
 import { ActivityShowcase } from '@/components/blog/ActivityShowcase';
 import { TripCalculator } from '@/components/planning/TripCalculator';
 import { BlogMap } from '@/components/blog/BlogMap';
-import { LodgingComparisonMatrix } from '@/components/planning/LodgingComparisonMatrix';
+import { HotelComparison } from '@/components/planning/HotelComparison';
 
 # Telluride Family Ski Vacation: Complete Planning Guide & Cost Breakdown (2025)
 
@@ -98,11 +98,8 @@ For smaller families (2 adults, 1-2 children), hotel rooms often provide better 
 
 Larger families (2 adults, 3+ children) typically find condominiums more cost-effective when calculating per-person expenses. Properties like Bear Creek Lodge and Aspen Ridge offer 2-4 bedroom units accommodating 6-8 people at $400-900 per night, translating to $75-150 per person compared to $200-300 per person for multiple hotel rooms. The kitchen facilities allow significant dining cost savings, with families preparing breakfast and some dinners reducing restaurant expenses by 40-50%. The additional space provides separate bedrooms for children and adults, living areas for downtime, and storage for equipment and gear.
 
-<LodgingComparisonMatrix 
-  compareIds={["lp21ee2", "lp656c95f0", "lp656c5e5d"]}
-  criteria={["price", "space", "amenities", "location"]}
-  groupSize={6}
-  nights={4}
+<HotelComparison 
+  hotelIds={["lp21ee2", "lp656c95f0", "lp656c5e5d"]}
   title="Compare: Hotel vs Condo for Families"
   client:load
 />
