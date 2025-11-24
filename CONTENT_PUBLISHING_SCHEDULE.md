@@ -1,5 +1,23 @@
 # Content Publishing Schedule - Telluride Ski Hotels
 
+## 📊 CURRENT PUBLISHING STATUS
+
+**Last Updated:** November 24, 2025
+**Articles Published Through:** Day 18 (Nov 24, 2025)
+**Total Published:** 18 scheduled articles + 5 additional articles = **23 published articles**
+
+**Latest Published:**
+- Nov 24: Telluride Multi-Family Ski Trip (Day 18)
+- Nov 23: Telluride Couples Retreat (Day 17)
+- Nov 22: Telluride Bachelor/Bachelorette Party (Day 16)
+- Nov 21: Telluride Friends Ski Trip (Day 15)
+- Nov 20: Telluride Family Ski Vacation (Day 14) + Slopeside vs Town Hotels
+
+**Next Scheduled:**
+- Nov 25: Telluride Solo Travel (Day 19)
+
+---
+
 ## 🚨 MAJOR STRATEGY UPDATE (Nov 2025)
 
 **Based on kwrds.ai actual search volume data, we're pivoting our content strategy:**
@@ -83,7 +101,7 @@
 - Type: Pillar
 - Category: destination-guides
 - Tags: telluride, overview, planning, guide
-- **Status:** Published Nov 15, 2025
+- **Status:** Published Nov 14, 2025
 
 **Day 2: "Where to Stay in Telluride: Complete Lodging Guide"** ✅ PUBLISHED
 - Keyword: where to stay in telluride (3,600/mo)
@@ -91,15 +109,15 @@
 - Type: Pillar
 - Category: destination-guides
 - Tags: hotels, lodging, accommodations
-- **Status:** Published Nov 16, 2025
+- **Status:** Published Nov 15, 2025
 
-**Day 3: "Telluride Ski Resort: Complete Guide"** ✅ PUBLISHED
+**Day 3: "Telluride Ski Resort Guide: Terrain, Lifts, and Insider Tips for 2,000 Acres"** ✅ PUBLISHED
 - Keyword: telluride ski resort (12,100/mo)
 - Word Count: 3,800
 - Type: Pillar
 - Category: ski-guides
 - Tags: skiing, resort, terrain, lifts
-- **Status:** Published Nov 9, 2025
+- **Status:** Published Nov 8, 2025
 
 **Day 4: "Telluride Hotels: Complete Accommodation Guide"** ✅ PUBLISHED
 - Keyword: telluride hotels (14,800/mo)
@@ -107,15 +125,15 @@
 - Type: Comprehensive Guide
 - Category: hotel-reviews
 - Tags: hotels, lodging, accommodations
-- **Status:** Published Nov 10, 2025
+- **Status:** Published Nov 9, 2025
 
-**Day 5: "Things to Do in Telluride: Ultimate Activity Guide"** ✅ PUBLISHED
+**Day 5: "Things to Do in Telluride: Beyond Skiing in Colorado's Box Canyon"** ✅ PUBLISHED
 - Keyword: things to do in telluride (6,600/mo)
 - Word Count: 3,000
 - Type: Pillar
 - Category: activity-guides
 - Tags: activities, attractions, experiences
-- **Status:** Published Nov 11, 2025
+- **Status:** Published Nov 10, 2025
 
 **Day 6: "Telluride Gondola Guide: Free Transportation & Views"** ✅ PUBLISHED
 - Keyword: telluride gondola (5,400/mo, +125% growth)
@@ -130,13 +148,13 @@
 - Keyword: telluride ski season (2,400/mo)
 - Word Count: 2,500
 - Type: Comprehensive Guide
-- Category: planning-tips
+- Category: seasonal-guides
 - Tags: season, timing, snow, conditions
-- **Status:** Published Nov 12, 2025
+- **Status:** Published Nov 11, 2025
 
 ### Week 2: High-Volume Keywords + Colorado Local Guides
 
-**Day 8: "Driving to Telluride from Denver: Complete I-70 Guide"** ✅ PUBLISHED
+**Day 8: "Denver to Telluride Drive: Complete Route Guide for Colorado Travelers"** ✅ PUBLISHED
 - Keyword: denver to telluride drive (1,600/mo)
 - Word Count: 2,800
 - Type: Comprehensive Guide
@@ -144,7 +162,7 @@
 - Tags: driving, denver, i70, road-trip, locals
 - **Status:** Published Nov 12, 2025
 
-**Day 9: "Telluride from Colorado Springs: Drive Guide & Tips"** ✅ PUBLISHED
+**Day 9: "Colorado Springs to Telluride Drive: Complete Route Guide Through the Rockies"** ✅ PUBLISHED
 - Keyword: colorado springs to telluride (720/mo)
 - Word Count: 2,400
 - Type: Comprehensive Guide
@@ -152,7 +170,7 @@
 - Tags: driving, colorado-springs, road-trip, locals
 - **Status:** Published Nov 13, 2025
 
-**Day 10: "Telluride Skiing: Complete Guide for All Levels"** ✅ PUBLISHED
+**Day 10: "Telluride Skiing: Complete Guide for All Skill Levels"** ✅ PUBLISHED
 - Keyword: telluride skiing (4,400/mo)
 - Word Count: 2,700
 - Type: Comprehensive Guide
@@ -160,7 +178,7 @@
 - Tags: skiing, terrain, lessons, tips
 - **Status:** Published Nov 14, 2025
 
-**Day 11: "Winter Driving to Telluride: Safety Tips & Road Conditions"** ✅ PUBLISHED
+**Day 11: "Winter Driving to Telluride: Safety Guide and Essential Preparation"** ✅ PUBLISHED
 - Keyword: telluride winter driving (480/mo)
 - Word Count: 2,500
 - Type: Comprehensive Guide
@@ -169,16 +187,16 @@
 - **Local Focus:** Chain laws, I-70 closures, Eisenhower Tunnel, Red Mountain Pass, emergency prep
 - **Status:** Published Nov 15, 2025
 
-**Day 12: "Telluride Weather Guide: What to Expect Year-Round"** ✅ PUBLISHED
+**Day 12: "Telluride Weather Guide: Month-by-Month Climate and Packing Tips"** ✅ PUBLISHED
 - Keyword: telluride weather (8,100/mo)
 - Word Count: 2,400
 - Type: Comprehensive Guide
-- Category: planning-tips
+- Category: seasonal-guides
 - Tags: weather, climate, conditions
 - **Status:** Published Nov 16, 2025
 - **Data Source:** Open-Meteo API (2024-2025 real historical data)
 
-**Day 13: "Front Range to Telluride: Weekend Getaway Guide"** ✅ PUBLISHED
+**Day 13: "Front Range to Telluride Weekend Getaway: Complete Planning Guide"** ✅ PUBLISHED
 - Keyword: weekend trip telluride (320/mo)
 - Word Count: 2,300
 - Type: Comprehensive Guide
@@ -207,7 +225,7 @@
 - **Focus:** Cost splitting scenarios, hotel vs vacation rental for groups
 - **Status:** Published Nov 21, 2025
 
-**Day 16: "Telluride Bachelor/Bachelorette Party: Ultimate Planning Guide"** ✅ SCHEDULED 🎯 CONVERSION FOCUS
+**Day 16: "Telluride Bachelor/Bachelorette Party: Ultimate Planning Guide"** ✅ PUBLISHED 🎯 CONVERSION FOCUS
 - Keyword: telluride bachelorette party (170/mo) + telluride bachelor party
 - Word Count: 2,900
 - Type: Comprehensive Guide with Interactive Tools
@@ -215,10 +233,9 @@
 - Tags: bachelorette, bachelor, party, groups, events
 - **Tools Required:** GroupCostCalculator, EventPlanningTimeline, BudgetToItineraryPlanner
 - **Focus:** Event planning timeline, group lodging, activity recommendations
-- **Status:** Draft saved at `src/content/drafts/telluride-bachelor-bachelorette-party.md`
-- **Publish Date:** 2025-11-22T15:00:00Z
+- **Status:** Published Nov 22, 2025
 
-**Day 17: "Telluride Couples Retreat: Romantic Getaway Planner"** ✅ SCHEDULED 🎯 CONVERSION FOCUS
+**Day 17: "Telluride Couples Retreat: Romantic Getaway Planner"** ✅ PUBLISHED 🎯 CONVERSION FOCUS
 - Keyword: telluride romantic getaway (260/mo) + telluride couples trip
 - Word Count: 2,600
 - Type: Comprehensive Guide with Interactive Tools
@@ -226,12 +243,11 @@
 - Tags: couples, romantic, getaway, planning
 - **Tools Required:** BudgetToItineraryPlanner, SeasonComparison
 - **Focus:** Budget planning, romantic activities, best times to visit
-- **Status:** Draft saved at `src/content/drafts/telluride-couples-retreat.md`
-- **Publish Date:** 2025-11-23T15:00:00Z
+- **Status:** Published Nov 23, 2025
 
 ### Week 3: Group Planning & Conversion-Focused Content
 
-**Day 18: "Telluride Multi-Family Ski Trip: Large Group Planning Guide"** ✅ SCHEDULED 🎯 CONVERSION FOCUS
+**Day 18: "Telluride Multi-Family Ski Trip: Large Group Planning Guide"** ✅ PUBLISHED 🎯 CONVERSION FOCUS
 - Keyword: telluride group lodging (140/mo) + telluride family reunion
 - Word Count: 3,000
 - Type: Comprehensive Guide with Interactive Tools
@@ -239,8 +255,49 @@
 - Tags: multi-family, large-groups, planning, cost-breakdown
 - **Tools Required:** GroupCostCalculator, HotelSplitCalculator, EventPlanningTimeline
 - **Focus:** Large group logistics, multiple families, cost coordination
-- **Status:** Draft saved at `src/content/drafts/telluride-multi-family-ski-trip.md`
-- **Publish Date:** 2025-11-24T15:00:00Z
+- **Status:** Published Nov 24, 2025
+
+### Additional Published Articles (Not in Original Schedule)
+
+**"Slopeside vs Town Hotels in Telluride: Complete Comparison Guide"** ✅ PUBLISHED
+- Keyword: slopeside vs town hotels telluride + mountain village vs downtown telluride
+- Word Count: 2,800
+- Type: Comparison Guide
+- Category: hotel-reviews
+- Tags: slopeside, town, comparison, mountain-village, downtown
+- **Status:** Published Nov 20, 2025
+
+**"Best Hotels in Telluride: Where Luxury Meets the San Juan Mountains"** ✅ PUBLISHED
+- Keyword: best hotels telluride (4,400/mo)
+- Word Count: 2,600
+- Type: Listicle
+- Category: hotel-reviews
+- Tags: best-hotels, luxury, rankings
+- **Status:** Published Nov 19, 2025
+
+**"Best Time to Visit Telluride: Month-by-Month Guide"** ✅ PUBLISHED
+- Keyword: best time to visit telluride (1,300/mo)
+- Word Count: 2,400
+- Type: Comprehensive Guide
+- Category: seasonal-guides
+- Tags: best-time, timing, seasonal, month-by-month
+- **Status:** Published Nov 19, 2025
+
+**"Telluride Ski Hotel Insider's Guide: Which Hotel for Which Skier"** ✅ PUBLISHED
+- Keyword: telluride ski hotel guide + telluride hotel for skiers
+- Word Count: 2,800
+- Type: Comprehensive Guide
+- Category: hotel-reviews
+- Tags: ski-hotels, skier-types, matching, guide
+- **Status:** Published Nov 19, 2025
+
+**"Telluride Skiing Guide: Terrain, Lessons, and Strategies for Every Level"** ✅ PUBLISHED
+- Keyword: telluride skiing guide (4,400/mo)
+- Word Count: 2,200
+- Type: Comprehensive Guide
+- Category: ski-guides
+- Tags: skiing, terrain, lessons, strategies
+- **Status:** Published Nov 14, 2025
 
 **Day 19: "Telluride Solo Travel: Complete Independent Traveler's Guide"** ✅ SCHEDULED 🎯 CONVERSION FOCUS
 - Keyword: solo travel telluride + telluride solo skiing
