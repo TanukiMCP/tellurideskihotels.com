@@ -57,6 +57,7 @@
 
 import { HotelGrid } from '@/components/blog/HotelGrid';
 import { ArticleBookingWidget } from '@/components/blog/ArticleBookingWidget';
+import { BlogMap } from '@/components/blog/BlogMap';
 
 
 # Telluride Gondola Guide: Free Transportation & Views (2025)
@@ -85,6 +86,16 @@ The gondola solves Telluride's unique geographic challenge: two distinct base ar
 The free aspect distinguishes Telluride from every other North American ski resort. Most resorts charge $20-40 per person for gondola rides, making them tourist attractions rather than practical transportation. Telluride's gondola functions as genuine public transit, used daily by locals commuting to work, families traveling between accommodations and activities, and visitors exploring both base areas without transportation costs or parking hassles. This accessibility creates a unique experience where the gondola becomes part of daily life rather than a special-occasion expense.
 
 The year-round operation means the gondola serves purposes beyond winter skiing. Summer visitors use it to access Mountain Village's hiking trails, restaurants, and events without driving. Fall foliage viewing becomes spectacular from the elevated perspective. Spring provides access to lower-elevation activities while higher trails remain snow-covered. The gondola transforms Telluride from a single-base-area resort into a connected two-community destination where visitors can experience both historic charm and modern convenience within minutes.
+
+<BlogMap 
+  preset="overview"
+  markers={[
+    { lng: -107.8123, lat: 37.9375, label: "Downtown Station", icon: "gondola" },
+    { lng: -107.848, lat: 37.939, label: "Mountain Village Station", icon: "gondola" }
+  ]}
+  caption="The gondola route connects downtown Telluride to Mountain Village, climbing 1,700 vertical feet"
+  client:load
+/>
 
 ## Operating Hours and Schedules
 

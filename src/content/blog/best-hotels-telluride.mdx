@@ -28,6 +28,7 @@ seasonalRelevance: ["winter", "spring", "summer", "fall"]
 import { ArticleBookingWidget } from '@/components/blog/ArticleBookingWidget';
 import { HotelGrid } from '@/components/blog/HotelGrid';
 import { HotelShowcase } from '@/components/blog/HotelShowcase';
+import { BlogMap } from '@/components/blog/BlogMap';
 
 Choosing where to stay in Telluride isn't just about finding a bed—it's about selecting your home base for an unforgettable mountain experience. Whether you're chasing fresh powder at first light, seeking a romantic escape in a Victorian-era boutique hotel, or planning a family ski vacation with all the amenities, Telluride's accommodation scene delivers sophistication without sacrificing the town's authentic mountain character. For a detailed comparison of Mountain Village versus downtown locations, see our [slopeside vs town hotels guide](/blog/hotel-reviews/slopeside-vs-town-hotels-telluride). To understand seasonal pricing and timing, check our [best time to visit guide](/blog/seasonal-guides/best-time-visit-telluride).
 
@@ -55,6 +56,14 @@ Dining at The Peaks reflects Telluride's evolution from mining town to culinary 
 <HotelShowcase hotelId="lp21ee2" client:load />
 
 ## Ski-In/Ski-Out Properties
+
+<BlogMap 
+  preset="hotels"
+  hotelIds={["lp21ee2", "lp4b27f", "lp4153f"]}
+  showLifts={true}
+  caption="Ski-in/ski-out hotels in Mountain Village offer direct slope access"
+  client:load
+/>
 
 <HotelGrid 
   hotelIds={["lp21ee2", "lp4b27f", "lp4153f"]}

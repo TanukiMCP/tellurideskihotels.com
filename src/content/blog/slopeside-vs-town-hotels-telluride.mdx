@@ -56,6 +56,7 @@
 import { HotelGrid } from '@/components/blog/HotelGrid';
 import { ArticleBookingWidget } from '@/components/blog/ArticleBookingWidget';
 import { HotelComparison } from '@/components/planning/HotelComparison';
+import { BlogMap } from '@/components/blog/BlogMap';
 
 
 # Slopeside vs Town Hotels in Telluride: Complete Comparison Guide
@@ -79,6 +80,13 @@ Properties include The Madeline Hotel, Peaks Resort & Spa, Lumiere, Inn at Lost 
 Downtown Telluride sits at 8,750 feet on the box canyon floor, with Main Street (Colorado Avenue) lined by Victorian buildings dating to the 1880s mining era. Historic hotels, boutique properties, and converted Victorian homes provide accommodations. The National Historic Landmark District maintains authentic mining town character with strict preservation standards.
 
 Properties include Hotel Telluride, New Sheridan Hotel, Hotel Columbia, Mountain Lodge, and various boutique inns. Expect historic character, walkable restaurant access, authentic Western atmosphere, and 13-minute gondola rides to skiing. The free gondola departs from the south end of town.
+
+<BlogMap 
+  preset="overview"
+  terrain={true}
+  caption="Downtown Telluride (left) and Mountain Village (right) connected by the free gondola"
+  client:load
+/>
 
 <HotelComparison 
   filter="ski-in-ski-out"

@@ -1,0 +1,472 @@
+# Blog Post Polishing & Compliance Review Prompt
+
+## Your Assignment
+
+You are reviewing and polishing a single blog post for TellurideSki Hotels. Your job is to bring this article into full compliance with our content standards, fix any broken or improperly curated elements, and ensure the post is conversion-optimized with intentionally placed widgets and links.
+
+**Target Article:** `[PASTE ARTICLE PATH HERE]`
+
+---
+
+## Step 1: Read Required Reference Files
+
+Before making any changes, read these files to understand our standards and available resources:
+
+```
+read_file: src/data/telluride-hotels.csv
+read_file: INTERNAL_EXTERNAL_LINKING_PLAN.md
+list_dir: media-library/
+```
+
+Then read the target article in full.
+
+---
+
+## Step 2: Content Body Review & Polish
+
+### Text Quality Standards
+
+1. **Voice Check:** The article should read like a knowledgeable local friend—specific details, insider tips, no generic travel clichés ("hidden gem," "breathtaking," "off the beaten path").
+
+2. **Paragraph Structure:** 2-4 sentences max per paragraph. Break up any walls of text. Mobile-friendly formatting.
+
+3. **Bullet Point Usage:** Bullets should be RARE (3-5 item max for quick reference lists only). 90% of content should be narrative paragraphs, not outline format.
+
+4. **Specificity:** Replace any vague descriptions with concrete details:
+   - BAD: "Beautiful mountain views"
+   - GOOD: "Views of 14,000-foot Wilson Peak from your balcony"
+
+5. **Active Voice:** 80%+ of sentences should be active voice. Fix passive constructions.
+
+6. **Subheadings:** Ensure an H2 every 300-400 words. All H2s should be descriptive and keyword-rich.
+
+---
+
+## Step 3: Widget Selection & Placement Strategy
+
+**CRITICAL: Choose the RIGHT widget for the context, not just HotelGrid everywhere. Every widget with hotelIds must be manually curated based on surrounding text.**
+
+### Available Widget Toolkit
+
+You have multiple conversion tools—use them strategically based on content type:
+
+#### Hotel Display Widgets
+
+| Widget | When to Use | Props |
+|--------|-------------|-------|
+| `<HotelShowcase hotelId="..." showGallery={true} />` | **Listicles** - One hotel per section with image gallery | `hotelId`, `showGallery`, `checkIn` |
+| `<HotelGrid hotelIds={[...]} />` | **Category sections** - 2-3 hotels mentioned together | `hotelIds` (array of 1-3), `title`, `filter`, `limit` |
+| `<ArticleBookingWidget />` | **General CTAs** - No specific hotel, filtered searches, transitions | `variant`, `filter`, `location`, `hotelName` |
+
+#### Planning & Interactive Tools
+
+| Widget | When to Use | Best For |
+|--------|-------------|----------|
+| `<GroupCostCalculator groupType="..." />` | Cost breakdown discussions | Family trips, friend groups, budget planning |
+| `<HotelSplitCalculator hotelIds={[...]} />` | Hotel vs condo comparisons | Group lodging decisions, cost splitting |
+| `<BudgetToItineraryPlanner />` | Budget-conscious content | First-timers, budget travelers |
+| `<SeasonComparison />` | Peak vs off-peak discussions | Timing decisions, cost comparisons |
+| `<GroupTypeRecommender />` | General planning content | Undecided travelers, landing sections |
+| `<CostPerPersonRanking hotelIds={[...]} />` | Value/ranking articles | Hotel rankings, price analysis |
+| `<EventPlanningTimeline eventType="..." />` | Event planning content | Weddings, birthdays, corporate retreats |
+| `<LodgingComparisonMatrix compareIds={[...]} />` | Head-to-head comparisons | Detailed property comparisons |
+
+#### Activity Widget
+
+| Widget | When to Use | Props |
+|--------|-------------|-------|
+| `<ActivityShowcase category="..." />` | Activity/experience sections | `category`: skiing, hiking, dining, events, family, nightlife |
+
+#### Visual/Geographic Widget (NEW)
+
+| Widget | When to Use | Props |
+|--------|-------------|-------|
+| `<BlogMap preset="..." />` | **Location context, geographic understanding** - Adds visual variety beyond hotel grids | `preset`, `hotelIds`, `markers`, `terrain`, `showTrails`, `caption` |
+
+**BlogMap Presets:**
+- `resort` - Full ski area view with trails/lifts
+- `town` - Downtown Telluride focused  
+- `mountain-village` - Mountain Village focused
+- `overview` - Both areas showing gondola connection
+- `hotels` - Auto-fit to show hotel markers
+- `trails` - Trail-focused with difficulty colors
+
+**When to Use BlogMap:**
+- Location comparison sections (downtown vs Mountain Village)
+- Geography/layout explanations
+- Gondola discussions
+- Trail/terrain breakdowns
+- Hotel proximity to slopes
+
+---
+
+### Widget Selection Decision Tree
+
+**Ask yourself for each section:**
+
+1. **Is this a listicle where each hotel gets its own numbered entry?**
+   → Use `<HotelShowcase hotelId="..." showGallery={true} />` after each hotel description
+
+2. **Are 2-3 hotels mentioned together in a category discussion?**
+   → Use `<HotelGrid hotelIds={["id1", "id2", "id3"]} title="..." />`
+
+3. **Is this discussing costs, budgets, or group trip planning?**
+   → Use appropriate planning tool: `GroupCostCalculator`, `BudgetToItineraryPlanner`, `HotelSplitCalculator`
+
+4. **Is this comparing options (hotel vs condo, peak vs off-peak)?**
+   → Use `SeasonComparison`, `HotelSplitCalculator`, or `LodgingComparisonMatrix`
+
+5. **Is this a transition point or general CTA without specific hotels mentioned?**
+   → Use `<ArticleBookingWidget variant="compact" filter="..." />`
+
+6. **Is this the end of the article?**
+   → Use `<ArticleBookingWidget variant="featured" />` (REQUIRED)
+
+7. **Is this discussing activities, dining, or experiences?**
+   → Use `<ActivityShowcase category="..." />` or link to `/things-to-do`
+
+8. **Is this discussing geography, locations, or comparing downtown vs Mountain Village?**
+   → Use `<BlogMap preset="overview" />` to visually show both areas
+
+9. **Is this a ski terrain or trail discussion?**
+   → Use `<BlogMap preset="trails" terrain={true} />` to show trail difficulty
+
+10. **Does the article need visual variety (too many hotel widgets in a row)?**
+   → Add a `<BlogMap />` between hotel sections to break up the page visually
+
+---
+
+### Audit Existing Widgets
+
+Search the article for ALL widget patterns:
+```
+<HotelGrid
+<HotelShowcase
+<ArticleBookingWidget
+<GroupCostCalculator
+<HotelSplitCalculator
+<BudgetToItineraryPlanner
+<SeasonComparison
+<GroupTypeRecommender
+<CostPerPersonRanking
+<EventPlanningTimeline
+<LodgingComparisonMatrix
+<ActivityShowcase
+<BlogMap
+```
+
+For each widget found:
+
+1. **Evaluate if it's the RIGHT widget type** for that content section
+2. **Read surrounding context** (200-300 words before/after)
+3. **Identify hotels/items mentioned by name** in that section
+4. **Search CSV and curate IDs:**
+   ```
+   grep -i "hotel name" src/data/telluride-hotels.csv
+   ```
+5. **Update or replace** the widget as needed
+
+---
+
+### Manual Hotel ID Curation (MANDATORY)
+
+For ANY widget accepting hotelIds:
+
+1. **Extract the hotelId** from CSV (first column, format: `lpXXXXX` or `lpXXXXXXXX`)
+2. **Match IDs to hotels mentioned in surrounding text**
+3. **Never use filter-only HotelGrid when specific hotels are named**
+
+Common property lookups:
+```
+grep -i "madeline" src/data/telluride-hotels.csv
+grep -i "peaks" src/data/telluride-hotels.csv  
+grep -i "lumiere" src/data/telluride-hotels.csv
+grep -i "capella" src/data/telluride-hotels.csv
+grep -i "fairmont" src/data/telluride-hotels.csv
+grep -i "sheridan" src/data/telluride-hotels.csv
+grep -i "lost creek" src/data/telluride-hotels.csv
+grep -i "mountain lodge" src/data/telluride-hotels.csv
+```
+
+---
+
+### Widget Frequency & Balance
+
+- **Accommodation-focused articles:** Mix of HotelShowcase/HotelGrid + BlogMap for location context + ArticleBookingWidget
+- **Planning/cost articles:** At least 1-2 planning tools + booking widgets
+- **Activity articles:** ActivityShowcase + relevant booking widgets
+- **Comparison articles:** LodgingComparisonMatrix or HotelSplitCalculator + BlogMap (preset="overview") + booking widgets
+- **Location-focused articles:** BlogMap is essential - use preset="overview" or preset="hotels"
+- **Ski guides:** BlogMap with preset="trails" for terrain visualization
+
+**General rules:**
+- Minimum 3 interactive elements per article
+- Maximum 5-6 for long articles (3,000+ words)
+- Featured ArticleBookingWidget before conclusion (REQUIRED)
+- No back-to-back widgets (minimum 200 words between)
+- Vary widget types—don't use only HotelGrid throughout
+- **Use BlogMap to break up hotel widget sections** and add visual variety
+- **Location comparison articles SHOULD have a BlogMap** showing both areas
+
+---
+
+### Widget Examples by Article Type
+
+**Listicle (Best Hotels in Telluride):**
+```jsx
+### 1. The Madeline Hotel
+[Description paragraph...]
+<HotelShowcase hotelId="lp4b27f" showGallery={true} />
+
+### 2. Peaks Resort & Spa
+[Description paragraph...]
+<HotelShowcase hotelId="lp3e47f" showGallery={true} />
+```
+
+**Category Guide (Where to Stay):**
+```jsx
+## Luxury Ski-In/Ski-Out Properties
+[Discussion of The Madeline, Peaks, and Lumière...]
+<HotelGrid hotelIds={["lp4b27f", "lp3e47f", "lpXXXXX"]} title="Featured Luxury Properties" client:load />
+```
+
+**Planning Article (Family Trip):**
+```jsx
+## Estimating Your Trip Cost
+[Budget discussion...]
+<GroupCostCalculator groupType="family" defaultNights={4} defaultGuests={6} />
+
+## Hotel vs Condo for Families
+[Comparison discussion...]
+<HotelSplitCalculator scenario="family-of-6" defaultGuests={6} />
+```
+
+**General CTA (Mid-Article Transition):**
+```jsx
+<ArticleBookingWidget variant="compact" filter="ski-in-ski-out" title="Browse Ski-In/Ski-Out Hotels" />
+```
+
+**End of Article (REQUIRED):**
+```jsx
+<ArticleBookingWidget variant="featured" title="Ready to Book Your Telluride Trip?" />
+```
+
+**Location/Geography Section:**
+```jsx
+## Understanding Telluride's Layout
+[Discussion of downtown vs Mountain Village...]
+<BlogMap preset="overview" caption="Downtown Telluride and Mountain Village connected by free gondola" client:load />
+```
+
+**Ski Terrain Section:**
+```jsx
+## Expert Terrain
+[Discussion of advanced runs...]
+<BlogMap preset="trails" terrain={true} highlightTrails={["The Plunge", "Spiral Stairs"]} caption="Black diamond and double black runs" client:load />
+```
+
+**Hotel Location Context:**
+```jsx
+## Ski-In/Ski-Out Properties
+[Discussion of slope-side hotels...]
+<BlogMap preset="hotels" hotelIds={["lp4b27f", "lp3e47f"]} showLifts={true} caption="The Madeline and Peaks offer direct slope access" client:load />
+```
+
+---
+
+## Step 4: Image Audit
+
+### Check All Embedded Images
+
+Search for markdown image syntax: `![`
+
+For each image found:
+
+1. **Verify LANDSCAPE orientation:** Images MUST be wider than they are tall. Check the Pexels URL parameters or original CSV data.
+
+2. **Contextual relevance:** Does the image match the surrounding content? A hotel amenities section shouldn't have a skiing action shot.
+
+3. **Proper attribution:** Each image needs photographer credit:
+   ```markdown
+   ![Descriptive alt text](https://images.pexels.com/photos/XXXXX/image.jpeg?auto=compress&cs=tinysrgb&h=350)
+   *Photo by [Photographer Name](https://www.pexels.com/@photographer-url) via Pexels*
+   ```
+
+### Image Placement
+
+- First body image after 2-3 paragraphs
+- One image every 300-400 words thereafter
+- 5-8 images total per article
+- Hero image in frontmatter should use `large_url` from CSV
+
+### Media Library Reference
+
+Select images from these CSVs based on article content:
+- `luxury-ski-hotels.csv` - Hotel exteriors, luxury properties
+- `hotel-rooms.csv` / `hotel-bedrooms.csv` - Room interiors
+- `ski-slopes.csv` / `powder-skiing.csv` - Skiing content
+- `mountain-villages.csv` - Town/location shots
+- `hotel-spas.csv` / `hotel-pools.csv` / `hot-tubs.csv` - Amenities
+- `restaurants.csv` / `apres-ski.csv` - Dining/nightlife
+- `winter-landscapes.csv` / `colorado-mountains.csv` - Scenic shots
+- `gondolas.csv` - Gondola/transportation content
+- `family-skiing.csv` / `ski-lessons.csv` - Family/beginner content
+
+**To replace an image:** Read the appropriate CSV, select a LANDSCAPE image (width > height), extract the `medium_url`, `photographer`, and `photographer_url`.
+
+---
+
+## Step 5: Internal Link Audit
+
+### Required Internal Links (5-10 per article)
+
+1. **Article-to-Article Links (2-3):**
+   - Reference `INTERNAL_EXTERNAL_LINKING_PLAN.md` for the linking map
+   - Link to related blog posts using descriptive anchor text
+   - First mention of a topic = link opportunity
+   - Format: `[descriptive anchor text](/blog/category/article-slug)`
+
+2. **Article-to-Lodging Links (3-5):**
+   - When mentioning accommodations: `/lodging`
+   - When mentioning ski-in/ski-out: `/lodging?filter=ski-in-ski-out`
+   - When mentioning location: `/lodging?location=mountain-village` or `/lodging?location=downtown`
+   - When mentioning specific hotels (if we have detail pages): `/lodging/[hotel-slug]`
+
+3. **Article-to-Page Links (1-2):**
+   - Activities mentioned: `/things-to-do`
+   - Ski conditions: `/ski-conditions`
+   - FAQ page: `/faq`
+
+### Link Quality Check
+
+- NO generic anchor text ("click here", "read more", "this article")
+- NO broken slugs (verify article exists in `src/content/blog/`)
+- NO duplicate anchor text for different destinations
+- Links should feel natural in context
+
+---
+
+## Step 6: External Link Audit
+
+### Required External Links (2-4 per article)
+
+Every statistic or official claim needs a source link:
+
+| Content Type | Source |
+|--------------|--------|
+| Resort stats | https://www.telluride.com |
+| Weather data | https://www.weather.gov/gjt |
+| Road conditions | https://www.cotrip.org |
+| Avalanche info | https://avalanche.state.co.us |
+| Colorado tourism | https://www.colorado.com |
+| Snow forecasts | https://www.opensnow.com |
+| Festival dates | Official festival websites |
+
+### External Link Format
+
+```markdown
+According to [Telluride Ski Resort](https://www.telluride.com), the resort offers 2,000+ acres of terrain.
+```
+
+---
+
+## Step 7: Inventory Linking
+
+### Hotels (LiteAPI)
+
+When a specific hotel is mentioned by name in body text and we want readers to book it:
+
+1. Search `src/data/telluride-hotels.csv` for the hotel ID
+2. Either add a `HotelShowcase` or `HotelGrid` widget with that ID
+3. OR link to a filtered lodging search
+
+### Activities (Viator)
+
+When specific activities are mentioned:
+- Link to `/things-to-do` for general activity browsing
+- If we have specific activity detail pages, link directly to those
+
+---
+
+## Step 8: FAQ Section Check
+
+Every article should have an FAQ section with 5-8 questions using the accordion format:
+
+```markdown
+## Frequently Asked Questions
+
+<details>
+<summary>Question goes here?</summary>
+
+Answer goes here. 50-150 words. Include internal link where relevant.
+
+</details>
+```
+
+- Questions should be conversational and keyword-rich
+- Answers should start with a direct answer in the first sentence
+- Include at least 1-2 internal links within FAQ answers
+
+---
+
+## Step 9: Frontmatter Validation
+
+Check these fields:
+
+```yaml
+---
+title: "..." # 50-60 characters
+seo:
+  metaTitle: "..." # 50-60 characters
+  metaDescription: "..." # MAXIMUM 150 CHARACTERS - this will break the build if longer
+  keywords: ["primary", "secondary", "tertiary"]
+featuredImage: "..." # Should be landscape Pexels URL
+featuredImageAlt: "..." # Descriptive, includes primary keyword
+---
+```
+
+**CRITICAL:** `metaDescription` must be 150 characters or less.
+
+---
+
+## Output Format
+
+After completing your review, make all necessary edits to the article file. Provide a summary of changes made:
+
+1. **Text Polish:** [List specific text improvements made]
+2. **Widget Selection:** [Note any widgets replaced with more appropriate types - e.g., "Changed HotelGrid to HotelShowcase for listicle format"]
+3. **Widget Curation:** [List widgets updated with manually curated hotelIds]
+4. **Planning Tools Added:** [List any GroupCostCalculator, SeasonComparison, etc. added where appropriate]
+5. **Images Updated:** [List any images replaced or added]
+6. **Links Added/Fixed:** [List internal and external links modified]
+7. **FAQ Updated:** [Note any FAQ changes]
+
+---
+
+## Reference: Key Hotel IDs
+
+Common Telluride properties (verify in CSV before using):
+- The Madeline Hotel: Search "madeline" in CSV
+- Peaks Resort & Spa: Search "peaks" in CSV
+- Lumière Telluride: Search "lumiere" in CSV
+- Hotel Telluride: Search "hotel telluride" in CSV
+- Inn at Lost Creek: Search "lost creek" in CSV
+- Mountain Lodge Telluride: Search "mountain lodge" in CSV
+
+**NEVER guess a hotel ID. Always search the CSV.**
+
+---
+
+## Remember
+
+- **Widget SELECTION matters as much as placement** - Use the right tool for the context (HotelShowcase for listicles, HotelGrid for categories, BlogMap for geography, planning tools for cost content, ArticleBookingWidget for CTAs)
+- **Vary your widgets** - Don't default to HotelGrid everywhere; mix HotelShowcase, BlogMap, planning tools, ActivityShowcase, and booking widgets appropriately
+- **Use BlogMap for visual variety** - If an article has 3+ HotelGrid/HotelShowcase widgets in a row, add a BlogMap between them to break up the page
+- **Location comparison articles need BlogMap** - Downtown vs Mountain Village discussions should include `<BlogMap preset="overview" />` to visualize the geography
+- **Every widget with hotelIds must be manually curated** based on hotels mentioned in surrounding text
+- **Every image must be landscape orientation** and contextually relevant to its section
+- **Every internal link must point to a real, existing page** - verify slugs exist
+- **Every mentioned hotel should have a booking path** - either via widget with curated ID or link to filtered search
+- **Planning articles need planning tools** - GroupCostCalculator, BudgetToItineraryPlanner, SeasonComparison, etc.
+- **The goal is conversion through intentional, varied content placement**
+

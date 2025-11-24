@@ -51,6 +51,7 @@ For detailed resort information including lift system, terrain breakdown, and op
 
 import { HotelGrid } from '@/components/blog/HotelGrid';
 import { ArticleBookingWidget } from '@/components/blog/ArticleBookingWidget';
+import { BlogMap } from '@/components/blog/BlogMap';
 
 <HotelGrid 
     limit={3}
@@ -116,6 +117,15 @@ Consider intermediate lesson packages focusing on specific skills. Clinics for m
 Explore the Front Side tree skiing through wider-spaced aspens on runs where you can see through the trees. This introduces off-piste skiing in a forgiving environment without the commitment and consequence of tight trees or steep faces. Tree skiing at intermediate level teaches line selection, rhythm adjustment, and powder technique without requiring advanced skills. Many intermediate skiers avoid trees entirely, missing some of Telluride's most enjoyable terrain.
 
 Weather your conditions—the best learning happens on variable days rather than perfect bluebird mornings. Flat light, light snow, and wind teach you to ski by feel rather than sight, developing more complete skills. Many intermediates only ski perfect conditions then struggle when weather deteriorates. Deliberately skiing in less-than-ideal conditions (avoiding dangerous conditions but accepting uncomfortable ones) builds versatility and confidence.
+
+<BlogMap 
+  preset="resort"
+  terrain={true}
+  showTrails={true}
+  showLifts={true}
+  caption="The Front Side's groomed runs (center) progress naturally to Gold Hill's expert terrain (right)"
+  client:load
+/>
 
 ## For Advanced Skiers: Tackling Challenging Terrain
 

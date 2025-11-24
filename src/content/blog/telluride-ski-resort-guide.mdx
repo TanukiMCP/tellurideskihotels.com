@@ -29,6 +29,7 @@ seasonalRelevance: ["winter"]
 
 import { HotelGrid } from '@/components/blog/HotelGrid';
 import { ArticleBookingWidget } from '@/components/blog/ArticleBookingWidget';
+import { BlogMap } from '@/components/blog/BlogMap';
 
 Telluride Ski Resort spans 2,000 acres across 4,425 vertical feet of the San Juan Mountains, delivering terrain that challenges experts while accommodating intermediates and beginners. What sets Telluride apart from Colorado's mega-resorts isn't raw acreage—Vail and Breckenridge claim more square footage—but rather the combination of genuinely challenging terrain, remarkably sparse crowds even during peak season, and a mountain layout that rewards local knowledge and strategic lift selection. For ability-specific skiing strategies, see our [complete skiing guide](/blog/ski-guides/telluride-skiing-complete-guide). To plan your visit timing, check our [ski season guide](/blog/planning-tips/telluride-ski-season-guide).
 
@@ -57,6 +58,14 @@ Gold Hill, often called the Back Side, represents Telluride's expert showcase. T
 The Prospect area serves beginners and lower intermediates with gentle, wide-open terrain isolated from faster traffic. This zone's consolidated layout and separated location from the main mountain create an ideal learning environment where families can ski together without worrying about collisions with aggressive skiers.
 
 Revelation Bowl, accessible via a short hike from the top of Lift 9, extends the resort's skiable terrain above treeline. The 10-15 minute hike gains about 300 vertical feet, enough to thin crowds significantly while accessing terrain that often holds the best snow on the mountain. The effort is minimal by backcountry standards but substantial enough that casual skiers skip it, leaving relatively fresh snow hours after storms when lower elevations are tracked out.
+
+<BlogMap 
+  preset="trails"
+  terrain={true}
+  showLifts={true}
+  caption="Telluride's 2,000 acres span from the Front Side groomers to Gold Hill's expert bowls"
+  client:load
+/>
 
 ## The Lift System: Efficiency and Strategy
 
