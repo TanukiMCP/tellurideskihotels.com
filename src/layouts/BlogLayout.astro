@@ -7,18 +7,11 @@ import RelatedArticles from '@/components/blog/RelatedArticles';
 import BlogCTA from '@/components/blog/BlogCTA';
 import { formatDate, formatDateShort } from '@/lib/utils';
 import { ArticleBookingWidget } from '@/components/blog/ArticleBookingWidget';
-import { HotelShowcase } from '@/components/blog/HotelShowcase';
 import { HotelGrid } from '@/components/blog/HotelGrid';
 import { ActivityShowcase } from '@/components/blog/ActivityShowcase';
 import { TripCalculator } from '@/components/planning/TripCalculator';
 import { HotelComparison } from '@/components/planning/HotelComparison';
 import { SeasonComparison } from '@/components/planning/SeasonComparison';
-import { GroupTypeRecommender } from '@/components/planning/GroupTypeRecommender';
-import { EventPlanningTimeline } from '@/components/planning/EventPlanningTimeline';
-import { GroupCostCalculator } from '@/components/planning/GroupCostCalculator';
-import { HotelSplitCalculator } from '@/components/planning/HotelSplitCalculator';
-import { CostPerPersonRanking } from '@/components/planning/CostPerPersonRanking';
-import { BudgetToItineraryPlanner } from '@/components/planning/BudgetToItineraryPlanner';
 
 interface Props {
   article: CollectionEntry<'blog'>;
@@ -191,18 +184,11 @@ const categoryName = data.category.replace(/-/g, ' ');
             <Content 
               components={{
                 ArticleBookingWidget,
-                HotelShowcase,
                 HotelGrid,
                 ActivityShowcase,
                 TripCalculator,
                 HotelComparison,
                 SeasonComparison,
-                GroupTypeRecommender,
-                EventPlanningTimeline,
-                GroupCostCalculator,
-                HotelSplitCalculator,
-                CostPerPersonRanking,
-                BudgetToItineraryPlanner,
               }}
             />
           </div>

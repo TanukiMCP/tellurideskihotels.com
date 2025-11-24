@@ -117,7 +117,7 @@ export function ArticleBookingWidget({
     return (
       <a
         href={link}
-        className="group block my-6 p-5 border-2 border-primary-300 rounded-xl bg-white hover:border-primary-500 hover:shadow-xl transition-all duration-300"
+        className="not-prose group block my-6 p-5 border-2 border-primary-300 rounded-xl bg-white hover:border-primary-500 hover:shadow-xl transition-all duration-300"
       >
         <div className="flex items-center justify-between gap-4">
           <div className="flex items-center gap-4 flex-1 min-w-0">
@@ -147,7 +147,7 @@ export function ArticleBookingWidget({
   // Featured variant for prominent placement
   if (variant === 'featured') {
     return (
-      <Card className="my-8 border-2 border-primary-400 shadow-xl bg-white hover:shadow-2xl hover:border-primary-500 transition-all duration-300 group">
+      <Card className="not-prose my-8 border-2 border-primary-400 shadow-xl bg-white hover:shadow-2xl hover:border-primary-500 transition-all duration-300 group">
         <CardContent className="p-8">
           <div className="flex flex-col lg:flex-row gap-8 items-center">
             {/* Icon Section */}
@@ -208,7 +208,7 @@ export function ArticleBookingWidget({
 
   // Default variant - clean and professional
   return (
-    <Card className="my-6 border-2 border-primary-300 hover:border-primary-500 hover:shadow-xl transition-all duration-300 bg-white group">
+    <Card className="not-prose my-6 border-2 border-primary-300 hover:border-primary-500 hover:shadow-xl transition-all duration-300 bg-white group">
       <CardContent className="p-6">
         <div className="flex flex-col sm:flex-row gap-5 items-start sm:items-center">
           {/* Icon */}

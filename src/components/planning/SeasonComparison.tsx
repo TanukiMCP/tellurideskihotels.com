@@ -2,25 +2,23 @@
 
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
+import { Input } from '@/components/ui/Input';
 import { HotelGrid } from '@/components/blog/HotelGrid';
-import { Calendar, TrendingDown } from 'lucide-react';
+import { Calendar, TrendingDown, Users, AlertCircle } from 'lucide-react';
 import { LoadingSpinner } from '@/components/shared/LoadingSpinner';
 import type { LiteAPIHotel } from '@/lib/liteapi/types';
-import { addDays, format } from 'date-fns';
+import { format } from 'date-fns';
 
 export interface SeasonComparisonProps {
-  peakDates: string;
-  offPeakDates: string;
   groupSize?: number;
-  peakCheckIn?: string;
-  peakCheckOut?: string;
-  offPeakCheckIn?: string;
-  offPeakCheckOut?: string;
+  title?: string;
 }
 
 interface SeasonData {
   name: string;
   dates: string;
+  checkIn: string;
+  checkOut: string;
   hotelCost: number;
   liftTicketCost: number;
   crowdLevel: string;
@@ -30,41 +28,45 @@ interface SeasonData {
 
 const BASE_LIFT_COST = 180;
 
+// Hardcoded peak and off-peak date ranges for current season
+const PEAK_SEASON = {
+  name: 'Peak Season',
+  dates: 'Dec 20 - Jan 5',
+  checkIn: '2025-12-20',
+  checkOut: '2025-12-27', // 7 nights
+  crowdLevel: 'High',
+  conditions: 'Excellent Snow',
+};
+
+const OFF_PEAK_SEASON = {
+  name: 'Off-Peak Season',
+  dates: 'Jan 15 - Mar 15',
+  checkIn: '2026-01-15',
+  checkOut: '2026-01-22', // 7 nights
+  crowdLevel: 'Low',
+  conditions: 'Good to Excellent',
+};
+
 export function SeasonComparison({
-  peakDates,
-  offPeakDates,
-  groupSize = 4,
-  peakCheckIn,
-  peakCheckOut,
-  offPeakCheckIn,
-  offPeakCheckOut,
+  groupSize = 2,
+  title = 'Peak vs Off-Peak Season Comparison',
 }: SeasonComparisonProps) {
-  const [selectedSeason, setSelectedSeason] = useState<'peak' | 'offpeak'>('peak');
+  const [guests, setGuests] = useState(groupSize);
+  const [selectedSeason, setSelectedSeason] = useState<'peak' | 'offpeak'>('offpeak');
   const [peakData, setPeakData] = useState<SeasonData | null>(null);
   const [offPeakData, setOffPeakData] = useState<SeasonData | null>(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+
+  const nights = 7; // Fixed 7-night stay for comparison
 
   useEffect(() => {
     fetchSeasonData();
-  }, [peakCheckIn, peakCheckOut, offPeakCheckIn, offPeakCheckOut, groupSize]);
+  }, [guests]);
 
   const fetchSeasonData = async () => {
     try {
       setLoading(true);
       
-      // Default dates: 1 week out from today, 1 week duration
-      const defaultCheckIn = new Date();
-      defaultCheckIn.setDate(defaultCheckIn.getDate() + 7);
-      const defaultCheckOut = new Date(defaultCheckIn);
-      defaultCheckOut.setDate(defaultCheckOut.getDate() + 7);
-      
-      const peakCheckInDate = peakCheckIn || defaultCheckIn.toISOString().split('T')[0];
-      const peakCheckOutDate = peakCheckOut || defaultCheckOut.toISOString().split('T')[0];
-      const offPeakCheckInDate = offPeakCheckIn || defaultCheckIn.toISOString().split('T')[0];
-      const offPeakCheckOutDate = offPeakCheckOut || defaultCheckOut.toISOString().split('T')[0];
-      
-      // STEP 1: Fetch hotels for both seasons
       const searchParams = new URLSearchParams({
         cityName: 'Telluride',
         countryCode: 'US',
@@ -85,24 +87,23 @@ export function SeasonComparison({
       }
       
       const hotelIds = hotels.map(h => h.hotel_id);
-      const nights = Math.ceil((new Date(peakCheckOutDate).getTime() - new Date(peakCheckInDate).getTime()) / (1000 * 60 * 60 * 24));
       
-      // STEP 2: Fetch peak season rates
+      // Fetch peak season rates
       const peakRatesParams = new URLSearchParams({
         hotelIds: hotelIds.join(','),
-        checkIn: peakCheckInDate,
-        checkOut: peakCheckOutDate,
-        adults: groupSize.toString(),
+        checkIn: PEAK_SEASON.checkIn,
+        checkOut: PEAK_SEASON.checkOut,
+        adults: guests.toString(),
       });
       
       const peakRatesResponse = await fetch(`/api/hotels/min-rates?${peakRatesParams.toString()}`);
       
-      // STEP 3: Fetch off-peak season rates
+      // Fetch off-peak season rates
       const offPeakRatesParams = new URLSearchParams({
         hotelIds: hotelIds.join(','),
-        checkIn: offPeakCheckInDate,
-        checkOut: offPeakCheckOutDate,
-        adults: groupSize.toString(),
+        checkIn: OFF_PEAK_SEASON.checkIn,
+        checkOut: OFF_PEAK_SEASON.checkOut,
+        adults: guests.toString(),
       });
       
       const offPeakRatesResponse = await fetch(`/api/hotels/min-rates?${offPeakRatesParams.toString()}`);
@@ -136,38 +137,40 @@ export function SeasonComparison({
         }
       }
       
-      // Calculate averages
+      // Calculate averages (fallback to estimates if no data)
       peakHotelCost = peakCount > 0 ? peakHotelCost / peakCount : 600;
       offPeakHotelCost = offPeakCount > 0 ? offPeakHotelCost / offPeakCount : 280;
       
       const peak: SeasonData = {
-    name: 'Peak Season',
-    dates: peakDates,
+        ...PEAK_SEASON,
         hotelCost: peakHotelCost,
-    liftTicketCost: BASE_LIFT_COST,
-    crowdLevel: 'High',
-    conditions: 'Excellent',
-        totalCost: (peakHotelCost * nights + BASE_LIFT_COST * nights) * groupSize,
-  };
+        liftTicketCost: BASE_LIFT_COST,
+        totalCost: (peakHotelCost * nights + BASE_LIFT_COST * nights) * guests,
+      };
 
       const offPeak: SeasonData = {
-    name: 'Off-Peak Season',
-    dates: offPeakDates,
+        ...OFF_PEAK_SEASON,
         hotelCost: offPeakHotelCost,
-    liftTicketCost: BASE_LIFT_COST,
-    crowdLevel: 'Low',
-    conditions: 'Good to Excellent',
-        totalCost: (offPeakHotelCost * nights + BASE_LIFT_COST * nights) * groupSize,
+        liftTicketCost: BASE_LIFT_COST,
+        totalCost: (offPeakHotelCost * nights + BASE_LIFT_COST * nights) * guests,
       };
       
       setPeakData(peak);
       setOffPeakData(offPeak);
-      setError(null);
     } catch (err) {
-      // If API fails completely, show error state
-      setError('Unable to fetch current rates. Please try again later.');
-      setPeakData(null);
-      setOffPeakData(null);
+      // Use fallback estimates if API fails
+      setPeakData({
+        ...PEAK_SEASON,
+        hotelCost: 600,
+        liftTicketCost: BASE_LIFT_COST,
+        totalCost: (600 * nights + BASE_LIFT_COST * nights) * guests,
+      });
+      setOffPeakData({
+        ...OFF_PEAK_SEASON,
+        hotelCost: 280,
+        liftTicketCost: BASE_LIFT_COST,
+        totalCost: (280 * nights + BASE_LIFT_COST * nights) * guests,
+      });
     } finally {
       setLoading(false);
     }
@@ -183,7 +186,7 @@ export function SeasonComparison({
 
   if (loading) {
     return (
-      <Card className="my-8 border-2 border-primary-200">
+      <Card className="my-12 not-prose border-2 border-primary-200">
         <CardContent className="py-12">
           <div className="flex justify-center items-center">
             <LoadingSpinner size="lg" />
@@ -201,192 +204,170 @@ export function SeasonComparison({
   const savingsPercent = ((savings / peakData.totalCost) * 100).toFixed(0);
 
   return (
-    <Card className="my-8 border-2 border-primary-200">
-      <CardHeader>
+    <Card className="my-12 not-prose border-2 border-primary-200 shadow-lg">
+      <CardHeader className="bg-gradient-to-r from-primary-50 to-primary-100 border-b border-primary-200">
         <div className="flex items-center gap-3">
-          <div className="w-12 h-12 bg-primary-600 rounded-lg flex items-center justify-center">
+          <div className="w-12 h-12 bg-primary-600 rounded-lg flex items-center justify-center shadow-md">
             <Calendar className="w-6 h-6 text-white" />
           </div>
           <div>
-            <CardTitle className="text-2xl">Peak vs Off-Peak Comparison</CardTitle>
-            <p className="text-neutral-600 mt-1">
-              Compare costs with real-time pricing between peak and off-peak seasons
+            <CardTitle className="text-2xl font-bold text-neutral-900">{title}</CardTitle>
+            <p className="text-neutral-600 mt-1 text-sm">
+              Compare costs and find the best time to visit
             </p>
           </div>
         </div>
       </CardHeader>
-      <CardContent className="space-y-6">
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-          <div>
-            <label className="block text-sm font-semibold text-neutral-900 mb-2">
-              <Users className="w-4 h-4 inline mr-2" />
-              Group Size
-            </label>
-            <input
-              type="number"
-              min="1"
-              max="20"
-              value={groupSize}
-              onChange={(e) => {
-                const newSize = parseInt(e.target.value) || 4;
-                window.location.href = window.location.pathname + `?groupSize=${newSize}`;
-              }}
-              className="flex h-12 w-full rounded-md border border-neutral-300 bg-white px-3 py-2.5 text-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-semibold text-neutral-900 mb-2">
-              <Calendar className="w-4 h-4 inline mr-2" />
-              Peak Check-In
-            </label>
-            <input
-              type="date"
-              value={peakCheckIn || format(addDays(new Date(), 7), 'yyyy-MM-dd')}
-              onChange={(e) => {
-                if (e.target.value) {
-                  window.location.href = window.location.pathname + `?peakCheckIn=${e.target.value}`;
-                }
-              }}
-              min={format(new Date(), 'yyyy-MM-dd')}
-              className="flex h-12 w-full rounded-md border border-neutral-300 bg-white px-3 py-2.5 text-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-semibold text-neutral-900 mb-2">
-              <Calendar className="w-4 h-4 inline mr-2" />
-              Off-Peak Check-In
-            </label>
-            <input
-              type="date"
-              value={offPeakCheckIn || format(addDays(new Date(), 7), 'yyyy-MM-dd')}
-              onChange={(e) => {
-                if (e.target.value) {
-                  window.location.href = window.location.pathname + `?offPeakCheckIn=${e.target.value}`;
-                }
-              }}
-              min={format(new Date(), 'yyyy-MM-dd')}
-              className="flex h-12 w-full rounded-md border border-neutral-300 bg-white px-3 py-2.5 text-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-semibold text-neutral-900 mb-2">
-              <Calendar className="w-4 h-4 inline mr-2" />
-              Nights
-            </label>
-            <input
-              type="number"
-              min="1"
-              max="14"
-              value={Math.ceil((new Date(peakCheckOut || format(addDays(new Date(), 14), 'yyyy-MM-dd')).getTime() - new Date(peakCheckIn || format(addDays(new Date(), 7), 'yyyy-MM-dd')).getTime()) / (1000 * 60 * 60 * 24))}
-              readOnly
-              className="flex h-12 w-full rounded-md border border-neutral-300 bg-neutral-50 px-3 py-2.5 text-base"
-            />
+      <CardContent className="p-6 space-y-6">
+        {/* Disclaimer */}
+        <div className="flex items-start gap-3 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+          <AlertCircle className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
+          <div className="text-sm text-blue-900">
+            <p className="font-medium mb-1">Season Comparison</p>
+            <p>
+              Comparing average rates for {nights}-night stays during peak holiday season vs off-peak winter season. 
+              Actual prices vary by specific dates and availability.
+            </p>
           </div>
         </div>
+
+        {/* Group Size Input */}
+        <div className="max-w-xs">
+          <label className="block text-sm font-medium text-neutral-700 mb-2">
+            <Users className="w-4 h-4 inline mr-2" />
+            Number of Guests
+          </label>
+          <Input
+            type="number"
+            min="1"
+            max="20"
+            value={guests}
+            onChange={(e) => setGuests(parseInt(e.target.value) || 2)}
+            className="w-full"
+          />
+        </div>
         
+        {/* Season Comparison Cards */}
         <div className="grid gap-4 md:grid-cols-2">
-          <div
-            className={`p-6 border-2 rounded-lg cursor-pointer transition-all ${
-              selectedSeason === 'peak'
-                ? 'border-primary-400 bg-primary-50'
-                : 'border-neutral-200 hover:border-primary-200'
-            }`}
+          <button
             onClick={() => setSelectedSeason('peak')}
+            className={`p-6 border-2 rounded-lg text-left transition-all hover:shadow-md ${
+              selectedSeason === 'peak'
+                ? 'border-primary-500 bg-primary-50 ring-2 ring-primary-200'
+                : 'border-neutral-200 hover:border-primary-200 bg-white'
+            }`}
           >
-            <div className="font-semibold text-lg text-neutral-900 mb-2">Peak Season</div>
-            <div className="text-sm text-neutral-600 mb-4">{peakDates}</div>
-            <div className="space-y-2">
+            <div className="font-bold text-xl text-neutral-900 mb-2">{peakData.name}</div>
+            <div className="text-sm text-neutral-600 mb-4">{peakData.dates}</div>
+            <div className="space-y-2 mb-4">
               <div className="flex justify-between text-sm">
                 <span className="text-neutral-600">Hotel (per night):</span>
                 <span className="font-semibold">{formatCurrency(peakData.hotelCost)}</span>
               </div>
               <div className="flex justify-between text-sm">
-                <span className="text-neutral-600">Lift Tickets:</span>
+                <span className="text-neutral-600">Lift Tickets (per day):</span>
                 <span className="font-semibold">{formatCurrency(peakData.liftTicketCost)}</span>
               </div>
               <div className="flex justify-between text-sm">
                 <span className="text-neutral-600">Crowds:</span>
-                <span className="font-semibold">{peakData.crowdLevel}</span>
+                <span className="font-semibold text-red-600">{peakData.crowdLevel}</span>
               </div>
               <div className="flex justify-between text-sm">
                 <span className="text-neutral-600">Conditions:</span>
-                <span className="font-semibold">{peakData.conditions}</span>
+                <span className="font-semibold text-green-600">{peakData.conditions}</span>
               </div>
             </div>
-          </div>
+            <div className="pt-4 border-t border-neutral-200">
+              <div className="text-xs text-neutral-500 mb-1">Total for {guests} {guests === 1 ? 'guest' : 'guests'}, {nights} nights</div>
+              <div className="text-2xl font-bold text-primary-600">
+                {formatCurrency(peakData.totalCost)}
+              </div>
+            </div>
+            {selectedSeason === 'peak' && (
+              <div className="mt-3 text-xs text-primary-600 font-medium">
+                ✓ Selected
+              </div>
+            )}
+          </button>
 
-          <div
-            className={`p-6 border-2 rounded-lg cursor-pointer transition-all ${
-              selectedSeason === 'offpeak'
-                ? 'border-primary-400 bg-primary-50'
-                : 'border-neutral-200 hover:border-primary-200'
-            }`}
+          <button
             onClick={() => setSelectedSeason('offpeak')}
+            className={`p-6 border-2 rounded-lg text-left transition-all hover:shadow-md ${
+              selectedSeason === 'offpeak'
+                ? 'border-primary-500 bg-primary-50 ring-2 ring-primary-200'
+                : 'border-neutral-200 hover:border-primary-200 bg-white'
+            }`}
           >
-            <div className="font-semibold text-lg text-neutral-900 mb-2">Off-Peak Season</div>
-            <div className="text-sm text-neutral-600 mb-4">{offPeakDates}</div>
-            <div className="space-y-2">
+            <div className="font-bold text-xl text-neutral-900 mb-2">{offPeakData.name}</div>
+            <div className="text-sm text-neutral-600 mb-4">{offPeakData.dates}</div>
+            <div className="space-y-2 mb-4">
               <div className="flex justify-between text-sm">
                 <span className="text-neutral-600">Hotel (per night):</span>
                 <span className="font-semibold">{formatCurrency(offPeakData.hotelCost)}</span>
               </div>
               <div className="flex justify-between text-sm">
-                <span className="text-neutral-600">Lift Tickets:</span>
+                <span className="text-neutral-600">Lift Tickets (per day):</span>
                 <span className="font-semibold">{formatCurrency(offPeakData.liftTicketCost)}</span>
               </div>
               <div className="flex justify-between text-sm">
                 <span className="text-neutral-600">Crowds:</span>
-                <span className="font-semibold">{offPeakData.crowdLevel}</span>
+                <span className="font-semibold text-green-600">{offPeakData.crowdLevel}</span>
               </div>
               <div className="flex justify-between text-sm">
                 <span className="text-neutral-600">Conditions:</span>
-                <span className="font-semibold">{offPeakData.conditions}</span>
+                <span className="font-semibold text-green-600">{offPeakData.conditions}</span>
               </div>
             </div>
+            <div className="pt-4 border-t border-neutral-200">
+              <div className="text-xs text-neutral-500 mb-1">Total for {guests} {guests === 1 ? 'guest' : 'guests'}, {nights} nights</div>
+              <div className="text-2xl font-bold text-primary-600">
+                {formatCurrency(offPeakData.totalCost)}
+              </div>
+            </div>
+            {selectedSeason === 'offpeak' && (
+              <div className="mt-3 text-xs text-primary-600 font-medium">
+                ✓ Selected
+              </div>
+            )}
+          </button>
+        </div>
+
+        {/* Savings Callout */}
+        <div className="p-6 bg-green-50 border-2 border-green-200 rounded-lg">
+          <div className="flex items-center gap-3 mb-3">
+            <TrendingDown className="w-6 h-6 text-green-600" />
+            <span className="font-bold text-lg text-neutral-900">Potential Savings</span>
+          </div>
+          <div className="text-3xl font-bold text-green-600 mb-2">
+            {formatCurrency(savings)}
+          </div>
+          <div className="text-sm text-neutral-700">
+            Save <span className="font-bold">{savingsPercent}%</span> by choosing off-peak dates 
+            ({offPeakData.dates}) instead of peak season ({peakData.dates}) 
+            for {guests} {guests === 1 ? 'person' : 'people'}.
           </div>
         </div>
 
-        <div className="border-t border-neutral-200 pt-4">
-          <div className="p-4 bg-neutral-50 border-2 border-neutral-200 rounded-lg">
-            <div className="flex items-center gap-2 mb-2">
-              <TrendingDown className="w-5 h-5 text-primary-600" />
-              <span className="font-semibold text-neutral-900">Potential Savings</span>
-            </div>
-            <div className="text-2xl font-bold text-primary-600 mb-1">
-              {formatCurrency(savings)}
-            </div>
-            <div className="text-sm text-neutral-600">
-              Save {savingsPercent}% by choosing off-peak dates for {groupSize} people, {nights} nights
-            </div>
-          </div>
-        </div>
-
-        <div className="border-t border-neutral-200 pt-6">
+        {/* Matching Hotels */}
+        <div className="pt-6 border-t border-neutral-200">
           <h3 className="text-xl font-bold text-neutral-900 mb-4">
             Available Hotels for {selectedSeason === 'offpeak' ? 'Off-Peak' : 'Peak'} Season
           </h3>
           <p className="text-neutral-600 mb-6">
             {selectedSeason === 'offpeak' 
-              ? `Save ${savingsPercent}% with these off-peak season hotels (${offPeakDates})`
-              : `Premium availability for peak season (${peakDates})`
+              ? `Save ${savingsPercent}% with these off-peak season hotels (${offPeakData.dates})`
+              : `Premium availability for peak season (${peakData.dates})`
             }
           </p>
           <HotelGrid
-            filter={selectedSeason === 'offpeak' ? undefined : 'luxury'}
             limit={3}
-            checkIn={selectedSeason === 'offpeak' 
-              ? (offPeakCheckIn || format(addDays(new Date(), 7), 'yyyy-MM-dd'))
-              : (peakCheckIn || format(addDays(new Date(), 7), 'yyyy-MM-dd'))
-            }
-            checkOut={selectedSeason === 'offpeak'
-              ? (offPeakCheckOut || format(addDays(new Date(), 14), 'yyyy-MM-dd'))
-              : (peakCheckOut || format(addDays(new Date(), 14), 'yyyy-MM-dd'))
-            }
+            checkIn={selectedSeason === 'offpeak' ? offPeakData.checkIn : peakData.checkIn}
+            checkOut={selectedSeason === 'offpeak' ? offPeakData.checkOut : peakData.checkOut}
             title=""
+            displayMode="triple"
           />
         </div>
       </CardContent>
     </Card>
   );
 }
-

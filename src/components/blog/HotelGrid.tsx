@@ -418,20 +418,20 @@ export function HotelGrid({
           {displayMode === 'triple' && (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {hotels.map((hotel) => (
-                <HotelCard
+                  <HotelCard
                   key={hotel.hotel_id}
-                  hotel={hotel}
-                  minPrice={minPrices[hotel.hotel_id]}
-                  currency="USD"
-                  nights={nights}
-                  checkInDate={computedCheckIn || undefined}
-                  checkOutDate={computedCheckOut || undefined}
-                  onSelect={(id) => {
-                    const checkInDate = computedCheckIn || format(addDays(new Date(), 7), 'yyyy-MM-dd');
-                    const checkOutDate = computedCheckOut || format(addDays(new Date(), 14), 'yyyy-MM-dd');
-                    window.location.href = `/places-to-stay/${id}?checkIn=${checkInDate}&checkOut=${checkOutDate}&adults=2&rooms=1`;
-                  }}
-                />
+                    hotel={hotel}
+                    minPrice={minPrices[hotel.hotel_id]}
+                    currency="USD"
+                    nights={nights}
+                    checkInDate={computedCheckIn || undefined}
+                    checkOutDate={computedCheckOut || undefined}
+                    onSelect={(id) => {
+                      const checkInDate = computedCheckIn || format(addDays(new Date(), 7), 'yyyy-MM-dd');
+                      const checkOutDate = computedCheckOut || format(addDays(new Date(), 14), 'yyyy-MM-dd');
+                      window.location.href = `/places-to-stay/${id}?checkIn=${checkInDate}&checkOut=${checkOutDate}&adults=2&rooms=1`;
+                    }}
+                  />
               ))}
             </div>
           )}
