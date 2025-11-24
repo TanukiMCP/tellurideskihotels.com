@@ -81,9 +81,12 @@ export function HotelCard({
       onClick={() => onSelect(hotel.hotel_id)}
     >
       {/* Image Section - Flush to top edge, badge overlays */}
-      <div className={`relative w-full overflow-hidden ${variant === 'compact' ? 'h-[240px]' : 'h-56'} ${
-        !imageUrl ? 'bg-gradient-to-br from-neutral-100 to-neutral-200' : ''
-      }`}>
+      <div 
+        className={`relative w-full overflow-hidden ${variant === 'compact' ? 'h-[240px]' : 'h-56'} ${
+          !imageUrl ? 'bg-gradient-to-br from-neutral-100 to-neutral-200' : ''
+        }`}
+        style={{ position: 'relative', margin: 0, padding: 0 }}
+      >
         {imageUrl ? (
           <img
             src={imageUrl}
@@ -103,9 +106,17 @@ export function HotelCard({
         {/* Subtle gradient overlay */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/5 via-transparent to-transparent pointer-events-none z-[10]" />
         
-        {/* Rating Badge - Absolutely positioned overlay, nested within image with proper padding */}
+        {/* Rating Badge - Absolutely positioned within image container, overlaying top-right corner */}
         {rating > 0 && (
-          <div className={`absolute top-4 right-4 z-[20] ${getRatingStyle(rating)} px-2.5 py-1 rounded-md shadow-md backdrop-blur-sm font-semibold text-sm tracking-tight`}>
+          <div 
+            className={`${getRatingStyle(rating)} px-2.5 py-1 rounded-md shadow-md backdrop-blur-sm font-semibold text-sm tracking-tight`}
+            style={{
+              position: 'absolute',
+              top: '8px',
+              right: '8px',
+              zIndex: 20
+            }}
+          >
             {rating.toFixed(1)}
           </div>
         )}
