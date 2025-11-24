@@ -5,31 +5,26 @@ import BlogLayout from '@/layouts/BlogLayout.astro';
 
 export const prerender = false;
 
-export async function getStaticPaths() {
-  const allArticles = await getCollection('blog', ({ data }) => {
-    return data.status === 'published';
-  });
+const { category, slug } = Astro.params;
 
-  return allArticles.map(article => ({
-    params: {
-      category: article.data.category,
-      slug: article.slug,
-    },
-    props: { article },
-  }));
+if (!category || !slug) {
+  return Astro.redirect('/blog');
 }
 
-interface Props {
-  article: CollectionEntry<'blog'>;
-}
-
-const { article } = Astro.props;
-
-// Get related articles
+// Get all articles and find the one matching category and slug
 const allArticles = await getCollection('blog', ({ data }) => {
   return data.status === 'published';
 });
 
+const article = allArticles.find(
+  (a) => a.data.category === category && a.slug === slug
+);
+
+if (!article) {
+  return Astro.redirect('/blog');
+}
+
+// Get related articles
 let relatedArticles: CollectionEntry<'blog'>[] = [];
 
 // First, try to get articles specified in relatedArticles array
