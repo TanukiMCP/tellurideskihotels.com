@@ -73,10 +73,10 @@ function SingleHotelShowcase({
   };
 
   return (
-    <Card className="overflow-hidden border-2 border-neutral-200 hover:shadow-2xl transition-all duration-300 group cursor-pointer">
+    <Card className="overflow-hidden rounded-xl border border-neutral-200/60 hover:shadow-2xl transition-all duration-300 group cursor-pointer">
       <div className="grid md:grid-cols-2 gap-0">
         {/* Image Section - Left side, full height */}
-        <div className="relative h-[400px] md:h-auto overflow-hidden bg-gradient-to-br from-neutral-50 to-neutral-100">
+        <div className="relative h-[400px] md:h-auto overflow-hidden bg-gradient-to-br from-neutral-50 to-neutral-100 md:rounded-l-xl">
           {imageUrl ? (
             <img
               src={imageUrl}
@@ -102,7 +102,7 @@ function SingleHotelShowcase({
         </div>
 
         {/* Content Section - Right side */}
-        <div className="flex flex-col p-8 bg-white">
+        <div className="flex flex-col p-8 bg-white md:rounded-r-xl">
           {/* Header */}
           <div className="mb-6">
             <h3 className="text-3xl font-bold text-neutral-900 mb-3 leading-tight group-hover:text-primary-700 transition-colors" title={hotel.name}>
