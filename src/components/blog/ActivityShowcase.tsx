@@ -26,29 +26,29 @@ export function ActivityShowcase({
     fetchActivities();
   }, [category, limit]);
 
-  async function fetchActivities() {
-    try {
+    async function fetchActivities() {
+      try {
       setLoading(true);
       setError(null);
       
-      const params = new URLSearchParams({
-        destination: 'Telluride',
-        limit: limit.toString(),
-      });
+        const params = new URLSearchParams({
+          destination: 'Telluride',
+          limit: limit.toString(),
+        });
 
-      if (category) {
-        params.set('category', category);
-      }
-      
-      const response = await fetch(`/api/viator/search?${params.toString()}`);
-      
-      if (!response.ok) {
+        if (category) {
+          params.set('category', category);
+        }
+        
+        const response = await fetch(`/api/viator/search?${params.toString()}`);
+        
+        if (!response.ok) {
         throw new Error('Failed to load activities');
-      }
-      
-      const data = await response.json();
-      setActivities(data.products || []);
-    } catch (err) {
+        }
+        
+        const data = await response.json();
+        setActivities(data.products || []);
+      } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to load activities');
       setActivities([]);
     } finally {
@@ -85,7 +85,7 @@ export function ActivityShowcase({
   }
 
   if (activities.length === 0) {
-    return (
+  return (
       <Card className="my-12 not-prose border-2 border-primary-200">
         <CardHeader className="bg-gradient-to-r from-primary-50 to-primary-100 border-b border-primary-200">
           <div className="flex items-center gap-3">
@@ -103,10 +103,10 @@ export function ActivityShowcase({
         <CardContent className="py-12">
           <div className="text-center">
             <p className="text-neutral-600 mb-4">No activities available at this time</p>
-            <a
-              href="/things-to-do"
+          <a
+            href="/things-to-do"
               className="inline-flex items-center justify-center gap-2 bg-primary-600 hover:bg-primary-700 text-white font-semibold px-6 py-3 rounded-lg transition-colors duration-200 shadow-md hover:shadow-lg"
-            >
+          >
               Browse All Activities
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -137,27 +137,27 @@ export function ActivityShowcase({
       </CardHeader>
       <CardContent className="p-6">
         {/* Activity Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {activities.slice(0, limit).map((activity) => (
-            <ActivityCard
-              key={activity.productCode}
-              activity={activity}
-            />
-          ))}
-        </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {activities.slice(0, limit).map((activity) => (
+          <ActivityCard
+            key={activity.productCode}
+            activity={activity}
+          />
+        ))}
+      </div>
 
         {/* CTA to see more */}
         <div className="mt-8 pt-6 border-t border-neutral-200 text-center">
-          <a
-            href={`/things-to-do${category ? `?category=${category}` : ''}`}
+        <a
+          href={`/things-to-do${category ? `?category=${category}` : ''}`}
             className="inline-flex items-center justify-center gap-2 bg-primary-600 hover:bg-primary-700 text-white font-semibold px-8 py-3.5 rounded-lg transition-colors duration-200 shadow-md hover:shadow-lg"
-          >
-            Explore All Activities
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-            </svg>
-          </a>
-        </div>
+        >
+          Explore All Activities
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+          </svg>
+        </a>
+      </div>
       </CardContent>
     </Card>
   );

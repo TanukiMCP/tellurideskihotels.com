@@ -222,11 +222,11 @@ export function TripCalculator({
 
         {/* Cost Tiers */}
         <div>
-          <h3 className="text-lg font-semibold text-neutral-900 mb-4">
+              <h3 className="text-lg font-semibold text-neutral-900 mb-4">
             Select Your Budget Tier
-          </h3>
-          <div className="grid gap-4 md:grid-cols-3">
-            {(['budget', 'midRange', 'luxury'] as const).map((tier) => {
+              </h3>
+              <div className="grid gap-4 md:grid-cols-3">
+                {(['budget', 'midRange', 'luxury'] as const).map((tier) => {
               const costs = calculateTierCosts(tier);
               const tierLabels = {
                 budget: 'Budget',
@@ -234,16 +234,16 @@ export function TripCalculator({
                 luxury: 'Luxury',
               };
 
-              return (
-                <button
-                  key={tier}
-                  onClick={() => setSelectedTier(tier)}
+                  return (
+                    <button
+                      key={tier}
+                      onClick={() => setSelectedTier(tier)}
                   className={`p-5 border-2 rounded-lg text-left transition-all hover:shadow-md ${
-                    selectedTier === tier
+                        selectedTier === tier
                       ? 'border-primary-500 bg-primary-50 shadow-sm ring-2 ring-primary-200'
                       : 'border-neutral-200 hover:border-primary-200 bg-white'
-                  }`}
-                >
+                      }`}
+                    >
                   <div className="text-sm font-medium text-neutral-600 mb-2">{tierLabels[tier]}</div>
                   <div className="text-3xl font-bold text-primary-600 mb-1">
                     {formatCurrency(costs.perPerson)}
@@ -260,36 +260,36 @@ export function TripCalculator({
                     <div className="text-lg font-bold text-neutral-900">
                       {formatCurrency(costs.total)}
                     </div>
-                  </div>
+                      </div>
                   {selectedTier === tier && (
                     <div className="mt-3 text-xs text-primary-600 font-medium">
                       ✓ Selected
-                    </div>
+                      </div>
                   )}
-                </button>
-              );
-            })}
-          </div>
-        </div>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
 
         {/* Matching Hotels */}
         <div className="pt-6 border-t border-neutral-200">
-          <h3 className="text-xl font-bold text-neutral-900 mb-4">
+              <h3 className="text-xl font-bold text-neutral-900 mb-4">
             {selectedTier === 'budget' ? 'Budget' : selectedTier === 'midRange' ? 'Mid-Range' : 'Luxury'} Hotels
-          </h3>
-          <p className="text-neutral-600 mb-6">
+              </h3>
+              <p className="text-neutral-600 mb-6">
             Based on {guests} {guests === 1 ? 'guest' : 'guests'} for {nights} {nights === 1 ? 'night' : 'nights'}, 
             here are hotels around {formatCurrency(lodgingRates[selectedTier])}/night:
-          </p>
-          <HotelGrid
+              </p>
+              <HotelGrid
             filter={selectedTier === 'budget' ? 'budget' : selectedTier === 'luxury' ? 'luxury' : undefined}
-            limit={3}
+                limit={3}
             checkIn={defaultCheckInDate}
             checkOut={defaultCheckOutDate}
-            title=""
+                title=""
             displayMode="triple"
-          />
-        </div>
+              />
+            </div>
       </CardContent>
     </Card>
   );
