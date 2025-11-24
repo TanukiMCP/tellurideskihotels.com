@@ -64,12 +64,11 @@ This comprehensive guide provides everything you need to plan your Telluride bac
 
 Use the cost calculator below to estimate total party expenses based on group size, trip length, and travel dates. Understanding costs helps groups make informed decisions about accommodations, activities, and budget allocation.
 
-<GroupCostCalculator 
-  groupType="friends"
+<TripCalculator 
   defaultNights={3}
   defaultGuests={8}
-  checkIn="2025-02-15"
-  checkOut="2025-02-18"
+  title="Party Trip Cost Calculator"
+  client:load
 />
 
 For information about planning general friend group trips, see our [friends ski trip guide](/blog/planning-tips/telluride-friends-ski-trip). To understand seasonal timing and when to visit, check our [ski season guide](/blog/planning-tips/telluride-ski-season-guide). For accommodation options, review our [where to stay guide](/blog/destination-guides/where-to-stay-telluride).
@@ -94,11 +93,6 @@ Two months before the party, finalize activity schedules, make restaurant reserv
 
 One month before the party, send final details to all attendees, confirm reservations, and handle last-minute logistics. Final attendee counts help adjust accommodations if needed, while confirmation calls to properties and activities prevent surprises. Last-minute details like grocery lists for condos, group communication apps, and emergency contact information should be distributed to all attendees.
 
-<EventPlanningTimeline 
-  eventType="celebration"
-  eventDate="2025-02-15"
-  groupSize={8}
-/>
 
 ## Group Lodging Strategies
 
@@ -112,11 +106,10 @@ Hotels work well for smaller parties (6-8 people) or groups wanting resort ameni
 
 Hybrid options combine space advantages with hotel services. Some properties offer condominium-style units within hotel complexes, providing kitchen facilities and multiple bedrooms while maintaining access to hotel amenities. These options work well for parties wanting both space and services, though they command premium rates that groups should evaluate against their specific needs.
 
-<HotelSplitCalculator 
+<HotelComparison 
   hotelIds={["lp4153f", "lp4b27f", "lp21ee2"]}
-  scenario="bachelor-party-10"
-  defaultNights={3}
-  defaultGuests={10}
+  title="Compare Group-Friendly Hotels"
+  client:load
 />
 
 ## Activity Planning and Recommendations
@@ -133,12 +126,11 @@ Evening activities vary significantly based on party preferences and the guest o
 
 Special experiences create memorable moments that distinguish bachelor and bachelorette parties from regular friend trips. Private group lessons, guided backcountry tours, helicopter skiing, or special dining experiences provide unique opportunities that celebrate the occasion. These premium experiences add costs but create memories that extend beyond the trip itself. Parties should balance special experiences with regular activities to manage budgets while ensuring celebration feels special.
 
-<BudgetToItineraryPlanner 
-  budgetPerPerson={1200}
-  tripLength={3}
-  groupSize={8}
-  checkIn="2025-02-15"
-  checkOut="2025-02-18"
+<TripCalculator 
+  defaultNights={3}
+  defaultGuests={8}
+  title="Plan Your Party Budget"
+  client:load
 />
 
 ## Cost Management for Parties

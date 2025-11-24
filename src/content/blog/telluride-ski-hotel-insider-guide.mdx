@@ -55,9 +55,7 @@
 
 import { HotelGrid } from '@/components/blog/HotelGrid';
 import { ArticleBookingWidget } from '@/components/blog/ArticleBookingWidget';
-import { GroupTypeRecommender } from '@/components/planning/GroupTypeRecommender';
 import { HotelComparison } from '@/components/planning/HotelComparison';
-import { CostPerPersonRanking } from '@/components/planning/CostPerPersonRanking';
 import { HotelShowcase } from '@/components/blog/HotelShowcase';
 
 
@@ -67,7 +65,6 @@ Where you stay in Telluride should match how you ski. The powder hound chasing f
 
 We've analyzed skiing patterns, interviewed guests, and evaluated properties specifically through the lens of different skier types. Whether you're maximizing vertical feet, teaching kids, recovering from injuries, or simply want to ski in the morning and explore town at night, this guide identifies your perfect Telluride basecamp based on what actually matters for your skiing style.
 
-<GroupTypeRecommender client:load />
 
 ![Skier enjoying fresh powder snow at Telluride ski resort with mountain peaks in background](https://images.pexels.com/photos/2405649/pexels-photo-2405649.jpeg?auto=compress&cs=tinysrgb&h=350)
 *Photo by [Melvin Wahlin](https://www.pexels.com/@melvinwahlin) via Pexels*
@@ -107,9 +104,8 @@ Downtown's Mountain Lodge puts you two blocks from the gondola while offering fu
 
 The rooftop hot tub becomes essential for maintaining multi-day powder skiing stamina. Your legs need recovery to perform on day three and four of a storm cycle.
 
-<CostPerPersonRanking 
-  groupSize={2}
-  nights={4}
+<HotelComparison 
+  title="Compare Hotels by Cost Per Person"
   client:load
 />
 

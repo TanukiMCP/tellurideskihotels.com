@@ -56,8 +56,6 @@
 import { HotelGrid } from '@/components/blog/HotelGrid';
 import { ArticleBookingWidget } from '@/components/blog/ArticleBookingWidget';
 import { HotelComparison } from '@/components/planning/HotelComparison';
-import { CostPerPersonRanking } from '@/components/planning/CostPerPersonRanking';
-import { HotelSplitCalculator } from '@/components/planning/HotelSplitCalculator';
 
 
 # Slopeside vs Town Hotels in Telluride: Complete Comparison Guide
@@ -124,8 +122,9 @@ A week downtown at Hotel Telluride ($300/night average) costs $2,100 versus $5,6
 
 Downtown value extends beyond room rates. Restaurant variety provides more affordable dining options than resort restaurants. Walking to bars eliminates ride-share costs. Free street parking exists in some areas (though limited). The sum of these savings compounds significantly across week-long stays.
 
-<CostPerPersonRanking 
+<HotelComparison 
   hotelIds={["lp4b27f", "lp2ff71", "lp35ebc", "lp7924d"]}
+  title="Compare Hotels by Cost Per Person"
   client:load
 />
 
@@ -249,8 +248,9 @@ This approach works particularly well for week-long trips. Front-load your skiin
 
 The split-stay compromise lets you experience both Telluride dimensions—the skiing-focused resort experience and the authentic mountain town atmosphere. You'll spend more on total accommodations versus single-location weeks, but the variety prevents location fatigue while delivering both convenience and character.
 
-<HotelSplitCalculator 
+<HotelComparison 
   hotelIds={["lp4b27f", "lp2ff71", "lp4153f"]}
+  title="Compare Accommodation Options"
   client:load
 />
 

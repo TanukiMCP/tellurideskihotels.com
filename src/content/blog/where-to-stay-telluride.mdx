@@ -42,8 +42,7 @@ seasonalRelevance: ["winter", "spring", "summer", "fall"]
 
 import { ArticleBookingWidget } from '@/components/blog/ArticleBookingWidget';
 import { HotelGrid } from '@/components/blog/HotelGrid';
-import { HotelSplitCalculator } from '@/components/planning/HotelSplitCalculator';
-import { CostPerPersonRanking } from '@/components/planning/CostPerPersonRanking';
+import { HotelComparison } from '@/components/planning/HotelComparison';
 
 # Where to Stay in Telluride: Complete Lodging Guide (2025)
 
@@ -269,8 +268,9 @@ Telluride's free gondola is North America's only complimentary public transporta
 
 **Best For:** Large groups, families, budget-conscious travelers willing to cook, longer stays (week+)
 
-<HotelSplitCalculator 
+<HotelComparison 
   hotelIds={["lp4153f", "lp35351", "lp3e47f"]}
+  title="Compare Vacation Rentals"
   client:load
 />
 
@@ -490,10 +490,9 @@ Trade-off: Cook some meals, no daily housekeeping
 Savings: 30-50% vs peak season
 Trade-off: Potentially variable conditions early/late season
 
-<CostPerPersonRanking 
-  groupSize={2}
-  nights={4}
+<HotelComparison 
   hotelIds={["lp21ee2", "lp2ff71", "lp35ebc"]}
+  title="Compare Hotels by Cost Per Person"
   client:load
 />
 
