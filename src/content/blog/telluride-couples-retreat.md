@@ -3,7 +3,7 @@
   "id": "telluride-couples-retreat",
   "title": "Telluride Couples Retreat: Romantic Getaway Planner (2025)",
   "slug": "telluride-couples-retreat",
-  "status": "scheduled",
+  "status": "published",
   "category": "planning-tips",
   "author": "Telluride Ski Hotels Team",
   "publishDate": "2025-11-23T15:00:00Z",
@@ -47,7 +47,8 @@
     "spring",
     "summer",
     "fall"
-  ]
+  ],
+  "updatedDate": "2025-11-24T14:11:12.006Z"
 }
 ---
 

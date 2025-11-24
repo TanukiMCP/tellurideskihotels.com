@@ -20,7 +20,7 @@
     "canonical": "https://tellurideskihotels.com/blog/planning-tips/telluride-bachelor-bachelorette-party"
   },
   "featured": false,
-  "featuredImage": "https://images.pexels.com/photos/7357314/pexels-photo-7357314.jpeg?auto=compress&dpr=2&h=650&w=940",
+  "featuredImage": "https://images.pexels.com/photos/7357314/pexels-photo-7357314.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
   "featuredImageAlt": "Two women in winter attire enjoying hot beverages by the ski slopes at night",
   "excerpt": "Complete planning guide for Telluride bachelor and bachelorette parties: event timeline, group lodging strategies, activity recommendations, cost breakdowns, and expert tips for memorable...",
   "wordCount": 2900,
@@ -49,7 +49,7 @@
     "summer",
     "fall"
   ],
-  "updatedDate": "2025-11-23T14:08:06.075Z"
+  "updatedDate": "2025-11-24T14:11:12.003Z"
 }
 ---
 
@@ -59,16 +59,17 @@ Planning a Telluride bachelor or bachelorette party requires coordinating group 
 
 This comprehensive guide provides everything you need to plan your Telluride bachelor or bachelorette party: detailed event planning timelines showing when to book accommodations and activities, group lodging strategies that accommodate party sizes while maintaining budgets, activity recommendations spanning skiing, après-ski, and non-skiing options, cost breakdowns helping groups understand expenses, and insider tips that help party planners create memorable experiences without becoming overwhelmed by logistics. Whether you're organizing a weekend ski celebration or a longer trip combining multiple activities, understanding Telluride's party offerings and planning strategically transforms a potentially chaotic experience into an exceptional celebration.
 
-![Two women in winter attire enjoying hot beverages by the ski slopes at night](https://images.pexels.com/photos/7357314/pexels-photo-7357314.jpeg?auto=compress&w=1200&h=800&fit=crop&dpr=2)
+![Two women in winter attire enjoying hot beverages by the ski slopes at night](https://images.pexels.com/photos/7357314/pexels-photo-7357314.jpeg?auto=compress&cs=tinysrgb&h=350)
 *Photo by [cottonbro studio](https://www.pexels.com/@cottonbro) via Pexels*
 
 Use the cost calculator below to estimate total party expenses based on group size, trip length, and travel dates. Understanding costs helps groups make informed decisions about accommodations, activities, and budget allocation.
 
-<TripCalculator 
+<GroupCostCalculator 
+  groupType="friends"
   defaultNights={3}
   defaultGuests={8}
-  title="Party Trip Cost Calculator"
-  client:load
+  checkIn="2025-02-15"
+  checkOut="2025-02-18"
 />
 
 For information about planning general friend group trips, see our [friends ski trip guide](/blog/planning-tips/telluride-friends-ski-trip). To understand seasonal timing and when to visit, check our [ski season guide](/blog/planning-tips/telluride-ski-season-guide). For accommodation options, review our [where to stay guide](/blog/destination-guides/where-to-stay-telluride).
@@ -93,6 +94,11 @@ Two months before the party, finalize activity schedules, make restaurant reserv
 
 One month before the party, send final details to all attendees, confirm reservations, and handle last-minute logistics. Final attendee counts help adjust accommodations if needed, while confirmation calls to properties and activities prevent surprises. Last-minute details like grocery lists for condos, group communication apps, and emergency contact information should be distributed to all attendees.
 
+<EventPlanningTimeline 
+  eventType="celebration"
+  eventDate="2025-02-15"
+  groupSize={8}
+/>
 
 ## Group Lodging Strategies
 
@@ -106,10 +112,11 @@ Hotels work well for smaller parties (6-8 people) or groups wanting resort ameni
 
 Hybrid options combine space advantages with hotel services. Some properties offer condominium-style units within hotel complexes, providing kitchen facilities and multiple bedrooms while maintaining access to hotel amenities. These options work well for parties wanting both space and services, though they command premium rates that groups should evaluate against their specific needs.
 
-<HotelComparison 
-  hotelIds={["lp4153f", "lp4b27f", "lp21ee2"]}
-  title="Compare Group-Friendly Hotels"
-  client:load
+<HotelSplitCalculator 
+  hotelIds={["mountain-village-condo", "madeline-hotel", "peaks-resort"]}
+  scenario="bachelor-party-10"
+  defaultNights={3}
+  defaultGuests={10}
 />
 
 ## Activity Planning and Recommendations
@@ -126,11 +133,12 @@ Evening activities vary significantly based on party preferences and the guest o
 
 Special experiences create memorable moments that distinguish bachelor and bachelorette parties from regular friend trips. Private group lessons, guided backcountry tours, helicopter skiing, or special dining experiences provide unique opportunities that celebrate the occasion. These premium experiences add costs but create memories that extend beyond the trip itself. Parties should balance special experiences with regular activities to manage budgets while ensuring celebration feels special.
 
-<TripCalculator 
-  defaultNights={3}
-  defaultGuests={8}
-  title="Plan Your Party Budget"
-  client:load
+<BudgetToItineraryPlanner 
+  budgetPerPerson={1200}
+  tripLength={3}
+  groupSize={8}
+  checkIn="2025-02-15"
+  checkOut="2025-02-18"
 />
 
 ## Cost Management for Parties
@@ -168,7 +176,7 @@ Budget transparency prevents conflicts about costs and spending. Sharing accommo
 
 Celebration elements distinguish bachelor and bachelorette parties from regular trips. Decorations, special activities, group gifts, or themed experiences create moments that celebrate the occasion appropriately. These elements don't need to be expensive—simple touches like group photos, special toasts, or coordinated outfits can create celebration atmosphere without adding significant costs. The key is ensuring celebration feels special while maintaining budgets that work for all attendees.
 
-![Women enjoying warm beverages by a fire outdoors on a snowy winter night](https://images.pexels.com/photos/7357317/pexels-photo-7357317.jpeg?auto=compress&w=1200&h=800&fit=crop&dpr=2)
+![Women enjoying warm beverages by a fire outdoors on a snowy winter night](https://images.pexels.com/photos/7357317/pexels-photo-7357317.jpeg?auto=compress&cs=tinysrgb&h=350)
 *Photo by [cottonbro studio](https://www.pexels.com/@cottonbro) via Pexels*
 
 ## Practical Planning Tips

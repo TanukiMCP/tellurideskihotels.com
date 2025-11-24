@@ -3,7 +3,7 @@
   "id": "telluride-multi-family-ski-trip",
   "title": "Telluride Multi-Family Ski Trip: Large Group Planning Guide (2025)",
   "slug": "telluride-multi-family-ski-trip",
-  "status": "scheduled",
+  "status": "published",
   "category": "planning-tips",
   "author": "Telluride Ski Hotels Team",
   "publishDate": "2025-11-24T15:00:00Z",
@@ -44,7 +44,8 @@
   ],
   "seasonalRelevance": [
     "winter"
-  ]
+  ],
+  "updatedDate": "2025-11-24T14:11:12.008Z"
 }
 ---
 
