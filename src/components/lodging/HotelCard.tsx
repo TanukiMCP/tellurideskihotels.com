@@ -113,10 +113,13 @@ export function HotelCard({
       
       {/* Content Section - Proper spacing, no overlap */}
       <div className="flex flex-col flex-grow bg-white p-4">
-        {/* Property Name */}
-        <h3 className={`font-bold text-neutral-900 leading-tight line-clamp-2 tracking-tight group-hover:text-primary-700 transition-colors mb-3 ${
-          variant === 'compact' ? 'text-lg' : 'text-xl'
-        }`}>
+        {/* Property Name - Truncates to 2 lines, shows full name on hover */}
+        <h3 
+          className={`font-bold text-neutral-900 leading-tight line-clamp-2 tracking-tight group-hover:text-primary-700 transition-colors mb-3 ${
+            variant === 'compact' ? 'text-lg' : 'text-xl'
+          }`}
+          title={hotel.name}
+        >
           {hotel.name}
         </h3>
         
@@ -173,34 +176,34 @@ export function HotelCard({
         {/* Price */}
         {minPrice && minPrice > 0 && (
           <div className="mb-3 flex-shrink-0">
-            <div className="flex items-baseline gap-1.5">
+                <div className="flex items-baseline gap-1.5">
               <span className={`font-bold text-primary-600 tracking-tight ${
                 variant === 'compact' ? 'text-lg' : 'text-xl'
               }`}>
-                {formatCurrency(minPrice, currency)}
-              </span>
+                    {formatCurrency(minPrice, currency)}
+                  </span>
               <span className="text-xs text-neutral-500">/ night</span>
-            </div>
-          </div>
+                </div>
+              </div>
         )}
-        
+              
         {/* CTA Button - Explicit 16px top margin if description exists */}
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            onSelect(hotel.hotel_id);
-          }}
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onSelect(hotel.hotel_id);
+                }}
           className={`w-full bg-primary-600 hover:bg-primary-700 text-white font-semibold rounded-lg transition-all duration-200 shadow-sm hover:shadow-md hover:scale-[1.02] active:scale-[0.98] flex-shrink-0 ${
             variant === 'compact' ? 'py-2.5 px-3 text-sm' : 'py-3 px-4'
           }`}
           style={{ marginTop: descriptionText ? '16px' : '0px' }}
-          type="button"
-        >
+                type="button"
+              >
           {minPrice && minPrice > 0 
             ? (variant === 'compact' ? 'View Rates' : 'Check Availability')
             : 'View Details & Rates'
           }
-        </button>
+              </button>
       </div>
     </Card>
   );
