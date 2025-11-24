@@ -192,12 +192,14 @@ async function main() {
         const photos = await fetchPexelsImages(query, config.perQuery);
 
         if (photos.length > 0) {
-          const formattedImages = photos.map(photo => formatImageData(photo, category, query));
+          // Filter out portrait images (width < height) as safety check
+          const landscapePhotos = photos.filter(photo => photo.width > photo.height);
+          const formattedImages = landscapePhotos.map(photo => formatImageData(photo, category, query));
           imageLibrary.images.push(...formattedImages);
-          imageLibrary.categories[category].count += photos.length;
-          totalFetched += photos.length;
+          imageLibrary.categories[category].count += landscapePhotos.length;
+          totalFetched += landscapePhotos.length;
 
-          log(`  ✅ Added ${photos.length} images`, 'green');
+          log(`  ✅ Added ${landscapePhotos.length} landscape images (${photos.length - landscapePhotos.length} portrait filtered out)`, 'green');
         }
 
         // Rate limiting: wait 1 second between requests
