@@ -45,7 +45,7 @@ updatedDate: 2025-11-21T22:44:24.844Z
 import { ArticleBookingWidget } from '@/components/blog/ArticleBookingWidget';
 import { HotelGrid } from '@/components/blog/HotelGrid';
 import { ActivityShowcase } from '@/components/blog/ActivityShowcase';
-import { GroupCostCalculator } from '@/components/planning/GroupCostCalculator';
+import { TripCalculator } from '@/components/planning/TripCalculator';
 
 # Telluride Family Ski Vacation: Complete Planning Guide & Cost Breakdown (2025)
 
@@ -56,12 +56,12 @@ This comprehensive guide provides everything you need to plan your Telluride fam
 ![Family having fun on a ski lift with snow-covered mountains in the background during a sunny winter day](https://images.pexels.com/photos/15744603/pexels-photo-15744603.jpeg?auto=compress&cs=tinysrgb&h=350)
 *Photo by [karim desouki](https://www.pexels.com/@karim-desouki-468172584) via Pexels*
 
-Use the cost calculator below to estimate your family's total trip expenses based on your group size, trip length, and travel dates. This tool helps you understand where your budget goes and identify opportunities to optimize costs.
+Use the cost calculator below to estimate your family's total trip expenses based on your group size and trip length. This tool helps you understand where your budget goes and shows matching hotels for your selected budget tier.
 
-<GroupCostCalculator 
-  groupType="family"
+<TripCalculator 
   defaultNights={4}
   defaultGuests={6}
+  title="Family Trip Cost Calculator"
   client:load
 />
 
@@ -96,11 +96,10 @@ For smaller families (2 adults, 1-2 children), hotel rooms often provide better 
 
 Larger families (2 adults, 3+ children) typically find condominiums more cost-effective when calculating per-person expenses. A 3-bedroom condo accommodating 6-8 people often costs $600-900 per night, translating to $75-150 per person compared to $200-300 per person for multiple hotel rooms. The kitchen facilities allow significant dining cost savings, with families preparing breakfast and some dinners reducing restaurant expenses by 40-50%. The additional space provides separate bedrooms for children and adults, living areas for downtime, and storage for equipment and gear.
 
-<HotelSplitCalculator 
-  hotelIds={["lp1f957", "lp4b27f", "lp57ca3"]}
-  scenario="family-of-6"
-  defaultNights={4}
-  defaultGuests={6}
+<HotelGrid 
+  limit={3}
+  title="Compare Family Accommodation Options"
+  client:load
 />
 
 Location considerations matter significantly for families. Mountain Village condos provide ski-in/ski-out convenience, eliminating morning commutes and allowing children to return to accommodations easily for breaks or early finishes. Downtown Telluride condos offer gondola access to skiing plus walkable access to restaurants, shops, and activities, creating a different experience that some families prefer. The free gondola connecting both areas means families can choose either location without sacrificing access to the other, making the decision more about atmosphere and preferences than pure logistics.
