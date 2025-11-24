@@ -8,8 +8,8 @@
   "author": "Telluride Ski Hotels Team",
   "publishDate": "2025-11-24T15:00:00Z",
   "seo": {
-    "metaTitle": "Telluride Multi-Family Ski Trip Guide 2025 | Large Group Planning",
-    "metaDescription": "Complete guide to planning a Telluride multi-family ski trip: large group logistics, cost coordination, accommodation options for multiple families, and tips for successful group trips.",
+    "metaTitle": "Telluride Multi-Family Ski Trip 2025 | Group Planning",
+    "metaDescription": "Plan a Telluride multi-family ski trip: large group logistics, cost coordination, accommodation options for multiple families, and tips for success.",
     "keywords": [
       "telluride group lodging",
       "telluride family reunion",

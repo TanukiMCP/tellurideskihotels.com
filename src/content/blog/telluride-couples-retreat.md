@@ -8,8 +8,8 @@
   "author": "Telluride Ski Hotels Team",
   "publishDate": "2025-11-23T15:00:00Z",
   "seo": {
-    "metaTitle": "Telluride Couples Retreat Guide 2025 | Romantic Getaway Planning",
-    "metaDescription": "Complete guide to planning a romantic Telluride couples retreat: budget planning, romantic activities, best times to visit, accommodation recommendations, and tips for couples.",
+    "metaTitle": "Telluride Couples Retreat 2025 | Romantic Getaway",
+    "metaDescription": "Plan a romantic Telluride couples retreat: budget planning, activities, best times to visit, accommodation recommendations, and expert tips for couples.",
     "keywords": [
       "telluride romantic getaway",
       "telluride couples trip",
