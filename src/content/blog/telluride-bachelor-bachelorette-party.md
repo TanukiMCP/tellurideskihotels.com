@@ -20,7 +20,7 @@
     "canonical": "https://tellurideskihotels.com/blog/planning-tips/telluride-bachelor-bachelorette-party"
   },
   "featured": false,
-  "featuredImage": "https://images.pexels.com/photos/7357314/pexels-photo-7357314.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+  "featuredImage": "https://images.pexels.com/photos/7357314/pexels-photo-7357314.jpeg?auto=compress&dpr=2&h=650&w=940",
   "featuredImageAlt": "Two women in winter attire enjoying hot beverages by the ski slopes at night",
   "excerpt": "Complete planning guide for Telluride bachelor and bachelorette parties: event timeline, group lodging strategies, activity recommendations, cost breakdowns, and expert tips for memorable...",
   "wordCount": 2900,
@@ -59,7 +59,7 @@ Planning a Telluride bachelor or bachelorette party requires coordinating group 
 
 This comprehensive guide provides everything you need to plan your Telluride bachelor or bachelorette party: detailed event planning timelines showing when to book accommodations and activities, group lodging strategies that accommodate party sizes while maintaining budgets, activity recommendations spanning skiing, après-ski, and non-skiing options, cost breakdowns helping groups understand expenses, and insider tips that help party planners create memorable experiences without becoming overwhelmed by logistics. Whether you're organizing a weekend ski celebration or a longer trip combining multiple activities, understanding Telluride's party offerings and planning strategically transforms a potentially chaotic experience into an exceptional celebration.
 
-![Two women in winter attire enjoying hot beverages by the ski slopes at night](https://images.pexels.com/photos/7357314/pexels-photo-7357314.jpeg?auto=compress&cs=tinysrgb&h=350)
+![Two women in winter attire enjoying hot beverages by the ski slopes at night](https://images.pexels.com/photos/7357314/pexels-photo-7357314.jpeg?auto=compress&w=1200&h=800&fit=crop&dpr=2)
 *Photo by [cottonbro studio](https://www.pexels.com/@cottonbro) via Pexels*
 
 Use the cost calculator below to estimate total party expenses based on group size, trip length, and travel dates. Understanding costs helps groups make informed decisions about accommodations, activities, and budget allocation.
@@ -168,7 +168,7 @@ Budget transparency prevents conflicts about costs and spending. Sharing accommo
 
 Celebration elements distinguish bachelor and bachelorette parties from regular trips. Decorations, special activities, group gifts, or themed experiences create moments that celebrate the occasion appropriately. These elements don't need to be expensive—simple touches like group photos, special toasts, or coordinated outfits can create celebration atmosphere without adding significant costs. The key is ensuring celebration feels special while maintaining budgets that work for all attendees.
 
-![Women enjoying warm beverages by a fire outdoors on a snowy winter night](https://images.pexels.com/photos/7357317/pexels-photo-7357317.jpeg?auto=compress&cs=tinysrgb&h=350)
+![Women enjoying warm beverages by a fire outdoors on a snowy winter night](https://images.pexels.com/photos/7357317/pexels-photo-7357317.jpeg?auto=compress&w=1200&h=800&fit=crop&dpr=2)
 *Photo by [cottonbro studio](https://www.pexels.com/@cottonbro) via Pexels*
 
 ## Practical Planning Tips
