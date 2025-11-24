@@ -1461,6 +1461,15 @@ The [National Weather Service Grand Junction office](https://www.weather.gov/gjt
 
 **CRITICAL REQUIREMENT:** Every article MUST include interactive components. These are not optional - they are essential conversion tools that drive bookings and revenue.
 
+**Available Component Types:**
+1. **Hotel Displays:** `HotelShowcase`, `HotelGrid` - For featuring specific properties
+2. **Visual Context:** `BlogMap` - For geographic/location understanding (trails, hotel proximity, area overview)
+3. **Booking CTAs:** `ArticleBookingWidget` - For conversion points
+4. **Planning Tools:** `GroupCostCalculator`, `SeasonComparison`, etc. - For engagement
+5. **Activities:** `ActivityShowcase` - For highlighting experiences
+
+**⚠️ VARIETY IS KEY:** Don't overuse any single component type. Balance hotel grids with maps and planning tools. Use `BlogMap` when content discusses geography, locations, or spatial relationships instead of adding more hotel widgets.
+
 ### 1. HotelShowcase (Single Hotel Display - For Listicles)
 
 **Use Case:** Featuring ONE specific hotel with rich details, real-time price, and IMAGE GALLERY in a dedicated section.
@@ -1700,7 +1709,128 @@ The Madeline and Peaks Resort both offer exceptional ski-in/ski-out access with 
 - `description` (Optional): Custom description.
 - `image` (Optional): Specific image URL (if not using default).
 
-### 4. ArticleBookingWidget (Flexible CTA)
+### 4. BlogMap (Interactive Map Widget)
+
+**Use Case:** Visual storytelling, location context, geographic understanding. Adds visual variety beyond hotel grids and calculators.
+**Best For:** Ski guides (trails/terrain), hotel reviews (location context), destination guides (geography), comparison articles (location differences).
+
+**⚠️ WHEN TO USE BlogMap:**
+- When discussing geography, locations, or spatial relationships
+- When comparing downtown vs Mountain Village
+- When discussing specific trails or terrain areas
+- When showing hotel proximity to lifts/trails
+- When explaining the gondola connection between areas
+- **Use BlogMap INSTEAD OF additional HotelGrid widgets** when the content is about location/geography rather than booking
+
+**Presets Available:**
+
+| Preset | Default View | Features | Best For |
+|--------|--------------|----------|----------|
+| `resort` | Ski area centered | Trails, lifts | Ski guides, terrain articles |
+| `town` | Downtown Telluride | Streets | Restaurant guides, nightlife |
+| `mountain-village` | Mountain Village | Hotels, lifts | Lodging articles |
+| `overview` | Both areas | Gondola connection | Location comparisons |
+| `hotels` | Auto-fit to hotels | Hotel markers | Hotel reviews, listicles |
+| `trails` | Trail-focused | Color-coded difficulty | Terrain guides |
+
+**Syntax Examples:**
+
+**Basic Resort Overview:**
+```markdown
+<BlogMap 
+  preset="overview"
+  caption="Downtown Telluride and Mountain Village connected by the free gondola"
+  client:load
+/>
+```
+
+**Show Specific Hotels with Lifts:**
+```markdown
+<BlogMap 
+  preset="hotels"
+  hotelIds={["lp4b27f", "lp3e47f"]}
+  showLifts={true}
+  caption="The Madeline and Peaks Resort offer ski-in/ski-out access"
+  client:load
+/>
+```
+
+**Trail-Focused with 3D Terrain:**
+```markdown
+<BlogMap 
+  preset="trails"
+  terrain={true}
+  highlightTrails={["The Plunge", "Spiral Stairs"]}
+  caption="Expert terrain on Gold Hill and Revelation Bowl"
+  client:load
+/>
+```
+
+**Custom Markers for Points of Interest:**
+```markdown
+<BlogMap 
+  preset="overview"
+  markers={[
+    { lng: -107.8123, lat: 37.9375, label: "Downtown", icon: "default" },
+    { lng: -107.848, lat: 37.939, label: "Mountain Village", icon: "hotel" },
+    { lng: -107.815, lat: 37.945, label: "Gondola Mid-Station", icon: "gondola" }
+  ]}
+  caption="Key locations in the Telluride area"
+  client:load
+/>
+```
+
+**Props Reference:**
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `preset` | string | `"resort"` | Map configuration preset (see table above) |
+| `center` | [lng, lat] | (preset) | Override center point |
+| `zoom` | number | (preset) | Override zoom level |
+| `terrain` | boolean | `false` | Enable 3D terrain view |
+| `showTrails` | boolean | (preset) | Show ski trail overlays |
+| `showLifts` | boolean | (preset) | Show lift lines |
+| `hotelIds` | string[] | - | Hotel IDs to show as markers |
+| `markers` | array | `[]` | Custom markers (see syntax above) |
+| `highlightTrails` | string[] | `[]` | Trail names to highlight |
+| `height` | string | `"400px"` | Map container height |
+| `caption` | string | - | Caption below map |
+| `interactive` | boolean | `true` | Allow pan/zoom |
+| `showLegend` | boolean | `true` | Show trail difficulty legend |
+
+**Marker Icon Types:**
+- `hotel` - Building icon (sage green)
+- `restaurant` - Fork/knife icon (red)
+- `lift` / `gondola` - Cable icon (amber)
+- `trail` - Trees icon (blue)
+- `viewpoint` - Mountain icon (cyan)
+- `parking` - P icon (gray)
+- `default` - Pin icon (sage green)
+
+**Placement Strategy:**
+
+1. **Geography Sections:** Use `preset="overview"` when explaining Telluride's layout
+2. **Trail/Terrain Sections:** Use `preset="trails"` with `highlightTrails` when discussing specific runs
+3. **Hotel Location Sections:** Use `preset="hotels"` with `hotelIds` when discussing proximity/access
+4. **Comparison Articles:** Use `preset="overview"` with custom markers to show differences
+
+**Example: Complete Guide Section**
+```markdown
+## Understanding Telluride's Geography
+
+The ski resort spans two distinct areas connected by a free gondola that runs daily...
+
+<BlogMap 
+  preset="overview"
+  terrain={true}
+  caption="Downtown Telluride and Mountain Village connected by the free gondola"
+  client:load
+/>
+
+Downtown Telluride sits at 8,750 feet in a box canyon, while Mountain Village perches 1,700 feet above...
+```
+
+### 5. ArticleBookingWidget (Flexible CTA)
 
 **Use Case:** General CTAs, filtered searches, or specific hotels when ID is unknown.
 
@@ -2547,7 +2677,8 @@ Before publishing any group planning article, verify:
 - [ ] `metaDescription` is 150 chars or less
 - [ ] Images compressed and optimized
 - [ ] **ALL images are LANDSCAPE orientation**
-- [ ] **At least 3 interactive components used**
+- [ ] **At least 3 interactive components used** (mix of HotelGrid, BlogMap, Planning Tools, etc.)
+- [ ] **BlogMap used for geographic/location context** (trails, hotel proximity, area overview)
 - [ ] Real Hotel IDs used in `HotelShowcase` (checked `src/data/telluride-hotels.csv`)
 - [ ] HotelGrid widgets manually curated with `hotelIds` prop when hotels are mentioned in article text
 - [ ] Hotel IDs verified in CSV file before using in widgets

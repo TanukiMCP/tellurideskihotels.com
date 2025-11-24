@@ -3,6 +3,7 @@ export { ArticleBookingWidget } from './ArticleBookingWidget';
 export { HotelShowcase } from './HotelShowcase';
 export { HotelGrid } from './HotelGrid';
 export { ActivityShowcase } from './ActivityShowcase';
+export { BlogMap } from './BlogMap';
 export { TripCalculator } from '@/components/planning/TripCalculator';
 export { HotelComparison } from '@/components/planning/HotelComparison';
 export { SeasonComparison } from '@/components/planning/SeasonComparison';
