@@ -85,13 +85,21 @@ export function HotelCard({
         className={`relative w-full overflow-hidden ${variant === 'compact' ? 'h-[240px]' : 'h-56'} ${
           !imageUrl ? 'bg-gradient-to-br from-neutral-100 to-neutral-200' : ''
         }`}
-        style={{ position: 'relative', margin: 0, padding: 0 }}
+        style={{ 
+          position: 'relative', 
+          margin: 0, 
+          padding: 0,
+          lineHeight: 0,
+          fontSize: 0,
+          display: 'block'
+        }}
       >
         {imageUrl ? (
           <img
             src={imageUrl}
             alt={hotel.name || 'Property'}
             className="absolute inset-0 w-full h-full object-cover object-center transition-transform duration-700 group-hover:scale-105"
+            style={{ display: 'block', margin: 0, padding: 0, lineHeight: 0 }}
             loading="lazy"
             onError={(e) => {
               (e.target as HTMLImageElement).src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="300"%3E%3Crect fill="%23f5f5f5" width="400" height="300"/%3E%3Ctext fill="%23999" font-family="sans-serif" font-size="18" dy="10.5" font-weight="bold" x="50%25" y="50%25" text-anchor="middle"%3ENo Image%3C/text%3E%3C/svg%3E';
