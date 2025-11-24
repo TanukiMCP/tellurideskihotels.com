@@ -30,14 +30,14 @@ import { ArticleBookingWidget } from '@/components/blog/ArticleBookingWidget';
 import { TripCalculator } from '@/components/planning/TripCalculator';
 import { ActivityShowcase } from '@/components/blog/ActivityShowcase';
 
-Telluride occupies a box canyon at 8,750 feet elevation in Colorado's San Juan Mountains, surrounded on three sides by 13,000-foot peaks that create one of skiing's most dramatic settings. This former mining town has evolved into a world-class ski destination without sacrificing the authentic mountain character that makes it special. You won't find the sprawling development of Vail or the celebrity scene of Aspen—instead, Telluride delivers challenging terrain, manageable crowds, and a Victorian downtown that feels genuinely preserved rather than theme-park manufactured. For detailed skiing information, see our [ski resort guide](/blog/ski-guides/telluride-ski-resort-guide). To find the perfect place to stay, check our [where to stay guide](/blog/destination-guides/where-to-stay-telluride).
+[Telluride](https://www.telluride.com) occupies a box canyon at 8,750 feet elevation in Colorado's San Juan Mountains, surrounded on three sides by 13,000-foot peaks that create one of skiing's most dramatic settings. This former mining town has evolved into a world-class ski destination without sacrificing the authentic mountain character that makes it special. You won't find the sprawling development of Vail or the celebrity scene of Aspen—instead, Telluride delivers challenging terrain, manageable crowds, and a Victorian downtown that feels genuinely preserved rather than theme-park manufactured. For detailed skiing information, see our [ski resort guide](/blog/ski-guides/telluride-ski-resort-guide). To find the perfect place to stay, check our [where to stay guide](/blog/destination-guides/where-to-stay-telluride).
 
 Understanding Telluride requires grasping its dual nature: the historic town on the canyon floor and Mountain Village on the mesa above, connected by North America's only free public gondola. This geography shapes everything from where you stay to how you experience the resort. First-time visitors often struggle with this layout, but once you understand the system, Telluride reveals itself as remarkably accessible and well-designed.
 
 <TripCalculator client:load />
 
 <HotelGrid 
-  limit={3}
+  hotelIds={["lp4b27f", "lp21ee2", "lp4153f"]}
   title="Featured Hotels in Telluride"
   client:load
 />
@@ -73,10 +73,10 @@ The trade-off for downtown lodging is the gondola ride to skiing. You'll walk to
 
 Mountain Village prioritizes skiing convenience above all else. Hotels here offer true ski-in/ski-out access, with ski valets handling equipment storage and preparation. You can be on the slopes within minutes of leaving your room, maximizing skiing time. The village provides restaurants, shops, and services, though the selection is more limited than downtown. The atmosphere is quieter and more resort-focused, appealing to families and skiers who want to minimize logistics.
 
-Mountain Village hotels command premium prices reflecting their convenience and luxury amenities. Properties like The Madeline Hotel, Peaks Resort & Spa, and Lumiere deliver full-service resort experiences with spas, multiple restaurants, and extensive amenities. You'll pay 20-40% more than comparable downtown properties, but you gain significant convenience and typically more space.
+Mountain Village hotels command premium prices reflecting their convenience and luxury amenities. Properties like The Madeline Hotel, Peaks Resort & Spa, and Lumiere deliver full-service resort experiences with spas, multiple restaurants, and extensive amenities. You'll pay 20-40% more than comparable downtown properties, but you gain significant convenience and typically more space. Browse all available properties on our [lodging search page](/lodging).
 
 <HotelGrid 
-  limit={3}
+  hotelIds={["lp4b27f", "lp21ee2", "lp35ebc"]}
   title="Downtown and Mountain Village Hotels"
   client:load
 />
@@ -87,11 +87,11 @@ Reaching Telluride requires more planning than major Colorado resorts with direc
 
 Montrose receives direct flights from major hubs including Denver, Dallas, Houston, Phoenix, and seasonal service from other cities. Flight availability and pricing vary dramatically by season, with winter commanding premium fares and summer offering better values. Book flights early for peak periods—Christmas week and major festival weekends see significant price increases and limited availability.
 
-Ground transportation from Montrose includes rental cars, shuttle services, and private transfers. Rental cars provide maximum flexibility for exploring the region, though winter driving requires comfort with mountain roads and potentially snowy conditions. All-wheel drive is strongly recommended in winter, and many rental companies require it for mountain travel.
+Ground transportation from Montrose includes rental cars, shuttle services, and private transfers. Rental cars provide maximum flexibility for exploring the region, though winter driving requires comfort with mountain roads and potentially snowy conditions—check [COtrip](https://www.cotrip.org) for real-time road conditions before your drive. All-wheel drive is strongly recommended in winter, and many rental companies require it for mountain travel.
 
 Shuttle services like Telluride Express and Mountain Limo offer shared and private options. Shared shuttles cost $50-75 per person and operate on fixed schedules, requiring advance booking. Private transfers cost $200-300 for groups but provide door-to-door service on your schedule. During peak season, shuttles book weeks in advance—don't wait until arrival to arrange transportation.
 
-Some travelers fly to Denver International Airport and drive 6-7 hours to Telluride. This makes sense if you're combining Telluride with other Colorado destinations or if Denver offers significantly cheaper flights. The drive crosses multiple mountain passes and requires winter driving confidence during ski season. Budget a full day for this journey, as mountain weather can extend travel time significantly.
+Some travelers fly to Denver International Airport and drive 6-7 hours to Telluride. This makes sense if you're combining Telluride with other Colorado destinations or if Denver offers significantly cheaper flights—see our [Denver to Telluride drive guide](/blog/driving-guides/denver-to-telluride-drive-guide) for detailed route planning. The drive crosses multiple mountain passes and requires winter driving confidence during ski season. Budget a full day for this journey, as mountain weather can extend travel time significantly.
 
 Telluride Regional Airport (TEX) sits just outside town, offering limited commercial service via boutique carriers and charter flights. United operates seasonal service from Denver, though schedules are limited and fares typically exceed Montrose flights. The airport's 9,070-foot elevation and challenging approaches mean weather delays are common. Private charters use this airport frequently, offering the fastest access to Telluride for travelers with appropriate budgets.
 
@@ -138,7 +138,7 @@ Telluride's appeal extends well beyond ski season, with summer and fall attracti
 
 <ActivityShowcase client:load />
 
-Summer transforms the ski resort into a hiking and mountain biking destination. The gondola operates daily, providing free access to high-elevation trails without the climb. From the top of the gondola, you can access trails ranging from gentle nature walks to challenging alpine routes. Bear Creek Trail, starting from town, leads to a spectacular waterfall and continues into high alpine terrain. Jud Wiebe Trail offers a moderate loop with excellent views of the box canyon and surrounding peaks.
+Summer transforms the ski resort into a hiking and mountain biking destination. The gondola operates daily, providing free access to high-elevation trails without the climb. Explore our [curated activities and tours](/things-to-do) to plan your adventures. From the top of the gondola, you can access trails ranging from gentle nature walks to challenging alpine routes. Bear Creek Trail, starting from town, leads to a spectacular waterfall and continues into high alpine terrain. Jud Wiebe Trail offers a moderate loop with excellent views of the box canyon and surrounding peaks.
 
 Mountain biking has grown significantly in recent years, with the resort developing dedicated downhill trails and the surrounding area offering extensive cross-country options. The lift-served downhill trails range from flowy intermediate runs to technical expert terrain. Cross-country riders can access hundreds of miles of trails in the surrounding national forest, with options for all skill levels.
 
@@ -150,7 +150,7 @@ Fall brings arguably Telluride's most beautiful season, with aspen groves turnin
 
 Elevation affects everyone differently, but at 8,750 feet in town and 13,150 at the resort's summit, altitude sickness is a real possibility. Arrive a day early if possible, allowing your body to adjust before skiing. Drink more water than you think necessary, limit alcohol consumption your first day, and don't push too hard your first morning on the slopes. Headaches, fatigue, and shortness of breath are common—if symptoms are severe or persist, descend to lower elevation.
 
-Weather in the mountains changes rapidly. Morning sunshine can give way to afternoon storms, especially in summer when thunderstorms develop regularly. Always carry layers, even on seemingly perfect days. In winter, cold temperatures and wind chill can create dangerous conditions—the summit regularly sees temperatures below zero with strong winds. Proper clothing isn't optional.
+Weather in the mountains changes rapidly—check the [National Weather Service forecast](https://www.weather.gov/gjt) before heading out. Morning sunshine can give way to afternoon storms, especially in summer when thunderstorms develop regularly. Always carry layers, even on seemingly perfect days. In winter, cold temperatures and wind chill can create dangerous conditions—the summit regularly sees temperatures below zero with strong winds. Proper clothing isn't optional.
 
 The free gondola is Telluride's secret weapon, but understanding its operation maximizes its value. It runs from approximately 7 AM to midnight daily, with extended hours during special events. Morning lines develop during peak season, especially 8:30-10 AM when everyone heads to the slopes. Arriving at 8 AM or waiting until 10:30 AM avoids the worst crowds. The gondola stops at multiple stations—know which one serves your destination to avoid unnecessary walking.
 
@@ -161,7 +161,7 @@ Parking in downtown Telluride is limited and often challenging during peak seaso
 <details>
 <summary>Is Telluride good for beginner skiers?</summary>
 
-Telluride offers adequate beginner terrain near both bases, but it's not the ideal resort for first-time skiers. The resort's reputation emphasizes advanced terrain, and beginners may feel intimidated by the expert-focused culture. If you're traveling with beginners, ensure they take lessons and stick to designated beginner areas. Intermediate skiers will find plenty of terrain to progress their skills.
+Telluride offers adequate beginner terrain near both bases, but it's not the ideal resort for first-time skiers. The resort's reputation emphasizes advanced terrain, and beginners may feel intimidated by the expert-focused culture. If you're traveling with beginners, ensure they take lessons and stick to designated beginner areas. Check our [ski resort guide](/blog/ski-guides/telluride-ski-resort-guide) for terrain breakdowns by skill level.
 
 </details>
 
@@ -175,7 +175,7 @@ For a ski-focused trip, 4-5 days provides enough time to explore the mountain wi
 <details>
 <summary>Is Telluride expensive compared to other Colorado resorts?</summary>
 
-Yes, Telluride ranks among Colorado's most expensive ski destinations, comparable to Aspen and Vail. Hotel rates, dining, and lift tickets all command premium prices. However, the free gondola, manageable crowds, and authentic atmosphere provide value that justifies the cost for many visitors. Shoulder seasons offer significantly better values while maintaining much of the experience.
+Yes, Telluride ranks among Colorado's most expensive ski destinations, comparable to Aspen and Vail. Hotel rates, dining, and lift tickets all command premium prices. However, the free gondola, manageable crowds, and authentic atmosphere provide value that justifies the cost for many visitors. Browse our [lodging options](/lodging) to find properties that fit your budget—shoulder seasons offer significantly better values.
 
 </details>
 
@@ -189,7 +189,7 @@ Yes, especially if you're staying downtown or in Mountain Village. The free gond
 <details>
 <summary>What's the best month to visit Telluride?</summary>
 
-It depends on your priorities. January and February offer the best skiing conditions. Late September provides spectacular fall colors and pleasant weather. July brings summer festivals and warm temperatures. March offers spring skiing with longer days and better weather. Avoid April and November unless you're seeking extreme solitude and don't mind limited services.
+It depends on your priorities. January and February offer the best skiing conditions. Late September provides spectacular fall colors and pleasant weather. July brings summer festivals and warm temperatures. March offers spring skiing with longer days and better weather. Read our [best time to visit guide](/blog/seasonal-guides/best-time-visit-telluride) for month-by-month breakdowns.
 
 </details>
 
