@@ -115,10 +115,10 @@ Hotels work well for smaller parties (6-8 people) or groups wanting resort ameni
 
 Hybrid options combine space advantages with hotel services. Some properties offer condominium-style units within hotel complexes, providing kitchen facilities and multiple bedrooms while maintaining access to hotel amenities. These options work well for parties wanting both space and services, though they command premium rates that groups should evaluate against their specific needs.
 
-<HotelGrid hotelIds={["lp4b27f", "lp21ee2", "lp35351"]} title="Top Properties for Group Celebrations" client:load />
+<HotelGrid hotelIds={["lp4b27f", "lpd153e", "lp656c95d8"]} title="Top Properties for Group Celebrations" client:load />
 
 <HotelSplitCalculator 
-  hotelIds={["lp35351", "lp4b27f", "lp21ee2"]}
+  hotelIds={["lp4b27f", "lpd153e", "lp656c95d8"]}
   scenario="bachelor-party-10"
   defaultNights={3}
   defaultGuests={10}

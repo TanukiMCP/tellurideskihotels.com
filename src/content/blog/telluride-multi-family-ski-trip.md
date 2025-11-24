@@ -93,7 +93,7 @@ Activity costs (lessons, tours, non-skiing activities) remain individual or fami
 Transportation costs split based on usage, with car rentals or shuttles divided among families using the transportation. Groups using personal vehicles typically split gas costs equally among participating families. The key is establishing methods before the trip to prevent awkward conversations during travel. Many multi-family groups designate one family to handle transportation coordination and splitting to streamline logistics.
 
 <HotelSplitCalculator 
-  hotelIds={["large-vacation-rental", "peaks-resort", "multiple-condos"]}
+  hotelIds={["lp656c5dd6", "lp21ee2", "lp656c9596"]}
   scenario="three-families-12-people"
   defaultNights={5}
   defaultGuests={12}

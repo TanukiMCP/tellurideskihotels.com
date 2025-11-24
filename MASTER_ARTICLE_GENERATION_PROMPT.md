@@ -1572,53 +1572,108 @@ The [National Weather Service Grand Junction office](https://www.weather.gov/gjt
 
 **⚠️ CRITICAL: Manual Curation Workflow**
 
-**When multiple hotels are mentioned together in your article text, you MUST manually curate the widget with their actual IDs:**
+**When properties are mentioned or discussed in your article text, you MUST manually curate the widget with IDs that match BOTH the property names AND property types being discussed:**
 
-1. **Identify mentioned hotels** in your article text (e.g., "The Madeline, Peaks Resort, and Hotel Columbia all feature...")
-2. **Search the CSV file** (`src/data/telluride-hotels.csv`) for each hotel name
-3. **Extract the hotel IDs** from the CSV (format: `id,name`)
+1. **Identify the property TYPE** discussed in the text (hotels? condos? vacation rentals?)
+2. **Search the CSV file** (`src/data/telluride-hotels.csv`) for matching property type
+3. **Extract the property IDs** from the CSV (format: `id,name`)
 4. **Use those IDs** in the `hotelIds` prop array
 
-**Example Workflow:**
+**⚠️ MATCH PROPERTY TYPE TO CONTENT (CRITICAL)**
+
+The CSV contains 700+ properties of ALL types - hotels, condos, townhouses, vacation rentals. Your widget MUST reflect the property type being discussed:
+
+| Content Discusses | Search Strategy | Example |
+|-------------------|-----------------|---------|
+| Luxury hotels | `grep -i "hotel\|resort" src/data/telluride-hotels.csv` | Madeline, Peaks Resort |
+| Condos for families | `grep -i "condo\|lodge\|BR\|bedroom" src/data/telluride-hotels.csv` | Bear Creek Lodge, Cimarron |
+| Vacation rentals | `grep -i "home\|house\|cabin" src/data/telluride-hotels.csv` | Various homes/chalets |
+| Multi-bedroom options | `grep -i "3 bedroom\|4 bedroom\|3BR" src/data/telluride-hotels.csv` | Large condos/townhouses |
+| Hotel vs Condo comparison | Include BOTH types in widget | Mix hotel + condo IDs |
+
+**Example Workflow (Hotels):**
 ```markdown
 ## Luxury Ski-In/Ski-Out Resorts
 
-These properties command top pricing and deliver comprehensive resort experiences. The Madeline, Peaks Resort, and Capella all offer ski valets who store your equipment, full-service spas, and multiple dining venues. These properties justify premium pricing through convenience and comprehensive amenities.
+These properties command top pricing and deliver comprehensive resort experiences. The Madeline, Peaks Resort, and Lumiere all offer ski valets, full-service spas, and multiple dining venues.
 
 <HotelGrid 
-  hotelIds={["lp4b27f", "lp3e47f", "lp2ff71"]}
-  limit={3}
+  hotelIds={["lp4b27f", "lp21ee2", "lp4153f"]}
   title="Featured Luxury Ski-In/Ski-Out Properties"
-  client:load
-/>
-
-## Downtown Boutique Hotels
-
-Mid-range downtown properties like Hotel Telluride, New Sheridan, and Hotel Columbia balance character, service, and pricing...
-
-<HotelGrid 
-  hotelIds={["lp2ff71", "lp35ebc", "lp7924d"]}
-  limit={3}
-  title="Top Downtown Boutique Hotels"
   client:load
 />
 ```
 
+**Example Workflow (Condos for Families):**
+```markdown
+## Condos for Larger Families
+
+Condominiums provide space advantages with 2-3 bedrooms, full kitchens, and living areas. Properties like Bear Creek Lodge and Cimarron Lodge offer ski-in/ski-out access with condo convenience.
+
+<HotelGrid 
+  hotelIds={["lp36f78", "lp39cb3", "lp656c95f0"]}
+  title="Family-Friendly Condo Options"
+  client:load
+/>
+```
+Here: `lp36f78` = Bear Creek Lodge, `lp39cb3` = Cimarron Lodge, `lp656c95f0` = Bear Creek 2BR Unit
+
+**Example Workflow (Hotel vs Condo Comparison):**
+```markdown
+## Hotel vs Condo: Which is Right for Your Family?
+
+For smaller families, hotels like The Peaks provide concierge service and daily housekeeping. Larger families find condos like Bear Creek Lodge more cost-effective with kitchen facilities.
+
+<HotelGrid 
+  hotelIds={["lp21ee2", "lp656c95f0", "lp656c9c38"]}
+  title="Compare: Hotels vs Condos"
+  client:load
+/>
+```
+Here: `lp21ee2` = The Peaks (hotel), `lp656c95f0` = Bear Creek 2BR (condo), `lp656c9c38` = Bear Creek 3BR (condo)
+
 **Why Manual Curation Matters:**
-- Ensures widgets display hotels actually mentioned in the text
+- Ensures widgets display properties actually mentioned in the text
+- **Matches property TYPE (hotel/condo/rental) to content context**
 - Creates intentional, relevant user experience
 - Drives higher conversion by showing contextually relevant properties
-- Avoids random hotel displays that confuse readers
+- Avoids random displays that confuse readers
 
-**Finding Hotel IDs:**
-- Read `src/data/telluride-hotels.csv` (lightweight, 49KB, 769 hotels)
-- Use `grep` to search: `grep -i "madeline\|peaks\|columbia" src/data/telluride-hotels.csv`
-- CSV format: `id,name` (e.g., `lp4b27f,"Madeline Hotel & Residences, Auberge Collection"`)
+**Finding Property IDs by Type:**
+
+**Hotels/Resorts:**
+```bash
+grep -i "madeline" src/data/telluride-hotels.csv
+grep -i "peaks resort" src/data/telluride-hotels.csv
+grep -i "lumiere" src/data/telluride-hotels.csv
+grep -i "fairmont" src/data/telluride-hotels.csv
+grep -i "sheridan" src/data/telluride-hotels.csv
+grep -i "hotel telluride" src/data/telluride-hotels.csv
+```
+
+**Condos/Lodges (for family/group content):**
+```bash
+grep -i "bear creek lodge" src/data/telluride-hotels.csv
+grep -i "cimarron" src/data/telluride-hotels.csv
+grep -i "blue mesa" src/data/telluride-hotels.csv
+grep -i "aspen ridge" src/data/telluride-hotels.csv
+grep -i "mountain lodge" src/data/telluride-hotels.csv
+grep -i "3 bedroom\|4 bedroom" src/data/telluride-hotels.csv
+grep -i "condo" src/data/telluride-hotels.csv | head -20
+```
+
+**Vacation Rentals/Homes:**
+```bash
+grep -i "home\|house" src/data/telluride-hotels.csv | head -20
+grep -i "cabin\|chalet" src/data/telluride-hotels.csv
+grep -i "townhouse\|townhome" src/data/telluride-hotels.csv
+```
 
 **When to Use Filters vs hotelIds:**
-- **Use `hotelIds`**: When specific hotels are mentioned in the article text (MANDATORY)
-- **Use `filter`**: Only when discussing a category but NOT naming specific hotels
+- **Use `hotelIds`**: When specific properties are mentioned OR when content discusses a property TYPE (MANDATORY)
+- **Use `filter`**: Only when discussing a category but NOT naming specific properties AND no property type emphasis
 - **Use both**: `hotelIds` takes priority, `filter` is ignored when `hotelIds` is provided
+- **Match property type**: If text says "condos are better for families", show condo IDs not hotel IDs
 
 ---
 
@@ -2581,9 +2636,21 @@ Here's what changes between seasons...
 - CostPerPersonRanking (value analysis)
 
 **For Comparison Articles:**
-- LodgingComparisonMatrix (required)
-- HotelSplitCalculator (accommodation type comparison)
+- LodgingComparisonMatrix (REQUIRED for any "vs" or comparison content)
+- HotelSplitCalculator (accommodation type cost comparison)
 - CostPerPersonRanking (price comparison)
+
+**⚠️ CRITICAL: When to Use LodgingComparisonMatrix vs HotelGrid**
+
+| Content Type | Use This Widget |
+|--------------|-----------------|
+| "Hotel vs Condo" sections | `LodgingComparisonMatrix` |
+| "Slopeside vs Downtown" articles | `LodgingComparisonMatrix` |
+| "Which is better for X" sections | `LodgingComparisonMatrix` |
+| Listing properties in a category | `HotelGrid` |
+| Single property feature | `HotelShowcase` |
+
+**DO NOT use HotelGrid for comparison content!** Use `LodgingComparisonMatrix` with `compareIds` including BOTH property types being compared (e.g., hotel ID + condo ID).
 
 ### Integration with ArticleBookingWidget
 

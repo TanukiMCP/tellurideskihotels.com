@@ -114,32 +114,44 @@ When using `hotelIds` prop, markers appear on the map. Clicking a marker shows a
 1. **Is this a listicle where each hotel gets its own numbered entry?**
    → Use `<HotelShowcase hotelId="..." showGallery={true} />` after each hotel description
 
-2. **Are 2-3 hotels mentioned together in a category discussion?**
+2. **Are 2-3 properties mentioned together in a category discussion?**
    → Use `<HotelGrid hotelIds={["id1", "id2", "id3"]} title="..." />`
+   → **Match property TYPE to content** (hotels vs condos vs rentals)
 
-3. **Is this discussing costs, budgets, or group trip planning?**
+3. **Is this COMPARING two accommodation types (hotel vs condo, slopeside vs downtown)?**
+   → **USE `<LodgingComparisonMatrix compareIds={[...]} criteria={[...]} />`** (NOT HotelGrid!)
+   → Include BOTH types in compareIds (e.g., one hotel ID + one condo ID)
+   → This is the RIGHT widget for comparison sections!
+
+4. **Is this discussing costs, budgets, or group trip planning?**
    → Use appropriate planning tool: `GroupCostCalculator`, `BudgetToItineraryPlanner`, `HotelSplitCalculator`
 
-4. **Is this comparing options (hotel vs condo, peak vs off-peak)?**
-   → Use `SeasonComparison`, `HotelSplitCalculator`, or `LodgingComparisonMatrix`
+5. **Is this comparing seasonal timing (peak vs off-peak)?**
+   → Use `SeasonComparison`
 
-5. **Is this a transition point or general CTA without specific hotels mentioned?**
+6. **Is this a transition point or general CTA without specific properties mentioned?**
    → Use `<ArticleBookingWidget variant="compact" filter="..." />`
 
-6. **Is this the end of the article?**
+7. **Is this the end of the article?**
    → Use `<ArticleBookingWidget variant="featured" />` (REQUIRED)
 
-7. **Is this discussing activities, dining, or experiences?**
+8. **Is this discussing activities, dining, or experiences?**
    → Use `<ActivityShowcase category="..." />` or link to `/things-to-do`
 
-8. **Is this discussing geography, locations, or comparing downtown vs Mountain Village?**
-   → Use `<BlogMap preset="overview" />` to visually show both areas
+9. **Is this discussing geography, locations, or showing where things are?**
+   → Use `<BlogMap preset="overview" />` to visually show areas
 
-9. **Is this a ski terrain or trail discussion?**
+10. **Is this a ski terrain or trail discussion?**
    → Use `<BlogMap preset="trails" terrain={true} />` to show trail difficulty
 
-10. **Does the article need visual variety (too many hotel widgets in a row)?**
+11. **Does the article need visual variety (too many hotel widgets in a row)?**
    → Add a `<BlogMap />` between hotel sections to break up the page visually
+
+**⚠️ CRITICAL: When content COMPARES accommodation types, use LodgingComparisonMatrix!**
+- "Hotel vs Condo" sections → LodgingComparisonMatrix
+- "Slopeside vs Downtown" articles → LodgingComparisonMatrix  
+- "Which is better for families" → LodgingComparisonMatrix
+- DO NOT use HotelGrid for comparison content!
 
 ---
 
@@ -180,19 +192,58 @@ For each widget found:
 For ANY widget accepting hotelIds:
 
 1. **Extract the hotelId** from CSV (first column, format: `lpXXXXX` or `lpXXXXXXXX`)
-2. **Match IDs to hotels mentioned in surrounding text**
-3. **Never use filter-only HotelGrid when specific hotels are named**
+2. **Match IDs to properties mentioned in surrounding text**
+3. **Match PROPERTY TYPE to content context** (see below)
+4. **Never use filter-only HotelGrid when specific properties are named**
 
-Common property lookups:
+**⚠️ CRITICAL: Match Property TYPE to Content**
+
+The CSV contains MANY property types - hotels, condos, townhouses, vacation rentals. **Match the widget property type to what the surrounding text discusses:**
+
+| Content Discusses | Search For | Example grep |
+|-------------------|------------|--------------|
+| Hotels/resorts | "hotel", "resort", "inn" | `grep -i "hotel\|resort\|inn" src/data/telluride-hotels.csv` |
+| Condos/condominiums | "condo", "lodge", "unit" | `grep -i "condo\|lodge\|BR\|bedroom" src/data/telluride-hotels.csv` |
+| Townhouses | "townhouse", "townhome" | `grep -i "townhouse\|townhome" src/data/telluride-hotels.csv` |
+| Vacation rentals | "home", "house", "cabin", "chalet" | `grep -i "home\|house\|cabin\|chalet" src/data/telluride-hotels.csv` |
+| Family/large group | Multi-bedroom units | `grep -i "3 bedroom\|4 bedroom\|3BR\|4BR" src/data/telluride-hotels.csv` |
+| Ski-in/ski-out | "ski in", "ski-in", "slopeside" | `grep -i "ski.in\|slopeside" src/data/telluride-hotels.csv` |
+
+**Example: Hotel vs Condo Comparison Section**
+```markdown
+## Hotel vs Condo: Choosing the Right Accommodation
+[Discussion comparing hotels and condos for families...]
+
+<HotelGrid 
+  hotelIds={["lp21ee2", "lp36f78", "lp656c95f0"]}
+  title="Compare: Hotel vs Condo Options"
+  client:load
+/>
+```
+Here you'd include:
+- `lp21ee2` = The Peaks Resort (hotel option)
+- `lp36f78` = Bear Creek Lodge (condo complex)
+- `lp656c95f0` = Bear Creek Lodge 105 (specific 2BR condo)
+
+**Popular Condo/Multi-Bedroom Properties:**
+```
+grep -i "bear creek lodge" src/data/telluride-hotels.csv
+grep -i "aspen ridge" src/data/telluride-hotels.csv
+grep -i "cimarron lodge" src/data/telluride-hotels.csv
+grep -i "blue mesa" src/data/telluride-hotels.csv
+grep -i "mountain lodge" src/data/telluride-hotels.csv
+grep -i "3 bedroom\|4 bedroom" src/data/telluride-hotels.csv
+```
+
+**Common Hotel/Resort lookups:**
 ```
 grep -i "madeline" src/data/telluride-hotels.csv
 grep -i "peaks" src/data/telluride-hotels.csv  
 grep -i "lumiere" src/data/telluride-hotels.csv
-grep -i "capella" src/data/telluride-hotels.csv
 grep -i "fairmont" src/data/telluride-hotels.csv
 grep -i "sheridan" src/data/telluride-hotels.csv
 grep -i "lost creek" src/data/telluride-hotels.csv
-grep -i "mountain lodge" src/data/telluride-hotels.csv
+grep -i "hotel telluride" src/data/telluride-hotels.csv
 ```
 
 ---
