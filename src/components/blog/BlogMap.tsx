@@ -2,12 +2,15 @@
  * BlogMap Component
  * Lightweight, embeddable Mapbox widget for MDX blog posts
  * Features multiple presets for different content contexts
+ * 
+ * For hotel markers: Shows rich preview cards with image, rating, and View Details CTA
+ * For other markers: Shows simple label popups
  */
 import { useRef, useState, useEffect, useMemo } from 'react';
 import Map, { Marker, NavigationControl, Popup, Source, Layer } from 'react-map-gl/mapbox';
 import type { MapRef } from 'react-map-gl/mapbox';
 import { MAPBOX_TOKEN, TELLURIDE_CENTER, MOUNTAIN_VILLAGE_CENTER, TELLURIDE_AREA_CENTER } from '@/lib/mapbox-utils';
-import { MapPin, Mountain, Building2, Cable, Trees, Info, X } from 'lucide-react';
+import { MapPin, Mountain, Building2, Cable, Trees, Info, X, ChevronRight, Star } from 'lucide-react';
 import 'mapbox-gl/dist/mapbox-gl.css';
 
 // Preset configurations
@@ -101,9 +104,9 @@ export interface BlogMapProps {
   showTrails?: boolean;
   /** Show lift lines */
   showLifts?: boolean;
-  /** Hotel IDs to show as markers */
+  /** Hotel IDs to show as markers with rich preview cards */
   hotelIds?: string[];
-  /** Custom point markers */
+  /** Custom point markers (simple label popups) */
   markers?: BlogMapMarker[];
   /** Highlight specific trails by name */
   highlightTrails?: string[];
@@ -117,12 +120,29 @@ export interface BlogMapProps {
   showLegend?: boolean;
 }
 
-// Hotel data type from API
+// Full hotel data from API for rich preview cards
 interface HotelData {
   hotel_id: string;
   name: string;
   latitude?: number;
   longitude?: number;
+  // Location can come in different formats from API
+  location?: {
+    latitude?: number;
+    longitude?: number;
+  };
+  // Image data
+  images?: Array<{ url: string }>;
+  main_photo?: string;
+  // Ratings
+  star_rating?: number;
+  review_score?: number;
+  review_count?: number;
+  // Address
+  address?: {
+    line1?: string;
+    city?: string;
+  };
 }
 
 // Marker icon component
@@ -131,10 +151,10 @@ function MarkerIcon({ type, size = 24 }: { type: string; size?: number }) {
   
   switch (type) {
     case 'hotel':
-      return <Building2 size={size} color={color} fill={color} fillOpacity={0.2} />;
+      return <Building2 size={size} color="white" />;
     case 'restaurant':
       return (
-        <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2">
+        <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2">
           <path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2" />
           <path d="M7 2v20" />
           <path d="M21 15V2v0a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7" />
@@ -142,21 +162,95 @@ function MarkerIcon({ type, size = 24 }: { type: string; size?: number }) {
       );
     case 'lift':
     case 'gondola':
-      return <Cable size={size} color={color} />;
+      return <Cable size={size} color="white" />;
     case 'trail':
-      return <Trees size={size} color={color} />;
+      return <Trees size={size} color="white" />;
     case 'viewpoint':
-      return <Mountain size={size} color={color} />;
+      return <Mountain size={size} color="white" />;
     case 'parking':
       return (
-        <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2">
+        <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2">
           <rect x="3" y="3" width="18" height="18" rx="2" />
           <path d="M9 17V7h4a3 3 0 0 1 0 6H9" />
         </svg>
       );
     default:
-      return <MapPin size={size} color={color} fill={color} fillOpacity={0.3} />;
+      return <MapPin size={size} color="white" />;
   }
+}
+
+// Hotel Preview Card Component (shown in popup)
+function HotelPreviewCard({ hotel, onViewDetails }: { hotel: HotelData; onViewDetails: () => void }) {
+  // Get primary image
+  const primaryImage = hotel.images?.[0]?.url || hotel.main_photo;
+  
+  // Get location string
+  const locationString = hotel.address?.city || hotel.address?.line1 || 'Telluride, CO';
+  
+  return (
+    <div className="w-[260px]">
+      {/* Hero Image */}
+      {primaryImage && (
+        <div className="relative w-full h-[120px] mb-2 rounded-lg overflow-hidden">
+          <img 
+            src={primaryImage}
+            alt={hotel.name}
+            className="w-full h-full object-cover"
+            loading="lazy"
+          />
+          
+          {/* Star Rating Badge */}
+          {hotel.star_rating && hotel.star_rating > 0 && (
+            <div className="absolute top-2 left-2 bg-white/95 px-1.5 py-0.5 rounded shadow-sm">
+              <div className="flex gap-0.5">
+                {Array.from({ length: 5 }).map((_, i) => (
+                  <Star
+                    key={i}
+                    size={10}
+                    className={i < hotel.star_rating! ? 'text-amber-400 fill-amber-400' : 'text-gray-300'}
+                  />
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Hotel Name */}
+      <h3 className="text-sm font-bold text-neutral-900 mb-1 line-clamp-2 leading-tight">
+        {hotel.name}
+      </h3>
+
+      {/* Location */}
+      <div className="flex items-center gap-1 mb-2">
+        <MapPin size={12} className="text-gray-400 flex-shrink-0" />
+        <p className="text-xs text-gray-500 line-clamp-1">
+          {locationString}
+        </p>
+      </div>
+
+      {/* Guest Rating */}
+      {hotel.review_score && hotel.review_score > 0 && (
+        <div className="flex items-center gap-1.5 mb-3">
+          <span className="bg-primary-600 text-white px-1.5 py-0.5 rounded text-xs font-semibold">
+            {hotel.review_score.toFixed(1)}
+          </span>
+          <span className="text-xs text-gray-500">
+            {hotel.review_count ? `${hotel.review_count.toLocaleString()} reviews` : 'Guest rating'}
+          </span>
+        </div>
+      )}
+
+      {/* CTA Button */}
+      <button
+        onClick={onViewDetails}
+        className="w-full inline-flex items-center justify-center gap-1 bg-primary-600 text-white px-3 py-2 rounded-lg text-xs font-bold hover:bg-primary-700 transition-colors"
+      >
+        View Details
+        <ChevronRight size={14} />
+      </button>
+    </div>
+  );
 }
 
 export function BlogMap({
@@ -179,7 +273,8 @@ export function BlogMap({
   const [trailsData, setTrailsData] = useState<any>(null);
   const [liftsData, setLiftsData] = useState<any>(null);
   const [hotels, setHotels] = useState<HotelData[]>([]);
-  const [popupInfo, setPopupInfo] = useState<{ lng: number; lat: number; label: string } | null>(null);
+  const [selectedHotel, setSelectedHotel] = useState<HotelData | null>(null);
+  const [simplePopupInfo, setSimplePopupInfo] = useState<{ lng: number; lat: number; label: string } | null>(null);
   const [isLegendOpen, setIsLegendOpen] = useState(false);
 
   // Get preset config
@@ -244,12 +339,24 @@ export function BlogMap({
       });
       
       const fetchedHotels = await Promise.all(hotelPromises);
-      const validHotels = fetchedHotels.filter((h): h is HotelData => h !== null && h.latitude && h.longitude);
+      // Filter for valid hotels with coordinates
+      const validHotels = fetchedHotels.filter((h): h is HotelData => {
+        if (!h) return false;
+        const lat = h.latitude || h.location?.latitude;
+        const lng = h.longitude || h.location?.longitude;
+        return lat !== undefined && lng !== undefined;
+      });
       setHotels(validHotels);
     };
     
     fetchHotels();
   }, [hotelIds]);
+
+  // Helper to get hotel coordinates
+  const getHotelCoords = (hotel: HotelData) => ({
+    lat: hotel.latitude || hotel.location?.latitude || 0,
+    lng: hotel.longitude || hotel.location?.longitude || 0,
+  });
 
   // Handle map load
   const handleMapLoad = () => {
@@ -282,11 +389,12 @@ export function BlogMap({
       // Calculate bounds
       let minLng = Infinity, maxLng = -Infinity, minLat = Infinity, maxLat = -Infinity;
       hotels.forEach(hotel => {
-        if (hotel.longitude && hotel.latitude) {
-          minLng = Math.min(minLng, hotel.longitude);
-          maxLng = Math.max(maxLng, hotel.longitude);
-          minLat = Math.min(minLat, hotel.latitude);
-          maxLat = Math.max(maxLat, hotel.latitude);
+        const { lat, lng } = getHotelCoords(hotel);
+        if (lng && lat) {
+          minLng = Math.min(minLng, lng);
+          maxLng = Math.max(maxLng, lng);
+          minLat = Math.min(minLat, lat);
+          maxLat = Math.max(maxLat, lat);
         }
       });
       
@@ -302,6 +410,28 @@ export function BlogMap({
       }
     }
   }, [isMapLoaded, hotels, preset]);
+
+  // Handle hotel marker click
+  const handleHotelClick = (hotel: HotelData) => {
+    setSimplePopupInfo(null); // Close any simple popup
+    setSelectedHotel(hotel);
+    
+    // Pan to hotel
+    if (mapRef.current) {
+      const { lat, lng } = getHotelCoords(hotel);
+      mapRef.current.flyTo({
+        center: [lng, lat],
+        zoom: Math.max(mapZoom, 14),
+        duration: 500,
+      });
+    }
+  };
+
+  // Handle view details click
+  const handleViewDetails = (hotelId: string) => {
+    // Navigate to hotel detail page
+    window.location.href = `/lodging/${hotelId}`;
+  };
 
   // Trail layer paint configuration
   const trailLayerPaint = useMemo(() => ({
@@ -345,18 +475,6 @@ export function BlogMap({
     ] : 0.85
   }), [highlightTrails]);
 
-  // Combine hotel markers with custom markers
-  const allMarkers = useMemo(() => {
-    const hotelMarkers: BlogMapMarker[] = hotels.map(hotel => ({
-      lng: hotel.longitude!,
-      lat: hotel.latitude!,
-      label: hotel.name,
-      icon: 'hotel' as const,
-    }));
-    
-    return [...hotelMarkers, ...markers];
-  }, [hotels, markers]);
-
   return (
     <div className="my-8 not-prose">
       <div 
@@ -376,6 +494,10 @@ export function BlogMap({
           mapStyle={MAP_STYLE}
           style={{ width: '100%', height: '100%' }}
           onLoad={handleMapLoad}
+          onClick={() => {
+            setSelectedHotel(null);
+            setSimplePopupInfo(null);
+          }}
           scrollZoom={interactive}
           dragPan={interactive}
           dragRotate={interactive && enableTerrain}
@@ -423,8 +545,44 @@ export function BlogMap({
             </Source>
           )}
 
-          {/* Markers */}
-          {allMarkers.map((marker, index) => (
+          {/* Hotel Markers (with rich preview cards) */}
+          {hotels.map((hotel) => {
+            const { lat, lng } = getHotelCoords(hotel);
+            const isSelected = selectedHotel?.hotel_id === hotel.hotel_id;
+            
+            return (
+              <Marker
+                key={hotel.hotel_id}
+                longitude={lng}
+                latitude={lat}
+                anchor="bottom"
+                onClick={(e) => {
+                  e.originalEvent.stopPropagation();
+                  handleHotelClick(hotel);
+                }}
+              >
+                <div 
+                  className={`cursor-pointer transform transition-all duration-200 ${
+                    isSelected ? 'scale-125 z-20' : 'hover:scale-110'
+                  }`}
+                  style={{ 
+                    backgroundColor: isSelected ? '#2563eb' : MARKER_COLORS.hotel,
+                    padding: '8px',
+                    borderRadius: '50%',
+                    boxShadow: isSelected 
+                      ? '0 4px 12px rgba(37, 99, 235, 0.5)' 
+                      : '0 2px 8px rgba(0,0,0,0.3)',
+                    border: '2px solid white',
+                  }}
+                >
+                  <Building2 size={18} color="white" />
+                </div>
+              </Marker>
+            );
+          })}
+
+          {/* Custom Markers (simple label popups) */}
+          {markers.map((marker, index) => (
             <Marker
               key={`${marker.label}-${index}`}
               longitude={marker.lng}
@@ -432,7 +590,8 @@ export function BlogMap({
               anchor="bottom"
               onClick={(e) => {
                 e.originalEvent.stopPropagation();
-                setPopupInfo({ lng: marker.lng, lat: marker.lat, label: marker.label });
+                setSelectedHotel(null);
+                setSimplePopupInfo({ lng: marker.lng, lat: marker.lat, label: marker.label });
               }}
             >
               <div 
@@ -450,19 +609,38 @@ export function BlogMap({
             </Marker>
           ))}
 
-          {/* Popup */}
-          {popupInfo && (
+          {/* Hotel Preview Popup */}
+          {selectedHotel && (
             <Popup
-              longitude={popupInfo.lng}
-              latitude={popupInfo.lat}
+              longitude={getHotelCoords(selectedHotel).lng}
+              latitude={getHotelCoords(selectedHotel).lat}
               anchor="bottom"
-              onClose={() => setPopupInfo(null)}
+              onClose={() => setSelectedHotel(null)}
+              closeButton={true}
+              closeOnClick={false}
+              offset={35}
+              maxWidth="none"
+            >
+              <HotelPreviewCard 
+                hotel={selectedHotel} 
+                onViewDetails={() => handleViewDetails(selectedHotel.hotel_id)}
+              />
+            </Popup>
+          )}
+
+          {/* Simple Popup for non-hotel markers */}
+          {simplePopupInfo && (
+            <Popup
+              longitude={simplePopupInfo.lng}
+              latitude={simplePopupInfo.lat}
+              anchor="bottom"
+              onClose={() => setSimplePopupInfo(null)}
               closeButton={true}
               closeOnClick={false}
               offset={25}
             >
               <div className="font-semibold text-neutral-900 text-sm pr-4">
-                {popupInfo.label}
+                {simplePopupInfo.label}
               </div>
             </Popup>
           )}
@@ -542,4 +720,3 @@ export function BlogMap({
 }
 
 export default BlogMap;
-

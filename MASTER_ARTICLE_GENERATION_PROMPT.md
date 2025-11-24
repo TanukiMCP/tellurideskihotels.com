@@ -1744,7 +1744,7 @@ The Madeline and Peaks Resort both offer exceptional ski-in/ski-out access with 
 />
 ```
 
-**Show Specific Hotels with Lifts:**
+**Show Specific Hotels with Lifts (Rich Preview Cards on Click):**
 ```markdown
 <BlogMap 
   preset="hotels"
@@ -1754,6 +1754,21 @@ The Madeline and Peaks Resort both offer exceptional ski-in/ski-out access with 
   client:load
 />
 ```
+
+**⚠️ HOTEL MARKER CURATION (MANDATORY):**
+When using `hotelIds` with BlogMap, you MUST manually curate the hotel IDs by:
+1. Identify hotels mentioned in the surrounding article text
+2. Search `src/data/telluride-hotels.csv` for each hotel name to get the ID
+3. Use `grep -i "hotel-name" src/data/telluride-hotels.csv` to find IDs
+4. Add only the relevant hotel IDs to the `hotelIds` array
+
+**What Happens:**
+- Hotel markers appear on the map as clickable icons
+- When user clicks a marker → rich preview card popup appears with:
+  - Hotel image
+  - Star rating
+  - Guest review score & count
+  - "View Details" CTA button linking to `/lodging/{hotel_id}`
 
 **Trail-Focused with 3D Terrain:**
 ```markdown

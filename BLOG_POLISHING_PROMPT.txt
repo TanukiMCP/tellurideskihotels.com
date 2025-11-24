@@ -88,8 +88,8 @@ You have multiple conversion tools—use them strategically based on content typ
 - `town` - Downtown Telluride focused  
 - `mountain-village` - Mountain Village focused
 - `overview` - Both areas showing gondola connection
-- `hotels` - Auto-fit to show hotel markers
-- `trails` - Trail-focused with difficulty colors
+- `hotels` - Auto-fit to show hotel markers (with rich preview cards on click)
+- `trails` - Trail-focused with difficulty colors (auto-enables 3D terrain)
 
 **When to Use BlogMap:**
 - Location comparison sections (downtown vs Mountain Village)
@@ -97,6 +97,13 @@ You have multiple conversion tools—use them strategically based on content typ
 - Gondola discussions
 - Trail/terrain breakdowns
 - Hotel proximity to slopes
+
+**⚠️ Hotel Marker Curation:**
+When using `hotelIds` prop, markers appear on the map. Clicking a marker shows a rich preview card with:
+- Hotel image, star rating, guest reviews
+- "View Details" CTA → links to `/lodging/{hotel_id}`
+
+**MUST manually curate hotel IDs** from `src/data/telluride-hotels.csv` - match hotels mentioned in article text.
 
 ---
 
