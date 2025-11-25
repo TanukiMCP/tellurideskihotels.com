@@ -62,11 +62,7 @@ This comprehensive guide provides everything you need to plan your Telluride cor
 
 Use the event planning timeline below to organize your corporate retreat planning, ensuring all logistics are handled on schedule. Corporate retreats require advance planning to secure meeting spaces, accommodations, and activities.
 
-<EventPlanningTimeline 
-  eventType="corporate-retreat"
-  eventDate="2025-03-15"
-  groupSize={20}
-/>
+<TripCalculator defaultNights={3} defaultGuests={20} title="Corporate Retreat Cost Calculator" />
 
 For information about planning other types of group trips, see our [friends ski trip guide](/blog/planning-tips/telluride-friends-ski-trip) or [multi-family trip guide](/blog/planning-tips/telluride-multi-family-ski-trip). For accommodation options, review our [where to stay guide](/blog/destination-guides/where-to-stay-telluride).
 
@@ -90,12 +86,7 @@ Lumiere Telluride and Fairmont Heritage Place offer condominium-style accommodat
 
 Downtown Telluride properties like Hotel Telluride offer smaller meeting spaces suitable for team meetings rather than large corporate events. These properties provide intimate settings for team discussions, strategic planning sessions, or smaller group work. The downtown location provides walkable access to restaurants and activities, creating different atmospheres than resort properties. Meeting capacities typically range 10-50 people, with basic audiovisual equipment available.
 
-<LodgingComparisonMatrix 
-  compareIds={["peaks-resort", "madeline-hotel", "lumiere-telluride", "fairmont-heritage-place"]}
-  criteria={["meeting-spaces", "location", "amenities", "group-capacity"]}
-  groupSize={20}
-  nights={3}
-/>
+<HotelComparison hotelIds={["lp21ee2", "lp4b27f", "lp4153f", "lp3d0c1"]} title="Compare Corporate Retreat Hotels" groupSize={20} />
 
 ## Team Building Activities
 
@@ -109,13 +100,7 @@ Outdoor activities like snowshoeing tours, guided hikes, or adventure activities
 
 Social activities provide important team building opportunities that many corporate retreats prioritize. Group meals, après-ski gatherings, and informal social time create environments where team members can connect outside formal meeting contexts. Many corporate retreats find that social activities provide some of the most valuable team building, as informal interactions build relationships that enhance workplace collaboration. The key is creating social opportunities that feel natural rather than forced, allowing team dynamics to develop organically.
 
-<GroupCostCalculator 
-  groupType="corporate"
-  defaultNights={3}
-  defaultGuests={20}
-  checkIn="2025-03-15"
-  checkOut="2025-03-18"
-/>
+<TripCalculator defaultNights={3} defaultGuests={20} title="Corporate Retreat Budget Planner" />
 
 ## Group Lodging Strategies for Corporate Retreats
 

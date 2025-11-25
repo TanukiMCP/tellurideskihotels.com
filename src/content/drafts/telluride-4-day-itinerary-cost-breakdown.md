@@ -54,13 +54,7 @@ Planning a 4-day Telluride ski trip requires balancing daily activities, accommo
 
 Use the budget planner below to allocate your 4-day trip budget across lodging, activities, dining, and lift tickets. Adjust the inputs to see how different group sizes and budgets affect your itinerary options.
 
-<BudgetToItineraryPlanner 
-  budgetPerPerson={1500}
-  tripLength={4}
-  groupSize={4}
-  checkIn="2025-12-20"
-  checkOut="2025-12-24"
-/>
+<TripCalculator defaultNights={4} defaultGuests={4} title="4-Day Trip Cost Calculator" />
 
 For detailed cost information by group size, see our [ski trip cost calculator guide](/blog/planning-tips/telluride-ski-trip-cost-calculator). For family trip planning, check our [family ski vacation guide](/blog/planning-tips/telluride-family-ski-vacation). For friend group planning, review our [friends ski trip guide](/blog/planning-tips/telluride-friends-ski-trip).
 
@@ -87,13 +81,7 @@ For detailed cost information by group size, see our [ski trip cost calculator g
 - **6 People:** Accommodations $600-1,200/night ($100-200 pp), Equipment rental $100-160 ($50-80 pp), Dinner $180-300 ($30-50 pp) = **$180-330 per person**
 - **8 People:** Accommodations $800-1,600/night ($100-200 pp), Equipment rental $100-160 ($50-80 pp), Dinner $240-400 ($30-50 pp) = **$180-330 per person**
 
-<GroupCostCalculator 
-  groupType="friends"
-  defaultNights={4}
-  defaultGuests={4}
-  checkIn="2025-12-20"
-  checkOut="2025-12-24"
-/>
+<TripCalculator defaultNights={4} defaultGuests={4} title="Group Trip Cost Estimator" />
 
 ## Day 2: Full Day of Skiing
 
@@ -131,13 +119,7 @@ For detailed cost information by group size, see our [ski trip cost calculator g
 
 *Note: Group lessons provide better per-person value for larger groups. Activities are optional and can be adjusted based on preferences.*
 
-<CostPerPersonRanking 
-  hotelIds={["madeline-hotel", "peaks-resort", "mountain-village-condo", "downtown-condo"]}
-  groupSize={4}
-  nights={4}
-  checkIn="2025-12-20"
-  checkOut="2025-12-24"
-/>
+<HotelComparison hotelIds={["lp4b27f", "lp21ee2", "lp4153f"]} title="Compare Accommodation Options" groupSize={4} />
 
 ## Day 4: Final Skiing and Departure
 

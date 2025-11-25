@@ -54,12 +54,14 @@
 
 # Best Telluride Hotels for Groups: Ranked by Amenities & Space (2025)
 
-Finding the best Telluride hotels for groups requires evaluating properties based on group-specific needs: space for gatherings, multiple room configurations, meeting facilities, group-friendly amenities, and coordination services. This comprehensive ranking analyzes Telluride hotels based on their ability to accommodate groups effectively, comparing amenities, space options, meeting facilities, and group services. Whether you're planning a family reunion, corporate retreat, wedding party, or friend group trip, understanding which hotels work best for groups helps make informed decisions that maximize group experiences.
+Finding the best Telluride hotels for groups requires evaluating properties based on group-specific needs: space for gatherings, multiple room configurations, meeting facilities, group-friendly amenities, and coordination services. This comprehensive ranking analyzes Telluride hotels based on their ability to accommodate groups effectively, comparing amenities, space options, meeting facilities, and group services.
+
+Whether you're planning a family reunion, corporate retreat, wedding party, or friend group trip, understanding which hotels work best for groups helps make informed decisions that maximize group experiences. Group travel presents unique challenges that individual trips don't, making it essential to choose accommodations that support group dynamics and logistics.
 
 Use the lodging comparison matrix below to compare group-friendly hotels based on amenities, space, meeting facilities, and group capacity. Adjust criteria to match your specific group needs.
 
 <LodgingComparisonMatrix 
-  compareIds={["peaks-resort", "madeline-hotel", "lumiere-telluride", "fairmont-heritage-place", "hotel-telluride"]}
+  compareIds={["lp21ee2", "lp4b27f", "lp4153f", "lp3d0c1", "lp2ff71"]}
   criteria={["group-capacity", "meeting-spaces", "amenities", "space", "group-services"]}
   groupSize={12}
   nights={4}
@@ -77,12 +79,9 @@ For information about planning multi-family trips, see our [multi-family trip gu
 
 ## Ranking Methodology
 
-This ranking evaluates hotels based on:
-- **Group capacity** (ability to accommodate large groups)
-- **Meeting spaces** (rooms and facilities for group gatherings)
-- **Amenities** (pools, restaurants, common areas for groups)
-- **Space options** (suites, connecting rooms, large accommodations)
-- **Group services** (coordination, group rates, event planning)
+This ranking evaluates hotels based on five key factors that determine how well properties accommodate groups. Group capacity measures each property's ability to accommodate large groups through multiple room configurations and large accommodations. Meeting spaces evaluate available rooms and facilities for group gatherings, from small team meetings to large corporate events.
+
+Amenities assess pools, restaurants, and common areas that create natural gathering spaces for groups. Space options examine suites, connecting rooms, and large accommodations that provide flexibility for different group needs. Group services evaluate coordination support, group rates, and event planning assistance that simplify group logistics.
 
 ## Top Hotels for Groups
 
@@ -151,12 +150,7 @@ Hotel Telluride provides group-friendly accommodations with meeting spaces and d
 - Included breakfast and amenities
 - Modern accommodations
 
-<HotelSplitCalculator 
-  hotelIds={["peaks-resort", "madeline-hotel", "lumiere-telluride"]}
-  scenario="group-of-12"
-  defaultNights={4}
-  defaultGuests={12}
-/>
+<TripCalculator defaultNights={4} defaultGuests={12} title="Group Trip Cost Calculator" />
 
 ## Group Capacity Analysis
 
@@ -182,13 +176,7 @@ Meeting spaces are crucial for groups requiring formal gatherings, corporate ret
 
 **Hotel Telluride:** Smaller meeting spaces for small groups, flexible common areas, downtown location for off-site meeting options.
 
-<GroupCostCalculator 
-  groupType="friends"
-  defaultNights={4}
-  defaultGuests={12}
-  checkIn="2025-12-20"
-  checkOut="2025-12-24"
-/>
+<HotelGrid hotelIds={["lp21ee2", "lp4b27f", "lp4153f"]} title="Top Group-Friendly Hotels" client:load />
 
 ## Amenities for Groups
 

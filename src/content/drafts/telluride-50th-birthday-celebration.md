@@ -63,11 +63,7 @@ This comprehensive guide provides everything you need to plan your Telluride 50t
 
 Use the event planning timeline below to organize your 50th birthday celebration planning, ensuring all logistics are handled on schedule. Milestone celebrations require advance planning to secure accommodations, activities, and special experiences.
 
-<EventPlanningTimeline 
-  eventType="celebration"
-  eventDate="2025-06-15"
-  groupSize={12}
-/>
+<TripCalculator defaultNights={4} defaultGuests={12} title="50th Birthday Celebration Cost Calculator" />
 
 For information about planning other types of celebrations, see our [bachelor/bachelorette party guide](/blog/planning-tips/telluride-bachelor-bachelorette-party) or [couples retreat guide](/blog/planning-tips/telluride-couples-retreat). For accommodation options, review our [where to stay guide](/blog/destination-guides/where-to-stay-telluride).
 
@@ -91,13 +87,7 @@ Two months before the celebration, finalize activity schedules, make restaurant 
 
 One month before the celebration, send final details to all attendees, confirm reservations, and handle last-minute logistics. Final attendee counts help adjust accommodations if needed, while confirmation calls to properties and activities prevent surprises. Last-minute details like celebration decorations, surprise elements, and special requests should be coordinated. If the celebration is a surprise, final coordination becomes especially important to ensure all elements work together seamlessly.
 
-<GroupCostCalculator 
-  groupType="friends"
-  defaultNights={4}
-  defaultGuests={12}
-  checkIn="2025-06-15"
-  checkOut="2025-06-19"
-/>
+<HotelComparison hotelIds={["lp4b27f", "lp21ee2", "lp4153f"]} title="Compare Celebration Accommodations" groupSize={12} />
 
 ## Group Lodging for Birthday Celebrations
 
@@ -111,13 +101,7 @@ Downtown Telluride vacation rentals provide gondola access to skiing plus walkab
 
 Hotels work well for smaller celebration groups (8-12 people) or groups prioritizing convenience and services over space and cost savings. Multiple rooms in the same hotel keep groups together while providing individual privacy, and hotel amenities like pools, hot tubs, and restaurants create natural gathering spaces. Properties like The Madeline and Peaks Resort offer group-friendly configurations and social spaces. The convenience factor becomes valuable when groups want to focus on celebration rather than managing accommodations.
 
-<BudgetToItineraryPlanner 
-  budgetPerPerson={1200}
-  tripLength={4}
-  groupSize={12}
-  checkIn="2025-06-15"
-  checkOut="2025-06-19"
-/>
+<TripCalculator defaultNights={4} defaultGuests={12} title="Celebration Budget Planner" />
 
 ## Celebration Activities and Experiences
 

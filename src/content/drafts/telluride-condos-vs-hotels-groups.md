@@ -57,12 +57,7 @@ Choosing between condos and hotels for Telluride group trips requires understand
 
 Use the hotel split calculator below to compare condos vs hotels for your group size, showing per-person cost differences and helping you make informed accommodation decisions.
 
-<HotelSplitCalculator 
-  hotelIds={["peaks-resort", "madeline-hotel", "mountain-village-condo"]}
-  scenario="group-of-6"
-  defaultNights={4}
-  defaultGuests={6}
-/>
+<HotelComparison hotelIds={["lp21ee2", "lp4b27f", "lp4153f"]} title="Compare Hotels vs Condos" groupSize={6} />
 
 For detailed information about planning family trips, see our [family ski vacation guide](/blog/planning-tips/telluride-family-ski-vacation). For friend group planning, check our [friends ski trip guide](/blog/planning-tips/telluride-friends-ski-trip). For cost breakdowns by group size, review our [ski trip cost calculator](/blog/planning-tips/telluride-ski-trip-cost-calculator).
 
@@ -98,13 +93,7 @@ Per-person accommodation costs vary dramatically based on group size and accommo
 - Condos: $800-1,600 per night ($100-200 per person)
 - **Winner:** Condos provide substantial savings (30-40%), with group bookings often providing additional discounts
 
-<CostPerPersonRanking 
-  hotelIds={["peaks-resort", "madeline-hotel", "lumiere-telluride", "mountain-village-condo"]}
-  groupSize={6}
-  nights={4}
-  checkIn="2025-12-20"
-  checkOut="2025-12-24"
-/>
+<HotelComparison hotelIds={["lp21ee2", "lp4b27f", "lp4153f", "lp656c95d8"]} title="Compare Per-Person Costs" groupSize={6} />
 
 ## Condo Advantages for Groups
 
@@ -134,12 +123,7 @@ Hotels provide advantages that may justify higher costs for some groups, especia
 
 **No Maintenance:** Hotels eliminate concerns about cleaning, maintenance, or property management that condos require. Groups simply check in and enjoy, without worrying about accommodation details. This simplicity appeals to groups wanting hassle-free experiences.
 
-<LodgingComparisonMatrix 
-  compareIds={["peaks-resort", "madeline-hotel", "lumiere-telluride", "mountain-village-condo"]}
-  criteria={["cost-per-person", "space", "amenities", "location", "kitchen"]}
-  groupSize={6}
-  nights={4}
-/>
+<HotelComparison hotelIds={["lp21ee2", "lp4b27f", "lp4153f", "lp656c95d8"]} title="Compare All Options" groupSize={6} />
 
 ## Dining Cost Impact
 
