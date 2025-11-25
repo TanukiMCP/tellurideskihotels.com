@@ -3,7 +3,7 @@
   "id": "telluride-solo-travel",
   "title": "Telluride Solo Travel: Complete Independent Traveler's Guide (2025)",
   "slug": "telluride-solo-travel",
-  "status": "scheduled",
+  "status": "published",
   "category": "planning-tips",
   "author": "Telluride Ski Hotels Team",
   "publishDate": "2025-11-25T15:00:00Z",
@@ -47,7 +47,8 @@
     "spring",
     "summer",
     "fall"
-  ]
+  ],
+  "updatedDate": "2025-11-25T14:10:35.571Z"
 }
 ---
 
