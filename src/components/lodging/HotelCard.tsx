@@ -40,7 +40,9 @@ export function HotelCard({
   const address = formatHotelAddress(hotel);
   const rating = hotel.review_score || 0;
   const reviewCount = hotel.review_count || 0;
-  const starRating = hotel.star_rating || 0;
+  // Ensure starRating is a valid positive integer (0-5) to avoid Invalid Array Length errors
+  const rawStarRating = hotel.star_rating || 0;
+  const starRating = Math.max(0, Math.min(5, Math.floor(Number(rawStarRating) || 0)));
 
   const stripHTML = (html: string): string => {
     if (!html) return '';

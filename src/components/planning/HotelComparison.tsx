@@ -39,22 +39,31 @@ export function HotelComparison({
   groupSize = 2,
   title = 'Compare Top Properties',
 }: HotelComparisonProps) {
-  // Use smart defaults: 30-37 days out (better availability, avoids immediate sold-out dates)
-  const defaultCheckInDate = format(addDays(new Date(), 30), 'yyyy-MM-dd');
-  const defaultCheckOutDate = format(addDays(new Date(), 37), 'yyyy-MM-dd');
-  
   const [guests, setGuests] = useState(groupSize);
-  const [checkIn, setCheckIn] = useState(defaultCheckInDate);
-  const [checkOut, setCheckOut] = useState(defaultCheckOutDate);
+  // Initialize dates as empty to avoid hydration mismatch (new Date() differs server vs client)
+  const [checkIn, setCheckIn] = useState('');
+  const [checkOut, setCheckOut] = useState('');
   const [hotels, setHotels] = useState<HotelData[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [showSettings, setShowSettings] = useState(false);
+  const [isInitialized, setIsInitialized] = useState(false);
 
+  // Set default dates client-side only to avoid hydration mismatch
   useEffect(() => {
+    const defaultCheckInDate = format(addDays(new Date(), 30), 'yyyy-MM-dd');
+    const defaultCheckOutDate = format(addDays(new Date(), 37), 'yyyy-MM-dd');
+    setCheckIn(defaultCheckInDate);
+    setCheckOut(defaultCheckOutDate);
+    setIsInitialized(true);
+  }, []);
+
+  // Fetch data only after dates are initialized
+  useEffect(() => {
+    if (!isInitialized || !checkIn || !checkOut) return;
     fetchAndCalculateHotels();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [guests, checkIn, checkOut, hotelIds, filter]);
+  }, [isInitialized, guests, checkIn, checkOut, hotelIds, filter]);
 
   const fetchAndCalculateHotels = async () => {
     try {

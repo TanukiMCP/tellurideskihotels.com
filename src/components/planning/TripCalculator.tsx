@@ -41,10 +41,6 @@ export function TripCalculator({
   defaultGuests = 2,
   title = 'Trip Cost Calculator',
 }: TripCalculatorProps) {
-  // Smart default dates: 30 days out (better availability, avoids immediate sold-out dates)
-  const defaultCheckInDate = format(addDays(new Date(), 30), 'yyyy-MM-dd');
-  const defaultCheckOutDate = format(addDays(new Date(), 30 + defaultNights), 'yyyy-MM-dd');
-
   const [guests, setGuests] = useState(defaultGuests);
   const [nights, setNights] = useState(defaultNights);
   const [loading, setLoading] = useState(true);
@@ -55,14 +51,28 @@ export function TripCalculator({
     midRange: 400,
     luxury: 900,
   });
+  // Initialize dates client-side only to avoid hydration mismatch
+  const [checkInDate, setCheckInDate] = useState('');
+  const [checkOutDate, setCheckOutDate] = useState('');
 
   useEffect(() => {
-    fetchRates();
-  }, []);
+    // Set dates client-side only
+    const defaultCheckIn = format(addDays(new Date(), 30), 'yyyy-MM-dd');
+    const defaultCheckOut = format(addDays(new Date(), 30 + defaultNights), 'yyyy-MM-dd');
+    setCheckInDate(defaultCheckIn);
+    setCheckOutDate(defaultCheckOut);
+    fetchRates(defaultCheckIn, defaultCheckOut);
+  }, [defaultNights]);
 
-  const fetchRates = async () => {
+  const fetchRates = async (checkIn: string, checkOut: string) => {
     try {
       setLoading(true);
+      
+      if (!checkIn || !checkOut) {
+        setLodgingRates({ budget: 180, midRange: 400, luxury: 900 });
+        setLoading(false);
+        return;
+      }
       
       const searchParams = new URLSearchParams({
         cityName: 'Telluride',
@@ -90,8 +100,8 @@ export function TripCalculator({
       const hotelIds = hotels.map(h => h.hotel_id);
       const ratesParams = new URLSearchParams({
         hotelIds: hotelIds.join(','),
-        checkIn: defaultCheckInDate,
-        checkOut: defaultCheckOutDate,
+        checkIn: checkIn,
+        checkOut: checkOut,
         adults: guests.toString(),
       });
       
@@ -481,8 +491,8 @@ export function TripCalculator({
           <HotelGrid
             filter={selectedTier === 'budget' ? 'budget' : selectedTier === 'luxury' ? 'luxury' : undefined}
             limit={3}
-            checkIn={defaultCheckInDate}
-            checkOut={defaultCheckOutDate}
+            checkIn={checkInDate}
+            checkOut={checkOutDate}
             title=""
           />
         </div>
