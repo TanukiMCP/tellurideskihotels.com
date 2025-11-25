@@ -63,44 +63,23 @@ export function HotelComparison({
       
       let hotelsData: LiteAPIHotel[] = [];
       
-      // If specific hotel IDs provided, fetch them directly for more reliable results
+      // If specific hotel IDs provided, fetch them directly
       if (hotelIds && hotelIds.length > 0) {
-        console.log('[HotelComparison] Fetching hotels by ID:', hotelIds);
-        
         const hotelPromises = hotelIds.map(async (id) => {
           try {
-            // Use the /api/hotels/details endpoint which has caching
             const response = await fetch(`/api/hotels/details?hotelId=${id}`);
             if (response.ok) {
               const data = await response.json();
-              const hotel = data.data || data;
-              console.log(`[HotelComparison] Hotel ${id} response:`, {
-                name: hotel?.name,
-                hotel_id: hotel?.hotel_id,
-                star_rating: hotel?.star_rating,
-                hasImages: !!hotel?.images?.length,
-              });
-              return hotel;
+              return data.data || data;
             }
-            console.warn(`[HotelComparison] Hotel ${id} fetch failed:`, response.status);
             return null;
-          } catch (err) {
-            console.error(`[HotelComparison] Hotel ${id} error:`, err);
+          } catch {
             return null;
           }
         });
         
         const results = await Promise.all(hotelPromises);
         hotelsData = results.filter((h): h is LiteAPIHotel => h !== null && h.name);
-        console.log('[HotelComparison] Valid hotels loaded:', hotelsData.length);
-        
-        // If no valid hotels found, provide specific error feedback
-        if (hotelsData.length === 0 && hotelIds.length > 0) {
-          console.error('[HotelComparison] No hotels loaded despite valid IDs. API may be failing.');
-          setError('Unable to load hotel details. Please try refreshing the page.');
-          setLoading(false);
-          return;
-        }
       } else {
         // Fall back to city search for filter-based queries
         const params = new URLSearchParams({
