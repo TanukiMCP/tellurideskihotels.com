@@ -190,10 +190,12 @@ export function HotelGrid({
   const [isLoadingHotels, setIsLoadingHotels] = useState(true);
   const [isLoadingRates, setIsLoadingRates] = useState(false);
 
-  // Calculate default dates on client side only to avoid hydration mismatch
+  // Calculate smart default dates on client side only to avoid hydration mismatch
+  // Use 30-37 days out (better availability, avoids immediate sold-out dates)
   useEffect(() => {
-    const defaultCheckIn = format(addDays(new Date(), 7), 'yyyy-MM-dd');
-    const defaultCheckOut = format(addDays(new Date(), 14), 'yyyy-MM-dd');
+    const today = new Date();
+    const defaultCheckIn = format(addDays(today, 30), 'yyyy-MM-dd');
+    const defaultCheckOut = format(addDays(today, 37), 'yyyy-MM-dd');
     setComputedCheckIn(checkIn || defaultCheckIn);
     setComputedCheckOut(checkOut || defaultCheckOut);
   }, [checkIn, checkOut]);
@@ -316,6 +318,19 @@ export function HotelGrid({
   // Fetch min-rates once dates are computed AND hotels are loaded
   useEffect(() => {
     if (!computedCheckIn || !computedCheckOut || hotels.length === 0) {
+      console.log('[HotelGrid] Skipping rate fetch:', {
+        hasCheckIn: !!computedCheckIn,
+        hasCheckOut: !!computedCheckOut,
+        hotelsCount: hotels.length,
+      });
+      return;
+    }
+
+    // Validate dates
+    const checkInDate = new Date(computedCheckIn);
+    const checkOutDate = new Date(computedCheckOut);
+    if (isNaN(checkInDate.getTime()) || isNaN(checkOutDate.getTime()) || checkOutDate <= checkInDate) {
+      console.error('[HotelGrid] Invalid dates:', { computedCheckIn, computedCheckOut });
       return;
     }
 
@@ -323,6 +338,10 @@ export function HotelGrid({
     setIsLoadingRates(true);
 
     const hotelIds = hotels.map(h => h.hotel_id);
+    console.log('[HotelGrid] Hotels to fetch rates for:', {
+      hotelIds,
+      hotelNames: hotels.map(h => h.name),
+    });
     const ratesParams = new URLSearchParams({
       hotelIds: hotelIds.join(','),
       checkIn: computedCheckIn,
@@ -330,32 +349,49 @@ export function HotelGrid({
       adults: '2',
     });
     
-    // Calculate nights for price-per-night conversion
-    const nightsCount = Math.ceil(
-      (new Date(computedCheckOut).getTime() - new Date(computedCheckIn).getTime()) / (1000 * 60 * 60 * 24)
-    ) || 1;
+    console.log('[HotelGrid] Fetching rates:', {
+      hotelIds,
+      checkIn: computedCheckIn,
+      checkOut: computedCheckOut,
+      url: `/api/hotels/min-rates?${ratesParams.toString()}`,
+    });
     
     fetch(`/api/hotels/min-rates?${ratesParams.toString()}`)
-      .then(res => res.ok ? res.json() : null)
+      .then(res => {
+        if (!res.ok) {
+          const errorText = res.statusText;
+          console.error('[HotelGrid] Rates API error:', res.status, errorText);
+          return null;
+        }
+        return res.json();
+      })
       .then(ratesData => {
         if (!isMounted) return;
+        
+        console.log('[HotelGrid] Rates response:', ratesData);
         
         if (ratesData?.data && Array.isArray(ratesData.data)) {
           const prices: Record<string, number> = {};
           
-          // API returns total price for stay - convert to per-night
           ratesData.data.forEach((item: { hotelId?: string; price?: number }) => {
             if (item.hotelId && item.price && item.price > 0) {
-              prices[item.hotelId] = Math.round(item.price / nightsCount);
+              prices[item.hotelId] = item.price;
+              console.log(`[HotelGrid] Price for ${item.hotelId}: $${item.price}/night`);
             }
           });
           
+          console.log('[HotelGrid] Final price map:', prices);
           setMinPrices(prices);
+        } else {
+          console.warn('[HotelGrid] No rate data in response:', ratesData);
         }
         setIsLoadingRates(false);
       })
-      .catch(() => {
-        if (isMounted) setIsLoadingRates(false);
+      .catch(err => {
+        console.error('[HotelGrid] Error fetching min rates:', err);
+        if (isMounted) {
+          setIsLoadingRates(false);
+        }
       });
     
     return () => {
@@ -372,6 +408,20 @@ export function HotelGrid({
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
     return Math.max(1, diffDays);
   }, [computedCheckIn, computedCheckOut]);
+
+  // Debug: Log price mapping
+  useEffect(() => {
+    if (hotels.length > 0 && Object.keys(minPrices).length > 0) {
+      console.log('[HotelGrid] Price mapping for cards:', 
+        hotels.map(h => ({
+          hotelId: h.hotel_id,
+          name: h.name,
+          price: minPrices[h.hotel_id],
+          hasPrice: !!(minPrices[h.hotel_id] && minPrices[h.hotel_id] > 0),
+        }))
+      );
+    }
+  }, [hotels, minPrices]);
 
   // Determine display mode based on number of hotels
   const displayMode = hotels.length === 1 ? 'single' : hotels.length === 2 ? 'double' : 'triple';
@@ -424,8 +474,8 @@ export function HotelGrid({
                   checkOutDate={computedCheckOut || undefined}
                   priceLoading={isLoadingRates}
                   onSelect={(id) => {
-                    const checkInDate = computedCheckIn || format(addDays(new Date(), 7), 'yyyy-MM-dd');
-                    const checkOutDate = computedCheckOut || format(addDays(new Date(), 14), 'yyyy-MM-dd');
+                    const checkInDate = computedCheckIn || format(addDays(new Date(), 30), 'yyyy-MM-dd');
+                    const checkOutDate = computedCheckOut || format(addDays(new Date(), 37), 'yyyy-MM-dd');
                     window.location.href = `/places-to-stay/${id}?checkIn=${checkInDate}&checkOut=${checkOutDate}&adults=2&rooms=1`;
                   }}
                 />
@@ -447,8 +497,8 @@ export function HotelGrid({
                     checkOutDate={computedCheckOut || undefined}
                     priceLoading={isLoadingRates}
                     onSelect={(id) => {
-                      const checkInDate = computedCheckIn || format(addDays(new Date(), 7), 'yyyy-MM-dd');
-                      const checkOutDate = computedCheckOut || format(addDays(new Date(), 14), 'yyyy-MM-dd');
+                      const checkInDate = computedCheckIn || format(addDays(new Date(), 30), 'yyyy-MM-dd');
+                      const checkOutDate = computedCheckOut || format(addDays(new Date(), 37), 'yyyy-MM-dd');
                       window.location.href = `/places-to-stay/${id}?checkIn=${checkInDate}&checkOut=${checkOutDate}&adults=2&rooms=1`;
                     }}
                   />
@@ -456,28 +506,37 @@ export function HotelGrid({
             </div>
           )}
       
-          <div className="mt-8 text-center">
-            <a
-              href={`/places-to-stay${filter ? `?filter=${filter}` : ''}${computedCheckIn ? `&checkin=${computedCheckIn}` : ''}${computedCheckOut ? `&checkout=${computedCheckOut}` : ''}`}
-              className="inline-flex items-center justify-center gap-2 bg-primary-600 hover:bg-primary-700 !text-white font-semibold px-6 py-3 rounded-lg transition-colors duration-200 shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2"
-              aria-label="View all properties in Telluride"
-            >
-              View All Properties
-              <svg 
-                className="w-5 h-5 !text-white" 
-                fill="none" 
-                stroke="currentColor" 
-                viewBox="0 0 24 24"
-                aria-hidden="true"
+          <div className="mt-8 space-y-3">
+            <div className="text-center">
+              <a
+                href={`/places-to-stay${filter ? `?filter=${filter}` : ''}${computedCheckIn ? `&checkin=${computedCheckIn}` : ''}${computedCheckOut ? `&checkout=${computedCheckOut}` : ''}`}
+                className="inline-flex items-center justify-center gap-2 bg-primary-600 hover:bg-primary-700 !text-white font-semibold px-6 py-3 rounded-lg transition-colors duration-200 shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2"
+                aria-label="View all properties in Telluride"
               >
-                <path 
-                  strokeLinecap="round" 
-                  strokeLinejoin="round" 
-                  strokeWidth={2} 
-                  d="M9 5l7 7-7 7" 
-                />
-              </svg>
-            </a>
+                View All Properties
+                <svg 
+                  className="w-5 h-5 !text-white" 
+                  fill="none" 
+                  stroke="currentColor" 
+                  viewBox="0 0 24 24"
+                  aria-hidden="true"
+                >
+                  <path 
+                    strokeLinecap="round" 
+                    strokeLinejoin="round" 
+                    strokeWidth={2} 
+                    d="M9 5l7 7-7 7" 
+                  />
+                </svg>
+              </a>
+            </div>
+            {Object.keys(minPrices).length > 0 && (
+              <p className="text-xs text-neutral-500 text-center">
+                Prices shown are sample rates for {computedCheckIn && computedCheckOut 
+                  ? `${format(new Date(computedCheckIn), 'MMM d')} - ${format(new Date(computedCheckOut), 'MMM d')}`
+                  : 'selected dates'}. Actual rates vary by date and availability. Hotels without prices may not have availability for these dates.
+              </p>
+            )}
           </div>
         </>
       )}

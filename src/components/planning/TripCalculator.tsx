@@ -41,9 +41,9 @@ export function TripCalculator({
   defaultGuests = 2,
   title = 'Trip Cost Calculator',
 }: TripCalculatorProps) {
-  // Default dates: 7 days from today
-  const defaultCheckInDate = format(addDays(new Date(), 7), 'yyyy-MM-dd');
-  const defaultCheckOutDate = format(addDays(new Date(), 7 + defaultNights), 'yyyy-MM-dd');
+  // Smart default dates: 30 days out (better availability, avoids immediate sold-out dates)
+  const defaultCheckInDate = format(addDays(new Date(), 30), 'yyyy-MM-dd');
+  const defaultCheckOutDate = format(addDays(new Date(), 30 + defaultNights), 'yyyy-MM-dd');
 
   const [guests, setGuests] = useState(defaultGuests);
   const [nights, setNights] = useState(defaultNights);

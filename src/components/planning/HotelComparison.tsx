@@ -39,8 +39,9 @@ export function HotelComparison({
   groupSize = 2,
   title = 'Compare Top Properties',
 }: HotelComparisonProps) {
-  const defaultCheckInDate = format(addDays(new Date(), 7), 'yyyy-MM-dd');
-  const defaultCheckOutDate = format(addDays(new Date(), 14), 'yyyy-MM-dd');
+  // Use smart defaults: 30-37 days out (better availability, avoids immediate sold-out dates)
+  const defaultCheckInDate = format(addDays(new Date(), 30), 'yyyy-MM-dd');
+  const defaultCheckOutDate = format(addDays(new Date(), 37), 'yyyy-MM-dd');
   
   const [guests, setGuests] = useState(groupSize);
   const [checkIn, setCheckIn] = useState(defaultCheckInDate);
@@ -59,15 +60,44 @@ export function HotelComparison({
     try {
       setLoading(true);
       
-      const nightsCalc = Math.ceil((new Date(checkOut).getTime() - new Date(checkIn).getTime()) / (1000 * 60 * 60 * 24));
+      // Validate dates
+      const checkInDate = new Date(checkIn);
+      const checkOutDate = new Date(checkOut);
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      
+      if (isNaN(checkInDate.getTime()) || isNaN(checkOutDate.getTime())) {
+        throw new Error('Invalid dates provided');
+      }
+      
+      if (checkInDate < today) {
+        throw new Error('Check-in date must be today or later');
+      }
+      
+      if (checkOutDate <= checkInDate) {
+        throw new Error('Check-out date must be after check-in date');
+      }
+      
+      const nightsCalc = Math.ceil((checkOutDate.getTime() - checkInDate.getTime()) / (1000 * 60 * 60 * 24));
+      
+      if (nightsCalc < 1) {
+        throw new Error('Stay must be at least 1 night');
+      }
+      
+      console.log('[HotelComparison] Validated dates:', {
+        checkIn,
+        checkOut,
+        nights: nightsCalc,
+        guests,
+      });
       
       let hotelsData: LiteAPIHotel[] = [];
       
-      // If specific hotel IDs provided, fetch them directly
+      // If specific hotel IDs provided, fetch them directly for more reliable results
       if (hotelIds && hotelIds.length > 0) {
         const hotelPromises = hotelIds.map(async (id) => {
           try {
-            const response = await fetch(`/api/hotels/details?hotelId=${id}`);
+            const response = await fetch(`/api/liteapi/hotel?hotelId=${id}`);
             if (response.ok) {
               const data = await response.json();
               return data.data || data;
@@ -79,7 +109,7 @@ export function HotelComparison({
         });
         
         const results = await Promise.all(hotelPromises);
-        hotelsData = results.filter((h): h is LiteAPIHotel => h !== null && h.name);
+        hotelsData = results.filter((h): h is LiteAPIHotel => h !== null);
       } else {
         // Fall back to city search for filter-based queries
         const params = new URLSearchParams({
@@ -122,7 +152,7 @@ export function HotelComparison({
         return;
       }
       
-      // Fetch min rates
+      // Fetch min rates - CRITICAL: This API returns PER-NIGHT prices already
       const hotelIdsList = hotelsData.map(h => h.hotel_id);
       const ratesParams = new URLSearchParams({
         hotelIds: hotelIdsList.join(','),
@@ -131,31 +161,57 @@ export function HotelComparison({
         adults: guests.toString(),
       });
       
+      console.log('[HotelComparison] Fetching rates:', {
+        hotelIds: hotelIdsList,
+        checkIn,
+        checkOut,
+        adults: guests,
+        nights: nightsCalc,
+      });
+      
       const ratesResponse = await fetch(`/api/hotels/min-rates?${ratesParams.toString()}`);
       
-      // Build price map
+      // Build price map - API returns per-night prices
       const prices: Record<string, number> = {};
       if (ratesResponse.ok) {
         const ratesData = await ratesResponse.json();
+        console.log('[HotelComparison] Rates response:', ratesData);
+        
         if (ratesData.data && Array.isArray(ratesData.data)) {
           ratesData.data.forEach((item: any) => {
-            if (item.hotelId && item.price) {
-              prices[item.hotelId] = nightsCalc > 0 ? item.price / nightsCalc : item.price;
+            if (item.hotelId && item.price && item.price > 0) {
+              // API returns per-night price already (from LiteAPI min-rates endpoint)
+              prices[item.hotelId] = item.price;
+              console.log(`[HotelComparison] Price for ${item.hotelId}: $${item.price}/night`);
             }
           });
         }
+      } else {
+        const errorText = await ratesResponse.text();
+        console.error('[HotelComparison] Rates API error:', ratesResponse.status, errorText);
       }
       
-      // Calculate hotel data
-      const hotelComparisons: HotelData[] = hotelsData.map((hotel) => {
-        const costPerNight = prices[hotel.hotel_id] || (hotel.star_rating || 3) * 150;
+      console.log('[HotelComparison] Price map:', prices);
+      
+      // Calculate hotel data - ONLY use real prices, NO fallback formulas
+      const hotelComparisons: HotelData[] = hotelsData
+        .filter((hotel) => {
+          // Only include hotels that have actual prices from API
+          const hasPrice = prices[hotel.hotel_id] && prices[hotel.hotel_id] > 0;
+          if (!hasPrice) {
+            console.warn(`[HotelComparison] Skipping ${hotel.hotel_id} (${hotel.name}) - no price from API`);
+          }
+          return hasPrice;
+        })
+        .map((hotel) => {
+        const costPerNight = prices[hotel.hotel_id]; // Guaranteed to exist due to filter above
         const totalCost = costPerNight * nightsCalc;
         const costPerPerson = totalCost / guests;
         
-        const location = hotel.address?.city || 'Telluride';
+        const location = hotel.address?.city || hotel.address?.line1?.split(',')[0] || 'Telluride';
         const amenities = hotel.amenities?.slice(0, 5).map(a => a.name || a) || [];
         const rating = hotel.review_score || 0;
-        const starRating = hotel.star_rating || 3;
+        const starRating = hotel.star_rating || 0;
         const reviewCount = hotel.review_count || 0;
         const imageUrl = hotel.images?.[0]?.url || hotel.images?.[0]?.thumbnail || '';
         
@@ -184,8 +240,14 @@ export function HotelComparison({
         return a.costPerPerson - b.costPerPerson;
       });
       
-      setHotels(hotelComparisons.slice(0, 3));
-      setError(null);
+      if (hotelComparisons.length === 0) {
+        const dateRange = `${format(new Date(checkIn), 'MMM d')} - ${format(new Date(checkOut), 'MMM d')}`;
+        setError(`No hotels have availability for ${dateRange}. These hotels may be sold out for these dates. Try adjusting your dates using the "Edit dates" button above.`);
+        setHotels([]);
+      } else {
+        setHotels(hotelComparisons.slice(0, 3));
+        setError(null);
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to load hotel comparisons');
     } finally {
