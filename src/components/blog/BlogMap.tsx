@@ -14,6 +14,9 @@ import { MapPin, Mountain, Building2, Cable, Trees, Info, X, ChevronRight, Star 
 import 'mapbox-gl/dist/mapbox-gl.css';
 
 // Preset configurations
+// NOTE: 
+// - "resort", "trails", "mountain-village" are for SKI CONTENT → show trails/lifts
+// - "overview", "town", "hotels" are for LOCATION CONTEXT → NO trails/lifts (unless explicitly set)
 const PRESETS = {
   resort: {
     center: [-107.8125, 37.9275] as [number, number],
@@ -37,17 +40,19 @@ const PRESETS = {
     showPOIs: false,
   },
   overview: {
+    // For general location/geography context - NO trails by default
     center: TELLURIDE_AREA_CENTER,
     zoom: 12.5,
-    showTrails: true,
-    showLifts: true,
+    showTrails: false,
+    showLifts: false,
     showPOIs: false,
   },
   hotels: {
+    // For hotel markers display - NO trails or lifts (focus on properties)
     center: TELLURIDE_AREA_CENTER,
     zoom: 13,
     showTrails: false,
-    showLifts: true,
+    showLifts: false,
     showPOIs: false,
   },
   trails: {
@@ -324,13 +329,25 @@ export function BlogMap({
     if (!hotelIds || hotelIds.length === 0) return;
     
     const fetchHotels = async () => {
+      console.log('[BlogMap] Fetching hotels:', hotelIds);
+      
       const hotelPromises = hotelIds.map(async (hotelId) => {
         try {
           const response = await fetch(`/api/hotels/details?hotelId=${hotelId}`);
           if (response.ok) {
             const data = await response.json();
-            return data.data || data;
+            const hotel = data.data || data;
+            console.log(`[BlogMap] Hotel ${hotelId} response:`, {
+              name: hotel?.name,
+              hasLocation: !!hotel?.location,
+              lat: hotel?.location?.latitude,
+              lng: hotel?.location?.longitude,
+              rawLat: hotel?.latitude,
+              rawLng: hotel?.longitude,
+            });
+            return hotel;
           }
+          console.warn(`[BlogMap] Hotel ${hotelId} fetch failed:`, response.status);
           return null;
         } catch (err) {
           console.error(`[BlogMap] Error fetching hotel ${hotelId}:`, err);
@@ -339,13 +356,21 @@ export function BlogMap({
       });
       
       const fetchedHotels = await Promise.all(hotelPromises);
+      
       // Filter for valid hotels with coordinates
       const validHotels = fetchedHotels.filter((h): h is HotelData => {
         if (!h) return false;
+        // Check all possible coordinate locations from API response
         const lat = h.latitude || h.location?.latitude;
         const lng = h.longitude || h.location?.longitude;
-        return lat !== undefined && lng !== undefined;
+        const hasCoords = lat !== undefined && lat !== 0 && lng !== undefined && lng !== 0;
+        if (!hasCoords) {
+          console.warn(`[BlogMap] Hotel ${h.hotel_id || h.name} missing coordinates:`, { lat, lng });
+        }
+        return hasCoords;
       });
+      
+      console.log(`[BlogMap] Valid hotels with coordinates: ${validHotels.length}/${fetchedHotels.length}`);
       setHotels(validHotels);
     };
     
@@ -645,8 +670,8 @@ export function BlogMap({
             </Popup>
           )}
 
-          {/* Compact Legend Toggle */}
-          {showLegend && showTrails && (
+          {/* Compact Legend Toggle - only show when trails are actually rendered */}
+          {showLegend && showTrails && trailsData && (
             <div className="absolute bottom-3 left-3 z-10">
               {isLegendOpen ? (
                 <div className="bg-white/95 backdrop-blur-sm rounded-lg shadow-lg border border-neutral-200 p-3 max-w-[200px]">
