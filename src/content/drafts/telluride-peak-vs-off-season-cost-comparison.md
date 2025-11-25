@@ -9,7 +9,7 @@
   "publishDate": "2025-12-03T15:00:00Z",
   "seo": {
     "metaTitle": "Telluride Peak vs Off-Season Cost Comparison 2025 | Savings Guide",
-    "metaDescription": "Complete cost comparison between Telluride peak season and off-season: accommodation savings, lift ticket prices, crowd levels, and tips for optimizing budget by timing your visit.",
+    "metaDescription": "Compare Telluride peak vs off-season costs: accommodation savings, lift tickets, crowd levels, and budget tips by timing.",
     "keywords": [
       "telluride peak season vs off season",
       "telluride cost comparison",
@@ -61,7 +61,7 @@ Use the season comparison tool below to see cost differences between peak and of
   groupSize={4}
 />
 
-For detailed information about seasonal conditions and timing, see our [ski season guide](/blog/planning-tips/telluride-ski-season-guide). For cost breakdowns by group size, check our [ski trip cost calculator](/blog/planning-tips/telluride-ski-trip-cost-calculator). For itinerary planning, review our [4-day itinerary guide](/blog/planning-tips/telluride-4-day-itinerary-cost-breakdown).
+For detailed information about seasonal conditions and timing, see our [ski season guide](/blog/planning-tips/telluride-ski-season-guide). For cost breakdowns by group size, check our [ski trip cost calculator](/blog/planning-tips/telluride-ski-trip-cost-calculator). For itinerary planning, review our [4-day itinerary guide](/blog/planning-tips/telluride-4-day-itinerary-cost-breakdown). According to [Telluride Ski Resort](https://www.telluride.com), peak season typically runs from late December through early March.
 
 <ArticleBookingWidget 
   variant="compact"

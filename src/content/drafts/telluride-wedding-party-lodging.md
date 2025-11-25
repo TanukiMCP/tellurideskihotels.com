@@ -9,7 +9,7 @@
   "publishDate": "2025-11-30T15:00:00Z",
   "seo": {
     "metaTitle": "Telluride Wedding Party Lodging Guide 2025 | Guest Accommodations",
-    "metaDescription": "Complete guide to Telluride wedding party lodging: where to house wedding guests, group accommodation options, cost coordination, and tips for destination weddings.",
+    "metaDescription": "Telluride wedding party lodging guide: where to house guests, group accommodations, cost coordination, destination wedding tips.",
     "keywords": [
       "telluride wedding venues",
       "telluride wedding party lodging",
@@ -69,7 +69,7 @@ Use the hotel split calculator below to compare accommodation options for your w
   defaultGuests={30}
 />
 
-For information about planning bachelor/bachelorette parties, see our [bachelor/bachelorette party guide](/blog/planning-tips/telluride-bachelor-bachelorette-party). For multi-family trip planning, check our [multi-family trip guide](/blog/planning-tips/telluride-multi-family-ski-trip). For accommodation options, review our [where to stay guide](/blog/destination-guides/where-to-stay-telluride).
+For information about planning bachelor/bachelorette parties, see our [bachelor/bachelorette party guide](/blog/planning-tips/telluride-bachelor-bachelorette-party). For multi-family trip planning, check our [multi-family trip guide](/blog/planning-tips/telluride-multi-family-ski-trip). For accommodation options, review our [where to stay guide](/blog/destination-guides/where-to-stay-telluride). According to [Telluride's official website](https://www.telluride.com), the area offers numerous wedding venues and group-friendly accommodations.
 
 <ArticleBookingWidget 
   variant="compact"

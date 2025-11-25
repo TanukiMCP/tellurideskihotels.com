@@ -9,7 +9,7 @@
   "publishDate": "2025-11-24T15:00:00Z",
   "seo": {
     "metaTitle": "Telluride Multi-Family Ski Trip 2025 | Group Planning",
-    "metaDescription": "Plan a Telluride multi-family ski trip: large group logistics, cost coordination, accommodation options for multiple families, and tips for success.",
+    "metaDescription": "Plan a Telluride multi-family ski trip: large group logistics, cost coordination, accommodation options, and tips for success.",
     "keywords": [
       "telluride group lodging",
       "telluride family reunion",
@@ -66,7 +66,7 @@ Use the cost calculator below to estimate total trip expenses for your multi-fam
   title="Multi-Family Trip Cost Calculator"
 />
 
-For information about planning single-family trips, see our [family ski vacation guide](/blog/planning-tips/telluride-family-ski-vacation). For friend group planning, check our [friends ski trip guide](/blog/planning-tips/telluride-friends-ski-trip). For accommodation options, review our [where to stay guide](/blog/destination-guides/where-to-stay-telluride).
+For information about planning single-family trips, see our [family ski vacation guide](/blog/planning-tips/telluride-family-ski-vacation). For friend group planning, check our [friends ski trip guide](/blog/planning-tips/telluride-friends-ski-trip). For accommodation options, review our [where to stay guide](/blog/destination-guides/where-to-stay-telluride). According to [Telluride Ski Resort](https://www.telluride.com), the resort offers group-friendly accommodations perfect for multi-family trips.
 
 <ArticleBookingWidget 
   variant="compact"

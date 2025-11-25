@@ -9,7 +9,7 @@
   "publishDate": "2025-11-29T15:00:00Z",
   "seo": {
     "metaTitle": "Telluride Memorial Trip Guide 2025 | Celebration of Life Planning",
-    "metaDescription": "Complete guide to planning a Telluride memorial or celebration of life trip: group lodging, memorial activities, cost coordination, and tips for honoring loved ones.",
+    "metaDescription": "Plan a Telluride memorial trip: group lodging, activities, cost coordination, and tips for celebration of life gatherings in 2025.",
     "keywords": [
       "telluride memorial trip",
       "telluride celebration of life",
@@ -69,7 +69,7 @@ Use the event planning timeline below to organize your memorial or celebration o
   groupSize={15}
 />
 
-For information about planning other types of group trips, see our [50th birthday celebration guide](/blog/planning-tips/telluride-50th-birthday-celebration) or [couples retreat guide](/blog/planning-tips/telluride-couples-retreat). For accommodation options, review our [where to stay guide](/blog/destination-guides/where-to-stay-telluride).
+For information about planning other types of group trips, see our [50th birthday celebration guide](/blog/planning-tips/telluride-50th-birthday-celebration) or [couples retreat guide](/blog/planning-tips/telluride-couples-retreat). For accommodation options, review our [where to stay guide](/blog/destination-guides/where-to-stay-telluride). According to [Telluride's official website](https://www.telluride.com), the area offers peaceful settings perfect for memorial gatherings.
 
 <ArticleBookingWidget 
   variant="compact"
@@ -89,7 +89,15 @@ Mountain Village vacation rentals offer peaceful resort atmospheres and proximit
 
 Downtown Telluride vacation rentals provide gondola access to activities plus walkable access to restaurants and shops, creating different atmospheres that some groups prefer. The historic charm and quieter downtown atmosphere appeal to groups wanting more intimate settings. Properties offer various sizes and amenities, with rates ranging $600-1,200 per night for groups. The free gondola means groups can easily access Mountain Village for natural settings while enjoying downtown atmosphere for other activities.
 
-Hotels work well for smaller memorial groups (10-15 people) or groups prioritizing convenience and services over space and cost savings. Multiple rooms in the same hotel keep groups together while providing individual privacy, and hotel amenities like common areas create natural gathering spaces. Properties like The Madeline and Peaks Resort offer group-friendly configurations and quiet spaces. The convenience factor becomes valuable when groups want to minimize logistics during difficult times.
+Hotels work well for smaller memorial groups (10-15 people) or groups prioritizing convenience and services over space and cost savings. Multiple rooms in the same hotel keep groups together while providing individual privacy. Hotel amenities like common areas create natural gathering spaces.
+
+Properties like The Madeline Hotel and Peaks Resort offer group-friendly configurations and quiet spaces. The convenience factor becomes valuable when groups want to minimize logistics during difficult times.
+
+<HotelGrid 
+  hotelIds={["lp4b27f", "lp21ee2"]}
+  title="Group-Friendly Hotels for Memorial Trips"
+  client:load
+/>
 
 <GroupCostCalculator 
   groupType="family"

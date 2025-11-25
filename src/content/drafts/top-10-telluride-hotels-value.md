@@ -9,7 +9,7 @@
   "publishDate": "2025-12-05T15:00:00Z",
   "seo": {
     "metaTitle": "Top 10 Telluride Hotels by Value 2025 | Price per Person Rankings",
-    "metaDescription": "Top 10 Telluride hotels ranked by value and price per person: detailed cost analysis, amenities comparison, and recommendations for budget-conscious travelers.",
+    "metaDescription": "Top 10 Telluride hotels by value: price per person analysis, amenities comparison, recommendations for budget travelers.",
     "keywords": [
       "best value telluride hotels",
       "telluride hotels price per person",
@@ -67,7 +67,7 @@ Use the cost per person ranking tool below to see how different Telluride hotels
   checkOut="2025-12-24"
 />
 
-For comprehensive hotel information, see our [complete hotels guide](/blog/hotel-reviews/telluride-hotels-complete-guide). For top hotels overall, check our [15 best hotels guide](/blog/hotel-reviews/15-best-hotels-telluride). For cost planning, review our [ski trip cost calculator](/blog/planning-tips/telluride-ski-trip-cost-calculator).
+For comprehensive hotel information, see our [complete hotels guide](/blog/hotel-reviews/telluride-hotels-complete-guide). For top hotels overall, check our [15 best hotels guide](/blog/hotel-reviews/15-best-hotels-telluride). For cost planning, review our [ski trip cost calculator](/blog/planning-tips/telluride-ski-trip-cost-calculator). According to [Telluride Ski Resort](https://www.telluride.com), accommodations range from budget-friendly to ultra-luxury options.
 
 <ArticleBookingWidget 
   variant="compact"

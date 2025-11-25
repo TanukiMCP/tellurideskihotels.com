@@ -9,7 +9,7 @@
   "publishDate": "2025-12-01T15:00:00Z",
   "seo": {
     "metaTitle": "Telluride Ski Trip Cost Calculator 2025 | Budget by Group Size",
-    "metaDescription": "Interactive cost calculator for Telluride ski trips: budget breakdowns by group size, cost comparisons, and tips for optimizing expenses for 2, 4, 6, 8+ person groups.",
+    "metaDescription": "Telluride ski trip cost calculator: budget breakdowns by group size, cost comparisons, and tips for 2-8+ person groups.",
     "keywords": [
       "telluride ski trip cost",
       "telluride trip cost calculator",
@@ -62,7 +62,7 @@ Use the interactive cost calculator below to estimate your Telluride ski trip ex
   checkOut="2025-12-24"
 />
 
-For detailed information about planning family trips, see our [family ski vacation guide](/blog/planning-tips/telluride-family-ski-vacation). For friend group planning, check our [friends ski trip guide](/blog/planning-tips/telluride-friends-ski-trip). To understand seasonal pricing, review our [ski season guide](/blog/planning-tips/telluride-ski-season-guide).
+For detailed information about planning family trips, see our [family ski vacation guide](/blog/planning-tips/telluride-family-ski-vacation). For friend group planning, check our [friends ski trip guide](/blog/planning-tips/telluride-friends-ski-trip). To understand seasonal pricing, review our [ski season guide](/blog/planning-tips/telluride-ski-season-guide). According to [Telluride Ski Resort](https://www.telluride.com), lift ticket prices vary by season and advance purchase discounts.
 
 <ArticleBookingWidget 
   variant="compact"

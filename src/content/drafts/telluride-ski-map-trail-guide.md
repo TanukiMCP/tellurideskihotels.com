@@ -9,7 +9,7 @@
   "publishDate": "2025-12-07T15:00:00Z",
   "seo": {
     "metaTitle": "Telluride Ski Map & Trail Guide 2025 | Complete Terrain Overview",
-    "metaDescription": "Complete Telluride ski map and trail guide: terrain breakdown, lift system, trail difficulty ratings, area navigation, and tips for exploring Telluride's 2,000+ acres.",
+    "metaDescription": "Telluride ski map and trail guide: terrain breakdown, lift system, difficulty ratings, navigation tips for 2,000+ acres.",
     "keywords": [
       "telluride ski map",
       "telluride trails",
@@ -51,7 +51,7 @@
 
 Understanding Telluride's ski map and trail system is essential for navigating the resort's 2,000+ acres of diverse terrain spanning beginner slopes to expert backcountry-style runs. Telluride's unique layout connects two distinct base areas (Mountain Village and Telluride) via the free gondola, creating a resort that spans from 8,750 feet to 13,150 feet elevation with terrain for all ability levels. This comprehensive guide provides detailed terrain breakdowns, lift system overviews, trail difficulty explanations, area navigation tips, and expert guidance for exploring Telluride's diverse mountain. Whether you're a first-time visitor or returning skier, understanding the ski map and trail system helps maximize your time on the mountain and discover terrain that matches your ability level and interests.
 
-For detailed information about Telluride's ski resort, see our [complete ski resort guide](/blog/ski-guides/telluride-ski-resort-guide). For skiing information for all skill levels, check our [complete skiing guide](/blog/ski-guides/telluride-skiing-complete-guide). For specific trail recommendations, review our [best ski runs guide](/blog/ski-guides/best-ski-runs-telluride).
+For detailed information about Telluride's ski resort, see our [complete ski resort guide](/blog/ski-guides/telluride-ski-resort-guide). For skiing information for all skill levels, check our [complete skiing guide](/blog/ski-guides/telluride-skiing-complete-guide). For specific trail recommendations, review our [best ski runs guide](/blog/ski-guides/best-ski-runs-telluride). According to [Telluride Ski Resort's official trail map](https://www.telluride.com/ski-and-snowboard/trail-map), the resort spans 2,000+ acres with terrain for all ability levels.
 
 <ArticleBookingWidget 
   variant="compact"
@@ -70,6 +70,8 @@ Telluride Ski Resort spans two distinct base areas connected by the free gondola
 **Telluride Base Area:** Located at 8,750 feet in the historic town, Telluride provides a secondary base area with gondola access to Mountain Village and the main lift system. The area offers a different atmosphere with historic charm and walkable access to restaurants and shops. The gondola provides 13-minute transportation between the two base areas.
 
 **Terrain Distribution:** Telluride's 2,000+ acres are distributed across multiple areas: Mountain Village base area, Prospect Bowl, See Forever, Gold Hill, and Palmyra Peak. Each area offers distinct terrain characteristics, from gentle beginner slopes to challenging expert terrain. Understanding terrain distribution helps skiers choose areas matching their ability levels and interests.
+
+<BlogMap preset="trails" terrain={true} caption="Telluride's diverse terrain spans from beginner slopes to expert backcountry-style runs" client:load />
 
 ## Lift System Overview
 
