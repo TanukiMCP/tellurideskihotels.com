@@ -424,6 +424,7 @@ export function HotelGrid({
                   nights={nights}
                   checkInDate={computedCheckIn || undefined}
                   checkOutDate={computedCheckOut || undefined}
+                  priceLoading={isLoadingRates}
                   onSelect={(id) => {
                     const checkInDate = computedCheckIn || format(addDays(new Date(), 7), 'yyyy-MM-dd');
                     const checkOutDate = computedCheckOut || format(addDays(new Date(), 14), 'yyyy-MM-dd');
@@ -446,6 +447,7 @@ export function HotelGrid({
                     nights={nights}
                     checkInDate={computedCheckIn || undefined}
                     checkOutDate={computedCheckOut || undefined}
+                    priceLoading={isLoadingRates}
                     onSelect={(id) => {
                       const checkInDate = computedCheckIn || format(addDays(new Date(), 7), 'yyyy-MM-dd');
                       const checkOutDate = computedCheckOut || format(addDays(new Date(), 14), 'yyyy-MM-dd');
