@@ -306,9 +306,10 @@ export async function getHotelDetails(hotelId: string): Promise<LiteAPIHotel> {
       postal_code: hotel.zip,
       country: hotel.country,
     },
-    location: hotel.location ? {
-      latitude: hotel.location.latitude,
-      longitude: hotel.location.longitude,
+    // LiteAPI returns coordinates at top level: hotel.latitude, hotel.longitude
+    location: (hotel.latitude && hotel.longitude) ? {
+      latitude: hotel.latitude,
+      longitude: hotel.longitude,
     } : undefined,
     images: hotelImages,
     amenities: (hotel.hotelFacilities || []).map((facility: string) => ({
