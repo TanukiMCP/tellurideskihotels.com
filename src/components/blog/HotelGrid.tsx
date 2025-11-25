@@ -330,9 +330,22 @@ export function HotelGrid({
       adults: '2',
     });
     
+    // Calculate nights for price-per-night conversion
+    const nightsCount = Math.ceil(
+      (new Date(computedCheckOut).getTime() - new Date(computedCheckIn).getTime()) / (1000 * 60 * 60 * 24)
+    ) || 1;
+    
+    console.log('[HotelGrid] Fetching min-rates for hotels:', {
+      hotelIds,
+      checkIn: computedCheckIn,
+      checkOut: computedCheckOut,
+      nights: nightsCount,
+    });
+    
     fetch(`/api/hotels/min-rates?${ratesParams.toString()}`)
       .then(res => {
         if (!res.ok) {
+          console.warn('[HotelGrid] Min-rates API returned:', res.status);
           return null;
         }
         return res.json();
@@ -340,16 +353,23 @@ export function HotelGrid({
       .then(ratesData => {
         if (!isMounted) return;
         
+        console.log('[HotelGrid] Min-rates response:', ratesData);
+        
         if (ratesData?.data && Array.isArray(ratesData.data)) {
           const prices: Record<string, number> = {};
           
+          // API returns TOTAL price for stay - convert to per-night
           ratesData.data.forEach((item: { hotelId?: string; price?: number }) => {
             if (item.hotelId && item.price && item.price > 0) {
-              prices[item.hotelId] = item.price;
+              // LiteAPI min-rates returns total for stay, divide by nights for per-night
+              prices[item.hotelId] = Math.round(item.price / nightsCount);
             }
           });
           
+          console.log('[HotelGrid] Per-night prices computed:', prices);
           setMinPrices(prices);
+        } else {
+          console.warn('[HotelGrid] No price data in response');
         }
         setIsLoadingRates(false);
       })

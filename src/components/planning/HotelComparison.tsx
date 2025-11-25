@@ -65,21 +65,34 @@ export function HotelComparison({
       
       // If specific hotel IDs provided, fetch them directly for more reliable results
       if (hotelIds && hotelIds.length > 0) {
+        console.log('[HotelComparison] Fetching hotels by ID:', hotelIds);
+        
         const hotelPromises = hotelIds.map(async (id) => {
           try {
-            const response = await fetch(`/api/liteapi/hotel?hotelId=${id}`);
+            // Use the /api/hotels/details endpoint which has caching
+            const response = await fetch(`/api/hotels/details?hotelId=${id}`);
             if (response.ok) {
               const data = await response.json();
-              return data.data || data;
+              const hotel = data.data || data;
+              console.log(`[HotelComparison] Hotel ${id} response:`, {
+                name: hotel?.name,
+                hotel_id: hotel?.hotel_id,
+                star_rating: hotel?.star_rating,
+                hasImages: !!hotel?.images?.length,
+              });
+              return hotel;
             }
+            console.warn(`[HotelComparison] Hotel ${id} fetch failed:`, response.status);
             return null;
-          } catch {
+          } catch (err) {
+            console.error(`[HotelComparison] Hotel ${id} error:`, err);
             return null;
           }
         });
         
         const results = await Promise.all(hotelPromises);
-        hotelsData = results.filter((h): h is LiteAPIHotel => h !== null);
+        hotelsData = results.filter((h): h is LiteAPIHotel => h !== null && h.name);
+        console.log('[HotelComparison] Valid hotels loaded:', hotelsData.length);
       } else {
         // Fall back to city search for filter-based queries
         const params = new URLSearchParams({
