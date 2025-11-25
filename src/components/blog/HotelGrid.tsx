@@ -318,11 +318,6 @@ export function HotelGrid({
   // Fetch min-rates once dates are computed AND hotels are loaded
   useEffect(() => {
     if (!computedCheckIn || !computedCheckOut || hotels.length === 0) {
-      console.log('[HotelGrid] Skipping rate fetch:', {
-        hasCheckIn: !!computedCheckIn,
-        hasCheckOut: !!computedCheckOut,
-        hotelsCount: hotels.length,
-      });
       return;
     }
 
@@ -330,7 +325,6 @@ export function HotelGrid({
     const checkInDate = new Date(computedCheckIn);
     const checkOutDate = new Date(computedCheckOut);
     if (isNaN(checkInDate.getTime()) || isNaN(checkOutDate.getTime()) || checkOutDate <= checkInDate) {
-      console.error('[HotelGrid] Invalid dates:', { computedCheckIn, computedCheckOut });
       return;
     }
 
@@ -338,10 +332,6 @@ export function HotelGrid({
     setIsLoadingRates(true);
 
     const hotelIds = hotels.map(h => h.hotel_id);
-    console.log('[HotelGrid] Hotels to fetch rates for:', {
-      hotelIds,
-      hotelNames: hotels.map(h => h.name),
-    });
     const ratesParams = new URLSearchParams({
       hotelIds: hotelIds.join(','),
       checkIn: computedCheckIn,
@@ -349,39 +339,16 @@ export function HotelGrid({
       adults: '2',
     });
     
-    console.log('[HotelGrid] Fetching rates:', {
-      hotelIds,
-      checkIn: computedCheckIn,
-      checkOut: computedCheckOut,
-      url: `/api/hotels/min-rates?${ratesParams.toString()}`,
-    });
-    
     fetch(`/api/hotels/min-rates?${ratesParams.toString()}`)
       .then(async res => {
         const responseData = await res.json();
-        
-        if (!res.ok) {
-          console.error('[HotelGrid] Rates API error:', {
-            status: res.status,
-            statusText: res.statusText,
-            error: responseData.error,
-            received: responseData.received,
-            url: `/api/hotels/min-rates?${ratesParams.toString()}`,
-          });
-          // Continue - show hotels without prices
-          return null;
-        }
-        
+        if (!res.ok) return null;
         return responseData;
       })
       .then(ratesData => {
         if (!isMounted) return;
         
-        console.log('[HotelGrid] Rates response:', ratesData);
-        
-        // Check if response has error field (even with 200 status)
         if (ratesData?.error) {
-          console.error('[HotelGrid] Response contains error:', ratesData.error, ratesData);
           setMinPrices({});
           setIsLoadingRates(false);
           return;
@@ -389,26 +356,28 @@ export function HotelGrid({
         
         const prices: Record<string, number> = {};
         
+        // Calculate nights for dividing total price
+        const checkInDate = new Date(computedCheckIn);
+        const checkOutDate = new Date(computedCheckOut);
+        const diffTime = checkOutDate.getTime() - checkInDate.getTime();
+        const nightsCount = Math.max(1, Math.ceil(diffTime / (1000 * 60 * 60 * 24)));
+        
         if (ratesData?.data && Array.isArray(ratesData.data)) {
+          // NOTE: LiteAPI min-rates returns TOTAL price for the stay, divide by nights for per-night rate
           ratesData.data.forEach((item: { hotelId?: string; price?: number }) => {
             if (item.hotelId && item.price && item.price > 0) {
-              prices[item.hotelId] = item.price;
-              console.log(`[HotelGrid] Price for ${item.hotelId}: $${item.price}/night`);
+              const perNightPrice = item.price / nightsCount;
+              prices[item.hotelId] = Math.round(perNightPrice * 100) / 100; // Round to 2 decimals
             }
           });
-        } else {
-          console.warn('[HotelGrid] No rate data in response - showing hotels without prices', ratesData);
         }
-        
-        console.log('[HotelGrid] Final price map:', prices, `(${Object.keys(prices).length} hotels with prices out of ${hotels.length} total)`);
         setMinPrices(prices);
         setIsLoadingRates(false);
       })
-      .catch(err => {
-        console.error('[HotelGrid] Error fetching min rates:', err);
+      .catch(() => {
         // Continue - show hotels without prices
         if (isMounted) {
-          setMinPrices({}); // Empty prices object
+          setMinPrices({});
           setIsLoadingRates(false);
         }
       });
@@ -427,20 +396,6 @@ export function HotelGrid({
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
     return Math.max(1, diffDays);
   }, [computedCheckIn, computedCheckOut]);
-
-  // Debug: Log price mapping
-  useEffect(() => {
-    if (hotels.length > 0 && Object.keys(minPrices).length > 0) {
-      console.log('[HotelGrid] Price mapping for cards:', 
-        hotels.map(h => ({
-          hotelId: h.hotel_id,
-          name: h.name,
-          price: minPrices[h.hotel_id],
-          hasPrice: !!(minPrices[h.hotel_id] && minPrices[h.hotel_id] > 0),
-        }))
-      );
-    }
-  }, [hotels, minPrices]);
 
   // Determine display mode based on number of hotels
   const displayMode = hotels.length === 1 ? 'single' : hotels.length === 2 ? 'double' : 'triple';

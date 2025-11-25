@@ -93,13 +93,6 @@ export function HotelComparison({
         throw new Error('Stay must be at least 1 night');
       }
       
-      console.log('[HotelComparison] Validated dates:', {
-        checkIn,
-        checkOut,
-        nights: nightsCalc,
-        guests,
-      });
-      
       let hotelsData: LiteAPIHotel[] = [];
       
       // If specific hotel IDs provided, fetch them directly for more reliable results
@@ -171,59 +164,31 @@ export function HotelComparison({
         adults: guests.toString(),
       });
       
-      console.log('[HotelComparison] Fetching rates:', {
-        hotelIds: hotelIdsList,
-        checkIn,
-        checkOut,
-        adults: guests,
-        nights: nightsCalc,
-      });
-      
-      // Build price map - API returns per-night prices
+      // Build price map - API returns TOTAL price for stay, we store per-night
       const prices: Record<string, number> = {};
       
       try {
         const ratesResponse = await fetch(`/api/hotels/min-rates?${ratesParams.toString()}`);
         const responseData = await ratesResponse.json();
         
-        if (ratesResponse.ok) {
-          console.log('[HotelComparison] Rates response:', responseData);
-          
-          // Check if response has error field (even with 200 status)
-          if (responseData.error) {
-            console.error('[HotelComparison] Response contains error:', responseData.error, responseData);
-            // Continue anyway - show hotels without prices
-          } else if (responseData.data && Array.isArray(responseData.data)) {
-            responseData.data.forEach((item: any) => {
-              if (item.hotelId && item.price && item.price > 0) {
-                // API returns per-night price already (from LiteAPI min-rates endpoint)
-                prices[item.hotelId] = item.price;
-                console.log(`[HotelComparison] Price for ${item.hotelId}: $${item.price}/night`);
-              }
-            });
-          }
-        } else {
-          console.error('[HotelComparison] Rates API error:', {
-            status: ratesResponse.status,
-            statusText: ratesResponse.statusText,
-            error: responseData.error,
-            received: responseData.received,
-            url: `/api/hotels/min-rates?${ratesParams.toString()}`,
+        if (ratesResponse.ok && responseData.data && Array.isArray(responseData.data)) {
+          responseData.data.forEach((item: any) => {
+            if (item.hotelId && item.price && item.price > 0) {
+              // LiteAPI min-rates returns TOTAL price - divide by nights for per-night
+              prices[item.hotelId] = item.price / nightsCalc;
+            }
           });
-          // Continue anyway - show hotels without prices
         }
-      } catch (err) {
-        console.error('[HotelComparison] Error fetching rates:', err);
-        // Continue anyway - show hotels without prices
+      } catch {
+        // Continue - show hotels without prices
       }
       
-      console.log('[HotelComparison] Price map:', prices, `(${Object.keys(prices).length} hotels with prices out of ${hotelsData.length} total)`);
-      
       // Calculate hotel data - Show ALL hotels, prices optional
+      // prices map now contains per-night rates
       const hotelComparisons: HotelData[] = hotelsData.map((hotel) => {
-        const costPerNight = prices[hotel.hotel_id] && prices[hotel.hotel_id] > 0 ? prices[hotel.hotel_id] : 0;
+        const costPerNight = prices[hotel.hotel_id] && prices[hotel.hotel_id] > 0 ? Math.round(prices[hotel.hotel_id] * 100) / 100 : 0;
         const totalCost = costPerNight > 0 ? costPerNight * nightsCalc : 0;
-        const costPerPerson = costPerNight > 0 ? totalCost / guests : 0;
+        const costPerPerson = totalCost > 0 ? totalCost / guests : 0;
         
         const location = hotel.address?.city || hotel.address?.line1?.split(',')[0] || 'Telluride';
         const amenities = hotel.amenities?.slice(0, 5).map(a => a.name || a) || [];
@@ -478,11 +443,13 @@ export function HotelComparison({
                     <h3 className="font-bold text-neutral-900 text-base leading-tight line-clamp-2 min-h-[2.5rem] group-hover:text-primary-700 transition-colors">
                       {hotel.name}
                     </h3>
-                    <div className="flex items-center gap-0.5 mt-1">
-                      {[...Array(hotel.starRating)].map((_, i) => (
-                        <Star key={i} className="w-3 h-3 fill-accent-400 text-accent-400" />
-                      ))}
-                    </div>
+                    {hotel.starRating > 0 && (
+                      <div className="flex items-center gap-0.5 mt-1">
+                        {[...Array(Math.max(0, Math.min(5, Math.floor(hotel.starRating || 0))))].map((_, i) => (
+                          <Star key={i} className="w-3 h-3 fill-accent-400 text-accent-400" />
+                        ))}
+                      </div>
+                    )}
                   </div>
 
                   {/* Location */}
