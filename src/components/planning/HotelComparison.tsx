@@ -93,6 +93,14 @@ export function HotelComparison({
         const results = await Promise.all(hotelPromises);
         hotelsData = results.filter((h): h is LiteAPIHotel => h !== null && h.name);
         console.log('[HotelComparison] Valid hotels loaded:', hotelsData.length);
+        
+        // If no valid hotels found, provide specific error feedback
+        if (hotelsData.length === 0 && hotelIds.length > 0) {
+          console.error('[HotelComparison] No hotels loaded despite valid IDs. API may be failing.');
+          setError('Unable to load hotel details. Please try refreshing the page.');
+          setLoading(false);
+          return;
+        }
       } else {
         // Fall back to city search for filter-based queries
         const params = new URLSearchParams({
