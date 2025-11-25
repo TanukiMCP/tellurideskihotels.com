@@ -79,7 +79,7 @@ Powder skiers prioritize slope access above everything else. Minutes matter when
 
 The Madeline delivers the absolute fastest powder access in Telluride. True ski-in/ski-out means you're clipping in steps from your room. When patrol drops the rope on fresh powder zones at 9:15 AM, you're already positioned mid-mountain while downtown skiers are still riding the gondola up. The ski valet has your equipment ready, eliminating the time drain of rental shops or digging through storage lockers.
 
-The location near Lift 10 provides immediate access to See Forever and Kant-Mak-M, which lead to Gold Hill's powder stashes. You're positioned to hit Gold Hill bowls or cut over to Prospect Bowl depending on wind direction and snow quality. After a morning powder session, you can return to your room, warm up, and head back out for afternoon tree runs while less strategic skiers call it a day from exhaustion.
+The location near Lift 10 provides immediate access to See Forever and Kant-Mak-M, which lead to Gold Hill's powder stashes. You're positioned to hit Gold Hill bowls or cut over to Prospect Bowl depending on wind direction and snow quality. For terrain navigation strategies, see our [ski resort guide](/blog/ski-guides/telluride-ski-resort-guide). After a morning powder session, you can return to your room, warm up, and head back out for afternoon tree runs while less strategic skiers call it a day from exhaustion.
 
 Book rooms on upper floors facing the mountain—you'll wake to views of fresh snow and can assess conditions before anyone else. The Mountain View Suites offer the best vantage points. During storm cycles, use the heated pool and hot tubs between sessions to maintain skiing stamina across multiple powder days.
 
@@ -92,8 +92,7 @@ Lumiere combines ski-in/ski-out access with full kitchens, enabling the powder h
 The ski-in/ski-out access via a short trail still beats downtown locations by 15-20 minutes each morning. For serious powder skiers planning extended stays, the full kitchen pays for itself through time efficiency rather than just cost savings.
 
 <HotelGrid 
-    limit={3}
-  filter="ski-in-ski-out"
+  hotelIds={["lp4b27f", "lp4153f", "lp21ee2"]}
   title="Browse Ski-In/Ski-Out Hotels"
   client:load
 />
@@ -105,7 +104,8 @@ Downtown's Mountain Lodge puts you two blocks from the gondola while offering fu
 The rooftop hot tub becomes essential for maintaining multi-day powder skiing stamina. Your legs need recovery to perform on day three and four of a storm cycle.
 
 <HotelComparison 
-  title="Compare Hotels by Cost Per Person"
+  hotelIds={["lp4b27f", "lp35351", "lp2be73"]}
+  title="Compare: Luxury vs Mid-Range vs Budget"
   client:load
 />
 
@@ -115,7 +115,7 @@ If you prioritize racking up vertical feet on perfectly groomed corduroy, your h
 
 ### The Best: Peaks Resort & Spa
 
-The Peaks excels for high-mileage cruisers through the combination of ski-in/ski-out access and the best spa facility in Telluride. The private slope returns you directly to the hotel, eliminating end-of-day walking that adds up across a week. After logging 30,000+ vertical feet, the 42,000-square-foot spa provides massage therapy, altitude-adjustment treatments, and multiple hot tubs perfectly positioned for tired legs.
+The Peaks excels for high-mileage cruisers through the combination of ski-in/ski-out access and the best spa facility in Telluride. According to [Telluride Ski Resort](https://www.telluride.com/ski-and-snowboard), you can easily log 30,000+ vertical feet across 2,000 skiable acres. The private slope returns you directly to the hotel, eliminating end-of-day walking that adds up across a week. After those high-mileage days, the 42,000-square-foot spa provides massage therapy, altitude-adjustment treatments, and multiple hot tubs perfectly positioned for tired legs.
 
 The indoor/outdoor pool offers active recovery opportunities—swimming laps in heated water provides low-impact exercise that aids recovery without adding skiing stress. The on-site Siam Thai restaurant eliminates the need to walk anywhere for dinner after big mileage days.
 
@@ -161,7 +161,7 @@ Lumiere's multi-bedroom layouts with full kitchens work brilliantly for families
 The spacious units provide family room for spreading out—critical when you're together 24/7. The in-unit washer/dryers handle the increased laundry volume from kids' ski clothing. The ski-in/ski-out access eliminates the morning logistics of getting kids on gondolas with all their equipment.
 
 <HotelGrid 
-    limit={3}
+  hotelIds={["lp21ee2", "lp4153f", "lp35351"]}
   title="Browse Family-Friendly Hotels"
   client:load
 />
@@ -196,7 +196,7 @@ Downtown Hotel Telluride works beautifully for beginners who want shorter ski da
 The complimentary breakfast and afternoon wine reception reduce decision fatigue—beginners already face overwhelming choices on the mountain. The ski storage with boot dryers means equipment is warm and ready each morning, eliminating the discomfort of cold boots that discourage beginners from continuing.
 
 <HotelGrid 
-    limit={3}
+  hotelIds={["lp31628", "lp2ff71", "lp35ebc"]}
   title="Search Beginner-Friendly Hotels"
   client:load
 />
@@ -226,8 +226,7 @@ The Madeline provides exceptional luxury with slightly less exclusivity than Cap
 The ski concierge goes beyond basic valet service—they'll arrange private lessons, book mountain dining, and coordinate guide services. The spa provides high-end treatments using alpine botanicals. The complimentary s'mores and cider add approachable touches that prevent luxury from feeling stuffy.
 
 <HotelGrid 
-    limit={3}
-  filter="luxury"
+  hotelIds={["lp6dfb6", "lp4b27f", "lp3d0c1"]}
   title="Browse Luxury Ski Hotels"
   client:load
 />
@@ -240,7 +239,7 @@ Solo skiers need different considerations—social opportunities, safety, value,
 
 Hotel Telluride excels for solo skiers through the afternoon wine and cheese receptions that facilitate organic social connections. The rooftop hot tubs create natural gathering spots where conversations start easily. The downtown location enables solo exploration—walk to dinner, bars, galleries—without the isolated feeling of driving or using ride-shares.
 
-The boutique scale (59 rooms) creates intimate atmosphere where staff recognize you, fostering comfort for solo travelers. The complimentary breakfast provides morning social opportunities. The ski storage areas naturally facilitate conversations with other skiers checking equipment.
+The boutique scale (59 rooms) creates intimate atmosphere where staff recognize you, fostering comfort for solo travelers. The complimentary breakfast provides morning social opportunities. The ski storage areas naturally facilitate conversations with other skiers checking equipment. The [free gondola](/blog/planning-tips/telluride-gondola-guide) is just three blocks away, making access to Mountain Village seamless.
 
 The three-block gondola walk is safe and well-lit. The Main Street proximity means you're never isolated—there are always people around. Single rooms provide comfortable solo space without paying supplements for unused beds.
 
@@ -267,7 +266,7 @@ The in-unit washer/dryers eliminate the laundry pile-up that occurs on extended 
 <HotelShowcase hotelId="lp4153f" client:load />
 
 <HotelGrid 
-    limit={3}
+  hotelIds={["lp4153f", "lp35351", "lp656c95d8"]}
   title="Book Extended Stay Accommodations"
   client:load
 />
@@ -284,7 +283,44 @@ Your skiing style should drive your hotel selection more than rankings, reviews,
 
 Consider your actual skiing behavior: How many hours do you ski daily? Do you take afternoon breaks? How important is first tracks versus comfortable recovery? Do you explore town or stay at the hotel? Are you traveling solo, as a couple, or with family? Your honest answers reveal your ideal match more accurately than generic "best hotel" lists.
 
-For comparing the fundamental Mountain Village versus downtown decision that underlies many of these recommendations, see our detailed [slopeside vs town hotels analysis](/blog/hotel-reviews/slopeside-vs-town-hotels-telluride). For comprehensive information on all properties regardless of skiing style, review our [complete hotel rankings](/blog/hotel-reviews/best-hotels-telluride). To search current availability and rates across all these properties for your specific dates, visit our [places to stay search](/places-to-stay).
+For comparing the fundamental Mountain Village versus downtown decision that underlies many of these recommendations, see our [accommodation guide](/blog/hotel-reviews/telluride-hotels-accommodation-guide). For comprehensive information on all properties regardless of skiing style, review our [complete hotel rankings](/blog/hotel-reviews/best-hotels-telluride). To search current availability and rates across all these properties for your specific dates, visit our [lodging search](/lodging). For seasonal timing strategies, check our [ski season guide](/blog/planning-tips/telluride-ski-season-guide).
+
+## Frequently Asked Questions
+
+<details>
+<summary>Which hotel is best for powder skiing?</summary>
+
+The Madeline Hotel offers the absolute fastest powder access in Telluride. True ski-in/ski-out positioning near Lift 10 means you're on Gold Hill's powder stashes before downtown skiers even finish their gondola ride. The ski valet service has equipment ready at dawn, eliminating delays when fresh snow demands immediate action.
+
+</details>
+
+<details>
+<summary>What's the best hotel for families with children?</summary>
+
+Peaks Resort & Spa dominates for families with supervised kids' programs, ski school proximity, multiple dining options, and spacious multi-bedroom suites. The indoor/outdoor heated pool provides evening entertainment after skiing, and on-site dining handles tired kids without navigating downtown restaurants.
+
+</details>
+
+<details>
+<summary>Are downtown hotels worth it for serious skiers?</summary>
+
+Downtown hotels make sense for skiers who prioritize nightlife, dining variety, and authentic town atmosphere over maximum slope time. The 13-minute free gondola ride adds about 30 minutes to your daily routine, but [Hotel Telluride](/lodging/lp2ff71) and similar properties deliver excellent experiences at 20-40% lower pricing than Mountain Village equivalents.
+
+</details>
+
+<details>
+<summary>Which hotel has the best spa for recovery after skiing?</summary>
+
+Peaks Resort & Spa features Telluride's most comprehensive spa facility at 42,000 square feet. The combination of massage therapy, altitude-adjustment treatments, indoor/outdoor pool, and multiple hot tubs makes it ideal for high-mileage cruisers who push their legs hard. Element 52 offers a more intimate, ultra-luxury spa experience.
+
+</details>
+
+<details>
+<summary>What's the best budget option for ski bums?</summary>
+
+[Camel's Garden Hotel](/lodging/lp2be73) and [Victorian Inn](/lodging/lp3489e) provide clean, basic downtown accommodations at $100-250 nightly. These properties prioritize central location and value over amenities, perfect for skiers spending minimal time in their rooms. The downtown location provides walking access to nightlife without transportation costs.
+
+</details>
 
 <ArticleBookingWidget 
   title="Book Your Perfect Ski Hotel"

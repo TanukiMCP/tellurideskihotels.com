@@ -47,6 +47,7 @@ import { HotelGrid } from '@/components/blog/HotelGrid';
 import { ActivityShowcase } from '@/components/blog/ActivityShowcase';
 import { TripCalculator } from '@/components/planning/TripCalculator';
 import { HotelComparison } from '@/components/planning/HotelComparison';
+import { BlogMap } from '@/components/blog/BlogMap';
 
 # Telluride Friends Ski Trip: Group Planning & Cost Splitting Guide (2025)
 
@@ -69,7 +70,7 @@ Use the cost calculator below to estimate total trip expenses for your friend gr
 For information about planning family trips with different considerations, see our [family ski vacation guide](/blog/planning-tips/telluride-family-ski-vacation). To understand seasonal timing and when to visit, check our [ski season guide](/blog/planning-tips/telluride-ski-season-guide). For accommodation options, review our [where to stay guide](/blog/destination-guides/where-to-stay-telluride).
 
 <HotelGrid 
-  limit={3}
+  hotelIds={["lp656c95d8", "lpd153e", "lp35351"]}
   title="Top Group-Friendly Properties"
   client:load
 />
@@ -77,6 +78,12 @@ For information about planning family trips with different considerations, see o
 **Note:** Group bookings often require different policies than individual reservations. Many properties require deposits, have stricter cancellation policies, and may require booking multiple rooms or units. Book early for best availability and rates, especially for larger groups or holiday periods.
 
 ## Cost Splitting Strategies for Friend Groups
+
+<BlogMap 
+  preset="overview"
+  caption="Friend groups choose between downtown Telluride's nightlife scene and Mountain Village's ski-in/ski-out convenience"
+  client:load
+/>
 
 Fairly splitting costs among friends requires clear communication, agreed-upon methods, and flexibility for individual circumstances. The most common approaches include equal division (everyone pays the same regardless of usage), per-person calculations (costs divided by number of people), and usage-based splitting (people pay for what they use). Each method has advantages and challenges, and many groups use combinations depending on expense types.
 
@@ -98,13 +105,13 @@ Activity costs (lessons, tours, non-skiing activities) remain individual expense
 
 ## Hotel vs Vacation Rental for Friend Groups
 
-The choice between hotels and vacation rentals significantly impacts group dynamics, costs, and experiences. Hotels provide convenience, services, and social atmospheres that work well for groups wanting to minimize logistics and maximize resort amenities. Vacation rentals offer space, privacy, and cost advantages that appeal to groups wanting more independence and lower per-person expenses.
+The choice between hotels and vacation rentals significantly impacts group dynamics, costs, and experiences. Hotels provide convenience, services, and social atmospheres that work well for groups wanting to minimize logistics and maximize resort amenities. Vacation rentals offer space, privacy, and cost advantages that appeal to groups wanting more independence and lower per-person expenses. For comprehensive lodging comparisons, see our [complete accommodation guide](/blog/hotel-reviews/telluride-hotels-accommodation-guide).
 
-For smaller friend groups (4-6 people), hotels often provide better experiences despite potentially higher costs. Multiple rooms in the same hotel keep groups together while providing individual privacy, and hotel amenities like pools, hot tubs, and bars create natural gathering spaces. The convenience factor becomes especially valuable when groups want to focus on skiing and socializing rather than managing accommodations. Hotels like The Madeline and Inn at Lost Creek offer group-friendly room configurations and social spaces that enhance friend trip experiences.
+For smaller friend groups (4-6 people), hotels often provide better experiences despite potentially higher costs. Multiple rooms in the same hotel keep groups together while providing individual privacy, and hotel amenities like pools, hot tubs, and bars create natural gathering spaces. The convenience factor becomes especially valuable when groups want to focus on skiing and socializing rather than managing accommodations. Hotels like [The Madeline](/lodging/lp4b27f) and [Inn at Lost Creek](/lodging/lp31628) offer group-friendly room configurations and social spaces that enhance friend trip experiences.
 
 Larger friend groups (8+ people) typically find vacation rentals more cost-effective and practical. A 4-bedroom condo accommodating 8-10 people often costs $800-1,200 per night, translating to $80-150 per person compared to $200-300 per person for multiple hotel rooms. The additional space provides separate bedrooms, multiple bathrooms, and common areas for group gatherings. Kitchen facilities allow group cooking that reduces dining costs and creates bonding experiences. Properties in Mountain Village and downtown Telluride offer vacation rentals ranging from basic condos to luxury homes.
 
-Location considerations matter for friend groups differently than families. Mountain Village condos provide ski-in/ski-out convenience and proximity to après-ski activities, creating seamless experiences from skiing to socializing. Downtown Telluride condos offer gondola access to skiing plus walkable access to restaurants, bars, and nightlife, creating different atmospheres that some groups prefer. The free gondola connecting both areas means groups can choose either location without sacrificing access to the other.
+Location considerations matter for friend groups differently than families. Mountain Village condos provide [ski-in/ski-out convenience](/lodging?filter=ski-in-ski-out) and proximity to après-ski activities, creating seamless experiences from skiing to socializing. [Downtown Telluride condos](/lodging?location=downtown) offer gondola access to skiing plus walkable access to restaurants, bars, and nightlife, creating different atmospheres that some groups prefer. The [free gondola](/blog/planning-tips/telluride-gondola-guide) connecting both areas means groups can choose either location without sacrificing access to the other.
 
 Group dynamics influence accommodation choices significantly. Groups wanting shared experiences and constant togetherness often prefer hotels that facilitate interaction. Groups wanting flexibility and individual space often prefer vacation rentals that allow people to gather or separate as desired. Understanding group preferences before booking prevents conflicts during the trip. Some groups compromise by booking hotels for shorter trips and vacation rentals for longer stays.
 
@@ -140,7 +147,7 @@ Skiing schedules work best when flexible, allowing people to ski together when d
 ![Two women in winter attire enjoying hot beverages by the ski slopes at night](https://images.pexels.com/photos/7357314/pexels-photo-7357314.jpeg?auto=compress&w=1200&h=800&fit=crop&dpr=2)
 *Photo by [cottonbro studio](https://www.pexels.com/@cottonbro) via Pexels*
 
-Après-ski activities provide important social time that friend groups often prioritize. Telluride's après-ski scene includes bars, restaurants, and gathering spots in both Mountain Village and downtown. Many friend groups establish après-ski meet-up locations and times, creating natural transition points from skiing to socializing. The free gondola between areas means groups can easily move between Mountain Village and downtown for different après-ski atmospheres.
+Après-ski activities provide important social time that friend groups often prioritize. Telluride's après-ski scene includes bars, restaurants, and gathering spots in both Mountain Village and downtown. According to [Telluride Ski Resort](https://www.telluride.com/things-to-do/apres-ski), the resort offers numerous on-mountain bars and base area venues. Many friend groups establish après-ski meet-up locations and times, creating natural transition points from skiing to socializing. The free gondola between areas means groups can easily move between Mountain Village and downtown for different après-ski atmospheres. For more activity ideas, explore our [things to do guide](/blog/activity-guides/things-to-do-telluride).
 
 ![A snowy winter scene at a mountain bar with bundled-up visitors](https://images.pexels.com/photos/20752231/pexels-photo-20752231.jpeg?auto=compress&w=1200&h=800&fit=crop&dpr=2)
 *Photo by [Phil Evenden](https://www.pexels.com/@philevenphotos) via Pexels*
@@ -152,7 +159,7 @@ Non-skiing activities provide variety and accommodate different interests within
 Evening activities vary significantly based on group preferences. Some friend groups prioritize nightlife, exploring Telluride's bars and live music venues. Others prefer quieter evenings with group dinners and games or movies in accommodations. Understanding group preferences before the trip helps plan appropriate evening activities. Many groups find that mixing active and relaxed evenings provides good balance.
 
 <HotelGrid 
-    limit={3}
+  hotelIds={["lp4b27f", "lp21ee2", "lp4153f"]}
   title="Book Group-Friendly Mountain Village Accommodations"
   client:load
 />
@@ -165,7 +172,7 @@ Group skiing strategies accommodate different abilities without forcing people i
 
 Lessons provide opportunities for improvement that benefit mixed-ability groups. Groups with beginners often book group lessons together, creating shared learning experiences while improving skills. Advanced skiers in groups can take advanced lessons or clinics that challenge them while others learn basics. Some groups designate one day for lessons, allowing everyone to improve before group skiing resumes.
 
-Terrain selection becomes important when skiing as groups. Telluride's diverse terrain means groups can find runs that accommodate different abilities, with intermediate runs providing good compromise terrain for mixed groups. Groups should communicate about comfort levels and be willing to split when necessary rather than forcing people into terrain that's too challenging or too easy.
+Terrain selection becomes important when skiing as groups. [Telluride's diverse terrain](https://www.telluride.com/ski-and-snowboard/terrain) spans 2,000 acres across all ability levels, meaning groups can find runs that accommodate different abilities. Intermediate runs provide good compromise terrain for mixed groups. Groups should communicate about comfort levels and be willing to split when necessary rather than forcing people into terrain that's too challenging or too easy. For terrain strategies by ability level, see our [ski resort guide](/blog/ski-guides/telluride-ski-resort-guide).
 
 Patience and encouragement help mixed-ability groups function smoothly. Advanced skiers should avoid pressuring beginners into challenging terrain, while beginners should communicate honestly about comfort levels. Groups that support individual progress while maintaining group connection create positive experiences for everyone. Some groups find that having designated "ski buddies" for different ability levels works better than trying to keep everyone together constantly.
 
@@ -174,9 +181,9 @@ Patience and encouragement help mixed-ability groups function smoothly. Advanced
 ![A group of skiers gather at a snow-covered mountain resort under overcast skies](https://images.pexels.com/photos/15324804/pexels-photo-15324804.jpeg?auto=compress&w=1200&h=800&fit=crop&dpr=2)
 *Photo by [Nati](https://www.pexels.com/@nati-87264186) via Pexels*
 
-Several strategies help friend groups reduce Telluride trip costs without sacrificing experience quality. Group bookings often provide discounts, with properties offering 10-15% reductions for multiple rooms or larger vacation rentals. Booking early secures better rates, with properties offering 10-20% discounts for reservations made 60+ days in advance. Off-peak travel (early December, late March) provides 30-40% savings compared to peak holiday periods.
+Several strategies help friend groups reduce Telluride trip costs without sacrificing experience quality. Group bookings often provide discounts, with properties offering 10-15% reductions for multiple rooms or larger vacation rentals. Booking early secures better rates, with properties offering 10-20% discounts for reservations made 60+ days in advance. Off-peak travel (early December, late March) provides 30-40% savings compared to peak holiday periods—see our [ski season guide](/blog/planning-tips/telluride-ski-season-guide) for optimal timing.
 
-Lift ticket savings come through group purchases, multi-day tickets, and advance online booking. Some groups coordinate lift ticket purchases to access group discounts, while multi-day tickets provide 15% savings compared to daily purchases. Advance online booking adds another 10% discount. Groups should compare individual vs group purchase options to determine best value.
+Lift ticket savings come through group purchases, multi-day tickets, and advance online booking. Some groups coordinate lift ticket purchases via [Telluride's online ticket portal](https://www.telluride.com/ski-and-snowboard/lift-tickets) to access group discounts, while multi-day tickets provide 15% savings compared to daily purchases. Advance online booking adds another 10% discount. Groups should compare individual vs group purchase options to determine best value.
 
 Accommodation cost management significantly impacts total expenses. Vacation rentals with kitchen facilities allow group cooking that reduces dining costs by 40-50% compared to restaurant meals. Groups can prepare breakfasts and some dinners in accommodations, reserving restaurant dining for special meals. Even groups staying in hotels can reduce costs by bringing snacks and choosing casual dining over fine dining for most meals.
 

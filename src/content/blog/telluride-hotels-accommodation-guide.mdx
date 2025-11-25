@@ -39,6 +39,7 @@ seasonalRelevance: ["winter", "spring", "summer", "fall"]
 import { ArticleBookingWidget } from '@/components/blog/ArticleBookingWidget';
 import { HotelGrid } from '@/components/blog/HotelGrid';
 import { HotelComparison } from '@/components/planning/HotelComparison';
+import { BlogMap } from '@/components/blog/BlogMap';
 
 # Telluride Hotels: Complete Accommodation Guide (2025)
 
@@ -65,12 +66,18 @@ Mountain Village includes some properties with brand affiliations, though most o
 
 ### Two Distinct Hotel Districts
 
-Downtown Telluride and Mountain Village function as separate hotel markets despite the 13-minute gondola connection. Downtown hotels sit at 8,750 feet in the historic town center, surrounded by Victorian architecture, Main Street restaurants, bars, galleries, and nightlife. Mountain Village properties cluster at the ski resort base around 9,500 feet, providing ski-in/ski-out access, resort amenities, and modern mountain architecture.
+Downtown Telluride and Mountain Village function as separate hotel markets despite the [13-minute gondola connection](/blog/planning-tips/telluride-gondola-guide). Downtown hotels sit at 8,750 feet in the historic town center, surrounded by Victorian architecture, Main Street restaurants, bars, galleries, and nightlife. Mountain Village properties cluster at the ski resort base around 9,500 feet, providing ski-in/ski-out access, resort amenities, and modern mountain architecture.
+
+<BlogMap 
+  preset="overview"
+  caption="Downtown Telluride (left) and Mountain Village (right) connected by the free gondola"
+  client:load
+/>
 
 ![Snow-covered mountain village seen through a modern window frame during winter](https://images.pexels.com/photos/7539837/pexels-photo-7539837.jpeg?auto=compress&w=1200&h=800&fit=crop&dpr=2)
 *Photo by [ROMAN ODINTSOV](https://www.pexels.com/@roman-odintsov) via Pexels*
 
-Downtown hotels typically cost 20-40% less than equivalent Mountain Village properties, reflecting the trade-off between historic charm with walkable amenities versus direct slope access. Downtown delivers authentic small-town character, diverse dining within walking distance, and vibrant nightlife. You'll ride the free gondola 10-15 minutes each morning to reach the slopes, then again at day's end. Mountain Village provides ski-in/ski-out convenience, modern resort facilities, and the ability to ski until lifts close without worrying about catching the gondola. However, dining options concentrate in resort hotels, nightlife remains limited, and the atmosphere feels more manufactured than organic.
+Downtown hotels typically cost 20-40% less than equivalent Mountain Village properties, reflecting the trade-off between historic charm with walkable amenities versus direct slope access. According to [Telluride's official lodging guide](https://www.telluride.com/lodging), the resort area offers over 300 accommodation options across both areas. Downtown delivers authentic small-town character, diverse dining within walking distance, and vibrant nightlife. You'll ride the free gondola 10-15 minutes each morning to reach the slopes, then again at day's end. Mountain Village provides ski-in/ski-out convenience, modern resort facilities, and the ability to ski until lifts close without worrying about catching the gondola. However, dining options concentrate in resort hotels, nightlife remains limited, and the atmosphere feels more manufactured than organic.
 
 Many visitors choose downtown for its superior value, authentic character, and walkable lifestyle, accepting the brief gondola commute as minor inconvenience. Serious skiers prioritizing maximum slope time often prefer Mountain Village despite premium pricing. Families appreciate Mountain Village's consolidated amenities and ski-to-door convenience, while couples and groups seeking nightlife lean toward downtown's restaurant and bar scene.
 
@@ -81,8 +88,7 @@ Many visitors choose downtown for its superior value, authentic character, and w
 These properties command top pricing but deliver comprehensive resort experiences with direct slope access. Expect nightly rates of $500-1,500+ depending on season, room type, and property. The Madeline, Peaks Resort, Capella, and similar properties offer ski valets who store your equipment and have it ready each morning, full-service spas with high-altitude treatments, multiple dining venues serving gourmet cuisine, heated pools and hot tubs with mountain views, and concierge services handling reservations and activity bookings.
 
 <HotelGrid 
-  hotelIds={["lp4b27f", "lp3e47f"]}
-  limit={3}
+  hotelIds={["lp4b27f", "lp21ee2", "lp4153f"]}
   title="Featured Luxury Ski-In/Ski-Out Properties"
   client:load
 />
@@ -140,7 +146,8 @@ Service ranges from minimal to friendly-but-basic depending on property. Don't e
 Budget properties work well for solo travelers, ski bums, backpackers, and anyone spending minimal time in their room. If you're skiing dawn to dusk and exploring town evenings, paying for luxury amenities you won't use makes little sense. These properties allocate your budget toward experiences rather than accommodations, allowing you to afford better dining, activities, or extra vacation days.
 
 <HotelComparison 
-  title="Compare Hotels by Cost Per Person"
+  hotelIds={["lp4b27f", "lp2ff71", "lp656c95d8"]}
+  title="Compare: Luxury Hotel vs Downtown vs Condo"
   client:load
 />
 
@@ -148,7 +155,7 @@ Budget properties work well for solo travelers, ski bums, backpackers, and anyon
 
 ### Peak Season Pricing
 
-Christmas week through New Year's (December 23-January 2) commands absolute peak pricing, with ski-in/ski-out properties reaching $800-1,500+ nightly and downtown hotels charging $300-600. Properties impose 3-4 night minimums and book 6-9 months in advance. Presidents Day week (third Monday in February) similarly spikes rates 50-100% above normal with heavy crowds and 2-3 night minimums.
+Christmas week through New Year's (December 23-January 2) commands absolute peak pricing, with ski-in/ski-out properties reaching $800-1,500+ nightly and downtown hotels charging $300-600. Properties impose 3-4 night minimums and book 6-9 months in advance. Presidents Day week (third Monday in February) similarly spikes rates 50-100% above normal with heavy crowds and 2-3 night minimums. For detailed seasonal pricing strategies, see our [ski season guide](/blog/planning-tips/telluride-ski-season-guide).
 
 Regular peak season spanning mid-January through mid-March sees ski-in/ski-out properties at $500-900 nightly and downtown hotels at $250-500. This represents normal winter high season without holiday premiums. Availability tightens during this period requiring 3-4 months advance booking for good selection, though last-minute deals sometimes appear if properties have gaps.
 
@@ -160,7 +167,7 @@ These periods deliver the best cost-to-quality ratios—solid snow conditions, a
 
 ### Summer and Fall
 
-Summer rates (June-September) vary based on festival schedules. Film Festival week in early September brings pricing approaching winter peaks, requiring advance booking and premium rates. Bluegrass Festival in late June similarly spikes prices and books properties months ahead. Non-festival summer weeks offer excellent values with properties charging $150-350 nightly depending on quality level.
+Summer rates (June-September) vary based on festival schedules. [Film Festival week](https://telluridefilmfestival.org/) in early September brings pricing approaching winter peaks, requiring advance booking and premium rates. [Bluegrass Festival](https://bluegrass.com/telluride/) in late June similarly spikes prices and books properties months ahead. Non-festival summer weeks offer excellent values with properties charging $150-350 nightly depending on quality level.
 
 Fall (late September-October) delivers Telluride's lowest prices, with many properties at $120-250 nightly. The ski resort remains closed while hiking, biking, and fall colors provide compelling non-ski activities. This period suits budget-conscious travelers and those seeking autumn mountain experiences without crowds.
 
@@ -225,7 +232,7 @@ Shoulder season promotions appear regularly as properties seek to maintain occup
 
 The free gondola connecting downtown and Mountain Village eliminates the need for cars once you arrive. Both areas maintain free shuttle bus systems covering their respective zones. However, accessing nearby towns, hot springs, or scenic drives requires vehicles. Parking in downtown can be challenging during peak periods, with many properties offering limited spaces. Mountain Village properties typically include parking.
 
-If arriving via Montrose Airport (65 miles), you'll need transportation to Telluride via rental car, shuttle service, or private transfer. Once in Telluride, the car sits mostly unused unless planning excursions. Many visitors arrange airport shuttle service and skip rental cars entirely.
+If arriving via Montrose Airport (65 miles), you'll need transportation to Telluride via rental car, shuttle service, or private transfer. Once in Telluride, the car sits mostly unused unless planning excursions. Many visitors arrange airport shuttle service and skip rental cars entirely. For driving details, see our [Denver to Telluride drive guide](/blog/destination-guides/denver-to-telluride-drive-guide).
 
 ### Pet-Friendly Properties
 
@@ -255,7 +262,7 @@ Choosing your Telluride hotel requires balancing location preferences, budget co
 
 Budget-conscious travelers discover excellent value in downtown properties during shoulder seasons, accepting basic amenities in exchange for central location and reasonable rates. Families often prefer condo-hotels providing space, kitchens, and residential comforts that hotels can't match. Understanding these trade-offs helps you select accommodations enhancing rather than limiting your Telluride experience.
 
-For specific property recommendations and detailed reviews, explore our [best hotels in Telluride](/blog/hotel-reviews/best-hotels-telluride) ranking. To search current availability and compare rates across properties, visit our [places to stay search](/places-to-stay). For activity planning that complements your accommodation choice, review our [complete guide to things to do in Telluride](/blog/activity-guides/things-to-do-telluride).
+For specific property recommendations and detailed reviews, explore our [best hotels in Telluride](/blog/hotel-reviews/best-hotels-telluride) ranking. To search current availability and compare rates across properties, visit our [lodging search](/lodging). For activity planning that complements your accommodation choice, review our [complete guide to things to do in Telluride](/blog/activity-guides/things-to-do-telluride). For terrain and skiing information, check our [ski resort guide](/blog/ski-guides/telluride-ski-resort-guide).
 
 <HotelGrid 
   limit={6}
