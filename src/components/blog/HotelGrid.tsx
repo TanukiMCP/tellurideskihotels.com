@@ -357,19 +357,35 @@ export function HotelGrid({
     });
     
     fetch(`/api/hotels/min-rates?${ratesParams.toString()}`)
-      .then(res => {
+      .then(async res => {
+        const responseData = await res.json();
+        
         if (!res.ok) {
-          const errorText = res.statusText;
-          console.warn('[HotelGrid] Rates API returned error:', res.status, errorText);
+          console.error('[HotelGrid] Rates API error:', {
+            status: res.status,
+            statusText: res.statusText,
+            error: responseData.error,
+            received: responseData.received,
+            url: `/api/hotels/min-rates?${ratesParams.toString()}`,
+          });
           // Continue - show hotels without prices
           return null;
         }
-        return res.json();
+        
+        return responseData;
       })
       .then(ratesData => {
         if (!isMounted) return;
         
         console.log('[HotelGrid] Rates response:', ratesData);
+        
+        // Check if response has error field (even with 200 status)
+        if (ratesData?.error) {
+          console.error('[HotelGrid] Response contains error:', ratesData.error, ratesData);
+          setMinPrices({});
+          setIsLoadingRates(false);
+          return;
+        }
         
         const prices: Record<string, number> = {};
         
@@ -381,7 +397,7 @@ export function HotelGrid({
             }
           });
         } else {
-          console.warn('[HotelGrid] No rate data in response - showing hotels without prices');
+          console.warn('[HotelGrid] No rate data in response - showing hotels without prices', ratesData);
         }
         
         console.log('[HotelGrid] Final price map:', prices, `(${Object.keys(prices).length} hotels with prices out of ${hotels.length} total)`);

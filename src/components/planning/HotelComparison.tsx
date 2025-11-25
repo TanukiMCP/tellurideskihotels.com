@@ -175,13 +175,17 @@ export function HotelComparison({
       
       try {
         const ratesResponse = await fetch(`/api/hotels/min-rates?${ratesParams.toString()}`);
+        const responseData = await ratesResponse.json();
         
         if (ratesResponse.ok) {
-          const ratesData = await ratesResponse.json();
-          console.log('[HotelComparison] Rates response:', ratesData);
+          console.log('[HotelComparison] Rates response:', responseData);
           
-          if (ratesData.data && Array.isArray(ratesData.data)) {
-            ratesData.data.forEach((item: any) => {
+          // Check if response has error field (even with 200 status)
+          if (responseData.error) {
+            console.error('[HotelComparison] Response contains error:', responseData.error, responseData);
+            // Continue anyway - show hotels without prices
+          } else if (responseData.data && Array.isArray(responseData.data)) {
+            responseData.data.forEach((item: any) => {
               if (item.hotelId && item.price && item.price > 0) {
                 // API returns per-night price already (from LiteAPI min-rates endpoint)
                 prices[item.hotelId] = item.price;
@@ -190,8 +194,13 @@ export function HotelComparison({
             });
           }
         } else {
-          const errorText = await ratesResponse.text();
-          console.warn('[HotelComparison] Rates API returned error:', ratesResponse.status, errorText);
+          console.error('[HotelComparison] Rates API error:', {
+            status: ratesResponse.status,
+            statusText: ratesResponse.statusText,
+            error: responseData.error,
+            received: responseData.received,
+            url: `/api/hotels/min-rates?${ratesParams.toString()}`,
+          });
           // Continue anyway - show hotels without prices
         }
       } catch (err) {
