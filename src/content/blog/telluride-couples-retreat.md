@@ -67,6 +67,7 @@ Use the budget planner below to allocate your couples retreat budget across lodg
   defaultNights={4}
   defaultGuests={2}
   title="Couples Retreat Cost Calculator"
+  client:load
 />
 
 For information about seasonal timing and when to visit for optimal conditions, check our [ski season guide](/blog/planning-tips/telluride-ski-season-guide). For accommodation options and recommendations, review our [where to stay guide](/blog/destination-guides/where-to-stay-telluride). For skiing information, see our [complete skiing guide](/blog/ski-guides/telluride-skiing-complete-guide).
@@ -96,6 +97,7 @@ Activity costs vary based on couple preferences, with skiing representing the pr
   hotelIds={["lp4b27f", "lp21ee2", "lp4153f"]}
   title="Compare Romantic Hotels"
   groupSize={2}
+  client:load
 />
 
 ## Best Times to Visit for Couples

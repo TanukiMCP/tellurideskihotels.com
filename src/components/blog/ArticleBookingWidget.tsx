@@ -109,10 +109,10 @@ export function ArticleBookingWidget({
     return (
       <a
         href={link}
-        className="not-prose group flex items-center justify-between gap-4 my-6 p-4 bg-slate-50 border-2 border-slate-200 rounded-xl hover:border-slate-400 hover:bg-white hover:shadow-lg transition-all duration-300"
+        className="not-prose group flex items-center justify-between gap-4 my-6 p-4 bg-primary-50 border-2 border-primary-200 rounded-xl hover:border-primary-400 hover:bg-white hover:shadow-lg transition-all duration-300"
       >
         <div className="flex items-center gap-3 flex-1 min-w-0">
-          <div className="flex-shrink-0 w-10 h-10 bg-slate-800 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+          <div className="flex-shrink-0 w-10 h-10 bg-primary-600 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
             {hotelName ? (
               <MapPin className="w-5 h-5 text-white" />
             ) : (
@@ -120,12 +120,12 @@ export function ArticleBookingWidget({
             )}
           </div>
           <div className="flex-1 min-w-0">
-            <div className="font-bold text-slate-900 group-hover:text-slate-700 transition-colors line-clamp-1">
+            <div className="font-bold text-neutral-900 group-hover:text-primary-700 transition-colors line-clamp-1">
               {widgetTitle}
             </div>
           </div>
         </div>
-        <div className="flex-shrink-0 flex items-center gap-1 text-sm font-semibold text-slate-700 group-hover:text-slate-900">
+        <div className="flex-shrink-0 flex items-center gap-1 text-sm font-semibold text-primary-700 group-hover:text-primary-800">
           {hotelName ? 'View Rates' : 'Search'}
           <ChevronRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
         </div>
@@ -137,7 +137,7 @@ export function ArticleBookingWidget({
   if (variant === 'featured') {
     return (
       <div className="not-prose my-10 rounded-2xl overflow-hidden shadow-xl">
-        <div className="bg-gradient-to-r from-slate-800 to-slate-900 p-8">
+        <div className="bg-gradient-to-r from-primary-700 to-primary-800 p-8">
           <div className="flex flex-col lg:flex-row gap-8 items-center">
             {/* Icon */}
             <div className="flex-shrink-0">
@@ -155,18 +155,18 @@ export function ArticleBookingWidget({
               <h3 className="text-2xl font-bold text-white mb-2">
                 {widgetTitle}
               </h3>
-              <p className="text-slate-300 text-base mb-4 max-w-xl">
+              <p className="text-primary-100 text-base mb-4 max-w-xl">
                 {widgetDescription}
               </p>
               
               {/* Features */}
-              <div className="flex flex-wrap gap-4 justify-center lg:justify-start text-sm text-slate-400">
+              <div className="flex flex-wrap gap-4 justify-center lg:justify-start text-sm text-primary-200">
                 <div className="flex items-center gap-1.5">
-                  <TrendingUp className="w-4 h-4 text-emerald-400" />
+                  <TrendingUp className="w-4 h-4 text-accent-400" />
                   <span>Real-time pricing</span>
                 </div>
                 <div className="flex items-center gap-1.5">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                  <CheckCircle2 className="w-4 h-4 text-accent-400" />
                   <span>Instant confirmation</span>
                 </div>
               </div>
@@ -176,7 +176,7 @@ export function ArticleBookingWidget({
             <div className="flex-shrink-0 w-full lg:w-auto">
               <a 
                 href={link}
-                className="inline-flex items-center justify-center w-full lg:w-auto bg-white hover:bg-slate-100 text-slate-900 font-bold px-8 py-4 text-base rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 group"
+                className="inline-flex items-center justify-center w-full lg:w-auto bg-white hover:bg-primary-50 text-primary-700 font-bold px-8 py-4 text-base rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 group"
               >
                 <span>{ctaText}</span>
                 <ChevronRight className="ml-2 w-5 h-5 group-hover:translate-x-0.5 transition-transform" />
@@ -193,11 +193,11 @@ export function ArticleBookingWidget({
     <div className="not-prose my-8">
       <a
         href={link}
-        className="group flex flex-col sm:flex-row gap-4 items-start sm:items-center p-5 bg-white border-2 border-slate-200 rounded-xl hover:border-slate-400 hover:shadow-xl transition-all duration-300"
+        className="group flex flex-col sm:flex-row gap-4 items-start sm:items-center p-5 bg-white border-2 border-neutral-200 rounded-xl hover:border-primary-400 hover:shadow-xl transition-all duration-300"
       >
         {/* Icon */}
         <div className="flex-shrink-0">
-          <div className="w-12 h-12 bg-slate-800 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+          <div className="w-12 h-12 bg-primary-600 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
             {hotelName ? (
               <MapPin className="w-6 h-6 text-white" />
             ) : (
@@ -208,17 +208,17 @@ export function ArticleBookingWidget({
 
         {/* Content */}
         <div className="flex-1 min-w-0">
-          <h3 className="text-lg font-bold text-slate-900 group-hover:text-slate-700 transition-colors mb-1">
+          <h3 className="text-lg font-bold text-neutral-900 group-hover:text-primary-700 transition-colors mb-1">
             {widgetTitle}
           </h3>
-          <p className="text-sm text-slate-600">
+          <p className="text-sm text-neutral-600">
             {widgetDescription}
           </p>
         </div>
 
         {/* CTA */}
         <div className="flex-shrink-0 w-full sm:w-auto">
-          <span className="inline-flex items-center justify-center w-full sm:w-auto bg-slate-800 hover:bg-slate-900 text-white font-semibold px-6 py-2.5 rounded-xl transition-colors text-sm">
+          <span className="inline-flex items-center justify-center w-full sm:w-auto bg-primary-600 hover:bg-primary-700 text-white font-semibold px-6 py-2.5 rounded-xl transition-colors text-sm">
             {ctaText}
             <ChevronRight className="ml-1 w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
           </span>

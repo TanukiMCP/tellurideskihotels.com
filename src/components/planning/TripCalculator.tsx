@@ -153,14 +153,14 @@ export function TripCalculator({
   }, [guests, nights, selectedTier, lodgingRates]);
 
   const tierInfo = {
-    budget: { label: 'Budget', desc: '2-3 star hotels, basic amenities', color: 'emerald' },
-    midRange: { label: 'Mid-Range', desc: '4 star hotels, good amenities', color: 'blue' },
-    luxury: { label: 'Luxury', desc: '5 star resorts, premium experience', color: 'purple' },
+    budget: { label: 'Budget', desc: '2-3 star hotels, basic amenities', color: 'primary' },
+    midRange: { label: 'Mid-Range', desc: '4 star hotels, good amenities', color: 'primary' },
+    luxury: { label: 'Luxury', desc: '5 star resorts, premium experience', color: 'primary' },
   };
 
   if (loading) {
     return (
-      <Card className="my-12 not-prose border-2 border-primary-200">
+      <Card className="my-12 not-prose border border-primary-200 bg-primary-50/30">
         <CardContent className="py-12">
           <div className="flex flex-col items-center gap-3">
             <LoadingSpinner size="lg" />
@@ -172,16 +172,16 @@ export function TripCalculator({
   }
 
   return (
-    <Card className="my-12 not-prose border-0 shadow-xl bg-gradient-to-br from-slate-50 to-slate-100 overflow-hidden">
+    <Card className="my-12 not-prose border-0 shadow-xl bg-gradient-to-br from-primary-50 to-primary-100/50 overflow-hidden">
       {/* Header */}
-      <CardHeader className="bg-gradient-to-r from-slate-800 to-slate-900 text-white pb-6">
+      <CardHeader className="bg-gradient-to-r from-primary-700 to-primary-800 text-white pb-6">
         <div className="flex items-center gap-4">
           <div className="w-14 h-14 bg-white/10 backdrop-blur rounded-xl flex items-center justify-center">
             <Calculator className="w-7 h-7 text-white" />
           </div>
           <div>
             <CardTitle className="text-2xl font-bold text-white">{title}</CardTitle>
-            <p className="text-slate-300 mt-1 text-sm">
+            <p className="text-primary-100 mt-1 text-sm">
               Estimate your Telluride ski trip budget with real-time rates
             </p>
           </div>
@@ -194,11 +194,11 @@ export function TripCalculator({
           {/* Guests Slider */}
           <div className="space-y-3">
             <div className="flex items-center justify-between">
-              <label className="flex items-center gap-2 text-sm font-semibold text-slate-700">
-                <Users className="w-4 h-4 text-slate-500" />
+              <label className="flex items-center gap-2 text-sm font-semibold text-neutral-700">
+                <Users className="w-4 h-4 text-neutral-500" />
                 Travelers
               </label>
-              <span className="text-2xl font-bold text-slate-900">{guests}</span>
+              <span className="text-2xl font-bold text-neutral-900">{guests}</span>
             </div>
             <input
               type="range"
@@ -206,9 +206,9 @@ export function TripCalculator({
               max="12"
               value={guests}
               onChange={(e) => setGuests(parseInt(e.target.value))}
-              className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-slate-700"
+              className="w-full h-2 bg-neutral-200 rounded-lg appearance-none cursor-pointer accent-primary-600"
             />
-            <div className="flex justify-between text-xs text-slate-500">
+            <div className="flex justify-between text-xs text-neutral-500">
               <span>Solo</span>
               <span>Couple</span>
               <span>Family</span>
@@ -219,11 +219,11 @@ export function TripCalculator({
           {/* Nights Slider */}
           <div className="space-y-3">
             <div className="flex items-center justify-between">
-              <label className="flex items-center gap-2 text-sm font-semibold text-slate-700">
-                <Moon className="w-4 h-4 text-slate-500" />
+              <label className="flex items-center gap-2 text-sm font-semibold text-neutral-700">
+                <Moon className="w-4 h-4 text-neutral-500" />
                 Nights
               </label>
-              <span className="text-2xl font-bold text-slate-900">{nights}</span>
+              <span className="text-2xl font-bold text-neutral-900">{nights}</span>
             </div>
             <input
               type="range"
@@ -231,9 +231,9 @@ export function TripCalculator({
               max="14"
               value={nights}
               onChange={(e) => setNights(parseInt(e.target.value))}
-              className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-slate-700"
+              className="w-full h-2 bg-neutral-200 rounded-lg appearance-none cursor-pointer accent-primary-600"
             />
-            <div className="flex justify-between text-xs text-slate-500">
+            <div className="flex justify-between text-xs text-neutral-500">
               <span>Weekend</span>
               <span>4 nights</span>
               <span>Week</span>
@@ -244,7 +244,7 @@ export function TripCalculator({
 
         {/* Budget Tier Selection */}
         <div className="space-y-3">
-          <label className="text-sm font-semibold text-slate-700">Select Your Budget Tier</label>
+          <label className="text-sm font-semibold text-neutral-700">Select Your Budget Tier</label>
           <div className="grid gap-3 md:grid-cols-3">
             {(['budget', 'midRange', 'luxury'] as const).map((tier) => {
               const info = tierInfo[tier];
@@ -256,19 +256,19 @@ export function TripCalculator({
                   onClick={() => setSelectedTier(tier)}
                   className={`relative p-4 rounded-xl border-2 text-left transition-all ${
                     isSelected
-                      ? 'border-slate-700 bg-slate-50 shadow-md'
-                      : 'border-slate-200 bg-white hover:border-slate-300'
+                      ? 'border-primary-600 bg-primary-50 shadow-md'
+                      : 'border-neutral-200 bg-white hover:border-primary-300'
                   }`}
                 >
                   {isSelected && (
-                    <div className="absolute -top-2 -right-2 w-6 h-6 bg-slate-700 rounded-full flex items-center justify-center">
+                    <div className="absolute -top-2 -right-2 w-6 h-6 bg-primary-600 rounded-full flex items-center justify-center">
                       <Sparkles className="w-3 h-3 text-white" />
                     </div>
                   )}
-                  <div className="font-bold text-slate-900">{info.label}</div>
-                  <div className="text-xs text-slate-500 mt-0.5">{info.desc}</div>
-                  <div className="text-lg font-bold text-slate-700 mt-2">
-                    {formatCurrency(lodgingRates[tier])}<span className="text-xs font-normal text-slate-500">/night</span>
+                  <div className="font-bold text-neutral-900">{info.label}</div>
+                  <div className="text-xs text-neutral-500 mt-0.5">{info.desc}</div>
+                  <div className="text-lg font-bold text-primary-700 mt-2">
+                    {formatCurrency(lodgingRates[tier])}<span className="text-xs font-normal text-neutral-500">/night</span>
                   </div>
                 </button>
               );
@@ -277,70 +277,70 @@ export function TripCalculator({
         </div>
 
         {/* Main Result Display */}
-        <div className="bg-gradient-to-r from-slate-800 to-slate-900 rounded-2xl p-6 text-white">
+        <div className="bg-gradient-to-r from-primary-700 to-primary-800 rounded-2xl p-6 text-white">
           <div className="grid gap-6 md:grid-cols-2">
             {/* Per Person Cost - Hero Metric */}
             <div className="text-center md:text-left">
-              <div className="text-slate-400 text-sm font-medium uppercase tracking-wide">Estimated Cost Per Person</div>
+              <div className="text-primary-200 text-sm font-medium uppercase tracking-wide">Estimated Cost Per Person</div>
               <div className="text-5xl font-bold mt-2">{formatCurrency(costs.perPerson)}</div>
-              <div className="text-slate-400 text-sm mt-1">
+              <div className="text-primary-200 text-sm mt-1">
                 for {nights} nights • {guests} {guests === 1 ? 'traveler' : 'travelers'}
               </div>
             </div>
             
             {/* Total Trip Cost */}
             <div className="text-center md:text-right">
-              <div className="text-slate-400 text-sm font-medium uppercase tracking-wide">Total Trip Cost</div>
+              <div className="text-primary-200 text-sm font-medium uppercase tracking-wide">Total Trip Cost</div>
               <div className="text-4xl font-bold mt-2">{formatCurrency(costs.total)}</div>
-              <div className="text-slate-400 text-sm mt-1">
+              <div className="text-primary-200 text-sm mt-1">
                 {formatCurrency(costs.total / nights)}/night average
               </div>
             </div>
           </div>
 
           {/* Visual Cost Breakdown Bar */}
-          <div className="mt-6 pt-6 border-t border-slate-700">
-            <div className="flex justify-between text-xs text-slate-400 mb-2">
+          <div className="mt-6 pt-6 border-t border-primary-600">
+            <div className="flex justify-between text-xs text-primary-200 mb-2">
               <span>Cost Breakdown</span>
               <span>100%</span>
             </div>
-            <div className="h-4 rounded-full overflow-hidden flex bg-slate-700">
+            <div className="h-4 rounded-full overflow-hidden flex bg-primary-900/50">
               <div 
-                className="bg-blue-500 transition-all duration-500" 
+                className="bg-secondary-400 transition-all duration-500" 
                 style={{ width: `${costs.lodging.pct}%` }}
                 title={`Lodging: ${costs.lodging.pct}%`}
               />
               <div 
-                className="bg-emerald-500 transition-all duration-500" 
+                className="bg-accent-400 transition-all duration-500" 
                 style={{ width: `${costs.liftTickets.pct}%` }}
                 title={`Lift Tickets: ${costs.liftTickets.pct}%`}
               />
               <div 
-                className="bg-amber-500 transition-all duration-500" 
+                className="bg-sky-400 transition-all duration-500" 
                 style={{ width: `${costs.activities.pct}%` }}
                 title={`Activities: ${costs.activities.pct}%`}
               />
               <div 
-                className="bg-rose-500 transition-all duration-500" 
+                className="bg-primary-300 transition-all duration-500" 
                 style={{ width: `${costs.dining.pct}%` }}
                 title={`Dining: ${costs.dining.pct}%`}
               />
             </div>
             <div className="flex flex-wrap gap-4 mt-3 text-xs">
               <div className="flex items-center gap-1.5">
-                <div className="w-3 h-3 rounded bg-blue-500" />
+                <div className="w-3 h-3 rounded bg-secondary-400" />
                 <span>Lodging {costs.lodging.pct}%</span>
               </div>
               <div className="flex items-center gap-1.5">
-                <div className="w-3 h-3 rounded bg-emerald-500" />
+                <div className="w-3 h-3 rounded bg-accent-400" />
                 <span>Lift Tickets {costs.liftTickets.pct}%</span>
               </div>
               <div className="flex items-center gap-1.5">
-                <div className="w-3 h-3 rounded bg-amber-500" />
+                <div className="w-3 h-3 rounded bg-sky-400" />
                 <span>Activities {costs.activities.pct}%</span>
               </div>
               <div className="flex items-center gap-1.5">
-                <div className="w-3 h-3 rounded bg-rose-500" />
+                <div className="w-3 h-3 rounded bg-primary-300" />
                 <span>Dining {costs.dining.pct}%</span>
               </div>
             </div>
@@ -348,106 +348,106 @@ export function TripCalculator({
         </div>
 
         {/* Expandable Math Breakdown */}
-        <div className="border border-slate-200 rounded-xl overflow-hidden bg-white">
+        <div className="border border-neutral-200 rounded-xl overflow-hidden bg-white">
           <button
             onClick={() => setShowBreakdown(!showBreakdown)}
-            className="w-full flex items-center justify-between p-4 hover:bg-slate-50 transition-colors"
+            className="w-full flex items-center justify-between p-4 hover:bg-neutral-50 transition-colors"
           >
-            <div className="flex items-center gap-2 text-sm font-semibold text-slate-700">
+            <div className="flex items-center gap-2 text-sm font-semibold text-neutral-700">
               <Info className="w-4 h-4" />
               How We Calculated This
             </div>
             {showBreakdown ? (
-              <ChevronUp className="w-5 h-5 text-slate-500" />
+              <ChevronUp className="w-5 h-5 text-neutral-500" />
             ) : (
-              <ChevronDown className="w-5 h-5 text-slate-500" />
+              <ChevronDown className="w-5 h-5 text-neutral-500" />
             )}
           </button>
           
           {showBreakdown && (
-            <div className="p-4 pt-0 space-y-4 border-t border-slate-100">
+            <div className="p-4 pt-0 space-y-4 border-t border-neutral-100">
               {/* Lodging */}
-              <div className="flex items-start gap-3 p-3 bg-blue-50 rounded-lg">
-                <div className="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center flex-shrink-0">
+              <div className="flex items-start gap-3 p-3 bg-secondary-50 rounded-lg">
+                <div className="w-8 h-8 bg-secondary-500 rounded-lg flex items-center justify-center flex-shrink-0">
                   <DollarSign className="w-4 h-4 text-white" />
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-baseline justify-between gap-2">
-                    <span className="font-semibold text-slate-900">Lodging</span>
-                    <span className="font-bold text-blue-700">{formatCurrency(costs.lodging.total)}</span>
+                    <span className="font-semibold text-neutral-900">Lodging</span>
+                    <span className="font-bold text-secondary-700">{formatCurrency(costs.lodging.total)}</span>
                   </div>
-                  <div className="text-xs text-slate-600 mt-0.5">
+                  <div className="text-xs text-neutral-600 mt-0.5">
                     {formatCurrency(costs.lodging.perNight)}/night × {nights} nights
                   </div>
-                  <div className="text-xs text-slate-500 mt-1">
+                  <div className="text-xs text-neutral-500 mt-1">
                     Based on avg {tierInfo[selectedTier].label.toLowerCase()} hotel rates in Telluride
                   </div>
                 </div>
               </div>
 
               {/* Lift Tickets */}
-              <div className="flex items-start gap-3 p-3 bg-emerald-50 rounded-lg">
-                <div className="w-8 h-8 bg-emerald-500 rounded-lg flex items-center justify-center flex-shrink-0">
+              <div className="flex items-start gap-3 p-3 bg-accent-50 rounded-lg">
+                <div className="w-8 h-8 bg-accent-500 rounded-lg flex items-center justify-center flex-shrink-0">
                   <Ticket className="w-4 h-4 text-white" />
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-baseline justify-between gap-2">
-                    <span className="font-semibold text-slate-900">Lift Tickets</span>
-                    <span className="font-bold text-emerald-700">{formatCurrency(costs.liftTickets.total)}</span>
+                    <span className="font-semibold text-neutral-900">Lift Tickets</span>
+                    <span className="font-bold text-accent-700">{formatCurrency(costs.liftTickets.total)}</span>
                   </div>
-                  <div className="text-xs text-slate-600 mt-0.5">
+                  <div className="text-xs text-neutral-600 mt-0.5">
                     {formatCurrency(costs.liftTickets.perDay)}/person/day × {guests} people × {nights} days
                   </div>
-                  <div className="text-xs text-slate-500 mt-1">
+                  <div className="text-xs text-neutral-500 mt-1">
                     Adult full-day tickets at Telluride Ski Resort
                   </div>
                 </div>
               </div>
 
               {/* Activities */}
-              <div className="flex items-start gap-3 p-3 bg-amber-50 rounded-lg">
-                <div className="w-8 h-8 bg-amber-500 rounded-lg flex items-center justify-center flex-shrink-0">
+              <div className="flex items-start gap-3 p-3 bg-sky-50 rounded-lg">
+                <div className="w-8 h-8 bg-sky-500 rounded-lg flex items-center justify-center flex-shrink-0">
                   <Mountain className="w-4 h-4 text-white" />
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-baseline justify-between gap-2">
-                    <span className="font-semibold text-slate-900">Activities</span>
-                    <span className="font-bold text-amber-700">{formatCurrency(costs.activities.total)}</span>
+                    <span className="font-semibold text-neutral-900">Activities</span>
+                    <span className="font-bold text-sky-700">{formatCurrency(costs.activities.total)}</span>
                   </div>
-                  <div className="text-xs text-slate-600 mt-0.5">
+                  <div className="text-xs text-neutral-600 mt-0.5">
                     {formatCurrency(costs.activities.perDay)}/person/day × {guests} people × {nights} days
                   </div>
-                  <div className="text-xs text-slate-500 mt-1">
+                  <div className="text-xs text-neutral-500 mt-1">
                     Equipment rentals, lessons, spa, tours, etc.
                   </div>
                 </div>
               </div>
 
               {/* Dining */}
-              <div className="flex items-start gap-3 p-3 bg-rose-50 rounded-lg">
-                <div className="w-8 h-8 bg-rose-500 rounded-lg flex items-center justify-center flex-shrink-0">
+              <div className="flex items-start gap-3 p-3 bg-primary-50 rounded-lg">
+                <div className="w-8 h-8 bg-primary-500 rounded-lg flex items-center justify-center flex-shrink-0">
                   <Utensils className="w-4 h-4 text-white" />
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-baseline justify-between gap-2">
-                    <span className="font-semibold text-slate-900">Dining</span>
-                    <span className="font-bold text-rose-700">{formatCurrency(costs.dining.total)}</span>
+                    <span className="font-semibold text-neutral-900">Dining</span>
+                    <span className="font-bold text-primary-700">{formatCurrency(costs.dining.total)}</span>
                   </div>
-                  <div className="text-xs text-slate-600 mt-0.5">
+                  <div className="text-xs text-neutral-600 mt-0.5">
                     {formatCurrency(costs.dining.perDay)}/person/day × {guests} people × {nights} days
                   </div>
-                  <div className="text-xs text-slate-500 mt-1">
+                  <div className="text-xs text-neutral-500 mt-1">
                     Breakfast, lunch, dinner, and drinks
                   </div>
                 </div>
               </div>
 
               {/* Total Formula */}
-              <div className="p-3 bg-slate-100 rounded-lg border border-slate-200">
-                <div className="text-xs font-mono text-slate-600">
-                  {formatCurrency(costs.lodging.total)} + {formatCurrency(costs.liftTickets.total)} + {formatCurrency(costs.activities.total)} + {formatCurrency(costs.dining.total)} = <span className="font-bold text-slate-900">{formatCurrency(costs.total)}</span>
+              <div className="p-3 bg-neutral-100 rounded-lg border border-neutral-200">
+                <div className="text-xs font-mono text-neutral-600">
+                  {formatCurrency(costs.lodging.total)} + {formatCurrency(costs.liftTickets.total)} + {formatCurrency(costs.activities.total)} + {formatCurrency(costs.dining.total)} = <span className="font-bold text-neutral-900">{formatCurrency(costs.total)}</span>
                 </div>
-                <div className="text-xs text-slate-500 mt-1">
+                <div className="text-xs text-neutral-500 mt-1">
                   {formatCurrency(costs.total)} ÷ {guests} travelers = <span className="font-bold">{formatCurrency(costs.perPerson)}/person</span>
                 </div>
               </div>
@@ -456,9 +456,9 @@ export function TripCalculator({
         </div>
 
         {/* Hotel Recommendations */}
-        <div className="pt-6 border-t border-slate-200">
+        <div className="pt-6 border-t border-neutral-200">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-xl font-bold text-slate-900">
+            <h3 className="text-xl font-bold text-neutral-900">
               {tierInfo[selectedTier].label} Hotels Around {formatCurrency(lodgingRates[selectedTier])}/night
             </h3>
           </div>
@@ -468,12 +468,11 @@ export function TripCalculator({
             checkIn={defaultCheckInDate}
             checkOut={defaultCheckOutDate}
             title=""
-            displayMode="triple"
           />
         </div>
 
         {/* Disclaimer */}
-        <p className="text-xs text-slate-500 text-center">
+        <p className="text-xs text-neutral-500 text-center">
           Estimates based on average rates. Actual costs vary by season, availability, and choices. 
           Lift ticket prices from tellurideskiresort.com. Does not include airfare or transportation.
         </p>

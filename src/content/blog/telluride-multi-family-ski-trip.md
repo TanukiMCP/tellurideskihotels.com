@@ -64,6 +64,7 @@ Use the cost calculator below to estimate total trip expenses for your multi-fam
   defaultNights={5}
   defaultGuests={12}
   title="Multi-Family Trip Cost Calculator"
+  client:load
 />
 
 For information about planning single-family trips, see our [family ski vacation guide](/blog/planning-tips/telluride-family-ski-vacation). For friend group planning, check our [friends ski trip guide](/blog/planning-tips/telluride-friends-ski-trip). For accommodation options, review our [where to stay guide](/blog/destination-guides/where-to-stay-telluride). According to [Telluride Ski Resort](https://www.telluride.com), the resort offers group-friendly accommodations perfect for multi-family trips.
@@ -94,6 +95,7 @@ Transportation costs split based on usage, with car rentals or shuttles divided 
   hotelIds={["lp656c5dd6", "lp21ee2", "lp656c9596"]}
   title="Compare Multi-Family Lodging Options"
   groupSize={12}
+  client:load
 />
 
 ## Accommodation Options for Multi-Family Groups
@@ -151,6 +153,7 @@ Evening activities vary significantly based on group preferences and children's 
   category="family"
   limit={3}
   title="Family-Friendly Activities"
+  client:load
 />
 
 ## Handling Different Family Sizes and Needs

@@ -80,11 +80,11 @@ export function ActivityShowcase({
 
   if (loading) {
     return (
-      <Card className="my-12 not-prose border-0 shadow-xl bg-gradient-to-br from-slate-50 to-slate-100">
+      <Card className="my-12 not-prose border-0 shadow-xl bg-gradient-to-br from-primary-50 to-primary-100/50">
         <CardContent className="py-12">
           <div className="flex flex-col items-center gap-3">
             <LoadingSpinner size="lg" />
-            <p className="text-sm text-slate-600">Discovering activities...</p>
+            <p className="text-sm text-neutral-600">Discovering activities...</p>
           </div>
         </CardContent>
       </Card>
@@ -93,14 +93,14 @@ export function ActivityShowcase({
 
   if (error) {
     return (
-      <Card className="my-12 not-prose border-0 shadow-xl bg-gradient-to-br from-slate-50 to-slate-100">
+      <Card className="my-12 not-prose border-0 shadow-xl bg-gradient-to-br from-primary-50 to-primary-100/50">
         <CardContent className="py-12">
           <div className="text-center">
-            <Compass className="w-12 h-12 text-slate-300 mx-auto mb-4" />
-            <p className="text-slate-600 mb-4">Unable to load activities right now.</p>
+            <Compass className="w-12 h-12 text-neutral-300 mx-auto mb-4" />
+            <p className="text-neutral-600 mb-4">Unable to load activities right now.</p>
             <a
               href="/things-to-do"
-              className="inline-flex items-center gap-2 bg-slate-800 hover:bg-slate-900 text-white font-semibold px-6 py-3 rounded-xl transition-colors"
+              className="inline-flex items-center gap-2 bg-primary-600 hover:bg-primary-700 text-white font-semibold px-6 py-3 rounded-xl transition-colors"
             >
               Browse All Activities
             </a>
@@ -112,24 +112,24 @@ export function ActivityShowcase({
 
   if (activities.length === 0) {
     return (
-      <Card className="my-12 not-prose border-0 shadow-xl bg-gradient-to-br from-slate-50 to-slate-100 overflow-hidden">
-        <CardHeader className="bg-gradient-to-r from-slate-800 to-slate-900 text-white pb-6">
+      <Card className="my-12 not-prose border-0 shadow-xl bg-gradient-to-br from-primary-50 to-primary-100/50 overflow-hidden">
+        <CardHeader className="bg-gradient-to-r from-primary-700 to-primary-800 text-white pb-6">
           <div className="flex items-center gap-4">
             <div className="w-14 h-14 bg-white/10 backdrop-blur rounded-xl flex items-center justify-center">
               <Compass className="w-7 h-7 text-white" />
             </div>
             <div>
               <CardTitle className="text-2xl font-bold text-white">{title}</CardTitle>
-              <p className="text-slate-300 mt-1 text-sm">{getCategoryLabel(category)}</p>
+              <p className="text-primary-100 mt-1 text-sm">{getCategoryLabel(category)}</p>
             </div>
           </div>
         </CardHeader>
         <CardContent className="py-12">
           <div className="text-center">
-            <p className="text-slate-600 mb-6">No activities available for this category right now.</p>
+            <p className="text-neutral-600 mb-6">No activities available for this category right now.</p>
             <a
               href="/things-to-do"
-              className="inline-flex items-center gap-2 bg-slate-800 hover:bg-slate-900 text-white font-semibold px-8 py-3.5 rounded-xl transition-colors shadow-lg hover:shadow-xl"
+              className="inline-flex items-center gap-2 bg-primary-600 hover:bg-primary-700 text-white font-semibold px-8 py-3.5 rounded-xl transition-colors shadow-lg hover:shadow-xl"
             >
               Explore All Activities
               <ChevronRight className="w-5 h-5" />
@@ -141,9 +141,9 @@ export function ActivityShowcase({
   }
 
   return (
-    <Card className="my-12 not-prose border-0 shadow-xl bg-gradient-to-br from-slate-50 to-slate-100 overflow-hidden">
+    <Card className="my-12 not-prose border-0 shadow-xl bg-gradient-to-br from-primary-50 to-primary-100/50 overflow-hidden">
       {/* Header */}
-      <CardHeader className="bg-gradient-to-r from-slate-800 to-slate-900 text-white pb-6">
+      <CardHeader className="bg-gradient-to-r from-primary-700 to-primary-800 text-white pb-6">
         <div className="flex items-center justify-between flex-wrap gap-4">
           <div className="flex items-center gap-4">
             <div className="w-14 h-14 bg-white/10 backdrop-blur rounded-xl flex items-center justify-center">
@@ -151,14 +151,14 @@ export function ActivityShowcase({
             </div>
             <div>
               <CardTitle className="text-2xl font-bold text-white">{title}</CardTitle>
-              <p className="text-slate-300 mt-1 text-sm">
+              <p className="text-primary-100 mt-1 text-sm">
                 {activities.length} {getCategoryLabel(category).toLowerCase()} experiences
               </p>
             </div>
           </div>
           <a
             href={`/things-to-do${category ? `?category=${category}` : ''}`}
-            className="text-sm text-slate-300 hover:text-white transition-colors flex items-center gap-1"
+            className="text-sm text-primary-200 hover:text-white transition-colors flex items-center gap-1"
           >
             View all <ChevronRight className="w-4 h-4" />
           </a>
@@ -181,18 +181,18 @@ export function ActivityShowcase({
                 href={activity.productUrl || `/things-to-do/${activity.productCode}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group relative bg-white rounded-2xl border-2 border-slate-200 overflow-hidden hover:border-slate-400 hover:shadow-xl transition-all duration-300"
+                className="group relative bg-white rounded-2xl border-2 border-neutral-200 overflow-hidden hover:border-primary-400 hover:shadow-xl transition-all duration-300"
               >
                 {/* Popular Badge */}
                 {index === 0 && (
-                  <div className="absolute top-3 left-3 z-10 flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-amber-500 text-white shadow-lg">
+                  <div className="absolute top-3 left-3 z-10 flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-accent-500 text-white shadow-lg">
                     <Sparkles className="w-3 h-3" />
                     Popular
                   </div>
                 )}
 
                 {/* Image */}
-                <div className="relative h-44 bg-slate-100 overflow-hidden">
+                <div className="relative h-44 bg-neutral-100 overflow-hidden">
                   {imageUrl ? (
                     <img
                       src={imageUrl}
@@ -202,7 +202,7 @@ export function ActivityShowcase({
                     />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center">
-                      <Compass className="w-12 h-12 text-slate-300" />
+                      <Compass className="w-12 h-12 text-neutral-300" />
                     </div>
                   )}
                   
@@ -210,8 +210,8 @@ export function ActivityShowcase({
                   {price && (
                     <div className="absolute bottom-3 right-3 bg-white/95 backdrop-blur px-3 py-1.5 rounded-lg shadow-lg">
                       <div className="flex items-baseline gap-0.5">
-                        <span className="text-xs text-slate-500">from</span>
-                        <span className="font-bold text-slate-900">{formatPrice(price)}</span>
+                        <span className="text-xs text-neutral-500">from</span>
+                        <span className="font-bold text-neutral-900">{formatPrice(price)}</span>
                       </div>
                     </div>
                   )}
@@ -220,24 +220,24 @@ export function ActivityShowcase({
                 {/* Content */}
                 <div className="p-4 space-y-3">
                   {/* Title */}
-                  <h3 className="font-bold text-slate-900 text-base leading-tight line-clamp-2 min-h-[2.5rem] group-hover:text-slate-700 transition-colors">
+                  <h3 className="font-bold text-neutral-900 text-base leading-tight line-clamp-2 min-h-[2.5rem] group-hover:text-primary-700 transition-colors">
                     {activity.title}
                   </h3>
 
                   {/* Meta info */}
-                  <div className="flex flex-wrap gap-3 text-xs text-slate-600">
+                  <div className="flex flex-wrap gap-3 text-xs text-neutral-600">
                     {rating && (
                       <div className="flex items-center gap-1">
-                        <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
+                        <Star className="w-3.5 h-3.5 fill-accent-400 text-accent-400" />
                         <span className="font-semibold">{rating.toFixed(1)}</span>
                         {reviewCount && (
-                          <span className="text-slate-400">({reviewCount})</span>
+                          <span className="text-neutral-400">({reviewCount})</span>
                         )}
                       </div>
                     )}
                     {duration && (
                       <div className="flex items-center gap-1">
-                        <Clock className="w-3.5 h-3.5 text-slate-400" />
+                        <Clock className="w-3.5 h-3.5 text-neutral-400" />
                         <span>{duration >= 60 ? `${Math.round(duration / 60)}h` : `${duration}m`}</span>
                       </div>
                     )}
@@ -245,20 +245,20 @@ export function ActivityShowcase({
 
                   {/* Description snippet */}
                   {activity.description && (
-                    <p className="text-xs text-slate-500 line-clamp-2">
+                    <p className="text-xs text-neutral-500 line-clamp-2">
                       {activity.description}
                     </p>
                   )}
 
                   {/* CTA */}
-                  <div className="pt-3 border-t border-slate-200">
+                  <div className="pt-3 border-t border-neutral-200">
                     <div className="flex items-center justify-between">
-                      <span className="text-xs text-slate-500">
+                      <span className="text-xs text-neutral-500">
                         {activity.bookingInfo?.confirmationType === 'INSTANT' && (
-                          <span className="text-emerald-600 font-medium">Instant confirmation</span>
+                          <span className="text-primary-600 font-medium">Instant confirmation</span>
                         )}
                       </span>
-                      <span className="text-sm font-semibold text-slate-800 group-hover:text-slate-900 flex items-center gap-1 transition-colors">
+                      <span className="text-sm font-semibold text-primary-700 group-hover:text-primary-800 flex items-center gap-1 transition-colors">
                         Book Now <ChevronRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
                       </span>
                     </div>
@@ -270,10 +270,10 @@ export function ActivityShowcase({
         </div>
 
         {/* Footer CTA */}
-        <div className="mt-8 pt-6 border-t border-slate-200 text-center">
+        <div className="mt-8 pt-6 border-t border-neutral-200 text-center">
           <a
             href={`/things-to-do${category ? `?category=${category}` : ''}`}
-            className="inline-flex items-center gap-2 bg-slate-800 hover:bg-slate-900 text-white font-semibold px-8 py-3.5 rounded-xl transition-colors shadow-lg hover:shadow-xl"
+            className="inline-flex items-center gap-2 bg-primary-600 hover:bg-primary-700 text-white font-semibold px-8 py-3.5 rounded-xl transition-colors shadow-lg hover:shadow-xl"
           >
             Explore All {getCategoryLabel(category)} 
             <ChevronRight className="w-5 h-5" />

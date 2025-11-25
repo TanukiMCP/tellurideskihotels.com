@@ -61,42 +61,59 @@ export function HotelComparison({
       
       const nightsCalc = Math.ceil((new Date(checkOut).getTime() - new Date(checkIn).getTime()) / (1000 * 60 * 60 * 24));
       
-      const params = new URLSearchParams({
-        cityName: 'Telluride',
-        countryCode: 'US',
-        limit: hotelIds && hotelIds.length > 0 ? hotelIds.length.toString() : '20',
-        checkin: checkIn,
-        checkout: checkOut,
-      });
+      let hotelsData: LiteAPIHotel[] = [];
       
-      const response = await fetch(`/api/liteapi/search?${params.toString()}`);
-      
-      if (!response.ok) {
-        throw new Error('Failed to load hotels');
-      }
-      
-      const data = await response.json();
-      let hotelsData: LiteAPIHotel[] = data.data || [];
-      
-      // Apply filters
-      if (filter === 'luxury') {
-        hotelsData = hotelsData.filter(h => (h.star_rating || 0) >= 4);
-      } else if (filter === 'budget') {
-        hotelsData = hotelsData.filter(h => (h.star_rating || 0) <= 3);
-      } else if (filter === 'ski-in-ski-out') {
-        hotelsData = hotelsData.filter(h => {
-          const name = (h.name || '').toLowerCase();
-          const address = (h.address?.full || '').toLowerCase();
-          return name.includes('mountain village') || 
-                 address.includes('mountain village') ||
-                 name.includes('slopeside') ||
-                 address.includes('slopeside');
-        });
-      }
-      
-      // If specific hotel IDs provided, filter to those
+      // If specific hotel IDs provided, fetch them directly for more reliable results
       if (hotelIds && hotelIds.length > 0) {
-        hotelsData = hotelsData.filter(h => hotelIds.includes(h.hotel_id));
+        const hotelPromises = hotelIds.map(async (id) => {
+          try {
+            const response = await fetch(`/api/liteapi/hotel?hotelId=${id}`);
+            if (response.ok) {
+              const data = await response.json();
+              return data.data || data;
+            }
+            return null;
+          } catch {
+            return null;
+          }
+        });
+        
+        const results = await Promise.all(hotelPromises);
+        hotelsData = results.filter((h): h is LiteAPIHotel => h !== null);
+      } else {
+        // Fall back to city search for filter-based queries
+        const params = new URLSearchParams({
+          cityName: 'Telluride',
+          countryCode: 'US',
+          limit: '20',
+          checkin: checkIn,
+          checkout: checkOut,
+        });
+        
+        const response = await fetch(`/api/liteapi/search?${params.toString()}`);
+        
+        if (!response.ok) {
+          throw new Error('Failed to load hotels');
+        }
+        
+        const data = await response.json();
+        hotelsData = data.data || [];
+        
+        // Apply filters only for city searches
+        if (filter === 'luxury') {
+          hotelsData = hotelsData.filter(h => (h.star_rating || 0) >= 4);
+        } else if (filter === 'budget') {
+          hotelsData = hotelsData.filter(h => (h.star_rating || 0) <= 3);
+        } else if (filter === 'ski-in-ski-out') {
+          hotelsData = hotelsData.filter(h => {
+            const name = (h.name || '').toLowerCase();
+            const address = (h.address?.full || '').toLowerCase();
+            return name.includes('mountain village') || 
+                   address.includes('mountain village') ||
+                   name.includes('slopeside') ||
+                   address.includes('slopeside');
+          });
+        }
       }
       
       if (hotelsData.length === 0) {
@@ -204,7 +221,7 @@ export function HotelComparison({
         ? { type: 'price', label: 'Best Price', icon: Wallet, color: 'emerald' } 
         : null,
       [bestValue.hotelId]: bestValue.hotelId !== highestRated.hotelId && bestValue.hotelId !== lowestPrice.hotelId
-        ? { type: 'value', label: 'Best Value', icon: TrendingUp, color: 'blue' }
+        ? { type: 'value', label: 'Best Value', icon: TrendingUp, color: 'secondary' }
         : null,
     };
   };
@@ -213,11 +230,11 @@ export function HotelComparison({
 
   if (loading) {
     return (
-      <Card className="my-12 not-prose border-0 shadow-xl bg-gradient-to-br from-slate-50 to-slate-100">
+      <Card className="my-12 not-prose border-0 shadow-xl bg-gradient-to-br from-primary-50 to-primary-100/50">
         <CardContent className="py-12">
           <div className="flex flex-col items-center gap-3">
             <LoadingSpinner size="lg" />
-            <p className="text-sm text-slate-600">Comparing properties...</p>
+            <p className="text-sm text-neutral-600">Comparing properties...</p>
           </div>
         </CardContent>
       </Card>
@@ -226,14 +243,14 @@ export function HotelComparison({
 
   if (error || hotels.length === 0) {
     return (
-      <Card className="my-12 not-prose border-0 shadow-xl bg-gradient-to-br from-slate-50 to-slate-100">
+      <Card className="my-12 not-prose border-0 shadow-xl bg-gradient-to-br from-primary-50 to-primary-100/50">
         <CardContent className="py-12">
           <div className="text-center">
-            <Building2 className="w-12 h-12 text-slate-300 mx-auto mb-4" />
-            <p className="text-slate-600 mb-4">{error || 'No properties found matching your criteria.'}</p>
+            <Building2 className="w-12 h-12 text-neutral-300 mx-auto mb-4" />
+            <p className="text-neutral-600 mb-4">{error || 'No properties found matching your criteria.'}</p>
             <a
               href="/places-to-stay"
-              className="inline-flex items-center gap-2 bg-slate-800 hover:bg-slate-900 text-white font-semibold px-6 py-3 rounded-xl transition-colors"
+              className="inline-flex items-center gap-2 bg-primary-600 hover:bg-primary-700 text-white font-semibold px-6 py-3 rounded-xl transition-colors"
             >
               Browse All Properties
             </a>
@@ -244,9 +261,9 @@ export function HotelComparison({
   }
 
   return (
-    <Card className="my-12 not-prose border-0 shadow-xl bg-gradient-to-br from-slate-50 to-slate-100 overflow-hidden">
+    <Card className="my-12 not-prose border-0 shadow-xl bg-gradient-to-br from-primary-50 to-primary-100/50 overflow-hidden">
       {/* Header */}
-      <CardHeader className="bg-gradient-to-r from-slate-800 to-slate-900 text-white pb-6">
+      <CardHeader className="bg-gradient-to-r from-primary-700 to-primary-800 text-white pb-6">
         <div className="flex items-center justify-between flex-wrap gap-4">
           <div className="flex items-center gap-4">
             <div className="w-14 h-14 bg-white/10 backdrop-blur rounded-xl flex items-center justify-center">
@@ -254,14 +271,14 @@ export function HotelComparison({
             </div>
             <div>
               <CardTitle className="text-2xl font-bold text-white">{title}</CardTitle>
-              <p className="text-slate-300 mt-1 text-sm">
+              <p className="text-primary-100 mt-1 text-sm">
                 {nightsCount} nights • {guests} {guests === 1 ? 'guest' : 'guests'} • {format(new Date(checkIn), 'MMM d')} - {format(new Date(checkOut), 'MMM d')}
               </p>
             </div>
           </div>
           <button
             onClick={() => setShowSettings(!showSettings)}
-            className="flex items-center gap-1 text-sm text-slate-300 hover:text-white transition-colors"
+            className="flex items-center gap-1 text-sm text-primary-200 hover:text-white transition-colors"
           >
             {showSettings ? 'Hide' : 'Edit'} dates
             {showSettings ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
@@ -270,9 +287,9 @@ export function HotelComparison({
         
         {/* Expandable Settings */}
         {showSettings && (
-          <div className="mt-6 pt-6 border-t border-slate-700 grid gap-4 md:grid-cols-3">
+          <div className="mt-6 pt-6 border-t border-primary-600 grid gap-4 md:grid-cols-3">
             <div>
-              <label className="block text-xs text-slate-400 mb-1.5">
+              <label className="block text-xs text-primary-200 mb-1.5">
                 <Users className="w-3.5 h-3.5 inline mr-1" />
                 Guests
               </label>
@@ -282,11 +299,11 @@ export function HotelComparison({
                 max="20"
                 value={guests}
                 onChange={(e) => setGuests(parseInt(e.target.value) || 2)}
-                className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-white/20"
+                className="w-full px-3 py-2 bg-primary-800 border border-primary-600 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-white/20"
               />
             </div>
             <div>
-              <label className="block text-xs text-slate-400 mb-1.5">
+              <label className="block text-xs text-primary-200 mb-1.5">
                 <Calendar className="w-3.5 h-3.5 inline mr-1" />
                 Check-In
               </label>
@@ -295,11 +312,11 @@ export function HotelComparison({
                 value={checkIn}
                 onChange={(e) => setCheckIn(e.target.value)}
                 min={format(new Date(), 'yyyy-MM-dd')}
-                className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-white/20"
+                className="w-full px-3 py-2 bg-primary-800 border border-primary-600 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-white/20"
               />
             </div>
             <div>
-              <label className="block text-xs text-slate-400 mb-1.5">
+              <label className="block text-xs text-primary-200 mb-1.5">
                 <Calendar className="w-3.5 h-3.5 inline mr-1" />
                 Check-Out
               </label>
@@ -308,7 +325,7 @@ export function HotelComparison({
                 value={checkOut}
                 onChange={(e) => setCheckOut(e.target.value)}
                 min={checkIn}
-                className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-white/20"
+                className="w-full px-3 py-2 bg-primary-800 border border-primary-600 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-white/20"
               />
             </div>
           </div>
@@ -324,14 +341,14 @@ export function HotelComparison({
             return (
               <div
                 key={hotel.hotelId}
-                className="group relative bg-white rounded-2xl border-2 border-slate-200 overflow-hidden hover:border-slate-400 hover:shadow-xl transition-all duration-300"
+                className="group relative bg-white rounded-2xl border-2 border-neutral-200 overflow-hidden hover:border-primary-400 hover:shadow-xl transition-all duration-300"
               >
                 {/* Badge */}
                 {badge && (
                   <div className={`absolute top-3 left-3 z-10 flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold shadow-lg ${
-                    badge.color === 'amber' ? 'bg-amber-500 text-white' :
-                    badge.color === 'emerald' ? 'bg-emerald-500 text-white' :
-                    'bg-blue-500 text-white'
+                    badge.color === 'amber' ? 'bg-accent-500 text-white' :
+                    badge.color === 'emerald' ? 'bg-primary-500 text-white' :
+                    'bg-secondary-500 text-white'
                   }`}>
                     <badge.icon className="w-3 h-3" />
                     {badge.label}
@@ -339,12 +356,12 @@ export function HotelComparison({
                 )}
 
                 {/* Rank Badge */}
-                <div className="absolute top-3 right-3 z-10 w-8 h-8 bg-slate-900 text-white rounded-full flex items-center justify-center font-bold text-sm shadow-lg">
+                <div className="absolute top-3 right-3 z-10 w-8 h-8 bg-primary-700 text-white rounded-full flex items-center justify-center font-bold text-sm shadow-lg">
                   #{index + 1}
                 </div>
 
                 {/* Image */}
-                <div className="relative h-44 bg-slate-100">
+                <div className="relative h-44 bg-neutral-100">
                   {hotel.imageUrl ? (
                     <img
                       src={hotel.imageUrl}
@@ -354,7 +371,7 @@ export function HotelComparison({
                     />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center">
-                      <Building2 className="w-12 h-12 text-slate-300" />
+                      <Building2 className="w-12 h-12 text-neutral-300" />
                     </div>
                   )}
                   
@@ -362,10 +379,10 @@ export function HotelComparison({
                   {hotel.rating > 0 && (
                     <div className="absolute bottom-3 left-3 bg-white/95 backdrop-blur px-2.5 py-1 rounded-lg shadow-lg">
                       <div className="flex items-center gap-1">
-                        <span className="font-bold text-slate-900">{hotel.rating.toFixed(1)}</span>
-                        <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
+                        <span className="font-bold text-neutral-900">{hotel.rating.toFixed(1)}</span>
+                        <Star className="w-3.5 h-3.5 fill-accent-400 text-accent-400" />
                         {hotel.reviewCount > 0 && (
-                          <span className="text-xs text-slate-500">({hotel.reviewCount})</span>
+                          <span className="text-xs text-neutral-500">({hotel.reviewCount})</span>
                         )}
                       </div>
                     </div>
@@ -376,19 +393,19 @@ export function HotelComparison({
                 <div className="p-4 space-y-3">
                   {/* Name & Stars */}
                   <div>
-                    <h3 className="font-bold text-slate-900 text-base leading-tight line-clamp-2 min-h-[2.5rem] group-hover:text-slate-700 transition-colors">
+                    <h3 className="font-bold text-neutral-900 text-base leading-tight line-clamp-2 min-h-[2.5rem] group-hover:text-primary-700 transition-colors">
                       {hotel.name}
                     </h3>
                     <div className="flex items-center gap-0.5 mt-1">
                       {[...Array(hotel.starRating)].map((_, i) => (
-                        <Star key={i} className="w-3 h-3 fill-amber-400 text-amber-400" />
+                        <Star key={i} className="w-3 h-3 fill-accent-400 text-accent-400" />
                       ))}
                     </div>
                   </div>
 
                   {/* Location */}
                   {hotel.location && (
-                    <div className="flex items-center gap-1.5 text-xs text-slate-600">
+                    <div className="flex items-center gap-1.5 text-xs text-neutral-600">
                       <MapPin className="w-3 h-3 flex-shrink-0" />
                       <span className="line-clamp-1">{hotel.location}</span>
                     </div>
@@ -398,8 +415,8 @@ export function HotelComparison({
                   {hotel.amenities.length > 0 && (
                     <div className="space-y-1">
                       {hotel.amenities.slice(0, 3).map((amenity, i) => (
-                        <div key={i} className="flex items-center gap-1.5 text-xs text-slate-700">
-                          <Check className="w-3 h-3 text-emerald-600 flex-shrink-0" />
+                        <div key={i} className="flex items-center gap-1.5 text-xs text-neutral-700">
+                          <Check className="w-3 h-3 text-primary-600 flex-shrink-0" />
                           <span className="line-clamp-1">{amenity}</span>
                         </div>
                       ))}
@@ -407,18 +424,18 @@ export function HotelComparison({
                   )}
 
                   {/* Pricing */}
-                  <div className="pt-3 border-t border-slate-200">
+                  <div className="pt-3 border-t border-neutral-200">
                     <div className="flex items-baseline justify-between mb-1">
-                      <span className="text-xs text-slate-500">Per Person</span>
-                      <span className="text-2xl font-bold text-slate-900">
+                      <span className="text-xs text-neutral-500">Per Person</span>
+                      <span className="text-2xl font-bold text-neutral-900">
                         {formatCurrency(hotel.costPerPerson)}
                       </span>
                     </div>
-                    <div className="flex items-baseline justify-between text-xs text-slate-500">
+                    <div className="flex items-baseline justify-between text-xs text-neutral-500">
                       <span>{nightsCount} nights total</span>
                       <span className="font-semibold">{formatCurrency(hotel.totalCost)}</span>
                     </div>
-                    <div className="text-xs text-slate-400 text-right mt-0.5">
+                    <div className="text-xs text-neutral-400 text-right mt-0.5">
                       {formatCurrency(hotel.price)}/night
                     </div>
                   </div>
@@ -426,7 +443,7 @@ export function HotelComparison({
                   {/* CTA */}
                   <a
                     href={`/places-to-stay/${hotel.hotelId}?checkIn=${checkIn}&checkOut=${checkOut}&adults=${guests}&rooms=1`}
-                    className="block w-full bg-slate-800 hover:bg-slate-900 text-white font-semibold py-3 px-4 rounded-xl text-center transition-colors text-sm"
+                    className="block w-full bg-primary-600 hover:bg-primary-700 text-white font-semibold py-3 px-4 rounded-xl text-center transition-colors text-sm"
                   >
                     View Details & Book
                   </a>
@@ -440,7 +457,7 @@ export function HotelComparison({
         <div className="mt-6 text-center">
           <a
             href={`/places-to-stay?checkin=${checkIn}&checkout=${checkOut}&guests=${guests}`}
-            className="inline-flex items-center gap-2 text-sm font-semibold text-slate-600 hover:text-slate-900 transition-colors"
+            className="inline-flex items-center gap-2 text-sm font-semibold text-neutral-600 hover:text-primary-700 transition-colors"
           >
             See all properties in Telluride
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

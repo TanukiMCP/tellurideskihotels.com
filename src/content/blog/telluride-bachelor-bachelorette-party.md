@@ -68,6 +68,7 @@ Use the cost calculator below to estimate total party expenses based on group si
   defaultNights={3}
   defaultGuests={8}
   title="Party Trip Cost Calculator"
+  client:load
 />
 
 For information about planning general friend group trips, see our [friends ski trip guide](/blog/planning-tips/telluride-friends-ski-trip). To understand seasonal timing and when to visit, check our [ski season guide](/blog/planning-tips/telluride-ski-season-guide). For accommodation options, review our [where to stay guide](/blog/destination-guides/where-to-stay-telluride).
@@ -119,6 +120,7 @@ Hybrid options combine space advantages with hotel services. Some properties off
   hotelIds={["lp4b27f", "lpd153e", "lp656c95d8"]}
   title="Compare Group Lodging Options"
   groupSize={10}
+  client:load
 />
 
 ## Activity Planning and Recommendations
@@ -145,6 +147,7 @@ Special experiences create memorable moments that distinguish bachelor and bache
   category="nightlife"
   limit={3}
   title="Party-Ready Activities in Telluride"
+  client:load
 />
 
 ## Cost Management for Parties
