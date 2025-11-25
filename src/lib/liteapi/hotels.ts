@@ -294,7 +294,7 @@ export async function getHotelDetails(hotelId: string): Promise<LiteAPIHotel> {
   return {
     hotel_id: hotel.id || hotelId,
     name: hotel.name,
-    star_rating: hotel.starRating, // Hotel classification (1-5 stars based on amenities)
+    star_rating: hotel.starRating || hotel.stars, // Handle both field names
     review_score: hotel.rating,  // Guest rating (0-10 scale from reviews)
     review_count: hotel.reviewCount,
     hotel_type_id: hotel.hotelTypeId, // Preserve hotelTypeId from API
@@ -306,11 +306,19 @@ export async function getHotelDetails(hotelId: string): Promise<LiteAPIHotel> {
       postal_code: hotel.zip,
       country: hotel.country,
     },
-    // LiteAPI returns coordinates at top level: hotel.latitude, hotel.longitude
-    location: (hotel.latitude && hotel.longitude) ? {
-      latitude: hotel.latitude,
-      longitude: hotel.longitude,
-    } : undefined,
+    // LiteAPI coordinates: top-level (hotel.latitude, hotel.longitude) OR nested (hotel.location)
+    // Handle both formats for compatibility with list vs detail endpoints
+    location: (() => {
+      // Try top-level first (from /data/hotels list endpoint)
+      if (hotel.latitude && hotel.longitude) {
+        return { latitude: hotel.latitude, longitude: hotel.longitude };
+      }
+      // Try nested format (from /data/hotel detail endpoint)
+      if (hotel.location?.latitude && hotel.location?.longitude) {
+        return { latitude: hotel.location.latitude, longitude: hotel.location.longitude };
+      }
+      return undefined;
+    })(),
     images: hotelImages,
     amenities: (hotel.hotelFacilities || []).map((facility: string) => ({
       name: facility,
