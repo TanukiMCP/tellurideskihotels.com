@@ -5,6 +5,7 @@
   status = 200
 
 # Catch-all redirect for SPA routing (excludes static files like sitemap.xml)
+# API routes are handled by Astro SSR functions, not this redirect
 [[redirects]]
   from = "/*"
   to = "/index.html"

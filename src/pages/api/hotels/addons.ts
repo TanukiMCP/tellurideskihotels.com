@@ -1,6 +1,8 @@
 import type { APIRoute } from 'astro';
 import { getHotelAddons } from '@/lib/liteapi/addons';
 
+export const prerender = false;
+
 export const GET: APIRoute = async ({ request }) => {
   try {
     const url = new URL(request.url);

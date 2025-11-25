@@ -1,6 +1,8 @@
 import type { APIRoute } from 'astro';
 import { getHotelDetails } from '@/lib/liteapi/hotels';
 
+export const prerender = false;
+
 export const GET: APIRoute = async ({ request }) => {
   const url = new URL(request.url);
   const hotelId = url.searchParams.get('hotelId');

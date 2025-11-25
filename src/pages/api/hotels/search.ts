@@ -2,6 +2,8 @@ import type { APIRoute } from 'astro';
 import { searchHotels } from '@/lib/liteapi/hotels';
 import { withCache } from '@/lib/cache';
 
+export const prerender = false;
+
 export const GET: APIRoute = async ({ request }) => {
   try {
     const url = new URL(request.url);

@@ -5,6 +5,8 @@
 import type { APIRoute } from 'astro';
 import { withCache } from '@/lib/cache';
 
+export const prerender = false;
+
 const TELLURIDE_LAT = 37.9375;
 const TELLURIDE_LON = -107.8123;
 

@@ -1,6 +1,8 @@
 import type { APIRoute } from 'astro';
 import { prebook } from '@/lib/liteapi/booking';
 
+export const prerender = false;
+
 export const POST: APIRoute = async ({ request }) => {
   try {
     const body = await request.json();
