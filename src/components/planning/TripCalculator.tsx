@@ -14,11 +14,26 @@ export interface TripCalculatorProps {
   title?: string;
 }
 
-// Cost constants with explanations for transparency
-const COST_BREAKDOWN = {
-  liftTicket: { amount: 180, label: 'Lift Ticket', icon: Ticket, explanation: 'Adult full-day lift ticket at Telluride Ski Resort' },
-  activities: { amount: 80, label: 'Activities', icon: Mountain, explanation: 'Avg daily spend on tours, rentals, spa, etc.' },
-  dining: { amount: 60, label: 'Dining', icon: Utensils, explanation: 'Breakfast, lunch, dinner & drinks avg per person' },
+// Cost constants BY TIER - realistic budget-appropriate costs
+// Budget: Advance-purchase passes, own gear, grocery meals
+// Mid-Range: Standard pricing, some rentals, mix of dining
+// Luxury: Premium experiences, full rentals, fine dining
+const TIER_COSTS = {
+  budget: {
+    liftTicket: { amount: 135, explanation: 'Multi-day pass or advance purchase discount' },
+    activities: { amount: 25, explanation: 'Bring own gear, free activities (hiking, town exploration)' },
+    dining: { amount: 40, explanation: 'Grocery meals, cafeteria lunch, one restaurant dinner' },
+  },
+  midRange: {
+    liftTicket: { amount: 165, explanation: 'Standard advance-purchase lift tickets' },
+    activities: { amount: 60, explanation: 'Equipment rentals, one guided activity' },
+    dining: { amount: 75, explanation: 'Restaurant breakfast, mountain lunch, nice dinner' },
+  },
+  luxury: {
+    liftTicket: { amount: 195, explanation: 'Premium passes with perks, ski valet' },
+    activities: { amount: 150, explanation: 'Private lessons, spa, heli-skiing, premium rentals' },
+    dining: { amount: 150, explanation: 'Fine dining, craft cocktails, room service' },
+  },
 };
 
 export function TripCalculator({
@@ -131,22 +146,23 @@ export function TripCalculator({
     }).format(amount);
   };
 
-  // Calculate costs with detailed breakdown
+  // Calculate costs with detailed breakdown - TIER-SPECIFIC costs
   const costs = useMemo(() => {
+    const tierCosts = TIER_COSTS[selectedTier];
     const lodgingPerNight = lodgingRates[selectedTier];
     const lodgingTotal = lodgingPerNight * nights;
-    const liftTicketsTotal = COST_BREAKDOWN.liftTicket.amount * nights * guests;
-    const activitiesTotal = COST_BREAKDOWN.activities.amount * nights * guests;
-    const diningTotal = COST_BREAKDOWN.dining.amount * nights * guests;
+    const liftTicketsTotal = tierCosts.liftTicket.amount * nights * guests;
+    const activitiesTotal = tierCosts.activities.amount * nights * guests;
+    const diningTotal = tierCosts.dining.amount * nights * guests;
     
     const total = lodgingTotal + liftTicketsTotal + activitiesTotal + diningTotal;
     const perPerson = total / guests;
 
     return {
       lodging: { total: lodgingTotal, perNight: lodgingPerNight, pct: Math.round((lodgingTotal / total) * 100) },
-      liftTickets: { total: liftTicketsTotal, perDay: COST_BREAKDOWN.liftTicket.amount, pct: Math.round((liftTicketsTotal / total) * 100) },
-      activities: { total: activitiesTotal, perDay: COST_BREAKDOWN.activities.amount, pct: Math.round((activitiesTotal / total) * 100) },
-      dining: { total: diningTotal, perDay: COST_BREAKDOWN.dining.amount, pct: Math.round((diningTotal / total) * 100) },
+      liftTickets: { total: liftTicketsTotal, perDay: tierCosts.liftTicket.amount, pct: Math.round((liftTicketsTotal / total) * 100), explanation: tierCosts.liftTicket.explanation },
+      activities: { total: activitiesTotal, perDay: tierCosts.activities.amount, pct: Math.round((activitiesTotal / total) * 100), explanation: tierCosts.activities.explanation },
+      dining: { total: diningTotal, perDay: tierCosts.dining.amount, pct: Math.round((diningTotal / total) * 100), explanation: tierCosts.dining.explanation },
       total,
       perPerson,
     };
@@ -399,7 +415,7 @@ export function TripCalculator({
                     {formatCurrency(costs.liftTickets.perDay)}/person/day × {guests} people × {nights} days
                   </div>
                   <div className="text-xs text-neutral-500 mt-1">
-                    Adult full-day tickets at Telluride Ski Resort
+                    {costs.liftTickets.explanation}
                   </div>
                 </div>
               </div>
@@ -418,7 +434,7 @@ export function TripCalculator({
                     {formatCurrency(costs.activities.perDay)}/person/day × {guests} people × {nights} days
                   </div>
                   <div className="text-xs text-neutral-500 mt-1">
-                    Equipment rentals, lessons, spa, tours, etc.
+                    {costs.activities.explanation}
                   </div>
                 </div>
               </div>
@@ -437,7 +453,7 @@ export function TripCalculator({
                     {formatCurrency(costs.dining.perDay)}/person/day × {guests} people × {nights} days
                   </div>
                   <div className="text-xs text-neutral-500 mt-1">
-                    Breakfast, lunch, dinner, and drinks
+                    {costs.dining.explanation}
                   </div>
                 </div>
               </div>
