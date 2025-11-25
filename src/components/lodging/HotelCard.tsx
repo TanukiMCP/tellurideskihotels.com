@@ -177,7 +177,7 @@ export function HotelCard({
         {/* Spacer */}
         <div className="flex-grow"></div>
         
-        {/* CTA Button - More descriptive based on price availability */}
+        {/* CTA Button - Always consistent */}
         <button
           onClick={(e) => {
             e.stopPropagation();
@@ -188,7 +188,7 @@ export function HotelCard({
           }`}
           type="button"
         >
-          {minPrice && minPrice > 0 ? 'View Rooms & Book' : 'Check Availability'}
+          View Details & Rates
           <ChevronRight className="w-4 h-4" />
         </button>
       </div>

@@ -147,6 +147,7 @@ export function HotelComparison({
       }
       
       if (hotelsData.length === 0) {
+        setError('No hotels found matching your criteria. Try adjusting your search filters or dates.');
         setHotels([]);
         setLoading(false);
         return;
@@ -169,44 +170,42 @@ export function HotelComparison({
         nights: nightsCalc,
       });
       
-      const ratesResponse = await fetch(`/api/hotels/min-rates?${ratesParams.toString()}`);
-      
       // Build price map - API returns per-night prices
       const prices: Record<string, number> = {};
-      if (ratesResponse.ok) {
-        const ratesData = await ratesResponse.json();
-        console.log('[HotelComparison] Rates response:', ratesData);
+      
+      try {
+        const ratesResponse = await fetch(`/api/hotels/min-rates?${ratesParams.toString()}`);
         
-        if (ratesData.data && Array.isArray(ratesData.data)) {
-          ratesData.data.forEach((item: any) => {
-            if (item.hotelId && item.price && item.price > 0) {
-              // API returns per-night price already (from LiteAPI min-rates endpoint)
-              prices[item.hotelId] = item.price;
-              console.log(`[HotelComparison] Price for ${item.hotelId}: $${item.price}/night`);
-            }
-          });
+        if (ratesResponse.ok) {
+          const ratesData = await ratesResponse.json();
+          console.log('[HotelComparison] Rates response:', ratesData);
+          
+          if (ratesData.data && Array.isArray(ratesData.data)) {
+            ratesData.data.forEach((item: any) => {
+              if (item.hotelId && item.price && item.price > 0) {
+                // API returns per-night price already (from LiteAPI min-rates endpoint)
+                prices[item.hotelId] = item.price;
+                console.log(`[HotelComparison] Price for ${item.hotelId}: $${item.price}/night`);
+              }
+            });
+          }
+        } else {
+          const errorText = await ratesResponse.text();
+          console.warn('[HotelComparison] Rates API returned error:', ratesResponse.status, errorText);
+          // Continue anyway - show hotels without prices
         }
-      } else {
-        const errorText = await ratesResponse.text();
-        console.error('[HotelComparison] Rates API error:', ratesResponse.status, errorText);
+      } catch (err) {
+        console.error('[HotelComparison] Error fetching rates:', err);
+        // Continue anyway - show hotels without prices
       }
       
-      console.log('[HotelComparison] Price map:', prices);
+      console.log('[HotelComparison] Price map:', prices, `(${Object.keys(prices).length} hotels with prices out of ${hotelsData.length} total)`);
       
-      // Calculate hotel data - ONLY use real prices, NO fallback formulas
-      const hotelComparisons: HotelData[] = hotelsData
-        .filter((hotel) => {
-          // Only include hotels that have actual prices from API
-          const hasPrice = prices[hotel.hotel_id] && prices[hotel.hotel_id] > 0;
-          if (!hasPrice) {
-            console.warn(`[HotelComparison] Skipping ${hotel.hotel_id} (${hotel.name}) - no price from API`);
-          }
-          return hasPrice;
-        })
-        .map((hotel) => {
-        const costPerNight = prices[hotel.hotel_id]; // Guaranteed to exist due to filter above
-        const totalCost = costPerNight * nightsCalc;
-        const costPerPerson = totalCost / guests;
+      // Calculate hotel data - Show ALL hotels, prices optional
+      const hotelComparisons: HotelData[] = hotelsData.map((hotel) => {
+        const costPerNight = prices[hotel.hotel_id] && prices[hotel.hotel_id] > 0 ? prices[hotel.hotel_id] : 0;
+        const totalCost = costPerNight > 0 ? costPerNight * nightsCalc : 0;
+        const costPerPerson = costPerNight > 0 ? totalCost / guests : 0;
         
         const location = hotel.address?.city || hotel.address?.line1?.split(',')[0] || 'Telluride';
         const amenities = hotel.amenities?.slice(0, 5).map(a => a.name || a) || [];
@@ -233,21 +232,24 @@ export function HotelComparison({
         };
       });
       
-      // Sort by combined score
+      // Sort by: hotels with prices first, then by combined score
       hotelComparisons.sort((a, b) => {
+        // Hotels with prices come first
+        if ((a.price > 0) !== (b.price > 0)) {
+          return a.price > 0 ? -1 : 1;
+        }
+        // Then by combined score
         if (Math.abs(b.score - a.score) > 0.01) return b.score - a.score;
         if (b.rating !== a.rating) return b.rating - a.rating;
-        return a.costPerPerson - b.costPerPerson;
+        // If both have prices, sort by cost per person
+        if (a.price > 0 && b.price > 0) {
+          return a.costPerPerson - b.costPerPerson;
+        }
+        return 0;
       });
       
-      if (hotelComparisons.length === 0) {
-        const dateRange = `${format(new Date(checkIn), 'MMM d')} - ${format(new Date(checkOut), 'MMM d')}`;
-        setError(`No hotels have availability for ${dateRange}. These hotels may be sold out for these dates. Try adjusting your dates using the "Edit dates" button above.`);
-        setHotels([]);
-      } else {
-        setHotels(hotelComparisons.slice(0, 3));
-        setError(null);
-      }
+      setHotels(hotelComparisons.slice(0, 3));
+      setError(null);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to load hotel comparisons');
     } finally {
@@ -485,29 +487,37 @@ export function HotelComparison({
                     </div>
                   )}
 
-                  {/* Pricing */}
-                  <div className="pt-3 border-t border-neutral-200">
-                    <div className="flex items-baseline justify-between mb-1">
-                      <span className="text-xs text-neutral-500">Per Person</span>
-                      <span className="text-2xl font-bold text-neutral-900">
-                        {formatCurrency(hotel.costPerPerson)}
-                      </span>
+                  {/* Pricing - Only show if price available */}
+                  {hotel.price > 0 ? (
+                    <div className="pt-3 border-t border-neutral-200">
+                      <div className="flex items-baseline justify-between mb-1">
+                        <span className="text-xs text-neutral-500">Per Person</span>
+                        <span className="text-2xl font-bold text-neutral-900">
+                          {formatCurrency(hotel.costPerPerson)}
+                        </span>
+                      </div>
+                      <div className="flex items-baseline justify-between text-xs text-neutral-500">
+                        <span>{nightsCount} nights total</span>
+                        <span className="font-semibold">{formatCurrency(hotel.totalCost)}</span>
+                      </div>
+                      <div className="text-xs text-neutral-400 text-right mt-0.5">
+                        {formatCurrency(hotel.price)}/night
+                      </div>
                     </div>
-                    <div className="flex items-baseline justify-between text-xs text-neutral-500">
-                      <span>{nightsCount} nights total</span>
-                      <span className="font-semibold">{formatCurrency(hotel.totalCost)}</span>
+                  ) : (
+                    <div className="pt-3 border-t border-neutral-200">
+                      <p className="text-xs text-neutral-500 text-center py-2">
+                        Rates vary by date. Click to view current availability.
+                      </p>
                     </div>
-                    <div className="text-xs text-neutral-400 text-right mt-0.5">
-                      {formatCurrency(hotel.price)}/night
-                    </div>
-                  </div>
+                  )}
 
                   {/* CTA */}
                   <a
                     href={`/places-to-stay/${hotel.hotelId}?checkIn=${checkIn}&checkOut=${checkOut}&adults=${guests}&rooms=1`}
                     className="block w-full bg-primary-600 hover:bg-primary-700 text-white font-semibold py-3 px-4 rounded-xl text-center transition-colors text-sm"
                   >
-                    View Details & Book
+                    View Details & Rates
                   </a>
                 </div>
               </div>

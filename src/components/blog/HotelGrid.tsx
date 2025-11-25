@@ -166,7 +166,7 @@ function SingleHotelShowcase({
               className="w-full bg-primary-600 hover:bg-primary-700 text-white font-semibold py-4 px-6 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg hover:scale-[1.02] active:scale-[0.98] text-base"
               type="button"
             >
-              {minPrice && minPrice > 0 ? 'Check Availability & Book' : 'View Details & Rates'}
+              View Details & Rates
             </button>
           </div>
         </div>
@@ -360,7 +360,8 @@ export function HotelGrid({
       .then(res => {
         if (!res.ok) {
           const errorText = res.statusText;
-          console.error('[HotelGrid] Rates API error:', res.status, errorText);
+          console.warn('[HotelGrid] Rates API returned error:', res.status, errorText);
+          // Continue - show hotels without prices
           return null;
         }
         return res.json();
@@ -370,26 +371,28 @@ export function HotelGrid({
         
         console.log('[HotelGrid] Rates response:', ratesData);
         
+        const prices: Record<string, number> = {};
+        
         if (ratesData?.data && Array.isArray(ratesData.data)) {
-          const prices: Record<string, number> = {};
-          
           ratesData.data.forEach((item: { hotelId?: string; price?: number }) => {
             if (item.hotelId && item.price && item.price > 0) {
               prices[item.hotelId] = item.price;
               console.log(`[HotelGrid] Price for ${item.hotelId}: $${item.price}/night`);
             }
           });
-          
-          console.log('[HotelGrid] Final price map:', prices);
-          setMinPrices(prices);
         } else {
-          console.warn('[HotelGrid] No rate data in response:', ratesData);
+          console.warn('[HotelGrid] No rate data in response - showing hotels without prices');
         }
+        
+        console.log('[HotelGrid] Final price map:', prices, `(${Object.keys(prices).length} hotels with prices out of ${hotels.length} total)`);
+        setMinPrices(prices);
         setIsLoadingRates(false);
       })
       .catch(err => {
         console.error('[HotelGrid] Error fetching min rates:', err);
+        // Continue - show hotels without prices
         if (isMounted) {
+          setMinPrices({}); // Empty prices object
           setIsLoadingRates(false);
         }
       });
@@ -438,7 +441,7 @@ export function HotelGrid({
         </div>
       ) : hotels.length === 0 ? (
         <div className="border-2 border-neutral-200 rounded-lg p-8 text-center bg-neutral-50">
-          <p className="text-neutral-600 mb-2">No hotels available matching your criteria</p>
+          <p className="text-neutral-600 mb-2">No properties found matching your criteria</p>
           <a
             href={`/places-to-stay${filter ? `?filter=${filter}` : ''}`}
             className="inline-flex items-center gap-2 text-primary-600 hover:text-primary-700 font-medium"
