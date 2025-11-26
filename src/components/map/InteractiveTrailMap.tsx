@@ -80,58 +80,136 @@ export default function InteractiveTrailMap() {
   const [isMapLoaded, setIsMapLoaded] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // Helper function to apply/remove snow effect
-  // This can be called from multiple places to ensure snow persists
-  const applySnowEffect = useCallback(() => {
-    if (!mapRef.current || !isMapLoaded) return;
+  // ============================================================================
+  // SEASONAL EFFECTS MANAGEMENT
+  // Clean, deterministic handling of winter/summer style transitions
+  // ============================================================================
+
+  /**
+   * Clears ALL seasonal effects from the map.
+   * This ensures a clean slate before applying new seasonal styles.
+   * Called before every style/season transition.
+   */
+  const clearSeasonalEffects = useCallback(() => {
+    if (!mapRef.current) return;
     
     const map = mapRef.current.getMap();
     
-    // Check if setSnow method is available (v3.9+)
+    // Clear snow effect if the API is available
+    if (typeof (map as any).setSnow === 'function') {
+      try {
+        (map as any).setSnow(null);
+        console.log('[SeasonalEffects] ❄️ Cleared snow effect');
+      } catch (err) {
+        // Silently ignore - effect may not have been active
+      }
+    }
+    
+    // Clear rain effect if it was ever used (future-proofing)
+    if (typeof (map as any).setRain === 'function') {
+      try {
+        (map as any).setRain(null);
+      } catch (err) {
+        // Silently ignore
+      }
+    }
+    
+    // Clear fog effect if needed (can be used for atmosphere)
+    if (typeof (map as any).setFog === 'function') {
+      try {
+        (map as any).setFog(null);
+      } catch (err) {
+        // Silently ignore
+      }
+    }
+  }, []);
+
+  /**
+   * Applies winter-specific effects to the map.
+   * Only called when satellite + winter mode is active.
+   */
+  const applyWinterEffects = useCallback(() => {
+    if (!mapRef.current) return;
+    
+    const map = mapRef.current.getMap();
+    
+    // Check if setSnow method is available (Mapbox GL JS v3.9+)
     if (typeof (map as any).setSnow !== 'function') {
-      console.warn('[InteractiveTrailMap] ⚠️ setSnow() method not available. Mapbox GL JS v3.9+ required.');
+      console.warn('[SeasonalEffects] ⚠️ setSnow() not available. Requires Mapbox GL JS v3.9+');
       return;
     }
 
-    // Only apply snow for winter satellite view
-    if (mapStyle === 'satellite' && season === 'winter') {
-      try {
-        (map as any).setSnow({
-          density: ['interpolate', ['linear'], ['zoom'], 10, 0.4, 15, 0.7, 20, 1.0],
-          intensity: ['interpolate', ['linear'], ['zoom'], 10, 0.5, 15, 0.8, 20, 1.0],
-          direction: 180, // Snow falling downward (degrees)
-          opacity: ['interpolate', ['linear'], ['zoom'], 10, 0.6, 15, 0.8, 20, 0.95],
-          color: '#ffffff', // White snow
-          'flake-size': ['interpolate', ['linear'], ['zoom'], 10, 0.8, 15, 1.2, 20, 1.8],
-          vignette: true // Add vignette effect for atmosphere
-        });
-        console.log('[InteractiveTrailMap] ✅ Applied snow effect for winter satellite view');
-      } catch (snowError) {
-        console.warn('[InteractiveTrailMap] ⚠️ Snow effect failed:', snowError);
+    try {
+      // Apply snow effect per official Mapbox documentation
+      // https://docs.mapbox.com/mapbox-gl-js/example/snow/
+      (map as any).setSnow({
+        density: ['interpolate', ['linear'], ['zoom'], 10, 0.5, 14, 0.75, 18, 0.85],
+        intensity: 1.0,
+        'center-thinning': 0.1,
+        direction: [0, 50],
+        opacity: 1.0,
+        color: '#ffffff',
+        'flake-size': 0.71,
+        vignette: ['interpolate', ['linear'], ['zoom'], 10, 0.2, 14, 0.3, 18, 0.4],
+        'vignette-color': '#ffffff'
+      });
+      console.log('[SeasonalEffects] ✅ Applied winter snow effect');
+    } catch (err) {
+      console.warn('[SeasonalEffects] ⚠️ Failed to apply snow effect:', err);
+    }
+  }, []);
+
+  /**
+   * Applies summer-specific effects to the map.
+   * Currently just ensures no winter effects are present.
+   * Can be extended for summer-specific atmosphere (e.g., warm fog, sun glare).
+   */
+  const applySummerEffects = useCallback(() => {
+    if (!mapRef.current) return;
+    
+    // Summer mode: ensure all winter effects are cleared
+    // This is a defensive call - should already be cleared
+    clearSeasonalEffects();
+    
+    // Future: Could add summer-specific effects here
+    // e.g., warm atmospheric fog, sun position, etc.
+    console.log('[SeasonalEffects] ☀️ Applied summer mode (clean satellite view)');
+  }, [clearSeasonalEffects]);
+
+  /**
+   * Master function to apply the correct seasonal effects based on current state.
+   * This is the ONLY function that should be called to update seasonal effects.
+   */
+  const applySeasonalEffects = useCallback(() => {
+    if (!mapRef.current || !isMapLoaded) return;
+    
+    // Step 1: Always clear existing effects first for a clean transition
+    clearSeasonalEffects();
+    
+    // Step 2: Apply new effects based on current mode
+    if (mapStyle === 'satellite') {
+      if (season === 'winter') {
+        applyWinterEffects();
+      } else {
+        applySummerEffects();
       }
     } else {
-      // Disable snow effect for summer or terrain views
-      try {
-        (map as any).setSnow(null);
-        console.log('[InteractiveTrailMap] ❄️ Disabled snow effect');
-      } catch (snowError) {
-        // Silently ignore errors when disabling snow
-      }
+      // Terrain/outdoors mode - no seasonal effects needed
+      console.log('[SeasonalEffects] 🗺️ Terrain mode - no seasonal effects');
     }
-  }, [mapStyle, season, isMapLoaded]);
+  }, [mapStyle, season, isMapLoaded, clearSeasonalEffects, applyWinterEffects, applySummerEffects]);
 
-  // Handle map load and apply 3D terrain
+  // ============================================================================
+  // MAP INITIALIZATION
+  // ============================================================================
+
+  // Handle map load event
   const handleMapLoad = () => {
     setIsMapLoaded(true);
     
-    // Configure scrollZoom with consistent zoom rate for both zoom in and out
-    // This ensures symmetric zoom behavior
+    // Configure scrollZoom with consistent zoom rate
     const map = mapRef.current?.getMap();
     if (map && map.scrollZoom) {
-      // Set a consistent wheel zoom rate (default is 1/450, we'll use a slightly slower rate for better control)
-      // This makes zoom in and zoom out feel more balanced
-      // Note: scrollZoom by default zooms around the cursor position, not the map center
-      // This prevents the map from jumping when zooming out
       map.scrollZoom.setWheelZoomRate(1 / 500);
     }
   };
@@ -142,7 +220,6 @@ export default function InteractiveTrailMap() {
     
     const map = mapRef.current.getMap();
     
-    // Wait for initial style load, then fit to resort bounds
     const initialSetup = () => {
       setTimeout(() => {
         map.fitBounds(TELLURIDE_BOUNDS, {
@@ -159,64 +236,53 @@ export default function InteractiveTrailMap() {
     } else {
       map.once('style.load', initialSetup);
     }
-  }, [isMapLoaded]); // Only run once when map loads
+  }, [isMapLoaded]);
 
-  // Handle map style changes (terrain vs satellite) and apply snow effect for winter satellite
+  // ============================================================================
+  // UNIFIED STYLE & SEASON CHANGE HANDLER
+  // Single source of truth for all style/season transitions
+  // ============================================================================
   useEffect(() => {
     if (!mapRef.current || !isMapLoaded) return;
     
     const map = mapRef.current.getMap();
-    let styleToUse: string;
     
-    if (mapStyle === 'satellite') {
-      // When satellite is selected, use seasonal satellite style
-      styleToUse = SEASONAL_SATELLITE_STYLES[season];
-    } else {
-      // When terrain is selected, use outdoors style
-      styleToUse = MAP_STYLES[mapStyle];
-    }
+    // Determine which style URL to use
+    const styleToUse = mapStyle === 'satellite' 
+      ? SEASONAL_SATELLITE_STYLES[season]
+      : MAP_STYLES[mapStyle];
     
+    console.log('[StyleManager] 🔄 Transitioning to:', mapStyle, mapStyle === 'satellite' ? `(${season})` : '');
+    
+    // Step 1: Clear ALL seasonal effects BEFORE changing style
+    // This prevents any "bleeding" of effects between modes
+    clearSeasonalEffects();
+    
+    // Step 2: Change the map style
     try {
       map.setStyle(styleToUse);
-      console.log('[InteractiveTrailMap] Switched to', mapStyle, mapStyle === 'satellite' ? `(${season})` : '');
-      
-      // Apply snow effect after style loads (required by Mapbox)
-      // Wait for style to load before applying snow
-      const applySnowAfterStyleLoad = () => {
-        // Small delay to ensure style is fully ready
-        setTimeout(() => {
-          applySnowEffect();
-        }, 200);
-      };
-      
-      if (map.isStyleLoaded()) {
-        applySnowAfterStyleLoad();
-      } else {
-        map.once('style.load', applySnowAfterStyleLoad);
-      }
     } catch (error) {
-      console.error('[InteractiveTrailMap] Error switching map style:', error);
+      console.error('[StyleManager] ❌ Failed to set style:', error);
+      return;
     }
-  }, [mapStyle, season, isMapLoaded]);
-
-  // Handle style changes - preserve terrain state and restore after style loads
-  // This runs when mapStyle or season changes (which changes the style)
-  useEffect(() => {
-    if (!mapRef.current || !isMapLoaded) return;
     
-    const map = mapRef.current.getMap();
-    
-    const handleStyleChange = () => {
-      // After style change, restore terrain if it was enabled
-      // Wait for sources to be added by the main effect
+    // Step 3: Set up handler for when new style is loaded
+    const onStyleLoad = () => {
+      console.log('[StyleManager] ✅ Style loaded:', mapStyle, mapStyle === 'satellite' ? `(${season})` : '');
+      
+      // Step 4: Apply seasonal effects AFTER style is fully loaded
+      // Small delay ensures style internals are ready
       setTimeout(() => {
-        if (terrainEnabled && map.getSource('mapbox-dem')) {
-          map.setTerrain({ source: 'mapbox-dem', exaggeration: 2.0 });
-          
-          // If terrain was enabled, restore 3D camera position (preserve current state)
-          if (terrainEnabled) {
+        applySeasonalEffects();
+      }, 100);
+      
+      // Step 5: Restore 3D terrain if it was enabled
+      if (terrainEnabled) {
+        setTimeout(() => {
+          if (map.getSource('mapbox-dem')) {
+            map.setTerrain({ source: 'mapbox-dem', exaggeration: 2.0 });
+            
             const currentPitch = map.getPitch();
-            // Only adjust pitch if it's too low, otherwise preserve current 3D view
             if (currentPitch < 45) {
               map.easeTo({
                 pitch: SUMMIT_3D_VIEWPOINT.pitch,
@@ -224,31 +290,20 @@ export default function InteractiveTrailMap() {
                 duration: 500
               });
             }
+            console.log('[StyleManager] 🏔️ Restored 3D terrain');
           }
-          
-          // Reapply snow effect after terrain is restored
-          setTimeout(() => {
-            applySnowEffect();
-          }, 100);
-          
-          console.log('[InteractiveTrailMap] Restored 3D terrain after style change');
-        } else {
-          // Even if terrain is disabled, reapply snow effect
-          setTimeout(() => {
-            applySnowEffect();
-          }, 100);
-        }
-      }, 400); // Wait for sources to be added
+        }, 300);
+      }
     };
     
-    // Listen for style.load event when style changes
-    map.once('style.load', handleStyleChange);
+    // Wait for style to load before applying effects
+    map.once('style.load', onStyleLoad);
     
-    // Also run immediately if style is already loaded
-    if (map.isStyleLoaded()) {
-      handleStyleChange();
-    }
-  }, [mapStyle, season, isMapLoaded, terrainEnabled, applySnowEffect]);
+    // Cleanup: remove listener if effect re-runs before style loads
+    return () => {
+      map.off('style.load', onStyleLoad);
+    };
+  }, [mapStyle, season, isMapLoaded, terrainEnabled, clearSeasonalEffects, applySeasonalEffects]);
 
   // Load all map data (trails, lifts, POIs) after map is loaded and on style/visibility changes
   useEffect(() => {
@@ -773,9 +828,9 @@ export default function InteractiveTrailMap() {
       map.setTerrain({ source: 'mapbox-dem', exaggeration: 2.0 });
       setTerrainEnabled(true);
       
-      // Reapply snow effect after 3D terrain is enabled
+      // Reapply seasonal effects after 3D terrain is enabled
       setTimeout(() => {
-        applySnowEffect();
+        applySeasonalEffects();
       }, 200);
       
     } else {
@@ -796,9 +851,9 @@ export default function InteractiveTrailMap() {
       
       setTerrainEnabled(false);
       
-      // Reapply snow effect after 3D terrain is disabled
+      // Reapply seasonal effects after 3D terrain is disabled
       setTimeout(() => {
-        applySnowEffect();
+        applySeasonalEffects();
       }, 200);
     }
   };
