@@ -1,72 +1,111 @@
 /**
  * BlogMap Component
- * Lightweight, embeddable Mapbox widget for MDX blog posts
- * Features multiple presets for different content contexts
+ * Embeddable Mapbox widget for MDX blog posts with 2D hotel markers and 3D trail visualization
  * 
- * For hotel markers: Shows rich preview cards with image, rating, and View Details CTA
- * For other markers: Shows simple label popups
+ * 2D Mode: Clickable hotel markers with preview card tooltips positioned to the right
+ * 3D Mode: Highlighted trails/bowls with auto-focus camera and Reset View button
  */
-import { useRef, useState, useEffect, useMemo } from 'react';
+import { useRef, useState, useEffect, useMemo, useCallback } from 'react';
 import Map, { Marker, NavigationControl, Popup, Source, Layer } from 'react-map-gl/mapbox';
-import type { MapRef } from 'react-map-gl/mapbox';
+import type { MapRef, ViewStateChangeEvent } from 'react-map-gl/mapbox';
 import { MAPBOX_TOKEN, TELLURIDE_CENTER, MOUNTAIN_VILLAGE_CENTER, TELLURIDE_AREA_CENTER } from '@/lib/mapbox-utils';
-import { MapPin, Mountain, Building2, Cable, Trees, Info, X, ChevronRight, Star } from 'lucide-react';
+import { MapPin, Mountain, Building2, Cable, Trees, Info, X, ChevronRight, Star, RotateCcw } from 'lucide-react';
 import 'mapbox-gl/dist/mapbox-gl.css';
 
+// Trail area definitions for bowl/zone focusing
+const TRAIL_AREAS: Record<string, { trails: string[]; center: [number, number]; zoom: number; pitch?: number; bearing?: number }> = {
+  'gold-hill': {
+    trails: ['Gold Hill 1', 'Gold Hill 2', 'Gold Hill 6', 'Gold Hill 7', 'Gold Hill 8', 'Gold Hill 9', 'Gold Hill 10', 'Palmyra', 'Palmyra Basin', 'The Plunge', 'Lower Plunge'],
+    center: [-107.795, 37.935],
+    zoom: 14.5,
+    pitch: 60,
+    bearing: 45,
+  },
+  'prospect': {
+    trails: ['Prospect', 'Prospect Creek', 'Prospect Loop', 'Prospect Woods', 'Prospect Creek Hike Back'],
+    center: [-107.84, 37.92],
+    zoom: 14,
+    pitch: 50,
+    bearing: -30,
+  },
+  'revelation': {
+    trails: ['Bald Mountain Hike Too', 'East Drain', 'West Drain', 'Nice Chute', 'North Chute', 'Easy Chute', 'Dihedral Face', 'Dihedral Chute'],
+    center: [-107.79, 37.94],
+    zoom: 14.5,
+    pitch: 55,
+    bearing: 20,
+  },
+  'front-side': {
+    trails: ['See Forever', 'Kant-Mak-M', 'Mammoth', 'Bushwacker', 'Spiral Stairs', 'The Plunge', 'Misty Maiden'],
+    center: [-107.815, 37.93],
+    zoom: 13.5,
+    pitch: 50,
+    bearing: -15,
+  },
+  'beginner': {
+    trails: ['Meadows', 'Galloping Goose', 'Lower Galloping Goose', 'Village', 'Double Cabins', 'Teddy\'s Way', 'Ute Park'],
+    center: [-107.835, 37.935],
+    zoom: 14,
+    pitch: 45,
+    bearing: 0,
+  },
+};
+
 // Preset configurations
-// NOTE: 
-// - "resort", "trails", "mountain-village" are for SKI CONTENT → show trails/lifts
-// - "overview", "town", "hotels" are for LOCATION CONTEXT → NO trails/lifts (unless explicitly set)
 const PRESETS = {
   resort: {
     center: [-107.8125, 37.9275] as [number, number],
     zoom: 13,
+    pitch: 0,
+    bearing: 0,
     showTrails: true,
     showLifts: true,
-    showPOIs: false,
   },
   town: {
     center: TELLURIDE_CENTER,
     zoom: 15,
+    pitch: 0,
+    bearing: 0,
     showTrails: false,
     showLifts: false,
-    showPOIs: false,
   },
   'mountain-village': {
     center: MOUNTAIN_VILLAGE_CENTER,
     zoom: 14.5,
+    pitch: 0,
+    bearing: 0,
     showTrails: true,
     showLifts: true,
-    showPOIs: false,
   },
   overview: {
-    // For general location/geography context - NO trails by default
     center: TELLURIDE_AREA_CENTER,
     zoom: 12.5,
+    pitch: 0,
+    bearing: 0,
     showTrails: false,
     showLifts: false,
-    showPOIs: false,
   },
   hotels: {
-    // For hotel markers display - NO trails or lifts (focus on properties)
     center: TELLURIDE_AREA_CENTER,
     zoom: 13,
+    pitch: 0,
+    bearing: 0,
     showTrails: false,
     showLifts: false,
-    showPOIs: false,
   },
   trails: {
     center: [-107.82, 37.935] as [number, number],
     zoom: 13.5,
+    pitch: 45,
+    bearing: -15,
     showTrails: true,
     showLifts: true,
-    showPOIs: false,
   },
 };
 
 const MAP_STYLE = 'mapbox://styles/mapbox/outdoors-v12';
 
-// Trail difficulty colors (matches InteractiveTrailMap)
+// Trail difficulty colors
 const TRAIL_COLORS: Record<string, string> = {
   novice: '#22c55e',
   easy: '#22c55e',
@@ -76,7 +115,7 @@ const TRAIL_COLORS: Record<string, string> = {
   freeride: '#ef4444',
 };
 
-// Marker icon colors by type
+// Marker colors
 const MARKER_COLORS: Record<string, string> = {
   hotel: '#4A7C59',
   restaurant: '#ef4444',
@@ -97,63 +136,43 @@ export interface BlogMapMarker {
 }
 
 export interface BlogMapProps {
-  /** Map preset determines default configuration */
   preset?: 'resort' | 'town' | 'mountain-village' | 'overview' | 'hotels' | 'trails';
-  /** Custom center point [lng, lat] */
   center?: [number, number];
-  /** Zoom level */
   zoom?: number;
-  /** Enable 3D terrain */
+  /** Enable 3D terrain visualization */
   terrain?: boolean;
-  /** Show ski trails overlay */
   showTrails?: boolean;
-  /** Show lift lines */
   showLifts?: boolean;
-  /** Hotel IDs to show as markers with rich preview cards */
+  /** Hotel IDs for clickable markers with preview cards */
   hotelIds?: string[];
-  /** Custom point markers (simple label popups) */
+  /** Custom point markers */
   markers?: BlogMapMarker[];
   /** Highlight specific trails by name */
   highlightTrails?: string[];
-  /** Map height */
+  /** Focus on a predefined area (gold-hill, prospect, revelation, front-side, beginner) */
+  focusArea?: keyof typeof TRAIL_AREAS;
   height?: string;
-  /** Optional caption */
   caption?: string;
-  /** Interactive controls */
   interactive?: boolean;
-  /** Show legend */
   showLegend?: boolean;
 }
 
-// Full hotel data from API for rich preview cards
 interface HotelData {
   hotel_id: string;
   name: string;
   latitude?: number;
   longitude?: number;
-  // Location can come in different formats from API
-  location?: {
-    latitude?: number;
-    longitude?: number;
-  };
-  // Image data
+  location?: { latitude?: number; longitude?: number };
   images?: Array<{ url: string }>;
   main_photo?: string;
-  // Ratings
   star_rating?: number;
   review_score?: number;
   review_count?: number;
-  // Address
-  address?: {
-    line1?: string;
-    city?: string;
-  };
+  address?: { line1?: string; city?: string };
 }
 
 // Marker icon component
 function MarkerIcon({ type, size = 24 }: { type: string; size?: number }) {
-  const color = MARKER_COLORS[type] || MARKER_COLORS.default;
-  
   switch (type) {
     case 'hotel':
       return <Building2 size={size} color="white" />;
@@ -184,34 +203,41 @@ function MarkerIcon({ type, size = 24 }: { type: string; size?: number }) {
   }
 }
 
-// Hotel Preview Card Component (shown in popup)
-function HotelPreviewCard({ hotel, onViewDetails }: { hotel: HotelData; onViewDetails: () => void }) {
-  // Get primary image
+// Hotel Preview Card - positioned to the right of marker
+function HotelPreviewCard({ hotel, onViewDetails, onClose }: { 
+  hotel: HotelData; 
+  onViewDetails: () => void;
+  onClose: () => void;
+}) {
   const primaryImage = hotel.images?.[0]?.url || hotel.main_photo;
-  
-  // Get location string
   const locationString = hotel.address?.city || hotel.address?.line1 || 'Telluride, CO';
   
   return (
-    <div className="w-[260px]">
-      {/* Hero Image */}
+    <div className="w-[240px] bg-white rounded-lg shadow-xl border border-neutral-200 overflow-hidden">
+      {/* Close button */}
+      <button 
+        onClick={onClose}
+        className="absolute top-2 right-2 z-10 bg-white/90 rounded-full p-1 hover:bg-white transition-colors shadow-sm"
+      >
+        <X size={14} className="text-neutral-500" />
+      </button>
+      
+      {/* Image */}
       {primaryImage && (
-        <div className="relative w-full h-[120px] mb-2 rounded-lg overflow-hidden">
+        <div className="relative w-full h-[100px]">
           <img 
             src={primaryImage}
             alt={hotel.name}
             className="w-full h-full object-cover"
             loading="lazy"
           />
-          
-          {/* Star Rating Badge */}
           {hotel.star_rating && hotel.star_rating > 0 && (
-            <div className="absolute top-2 left-2 bg-white/95 px-1.5 py-0.5 rounded shadow-sm">
+            <div className="absolute bottom-2 left-2 bg-white/95 px-1.5 py-0.5 rounded shadow-sm">
               <div className="flex gap-0.5">
                 {Array.from({ length: 5 }).map((_, i) => (
                   <Star
                     key={i}
-                    size={10}
+                    size={9}
                     className={i < hotel.star_rating! ? 'text-amber-400 fill-amber-400' : 'text-gray-300'}
                   />
                 ))}
@@ -221,39 +247,39 @@ function HotelPreviewCard({ hotel, onViewDetails }: { hotel: HotelData; onViewDe
         </div>
       )}
 
-      {/* Hotel Name */}
-      <h3 className="text-sm font-bold text-neutral-900 mb-1 line-clamp-2 leading-tight">
-        {hotel.name}
-      </h3>
+      <div className="p-3">
+        {/* Name */}
+        <h3 className="text-sm font-bold text-neutral-900 mb-1 line-clamp-2 leading-tight">
+          {hotel.name}
+        </h3>
 
-      {/* Location */}
-      <div className="flex items-center gap-1 mb-2">
-        <MapPin size={12} className="text-gray-400 flex-shrink-0" />
-        <p className="text-xs text-gray-500 line-clamp-1">
-          {locationString}
-        </p>
-      </div>
-
-      {/* Guest Rating */}
-      {hotel.review_score && hotel.review_score > 0 && (
-        <div className="flex items-center gap-1.5 mb-3">
-          <span className="bg-primary-600 text-white px-1.5 py-0.5 rounded text-xs font-semibold">
-            {hotel.review_score.toFixed(1)}
-          </span>
-          <span className="text-xs text-gray-500">
-            {hotel.review_count ? `${hotel.review_count.toLocaleString()} reviews` : 'Guest rating'}
-          </span>
+        {/* Location */}
+        <div className="flex items-center gap-1 mb-2">
+          <MapPin size={11} className="text-gray-400 flex-shrink-0" />
+          <p className="text-xs text-gray-500 line-clamp-1">{locationString}</p>
         </div>
-      )}
 
-      {/* CTA Button */}
-      <button
-        onClick={onViewDetails}
-        className="w-full inline-flex items-center justify-center gap-1 bg-primary-600 text-white px-3 py-2 rounded-lg text-xs font-bold hover:bg-primary-700 transition-colors"
-      >
-        View Details
-        <ChevronRight size={14} />
-      </button>
+        {/* Rating */}
+        {hotel.review_score && hotel.review_score > 0 && (
+          <div className="flex items-center gap-1.5 mb-2">
+            <span className="bg-primary-600 text-white px-1.5 py-0.5 rounded text-xs font-semibold">
+              {hotel.review_score.toFixed(1)}
+            </span>
+            <span className="text-xs text-gray-500">
+              {hotel.review_count ? `${hotel.review_count.toLocaleString()} reviews` : 'Guest rating'}
+            </span>
+          </div>
+        )}
+
+        {/* CTA */}
+        <button
+          onClick={onViewDetails}
+          className="w-full inline-flex items-center justify-center gap-1 bg-primary-600 text-white px-3 py-2 rounded-lg text-xs font-bold hover:bg-primary-700 transition-colors"
+        >
+          View Details
+          <ChevronRight size={14} />
+        </button>
+      </div>
     </div>
   );
 }
@@ -268,6 +294,7 @@ export function BlogMap({
   hotelIds,
   markers = [],
   highlightTrails = [],
+  focusArea,
   height = '400px',
   caption,
   interactive = true,
@@ -281,27 +308,93 @@ export function BlogMap({
   const [selectedHotel, setSelectedHotel] = useState<HotelData | null>(null);
   const [simplePopupInfo, setSimplePopupInfo] = useState<{ lng: number; lat: number; label: string } | null>(null);
   const [isLegendOpen, setIsLegendOpen] = useState(false);
+  const [hasMovedFromDefault, setHasMovedFromDefault] = useState(false);
 
   // Get preset config
   const presetConfig = PRESETS[preset];
   
+  // Determine area config if focusArea is set
+  const areaConfig = focusArea ? TRAIL_AREAS[focusArea] : null;
+  
+  // Get all trails to highlight (from highlightTrails prop + area trails)
+  const allHighlightedTrails = useMemo(() => {
+    const trails = [...highlightTrails];
+    if (areaConfig) {
+      trails.push(...areaConfig.trails);
+    }
+    return [...new Set(trails)]; // dedupe
+  }, [highlightTrails, areaConfig]);
+  
+  // Compute initial view state
+  const initialViewState = useMemo(() => {
+    // If area is specified, use area config
+    if (areaConfig) {
+      return {
+        longitude: areaConfig.center[0],
+        latitude: areaConfig.center[1],
+        zoom: areaConfig.zoom,
+        pitch: areaConfig.pitch || 45,
+        bearing: areaConfig.bearing || 0,
+      };
+    }
+    
+    // Otherwise use preset/props
+    const mapCenter = center || presetConfig.center;
+    const mapZoom = zoom ?? presetConfig.zoom;
+    const enableTerrain = terrain || preset === 'trails' || allHighlightedTrails.length > 0;
+    
+    return {
+      longitude: mapCenter[0],
+      latitude: mapCenter[1],
+      zoom: mapZoom,
+      pitch: enableTerrain ? (presetConfig.pitch || 45) : 0,
+      bearing: enableTerrain ? (presetConfig.bearing || -15) : 0,
+    };
+  }, [center, zoom, presetConfig, terrain, preset, allHighlightedTrails.length, areaConfig]);
+
+  // Store default view for reset
+  const defaultViewRef = useRef(initialViewState);
+  
   // Merge props with preset defaults
-  const mapCenter = center || presetConfig.center;
-  const mapZoom = zoom ?? presetConfig.zoom;
   const showTrails = showTrailsProp ?? presetConfig.showTrails;
   const showLifts = showLiftsProp ?? presetConfig.showLifts;
   
-  // Auto-enable 3D terrain for trail-focused maps (more useful/cooler for ski content)
-  const enableTerrain = terrain || preset === 'trails' || highlightTrails.length > 0;
+  // Auto-enable 3D terrain for trail-focused maps
+  const enableTerrain = terrain || preset === 'trails' || allHighlightedTrails.length > 0 || focusArea !== undefined;
+
+  // Reset view handler
+  const handleResetView = useCallback(() => {
+    if (mapRef.current) {
+      mapRef.current.flyTo({
+        center: [defaultViewRef.current.longitude, defaultViewRef.current.latitude],
+        zoom: defaultViewRef.current.zoom,
+        pitch: defaultViewRef.current.pitch,
+        bearing: defaultViewRef.current.bearing,
+        duration: 1000,
+      });
+      setHasMovedFromDefault(false);
+      setSelectedHotel(null);
+      setSimplePopupInfo(null);
+    }
+  }, []);
+
+  // Track if user has moved from default view
+  const handleMove = useCallback((evt: ViewStateChangeEvent) => {
+    const vs = evt.viewState;
+    const diff = 
+      Math.abs(vs.longitude - defaultViewRef.current.longitude) > 0.001 ||
+      Math.abs(vs.latitude - defaultViewRef.current.latitude) > 0.001 ||
+      Math.abs(vs.zoom - defaultViewRef.current.zoom) > 0.5;
+    setHasMovedFromDefault(diff);
+  }, []);
 
   // Load trail data
   useEffect(() => {
-    if (!showTrails) return;
+    if (!showTrails && allHighlightedTrails.length === 0) return;
     
     fetch('/data/telluride-ski-trails.json')
       .then(res => res.json())
       .then(data => {
-        // Filter for resort bounds
         const filtered = {
           ...data,
           features: data.features.filter((feature: any) => {
@@ -312,7 +405,7 @@ export function BlogMap({
         setTrailsData(filtered);
       })
       .catch(err => console.error('[BlogMap] Failed to load trails:', err));
-  }, [showTrails]);
+  }, [showTrails, allHighlightedTrails.length]);
 
   // Load lift data
   useEffect(() => {
@@ -324,60 +417,39 @@ export function BlogMap({
       .catch(err => console.error('[BlogMap] Failed to load lifts:', err));
   }, [showLifts]);
 
-  // Load hotel data if hotelIds provided
+  // Load hotel data
   useEffect(() => {
     if (!hotelIds || hotelIds.length === 0) return;
     
     const fetchHotels = async () => {
-      console.log('[BlogMap] Fetching hotels:', hotelIds);
-      
       const hotelPromises = hotelIds.map(async (hotelId) => {
         try {
           const response = await fetch(`/api/hotels/details?hotelId=${hotelId}`);
           if (response.ok) {
             const data = await response.json();
-            const hotel = data.data || data;
-            console.log(`[BlogMap] Hotel ${hotelId} response:`, {
-              name: hotel?.name,
-              hasLocation: !!hotel?.location,
-              lat: hotel?.location?.latitude,
-              lng: hotel?.location?.longitude,
-              rawLat: hotel?.latitude,
-              rawLng: hotel?.longitude,
-            });
-            return hotel;
+            return data.data || data;
           }
-          console.warn(`[BlogMap] Hotel ${hotelId} fetch failed:`, response.status);
           return null;
-        } catch (err) {
-          console.error(`[BlogMap] Error fetching hotel ${hotelId}:`, err);
+        } catch {
           return null;
         }
       });
       
       const fetchedHotels = await Promise.all(hotelPromises);
-      
-      // Filter for valid hotels with coordinates
       const validHotels = fetchedHotels.filter((h): h is HotelData => {
         if (!h) return false;
-        // Check all possible coordinate locations from API response
         const lat = h.latitude || h.location?.latitude;
         const lng = h.longitude || h.location?.longitude;
-        const hasCoords = lat !== undefined && lat !== 0 && lng !== undefined && lng !== 0;
-        if (!hasCoords) {
-          console.warn(`[BlogMap] Hotel ${h.hotel_id || h.name} missing coordinates:`, { lat, lng });
-        }
-        return hasCoords;
+        return lat !== undefined && lat !== 0 && lng !== undefined && lng !== 0;
       });
       
-      console.log(`[BlogMap] Valid hotels with coordinates: ${validHotels.length}/${fetchedHotels.length}`);
       setHotels(validHotels);
     };
     
     fetchHotels();
   }, [hotelIds]);
 
-  // Helper to get hotel coordinates
+  // Get hotel coords helper
   const getHotelCoords = (hotel: HotelData) => ({
     lat: hotel.latitude || hotel.location?.latitude || 0,
     lng: hotel.longitude || hotel.location?.longitude || 0,
@@ -390,7 +462,6 @@ export function BlogMap({
     if (enableTerrain && mapRef.current) {
       const map = mapRef.current.getMap();
       
-      // Add terrain source
       if (!map.getSource('mapbox-dem')) {
         map.addSource('mapbox-dem', {
           type: 'raster-dem',
@@ -404,14 +475,13 @@ export function BlogMap({
     }
   };
 
-  // Fit bounds to hotels if showing hotel markers
+  // Fit bounds to hotels
   useEffect(() => {
     if (!isMapLoaded || !mapRef.current || hotels.length === 0) return;
     
-    if (preset === 'hotels' && hotels.length > 0) {
+    if (preset === 'hotels' && hotels.length > 0 && !focusArea) {
       const map = mapRef.current.getMap();
       
-      // Calculate bounds
       let minLng = Infinity, maxLng = -Infinity, minLat = Infinity, maxLat = -Infinity;
       hotels.forEach(hotel => {
         const { lat, lng } = getHotelCoords(hotel);
@@ -424,7 +494,6 @@ export function BlogMap({
       });
       
       if (minLng !== Infinity) {
-        // Add padding
         const lngPadding = (maxLng - minLng) * 0.3 || 0.01;
         const latPadding = (maxLat - minLat) * 0.3 || 0.01;
         
@@ -434,37 +503,50 @@ export function BlogMap({
         );
       }
     }
-  }, [isMapLoaded, hotels, preset]);
+  }, [isMapLoaded, hotels, preset, focusArea]);
 
-  // Handle hotel marker click
+  // Handle hotel marker click - center and show popup
   const handleHotelClick = (hotel: HotelData) => {
-    setSimplePopupInfo(null); // Close any simple popup
+    setSimplePopupInfo(null);
     setSelectedHotel(hotel);
     
-    // Pan to hotel
     if (mapRef.current) {
       const { lat, lng } = getHotelCoords(hotel);
+      // Offset center slightly left so popup appears to the right and is visible
       mapRef.current.flyTo({
-        center: [lng, lat],
-        zoom: Math.max(mapZoom, 14),
+        center: [lng - 0.003, lat],
+        zoom: Math.max(initialViewState.zoom, 14),
         duration: 500,
       });
     }
   };
 
-  // Handle view details click
+  // Navigate to hotel detail
   const handleViewDetails = (hotelId: string) => {
-    // Navigate to hotel detail page
     window.location.href = `/lodging/${hotelId}`;
   };
 
-  // Trail layer paint configuration
-  const trailLayerPaint = useMemo(() => ({
-    'line-color': highlightTrails.length > 0 ? [
-      'case',
-      ['in', ['get', 'name'], ['literal', highlightTrails]],
-      '#f59e0b', // Highlight color (amber)
-      [
+  // Trail layer paint
+  const trailLayerPaint = useMemo(() => {
+    const hasHighlights = allHighlightedTrails.length > 0;
+    
+    return {
+      'line-color': hasHighlights ? [
+        'case',
+        ['in', ['get', 'name'], ['literal', allHighlightedTrails]],
+        '#f59e0b', // Highlighted trails in amber
+        [
+          'match',
+          ['get', 'piste:difficulty'],
+          'novice', TRAIL_COLORS.novice,
+          'easy', TRAIL_COLORS.easy,
+          'intermediate', TRAIL_COLORS.intermediate,
+          'advanced', TRAIL_COLORS.advanced,
+          'expert', TRAIL_COLORS.expert,
+          'freeride', TRAIL_COLORS.freeride,
+          '#94a3b8' // Non-highlighted get muted
+        ]
+      ] : [
         'match',
         ['get', 'piste:difficulty'],
         'novice', TRAIL_COLORS.novice,
@@ -474,31 +556,24 @@ export function BlogMap({
         'expert', TRAIL_COLORS.expert,
         'freeride', TRAIL_COLORS.freeride,
         TRAIL_COLORS.intermediate
-      ]
-    ] : [
-      'match',
-      ['get', 'piste:difficulty'],
-      'novice', TRAIL_COLORS.novice,
-      'easy', TRAIL_COLORS.easy,
-      'intermediate', TRAIL_COLORS.intermediate,
-      'advanced', TRAIL_COLORS.advanced,
-      'expert', TRAIL_COLORS.expert,
-      'freeride', TRAIL_COLORS.freeride,
-      TRAIL_COLORS.intermediate
-    ],
-    'line-width': highlightTrails.length > 0 ? [
-      'case',
-      ['in', ['get', 'name'], ['literal', highlightTrails]],
-      5,
-      3
-    ] : 3,
-    'line-opacity': highlightTrails.length > 0 ? [
-      'case',
-      ['in', ['get', 'name'], ['literal', highlightTrails]],
-      1,
-      0.6
-    ] : 0.85
-  }), [highlightTrails]);
+      ],
+      'line-width': hasHighlights ? [
+        'case',
+        ['in', ['get', 'name'], ['literal', allHighlightedTrails]],
+        5, // Highlighted trails thicker
+        2  // Others thinner
+      ] : 3,
+      'line-opacity': hasHighlights ? [
+        'case',
+        ['in', ['get', 'name'], ['literal', allHighlightedTrails]],
+        1,   // Highlighted fully visible
+        0.4  // Others faded
+      ] : 0.85
+    };
+  }, [allHighlightedTrails]);
+
+  // Show reset button when terrain is enabled or when moved from default
+  const showResetButton = enableTerrain || hasMovedFromDefault;
 
   return (
     <div className="my-8 not-prose">
@@ -508,17 +583,12 @@ export function BlogMap({
       >
         <Map
           ref={mapRef}
-          initialViewState={{
-            longitude: mapCenter[0],
-            latitude: mapCenter[1],
-            zoom: mapZoom,
-            pitch: enableTerrain ? 45 : 0,
-            bearing: enableTerrain ? -15 : 0,
-          }}
+          initialViewState={initialViewState}
           mapboxAccessToken={MAPBOX_TOKEN}
           mapStyle={MAP_STYLE}
           style={{ width: '100%', height: '100%' }}
           onLoad={handleMapLoad}
+          onMove={handleMove}
           onClick={() => {
             setSelectedHotel(null);
             setSimplePopupInfo(null);
@@ -535,8 +605,22 @@ export function BlogMap({
             <NavigationControl position="top-right" showCompass={enableTerrain} visualizePitch={enableTerrain} />
           )}
 
+          {/* Reset View Button */}
+          {showResetButton && (
+            <div className="absolute top-3 left-3 z-10">
+              <button
+                onClick={handleResetView}
+                className="bg-white/95 backdrop-blur-sm rounded-lg shadow-lg border border-neutral-200 px-3 py-2 flex items-center gap-2 hover:bg-white transition-colors"
+                title="Reset view to default"
+              >
+                <RotateCcw size={14} className="text-neutral-600" />
+                <span className="text-xs font-medium text-neutral-700">Reset View</span>
+              </button>
+            </div>
+          )}
+
           {/* Trails layer */}
-          {showTrails && trailsData && (
+          {(showTrails || allHighlightedTrails.length > 0) && trailsData && (
             <Source id="trails" type="geojson" data={trailsData}>
               <Layer
                 id="trails-layer"
@@ -570,7 +654,7 @@ export function BlogMap({
             </Source>
           )}
 
-          {/* Hotel Markers (with rich preview cards) */}
+          {/* Hotel Markers */}
           {hotels.map((hotel) => {
             const { lat, lng } = getHotelCoords(hotel);
             const isSelected = selectedHotel?.hotel_id === hotel.hotel_id;
@@ -606,7 +690,7 @@ export function BlogMap({
             );
           })}
 
-          {/* Custom Markers (simple label popups) */}
+          {/* Custom Markers */}
           {markers.map((marker, index) => (
             <Marker
               key={`${marker.label}-${index}`}
@@ -634,26 +718,28 @@ export function BlogMap({
             </Marker>
           ))}
 
-          {/* Hotel Preview Popup */}
+          {/* Hotel Preview Popup - anchored to left so it appears to the right of marker */}
           {selectedHotel && (
             <Popup
               longitude={getHotelCoords(selectedHotel).lng}
               latitude={getHotelCoords(selectedHotel).lat}
-              anchor="bottom"
+              anchor="left"
               onClose={() => setSelectedHotel(null)}
-              closeButton={true}
+              closeButton={false}
               closeOnClick={false}
-              offset={35}
+              offset={15}
               maxWidth="none"
+              className="hotel-preview-popup"
             >
               <HotelPreviewCard 
                 hotel={selectedHotel} 
                 onViewDetails={() => handleViewDetails(selectedHotel.hotel_id)}
+                onClose={() => setSelectedHotel(null)}
               />
             </Popup>
           )}
 
-          {/* Simple Popup for non-hotel markers */}
+          {/* Simple Popup for markers */}
           {simplePopupInfo && (
             <Popup
               longitude={simplePopupInfo.lng}
@@ -670,8 +756,8 @@ export function BlogMap({
             </Popup>
           )}
 
-          {/* Compact Legend Toggle - only show when trails are actually rendered */}
-          {showLegend && showTrails && trailsData && (
+          {/* Legend */}
+          {showLegend && (showTrails || allHighlightedTrails.length > 0) && trailsData && (
             <div className="absolute bottom-3 left-3 z-10">
               {isLegendOpen ? (
                 <div className="bg-white/95 backdrop-blur-sm rounded-lg shadow-lg border border-neutral-200 p-3 max-w-[200px]">
@@ -707,10 +793,10 @@ export function BlogMap({
                         <span className="text-xs text-neutral-600">Lifts</span>
                       </div>
                     )}
-                    {highlightTrails.length > 0 && (
+                    {allHighlightedTrails.length > 0 && (
                       <div className="flex items-center gap-2 pt-1 border-t border-neutral-200 mt-1">
                         <div className="w-4 h-1.5 rounded bg-amber-500" />
-                        <span className="text-xs text-neutral-600">Highlighted</span>
+                        <span className="text-xs text-neutral-600">Featured</span>
                       </div>
                     )}
                   </div>
@@ -727,7 +813,7 @@ export function BlogMap({
             </div>
           )}
 
-          {/* Attribution override */}
+          {/* Attribution */}
           <div className="absolute bottom-1 right-1 text-[9px] text-neutral-500 bg-white/80 px-1 rounded">
             © Mapbox © OpenStreetMap
           </div>
