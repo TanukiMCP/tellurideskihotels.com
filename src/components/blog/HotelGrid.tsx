@@ -191,11 +191,11 @@ export function HotelGrid({
   const [isLoadingRates, setIsLoadingRates] = useState(false);
 
   // Calculate smart default dates on client side only to avoid hydration mismatch
-  // Use 30-37 days out (better availability, avoids immediate sold-out dates)
+  // Use 60-67 days out (better availability, aligns with liteapi best practices for guaranteed rates)
   useEffect(() => {
     const today = new Date();
-    const defaultCheckIn = format(addDays(today, 30), 'yyyy-MM-dd');
-    const defaultCheckOut = format(addDays(today, 37), 'yyyy-MM-dd');
+    const defaultCheckIn = format(addDays(today, 60), 'yyyy-MM-dd');
+    const defaultCheckOut = format(addDays(today, 67), 'yyyy-MM-dd');
     setComputedCheckIn(checkIn || defaultCheckIn);
     setComputedCheckOut(checkOut || defaultCheckOut);
   }, [checkIn, checkOut]);
@@ -448,8 +448,8 @@ export function HotelGrid({
                   checkOutDate={computedCheckOut || undefined}
                   priceLoading={isLoadingRates}
                   onSelect={(id) => {
-                    const checkInDate = computedCheckIn || format(addDays(new Date(), 30), 'yyyy-MM-dd');
-                    const checkOutDate = computedCheckOut || format(addDays(new Date(), 37), 'yyyy-MM-dd');
+                    const checkInDate = computedCheckIn || format(addDays(new Date(), 60), 'yyyy-MM-dd');
+                    const checkOutDate = computedCheckOut || format(addDays(new Date(), 67), 'yyyy-MM-dd');
                     window.location.href = `/places-to-stay/${id}?checkIn=${checkInDate}&checkOut=${checkOutDate}&adults=2&rooms=1`;
                   }}
                 />
@@ -471,8 +471,8 @@ export function HotelGrid({
                     checkOutDate={computedCheckOut || undefined}
                     priceLoading={isLoadingRates}
                     onSelect={(id) => {
-                      const checkInDate = computedCheckIn || format(addDays(new Date(), 30), 'yyyy-MM-dd');
-                      const checkOutDate = computedCheckOut || format(addDays(new Date(), 37), 'yyyy-MM-dd');
+                      const checkInDate = computedCheckIn || format(addDays(new Date(), 60), 'yyyy-MM-dd');
+                      const checkOutDate = computedCheckOut || format(addDays(new Date(), 67), 'yyyy-MM-dd');
                       window.location.href = `/places-to-stay/${id}?checkIn=${checkInDate}&checkOut=${checkOutDate}&adults=2&rooms=1`;
                     }}
                   />

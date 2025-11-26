@@ -50,9 +50,10 @@ export function HotelComparison({
   const [isInitialized, setIsInitialized] = useState(false);
 
   // Set default dates client-side only to avoid hydration mismatch
+  // Use 60-67 days out (better availability, aligns with liteapi best practices for guaranteed rates)
   useEffect(() => {
-    const defaultCheckInDate = format(addDays(new Date(), 30), 'yyyy-MM-dd');
-    const defaultCheckOutDate = format(addDays(new Date(), 37), 'yyyy-MM-dd');
+    const defaultCheckInDate = format(addDays(new Date(), 60), 'yyyy-MM-dd');
+    const defaultCheckOutDate = format(addDays(new Date(), 67), 'yyyy-MM-dd');
     setCheckIn(defaultCheckInDate);
     setCheckOut(defaultCheckOutDate);
     setIsInitialized(true);
