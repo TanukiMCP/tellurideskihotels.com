@@ -1578,7 +1578,13 @@ The [National Weather Service Grand Junction office](https://www.weather.gov/gjt
 1. **Identify the property TYPE** discussed in the text (hotels? condos? vacation rentals?)
 2. **Search the CSV file** (`src/data/telluride-hotels.csv`) for matching property type
 3. **Extract the property IDs** from the CSV (format: `id,name`)
-4. **Use those IDs** in the `hotelIds` prop array
+4. **⚠️ VERIFY IMAGES EXIST (MANDATORY)** - Before adding any hotel ID, verify the property has images:
+   - Use the API endpoint: `GET /api/hotels/details?hotelId={hotelId}`
+   - Check that `hotel.images` array exists and has at least one image with a valid `url`
+   - **DO NOT** use property IDs that return empty or null `images` arrays
+   - Private condos and some rentals often lack images - find alternatives with images
+   - If a property has no images, search for similar properties of the same type that DO have images
+5. **Use verified IDs with images** in the `hotelIds` prop array
 
 **⚠️ MATCH PROPERTY TYPE TO CONTENT (CRITICAL)**
 
@@ -1636,9 +1642,33 @@ Here: `lp21ee2` = The Peaks (hotel), `lp656c95f0` = Bear Creek 2BR (condo), `lp6
 **Why Manual Curation Matters:**
 - Ensures widgets display properties actually mentioned in the text
 - **Matches property TYPE (hotel/condo/rental) to content context**
+- **Ensures all displayed properties have images** (critical for visual quality)
 - Creates intentional, relevant user experience
 - Drives higher conversion by showing contextually relevant properties
 - Avoids random displays that confuse readers
+
+**⚠️ IMAGE VERIFICATION REQUIREMENT:**
+- **ALL properties in manually curated widgets MUST have images**
+- Properties without images show placeholder boxes that look unprofessional
+- Before adding any hotel ID to `hotelIds`, verify via API: `/api/hotels/details?hotelId={id}`
+- Check response: `hotel.images` must be an array with at least one object containing a valid `url`
+- If a property lacks images, find an alternative property of the same type that has images
+- Common culprits: private condos (`lp656c95d8`, `lpd153e`, `lp656c5e5d` often lack images)
+- **When in doubt, choose a different property ID that matches the content context AND has images**
+
+**Recommended Condo IDs (Likely to Have Images - Verify Before Use):**
+- **Bear Creek Lodge:** `lp36f78` (main lodge), `lp65711bba` (209 3BR), `lp65711a3a` (406 4BR), `lp65711c9f` (411 4BR)
+- **Aspen Ridge:** `lp656c5d41` (Aspen Ridge 3 3BR), `lp656c5983` (Aspen Ridge 31 3BR), `lp656c5d2e` (Aspen Ridge 27 3BR)
+- **Mountain Lodge:** `lp6575d72a` (2BR Mountain Lodge), `lp65868c47` (Slopeside Mountain Lodge)
+- **Other Condos:** Search for properties managed by "Alpine Lodging Telluride" in the CSV - these are more likely to have professional photos
+
+**⚠️ AVOID These IDs (Known to Lack Images):**
+- `lp656c95d8` (Bear Creek Lodge 203) - often lacks images
+- `lpd153e` (Aspen Ridge 19) - private condo, may lack images
+- `lp656c5e5d` (Aspen Ridge 2) - check first, may lack images
+- `lp656c95f0` (Bear Creek Lodge 105 2BR) - verify before use
+
+**Always verify images exist before adding to `hotelIds` array. The component will automatically filter out hotels without images, but it's better to prevent them from being added in the first place.**
 
 **Finding Property IDs by Type:**
 

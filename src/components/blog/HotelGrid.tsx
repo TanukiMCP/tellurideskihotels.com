@@ -227,9 +227,21 @@ export function HotelGrid({
           const fetchedHotels = await Promise.all(hotelPromises);
           const validHotels = fetchedHotels.filter((h): h is LiteAPIHotel => h !== null);
           
+          // Filter out hotels without images for manually curated lists (critical for visual quality)
+          // Only filter when hotelIds are explicitly provided (manual curation)
+          const hotelsWithImages = validHotels.filter((hotel) => {
+            const hasImages = hotel.images && hotel.images.length > 0 && 
+              hotel.images.some((img) => img.url && img.url.trim() !== '');
+            if (!hasImages) {
+              console.warn(`[HotelGrid] Filtered out hotel ${hotel.hotel_id} (${hotel.name}) - no images available`);
+            }
+            return hasImages;
+          });
+          
           // Keep manually curated hotelIds in their original order (intentional curation)
+          // Only include hotels that have images
           if (isMounted) {
-            setHotels(validHotels);
+            setHotels(hotelsWithImages);
             setIsLoadingHotels(false);
           }
           return;

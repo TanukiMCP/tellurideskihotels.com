@@ -100,7 +100,7 @@ Hybrid options combine space advantages with hotel services. Some properties off
 <HotelGrid hotelIds={["lp4b27f", "lp21ee2", "lp4153f"]} title="Top Properties for Group Celebrations" client:load />
 
 <HotelComparison 
-  hotelIds={["lp4b27f", "lpd153e", "lp656c95d8"]}
+  hotelIds={["lp4b27f", "lp36f78", "lp65711bba"]}
   title="Compare Group Lodging Options"
   groupSize={10}
   client:load
