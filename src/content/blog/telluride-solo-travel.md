@@ -7,9 +7,10 @@
   "category": "planning-tips",
   "author": "Telluride Ski Hotels Team",
   "publishDate": "2025-11-25T15:00:00Z",
+  "updatedDate": "2025-11-25T07:00:00Z",
   "seo": {
     "metaTitle": "Telluride Solo Travel Guide 2025 | Independent Traveler Tips",
-    "metaDescription": "Solo travel in Telluride: solo-friendly hotels, independent activities, cost optimization, safety tips for solo skiers.",
+    "metaDescription": "Solo travel in Telluride: Complete guide to solo-friendly hotels, independent activities, cost optimization strategies, and safety tips for solo skiers.",
     "keywords": [
       "solo travel telluride",
       "telluride solo skiing",
