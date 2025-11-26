@@ -29,6 +29,7 @@ seasonalRelevance: ["winter"]
 
 import { HotelGrid } from '@/components/blog/HotelGrid';
 import { ArticleBookingWidget } from '@/components/blog/ArticleBookingWidget';
+import { BlogMap } from '@/components/blog/BlogMap';
 
 
 Skiing Telluride means experiencing 2,000 acres of diverse terrain across the San Juan Mountains, with 127 trails ranging from gentle learning slopes to some of Colorado's most challenging in-bounds skiing, according to [Telluride Ski Resort](https://www.telluride.com). The resort's reputation emphasizes expert terrain, but this somewhat overstates the difficulty—roughly 60% of the mountain suits beginners and intermediates, with genuine expert zones concentrated in specific areas you can easily avoid or seek out depending on your ability. For comprehensive ability-specific strategies, see our [complete skiing guide](/blog/ski-guides/telluride-skiing-complete-guide). To understand the resort's terrain and lifts, check our [ski resort guide](/blog/ski-guides/telluride-ski-resort-guide).
@@ -56,6 +57,14 @@ Telluride Village Trail creates a unique beginner experience—a gentle path fro
 
 The key mistake beginners make at Telluride is venturing onto blue runs too early. The altitude affects everyone, making skiing more exhausting than at lower elevations. Blue runs here feature sustained pitches and width that narrows in sections, creating situations where losing control has consequences. Stay on greens until you're truly comfortable, not just capable of getting down blues by survival skiing.
 
+<BlogMap 
+  focusArea="beginner"
+  terrain={true}
+  showLifts={true}
+  caption="Beginner terrain at The Meadows and Prospect - gentle slopes separated from faster traffic"
+  client:load
+/>
+
 <HotelGrid 
   hotelIds={["lp21ee2", "lp4b27f", "lp4153f"]}
   title="Family-Friendly Ski Hotels"
@@ -76,6 +85,14 @@ Bushwacker adds slightly more challenge with consistent pitch and good width for
 As skills progress, Palmyra and Kant Mak M introduce steeper sections while maintaining manageable width and grooming. These blues ski more like blacks at other resorts due to pitch and altitude. Don't feel pressured to ski them early in your trip—build confidence on easier terrain first, then progress when you're ready.
 
 The mistake many intermediates make is rushing to ski the entire mountain rather than mastering specific terrain. Lapping See Forever and Misty Maiden for a full morning, focusing on technique rather than mileage, improves your skiing more than tentatively surviving harder runs. Quality repetition on appropriate terrain beats quantity on terrain that's too advanced.
+
+<BlogMap 
+  focusArea="front-side"
+  terrain={true}
+  showLifts={true}
+  caption="Front Side intermediate terrain: See Forever, Misty Maiden, Bushwacker, and Kant-Mak-M"
+  client:load
+/>
 
 ![Two people exploring a snowy forest in winter](https://images.pexels.com/photos/11747549/pexels-photo-11747549.jpeg?auto=compress&w=1200&h=800&fit=crop&dpr=2)
 *Photo by [Jamo Images](https://www.pexels.com/@jamoimages) via Pexels*

@@ -57,6 +57,7 @@ import { HotelGrid } from '@/components/blog/HotelGrid';
 import { ArticleBookingWidget } from '@/components/blog/ArticleBookingWidget';
 import { HotelComparison } from '@/components/planning/HotelComparison';
 import { HotelShowcase } from '@/components/blog/HotelShowcase';
+import { BlogMap } from '@/components/blog/BlogMap';
 
 
 # Telluride Ski Hotel Insider's Guide: Which Hotel for Which Skier
@@ -106,6 +107,14 @@ The rooftop hot tub becomes essential for maintaining multi-day powder skiing st
 <HotelComparison 
   hotelIds={["lp4b27f", "lp35351", "lp2be73"]}
   title="Compare: Luxury vs Mid-Range vs Budget"
+  client:load
+/>
+
+<BlogMap 
+  focusArea="gold-hill"
+  terrain={true}
+  showLifts={true}
+  caption="Gold Hill's expert terrain - where powder hounds want immediate access via ski-in/ski-out hotels"
   client:load
 />
 
@@ -198,6 +207,14 @@ The complimentary breakfast and afternoon wine reception reduce decision fatigue
 <HotelGrid 
   hotelIds={["lp31628", "lp2ff71", "lp35ebc"]}
   title="Search Beginner-Friendly Hotels"
+  client:load
+/>
+
+<BlogMap 
+  focusArea="beginner"
+  terrain={true}
+  showLifts={true}
+  caption="Beginner terrain at The Meadows and Prospect - gentle slopes ideal for learning"
   client:load
 />
 
