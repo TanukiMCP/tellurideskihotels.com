@@ -1,55 +1,39 @@
 ---
-{
-  "id": "telluride-solo-travel",
-  "title": "Telluride Solo Travel: Complete Independent Traveler's Guide (2025)",
-  "slug": "telluride-solo-travel",
-  "status": "published",
-  "category": "planning-tips",
-  "author": "Telluride Ski Hotels Team",
-  "publishDate": "2025-11-25T15:00:00Z",
-  "seo": {
-    "metaTitle": "Telluride Solo Travel Guide 2025 | Independent Traveler Tips",
-    "metaDescription": "Solo travel in Telluride: Complete guide to solo-friendly hotels, independent activities, cost optimization strategies, and safety tips for solo skiers.",
-    "keywords": [
-      "solo travel telluride",
-      "telluride solo skiing",
-      "solo travel colorado",
-      "telluride solo trip",
-      "independent travel telluride"
-    ],
-    "canonical": "https://tellurideskihotels.com/blog/planning-tips/telluride-solo-travel"
-  },
-  "featured": false,
-  "featuredImage": "https://images.pexels.com/photos/2405649/pexels-photo-2405649.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
-  "featuredImageAlt": "Energetic skier in black gear enjoying snowy slopes under blue sky and sunlight",
-  "excerpt": "Complete planning guide for solo travel in Telluride: solo-friendly accommodations, independent activities, cost optimization strategies, safety tips, and recommendations for solo skiers.",
-  "wordCount": 2400,
-  "readingTime": 12,
-  "relatedHotels": [
-    "hotel-telluride",
-    "new-sheridan-hotel",
-    "madeline-hotel",
-    "inn-lost-creek"
-  ],
-  "relatedArticles": [
-    "telluride-skiing-complete-guide",
-    "telluride-ski-season-guide",
-    "where-to-stay-telluride"
-  ],
-  "tags": [
-    "solo-travel",
-    "independent",
-    "planning",
-    "budget"
-  ],
-  "seasonalRelevance": [
-    "winter",
-    "spring",
-    "summer",
-    "fall"
-  ],
-  "updatedDate": "2025-11-25T14:10:35.571Z"
-}
+id: "telluride-solo-travel"
+title: "Telluride Solo Travel: Complete Independent Traveler's Guide (2025)"
+slug: "telluride-solo-travel"
+status: "published"
+category: "planning-tips"
+author: "Telluride Ski Hotels Team"
+publishDate: 2025-11-25
+updatedDate: 2025-11-25
+seo:
+  metaTitle: "Telluride Solo Travel Guide 2025 | Independent Traveler Tips"
+  metaDescription: "Solo travel in Telluride: Complete guide to solo-friendly hotels, independent activities, cost optimization strategies, and safety tips for solo skiers."
+  keywords:
+    - "solo travel telluride"
+    - "telluride solo skiing"
+    - "solo travel colorado"
+    - "telluride solo trip"
+    - "independent travel telluride"
+  canonical: "https://tellurideskihotels.com/blog/planning-tips/telluride-solo-travel"
+featured: false
+featuredImage: "https://images.pexels.com/photos/2405649/pexels-photo-2405649.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
+featuredImageAlt: "Energetic skier in black gear enjoying snowy slopes under blue sky and sunlight"
+excerpt: "Complete planning guide for solo travel in Telluride: solo-friendly accommodations, independent activities, cost optimization strategies, safety tips, and recommendations for solo skiers."
+wordCount: 2400
+readingTime: 12
+relatedHotels:
+  - "hotel-telluride"
+  - "new-sheridan-hotel"
+  - "madeline-hotel"
+  - "inn-lost-creek"
+relatedArticles:
+  - "telluride-skiing-complete-guide"
+  - "telluride-ski-season-guide"
+  - "where-to-stay-telluride"
+tags: ["solo-travel", "independent", "planning", "budget"]
+seasonalRelevance: ["winter", "spring", "summer", "fall"]
 ---
 
 # Telluride Solo Travel: Complete Independent Traveler's Guide (2025)

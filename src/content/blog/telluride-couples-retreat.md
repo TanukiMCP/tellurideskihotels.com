@@ -1,55 +1,39 @@
 ---
-{
-  "id": "telluride-couples-retreat",
-  "title": "Telluride Couples Retreat: Romantic Getaway Planner (2025)",
-  "slug": "telluride-couples-retreat",
-  "status": "published",
-  "category": "planning-tips",
-  "author": "Telluride Ski Hotels Team",
-  "publishDate": "2025-11-23T15:00:00Z",
-  "seo": {
-    "metaTitle": "Telluride Couples Retreat 2025 | Romantic Getaway",
-    "metaDescription": "Plan a romantic Telluride couples retreat: budget planning, activities, best times to visit, accommodation recommendations, and expert tips for couples.",
-    "keywords": [
-      "telluride romantic getaway",
-      "telluride couples trip",
-      "telluride couples retreat",
-      "romantic telluride vacation",
-      "telluride for couples"
-    ],
-    "canonical": "https://tellurideskihotels.com/blog/planning-tips/telluride-couples-retreat"
-  },
-  "featured": false,
-  "featuredImage": "https://images.pexels.com/photos/34605839/pexels-photo-34605839.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
-  "featuredImageAlt": "Majestic view of Chamonix-Mont-Blanc mountains at sunset, showcasing stunning snow-capped peaks",
-  "excerpt": "Complete planning guide for romantic Telluride couples retreats: budget planning, romantic activities, best times to visit, accommodation recommendations, and expert tips for couples.",
-  "wordCount": 2600,
-  "readingTime": 13,
-  "relatedHotels": [
-    "madeline-hotel",
-    "peaks-resort",
-    "lumiere-telluride",
-    "capella-telluride"
-  ],
-  "relatedArticles": [
-    "telluride-ski-season-guide",
-    "where-to-stay-telluride",
-    "telluride-skiing-complete-guide"
-  ],
-  "tags": [
-    "couples",
-    "romantic",
-    "getaway",
-    "planning"
-  ],
-  "seasonalRelevance": [
-    "winter",
-    "spring",
-    "summer",
-    "fall"
-  ],
-  "updatedDate": "2025-11-24T14:11:12.006Z"
-}
+id: "telluride-couples-retreat"
+title: "Telluride Couples Retreat: Romantic Getaway Planner (2025)"
+slug: "telluride-couples-retreat"
+status: "published"
+category: "planning-tips"
+author: "Telluride Ski Hotels Team"
+publishDate: 2025-11-23
+updatedDate: 2025-11-24
+seo:
+  metaTitle: "Telluride Couples Retreat 2025 | Romantic Getaway"
+  metaDescription: "Plan a romantic Telluride couples retreat: budget planning, activities, best times to visit, accommodation recommendations, and expert tips for couples."
+  keywords:
+    - "telluride romantic getaway"
+    - "telluride couples trip"
+    - "telluride couples retreat"
+    - "romantic telluride vacation"
+    - "telluride for couples"
+  canonical: "https://tellurideskihotels.com/blog/planning-tips/telluride-couples-retreat"
+featured: false
+featuredImage: "https://images.pexels.com/photos/34605839/pexels-photo-34605839.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
+featuredImageAlt: "Majestic view of Chamonix-Mont-Blanc mountains at sunset, showcasing stunning snow-capped peaks"
+excerpt: "Complete planning guide for romantic Telluride couples retreats: budget planning, romantic activities, best times to visit, accommodation recommendations, and expert tips for couples."
+wordCount: 2600
+readingTime: 13
+relatedHotels:
+  - "madeline-hotel"
+  - "peaks-resort"
+  - "lumiere-telluride"
+  - "capella-telluride"
+relatedArticles:
+  - "telluride-ski-season-guide"
+  - "where-to-stay-telluride"
+  - "telluride-skiing-complete-guide"
+tags: ["couples", "romantic", "getaway", "planning"]
+seasonalRelevance: ["winter", "spring", "summer", "fall"]
 ---
 
 # Telluride Couples Retreat: Romantic Getaway Planner (2025)

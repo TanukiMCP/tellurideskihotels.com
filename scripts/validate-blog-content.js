@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 /**
  * Validate blog content against schema limits
+ * Supports both .md and .mdx files with YAML or JSON frontmatter
  * Run: node scripts/validate-blog-content.js
  */
 
@@ -17,32 +18,97 @@ const SCHEMA_LIMITS = {
   metaDescription: { min: 140, max: 160 },
 };
 
-function validateBlogPost(filePath) {
-  const content = fs.readFileSync(filePath, 'utf8');
+/**
+ * Extract frontmatter from a markdown/mdx file
+ */
+function extractFrontmatter(content) {
+  const match = content.match(/^---\r?\n([\s\S]*?)\r?\n---/);
+  if (!match) return null;
+  return match[1];
+}
+
+/**
+ * Extract a value from frontmatter (supports both YAML and JSON formats)
+ */
+function extractValue(frontmatter, key) {
+  // Try JSON format: "key": "value"
+  const jsonMatch = frontmatter.match(new RegExp(`"${key}":\\s*"([^"]+)"`));
+  if (jsonMatch) return jsonMatch[1];
+  
+  // Try YAML format: key: "value" or key: 'value'
+  const yamlDoubleQuoteMatch = frontmatter.match(new RegExp(`^\\s*${key}:\\s*"([^"]+)"`, 'm'));
+  if (yamlDoubleQuoteMatch) return yamlDoubleQuoteMatch[1];
+  
+  const yamlSingleQuoteMatch = frontmatter.match(new RegExp(`^\\s*${key}:\\s*'([^']+)'`, 'm'));
+  if (yamlSingleQuoteMatch) return yamlSingleQuoteMatch[1];
+  
+  // Try YAML format without quotes (for simple values)
+  const yamlUnquotedMatch = frontmatter.match(new RegExp(`^\\s*${key}:\\s*([^\\n\\r"']+)`, 'm'));
+  if (yamlUnquotedMatch) return yamlUnquotedMatch[1].trim();
+  
+  return null;
+}
+
+/**
+ * Check if frontmatter is valid (not JSON inside YAML delimiters)
+ */
+function validateFrontmatterFormat(frontmatter, fileName) {
   const errors = [];
   
-  // Extract metaTitle
-  const titleMatch = content.match(/"metaTitle":\s*"([^"]+)"/);
-  if (titleMatch) {
-    const title = titleMatch[1];
-    if (title.length < SCHEMA_LIMITS.metaTitle.min) {
-      errors.push(`metaTitle too short: ${title.length} chars (min ${SCHEMA_LIMITS.metaTitle.min})`);
-    }
-    if (title.length > SCHEMA_LIMITS.metaTitle.max) {
-      errors.push(`metaTitle too long: ${title.length} chars (max ${SCHEMA_LIMITS.metaTitle.max}): "${title}"`);
-    }
+  // Check for JSON object inside YAML frontmatter (common mistake)
+  const trimmed = frontmatter.trim();
+  if (trimmed.startsWith('{') && trimmed.endsWith('}')) {
+    errors.push('Invalid frontmatter: JSON object found inside YAML delimiters. Convert to YAML format.');
   }
   
-  // Extract metaDescription
-  const descMatch = content.match(/"metaDescription":\s*"([^"]+)"/);
-  if (descMatch) {
-    const desc = descMatch[1];
-    if (desc.length < SCHEMA_LIMITS.metaDescription.min) {
-      errors.push(`metaDescription too short: ${desc.length} chars (min ${SCHEMA_LIMITS.metaDescription.min})`);
+  // Check for empty lines at the start of frontmatter
+  if (frontmatter.startsWith('\n') || frontmatter.startsWith('\r')) {
+    errors.push('Invalid frontmatter: Empty lines at start. Remove blank lines after opening ---');
+  }
+  
+  return errors;
+}
+
+function validateBlogPost(filePath) {
+  const content = fs.readFileSync(filePath, 'utf8');
+  const fileName = path.basename(filePath);
+  const errors = [];
+  
+  // Extract frontmatter
+  const frontmatter = extractFrontmatter(content);
+  if (!frontmatter) {
+    errors.push('No frontmatter found');
+    return errors;
+  }
+  
+  // Validate frontmatter format
+  const formatErrors = validateFrontmatterFormat(frontmatter, fileName);
+  errors.push(...formatErrors);
+  
+  // Extract and validate metaTitle
+  const metaTitle = extractValue(frontmatter, 'metaTitle');
+  if (metaTitle) {
+    if (metaTitle.length < SCHEMA_LIMITS.metaTitle.min) {
+      errors.push(`metaTitle too short: ${metaTitle.length} chars (min ${SCHEMA_LIMITS.metaTitle.min}): "${metaTitle}"`);
     }
-    if (desc.length > SCHEMA_LIMITS.metaDescription.max) {
-      errors.push(`metaDescription too long: ${desc.length} chars (max ${SCHEMA_LIMITS.metaDescription.max})`);
+    if (metaTitle.length > SCHEMA_LIMITS.metaTitle.max) {
+      errors.push(`metaTitle too long: ${metaTitle.length} chars (max ${SCHEMA_LIMITS.metaTitle.max}): "${metaTitle}"`);
     }
+  } else {
+    errors.push('Missing metaTitle in seo section');
+  }
+  
+  // Extract and validate metaDescription
+  const metaDescription = extractValue(frontmatter, 'metaDescription');
+  if (metaDescription) {
+    if (metaDescription.length < SCHEMA_LIMITS.metaDescription.min) {
+      errors.push(`metaDescription too short: ${metaDescription.length} chars (min ${SCHEMA_LIMITS.metaDescription.min}): "${metaDescription}"`);
+    }
+    if (metaDescription.length > SCHEMA_LIMITS.metaDescription.max) {
+      errors.push(`metaDescription too long: ${metaDescription.length} chars (max ${SCHEMA_LIMITS.metaDescription.max}): "${metaDescription.substring(0, 50)}..."`);
+    }
+  } else {
+    errors.push('Missing metaDescription in seo section');
   }
   
   return errors;
@@ -50,8 +116,10 @@ function validateBlogPost(filePath) {
 
 function main() {
   try {
-    const files = fs.readdirSync(BLOG_DIR).filter(f => f.endsWith('.md'));
+    // Get all .md and .mdx files
+    const files = fs.readdirSync(BLOG_DIR).filter(f => f.endsWith('.md') || f.endsWith('.mdx'));
     let hasErrors = false;
+    let passCount = 0;
     
     console.log('Validating blog content against schema limits...\n');
     console.log(`Found ${files.length} blog posts to validate\n`);
@@ -65,14 +133,17 @@ function main() {
         console.log(`❌ ${file}:`);
         errors.forEach(err => console.log(`   ${err}`));
         console.log('');
+      } else {
+        passCount++;
       }
     }
     
     if (!hasErrors) {
-      console.log('✅ All blog posts pass validation!\n');
+      console.log(`✅ All ${files.length} blog posts pass validation!\n`);
       process.exit(0);
     } else {
-      console.log('\n❌ Validation failed. Please fix the errors above.');
+      console.log(`\n📊 Results: ${passCount}/${files.length} passed`);
+      console.log('❌ Validation failed. Please fix the errors above.');
       process.exit(1);
     }
   } catch (error) {
@@ -83,4 +154,3 @@ function main() {
 }
 
 main();
-

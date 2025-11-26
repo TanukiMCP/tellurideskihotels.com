@@ -1,56 +1,39 @@
 ---
-{
-  "id": "telluride-bachelor-bachelorette-party",
-  "title": "Telluride Bachelor/Bachelorette Party: Ultimate Planning Guide (2025)",
-  "slug": "telluride-bachelor-bachelorette-party",
-  "status": "published",
-  "category": "planning-tips",
-  "author": "Telluride Ski Hotels Team",
-  "publishDate": "2025-11-22T15:00:00Z",
-  "seo": {
-    "metaTitle": "Telluride Bachelor/Bachelorette Party Guide 2025",
-    "metaDescription": "Complete guide to planning a Telluride bachelor or bachelorette party: event timeline, group lodging, activity recommendations, and cost breakdowns.",
-    "keywords": [
-      "telluride bachelorette party",
-      "telluride bachelor party",
-      "telluride group events",
-      "telluride party planning",
-      "telluride celebration"
-    ],
-    "canonical": "https://tellurideskihotels.com/blog/planning-tips/telluride-bachelor-bachelorette-party"
-  },
-  "featured": false,
-  "featuredImage": "https://images.pexels.com/photos/7357314/pexels-photo-7357314.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
-  "featuredImageAlt": "Two women in winter attire enjoying hot beverages by the ski slopes at night",
-  "excerpt": "Complete planning guide for Telluride bachelor and bachelorette parties: event timeline, group lodging strategies, activity recommendations, cost breakdowns, and expert tips for memorable...",
-  "wordCount": 2900,
-  "readingTime": 15,
-  "relatedHotels": [
-    "madeline-hotel",
-    "peaks-resort",
-    "inn-lost-creek",
-    "hotel-telluride"
-  ],
-  "relatedArticles": [
-    "telluride-friends-ski-trip",
-    "telluride-ski-season-guide",
-    "where-to-stay-telluride"
-  ],
-  "tags": [
-    "bachelorette",
-    "bachelor",
-    "party",
-    "groups",
-    "events"
-  ],
-  "seasonalRelevance": [
-    "winter",
-    "spring",
-    "summer",
-    "fall"
-  ],
-  "updatedDate": "2025-11-24T14:11:12.003Z"
-}
+id: "telluride-bachelor-bachelorette-party"
+title: "Telluride Bachelor/Bachelorette Party: Ultimate Planning Guide (2025)"
+slug: "telluride-bachelor-bachelorette-party"
+status: "published"
+category: "planning-tips"
+author: "Telluride Ski Hotels Team"
+publishDate: 2025-11-22
+updatedDate: 2025-11-24
+seo:
+  metaTitle: "Telluride Bachelor/Bachelorette Party Guide 2025"
+  metaDescription: "Complete guide to planning a Telluride bachelor or bachelorette party: event timeline, group lodging, activity recommendations, and cost breakdowns."
+  keywords:
+    - "telluride bachelorette party"
+    - "telluride bachelor party"
+    - "telluride group events"
+    - "telluride party planning"
+    - "telluride celebration"
+  canonical: "https://tellurideskihotels.com/blog/planning-tips/telluride-bachelor-bachelorette-party"
+featured: false
+featuredImage: "https://images.pexels.com/photos/7357314/pexels-photo-7357314.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
+featuredImageAlt: "Two women in winter attire enjoying hot beverages by the ski slopes at night"
+excerpt: "Complete planning guide for Telluride bachelor and bachelorette parties: event timeline, group lodging strategies, activity recommendations, cost breakdowns, and expert tips for memorable..."
+wordCount: 2900
+readingTime: 15
+relatedHotels:
+  - "madeline-hotel"
+  - "peaks-resort"
+  - "inn-lost-creek"
+  - "hotel-telluride"
+relatedArticles:
+  - "telluride-friends-ski-trip"
+  - "telluride-ski-season-guide"
+  - "where-to-stay-telluride"
+tags: ["bachelorette", "bachelor", "party", "groups", "events"]
+seasonalRelevance: ["winter", "spring", "summer", "fall"]
 ---
 
 # Telluride Bachelor/Bachelorette Party: Ultimate Planning Guide (2025)

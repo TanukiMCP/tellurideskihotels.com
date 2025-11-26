@@ -1,52 +1,39 @@
 ---
-{
-  "id": "telluride-multi-family-ski-trip",
-  "title": "Telluride Multi-Family Ski Trip: Large Group Planning Guide (2025)",
-  "slug": "telluride-multi-family-ski-trip",
-  "status": "published",
-  "category": "planning-tips",
-  "author": "Telluride Ski Hotels Team",
-  "publishDate": "2025-11-24T15:00:00Z",
-  "seo": {
-    "metaTitle": "Telluride Multi-Family Ski Trip 2025 | Group Planning",
-    "metaDescription": "Plan a Telluride multi-family ski trip: large group logistics, cost coordination strategies, accommodation options for multiple families, and expert tips.",
-    "keywords": [
-      "telluride group lodging",
-      "telluride family reunion",
-      "telluride multi-family trip",
-      "telluride large group",
-      "telluride group accommodations"
-    ],
-    "canonical": "https://tellurideskihotels.com/blog/planning-tips/telluride-multi-family-ski-trip"
-  },
-  "featured": false,
-  "featuredImage": "https://images.pexels.com/photos/15744603/pexels-photo-15744603.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
-  "featuredImageAlt": "Family having fun on a ski lift with snow-covered mountains in the background",
-  "excerpt": "Complete planning guide for Telluride multi-family ski trips: large group logistics, cost coordination strategies, accommodation options for multiple families, and expert tips for successful...",
-  "wordCount": 3000,
-  "readingTime": 15,
-  "relatedHotels": [
-    "peaks-resort",
-    "madeline-hotel",
-    "lumiere-telluride",
-    "fairmont-heritage-place"
-  ],
-  "relatedArticles": [
-    "telluride-family-ski-vacation",
-    "telluride-friends-ski-trip",
-    "where-to-stay-telluride"
-  ],
-  "tags": [
-    "multi-family",
-    "large-groups",
-    "planning",
-    "cost-breakdown"
-  ],
-  "seasonalRelevance": [
-    "winter"
-  ],
-  "updatedDate": "2025-11-24T14:11:12.008Z"
-}
+id: "telluride-multi-family-ski-trip"
+title: "Telluride Multi-Family Ski Trip: Large Group Planning Guide (2025)"
+slug: "telluride-multi-family-ski-trip"
+status: "published"
+category: "planning-tips"
+author: "Telluride Ski Hotels Team"
+publishDate: 2025-11-24
+updatedDate: 2025-11-24
+seo:
+  metaTitle: "Telluride Multi-Family Ski Trip 2025 | Group Planning"
+  metaDescription: "Plan a Telluride multi-family ski trip: large group logistics, cost coordination strategies, accommodation options for multiple families, and expert tips."
+  keywords:
+    - "telluride group lodging"
+    - "telluride family reunion"
+    - "telluride multi-family trip"
+    - "telluride large group"
+    - "telluride group accommodations"
+  canonical: "https://tellurideskihotels.com/blog/planning-tips/telluride-multi-family-ski-trip"
+featured: false
+featuredImage: "https://images.pexels.com/photos/15744603/pexels-photo-15744603.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
+featuredImageAlt: "Family having fun on a ski lift with snow-covered mountains in the background"
+excerpt: "Complete planning guide for Telluride multi-family ski trips: large group logistics, cost coordination strategies, accommodation options for multiple families, and expert tips for successful..."
+wordCount: 3000
+readingTime: 15
+relatedHotels:
+  - "peaks-resort"
+  - "madeline-hotel"
+  - "lumiere-telluride"
+  - "fairmont-heritage-place"
+relatedArticles:
+  - "telluride-family-ski-vacation"
+  - "telluride-friends-ski-trip"
+  - "where-to-stay-telluride"
+tags: ["multi-family", "large-groups", "planning", "cost-breakdown"]
+seasonalRelevance: ["winter"]
 ---
 
 # Telluride Multi-Family Ski Trip: Large Group Planning Guide (2025)
