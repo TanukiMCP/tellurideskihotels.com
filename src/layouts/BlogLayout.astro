@@ -11,6 +11,7 @@ import { HotelGrid } from '@/components/blog/HotelGrid';
 import { ActivityGrid } from '@/components/blog/ActivityGrid';
 import { TripCalculator } from '@/components/planning/TripCalculator';
 import { HotelComparison } from '@/components/planning/HotelComparison';
+import BlogLink from '@/components/blog/BlogLink.astro';
 
 interface Props {
   article: CollectionEntry<'blog'>;
@@ -126,6 +127,7 @@ const categoryName = data.category.replace(/-/g, ' ');
             ">
             <Content 
               components={{
+                a: BlogLink,
                 ArticleBookingWidget,
                 HotelGrid,
                 ActivityGrid,

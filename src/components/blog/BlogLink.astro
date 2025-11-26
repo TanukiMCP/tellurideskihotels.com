@@ -1,0 +1,58 @@
+---
+interface Props {
+  href?: string;
+  class?: string;
+  [key: string]: any;
+}
+
+const { href, class: className, ...rest } = Astro.props;
+
+// Get site domain from Astro config
+// Astro.site returns full URL like 'https://tellurideskihotels.com'
+let siteHostname = 'tellurideskihotels.com';
+if (Astro.site) {
+  try {
+    const siteUrl = new URL(Astro.site);
+    siteHostname = siteUrl.hostname.replace(/^www\./, ''); // Remove www. prefix
+  } catch {
+    // Fallback to default
+  }
+}
+
+// Determine if link is external
+// External if it starts with http:// or https:// and is NOT our own domain
+// Also external if it starts with // (protocol-relative)
+let isExternal = false;
+if (href) {
+  if (href.startsWith('//')) {
+    isExternal = true;
+  } else if (href.startsWith('http://') || href.startsWith('https://')) {
+    try {
+      const url = new URL(href);
+      const urlHostname = url.hostname.replace(/^www\./, ''); // Remove www. prefix
+      // If it's our own domain, treat as internal
+      isExternal = urlHostname !== siteHostname;
+    } catch {
+      // If URL parsing fails, treat as external for safety
+      isExternal = true;
+    }
+  }
+  // Everything else (relative paths, hash links, mailto:, etc.) is internal
+}
+
+// For external links, add target="_blank" and rel="noopener noreferrer"
+// For internal links, use normal navigation
+const target = isExternal ? '_blank' : undefined;
+const rel = isExternal ? 'noopener noreferrer' : undefined;
+---
+
+<a 
+  href={href}
+  target={target}
+  rel={rel}
+  class={className}
+  {...rest}
+>
+  <slot />
+</a>
+
