@@ -3,7 +3,7 @@
   "id": "telluride-girls-weekend",
   "title": "Telluride Girls Weekend: Ultimate Girlfriend Getaway Guide (2025)",
   "slug": "telluride-girls-weekend",
-  "status": "scheduled",
+  "status": "published",
   "category": "planning-tips",
   "author": "Telluride Ski Hotels Team",
   "publishDate": "2025-11-26T15:00:00Z",
@@ -47,7 +47,8 @@
     "spring",
     "summer",
     "fall"
-  ]
+  ],
+  "updatedDate": "2025-11-26T14:10:54.487Z"
 }
 ---
 
