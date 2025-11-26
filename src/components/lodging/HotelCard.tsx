@@ -134,7 +134,7 @@ export function HotelCard({
       <div className="flex flex-col flex-grow p-4">
         {/* Hotel Name */}
         <h3 
-          className={`font-bold text-neutral-900 leading-tight line-clamp-2 mb-1.5 group-hover:text-primary-700 transition-colors ${
+          className={`font-bold text-neutral-900 leading-tight line-clamp-1 mb-1.5 group-hover:text-primary-700 transition-colors ${
             variant === 'compact' ? 'text-base' : 'text-lg'
           }`}
           title={hotel.name}
