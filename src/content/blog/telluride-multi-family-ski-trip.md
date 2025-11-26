@@ -149,7 +149,7 @@ Group meals create bonding opportunities and simplify logistics for multi-family
 
 Evening activities vary significantly based on group preferences and children's ages. Multi-family groups with young children often prefer quieter evenings with group dinners and games or movies in accommodations. Groups with older children or teenagers may want more active evening activities. Understanding group preferences before the trip helps plan appropriate evening activities. Many groups find that mixing active and relaxed evenings provides good balance for diverse family needs.
 
-<ActivityShowcase 
+<ActivityGrid 
   category="family"
   limit={3}
   title="Family-Friendly Activities"

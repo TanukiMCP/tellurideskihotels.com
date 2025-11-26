@@ -143,7 +143,7 @@ Evening activities vary significantly based on party preferences and the guest o
 
 Special experiences create memorable moments that distinguish bachelor and bachelorette parties from regular friend trips. Private group lessons, guided backcountry tours, helicopter skiing, or special dining experiences provide unique opportunities that celebrate the occasion. These premium experiences add costs but create memories that extend beyond the trip itself. Parties should balance special experiences with regular activities to manage budgets while ensuring celebration feels special.
 
-<ActivityShowcase 
+<ActivityGrid 
   category="nightlife"
   limit={3}
   title="Party-Ready Activities in Telluride"
