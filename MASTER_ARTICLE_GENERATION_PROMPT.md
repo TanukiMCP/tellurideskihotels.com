@@ -1817,7 +1817,28 @@ The Madeline and Peaks Resort both offer exceptional ski-in/ski-out access with 
 | `mountain-village` | Mountain Village | Hotels, lifts | Lodging articles |
 | `overview` | Both areas | Gondola connection | Location comparisons |
 | `hotels` | Auto-fit to hotels | Hotel markers | Hotel reviews, listicles |
-| `trails` | Trail-focused | Color-coded difficulty | Terrain guides |
+| `trails` | Trail-focused (3D) | Color-coded difficulty | Terrain guides (dramatic) |
+| `trails-overhead` | Trail-focused (top-down) | Color-coded, lower pitch | Terrain guides (readable) |
+
+**Focus Areas (Pre-configured Trail Zones):**
+
+Use `focusArea` prop to automatically highlight and center on a ski zone:
+
+| focusArea | Trails Highlighted | Best For |
+|-----------|-------------------|----------|
+| `gold-hill` | Gold Hill 1-10, Palmyra, The Plunge | Expert terrain articles |
+| `front-side` | See Forever, Kant-Mak-M, Telluride Trail | Intermediate/groomer articles |
+| `beginner` | Meadows, Galloping Goose, Village | Beginner/family articles |
+| `intermediate` | See Forever, Lookout, Coonskin, Breezeway | Progression articles |
+| `prospect` | Prospect Bowl trails | Advanced terrain articles |
+| `revelation` | Revelation Bowl trails | Expert terrain articles |
+
+**⚠️ TRAIL HIGHLIGHTING BEST PRACTICES:**
+- Trails are shown in their **actual difficulty colors** (green=easy, blue=intermediate, black=advanced, red=expert)
+- Highlighted trails appear **thicker and brighter** with a white glow outline
+- Non-highlighted trails appear faded in the background
+- Use `focusArea` for pre-configured zones OR `highlightTrails` for custom trail lists
+- **DO NOT** randomly select trails - choose trails that are contextually relevant to the article content
 
 **Syntax Examples:**
 
@@ -1896,6 +1917,7 @@ When using `hotelIds` with BlogMap, you MUST manually curate the hotel IDs by:
 | `hotelIds` | string[] | - | Hotel IDs to show as markers |
 | `markers` | array | `[]` | Custom markers (see syntax above) |
 | `highlightTrails` | string[] | `[]` | Trail names to highlight |
+| `focusArea` | string | - | Pre-configured zone: `gold-hill`, `front-side`, `beginner`, `intermediate`, `prospect`, `revelation` |
 | `height` | string | `"400px"` | Map container height |
 | `caption` | string | - | Caption below map |
 | `interactive` | boolean | `true` | Allow pan/zoom |
@@ -1903,9 +1925,11 @@ When using `hotelIds` with BlogMap, you MUST manually curate the hotel IDs by:
 
 **Camera Orientation Guide (pitch & bearing):**
 
-For ski terrain visualization, camera should look UP the mountain from the valley:
-- **pitch**: Higher = more dramatic 3D view. Use `60-70` for trail guides, `45-55` for general context
-- **bearing**: Controls compass direction camera faces. Telluride terrain faces north, so use `15-30` to look up at slopes
+For trail visualization, balance readability with visual appeal:
+- **pitch**: Controls camera tilt. `0` = flat top-down, `40-50` = readable 3D, `60-70` = dramatic 3D
+- **bearing**: Controls rotation/direction camera faces. Each `focusArea` has optimal bearing to face its trails
+- **RECOMMENDED**: Use `focusArea` prop - it automatically sets camera position and bearing to face the highlighted trails
+- Only override pitch/bearing manually if you need a specific custom view
 
 ```markdown
 // Looking up at Gold Hill terrain

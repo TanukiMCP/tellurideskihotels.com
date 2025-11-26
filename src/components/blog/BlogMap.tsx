@@ -13,42 +13,75 @@ import { MapPin, Mountain, Building2, Cable, Trees, Info, X, ChevronRight, Star,
 import 'mapbox-gl/dist/mapbox-gl.css';
 
 // Trail area definitions for bowl/zone focusing
-// Camera oriented to look UP the mountain (from valley toward peaks)
+// Camera oriented to FACE the highlighted trails (bearing points toward the trail area)
 const TRAIL_AREAS: Record<string, { trails: string[]; center: [number, number]; zoom: number; pitch?: number; bearing?: number }> = {
   'gold-hill': {
-    trails: ['Gold Hill 1', 'Gold Hill 2', 'Gold Hill 6', 'Gold Hill 7', 'Gold Hill 8', 'Gold Hill 9', 'Gold Hill 10', 'Palmyra', 'Palmyra Basin', 'The Plunge', 'Lower Plunge'],
-    center: [-107.798, 37.928],
-    zoom: 14.2,
-    pitch: 65,
-    bearing: 15,
+    // Expert terrain on Gold Hill (east side of resort) - camera faces east toward Gold Hill
+    trails: [
+      'Gold Hill 1', 'Gold Hill 2', 'Gold Hill 6', 'Gold Hill 7', 'Gold Hill 8', 'Gold Hill 9', 'Gold Hill 10',
+      'Palmyra', 'Palmyra Basin', 'The Plunge', 'Lower Plunge', 'Lift 9', 'Upper Palmyra'
+    ],
+    center: [-107.805, 37.924], // Position camera west of Gold Hill
+    zoom: 14.5,
+    pitch: 45,
+    bearing: 60, // Face east toward Gold Hill
   },
   'prospect': {
-    trails: ['Prospect', 'Prospect Creek', 'Prospect Loop', 'Prospect Woods', 'Prospect Creek Hike Back'],
-    center: [-107.842, 37.915],
-    zoom: 14.2,
-    pitch: 60,
-    bearing: 10,
+    // Prospect Bowl area trails (west side of resort) - camera faces west toward Prospect
+    trails: [
+      'Prospect', 'Prospect Creek', 'Prospect Loop', 'Prospect Woods', 
+      'Prospect Creek Hike Back', 'Upper Prospect', 'Lower Prospect'
+    ],
+    center: [-107.835, 37.918], // Position camera east of Prospect
+    zoom: 14.5,
+    pitch: 45,
+    bearing: -45, // Face west toward Prospect Bowl
   },
   'revelation': {
-    trails: ['Bald Mountain Hike Too', 'East Drain', 'West Drain', 'Nice Chute', 'North Chute', 'Easy Chute', 'Dihedral Face', 'Dihedral Chute'],
-    center: [-107.792, 37.932],
-    zoom: 14.2,
-    pitch: 65,
-    bearing: 30,
+    // Revelation Bowl expert terrain (far east, high elevation) - camera faces northeast
+    trails: [
+      'Bald Mountain Hike Too', 'East Drain', 'West Drain', 'Nice Chute', 
+      'North Chute', 'Easy Chute', 'Dihedral Face', 'Dihedral Chute', 'Revelation Bowl'
+    ],
+    center: [-107.800, 37.928], // Position camera southwest of Revelation
+    zoom: 14.5,
+    pitch: 50,
+    bearing: 45, // Face northeast toward Revelation Bowl
   },
   'front-side': {
-    trails: ['See Forever', 'Kant-Mak-M', 'Mammoth', 'Bushwacker', 'Spiral Stairs', 'The Plunge', 'Misty Maiden'],
-    center: [-107.818, 37.922],
-    zoom: 13.8,
-    pitch: 60,
-    bearing: 20,
+    // Main front-side runs - groomed cruisers and intermediates (center of resort)
+    trails: [
+      'See Forever', 'Kant-Mak-M', 'Mammoth', 'Bushwacker', 'Spiral Stairs', 
+      'The Plunge', 'Misty Maiden', 'Coonskin', 'Telluride Trail', 'Lookout',
+      'Breezeway', 'Pick & Gad', 'Allais Alley'
+    ],
+    center: [-107.820, 37.915], // Position camera at base looking up
+    zoom: 14,
+    pitch: 50,
+    bearing: 15, // Face slightly northeast up the mountain
   },
   'beginner': {
-    trails: ['Meadows', 'Galloping Goose', 'Lower Galloping Goose', 'Village', 'Double Cabins', 'Teddy\'s Way', 'Ute Park'],
-    center: [-107.838, 37.928],
+    // Beginner terrain - learning areas and green runs (base area near Mountain Village)
+    trails: [
+      'Meadows', 'Galloping Goose', 'Lower Galloping Goose', 'Village', 
+      'Double Cabins', 'Teddy\'s Way', 'Ute Park', 'Village Bypass', 
+      'Chondola', 'Misty Maiden'
+    ],
+    center: [-107.845, 37.925], // Position camera south looking at beginner area
     zoom: 14,
-    pitch: 55,
-    bearing: 15,
+    pitch: 40,
+    bearing: 25, // Face toward beginner terrain
+  },
+  'intermediate': {
+    // Intermediate terrain - blue runs for progression (central resort)
+    trails: [
+      'See Forever', 'Telluride Trail', 'Lookout', 'Coonskin', 'Breezeway',
+      'Pick & Gad', 'Boomerang', 'Sundance', 'Happy Thought', 'Lower Happy Thought'
+    ],
+    center: [-107.825, 37.912], // Position camera at base
+    zoom: 14,
+    pitch: 45,
+    bearing: 20, // Face up toward intermediate terrain
   },
 };
 
@@ -102,6 +135,15 @@ const PRESETS = {
     showTrails: true,
     showLifts: true,
   },
+  // Clean overhead view - better for showing trail networks clearly
+  'trails-overhead': {
+    center: [-107.815, 37.925] as [number, number],
+    zoom: 14,
+    pitch: 35, // Lower pitch for cleaner top-down view
+    bearing: 0, // North-facing
+    showTrails: true,
+    showLifts: true,
+  },
 };
 
 const MAP_STYLE = 'mapbox://styles/mapbox/outdoors-v12';
@@ -137,7 +179,7 @@ export interface BlogMapMarker {
 }
 
 export interface BlogMapProps {
-  preset?: 'resort' | 'town' | 'mountain-village' | 'overview' | 'hotels' | 'trails';
+  preset?: 'resort' | 'town' | 'mountain-village' | 'overview' | 'hotels' | 'trails' | 'trails-overhead';
   center?: [number, number];
   zoom?: number;
   /** Camera pitch angle in degrees (0 = flat top-down, 60-75 = dramatic 3D view looking up at terrain) */
@@ -154,7 +196,7 @@ export interface BlogMapProps {
   markers?: BlogMapMarker[];
   /** Highlight specific trails by name */
   highlightTrails?: string[];
-  /** Focus on a predefined area (gold-hill, prospect, revelation, front-side, beginner) */
+  /** Focus on a predefined area (gold-hill, prospect, revelation, front-side, beginner, intermediate) */
   focusArea?: keyof typeof TRAIL_AREAS;
   height?: string;
   caption?: string;
@@ -539,27 +581,13 @@ export function BlogMap({
     window.location.href = `/lodging/${hotelId}`;
   };
 
-  // Trail layer paint
+  // Trail layer paint - highlighted trails keep their difficulty colors but are emphasized
   const trailLayerPaint = useMemo(() => {
     const hasHighlights = allHighlightedTrails.length > 0;
     
+    // All trails show difficulty colors - highlighted ones are just brighter and thicker
     return {
-      'line-color': hasHighlights ? [
-        'case',
-        ['in', ['get', 'name'], ['literal', allHighlightedTrails]],
-        '#f59e0b', // Highlighted trails in amber
-        [
-          'match',
-          ['get', 'piste:difficulty'],
-          'novice', TRAIL_COLORS.novice,
-          'easy', TRAIL_COLORS.easy,
-          'intermediate', TRAIL_COLORS.intermediate,
-          'advanced', TRAIL_COLORS.advanced,
-          'expert', TRAIL_COLORS.expert,
-          'freeride', TRAIL_COLORS.freeride,
-          '#94a3b8' // Non-highlighted get muted
-        ]
-      ] : [
+      'line-color': [
         'match',
         ['get', 'piste:difficulty'],
         'novice', TRAIL_COLORS.novice,
@@ -568,20 +596,42 @@ export function BlogMap({
         'advanced', TRAIL_COLORS.advanced,
         'expert', TRAIL_COLORS.expert,
         'freeride', TRAIL_COLORS.freeride,
-        TRAIL_COLORS.intermediate
+        TRAIL_COLORS.intermediate // default
       ],
       'line-width': hasHighlights ? [
         'case',
         ['in', ['get', 'name'], ['literal', allHighlightedTrails]],
-        5, // Highlighted trails thicker
+        6, // Highlighted trails much thicker
         2  // Others thinner
       ] : 3,
       'line-opacity': hasHighlights ? [
         'case',
         ['in', ['get', 'name'], ['literal', allHighlightedTrails]],
         1,   // Highlighted fully visible
-        0.4  // Others faded
+        0.3  // Others more faded to emphasize highlighted
       ] : 0.85
+    };
+  }, [allHighlightedTrails]);
+
+  // Outline layer for highlighted trails (creates glow/emphasis effect)
+  const trailOutlinePaint = useMemo(() => {
+    if (allHighlightedTrails.length === 0) return null;
+    
+    return {
+      'line-color': '#ffffff',
+      'line-width': [
+        'case',
+        ['in', ['get', 'name'], ['literal', allHighlightedTrails]],
+        10, // White outline behind highlighted trails
+        0   // No outline for others
+      ],
+      'line-opacity': [
+        'case',
+        ['in', ['get', 'name'], ['literal', allHighlightedTrails]],
+        0.6,
+        0
+      ],
+      'line-blur': 2,
     };
   }, [allHighlightedTrails]);
 
@@ -635,6 +685,19 @@ export function BlogMap({
           {/* Trails layer */}
           {(showTrails || allHighlightedTrails.length > 0) && trailsData && (
             <Source id="trails" type="geojson" data={trailsData}>
+              {/* Outline/glow layer for highlighted trails (renders behind) */}
+              {trailOutlinePaint && (
+                <Layer
+                  id="trails-outline-layer"
+                  type="line"
+                  paint={trailOutlinePaint as any}
+                  layout={{
+                    'line-join': 'round',
+                    'line-cap': 'round',
+                  }}
+                  beforeId="trails-layer"
+                />
+              )}
               <Layer
                 id="trails-layer"
                 type="line"
@@ -664,25 +727,16 @@ export function BlogMap({
                   'text-ignore-placement': false,
                 }}
                 paint={{
-                  'text-color': allHighlightedTrails.length > 0 ? [
-                    'case',
-                    ['in', ['get', 'name'], ['literal', allHighlightedTrails]],
-                    '#ffffff',
-                    '#374151'
-                  ] : '#1f2937',
-                  'text-halo-color': allHighlightedTrails.length > 0 ? [
-                    'case',
-                    ['in', ['get', 'name'], ['literal', allHighlightedTrails]],
-                    '#d97706',
-                    '#ffffff'
-                  ] : '#ffffff',
+                  // Dark text with white halo for all labels (readable on any trail color)
+                  'text-color': '#1f2937',
+                  'text-halo-color': '#ffffff',
                   'text-halo-width': 2,
                   'text-halo-blur': 0.5,
                   'text-opacity': allHighlightedTrails.length > 0 ? [
                     'case',
                     ['in', ['get', 'name'], ['literal', allHighlightedTrails]],
                     1,
-                    0.7
+                    0.5  // Non-highlighted labels more faded
                   ] : 0.9
                 }}
               />
@@ -850,8 +904,8 @@ export function BlogMap({
                     )}
                     {allHighlightedTrails.length > 0 && (
                       <div className="flex items-center gap-2 pt-1 border-t border-neutral-200 mt-1">
-                        <div className="w-4 h-1.5 rounded bg-amber-500" />
-                        <span className="text-xs text-neutral-600">Featured</span>
+                        <div className="w-4 h-2 rounded ring-2 ring-white shadow-sm bg-gradient-to-r from-green-500 via-blue-500 to-neutral-800" />
+                        <span className="text-xs text-neutral-600">Featured (bold)</span>
                       </div>
                     )}
                   </div>
