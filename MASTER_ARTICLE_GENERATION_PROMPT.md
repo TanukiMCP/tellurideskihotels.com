@@ -1858,6 +1858,8 @@ When using `hotelIds` with BlogMap, you MUST manually curate the hotel IDs by:
 | `preset` | string | `"resort"` | Map configuration preset (see table above) |
 | `center` | [lng, lat] | (preset) | Override center point |
 | `zoom` | number | (preset) | Override zoom level |
+| `pitch` | number | (preset) | Camera tilt angle: 0=flat, 60-75=dramatic 3D looking up at terrain |
+| `bearing` | number | (preset) | Camera rotation: 0=north, 15-30=facing ski terrain, 90=east |
 | `terrain` | boolean | `false` | Enable 3D terrain view |
 | `showTrails` | boolean | (preset) | Show ski trail overlays |
 | `showLifts` | boolean | (preset) | Show lift lines |
@@ -1868,6 +1870,25 @@ When using `hotelIds` with BlogMap, you MUST manually curate the hotel IDs by:
 | `caption` | string | - | Caption below map |
 | `interactive` | boolean | `true` | Allow pan/zoom |
 | `showLegend` | boolean | `true` | Show trail difficulty legend |
+
+**Camera Orientation Guide (pitch & bearing):**
+
+For ski terrain visualization, camera should look UP the mountain from the valley:
+- **pitch**: Higher = more dramatic 3D view. Use `60-70` for trail guides, `45-55` for general context
+- **bearing**: Controls compass direction camera faces. Telluride terrain faces north, so use `15-30` to look up at slopes
+
+```markdown
+// Looking up at Gold Hill terrain
+<BlogMap 
+  preset="trails"
+  center={[-107.798, 37.928]}
+  pitch={65}
+  bearing={20}
+  highlightTrails={["Gold Hill 1", "The Plunge"]}
+  caption="Expert terrain on Gold Hill"
+  client:load
+/>
+```
 
 **Marker Icon Types:**
 - `hotel` - Building icon (sage green)

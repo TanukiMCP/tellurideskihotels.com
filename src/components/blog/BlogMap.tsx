@@ -13,51 +13,52 @@ import { MapPin, Mountain, Building2, Cable, Trees, Info, X, ChevronRight, Star,
 import 'mapbox-gl/dist/mapbox-gl.css';
 
 // Trail area definitions for bowl/zone focusing
+// Camera oriented to look UP the mountain (from valley toward peaks)
 const TRAIL_AREAS: Record<string, { trails: string[]; center: [number, number]; zoom: number; pitch?: number; bearing?: number }> = {
   'gold-hill': {
     trails: ['Gold Hill 1', 'Gold Hill 2', 'Gold Hill 6', 'Gold Hill 7', 'Gold Hill 8', 'Gold Hill 9', 'Gold Hill 10', 'Palmyra', 'Palmyra Basin', 'The Plunge', 'Lower Plunge'],
-    center: [-107.795, 37.935],
-    zoom: 14.5,
-    pitch: 60,
-    bearing: 45,
+    center: [-107.798, 37.928],
+    zoom: 14.2,
+    pitch: 65,
+    bearing: 15,
   },
   'prospect': {
     trails: ['Prospect', 'Prospect Creek', 'Prospect Loop', 'Prospect Woods', 'Prospect Creek Hike Back'],
-    center: [-107.84, 37.92],
-    zoom: 14,
-    pitch: 50,
-    bearing: -30,
+    center: [-107.842, 37.915],
+    zoom: 14.2,
+    pitch: 60,
+    bearing: 10,
   },
   'revelation': {
     trails: ['Bald Mountain Hike Too', 'East Drain', 'West Drain', 'Nice Chute', 'North Chute', 'Easy Chute', 'Dihedral Face', 'Dihedral Chute'],
-    center: [-107.79, 37.94],
-    zoom: 14.5,
-    pitch: 55,
-    bearing: 20,
+    center: [-107.792, 37.932],
+    zoom: 14.2,
+    pitch: 65,
+    bearing: 30,
   },
   'front-side': {
     trails: ['See Forever', 'Kant-Mak-M', 'Mammoth', 'Bushwacker', 'Spiral Stairs', 'The Plunge', 'Misty Maiden'],
-    center: [-107.815, 37.93],
-    zoom: 13.5,
-    pitch: 50,
-    bearing: -15,
+    center: [-107.818, 37.922],
+    zoom: 13.8,
+    pitch: 60,
+    bearing: 20,
   },
   'beginner': {
     trails: ['Meadows', 'Galloping Goose', 'Lower Galloping Goose', 'Village', 'Double Cabins', 'Teddy\'s Way', 'Ute Park'],
-    center: [-107.835, 37.935],
+    center: [-107.838, 37.928],
     zoom: 14,
-    pitch: 45,
-    bearing: 0,
+    pitch: 55,
+    bearing: 15,
   },
 };
 
 // Preset configurations
 const PRESETS = {
   resort: {
-    center: [-107.8125, 37.9275] as [number, number],
-    zoom: 13,
-    pitch: 0,
-    bearing: 0,
+    center: [-107.825, 37.92] as [number, number],
+    zoom: 13.2,
+    pitch: 55,
+    bearing: 20,
     showTrails: true,
     showLifts: true,
   },
@@ -94,10 +95,10 @@ const PRESETS = {
     showLifts: false,
   },
   trails: {
-    center: [-107.82, 37.935] as [number, number],
-    zoom: 13.5,
-    pitch: 45,
-    bearing: -15,
+    center: [-107.825, 37.925] as [number, number],
+    zoom: 13.8,
+    pitch: 65,
+    bearing: 25,
     showTrails: true,
     showLifts: true,
   },
@@ -139,6 +140,10 @@ export interface BlogMapProps {
   preset?: 'resort' | 'town' | 'mountain-village' | 'overview' | 'hotels' | 'trails';
   center?: [number, number];
   zoom?: number;
+  /** Camera pitch angle in degrees (0 = flat top-down, 60-75 = dramatic 3D view looking up at terrain) */
+  pitch?: number;
+  /** Camera bearing/rotation in degrees (0 = north, 90 = east, -90 = west). Use 15-30 to face ski terrain. */
+  bearing?: number;
   /** Enable 3D terrain visualization */
   terrain?: boolean;
   showTrails?: boolean;
@@ -288,6 +293,8 @@ export function BlogMap({
   preset = 'resort',
   center,
   zoom,
+  pitch: pitchProp,
+  bearing: bearingProp,
   terrain = false,
   showTrails: showTrailsProp,
   showLifts: showLiftsProp,
@@ -326,15 +333,16 @@ export function BlogMap({
   }, [highlightTrails, areaConfig]);
   
   // Compute initial view state
+  // Priority: explicit props > focusArea config > preset config
   const initialViewState = useMemo(() => {
-    // If area is specified, use area config
+    // If area is specified, use area config (but allow prop overrides)
     if (areaConfig) {
       return {
-        longitude: areaConfig.center[0],
-        latitude: areaConfig.center[1],
-        zoom: areaConfig.zoom,
-        pitch: areaConfig.pitch || 45,
-        bearing: areaConfig.bearing || 0,
+        longitude: center?.[0] ?? areaConfig.center[0],
+        latitude: center?.[1] ?? areaConfig.center[1],
+        zoom: zoom ?? areaConfig.zoom,
+        pitch: pitchProp ?? areaConfig.pitch ?? 45,
+        bearing: bearingProp ?? areaConfig.bearing ?? 0,
       };
     }
     
@@ -343,14 +351,19 @@ export function BlogMap({
     const mapZoom = zoom ?? presetConfig.zoom;
     const enableTerrain = terrain || preset === 'trails' || allHighlightedTrails.length > 0;
     
+    // Explicit pitch/bearing props override everything
+    // Otherwise use preset values (or defaults for terrain-enabled maps)
+    const defaultPitch = enableTerrain ? (presetConfig.pitch || 45) : 0;
+    const defaultBearing = enableTerrain ? (presetConfig.bearing || 0) : 0;
+    
     return {
       longitude: mapCenter[0],
       latitude: mapCenter[1],
       zoom: mapZoom,
-      pitch: enableTerrain ? (presetConfig.pitch || 45) : 0,
-      bearing: enableTerrain ? (presetConfig.bearing || -15) : 0,
+      pitch: pitchProp ?? defaultPitch,
+      bearing: bearingProp ?? defaultBearing,
     };
-  }, [center, zoom, presetConfig, terrain, preset, allHighlightedTrails.length, areaConfig]);
+  }, [center, zoom, pitchProp, bearingProp, presetConfig, terrain, preset, allHighlightedTrails.length, areaConfig]);
 
   // Store default view for reset
   const defaultViewRef = useRef(initialViewState);
@@ -629,6 +642,48 @@ export function BlogMap({
                 layout={{
                   'line-join': 'round',
                   'line-cap': 'round',
+                }}
+              />
+              {/* Trail name labels */}
+              <Layer
+                id="trails-labels"
+                type="symbol"
+                layout={{
+                  'symbol-placement': 'line-center',
+                  'text-field': ['get', 'name'],
+                  'text-size': allHighlightedTrails.length > 0 ? [
+                    'case',
+                    ['in', ['get', 'name'], ['literal', allHighlightedTrails]],
+                    13,
+                    10
+                  ] : 11,
+                  'text-font': ['DIN Pro Bold', 'Arial Unicode MS Bold'],
+                  'text-anchor': 'center',
+                  'text-max-angle': 30,
+                  'text-allow-overlap': false,
+                  'text-ignore-placement': false,
+                }}
+                paint={{
+                  'text-color': allHighlightedTrails.length > 0 ? [
+                    'case',
+                    ['in', ['get', 'name'], ['literal', allHighlightedTrails]],
+                    '#ffffff',
+                    '#374151'
+                  ] : '#1f2937',
+                  'text-halo-color': allHighlightedTrails.length > 0 ? [
+                    'case',
+                    ['in', ['get', 'name'], ['literal', allHighlightedTrails]],
+                    '#d97706',
+                    '#ffffff'
+                  ] : '#ffffff',
+                  'text-halo-width': 2,
+                  'text-halo-blur': 0.5,
+                  'text-opacity': allHighlightedTrails.length > 0 ? [
+                    'case',
+                    ['in', ['get', 'name'], ['literal', allHighlightedTrails]],
+                    1,
+                    0.7
+                  ] : 0.9
                 }}
               />
             </Source>
