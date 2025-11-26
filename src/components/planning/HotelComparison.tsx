@@ -99,7 +99,7 @@ export function HotelComparison({
       if (hotelIds && hotelIds.length > 0) {
         const hotelPromises = hotelIds.map(async (id) => {
           try {
-            const response = await fetch(`/api/liteapi/hotel?hotelId=${id}`);
+              const response = await fetch(`/api/hotels/details?hotelId=${id}`);
             if (response.ok) {
               const data = await response.json();
               return data.data || data;
@@ -122,7 +122,7 @@ export function HotelComparison({
           checkout: checkOut,
         });
         
-        const response = await fetch(`/api/liteapi/search?${params.toString()}`);
+        const response = await fetch(`/api/hotels/search?${params.toString()}`);
         
         if (!response.ok) {
           throw new Error('Failed to load hotels');

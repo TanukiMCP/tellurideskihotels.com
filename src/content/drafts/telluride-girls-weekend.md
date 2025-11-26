@@ -100,12 +100,10 @@ Sunday works best when flexible, allowing groups to participate in activities ba
 
 Activity planning for weekends requires prioritizing experiences that create group connection while accommodating different interests. Skiing provides active group experiences, while spa treatments offer relaxation and bonding. Après-ski and dining create social time that many girls weekends prioritize. Non-skiing activities like snowshoeing or shopping provide variety. The key is choosing activities that work for the group's interests and energy levels, ensuring the weekend feels balanced rather than exhausting.
 
-<BudgetToItineraryPlanner 
-  budgetPerPerson={800}
-  tripLength={2}
-  groupSize={6}
-  checkIn="2025-02-07"
-  checkOut="2025-02-09"
+<TripCalculator 
+  defaultNights={2}
+  defaultGuests={6}
+  title="Girls Weekend Cost Calculator"
 />
 
 ## Group Lodging for Girls Weekends

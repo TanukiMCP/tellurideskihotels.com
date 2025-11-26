@@ -164,12 +164,10 @@ Lift ticket costs show smaller differences between peak and off-season periods, 
 
 **Savings:** Lift ticket savings are minimal (0-10%), as prices remain relatively constant. The key is maximizing advance purchase and multi-day discounts regardless of season.
 
-<BudgetToItineraryPlanner 
-  budgetPerPerson={1200}
-  tripLength={4}
-  groupSize={4}
-  checkIn="2025-01-15"
-  checkOut="2025-01-19"
+<TripCalculator 
+  defaultNights={4}
+  defaultGuests={4}
+  title="Season Cost Comparison Calculator"
 />
 
 ## Dining and Activity Cost Comparison

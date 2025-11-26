@@ -102,12 +102,10 @@ Accommodation costs represent the largest expense category for Telluride ski tri
 
 **8+ Person Groups:** Multiple hotel rooms typically cost $1,200-2,400 per night ($150-300 per person), while large vacation rentals accommodating 8+ people often cost $800-1,600 per night ($100-200 per person). Large vacation rentals provide substantial per-person savings for 8+ person groups, with group bookings often providing 10-20% discounts. The key is booking early and coordinating group bookings to maximize discounts.
 
-<BudgetToItineraryPlanner 
-  budgetPerPerson={1500}
-  tripLength={4}
-  groupSize={6}
-  checkIn="2025-12-20"
-  checkOut="2025-12-24"
+<TripCalculator 
+  defaultNights={4}
+  defaultGuests={6}
+  title="Group Trip Cost Calculator"
 />
 
 ## Lift Ticket and Equipment Costs

@@ -119,12 +119,10 @@ Natural settings provide comfort and meaning for many memorial groups, with Tell
 
 Group activities that honor loved ones' interests or memories create meaningful remembrance experiences. If the loved one enjoyed skiing, groups might ski together in their memory. If they loved hiking, groups might take memorial hikes. If they appreciated fine dining, groups might share special meals together. The key is choosing activities that feel appropriate and meaningful rather than forcing participation in activities that don't connect to the loved one's memory.
 
-<BudgetToItineraryPlanner 
-  budgetPerPerson={1000}
-  tripLength={3}
-  groupSize={15}
-  checkIn="2025-07-15"
-  checkOut="2025-07-18"
+<TripCalculator 
+  defaultNights={3}
+  defaultGuests={8}
+  title="Trip Cost Calculator"
 />
 
 ## Cost Coordination for Memorial Trips

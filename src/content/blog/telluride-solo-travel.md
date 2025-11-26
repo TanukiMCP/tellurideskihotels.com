@@ -61,19 +61,13 @@ This comprehensive guide provides everything you need to plan your solo Tellurid
 ![Energetic skier in black gear enjoying snowy slopes under blue sky and sunlight](https://images.pexels.com/photos/2405649/pexels-photo-2405649.jpeg?auto=compress&cs=tinysrgb&h=350)
 *Photo by [Melvin Wahlin](https://www.pexels.com/@melvinwahlin) via Pexels*
 
-Use the budget planner below to allocate your solo trip budget across lodging, activities, dining, and lift tickets. Solo travelers can optimize costs differently than groups, focusing on value and experiences that work independently.
+Use the cost calculator below to estimate your solo trip budget across lodging, activities, dining, and lift tickets. Solo travelers can optimize costs differently than groups, focusing on value and experiences that work independently.
 
-<BudgetToItineraryPlanner 
-  budgetPerPerson={1500}
-  tripLength={4}
-  groupSize={1}
-  checkIn="2025-01-20"
-  checkOut="2025-01-24"
+<TripCalculator 
+  defaultNights={4}
+  defaultGuests={1}
+  title="Solo Trip Cost Calculator"
 />
-
-Not sure what type of trip suits you best? Use our group type recommender to explore different Telluride experiences and find recommendations tailored to your travel style.
-
-<GroupTypeRecommender />
 
 For detailed skiing information, see our [complete skiing guide](/blog/ski-guides/telluride-skiing-complete-guide). To understand seasonal timing, check our [ski season guide](/blog/planning-tips/telluride-ski-season-guide). For accommodation options, review our [where to stay guide](/blog/destination-guides/where-to-stay-telluride). According to [Telluride's official website](https://www.telluride.com), the area welcomes solo travelers with diverse activities and accommodations.
 
