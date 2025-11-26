@@ -1,55 +1,47 @@
 ---
-{
-  "id": "telluride-girls-weekend",
-  "title": "Telluride Girls Weekend: Ultimate Girlfriend Getaway Guide (2025)",
-  "slug": "telluride-girls-weekend",
-  "status": "published",
-  "category": "planning-tips",
-  "author": "Telluride Ski Hotels Team",
-  "publishDate": "2025-11-26T15:00:00Z",
-  "seo": {
-    "metaTitle": "Telluride Girls Weekend Guide 2025 | Girlfriend Getaway Planning",
-    "metaDescription": "Plan a Telluride girls weekend: itineraries, group lodging, activities, costs, and tips for girlfriend getaways in 2025.",
-    "keywords": [
-      "telluride girls trip",
-      "telluride girls weekend",
-      "girlfriend getaway telluride",
-      "telluride girls vacation",
-      "women's trip telluride"
-    ],
-    "canonical": "https://tellurideskihotels.com/blog/planning-tips/telluride-girls-weekend"
-  },
-  "featured": false,
-  "featuredImage": "https://images.pexels.com/photos/7357314/pexels-photo-7357314.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
-  "featuredImageAlt": "Two women in winter attire enjoying hot beverages by the ski slopes at night",
-  "excerpt": "Complete planning guide for Telluride girls weekends: weekend itineraries, group lodging strategies, activity recommendations, cost breakdowns, and expert tips for girlfriend getaways.",
-  "wordCount": 2700,
-  "readingTime": 14,
-  "relatedHotels": [
-    "madeline-hotel",
-    "peaks-resort",
-    "inn-lost-creek",
-    "hotel-telluride"
-  ],
-  "relatedArticles": [
-    "telluride-friends-ski-trip",
-    "telluride-bachelor-bachelorette-party",
-    "where-to-stay-telluride"
-  ],
-  "tags": [
-    "girls-trip",
-    "friends",
-    "weekend",
-    "planning"
-  ],
-  "seasonalRelevance": [
-    "winter",
-    "spring",
-    "summer",
-    "fall"
-  ],
-  "updatedDate": "2025-11-26T14:10:54.487Z"
-}
+id: "telluride-girls-weekend"
+title: "Telluride Girls Weekend: Ultimate Girlfriend Getaway Guide (2025)"
+slug: "telluride-girls-weekend"
+status: "published"
+category: "planning-tips"
+author: "Telluride Ski Hotels Team"
+publishDate: 2025-11-26T15:00:00Z
+seo:
+  metaTitle: "Telluride Girls Weekend Guide 2025 | Getaway Planning"
+  metaDescription: "Plan a Telluride girls weekend: complete itineraries, group lodging strategies, activity ideas, cost breakdowns, and tips for girlfriend getaways in 2025."
+  keywords:
+    - "telluride girls trip"
+    - "telluride girls weekend"
+    - "girlfriend getaway telluride"
+    - "telluride girls vacation"
+    - "women's trip telluride"
+  canonical: "https://tellurideskihotels.com/blog/planning-tips/telluride-girls-weekend"
+featured: false
+featuredImage: "https://images.pexels.com/photos/7357314/pexels-photo-7357314.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
+featuredImageAlt: "Two women in winter attire enjoying hot beverages by the ski slopes at night"
+excerpt: "Complete planning guide for Telluride girls weekends: weekend itineraries, group lodging strategies, activity recommendations, cost breakdowns, and expert tips for girlfriend getaways."
+wordCount: 2700
+readingTime: 14
+relatedHotels:
+  - "madeline-hotel"
+  - "peaks-resort"
+  - "inn-lost-creek"
+  - "hotel-telluride"
+relatedArticles:
+  - "telluride-friends-ski-trip"
+  - "telluride-bachelor-bachelorette-party"
+  - "where-to-stay-telluride"
+tags:
+  - "girls-trip"
+  - "friends"
+  - "weekend"
+  - "planning"
+seasonalRelevance:
+  - "winter"
+  - "spring"
+  - "summer"
+  - "fall"
+updatedDate: 2025-11-26T14:10:54.487Z
 ---
 
 # Telluride Girls Weekend: Ultimate Girlfriend Getaway Guide (2025)
