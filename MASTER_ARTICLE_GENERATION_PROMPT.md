@@ -1020,7 +1020,9 @@ Before adding a hotel ID to your article, verify it has images:
 
 Every article MUST include 5-8 embedded images throughout the body content. Images are NOT optional. Reading the CSV files and selecting appropriate images is a REQUIRED step before writing.
 
-**Location:** All images are stored in CSV files in the `media-library/` directory.
+**Location:** All images are stored in CSV files in the `media-library/` directory at the project root (`media-library/*.csv`).
+
+**File Path:** `media-library/[category-name].csv`
 
 **Available Image Categories:**
 
@@ -1082,15 +1084,26 @@ We have TWO types of media libraries:
 
 **CSV Format:**
 ```
-id,original_url,large_url,medium_url,small_url,width,height,photographer,photographer_url,alt,query
+id,original_url,large_url,medium_url,small_url,width,height,photographer,photographer_url,alt,query,source
 ```
+
+**Note:** Some files may have `unsplash_url` instead of `source` column. Both formats are valid.
+
+**Key Columns:**
+- `medium_url` - Use this for BlogImage `src` (add `?auto=compress&cs=tinysrgb&h=450` for optimization)
+- `alt` - Use for BlogImage `alt` text
+- `photographer` - Use for BlogImage `photographer` attribution
+- `photographer_url` - Use for BlogImage `photographerUrl` link
+- `source` or `unsplash_url` - Use "Unsplash" or "Pexels" for BlogImage `source`
+- `width` and `height` - Check these to ensure landscape orientation (width > height)
 
 **MANDATORY: How to Use the Media Library (STEP-BY-STEP):**
 
 **STEP 1: READ THE CSV FILES** (Do this BEFORE writing the article)
-- Use the `read_file` tool to open relevant CSV files from `media-library/`
-- Example: For a hotel review article, read `luxury-ski-hotels.csv`, `hotel-rooms.csv`, `hotel-pools.csv`
-- Review the available images, their URLs, alt text, and photographers
+- Use the `read_file` tool to open relevant CSV files from `media-library/` directory
+- **Full path:** `media-library/[category-name].csv`
+- Example: For a hotel review article, read `media-library/hotel-exteriors.csv`, `media-library/hotel-rooms.csv`, `media-library/hotel-amenities.csv`
+- Review the available images, their URLs, alt text, photographers, and verify landscape orientation (width > height)
 
 **STEP 2: SELECT 5-8 IMAGES**
 - Choose images that match your article sections
@@ -1102,18 +1115,59 @@ id,original_url,large_url,medium_url,small_url,width,height,photographer,photogr
 - Match image content to the surrounding text
 - First image should appear after 2-3 paragraphs
 
-**STEP 4: EMBED USING CORRECT SYNTAX**
+**STEP 4: EMBED USING BlogImage COMPONENT**
 
-**Correct Markdown Format:**
+**⚠️ PREFERRED: Use the BlogImage component for consistent styling and proper attribution:**
+
 ```markdown
-![Descriptive alt text here](https://images.pexels.com/photos/XXXXX/image.jpeg?auto=compress&cs=tinysrgb&h=350)
-*Photo by [Photographer Name](https://www.pexels.com/@photographer-url) via Pexels*
+<BlogImage 
+  images={{
+    src: "https://images.pexels.com/photos/XXXXX/image.jpeg?auto=compress&cs=tinysrgb&h=450",
+    alt: "Descriptive alt text here",
+    photographer: "Photographer Name",
+    photographerUrl: "https://www.pexels.com/@photographer-url",
+    source: "Pexels"
+  }}
+/>
 ```
 
-**REAL EXAMPLE from luxury-ski-hotels.csv:**
+**REAL EXAMPLE from telluride-images.csv:**
 ```markdown
-![Stunning winter landscape with illuminated resort nestled in snow-covered mountains during sunset](https://images.pexels.com/photos/13639247/pexels-photo-13639247.jpeg?auto=compress&cs=tinysrgb&h=350)
-*Photo by [Laura Paredis](https://www.pexels.com/@laura-paredis-1047081) via Pexels*
+<BlogImage 
+  images={{
+    src: "https://images.unsplash.com/photo-1564779443480?fm=jpg&q=80&w=1200&auto=compress&cs=tinysrgb&h=450",
+    alt: "field of green trees",
+    photographer: "Chad Madden",
+    photographerUrl: "https://unsplash.com/@chadmadden",
+    source: "Unsplash"
+  }}
+/>
+```
+
+**REAL EXAMPLE from powder-skiing.csv:**
+```markdown
+<BlogImage 
+  images={{
+    src: "https://images.unsplash.com/photo-1596473535762-ce7f43470748?fm=jpg&q=80&w=1200&auto=compress&cs=tinysrgb&h=450",
+    alt: "Person in orange jacket riding ski blades on snow covered mountain",
+    photographer: "Glade Optics",
+    photographerUrl: "https://unsplash.com/@gladegoggles",
+    source: "Unsplash"
+  }}
+/>
+```
+
+**⚠️ IMPORTANT:** Always append `&auto=compress&cs=tinysrgb&h=450` to Unsplash URLs for optimal compression. For Pexels URLs, use `?auto=compress&cs=tinysrgb&h=450`.
+
+**For Multiple Images (2-3 side by side):**
+```markdown
+<BlogImage 
+  images={[
+    { src: "url1", alt: "First image alt", photographer: "Name1", source: "Pexels" },
+    { src: "url2", alt: "Second image alt", photographer: "Name2", source: "Pexels" }
+  ]}
+  aspectRatio="16:9"
+/>
 ```
 
 **Image Selection Example for "Best Hotels in Telluride" Article:**
@@ -1152,14 +1206,21 @@ The Madeline is incredible...
 The Peaks offers...
 ```
 
-**✅ CORRECT: Images embedded throughout**
+**✅ CORRECT: Images embedded using BlogImage component**
 ```markdown
 ## Best Hotels in Telluride
 
 Telluride offers amazing hotels in both downtown and Mountain Village locations...
 
-![Mountain village with ski resort and luxury hotels in winter](https://images.pexels.com/photos/XXXXX/image.jpeg?auto=compress&cs=tinysrgb&h=350)
-*Photo by [Photographer Name](https://www.pexels.com/@photographer) via Pexels*
+<BlogImage 
+  images={{
+    src: "https://images.pexels.com/photos/XXXXX/image.jpeg?auto=compress&cs=tinysrgb&h=450",
+    alt: "Mountain village with ski resort and luxury hotels in winter",
+    photographer: "Photographer Name",
+    photographerUrl: "https://www.pexels.com/@photographer",
+    source: "Pexels"
+  }}
+/>
 
 The choice between these areas significantly impacts your experience...
 
@@ -1167,11 +1228,12 @@ The choice between these areas significantly impacts your experience...
 
 The Madeline sets the standard for luxury ski hotels in Telluride...
 
-![Luxury ski hotel exterior with mountain views in winter](https://images.pexels.com/photos/XXXXX/image.jpeg?auto=compress&cs=tinysrgb&h=350)
-*Photo by [Photographer Name](https://www.pexels.com/@photographer) via Pexels*
+<HotelShowcase hotelId="lp4b27f" showGallery={true} />
 
 Located steps from Lift 10, this AAA Four Diamond property...
 ```
+
+**Note:** For specific hotels in listicles, use `HotelShowcase` with real hotel IDs. For atmospheric/contextual images, use `BlogImage` with Pexels photos.
 
 ### Image Specifications
 
@@ -1638,9 +1700,10 @@ The [National Weather Service Grand Junction office](https://www.weather.gov/gjt
 1. **Hotel Displays:** `HotelShowcase`, `HotelGrid` - For featuring specific properties
 2. **Hotel Comparison:** `HotelComparison` - For comparing 2-3 properties side-by-side
 3. **Visual Context:** `BlogMap` - For geographic/location understanding (trails, hotel proximity, area overview)
-4. **Booking CTAs:** `ArticleBookingWidget` - For conversion points
-5. **Planning Tools:** `TripCalculator` - For trip cost estimation and engagement
-6. **Activities:** `ActivityShowcase` - For highlighting experiences
+4. **Image Display:** `BlogImage` - For consistent, professional image layouts (single, grid, gallery)
+5. **Booking CTAs:** `ArticleBookingWidget` - For conversion points
+6. **Planning Tools:** `TripCalculator` - For trip cost estimation and engagement
+7. **Activities:** `ActivityShowcase` - For highlighting experiences
 
 **⚠️ VARIETY IS KEY:** Don't overuse any single component type. Balance hotel grids with maps and planning tools. Use `BlogMap` when content discusses geography, locations, or spatial relationships instead of adding more hotel widgets.
 
@@ -1968,7 +2031,210 @@ The Madeline and Peaks Resort both offer exceptional ski-in/ski-out access with 
 - `description` (Optional): Custom description.
 - `image` (Optional): Specific image URL (if not using default).
 
-### 4. BlogMap (Interactive Map Widget)
+### 4. BlogImage (Unified Image Display Widget)
+
+**Use Case:** Professional, consistent image display throughout articles with proper sizing, captions, credits, and lightbox support.
+**Best For:** Any article requiring embedded images - replaces manual markdown image syntax for better control.
+
+**⚠️ WHEN TO USE BlogImage vs Markdown Images:**
+- **Use `BlogImage`** when you need: consistent sizing, photographer credits, captions, lightbox, multi-image layouts
+- **Use markdown images** only for simple inline images with no special formatting needs
+- **PREFER BlogImage** for all atmospheric/stock photos from Pexels/Unsplash libraries
+
+**Display Modes (Auto-Detected):**
+| Image Count | Mode | Layout |
+|-------------|------|--------|
+| 1 | `single` | Full-width with caption below |
+| 2 | `double` | 2-column responsive grid |
+| 3 | `triple` | 3-column responsive grid |
+| 4+ | `gallery` | Swipeable gallery with thumbnails |
+
+---
+
+#### Single Image (Full-Width Display)
+
+**Syntax:**
+```markdown
+<BlogImage 
+  images={{
+    src: "https://images.pexels.com/photos/12345/image.jpeg",
+    alt: "Skier carving fresh powder on Palmyra Peak",
+    caption: "Fresh powder days on Palmyra Peak offer some of Colorado's best expert terrain.",
+    photographer: "John Smith",
+    photographerUrl: "https://www.pexels.com/@johnsmith",
+    source: "Pexels"
+  }}
+/>
+```
+
+**Output:** Full-width image with rounded corners, caption, photo credit, and fullscreen lightbox on click.
+
+---
+
+#### Two Images (Side-by-Side Comparison)
+
+**Syntax:**
+```markdown
+<BlogImage 
+  images={[
+    {
+      src: "https://images.pexels.com/photos/111/downtown.jpeg",
+      alt: "Historic downtown Telluride main street",
+      caption: "Downtown Telluride offers Victorian charm"
+    },
+    {
+      src: "https://images.pexels.com/photos/222/village.jpeg",
+      alt: "Modern Mountain Village plaza",
+      caption: "Mountain Village provides slopeside convenience"
+    }
+  ]}
+  groupCaption="Choose between downtown's historic character or Mountain Village's ski-in/ski-out access."
+/>
+```
+
+**Output:** 2-column responsive grid (stacks on mobile), individual captions per image, optional group caption.
+
+---
+
+#### Three Images (Category Showcase)
+
+**Syntax:**
+```markdown
+<BlogImage 
+  images={[
+    { src: "url1", alt: "Luxury suite at The Madeline", caption: "Luxury tier" },
+    { src: "url2", alt: "Mid-range hotel room", caption: "Mid-range option" },
+    { src: "url3", alt: "Budget accommodation", caption: "Budget-friendly" }
+  ]}
+  aspectRatio="4:3"
+  groupCaption="Telluride offers accommodations at every price point."
+/>
+```
+
+**Output:** 3-column responsive grid with consistent aspect ratios.
+
+---
+
+#### Gallery Mode (4+ Images)
+
+**Syntax:**
+```markdown
+<BlogImage 
+  images={[
+    { src: "url1", alt: "Hotel exterior", caption: "The main entrance" },
+    { src: "url2", alt: "Lobby interior", caption: "Welcoming lobby with fireplace" },
+    { src: "url3", alt: "Guest room", caption: "Mountain view suite" },
+    { src: "url4", alt: "Restaurant", caption: "Award-winning dining" },
+    { src: "url5", alt: "Spa", caption: "Full-service spa facilities" }
+  ]}
+  showThumbnails={true}
+  showCount={true}
+/>
+```
+
+**Output:** Swipeable gallery with navigation arrows, thumbnail strip, image counter, and fullscreen lightbox.
+
+---
+
+#### Props Reference
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `images` | ImageItem or ImageItem[] | Required | Single image object or array of images |
+| `mode` | `single` \| `double` \| `triple` \| `gallery` | Auto | Force specific display mode |
+| `aspectRatio` | `16:9` \| `4:3` \| `3:2` \| `1:1` \| `3:4` \| `9:16` \| `auto` | `16:9` | Consistent aspect ratio for all images |
+| `showThumbnails` | boolean | `true` | Gallery: show thumbnail strip below main image |
+| `showCount` | boolean | `true` | Gallery: show "1/5" counter badge |
+| `autoPlay` | boolean | `false` | Gallery: auto-advance slides |
+| `autoPlayInterval` | number | `5000` | Gallery: ms between auto-advance |
+| `lightbox` | boolean | `true` | Enable fullscreen viewing on click |
+| `maxHeight` | string | `500px` | Maximum container height |
+| `groupCaption` | string | - | Caption for entire image group |
+| `className` | string | - | Additional CSS classes |
+
+#### ImageItem Object Structure
+
+```typescript
+{
+  src: string;           // Required: Image URL
+  alt: string;           // Required: Accessibility text
+  caption?: string;      // Optional: Displayed below image
+  photographer?: string; // Optional: Credit name
+  photographerUrl?: string; // Optional: Credit link
+  source?: string;       // Optional: "Pexels", "Unsplash", etc.
+  orientation?: 'landscape' | 'portrait' | 'square'; // Optional hint
+}
+```
+
+---
+
+#### Best Practices
+
+**1. Always Include Alt Text:**
+```markdown
+// ❌ BAD - No alt text
+{ src: "url" }
+
+// ✅ GOOD - Descriptive alt text
+{ src: "url", alt: "Skier descending Gold Hill chutes in fresh powder" }
+```
+
+**2. Include Photo Credits for Stock Images:**
+```markdown
+// ✅ GOOD - Full attribution
+{
+  src: "https://images.pexels.com/photos/123/image.jpeg",
+  alt: "Mountain sunset over Telluride",
+  photographer: "Laura Paredis",
+  photographerUrl: "https://www.pexels.com/@laura-paredis",
+  source: "Pexels"
+}
+```
+
+**3. Use Aspect Ratios for Consistency:**
+```markdown
+// Grid of 3 images - ensure consistent sizing
+<BlogImage 
+  images={[...]}
+  aspectRatio="16:9"  // All images will be 16:9
+/>
+```
+
+**4. Placement Guidelines:**
+- Place after 2-3 paragraphs of text (not immediately at start)
+- Use between major sections to break up text
+- Match image content to surrounding text
+- One BlogImage widget every 300-400 words
+
+**5. Landscape vs Portrait:**
+- **PREFER landscape (16:9, 4:3)** for most content - better blog layout fit
+- Use portrait (3:4, 9:16) only when subject requires it (tall buildings, vertical shots)
+- Gallery mode handles mixed orientations automatically
+
+---
+
+#### Integration with Media Library
+
+When using images from `media-library/*.csv` files, extract the data and format as:
+
+```markdown
+// From media-library CSV row:
+// id,original_url,large_url,medium_url,small_url,width,height,photographer,photographer_url,alt,query
+
+<BlogImage 
+  images={{
+    src: "[medium_url from CSV]?auto=compress&cs=tinysrgb&h=450",
+    alt: "[alt from CSV]",
+    photographer: "[photographer from CSV]",
+    photographerUrl: "[photographer_url from CSV]",
+    source: "Pexels"
+  }}
+/>
+```
+
+**⚠️ ALWAYS use `medium_url` with compression parameters for optimal loading.**
+
+### 6. BlogMap (Interactive Map Widget)
 
 **Use Case:** Visual storytelling, location context, geographic understanding. Adds visual variety beyond hotel grids and calculators.
 **Best For:** Ski guides (trails/terrain), hotel reviews (location context), destination guides (geography), comparison articles (location differences).
@@ -2149,7 +2415,7 @@ The ski resort spans two distinct areas connected by a free gondola that runs da
 Downtown Telluride sits at 8,750 feet in a box canyon, while Mountain Village perches 1,700 feet above...
 ```
 
-### 5. ArticleBookingWidget (Flexible CTA)
+### 7. ArticleBookingWidget (Flexible CTA)
 
 **Use Case:** General CTAs, filtered searches, or specific hotels when ID is unknown.
 
@@ -2169,7 +2435,7 @@ Downtown Telluride sits at 8,750 feet in a box canyon, while Mountain Village pe
 - `filter`: `ski-in-ski-out` | `luxury` | `budget` | `family-friendly`
 - `variant`: `default` | `compact` | `featured`
 
-### 3. Planning Tools (Calculators & Interactive)
+### 8. Planning Tools (Calculators & Interactive)
 
 **Use Case:** Engagement and utility. Every planning article needs one.
 

@@ -36,14 +36,23 @@ tags: ["multi-family", "large-groups", "planning", "cost-breakdown"]
 seasonalRelevance: ["winter"]
 ---
 
+import { BlogImage } from '@/components/blog/BlogImage';
+
 # Telluride Multi-Family Ski Trip: Large Group Planning Guide (2025)
 
 Planning a Telluride multi-family ski trip involves coordinating multiple families with different budgets, preferences, and logistics while managing costs fairly, choosing accommodations that accommodate everyone comfortably, and creating experiences that work for diverse age ranges and ability levels. Multi-family trips present unique challenges: coordinating schedules across families, splitting costs equitably when some families have more children or stay longer, managing group dynamics that differ from single-family vacations, and ensuring everyone feels included without forcing participation in every activity. Telluride's combination of diverse accommodations, group-friendly amenities, and activities spanning all ages makes it ideal for multi-family trips—but successful planning requires understanding large group logistics, accommodation strategies, and coordination methods that prevent one person from becoming overwhelmed.
 
 This comprehensive guide provides everything you need to plan your Telluride multi-family ski trip: detailed cost coordination strategies showing how to divide expenses fairly across families, accommodation options ranging from large vacation rentals to multiple hotel rooms, logistics management techniques that streamline coordination without micromanaging, activity planning that accommodates different interests and abilities, and insider tips that help multi-family groups maximize fun while minimizing conflicts. Whether you're planning a family reunion, coordinating multiple families for a shared vacation, or organizing a large group trip, understanding Telluride's multi-family offerings and planning strategically transforms a potentially chaotic experience into an exceptional one.
 
-![A group of people riding skis down a snow covered slope](https://images.unsplash.com/photo-1678879150716-6a3ad4bb335a?fm=jpg&q=90&w=1200)
-*Photo by [R Marte](https://unsplash.com/@rmarte) via Unsplash*
+<BlogImage 
+  images={{
+    src: "https://images.unsplash.com/photo-1678879150716-6a3ad4bb335a?fm=jpg&q=90&w=1200&auto=compress&cs=tinysrgb&h=450",
+    alt: "A group of people riding skis down a snow covered slope",
+    photographer: "R Marte",
+    photographerUrl: "https://unsplash.com/@rmarte",
+    source: "Unsplash"
+  }}
+/>
 
 Use the cost calculator below to estimate total trip expenses for your multi-family group based on total group size, trip length, and travel dates. Understanding total costs helps groups make informed decisions about accommodations and activities.
 
@@ -119,8 +128,15 @@ Budget transparency prevents conflicts about costs and spending. Sharing accommo
 
 Flexibility becomes essential when coordinating multiple families with different preferences, schedules, and constraints. Building buffer time into schedules, having backup plans for weather-dependent activities, and allowing individual family flexibility within group frameworks prevents frustration. Successful multi-family trips balance structured group activities with free time, ensuring families can pursue individual interests without feeling obligated to participate in everything. The key is creating frameworks that guide the trip while allowing natural family dynamics to develop.
 
-![A group of people riding skis down a snow covered slope](https://images.unsplash.com/photo-1678879150716-6a3ad4bb335a?fm=jpg&q=90&w=1200)
-*Photo by [R Marte](https://unsplash.com/@rmarte) via Unsplash*
+<BlogImage 
+  images={{
+    src: "https://images.unsplash.com/photo-1678879150716-6a3ad4bb335a?fm=jpg&q=90&w=1200&auto=compress&cs=tinysrgb&h=450",
+    alt: "A group of people riding skis down a snow covered slope",
+    photographer: "R Marte",
+    photographerUrl: "https://unsplash.com/@rmarte",
+    source: "Unsplash"
+  }}
+/>
 
 ## Activity Planning for Multi-Family Groups
 

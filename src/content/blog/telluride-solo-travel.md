@@ -36,14 +36,23 @@ tags: ["solo-travel", "independent", "planning", "budget"]
 seasonalRelevance: ["winter", "spring", "summer", "fall"]
 ---
 
+import { BlogImage } from '@/components/blog/BlogImage';
+
 # Telluride Solo Travel: Complete Independent Traveler's Guide (2025)
 
 Traveling solo to Telluride offers unique advantages: complete freedom to ski at your own pace, flexibility to change plans spontaneously, opportunities to meet other travelers naturally, and the ability to optimize costs without compromising on experiences. Solo travel requires different planning approaches than group trips: choosing accommodations that feel comfortable for single travelers, finding activities that work independently, managing costs efficiently without group discounts, and understanding safety considerations specific to mountain environments. Telluride's combination of welcoming atmosphere, solo-friendly accommodations, and diverse activities makes it excellent for independent travelers—but successful solo trips require understanding solo-specific considerations and planning strategies.
 
 This comprehensive guide provides everything you need to plan your solo Telluride trip: solo-friendly accommodation recommendations highlighting properties that welcome independent travelers, cost optimization strategies showing how to maximize value without group discounts, independent activity recommendations spanning skiing, dining, and non-skiing options, safety tips specific to solo mountain travel, and insider tips that help solo travelers create memorable experiences while maintaining independence. Whether you're an experienced solo traveler or planning your first independent trip, understanding Telluride's solo offerings and planning strategically transforms a good solo trip into an exceptional one.
 
-![Person in orange jacket riding ski blades on snow covered mountain](https://images.unsplash.com/photo-1596473535762-ce7f43470748?fm=jpg&q=90&w=1200)
-*Photo by [Glade Optics](https://unsplash.com/@gladegoggles) via Unsplash*
+<BlogImage 
+  images={{
+    src: "https://images.unsplash.com/photo-1596473535762-ce7f43470748?fm=jpg&q=90&w=1200&auto=compress&cs=tinysrgb&h=450",
+    alt: "Person in orange jacket riding ski blades on snow covered mountain",
+    photographer: "Glade Optics",
+    photographerUrl: "https://unsplash.com/@gladegoggles",
+    source: "Unsplash"
+  }}
+/>
 
 Use the cost calculator below to estimate your solo trip budget across lodging, activities, dining, and lift tickets. Solo travelers can optimize costs differently than groups, focusing on value and experiences that work independently.
 
@@ -110,8 +119,15 @@ Non-skiing activities provide variety and accommodate solo travelers wanting bre
 
 Dining experiences work well for solo travelers in Telluride, as many restaurants offer bar seating and welcoming atmospheres for independent diners. Fine dining restaurants often provide excellent solo dining experiences, with attentive service and intimate settings that work well for independent travelers. Casual restaurants offer relaxed atmospheres where solo diners feel comfortable. Many solo travelers find that Telluride's dining scene accommodates independent diners better than many destinations, with restaurants used to serving solo travelers who visit for skiing or work.
 
-![A man riding skis down a snow covered slope](https://images.unsplash.com/photo-1709882370244-4fae019515c2?fm=jpg&q=90&w=1200)
-*Photo by [Live Kaiah](https://unsplash.com/@livekaiah) via Unsplash*
+<BlogImage 
+  images={{
+    src: "https://images.unsplash.com/photo-1709882370244-4fae019515c2?fm=jpg&q=90&w=1200&auto=compress&cs=tinysrgb&h=450",
+    alt: "A man riding skis down a snow covered slope",
+    photographer: "Live Kaiah",
+    photographerUrl: "https://unsplash.com/@livekaiah",
+    source: "Unsplash"
+  }}
+/>
 
 ## Safety Considerations for Solo Travelers
 

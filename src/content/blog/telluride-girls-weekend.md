@@ -44,6 +44,8 @@ seasonalRelevance:
 updatedDate: 2025-11-26T14:10:54.487Z
 ---
 
+import { BlogImage } from '@/components/blog/BlogImage';
+
 # Telluride Girls Weekend: Ultimate Girlfriend Getaway Guide (2025)
 
 Planning a Telluride girls weekend means balancing group coordination with individual flexibility. You'll manage costs fairly across friends with different budgets. You'll create weekend itineraries that maximize limited time. Most importantly, you'll ensure experiences that strengthen friendships rather than create conflicts.
@@ -56,8 +58,15 @@ This comprehensive guide provides everything you need to plan your Telluride gir
 
 Whether you're planning a quick weekend escape or a longer girlfriend getaway, understanding Telluride's girls weekend offerings and planning strategically transforms a potentially rushed experience into an exceptional one.
 
-![A hot tub with a mountain view in the background](https://images.unsplash.com/photo-1734329596076-4aa090053d5f?fm=jpg&q=90&w=1200)
-*Photo by [Hailey Tong](https://unsplash.com/@haileytong) via Unsplash*
+<BlogImage 
+  images={{
+    src: "https://images.unsplash.com/photo-1734329596076-4aa090053d5f?fm=jpg&q=90&w=1200&auto=compress&cs=tinysrgb&h=450",
+    alt: "A hot tub with a mountain view in the background",
+    photographer: "Hailey Tong",
+    photographerUrl: "https://unsplash.com/@haileytong",
+    source: "Unsplash"
+  }}
+/>
 
 Use the cost calculator below to estimate total weekend expenses for your group based on group size, trip length, and travel dates. Understanding costs helps groups make informed decisions about accommodations and activities for limited-time trips.
 

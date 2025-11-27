@@ -3,6 +3,7 @@ export { ArticleBookingWidget } from './ArticleBookingWidget';
 export { HotelGrid } from './HotelGrid';
 export { ActivityGrid } from './ActivityGrid';
 export { BlogMap } from './BlogMap';
+export { BlogImage } from './BlogImage';
 
 // Planning components
 export { TripCalculator } from '@/components/planning/TripCalculator';
