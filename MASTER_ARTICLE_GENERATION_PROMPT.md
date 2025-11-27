@@ -870,6 +870,150 @@ When writing reviews or mentions of specific hotels that are bookable through ou
 
 **Never compromise credibility by showing unrelated locations or properties.**
 
+---
+
+## Property Data & Listing Images from LiteAPI
+
+### Understanding the Property Data Structure
+
+**⚠️ CRITICAL: Our hotel CSV contains 769 listings, but only ~370 unique properties!**
+
+LiteAPI returns BOTH parent properties AND individual room units as separate listings. For example:
+
+| Type | ID | Name |
+|------|-----|------|
+| **Parent Property** | `lp36f78` | Bear Creek Lodge by Alpine Lodging Telluride |
+| Individual Unit | `lp656c95f0` | Bear Creek Lodge 105 2 Bedroom Condo |
+| Individual Unit | `lp65711dac` | Bear Creek Lodge 107 by Alpine Lodging Telluride |
+| **Parent Property** | `lp31af6` | Mountainside Inn |
+| Individual Unit | `lp656c8cd4` | Mountainside Inn 101 2 Bedroom Condo |
+
+**Breakdown of 769 Listings:**
+- **~15 Major Hotels/Resorts** (Madeline, Peaks, Lumiere, etc.)
+- **~10 Parent Lodges** (Bear Creek Lodge, Viking Lodge, etc.)
+- **~60 Unique Homes** by Exceptional Stays
+- **~285 Other Unique Properties** (condos, vacation rentals)
+- **~400 Individual Room Units** (Bear Creek 105, Mountainside Inn 203, etc.)
+
+**Key Properties with Multiple Room Listings:**
+- **Bear Creek Lodge** (~88 individual units) - Parent: `lp36f78`
+- **Mountainside Inn** (~128 individual units) - Parent: `lp31af6`  
+- **Aspen Ridge** (~27 individual units)
+- **River Club** (~12 individual units)
+- **Villas at Cortina** (~6 individual units)
+
+**Curated Parent Properties File:** `src/data/parent-properties.csv`
+
+**When to Use Parent vs Individual Unit IDs:**
+
+| Scenario | Use This |
+|----------|----------|
+| General article about a lodge | Parent property ID |
+| Comparing accommodation types | Parent property IDs |
+| Discussing specific room configurations (2BR vs 4BR) | Individual unit IDs |
+| HotelShowcase/HotelGrid widgets | Parent property ID (better images) |
+
+### How to Search for Properties
+
+**STEP 1: Search by Property Name**
+
+Use `grep` to find property IDs:
+
+```bash
+# Find a specific hotel
+grep -i "madeline" src/data/telluride-hotels.csv
+
+# Find parent properties (usually shorter names without unit numbers)
+grep -i "bear creek lodge by" src/data/telluride-hotels.csv
+
+# Find ski-in/ski-out properties
+grep -i "ski.in\|ski-in\|skiin\|slopeside" src/data/telluride-hotels.csv
+```
+
+**STEP 2: Identify Parent vs Individual Units**
+
+Parent properties typically have:
+- Shorter names without unit numbers
+- Names ending in "by [Management Company]"
+- Better/more comprehensive images
+
+Individual units typically have:
+- Unit numbers in name (105, 203, etc.)
+- Bedroom count in name (2 Bedroom, 4 Bedroom)
+- More specific pricing
+
+### Ski-In/Ski-Out Properties Reference
+
+**We have 65+ properties with explicit ski-in/ski-out access in their names.**
+
+The curated list is available at: `src/data/ski-in-ski-out-properties.csv`
+
+**Top Ski-In/Ski-Out Properties (Recommended for Content):**
+
+| ID | Name | Notes |
+|----|------|-------|
+| `lp656eafa2` | 2 BR Condominium - Luxury Skiin and out | Rare ski-in/ski-out condo |
+| `lp6575d72a` | 2BR Mountain Lodge Luxury Skiin out | Great amenities |
+| `lp65868c47` | Absolutely Amazing Slopeside Mountain Lodge | With spa |
+| `lp6570bd38` | Bear Lodge - Modern log home ski-in-out | Modern cabin |
+| `lp65767eda` | Beautiful Mountain Lodge Ski in Ski out | Mountain Village |
+| `lp65874300` | Blue Mesa 2 Unit Buyout - Ski In Ski Out | Central location |
+| `lp65583a57` | Cimarron Lodge 14 - Ski-in/ski-out | Hot tubs in complex |
+| `lp655838a3` | Etta Place 1 - Ski In/Out w/ Views | Valley views |
+| `lp33e099` | Slopeside Lodge | Classic slopeside |
+| `lp65577ff9` | Slopeside Villa by Exceptional Stays | Premium property |
+
+**How to Use in Content:**
+
+When writing about ski-in/ski-out properties:
+1. Search the CSV: `grep -i "ski.in\|slopeside" src/data/telluride-hotels.csv`
+2. Pick 2-3 properties with good names
+3. Use their IDs in `HotelGrid` or `HotelShowcase` components
+
+### Using Listing Images in Articles
+
+**Option 1: HotelShowcase Component (Preferred for Featured Properties)**
+
+```markdown
+<HotelShowcase 
+  hotelId="lp4b27f" 
+  showGallery={true} 
+/>
+```
+
+This fetches REAL images from LiteAPI dynamically.
+
+**Option 2: HotelGrid with Curated IDs**
+
+```markdown
+<HotelGrid 
+  hotelIds={["lp4b27f", "lp21ee2", "lp4153f"]}
+  title="Featured Luxury Ski-In/Ski-Out Properties"
+  client:load
+/>
+```
+
+**Option 3: Verify Images Before Using**
+
+Before adding a hotel ID to your article, verify it has images:
+1. Check via API: `/api/hotels/details?hotelId={id}`
+2. Look for `hotel.images` array with valid URLs
+3. If no images, use a different property ID
+
+**Properties Known to Have Good Images:**
+- `lp4b27f` - Madeline Hotel (excellent images)
+- `lp21ee2` - The Peaks Resort (resort images)
+- `lp4153f` - Lumiere (luxury images)
+- `lp2ff71` - The Hotel Telluride (boutique images)
+- `lp35ebc` - New Sheridan Hotel (historic images)
+
+**Properties That May Lack Images (Avoid):**
+- Individual condo units with long descriptive names
+- Properties managed by RedAwning (inconsistent)
+- Units with bedroom counts in name (e.g., "105 2 Bedroom Condo")
+
+---
+
 ### Media Library System
 
 **⚠️ CRITICAL: IMAGE EMBEDDING IS MANDATORY**
@@ -880,33 +1024,41 @@ Every article MUST include 5-8 embedded images throughout the body content. Imag
 
 **Available Image Categories:**
 
-Each CSV file contains 30 curated images with full metadata. Use these categories based on article content:
+We have TWO types of media libraries:
+1. **LiteAPI Hotel Images** (~31,000 real hotel photos) - Use for specific property content
+2. **Unsplash/Pexels Images** (~200 atmospheric photos) - Use for general content
 
-| Category File | Use For | Query |
-|---------------|---------|-------|
-| `luxury-ski-hotels.csv` | Luxury hotel articles, high-end accommodations | luxury ski hotel |
-| `ski-slopes.csv` | Skiing guides, terrain articles, slope conditions | ski resort slopes |
-| `hotel-rooms.csv` | Hotel reviews, accommodation details | mountain hotel room |
-| `ski-lifts.csv` | Lift access, resort infrastructure | ski lift chairlift |
-| `powder-skiing.csv` | Skiing action, conditions, expert terrain | skiing powder snow |
-| `mountain-villages.csv` | Town guides, location comparisons | mountain village town |
-| `hotel-spas.csv` | Spa amenities, luxury features | hotel spa luxury |
-| `restaurants.csv` | Dining guides, food articles | mountain restaurant dining |
-| `winter-landscapes.csv` | Scenic shots, weather articles, season guides | winter mountain landscape |
-| `snowboarding.csv` | Snowboarding content, winter sports | snowboarding action |
-| `hotel-pools.csv` | Hotel amenities, pool features | hotel pool mountain |
-| `apres-ski.csv` | Nightlife, bars, après-ski activities | apres ski bar |
-| `ski-equipment.csv` | Gear guides, equipment rentals | ski equipment gear |
-| `family-skiing.csv` | Family content, beginner guides | family skiing |
-| `gondolas.csv` | Gondola articles, transportation | gondola cable car |
-| `mountain-sunsets.csv` | Scenic content, timing articles | mountain sunset sunrise |
-| `hotel-lobbies.csv` | Hotel interiors, check-in experience | hotel lobby luxury |
-| `ski-lessons.csv` | Lesson guides, beginner content | ski lesson instructor |
-| `colorado-mountains.csv` | General Colorado content, location guides | colorado mountains |
-| `hot-tubs.csv` | Hotel amenities, relaxation features | hot tub outdoor |
-| `hotel-bedrooms.csv` | Room reviews, accommodation details | hotel bedroom cozy |
-| `ski-trails.csv` | Trail guides, terrain maps | ski trail map |
-| `mountain-peaks.csv` | Summit content, advanced terrain | mountain peak summit |
+### LiteAPI Hotel Images (Real Property Photos)
+
+| Category File | Count | Use For |
+|---------------|-------|---------|
+| `hotel-rooms.csv` | 17,543 | Room interiors, accommodation details |
+| `hotel-amenities.csv` | 10,261 | Gyms, kitchens, dining areas, general amenities |
+| `hotel-lobbies.csv` | 759 | Lobby shots, common areas, fireplaces |
+| `hotel-exteriors.csv` | 616 | Building exteriors, property entrances |
+| `hotel-views.csv` | 351 | Mountain views from hotel balconies/windows |
+| `hotel-spas.csv` | 2 | Spa facilities (limited - use Unsplash for more) |
+
+**⚠️ NOTE:** These are categorized by image caption keywords from actual Telluride hotel listings. Quality and relevance varies.
+
+### Unsplash/Pexels Images (Atmospheric Content)
+
+| Category File | Use For | Source |
+|---------------|---------|--------|
+| `colorado-mountains.csv` | General mountain landscapes, Telluride scenery | Unsplash |
+| `mountain-villages.csv` | Town views, historic buildings, Main Street | Unsplash |
+| `winter-landscapes.csv` | Snow scenes, weather articles, season guides | Unsplash |
+| `mountain-peaks.csv` | Summit content, dramatic peaks, San Juans | Unsplash |
+| `mountain-sunsets.csv` | Golden hour, scenic timing articles | Unsplash |
+| `gondolas.csv` | Free gondola, transportation guides | Unsplash |
+| `ski-lifts.csv` | Chairlifts, resort infrastructure | Unsplash |
+| `ski-slopes.csv` | Trail views, terrain articles | Unsplash |
+| `powder-skiing.csv` | Action shots, skiing content | Unsplash |
+| `snowboarding.csv` | Snowboarding action, winter sports | Unsplash |
+| `hot-tubs.csv` | Outdoor hot tubs, relaxation | Unsplash |
+| `nature-forests.csv` | Trails, forests, waterfalls, hiking | Unsplash |
+| `summer-activities.csv` | Biking, hiking, summer tourism | Unsplash |
+| `winter-roads.csv` | Mountain roads, drive guides | Unsplash |
 
 **CSV Format:**
 ```
@@ -947,22 +1099,22 @@ id,original_url,large_url,medium_url,small_url,width,height,photographer,photogr
 **Image Selection Example for "Best Hotels in Telluride" Article:**
 
 Before writing, read these CSV files:
-- `media-library/luxury-ski-hotels.csv`
-- `media-library/hotel-rooms.csv`
-- `media-library/ski-slopes.csv`
-- `media-library/hotel-spas.csv`
-- `media-library/hotel-pools.csv`
-- `media-library/mountain-villages.csv`
+- `media-library/hotel-exteriors.csv` (LiteAPI - real hotel exteriors)
+- `media-library/hotel-rooms.csv` (LiteAPI - actual room photos)
+- `media-library/hotel-lobbies.csv` (LiteAPI - lobby/common areas)
+- `media-library/mountain-villages.csv` (Unsplash - town views)
+- `media-library/winter-landscapes.csv` (Unsplash - scenic shots)
 
 Then embed:
-- **Hero Image:** From `luxury-ski-hotels.csv` (use `large_url` in frontmatter)
+- **Hero Image:** From `hotel-exteriors.csv` or `mountain-villages.csv`
 - **After Introduction:** From `mountain-villages.csv` (Telluride town context)
-- **Hotel Section 1:** From `luxury-ski-hotels.csv` (luxury property exterior)
+- **Hotel Section 1:** From `hotel-exteriors.csv` (property exterior)
 - **Hotel Section 3:** From `hotel-rooms.csv` (room interior)
-- **Hotel Section 5:** From `ski-slopes.csv` (slope access view)
-- **Hotel Section 8:** From `hotel-spas.csv` (spa amenities)
-- **Hotel Section 11:** From `hotel-pools.csv` (outdoor pool with mountains)
+- **Hotel Section 5:** From `winter-landscapes.csv` (mountain scenery)
+- **Hotel Section 8:** From `hotel-amenities.csv` (gym/pool/kitchen)
 - **Before Conclusion:** From `hotel-lobbies.csv` (welcoming interior)
+
+**⚠️ FOR SPECIFIC HOTELS:** Use `HotelShowcase` component instead of manual images!
 
 **❌ WRONG: Articles with NO images in body content**
 ```markdown

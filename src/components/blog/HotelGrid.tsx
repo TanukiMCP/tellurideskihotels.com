@@ -271,7 +271,25 @@ export function HotelGrid({
           candidateHotels = candidateHotels.filter((h) => (h.star_rating || 0) >= 4);
         } else if (filter === 'budget') {
           candidateHotels = candidateHotels.filter((h) => (h.star_rating || 0) <= 3);
-        } else if (filter === 'ski-in-ski-out' || filter === 'family-friendly') {
+        } else if (filter === 'ski-in-ski-out') {
+          // Actually check for ski-in/ski-out in property names
+          candidateHotels = candidateHotels.filter((h) => {
+            const name = (h.name || '').toLowerCase();
+            const address = (h.address?.full || h.address?.line1 || '').toLowerCase();
+            const searchText = `${name} ${address}`;
+            
+            // Check for ski-in/ski-out variations
+            return searchText.includes('ski in') || 
+                   searchText.includes('ski-in') ||
+                   searchText.includes('skiin') ||
+                   searchText.includes('slopeside') ||
+                   searchText.includes('slope-side') ||
+                   searchText.includes('ski out') ||
+                   searchText.includes('ski-out') ||
+                   searchText.includes('skiout') ||
+                   (searchText.includes('mountain village') && (h.star_rating || 0) >= 4);
+          });
+        } else if (filter === 'family-friendly') {
           candidateHotels = candidateHotels.filter((h) => (h.star_rating || 0) >= 4);
         }
         

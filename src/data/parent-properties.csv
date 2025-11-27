@@ -1,0 +1,37 @@
+id,name,type,notes
+# MAJOR HOTELS & RESORTS (Use these for hotel-focused content)
+lp4b27f,"Madeline Hotel & Residences, Auberge Collection",hotel,Luxury ski-in/ski-out - excellent images
+lp21ee2,The Peaks Resort and Spa,resort,Family-friendly resort - great images
+lp4153f,Lumiere by Dunton,hotel,Luxury boutique - excellent images
+lp2ff71,The Hotel Telluride,hotel,Downtown boutique hotel
+lp35ebc,New Sheridan Hotel,hotel,Historic downtown hotel
+lp7924d,Hotel Columbia,hotel,Downtown hotel
+lp2be73,Camel's Garden Hotel,hotel,Budget-friendly downtown
+lp3489e,The Victorian Inn,inn,Historic inn
+lp6dfb6,"Element 52, Auberge Collection",hotel,Luxury residence
+lp3d0c1,"Fairmont Heritage Place, Franz Klammer Lodge",resort,Luxury ski resort
+lp66f37,Ice House Suites and Condominiums,hotel,Suites and condos
+lp38483,The Bivvi Hostel Telluride,hostel,Budget hostel option
+
+# PARENT LODGES (Use for lodge/condo complex content)
+lp36f78,Bear Creek Lodge by Alpine Lodging Telluride,lodge,Parent for 88+ individual units
+lp31af6,Mountainside Inn,inn,Parent for 128+ individual units
+lp4eacc,Blue Mesa Lodge by Telluride Alpine Lodging,lodge,Ski-in/ski-out lodge parent
+lp39fd1,Viking Lodge by Telluride Alpine Lodging,lodge,Riverside lodge parent
+lp35079,Telluride Lodge by Telluride Alpine Lodging,lodge,Downtown lodge parent
+lp35351,Mountain Lodge Telluride,lodge,Mountain Village lodge
+lp31628,Inn at Lost Creek,inn,Mountain Village inn
+lp6ca30,Telluride Alpine Lodge Portfolio,lodge,Portfolio listing
+
+# SKI-IN/SKI-OUT PROPERTIES (From src/data/ski-in-ski-out-properties.csv)
+lp656eafa2,2 BR Condominium - Luxury Skiin and out (rare to find),condo,Verified ski-in/ski-out
+lp6575d72a,2BR Mountain Lodge Luxury Skiin out Best Amenities,condo,Best amenities
+lp65868c47,Absolutely Amazing Slopeside Mountain Lodge With spa,lodge,Slopeside with spa
+lp6570bd38,Bear Lodge - Modern log home at easy ski-in-out location,home,Modern ski-in/out
+lp65767eda,Beautiful Mountain Lodge Ski in Ski out,lodge,Mountain Village
+lp33e099,Slopeside Lodge,lodge,Classic slopeside
+lp65577ff9,Slopeside Villa by Exceptional Stays,villa,Premium slopeside
+
+# UNIQUE VACATION HOMES (By Exceptional Stays - 60 properties)
+# Use grep "by Exceptional Stays" src/data/telluride-hotels.csv to find all
+

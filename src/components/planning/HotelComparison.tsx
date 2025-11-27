@@ -138,13 +138,21 @@ export function HotelComparison({
         } else if (filter === 'budget') {
           hotelsData = hotelsData.filter(h => (h.star_rating || 0) <= 3);
         } else if (filter === 'ski-in-ski-out') {
+          // Check for ski-in/ski-out variations in property names
           hotelsData = hotelsData.filter(h => {
             const name = (h.name || '').toLowerCase();
-            const address = (h.address?.full || '').toLowerCase();
-            return name.includes('mountain village') || 
-                   address.includes('mountain village') ||
-                   name.includes('slopeside') ||
-                   address.includes('slopeside');
+            const address = (h.address?.full || h.address?.line1 || '').toLowerCase();
+            const searchText = `${name} ${address}`;
+            
+            return searchText.includes('ski in') || 
+                   searchText.includes('ski-in') ||
+                   searchText.includes('skiin') ||
+                   searchText.includes('slopeside') ||
+                   searchText.includes('slope-side') ||
+                   searchText.includes('ski out') ||
+                   searchText.includes('ski-out') ||
+                   searchText.includes('skiout') ||
+                   (searchText.includes('mountain village') && (h.star_rating || 0) >= 4);
           });
         }
       }
