@@ -18,8 +18,8 @@ seo:
     - "telluride celebration"
   canonical: "https://tellurideskihotels.com/blog/planning-tips/telluride-bachelor-bachelorette-party"
 featured: false
-featuredImage: "https://images.unsplash.com/photo-1734329596076-4aa090053d5f?fm=jpg&q=90&w=1920"
-featuredImageAlt: "A hot tub with a mountain view in the background"
+featuredImage: "https://images.pexels.com/photos/1973293/pexels-photo-1973293.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
+featuredImageAlt: "Snowboarder performing a high jump in a picturesque snow-covered mountain landscape during the day."
 excerpt: "Complete planning guide for Telluride bachelor and bachelorette parties: event timeline, group lodging strategies, activity recommendations, cost breakdowns, and expert tips for memorable..."
 wordCount: 2900
 readingTime: 15

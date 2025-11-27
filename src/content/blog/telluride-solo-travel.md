@@ -18,8 +18,8 @@ seo:
     - "independent travel telluride"
   canonical: "https://tellurideskihotels.com/blog/planning-tips/telluride-solo-travel"
 featured: false
-featuredImage: "https://images.unsplash.com/photo-1596473535762-ce7f43470748?fm=jpg&q=90&w=1920"
-featuredImageAlt: "Person in orange jacket riding ski blades on snow covered mountain"
+featuredImage: "https://images.pexels.com/photos/34523877/pexels-photo-34523877.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
+featuredImageAlt: "telluride mountain village"
 excerpt: "Complete planning guide for solo travel in Telluride: solo-friendly accommodations, independent activities, cost optimization strategies, safety tips, and recommendations for solo skiers."
 wordCount: 2400
 readingTime: 12

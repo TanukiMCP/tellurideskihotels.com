@@ -18,8 +18,8 @@ seo:
     - "telluride group accommodations"
   canonical: "https://tellurideskihotels.com/blog/planning-tips/telluride-multi-family-ski-trip"
 featured: false
-featuredImage: "https://images.unsplash.com/photo-1678879150716-6a3ad4bb335a?fm=jpg&q=90&w=1920"
-featuredImageAlt: "A group of people riding skis down a snow covered slope"
+featuredImage: "https://images.pexels.com/photos/861567/pexels-photo-861567.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
+featuredImageAlt: "Scenic view of a ski lift in the snowy mountains of Zuberec, Slovakia under a bright winter sun."
 excerpt: "Complete planning guide for Telluride multi-family ski trips: large group logistics, cost coordination strategies, accommodation options for multiple families, and expert tips for successful..."
 wordCount: 3000
 readingTime: 15

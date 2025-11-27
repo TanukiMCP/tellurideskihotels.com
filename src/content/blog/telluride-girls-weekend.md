@@ -17,8 +17,8 @@ seo:
     - "women's trip telluride"
   canonical: "https://tellurideskihotels.com/blog/planning-tips/telluride-girls-weekend"
 featured: false
-featuredImage: "https://images.unsplash.com/photo-1734329596076-4aa090053d5f?fm=jpg&q=90&w=1920"
-featuredImageAlt: "A hot tub with a mountain view in the background"
+featuredImage: "https://images.pexels.com/photos/284949/pexels-photo-284949.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
+featuredImageAlt: "Skiers on a chairlift with snowy trees below on a sunny winter day."
 excerpt: "Complete planning guide for Telluride girls weekends: weekend itineraries, group lodging strategies, activity recommendations, cost breakdowns, and expert tips for girlfriend getaways."
 wordCount: 2700
 readingTime: 14

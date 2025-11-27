@@ -18,8 +18,8 @@ seo:
     - "telluride for couples"
   canonical: "https://tellurideskihotels.com/blog/planning-tips/telluride-couples-retreat"
 featured: false
-featuredImage: "https://images.unsplash.com/photo-1636488321018-ODvgdXxGhzQ?fm=jpg&q=90&w=1920"
-featuredImageAlt: "Trico Peak appears amongst the mountains of Telluride, above a lightly trafficked road in Telluride in August"
+featuredImage: "https://images.pexels.com/photos/2373201/pexels-photo-2373201.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
+featuredImageAlt: "Experience luxury relaxation at a poolside resort in Cabo San Lucas, Mexico."
 excerpt: "Complete planning guide for romantic Telluride couples retreats: budget planning, romantic activities, best times to visit, accommodation recommendations, and expert tips for couples."
 wordCount: 2600
 readingTime: 13
