@@ -1041,31 +1041,27 @@ We have TWO types of media libraries:
 
 **⚠️ NOTE:** These are categorized by image caption keywords from actual Telluride hotel listings. Quality and relevance varies.
 
-### Unsplash/Pexels Images (Atmospheric Content)
+### Generic Stock Images (Non-Location-Specific)
 
-**⚠️ CRITICAL: Only 2 files contain Telluride-specific images. All others are generic.**
+**⚠️ CRITICAL: These are GENERIC images of PEOPLE and ACTIVITIES - NOT locations.**
 
-| Category File | Query Used | Use For | Notes |
-|---------------|-----------|---------|-------|
-| `colorado-mountains.csv` | **"telluride"** | Telluride-specific mountain scenery | ✅ Telluride-specific |
-| `mountain-villages.csv` | **"telluride"** | Telluride town views, historic buildings | ✅ Telluride-specific |
-| `winter-landscapes.csv` | "winter mountain landscape" | Generic snow scenes, weather articles | Generic - not location-specific |
-| `mountain-peaks.csv` | "mountain peaks" | Generic summit content, dramatic peaks | Generic - not location-specific |
-| `mountain-sunsets.csv` | "mountain sunset" | Generic golden hour, scenic timing | Generic - not location-specific |
-| `gondolas.csv` | "gondola cable car" | Generic gondola/cable car images | Generic - not Telluride gondola |
-| `ski-lifts.csv` | "ski lift chairlift" | Generic chairlift images | Generic - not Telluride-specific |
-| `ski-slopes.csv` | "ski slopes" | Generic trail views, terrain | Generic - not Telluride terrain |
-| `powder-skiing.csv` | "powder skiing" | Generic skiing action shots | Generic - not Telluride skiing |
-| `snowboarding.csv` | "snowboarding" | Generic snowboarding action | Generic - not location-specific |
-| `hot-tubs.csv` | "hot tub mountain" | Generic outdoor hot tubs | Generic - not Telluride properties |
-| `nature-forests.csv` | "mountain forest trail" | Generic trails, forests, hiking | Generic - not Telluride trails |
-| `summer-activities.csv` | "summer activities mountain" | Generic biking, hiking | Generic - not Telluride-specific |
-| `winter-roads.csv` | "mountain road winter" | Generic mountain roads | Generic - not Telluride roads |
+| Category File | Use For | Content Type |
+|---------------|---------|--------------|
+| `powder-skiing.csv` | Skiing action shots | People skiing - no identifiable location |
+| `snowboarding.csv` | Snowboarding content | People snowboarding - no identifiable location |
+| `hot-tubs.csv` | Relaxation/amenities | People in hot tubs - no identifiable property |
 
-**Why This Matters:**
-- Use `colorado-mountains.csv` and `mountain-villages.csv` when you need **actual Telluride scenery**
-- Use all other categories for **atmospheric/generic** images that represent ski resort concepts without claiming to be Telluride
-- This prevents misleading readers with images from other locations
+**What These Files Contain:**
+- Action shots of people doing activities
+- Close-up or medium shots where location is not identifiable
+- Generic stock imagery that could be "any ski resort"
+
+**What These Files Do NOT Contain:**
+- Identifiable landmarks, buildings, or scenery
+- Images that could be mistaken as Telluride/Mountain Village
+- Location-specific imagery of any kind
+
+**⚠️ NEVER use these images with captions claiming they are Telluride, Mountain Village, or any specific location.**
 
 **CSV Format:**
 ```
@@ -1105,23 +1101,24 @@ id,original_url,large_url,medium_url,small_url,width,height,photographer,photogr
 
 **Image Selection Example for "Best Hotels in Telluride" Article:**
 
-Before writing, read these CSV files:
-- `media-library/hotel-exteriors.csv` (LiteAPI - real hotel exteriors)
-- `media-library/hotel-rooms.csv` (LiteAPI - actual room photos)
-- `media-library/hotel-lobbies.csv` (LiteAPI - lobby/common areas)
-- `media-library/mountain-villages.csv` (Unsplash - town views)
-- `media-library/winter-landscapes.csv` (Unsplash - scenic shots)
+**⚠️ PREFERRED METHOD: Use `HotelShowcase` or `HotelGrid` components to display REAL hotel images from LiteAPI.**
 
-Then embed:
-- **Hero Image:** From `hotel-exteriors.csv` or `mountain-villages.csv`
-- **After Introduction:** From `mountain-villages.csv` (Telluride town context)
-- **Hotel Section 1:** From `hotel-exteriors.csv` (property exterior)
-- **Hotel Section 3:** From `hotel-rooms.csv` (room interior)
-- **Hotel Section 5:** From `winter-landscapes.csv` (mountain scenery)
-- **Hotel Section 8:** From `hotel-amenities.csv` (gym/pool/kitchen)
-- **Before Conclusion:** From `hotel-lobbies.csv` (welcoming interior)
+For atmospheric/action shots only (not location-specific):
+- `media-library/powder-skiing.csv` - People skiing (action shots)
+- `media-library/snowboarding.csv` - People snowboarding (action shots)  
+- `media-library/hot-tubs.csv` - People in hot tubs (relaxation imagery)
 
-**⚠️ FOR SPECIFIC HOTELS:** Use `HotelShowcase` component instead of manual images!
+For ACTUAL property photos (LiteAPI verified):
+- `media-library/hotel-exteriors.csv` - Real hotel building photos
+- `media-library/hotel-rooms.csv` - Real room interiors
+- `media-library/hotel-lobbies.csv` - Real lobby/common areas
+- `media-library/hotel-amenities.csv` - Real amenity photos
+- `media-library/hotel-views.csv` - Real views from properties
+
+**Best Practice:**
+1. Use `<HotelShowcase hotelId="..." />` for specific hotels (fetches real images)
+2. Use LiteAPI CSVs for verified property photos
+3. Use generic action CSVs ONLY for people/activity shots with NO location claims
 
 **❌ WRONG: Articles with NO images in body content**
 ```markdown
