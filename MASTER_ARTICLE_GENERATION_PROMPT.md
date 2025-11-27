@@ -1043,22 +1043,29 @@ We have TWO types of media libraries:
 
 ### Unsplash/Pexels Images (Atmospheric Content)
 
-| Category File | Use For | Source |
-|---------------|---------|--------|
-| `colorado-mountains.csv` | General mountain landscapes, Telluride scenery | Unsplash |
-| `mountain-villages.csv` | Town views, historic buildings, Main Street | Unsplash |
-| `winter-landscapes.csv` | Snow scenes, weather articles, season guides | Unsplash |
-| `mountain-peaks.csv` | Summit content, dramatic peaks, San Juans | Unsplash |
-| `mountain-sunsets.csv` | Golden hour, scenic timing articles | Unsplash |
-| `gondolas.csv` | Free gondola, transportation guides | Unsplash |
-| `ski-lifts.csv` | Chairlifts, resort infrastructure | Unsplash |
-| `ski-slopes.csv` | Trail views, terrain articles | Unsplash |
-| `powder-skiing.csv` | Action shots, skiing content | Unsplash |
-| `snowboarding.csv` | Snowboarding action, winter sports | Unsplash |
-| `hot-tubs.csv` | Outdoor hot tubs, relaxation | Unsplash |
-| `nature-forests.csv` | Trails, forests, waterfalls, hiking | Unsplash |
-| `summer-activities.csv` | Biking, hiking, summer tourism | Unsplash |
-| `winter-roads.csv` | Mountain roads, drive guides | Unsplash |
+**⚠️ CRITICAL: Only 2 files contain Telluride-specific images. All others are generic.**
+
+| Category File | Query Used | Use For | Notes |
+|---------------|-----------|---------|-------|
+| `colorado-mountains.csv` | **"telluride"** | Telluride-specific mountain scenery | ✅ Telluride-specific |
+| `mountain-villages.csv` | **"telluride"** | Telluride town views, historic buildings | ✅ Telluride-specific |
+| `winter-landscapes.csv` | "winter mountain landscape" | Generic snow scenes, weather articles | Generic - not location-specific |
+| `mountain-peaks.csv` | "mountain peaks" | Generic summit content, dramatic peaks | Generic - not location-specific |
+| `mountain-sunsets.csv` | "mountain sunset" | Generic golden hour, scenic timing | Generic - not location-specific |
+| `gondolas.csv` | "gondola cable car" | Generic gondola/cable car images | Generic - not Telluride gondola |
+| `ski-lifts.csv` | "ski lift chairlift" | Generic chairlift images | Generic - not Telluride-specific |
+| `ski-slopes.csv` | "ski slopes" | Generic trail views, terrain | Generic - not Telluride terrain |
+| `powder-skiing.csv` | "powder skiing" | Generic skiing action shots | Generic - not Telluride skiing |
+| `snowboarding.csv` | "snowboarding" | Generic snowboarding action | Generic - not location-specific |
+| `hot-tubs.csv` | "hot tub mountain" | Generic outdoor hot tubs | Generic - not Telluride properties |
+| `nature-forests.csv` | "mountain forest trail" | Generic trails, forests, hiking | Generic - not Telluride trails |
+| `summer-activities.csv` | "summer activities mountain" | Generic biking, hiking | Generic - not Telluride-specific |
+| `winter-roads.csv` | "mountain road winter" | Generic mountain roads | Generic - not Telluride roads |
+
+**Why This Matters:**
+- Use `colorado-mountains.csv` and `mountain-villages.csv` when you need **actual Telluride scenery**
+- Use all other categories for **atmospheric/generic** images that represent ski resort concepts without claiming to be Telluride
+- This prevents misleading readers with images from other locations
 
 **CSV Format:**
 ```
