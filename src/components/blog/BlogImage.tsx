@@ -131,6 +131,7 @@ function ImageWithLoading({
         onError={handleError}
         loading={priority ? 'eager' : 'lazy'}
         decoding="async"
+        crossOrigin="anonymous"
       />
     </div>
   );
@@ -447,6 +448,7 @@ function GalleryView({
                     index === currentIndex ? 'opacity-100' : 'opacity-70 hover:opacity-100'
                   }`}
                   loading="lazy"
+                  crossOrigin="anonymous"
                 />
                 {index === currentIndex && (
                   <div className="absolute inset-0 bg-primary-600/20 pointer-events-none" />
@@ -539,6 +541,7 @@ function Lightbox({
           src={currentImage.src}
           alt={currentImage.alt}
           className="max-w-full max-h-[75vh] object-contain rounded-lg"
+          crossOrigin="anonymous"
         />
 
         {/* Caption in lightbox */}
@@ -628,6 +631,7 @@ function Lightbox({
                   alt={`Thumbnail ${index + 1}`}
                   className="w-14 h-14 object-cover"
                   loading="lazy"
+                  crossOrigin="anonymous"
                 />
               </button>
             ))}

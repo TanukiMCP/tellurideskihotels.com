@@ -695,7 +695,6 @@ export function BlogMap({
                     'line-join': 'round',
                     'line-cap': 'round',
                   }}
-                  beforeId="trails-layer"
                 />
               )}
               <Layer
