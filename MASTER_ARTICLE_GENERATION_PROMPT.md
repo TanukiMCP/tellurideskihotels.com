@@ -1041,6 +1041,23 @@ We have TWO types of media libraries:
 
 **⚠️ NOTE:** These are categorized by image caption keywords from actual Telluride hotel listings. Quality and relevance varies.
 
+### Telluride-Specific Images (Verified from Unsplash Search)
+
+**✅ VERIFIED TELLURIDE IMAGES - Safe to use with Telluride captions**
+
+| Category File | Count | Use For | Source |
+|---------------|-------|---------|--------|
+| `telluride-images.csv` | 73 | Verified Telluride scenery, town views, landmarks | Unsplash "telluride" search |
+
+**What This File Contains:**
+- Images from Unsplash search query "telluride"
+- Verified Telluride locations (e.g., "Trico Peak appears amongst the mountains of Telluride")
+- Telluride gondola images ("The gondola above Telluride connects the town with Mountain Village")
+- Actual Telluride town and mountain scenery
+- All premium images filtered out (only free images)
+
+**⚠️ These are the ONLY images safe to use with Telluride-specific captions.**
+
 ### Generic Stock Images (Non-Location-Specific)
 
 **⚠️ CRITICAL: These are GENERIC images of PEOPLE and ACTIVITIES - NOT locations.**
