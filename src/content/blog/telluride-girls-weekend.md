@@ -17,7 +17,7 @@ seo:
     - "women's trip telluride"
   canonical: "https://tellurideskihotels.com/blog/planning-tips/telluride-girls-weekend"
 featured: false
-featuredImage: "https://images.unsplash.com/photo-1734329596076-4aa090053d5f?fm=jpg&q=80&w=1920"
+featuredImage: "https://images.unsplash.com/photo-1734329596076-4aa090053d5f?fm=jpg&q=90&w=1920"
 featuredImageAlt: "A hot tub with a mountain view in the background"
 excerpt: "Complete planning guide for Telluride girls weekends: weekend itineraries, group lodging strategies, activity recommendations, cost breakdowns, and expert tips for girlfriend getaways."
 wordCount: 2700
@@ -56,7 +56,7 @@ This comprehensive guide provides everything you need to plan your Telluride gir
 
 Whether you're planning a quick weekend escape or a longer girlfriend getaway, understanding Telluride's girls weekend offerings and planning strategically transforms a potentially rushed experience into an exceptional one.
 
-![A hot tub with a mountain view in the background](https://images.unsplash.com/photo-1734329596076-4aa090053d5f?fm=jpg&q=80&w=1200)
+![A hot tub with a mountain view in the background](https://images.unsplash.com/photo-1734329596076-4aa090053d5f?fm=jpg&q=90&w=1200)
 *Photo by [Hailey Tong](https://unsplash.com/@haileytong) via Unsplash*
 
 Use the cost calculator below to estimate total weekend expenses for your group based on group size, trip length, and travel dates. Understanding costs helps groups make informed decisions about accommodations and activities for limited-time trips.
