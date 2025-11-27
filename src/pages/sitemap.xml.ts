@@ -4,7 +4,7 @@ import { getCollection } from 'astro:content';
 export const prerender = true;
 
 export const GET: APIRoute = async ({ site }) => {
-  const baseUrl = site?.toString().replace(/\/$/, '') || 'https://tellurideskihotels.com';
+  const baseUrl = site?.toString().replace(/\/$/, '') || 'https://tellurideinsider.com';
   
   // Get all blog articles
   const blogArticles = await getCollection('blog', ({ data }) => {

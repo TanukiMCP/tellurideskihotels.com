@@ -75,14 +75,14 @@ function createArticleTemplate(data) {
     slug: data.slug,
     status: data.status || 'scheduled',
     category: data.category,
-    author: 'Telluride Ski Hotels Team',
+    author: 'Telluride Insider Team',
     publishDate: data.publishDate,
     updatedDate: data.updatedDate || data.publishDate,
     seo: {
       metaTitle: data.metaTitle,
       metaDescription: data.metaDescription,
       keywords: data.keywords,
-      canonical: `https://tellurideskihotels.com/blog/${data.category}/${data.slug}`,
+      canonical: `https://tellurideinsider.com/blog/${data.category}/${data.slug}`,
     },
     featured: data.featured || false,
     featuredImage: data.featuredImage || '/images/uploads/placeholder.jpg',
@@ -149,7 +149,7 @@ ${body}`;
  */
 async function createArticleInteractive() {
   log('\n' + '='.repeat(60), 'bright');
-  log('📝 Telluride Ski Hotels - Article Generator', 'bright');
+  log('📝 Telluride Insider - Article Generator', 'bright');
   log('='.repeat(60) + '\n', 'bright');
 
   try {

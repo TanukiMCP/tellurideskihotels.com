@@ -11,8 +11,8 @@ const heroImage = resortImages[0];
 ---
 
 <PageLayout
-  title="Contact Us - Telluride Ski Hotels"
-  description="Get in touch with Telluride Ski Hotels. We're here to help with booking questions, travel planning, and Telluride recommendations."
+  title="Contact Us - Telluride Insider"
+  description="Get in touch with Telluride Insider. We're here to help with booking questions, travel planning, and Telluride recommendations."
 >
   <!-- Hero Section with Background Image -->
   <div class="relative py-32 lg:py-40 overflow-hidden">
@@ -171,10 +171,10 @@ const heroImage = resortImages[0];
             <div>
               <h3 class="font-bold text-lg text-neutral-900 mb-1">Email Us</h3>
               <a 
-                href="mailto:tellurideskihotels@gmail.com" 
+                href="mailto:tellurideinsider@gmail.com" 
                 class="text-primary-600 hover:text-primary-700 font-medium transition-colors"
               >
-                tellurideskihotels@gmail.com
+                tellurideinsider@gmail.com
               </a>
               <p class="text-sm text-neutral-600 mt-1">We'll respond within 24 hours</p>
             </div>
@@ -272,11 +272,11 @@ const heroImage = resortImages[0];
           `Message:\n${data.message}`
         );
         
-        window.location.href = `mailto:tellurideskihotels@gmail.com?subject=${subject}&body=${body}`;
+        window.location.href = `mailto:tellurideinsider@gmail.com?subject=${subject}&body=${body}`;
         
         // Show success message
         messageDiv.className = 'p-4 rounded-xl text-sm bg-green-50 border-2 border-green-200 text-green-800';
-        messageDiv.textContent = 'Your email client should open. If not, please email us directly at tellurideskihotels@gmail.com';
+        messageDiv.textContent = 'Your email client should open. If not, please email us directly at tellurideinsider@gmail.com';
         messageDiv.classList.remove('hidden');
         
         // Reset form after a moment
@@ -287,7 +287,7 @@ const heroImage = resortImages[0];
         }, 3000);
       } catch (error) {
         messageDiv.className = 'p-4 rounded-xl text-sm bg-red-50 border-2 border-red-200 text-red-800';
-        messageDiv.textContent = 'There was an error. Please email us directly at tellurideskihotels@gmail.com';
+        messageDiv.textContent = 'There was an error. Please email us directly at tellurideinsider@gmail.com';
         messageDiv.classList.remove('hidden');
         submitBtn.disabled = false;
         submitBtn.innerHTML = '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg> Send Message';

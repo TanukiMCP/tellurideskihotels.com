@@ -7,7 +7,7 @@ export const GET: APIRoute = async () => {
   const clientSecret = import.meta.env.GOOGLE_CLIENT_SECRET || '';
   const hasClientId = !!clientId;
   const hasClientSecret = !!clientSecret;
-  const siteUrl = import.meta.env.PUBLIC_SITE_URL || 'https://tellurideskihotels.com';
+  const siteUrl = import.meta.env.PUBLIC_SITE_URL || 'https://tellurideinsider.com';
   
   return new Response(
     JSON.stringify({

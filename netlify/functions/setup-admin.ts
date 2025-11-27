@@ -3,7 +3,7 @@ import { getStore } from '@netlify/blobs';
 import { randomBytes, scryptSync } from 'crypto';
 
 // Admin credentials
-const ADMIN_EMAIL = 'admin@tellurideskihotels.com';
+const ADMIN_EMAIL = 'admin@tellurideinsider.com';
 const ADMIN_PASSWORD = 'Voy79262!@#';
 const ADMIN_NAME = 'Administrator';
 
@@ -69,7 +69,7 @@ export const handler: Handler = async (event: HandlerEvent, context: HandlerCont
         message: 'Admin user created successfully',
         email: ADMIN_EMAIL,
         userId: user.id,
-        loginUrl: 'https://tellurideskihotels.com/admin/login',
+        loginUrl: 'https://tellurideinsider.com/admin/login',
       }),
     };
   } catch (error: any) {

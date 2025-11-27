@@ -8,8 +8,8 @@ interface Props {
 const { href, class: className, ...rest } = Astro.props;
 
 // Get site domain from Astro config
-// Astro.site returns full URL like 'https://tellurideskihotels.com'
-let siteHostname = 'tellurideskihotels.com';
+// Astro.site returns full URL like 'https://tellurideinsider.com'
+let siteHostname = 'tellurideinsider.com';
 if (Astro.site) {
   try {
     const siteUrl = new URL(Astro.site);

@@ -4,7 +4,7 @@ title: "Telluride Solo Travel: Complete Independent Traveler's Guide (2025)"
 slug: "telluride-solo-travel"
 status: "published"
 category: "planning-tips"
-author: "Telluride Ski Hotels Team"
+author: "Telluride Insider Team"
 publishDate: 2025-11-25
 updatedDate: 2025-11-25
 seo:
@@ -16,7 +16,7 @@ seo:
     - "solo travel colorado"
     - "telluride solo trip"
     - "independent travel telluride"
-  canonical: "https://tellurideskihotels.com/blog/planning-tips/telluride-solo-travel"
+  canonical: "https://tellurideinsider.com/blog/planning-tips/telluride-solo-travel"
 featured: false
 featuredImage: "https://images.pexels.com/photos/34523877/pexels-photo-34523877.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
 featuredImageAlt: "telluride mountain village"

@@ -282,7 +282,7 @@ export function LookupForm() {
             <span>
               Can't find your booking?{' '}
               <a
-                href="mailto:tellurideskihotels@gmail.com"
+                href="mailto:tellurideinsider@gmail.com"
                 className="text-[#2D5F4F] hover:text-[#255040] font-medium underline transition-colors focus:outline-none focus:ring-2 focus:ring-[#2D5F4F] rounded"
               >
                 Contact support

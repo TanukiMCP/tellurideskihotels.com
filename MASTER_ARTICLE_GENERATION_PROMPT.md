@@ -1,4 +1,4 @@
-# Master Article Generation Prompt - Telluride Ski Hotels
+# Master Article Generation Prompt - Telluride Insider
 
 ## Purpose
 
@@ -3157,13 +3157,13 @@ title: "Article Title (50-60 chars)"
 slug: "article-slug"
 status: "scheduled"
 category: "destination-guides"
-author: "Telluride Ski Hotels Team"
+author: "Telluride Insider Team"
 publishDate: "2025-11-15T14:00:00Z"
 seo:
   metaTitle: "Meta Title (50-60 chars)"
   metaDescription: "Meta description MUST be 150 characters or less. Include primary keyword and CTA."
   keywords: ["primary keyword", "secondary keyword 1", "secondary keyword 2"]
-  canonical: "https://tellurideskihotels.com/blog/category/article-slug"
+  canonical: "https://tellurideinsider.com/blog/category/article-slug"
 featured: false
 featuredImage: "/images/uploads/article-hero.jpg"
 featuredImageAlt: "Descriptive alt text with primary keyword"

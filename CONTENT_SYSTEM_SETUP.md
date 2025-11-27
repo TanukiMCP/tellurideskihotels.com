@@ -63,13 +63,13 @@ Follow the prompts to create an article template.
   "slug": "your-slug",
   "status": "scheduled",
   "category": "destination-guides",
-  "author": "Telluride Ski Hotels Team",
+  "author": "Telluride Insider Team",
   "publishDate": "2025-11-15T14:00:00Z",
   "seo": {
     "metaTitle": "Meta Title (50-60 chars)",
     "metaDescription": "Meta description 150-160 characters",
     "keywords": ["primary keyword", "secondary keyword"],
-    "canonical": "https://tellurideskihotels.com/blog/category/slug"
+    "canonical": "https://tellurideinsider.com/blog/category/slug"
   },
   "featured": false,
   "featuredImage": "/images/uploads/article.jpg",
@@ -415,5 +415,5 @@ For questions or issues:
 
 ---
 
-**You're all set! Start creating amazing content for Telluride Ski Hotels.**
+**You're all set! Start creating amazing content for Telluride Insider.**
 

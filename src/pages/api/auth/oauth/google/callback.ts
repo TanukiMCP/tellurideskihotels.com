@@ -5,7 +5,7 @@ export const prerender = false;
 
 const GOOGLE_CLIENT_ID = import.meta.env.GOOGLE_CLIENT_ID || '';
 const GOOGLE_CLIENT_SECRET = import.meta.env.GOOGLE_CLIENT_SECRET || '';
-const SITE_URL = import.meta.env.PUBLIC_SITE_URL || 'https://tellurideskihotels.com';
+const SITE_URL = import.meta.env.PUBLIC_SITE_URL || 'https://tellurideinsider.com';
 
 interface GoogleTokenResponse {
   access_token: string;

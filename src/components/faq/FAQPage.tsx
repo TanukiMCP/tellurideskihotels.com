@@ -53,7 +53,7 @@ const faqCategories: FAQCategory[] = [
       {
         id: 'group-discounts',
         question: 'Do you offer group booking discounts?',
-        answer: 'Yes! For group bookings of 5+ rooms or extended stays, we offer special rates. Please contact us directly at tellurideskihotels@gmail.com or call (970) XXX-XXXX to discuss group pricing and availability.',
+        answer: 'Yes! For group bookings of 5+ rooms or extended stays, we offer special rates. Please contact us directly at tellurideinsider@gmail.com or call (970) XXX-XXXX to discuss group pricing and availability.',
       },
     ],
   },
@@ -107,7 +107,7 @@ const faqCategories: FAQCategory[] = [
       {
         id: 'how-to-cancel',
         question: 'How do I cancel or modify my reservation?',
-        answer: 'You can cancel or modify your booking by looking it up on our "Find Your Booking" page using your booking ID and email. You can also contact us directly at tellurideskihotels@gmail.com or call (970) XXX-XXXX.',
+        answer: 'You can cancel or modify your booking by looking it up on our "Find Your Booking" page using your booking ID and email. You can also contact us directly at tellurideinsider@gmail.com or call (970) XXX-XXXX.',
       },
       {
         id: 'cancellation-fee',
@@ -476,10 +476,10 @@ export default function FAQPage() {
           <div className="bg-white rounded-lg p-6">
             <Mail className="w-8 h-8 text-[#2D5F4F] mx-auto mb-3" />
             <h4 className="font-semibold text-[#2C2C2C] mb-1">Email Us</h4>
-            <p className="text-sm text-[#666] mb-2">tellurideskihotels@gmail.com</p>
+            <p className="text-sm text-[#666] mb-2">tellurideinsider@gmail.com</p>
             <p className="text-xs text-neutral-500 mb-4">We typically respond within 24 hours</p>
             <a
-              href="mailto:tellurideskihotels@gmail.com"
+              href="mailto:tellurideinsider@gmail.com"
               className="inline-block bg-[#2D5F4F] text-white px-6 py-2 rounded-lg text-sm font-medium hover:bg-[#255040] transition-colors"
             >
               Send Email

@@ -4,7 +4,7 @@ title: "Telluride Multi-Family Ski Trip: Large Group Planning Guide (2025)"
 slug: "telluride-multi-family-ski-trip"
 status: "published"
 category: "planning-tips"
-author: "Telluride Ski Hotels Team"
+author: "Telluride Insider Team"
 publishDate: 2025-11-24
 updatedDate: 2025-11-24
 seo:
@@ -16,7 +16,7 @@ seo:
     - "telluride multi-family trip"
     - "telluride large group"
     - "telluride group accommodations"
-  canonical: "https://tellurideskihotels.com/blog/planning-tips/telluride-multi-family-ski-trip"
+  canonical: "https://tellurideinsider.com/blog/planning-tips/telluride-multi-family-ski-trip"
 featured: false
 featuredImage: "https://images.pexels.com/photos/861567/pexels-photo-861567.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
 featuredImageAlt: "Scenic view of a ski lift in the snowy mountains of Zuberec, Slovakia under a bright winter sun."

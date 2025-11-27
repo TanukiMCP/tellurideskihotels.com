@@ -1,6 +1,6 @@
 # API Testing Documentation
 
-## í·ª API Response Structure Tests
+## ï¿½ï¿½ï¿½ API Response Structure Tests
 
 ### 1. Viator Activities API
 
@@ -167,7 +167,7 @@ curl -X GET "http://localhost:4321/api/ski-conditions"
 
 ---
 
-## í´ Type Safety
+## ï¿½ï¿½ï¿½ Type Safety
 
 All APIs have TypeScript types defined in:
 - `src/lib/viator/types.ts` - Viator API types
@@ -184,7 +184,7 @@ All APIs have TypeScript types defined in:
 âœ“ Caching Strategy: CONFIGURED
 ```
 
-## íº€ Testing in Development
+## ï¿½ï¿½ï¿½ Testing in Development
 
 To test locally:
 
@@ -205,27 +205,27 @@ To test locally:
    curl "http://localhost:4321/api/viator/featured"
    ```
 
-## í³Š Production Testing
+## ï¿½ï¿½ï¿½ Production Testing
 
 Once deployed to Netlify:
 
 ```bash
 # Viator search
-curl "https://tellurideskihotels.com/api/viator/search?searchTerm=ski"
+curl "https://tellurideinsider.com/api/viator/search?searchTerm=ski"
 
 # Ski conditions
-curl "https://tellurideskihotels.com/api/ski-conditions"
+curl "https://tellurideinsider.com/api/ski-conditions"
 
 # Featured activities
-curl "https://tellurideskihotels.com/api/viator/featured"
+curl "https://tellurideinsider.com/api/viator/featured"
 ```
 
-## í´ Environment Variables Required
+## ï¿½ï¿½ï¿½ Environment Variables Required
 
 - `VIATOR_API_KEY` - Viator Partner API key
 - `VIATOR_BASE_URL` - Viator API base URL (https://api.viator.com/partner)
 
-## í³ Notes
+## ï¿½ï¿½ï¿½ Notes
 
 - All endpoints return JSON
 - Caching: 1 hour (s-maxage=3600), 2 hour stale-while-revalidate

@@ -155,7 +155,7 @@ async function processDraft(filename) {
  */
 async function main() {
   log('\n' + '='.repeat(60), 'bright');
-  log('📰 Telluride Ski Hotels - Article Publishing System', 'bright');
+  log('📰 Telluride Insider - Article Publishing System', 'bright');
   log('='.repeat(60) + '\n', 'bright');
   
   const startTime = Date.now();

@@ -53,7 +53,7 @@ export function AdminLogin() {
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            placeholder="admin@tellurideskihotels.com"
+            placeholder="admin@tellurideinsider.com"
             required
             autoComplete="email"
           />

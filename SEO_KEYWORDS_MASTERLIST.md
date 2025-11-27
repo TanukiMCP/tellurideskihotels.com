@@ -1,4 +1,4 @@
-# SEO Keywords Masterlist - Telluride Ski Hotels
+# SEO Keywords Masterlist - Telluride Insider
 
 ## Keyword Research Strategy
 

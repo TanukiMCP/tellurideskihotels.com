@@ -4,7 +4,7 @@ title: "Telluride Couples Retreat: Romantic Getaway Planner (2025)"
 slug: "telluride-couples-retreat"
 status: "published"
 category: "planning-tips"
-author: "Telluride Ski Hotels Team"
+author: "Telluride Insider Team"
 publishDate: 2025-11-23
 updatedDate: 2025-11-24
 seo:
@@ -16,7 +16,7 @@ seo:
     - "telluride couples retreat"
     - "romantic telluride vacation"
     - "telluride for couples"
-  canonical: "https://tellurideskihotels.com/blog/planning-tips/telluride-couples-retreat"
+  canonical: "https://tellurideinsider.com/blog/planning-tips/telluride-couples-retreat"
 featured: false
 featuredImage: "https://images.pexels.com/photos/2373201/pexels-photo-2373201.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
 featuredImageAlt: "Experience luxury relaxation at a poolside resort in Cabo San Lucas, Mexico."

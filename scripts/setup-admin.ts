@@ -2,7 +2,7 @@
 import { createUser } from '../src/lib/auth';
 
 // Default admin credentials - CHANGE THESE AFTER FIRST LOGIN!
-const DEFAULT_EMAIL = 'admin@tellurideskihotels.com';
+const DEFAULT_EMAIL = 'admin@tellurideinsider.com';
 const DEFAULT_PASSWORD = 'ChangeMe123!';
 const DEFAULT_NAME = 'Administrator';
 

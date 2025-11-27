@@ -4,7 +4,7 @@ title: "Telluride Girls Weekend: Ultimate Girlfriend Getaway Guide (2025)"
 slug: "telluride-girls-weekend"
 status: "published"
 category: "planning-tips"
-author: "Telluride Ski Hotels Team"
+author: "Telluride Insider Team"
 publishDate: 2025-11-26T15:00:00Z
 seo:
   metaTitle: "Telluride Girls Weekend Guide 2025 | Getaway Planning"
@@ -15,7 +15,7 @@ seo:
     - "girlfriend getaway telluride"
     - "telluride girls vacation"
     - "women's trip telluride"
-  canonical: "https://tellurideskihotels.com/blog/planning-tips/telluride-girls-weekend"
+  canonical: "https://tellurideinsider.com/blog/planning-tips/telluride-girls-weekend"
 featured: false
 featuredImage: "https://images.pexels.com/photos/284949/pexels-photo-284949.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
 featuredImageAlt: "Skiers on a chairlift with snowy trees below on a sunny winter day."

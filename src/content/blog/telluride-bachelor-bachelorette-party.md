@@ -4,7 +4,7 @@ title: "Telluride Bachelor/Bachelorette Party: Ultimate Planning Guide (2025)"
 slug: "telluride-bachelor-bachelorette-party"
 status: "published"
 category: "planning-tips"
-author: "Telluride Ski Hotels Team"
+author: "Telluride Insider Team"
 publishDate: 2025-11-22
 updatedDate: 2025-11-24
 seo:
@@ -16,7 +16,7 @@ seo:
     - "telluride group events"
     - "telluride party planning"
     - "telluride celebration"
-  canonical: "https://tellurideskihotels.com/blog/planning-tips/telluride-bachelor-bachelorette-party"
+  canonical: "https://tellurideinsider.com/blog/planning-tips/telluride-bachelor-bachelorette-party"
 featured: false
 featuredImage: "https://images.pexels.com/photos/1973293/pexels-photo-1973293.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
 featuredImageAlt: "Snowboarder performing a high jump in a picturesque snow-covered mountain landscape during the day."

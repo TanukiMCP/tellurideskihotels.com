@@ -6,7 +6,7 @@ import netlify from '@astrojs/netlify';
 import mdx from '@astrojs/mdx';
 
 export default defineConfig({
-  site: 'https://tellurideskihotels.com',
+  site: 'https://tellurideinsider.com',
   output: 'hybrid',
   adapter: netlify(),
   integrations: [

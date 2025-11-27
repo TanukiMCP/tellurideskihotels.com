@@ -74,7 +74,7 @@ export function LiteAPIPayment({
       // we check the hostname - if it's a Netlify preview or localhost, use sandbox
       // Otherwise, default to sandbox for safety (user is testing with sandbox API keys)
       const hostname = typeof window !== 'undefined' ? window.location.hostname : '';
-      const isProductionDomain = hostname === 'tellurideskihotels.com' || hostname === 'www.tellurideskihotels.com';
+      const isProductionDomain = hostname === 'tellurideinsider.com' || hostname === 'www.tellurideinsider.com';
       const isNetlifyPreview = hostname.includes('netlify.app') || hostname.includes('netlify.app');
       const isLocalhost = hostname === 'localhost' || hostname === '127.0.0.1';
       
@@ -128,7 +128,7 @@ export function LiteAPIPayment({
         },
         options: {
           business: {
-            name: 'Telluride Ski Hotels',
+            name: 'Telluride Insider',
           },
         },
         targetElement: '#liteapi-payment-portal',

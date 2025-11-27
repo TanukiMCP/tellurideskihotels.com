@@ -106,7 +106,7 @@ export function AdminBookings({ user }: { user?: any }) {
                   <Hotel className="w-6 h-6 text-white" />
                 </div>
                 <div>
-                  <h1 className="text-xl font-bold text-neutral-900">Telluride Ski Hotels</h1>
+                  <h1 className="text-xl font-bold text-neutral-900">Telluride Insider</h1>
                   <p className="text-xs text-neutral-500">Booking Management</p>
                 </div>
               </a>

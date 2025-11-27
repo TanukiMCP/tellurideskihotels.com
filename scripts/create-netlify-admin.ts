@@ -8,7 +8,7 @@ import { getStore } from '@netlify/blobs';
 import { randomBytes, scryptSync } from 'crypto';
 
 // Admin credentials
-const ADMIN_EMAIL = 'admin@tellurideskihotels.com';
+const ADMIN_EMAIL = 'admin@tellurideinsider.com';
 const ADMIN_PASSWORD = 'Voy79262!@#';
 const ADMIN_NAME = 'Administrator';
 
@@ -53,7 +53,7 @@ async function createNetlifyAdmin() {
     if (existing) {
       console.log('⚠️  Admin user already exists!');
       console.log('Email:', ADMIN_EMAIL);
-      console.log('\nUse this email to sign in at https://tellurideskihotels.com/admin/login');
+      console.log('\nUse this email to sign in at https://tellurideinsider.com/admin/login');
       process.exit(0);
     }
 
@@ -72,7 +72,7 @@ async function createNetlifyAdmin() {
     console.log('Email:    ', ADMIN_EMAIL);
     console.log('Password: ', ADMIN_PASSWORD);
     console.log('═══════════════════════════════════════');
-    console.log('\n🌐 Sign in at: https://tellurideskihotels.com/admin/login');
+    console.log('\n🌐 Sign in at: https://tellurideinsider.com/admin/login');
     console.log('\nUser ID:', user.id);
     console.log('\n⚠️  IMPORTANT: Keep these credentials secure!');
   } catch (error: any) {

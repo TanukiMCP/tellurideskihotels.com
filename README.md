@@ -1,4 +1,4 @@
-# Telluride Ski Hotels
+# Telluride Insider
 
 A comprehensive lodging search and content platform for Telluride, Colorado ski resorts.
 

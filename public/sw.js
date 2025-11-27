@@ -1,4 +1,4 @@
-// Service Worker for Telluride Ski Hotels PWA
+// Service Worker for Telluride Insider PWA
 // Provides offline support for trail map and essential assets
 
 const CACHE_NAME = 'telluride-ski-v3'; // Incremented version to force update

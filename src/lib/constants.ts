@@ -1,4 +1,4 @@
-export const SITE_NAME = 'Telluride Ski Hotels';
+export const SITE_NAME = 'Telluride Insider';
 export const SITE_DESCRIPTION = 'Search and book the best places to stay in Telluride, Colorado. Compare prices, read reviews, and book directly.';
 export const DEFAULT_LOCATION = 'Telluride';
 export const DEFAULT_COUNTRY_CODE = 'US';

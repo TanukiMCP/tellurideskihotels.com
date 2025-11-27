@@ -5,8 +5,8 @@ const LITEAPI_PRIVATE_KEY = process.env.LITEAPI_PRIVATE_KEY || '';
 const LITEAPI_PUBLIC_KEY = process.env.LITEAPI_PUBLIC_KEY || '';
 const RESEND_API_KEY = process.env.RESEND_API_KEY || '';
 const RESEND_FROM_EMAIL =
-  process.env.FROM_EMAIL || process.env.RESEND_FROM_EMAIL || 'bookings@tellurideskihotels.com';
-const SITE_URL = process.env.PUBLIC_SITE_URL || 'https://tellurideskihotels.com';
+  process.env.FROM_EMAIL || process.env.RESEND_FROM_EMAIL || 'bookings@tellurideinsider.com';
+const SITE_URL = process.env.PUBLIC_SITE_URL || 'https://tellurideinsider.com';
 
 const resend = RESEND_API_KEY ? new Resend(RESEND_API_KEY) : null;
 
@@ -247,14 +247,14 @@ async function sendBookingConfirmationEmail(params: {
           
           <p style="margin-top: 30px;">
             Best regards,<br>
-            <strong>Telluride Ski Hotels Team</strong>
+            <strong>Telluride Insider Team</strong>
           </p>
         </div>
         
         <div style="background-color: #f3f4f6; padding: 15px; text-align: center; font-size: 12px; color: #6b7280;">
-          <p style="margin: 0;">© 2025 Telluride Ski Hotels. All rights reserved.</p>
+          <p style="margin: 0;">© 2025 Telluride Insider. All rights reserved.</p>
           <p style="margin: 5px 0 0 0;">
-            <a href="https://tellurideskihotels.com" style="color: #2563eb; text-decoration: none;">Visit our website</a>
+            <a href="https://tellurideinsider.com" style="color: #2563eb; text-decoration: none;">Visit our website</a>
           </p>
         </div>
       </body>

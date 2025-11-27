@@ -3,7 +3,7 @@ import type { APIRoute } from 'astro';
 export const prerender = false;
 
 const GOOGLE_CLIENT_ID = import.meta.env.GOOGLE_CLIENT_ID || '';
-const SITE_URL = import.meta.env.PUBLIC_SITE_URL || 'https://tellurideskihotels.com';
+const SITE_URL = import.meta.env.PUBLIC_SITE_URL || 'https://tellurideinsider.com';
 
 export const GET: APIRoute = async ({ url, redirect }) => {
   // Log for debugging (remove in production if needed)

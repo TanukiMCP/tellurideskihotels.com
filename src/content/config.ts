@@ -18,7 +18,7 @@ const blogCollection = defineCollection({
       'luxury-travel',
       'budget-travel'
     ]),
-    author: z.string().default('Telluride Ski Hotels Team'),
+    author: z.string().default('Telluride Insider Team'),
     publishDate: z.coerce.date(),
     updatedDate: z.coerce.date().optional(),
     seo: z.object({

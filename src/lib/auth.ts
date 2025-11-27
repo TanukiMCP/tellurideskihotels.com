@@ -7,10 +7,10 @@ import { claimBookingAccessForUser } from './server/booking-access';
 const SECRET = new TextEncoder().encode(
   process.env.BETTER_AUTH_SECRET || 'dev-secret-change-in-production-minimum-32-chars'
 );
-const SITE_URL = process.env.PUBLIC_SITE_URL || 'https://tellurideskihotels.com';
+const SITE_URL = process.env.PUBLIC_SITE_URL || 'https://tellurideinsider.com';
 const RESEND_API_KEY = process.env.RESEND_API_KEY || '';
 const RESEND_FROM_EMAIL =
-  process.env.FROM_EMAIL || process.env.RESEND_FROM_EMAIL || 'bookings@tellurideskihotels.com';
+  process.env.FROM_EMAIL || process.env.RESEND_FROM_EMAIL || 'bookings@tellurideinsider.com';
 const EMAIL_VERIFICATION_TTL = 1000 * 60 * 60 * 24; // 24h
 
 const resend = RESEND_API_KEY ? new Resend(RESEND_API_KEY) : null;
@@ -224,10 +224,10 @@ async function queueVerificationEmail(user: User) {
   await resend.emails.send({
     from: RESEND_FROM_EMAIL,
     to: user.email,
-    subject: 'Verify your Telluride Ski Hotels account',
+    subject: 'Verify your Telluride Insider account',
     html: `
       <p>Hi ${user.name || 'there'},</p>
-      <p>Thanks for creating an account with Telluride Ski Hotels. Confirm your email to unlock saved bookings across devices.</p>
+      <p>Thanks for creating an account with Telluride Insider. Confirm your email to unlock saved bookings across devices.</p>
       <p><a href="${verificationUrl.toString()}" target="_blank">Verify email</a></p>
       <p>This link expires in 24 hours.</p>
     `,

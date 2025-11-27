@@ -163,7 +163,7 @@ function formatImageData(photo, category, query) {
  */
 async function main() {
   log('\n' + '='.repeat(60), 'bright');
-  log('🖼️  Telluride Ski Hotels - Image Library Refresh', 'bright');
+  log('🖼️  Telluride Insider - Image Library Refresh', 'bright');
   log('='.repeat(60) + '\n', 'bright');
 
   const startTime = Date.now();

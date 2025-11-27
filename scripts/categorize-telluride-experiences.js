@@ -1,6 +1,6 @@
 /**
  * Categorization Script for Telluride Experiences
- * Extracts all experiences from the live tellurideskihotels.com/things-to-do page
+ * Extracts all experiences from the live tellurideinsider.com/things-to-do page
  * and generates a JSON file for manual categorization
  */
 
@@ -26,8 +26,8 @@ async function extractExperiences() {
     const page = await browser.newPage();
     await page.setViewport({ width: 1920, height: 1080 });
     
-    console.log('📄 Navigating to https://tellurideskihotels.com/things-to-do...');
-    await page.goto('https://tellurideskihotels.com/things-to-do', {
+    console.log('📄 Navigating to https://tellurideinsider.com/things-to-do...');
+    await page.goto('https://tellurideinsider.com/things-to-do', {
       waitUntil: 'networkidle2',
       timeout: 30000,
     });

@@ -1,4 +1,4 @@
-# Content Publishing Schedule - Telluride Ski Hotels
+# Content Publishing Schedule - Telluride Insider
 
 ## 📊 CURRENT PUBLISHING STATUS
 

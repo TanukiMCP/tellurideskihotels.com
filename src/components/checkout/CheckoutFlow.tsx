@@ -289,7 +289,7 @@ export function CheckoutFlow({ hotelId, hotelName, room, addons = [], onComplete
           <div className="flex items-center gap-3">
             <img 
               src="/favicon-icon.png" 
-              alt="Telluride Ski Hotels" 
+              alt="Telluride Insider" 
               className="h-12 w-auto"
             />
             <div>
@@ -298,7 +298,7 @@ export function CheckoutFlow({ hotelId, hotelName, room, addons = [], onComplete
             </div>
           </div>
           <div className="flex items-center gap-6 text-sm text-neutral-600">
-            <a href="mailto:tellurideskihotels@gmail.com" className="flex items-center gap-2 hover:text-primary-600 transition-colors">
+            <a href="mailto:tellurideinsider@gmail.com" className="flex items-center gap-2 hover:text-primary-600 transition-colors">
               <Mail className="w-4 h-4" />
               <span className="font-medium">Need Help?</span>
             </a>
@@ -642,9 +642,9 @@ export function CheckoutFlow({ hotelId, hotelName, room, addons = [], onComplete
               <div className="border-t border-neutral-200 pt-4 -mx-6 px-6">
                 <h5 className="font-semibold text-neutral-900 mb-3 text-sm">Need Assistance?</h5>
                 <div className="space-y-2 text-sm">
-                  <a href="mailto:tellurideskihotels@gmail.com" className="flex items-center gap-2 text-neutral-700 hover:text-primary-600 transition-colors">
+                  <a href="mailto:tellurideinsider@gmail.com" className="flex items-center gap-2 text-neutral-700 hover:text-primary-600 transition-colors">
                     <Mail className="w-4 h-4" />
-                    <span>tellurideskihotels@gmail.com</span>
+                    <span>tellurideinsider@gmail.com</span>
                   </a>
                   <p className="text-xs text-neutral-500 mt-2">We typically respond within 24 hours</p>
                 </div>
