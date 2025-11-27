@@ -18,8 +18,8 @@ seo:
     - "telluride for couples"
   canonical: "https://tellurideskihotels.com/blog/planning-tips/telluride-couples-retreat"
 featured: false
-featuredImage: "https://images.pexels.com/photos/34605839/pexels-photo-34605839.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
-featuredImageAlt: "Majestic view of Chamonix-Mont-Blanc mountains at sunset, showcasing stunning snow-capped peaks"
+featuredImage: "https://images.unsplash.com/photo-1636488321018?fm=jpg&q=80&w=1920"
+featuredImageAlt: "Trico Peak appears amongst the mountains of Telluride, above a lightly trafficked road in Telluride in August"
 excerpt: "Complete planning guide for romantic Telluride couples retreats: budget planning, romantic activities, best times to visit, accommodation recommendations, and expert tips for couples."
 wordCount: 2600
 readingTime: 13
@@ -42,8 +42,8 @@ Planning a romantic Telluride couples retreat requires balancing intimate experi
 
 This comprehensive guide provides everything you need to plan your Telluride couples retreat: detailed budget planning tools showing how to allocate expenses for romantic experiences, seasonal comparisons highlighting best times to visit for different priorities, romantic activity recommendations spanning skiing, dining, and non-skiing options, accommodation recommendations for couples seeking intimacy and luxury, and insider tips that help couples create memorable experiences that strengthen relationships. Whether you're planning a first romantic trip together or celebrating an anniversary, understanding Telluride's couples offerings and planning strategically transforms a good getaway into an exceptional one.
 
-![Majestic view of Chamonix-Mont-Blanc mountains at sunset, showcasing stunning snow-capped peaks](https://images.pexels.com/photos/34605839/pexels-photo-34605839.jpeg?auto=compress&cs=tinysrgb&h=350)
-*Photo by [Manon Ridet](https://www.pexels.com/@manon-ridet-2157179082) via Pexels*
+![Clouds over a mountain in Telluride](https://images.unsplash.com/photo-1475549343237?fm=jpg&q=80&w=1200)
+*Photo by [Thomas Kelley](https://unsplash.com/@thkelley) via Unsplash*
 
 Use the budget planner below to allocate your couples retreat budget across lodging, activities, dining, and lift tickets. Understanding where your budget goes helps you prioritize romantic experiences and identify opportunities to optimize spending.
 
@@ -129,8 +129,8 @@ Non-skiing activities provide romantic alternatives that work year-round. Sleigh
 
 Dining experiences represent core romantic activities for many couples, with Telluride's restaurants providing exceptional food and atmospheres. Fine dining restaurants like Allred's and 221 South Oak offer intimate settings, excellent food, and romantic atmospheres perfect for special occasions. Casual restaurants provide excellent food in more relaxed settings that work well for everyday meals. Many couples balance special romantic dinners with casual meals, reserving fine dining for special occasions while enjoying Telluride's diverse casual dining scene.
 
-![Breathtaking view of Chamonix's snow-capped mountains at sunset](https://images.pexels.com/photos/34605832/pexels-photo-34605832.jpeg?auto=compress&cs=tinysrgb&h=350)
-*Photo by [Manon Ridet](https://www.pexels.com/@manon-ridet-2157179082) via Pexels*
+![Clouds over a mountain in Telluride](https://images.unsplash.com/photo-1475549343237?fm=jpg&q=80&w=1200)
+*Photo by [Thomas Kelley](https://unsplash.com/@thkelley) via Unsplash*
 
 ## Romantic Dining Recommendations
 
