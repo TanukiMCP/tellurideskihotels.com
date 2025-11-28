@@ -46,7 +46,7 @@ This comprehensive guide provides everything you need to plan your Telluride bac
 
 <BlogImage 
   images={{
-    src: "https://images.unsplash.com/photo-1734329596076-4aa090053d5f?fm=jpg&q=90&w=1200&auto=compress&cs=tinysrgb&h=450",
+    src: "https://images.unsplash.com/photo-1734329596076?fm=jpg&q=90&w=1200&auto=compress&cs=tinysrgb&h=450",
     alt: "A hot tub with a mountain view in the background",
     photographer: "Hailey Tong",
     photographerUrl: "https://unsplash.com/@haileytong",
@@ -103,7 +103,7 @@ Hotels work well for smaller parties (6-8 people) or groups wanting resort ameni
 
 <BlogImage 
   images={{
-    src: "https://images.unsplash.com/photo-1636488321018-ODvgdXxGhzQ?fm=jpg&q=90&w=1200&auto=compress&cs=tinysrgb&h=450",
+    src: "https://images.unsplash.com/photo-1636488321018?fm=jpg&q=90&w=1200&auto=compress&cs=tinysrgb&h=450",
     alt: "A street lined with buildings and mountains under a cloudy sky",
     photographer: "Cole Marshall",
     photographerUrl: "https://unsplash.com/@colemarshall",
@@ -130,7 +130,7 @@ Skiing activities provide core experiences for winter parties, with group skiing
 
 <BlogImage 
   images={{
-    src: "https://images.unsplash.com/photo-1678879150716-6a3ad4bb335a?fm=jpg&q=90&w=1200&auto=compress&cs=tinysrgb&h=450",
+    src: "https://images.unsplash.com/photo-1678879150716?fm=jpg&q=90&w=1200&auto=compress&cs=tinysrgb&h=450",
     alt: "A group of people riding skis down a snow covered slope",
     photographer: "R Marte",
     photographerUrl: "https://unsplash.com/@rmarte",
@@ -144,7 +144,7 @@ Non-skiing activities provide variety and accommodate different interests within
 
 <BlogImage 
   images={{
-    src: "https://images.unsplash.com/photo-1734329596076-4aa090053d5f?fm=jpg&q=90&w=1200&auto=compress&cs=tinysrgb&h=450",
+    src: "https://images.unsplash.com/photo-1734329596076?fm=jpg&q=90&w=1200&auto=compress&cs=tinysrgb&h=450",
     alt: "A hot tub with a mountain view in the background",
     photographer: "Hailey Tong",
     photographerUrl: "https://unsplash.com/@haileytong",
@@ -198,7 +198,7 @@ Budget transparency prevents conflicts about costs and spending. Sharing accommo
 
 <BlogImage 
   images={{
-    src: "https://images.unsplash.com/photo-1678879150716-6a3ad4bb335a?fm=jpg&q=90&w=1200&auto=compress&cs=tinysrgb&h=450",
+    src: "https://images.unsplash.com/photo-1678879150716?fm=jpg&q=90&w=1200&auto=compress&cs=tinysrgb&h=450",
     alt: "A group of people riding skis down a snow covered slope",
     photographer: "R Marte",
     photographerUrl: "https://unsplash.com/@rmarte",
@@ -210,7 +210,7 @@ Celebration elements distinguish bachelor and bachelorette parties from regular 
 
 <BlogImage 
   images={{
-    src: "https://images.unsplash.com/photo-1734329596076-4aa090053d5f?fm=jpg&q=90&w=1200&auto=compress&cs=tinysrgb&h=450",
+    src: "https://images.unsplash.com/photo-1734329596076?fm=jpg&q=90&w=1200&auto=compress&cs=tinysrgb&h=450",
     alt: "A hot tub with a mountain view in the background",
     photographer: "Hailey Tong",
     photographerUrl: "https://unsplash.com/@haileytong",
@@ -234,7 +234,7 @@ Documentation helps preserve memories and settle expenses after the trip. Design
 
 <BlogImage 
   images={{
-    src: "https://images.unsplash.com/photo-1706048185971-Lft26KnmMas?fm=jpg&q=90&w=1200&auto=compress&cs=tinysrgb&h=450",
+    src: "https://images.unsplash.com/photo-1706048185971?fm=jpg&q=90&w=1200&auto=compress&cs=tinysrgb&h=450",
     alt: "A ski lift going up a snowy mountain",
     photographer: "Jeff Heaton",
     photographerUrl: "https://unsplash.com/@heatonthetrail",

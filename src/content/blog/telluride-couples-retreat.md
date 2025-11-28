@@ -46,7 +46,7 @@ This comprehensive guide provides everything you need to plan your Telluride cou
 
 <BlogImage 
   images={{
-    src: "https://images.unsplash.com/photo-1475549343237-wIYLX_wNQho?fm=jpg&q=90&w=1200&auto=compress&cs=tinysrgb&h=450",
+    src: "https://images.unsplash.com/photo-1475549343237?fm=jpg&q=90&w=1200&auto=compress&cs=tinysrgb&h=450",
     alt: "Clouds over a mountain in Telluride",
     photographer: "Thomas Kelley",
     photographerUrl: "https://unsplash.com/@thkelley",
@@ -140,7 +140,7 @@ Dining experiences represent core romantic activities for many couples, with Tel
 
 <BlogImage 
   images={{
-    src: "https://images.unsplash.com/photo-1475549343237-wIYLX_wNQho?fm=jpg&q=90&w=1200&auto=compress&cs=tinysrgb&h=450",
+    src: "https://images.unsplash.com/photo-1475549343237?fm=jpg&q=90&w=1200&auto=compress&cs=tinysrgb&h=450",
     alt: "Clouds over a mountain in Telluride",
     photographer: "Thomas Kelley",
     photographerUrl: "https://unsplash.com/@thkelley",
