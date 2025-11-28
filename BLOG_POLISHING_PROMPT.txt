@@ -2,7 +2,7 @@
 
 ## Your Assignment
 
-You are reviewing and polishing a single blog post for TellurideSki Hotels. Your job is to bring this article into full compliance with our content standards, fix any broken or improperly curated elements, and ensure the post is conversion-optimized with intentionally placed widgets and links.
+You are reviewing and polishing a single blog post for Telluride Insider. Your job is to bring this article into full compliance with our content standards, fix any broken or improperly curated elements, and ensure the post is conversion-optimized with intentionally placed widgets and links.
 
 **Target Article:** `[PASTE ARTICLE PATH HERE]`
 

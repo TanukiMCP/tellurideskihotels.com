@@ -31,13 +31,13 @@ This application uses **Turso** (LibSQL) for production database storage in serv
 turso auth login
 
 # Create a new database
-turso db create telluride-ski-hotels
+turso db create telluride-insider
 
 # Get your database URL
-turso db show telluride-ski-hotels --url
+turso db show telluride-insider --url
 
 # Create an auth token
-turso db tokens create telluride-ski-hotels
+turso db tokens create telluride-insider
 ```
 
 ### 3. Initialize the Database Schema
@@ -53,7 +53,7 @@ npm run init-turso-db
 Or using the Turso CLI directly:
 
 ```bash
-turso db shell telluride-ski-hotels < scripts/init-turso-db.sql
+turso db shell telluride-insider < scripts/init-turso-db.sql
 ```
 
 ### 4. Configure Environment Variables
@@ -151,7 +151,7 @@ npm run dev
 
 ```bash
 # Open interactive shell
-turso db shell telluride-ski-hotels
+turso db shell telluride-insider
 
 # Run queries
 SELECT * FROM user_bookings LIMIT 10;
@@ -162,10 +162,10 @@ SELECT * FROM booking_access WHERE user_type = 'account';
 
 ```bash
 # View database stats
-turso db show telluride-ski-hotels
+turso db show telluride-insider
 
 # View usage
-turso db usage telluride-ski-hotels
+turso db usage telluride-insider
 ```
 
 ### Backup & Restore
@@ -174,10 +174,10 @@ Turso automatically backs up your database. To create manual backups:
 
 ```bash
 # Create a snapshot
-turso db snapshot telluride-ski-hotels
+turso db snapshot telluride-insider
 
 # List snapshots
-turso db snapshots telluride-ski-hotels
+turso db snapshots telluride-insider
 ```
 
 ## Troubleshooting
@@ -186,7 +186,7 @@ turso db snapshots telluride-ski-hotels
 
 - Verify `TURSO_DATABASE_URL` and `TURSO_AUTH_TOKEN` are set correctly
 - Check that the database exists: `turso db list`
-- Ensure the auth token is valid: `turso db tokens list telluride-ski-hotels`
+- Ensure the auth token is valid: `turso db tokens list telluride-insider`
 
 ### "Table does not exist" errors
 
@@ -208,7 +208,7 @@ If you have existing data in a local SQLite database:
 sqlite3 auth.db .dump > backup.sql
 
 # Import into Turso
-turso db shell telluride-ski-hotels < backup.sql
+turso db shell telluride-insider < backup.sql
 ```
 
 ## Cost & Limits

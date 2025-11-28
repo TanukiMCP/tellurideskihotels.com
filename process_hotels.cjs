@@ -2,7 +2,7 @@
 const fs = require('fs');
 
 try {
-  const rawData = fs.readFileSync('c:/Users/ididi/.cursor/projects/c-Users-ididi-OneDrive-Desktop-tellurideskihotels-com/agent-tools/c4e06198-dde9-4960-a4aa-cb864ce5fb24.txt', 'utf8');
+  const rawData = fs.readFileSync('c:/Users/ididi/.cursor/projects/c-Users-ididi-OneDrive-Desktop-tellurideinsider-com/agent-tools/c4e06198-dde9-4960-a4aa-cb864ce5fb24.txt', 'utf8');
   // The output file might have headers or extra text, so we need to find the JSON part.
   // It looks like the response body starts with { and ends with }
   // But the curl output might contain headers. 

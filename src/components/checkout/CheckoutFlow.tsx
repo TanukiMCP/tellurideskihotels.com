@@ -294,7 +294,7 @@ export function CheckoutFlow({ hotelId, hotelName, room, addons = [], onComplete
             />
             <div>
               <h1 className="text-2xl font-bold text-neutral-900">Secure Checkout</h1>
-              <p className="text-sm text-neutral-600 mt-1">Complete your booking with TellurideSkiHotels.com</p>
+              <p className="text-sm text-neutral-600 mt-1">Complete your booking with TellurideInsider.com</p>
             </div>
           </div>
           <div className="flex items-center gap-6 text-sm text-neutral-600">

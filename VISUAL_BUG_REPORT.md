@@ -1,7 +1,7 @@
 # Visual Bug Report - Hotel Grid Widgets & Blog Layout
 
 ## Date: 2025-01-XX
-## Page: https://tellurideskihotels.com/blog/hotel-reviews/telluride-hotels-accommodation-guide/
+## Page: https://tellurideinsider.com/blog/hotel-reviews/telluride-hotels-accommodation-guide/
 
 ---
 

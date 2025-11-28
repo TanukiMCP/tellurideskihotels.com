@@ -101,7 +101,7 @@ npm run refresh-images
 ## Project Structure
 
 ```
-tellurideskihotels.com/
+tellurideinsider.com/
 ├── src/
 │   ├── content/
 │   │   ├── blog/          # Published articles
