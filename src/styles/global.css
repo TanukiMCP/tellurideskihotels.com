@@ -2,9 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Mapbox GL CSS - Required for map display */
-@import 'mapbox-gl/dist/mapbox-gl.css';
-
 :root {
   --radius: 0.5rem;
   --background: 0 0% 100%;
