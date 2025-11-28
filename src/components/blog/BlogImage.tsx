@@ -117,16 +117,11 @@ function ImageWithLoading({
 
   return (
     <div className={`relative overflow-hidden bg-neutral-100 ${className}`}>
-      {loading && (
-        <div className="absolute inset-0 flex items-center justify-center bg-neutral-100 z-10">
-          <div className="w-8 h-8 border-2 border-neutral-300 border-t-primary-600 rounded-full animate-spin" />
-        </div>
-      )}
       <img
         ref={imgRef}
         src={src}
         alt={alt}
-        className={`w-full h-full object-cover transition-opacity duration-300 ${loading ? 'opacity-0' : 'opacity-100'}`}
+        className="w-full h-full object-cover"
         onLoad={handleLoad}
         onError={handleError}
         loading={priority ? 'eager' : 'lazy'}
