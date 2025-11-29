@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { ChevronLeft, ChevronRight, X, Maximize2, Camera, ExternalLink, Grid3X3 } from 'lucide-react';
 import { optimizeImageUrl, ImageSizes } from '@/lib/image-optimization';
 
@@ -79,10 +79,21 @@ function ImageWithLoading({
   const imgRef = useRef<HTMLImageElement>(null);
   
   // Optimize image URL for high quality
-  const optimizedSrc = optimizeImageUrl(src, {
-    width: ImageSizes.large.width,
-    quality: 90,
-  });
+  // Wrap in try-catch to ensure we always have a valid URL
+  const optimizedSrc = useMemo(() => {
+    try {
+      const optimized = optimizeImageUrl(src, {
+        width: ImageSizes.large.width,
+        quality: 90,
+      });
+      // If optimization returns empty or invalid, use original
+      return optimized && optimized.trim() !== '' ? optimized : src;
+    } catch (error) {
+      console.error('[BlogImage] Error optimizing image URL:', error, src);
+      // Fallback to original URL on error
+      return src;
+    }
+  }, [src]);
 
   useEffect(() => {
     setLoading(true);

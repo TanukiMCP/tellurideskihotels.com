@@ -23,21 +23,41 @@ export function optimizeUnsplashUrl(
 ): string {
   const { width = 1920, quality = 90, format = 'jpg' } = options;
   
-  // If URL already has query params, parse and update them
-  const urlObj = new URL(url);
-  
-  // Set high-quality parameters
-  urlObj.searchParams.set('fm', format);
-  urlObj.searchParams.set('q', quality.toString());
-  urlObj.searchParams.set('w', width.toString());
-  urlObj.searchParams.set('auto', 'format');
-  urlObj.searchParams.set('fit', 'crop');
-  
-  // Remove any conflicting parameters
-  urlObj.searchParams.delete('h'); // Remove height constraint for better quality
-  urlObj.searchParams.delete('dpr'); // DPR handled automatically by Unsplash
-  
-  return urlObj.toString();
+  try {
+    // Parse URL - handle errors gracefully
+    let urlObj: URL;
+    try {
+      urlObj = new URL(url);
+    } catch (error) {
+      // If URL parsing fails, return original URL
+      console.warn('[Image Optimization] Failed to parse Unsplash URL:', url);
+      return url;
+    }
+    
+    // Clean up invalid Pexels parameters that might have been added by mistake
+    urlObj.searchParams.delete('auto'); // Unsplash doesn't use 'auto' like Pexels
+    urlObj.searchParams.delete('compress'); // Not a valid Unsplash param
+    urlObj.searchParams.delete('cs'); // Not a valid Unsplash param
+    urlObj.searchParams.delete('tinysrgb'); // Not a valid Unsplash param
+    
+    // Set proper Unsplash parameters for high quality
+    urlObj.searchParams.set('fm', format);
+    urlObj.searchParams.set('q', quality.toString());
+    urlObj.searchParams.set('w', width.toString());
+    urlObj.searchParams.set('fit', 'max'); // 'max' preserves aspect ratio, 'crop' crops
+    
+    // Remove height constraint for better quality (width-only gives best quality)
+    urlObj.searchParams.delete('h');
+    
+    // DPR handled automatically by Unsplash CDN
+    urlObj.searchParams.delete('dpr');
+    
+    return urlObj.toString();
+  } catch (error) {
+    // If anything fails, return original URL so images still display
+    console.error('[Image Optimization] Error optimizing Unsplash URL:', error);
+    return url;
+  }
 }
 
 /**
@@ -56,19 +76,32 @@ export function optimizePexelsUrl(
 ): string {
   const { width = 1920, height, dpr = 2 } = options;
   
-  const urlObj = new URL(url);
-  
-  // Set high-quality parameters
-  urlObj.searchParams.set('auto', 'compress');
-  urlObj.searchParams.set('cs', 'tinysrgb');
-  urlObj.searchParams.set('dpr', dpr.toString());
-  urlObj.searchParams.set('w', width.toString());
-  
-  if (height) {
-    urlObj.searchParams.set('h', height.toString());
+  try {
+    let urlObj: URL;
+    try {
+      urlObj = new URL(url);
+    } catch (error) {
+      // If URL parsing fails, return original URL
+      console.warn('[Image Optimization] Failed to parse Pexels URL:', url);
+      return url;
+    }
+    
+    // Set high-quality parameters
+    urlObj.searchParams.set('auto', 'compress');
+    urlObj.searchParams.set('cs', 'tinysrgb');
+    urlObj.searchParams.set('dpr', dpr.toString());
+    urlObj.searchParams.set('w', width.toString());
+    
+    if (height) {
+      urlObj.searchParams.set('h', height.toString());
+    }
+    
+    return urlObj.toString();
+  } catch (error) {
+    // If anything fails, return original URL so images still display
+    console.error('[Image Optimization] Error optimizing Pexels URL:', error);
+    return url;
   }
-  
-  return urlObj.toString();
 }
 
 /**
@@ -135,13 +168,18 @@ export function optimizeImageUrl(
     source?: 'unsplash' | 'pexels' | 'liteapi' | 'viator' | 'auto';
   } = {}
 ): string {
+  // If no URL provided, return empty string
+  if (!url || typeof url !== 'string' || url.trim() === '') {
+    return '';
+  }
+  
   const { source = 'auto', width = 1920, quality = 90 } = options;
   
   // Auto-detect source if not specified
-  let detectedSource: 'unsplash' | 'pexels' | 'liteapi' | 'viator' = source as any;
+  let detectedSource: 'unsplash' | 'pexels' | 'liteapi' | 'viator' | 'unknown' = source as any;
   
   if (source === 'auto') {
-    if (url.includes('images.unsplash.com')) {
+    if (url.includes('images.unsplash.com') || url.includes('unsplash.com/photos')) {
       detectedSource = 'unsplash';
     } else if (url.includes('images.pexels.com') || url.includes('pexels.com')) {
       detectedSource = 'pexels';
@@ -155,18 +193,24 @@ export function optimizeImageUrl(
     }
   }
   
-  // Apply source-specific optimization
-  switch (detectedSource) {
-    case 'unsplash':
-      return optimizeUnsplashUrl(url, { width, quality });
-    case 'pexels':
-      return optimizePexelsUrl(url, { width });
-    case 'liteapi':
-    case 'viator':
-      // These APIs return URLs directly, no optimization needed
-      return url;
-    default:
-      return url;
+  // Apply source-specific optimization with error handling
+  try {
+    switch (detectedSource) {
+      case 'unsplash':
+        return optimizeUnsplashUrl(url, { width, quality });
+      case 'pexels':
+        return optimizePexelsUrl(url, { width });
+      case 'liteapi':
+      case 'viator':
+        // These APIs return URLs directly, no optimization needed
+        return url;
+      default:
+        return url;
+    }
+  } catch (error) {
+    // If optimization fails, return original URL so images still display
+    console.error('[Image Optimization] Error optimizing image URL:', error, url);
+    return url;
   }
 }
 
