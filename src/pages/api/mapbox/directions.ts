@@ -6,6 +6,7 @@ interface DirectionsRequest {
   coordinates: Array<[number, number]>; // [lng, lat] pairs
   alternatives?: boolean;
   routeId?: string;
+  profile?: 'driving' | 'walking' | 'cycling'; // Routing profile
 }
 
 interface DirectionsResponse {
@@ -32,7 +33,7 @@ export const POST: APIRoute = async ({ request }) => {
     }
 
     const body: DirectionsRequest = await request.json();
-    const { coordinates, alternatives = true, routeId } = body;
+    const { coordinates, alternatives = true, routeId, profile = 'driving' } = body;
 
     if (!coordinates || coordinates.length < 2) {
       return new Response(
@@ -41,6 +42,10 @@ export const POST: APIRoute = async ({ request }) => {
       );
     }
 
+    // Validate profile
+    const validProfiles = ['driving', 'walking', 'cycling'];
+    const routingProfile = validProfiles.includes(profile) ? profile : 'driving';
+
     // Build Mapbox Directions API URL
     // Format: /directions/v5/{profile}/{coordinates}?{parameters}
     const coordinatesString = coordinates
@@ -48,7 +53,7 @@ export const POST: APIRoute = async ({ request }) => {
       .join(';');
 
     const alternativesParam = alternatives ? 'true' : 'false';
-    const url = `https://api.mapbox.com/directions/v5/mapbox/driving/${coordinatesString}?alternatives=${alternativesParam}&geometries=geojson&steps=false&overview=full&access_token=${MAPBOX_TOKEN}`;
+    const url = `https://api.mapbox.com/directions/v5/mapbox/${routingProfile}/${coordinatesString}?alternatives=${alternativesParam}&geometries=geojson&steps=false&overview=full&access_token=${MAPBOX_TOKEN}`;
 
     const response = await fetch(url);
 

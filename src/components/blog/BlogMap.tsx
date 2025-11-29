@@ -153,6 +153,24 @@ const PRESETS = {
     showTrails: false,
     showLifts: false,
   },
+  // Hiking trails mode - shows hiking routes with walking directions
+  'hiking-trails': {
+    center: [-107.8123, 37.9375] as [number, number], // Telluride area
+    zoom: 13,
+    pitch: 45,
+    bearing: 0,
+    showTrails: true,
+    showLifts: false,
+  },
+  // Biking trails mode - shows biking routes with cycling directions
+  'biking-trails': {
+    center: [-107.8123, 37.9375] as [number, number], // Telluride area
+    zoom: 13,
+    pitch: 45,
+    bearing: 0,
+    showTrails: true,
+    showLifts: false,
+  },
 };
 
 const MAP_STYLE = 'mapbox://styles/mapbox/outdoors-v12';
@@ -188,7 +206,7 @@ export interface BlogMapMarker {
 }
 
 export interface BlogMapProps {
-  preset?: 'resort' | 'town' | 'mountain-village' | 'overview' | 'hotels' | 'trails' | 'trails-overhead' | 'driving-routes';
+  preset?: 'resort' | 'town' | 'mountain-village' | 'overview' | 'hotels' | 'trails' | 'trails-overhead' | 'driving-routes' | 'hiking-trails' | 'biking-trails';
   center?: [number, number];
   zoom?: number;
   /** Camera pitch angle in degrees (0 = flat top-down, 60-75 = dramatic 3D view looking up at terrain) */
@@ -211,7 +229,7 @@ export interface BlogMapProps {
   caption?: string;
   interactive?: boolean;
   showLegend?: boolean;
-  /** Route ID for driving routes mode (denver-to-telluride or colorado-springs-to-telluride) */
+  /** Route ID for driving/hiking/biking routes mode */
   routeId?: string;
 }
 
@@ -364,6 +382,8 @@ export function BlogMap({
   const mapRef = useRef<MapRef>(null);
   const [isMapLoaded, setIsMapLoaded] = useState(false);
   const [trailsData, setTrailsData] = useState<any>(null);
+  const [hikingTrailsData, setHikingTrailsData] = useState<any>(null);
+  const [bikingTrailsData, setBikingTrailsData] = useState<any>(null);
   const [liftsData, setLiftsData] = useState<any>(null);
   const [hotels, setHotels] = useState<HotelData[]>([]);
   const [selectedHotel, setSelectedHotel] = useState<HotelData | null>(null);
@@ -441,7 +461,7 @@ export function BlogMap({
   const showLifts = showLiftsProp ?? presetConfig.showLifts;
   
   // Auto-enable 3D terrain for trail-focused maps
-  const enableTerrain = terrain || preset === 'trails' || allHighlightedTrails.length > 0 || focusArea !== undefined;
+  const enableTerrain = terrain || preset === 'trails' || preset === 'hiking-trails' || preset === 'biking-trails' || allHighlightedTrails.length > 0 || focusArea !== undefined;
 
   // Reset view handler
   const handleResetView = useCallback(() => {
@@ -469,9 +489,10 @@ export function BlogMap({
     setHasMovedFromDefault(diff);
   }, []);
 
-  // Load trail data
+  // Load ski trail data
   useEffect(() => {
     if (!showTrails && allHighlightedTrails.length === 0) return;
+    if (preset === 'hiking-trails' || preset === 'biking-trails') return; // Skip ski trails for hiking/biking presets
     
     fetch('/data/telluride-ski-trails.json')
       .then(res => res.json())
@@ -485,8 +506,48 @@ export function BlogMap({
         };
         setTrailsData(filtered);
       })
-      .catch(err => console.error('[BlogMap] Failed to load trails:', err));
-  }, [showTrails, allHighlightedTrails.length]);
+      .catch(err => console.error('[BlogMap] Failed to load ski trails:', err));
+  }, [showTrails, allHighlightedTrails.length, preset]);
+
+  // Load hiking trail data
+  useEffect(() => {
+    if (preset !== 'hiking-trails') return;
+    
+    fetch('/data/telluride-hiking-trails.json')
+      .then(res => {
+        if (!res.ok) {
+          console.warn('[BlogMap] Hiking trails data not found');
+          return null;
+        }
+        return res.json();
+      })
+      .then(data => {
+        if (data) {
+          setHikingTrailsData(data);
+        }
+      })
+      .catch(err => console.error('[BlogMap] Failed to load hiking trails:', err));
+  }, [preset]);
+
+  // Load biking trail data
+  useEffect(() => {
+    if (preset !== 'biking-trails') return;
+    
+    fetch('/data/telluride-biking-trails.json')
+      .then(res => {
+        if (!res.ok) {
+          console.warn('[BlogMap] Biking trails data not found');
+          return null;
+        }
+        return res.json();
+      })
+      .then(data => {
+        if (data) {
+          setBikingTrailsData(data);
+        }
+      })
+      .catch(err => console.error('[BlogMap] Failed to load biking trails:', err));
+  }, [preset]);
 
   // Load lift data
   useEffect(() => {
@@ -984,6 +1045,84 @@ export function BlogMap({
                 layout={{
                   'line-join': 'round',
                   'line-cap': 'round',
+                }}
+              />
+            </Source>
+          )}
+
+          {/* Hiking trails layer */}
+          {preset === 'hiking-trails' && hikingTrailsData && (
+            <Source id="hiking-trails" type="geojson" data={hikingTrailsData}>
+              <Layer
+                id="hiking-trails-layer"
+                type="line"
+                paint={{
+                  'line-color': '#10b981',
+                  'line-width': 3,
+                  'line-opacity': 0.85,
+                }}
+                layout={{
+                  'line-join': 'round',
+                  'line-cap': 'round',
+                }}
+              />
+              <Layer
+                id="hiking-trails-labels"
+                type="symbol"
+                layout={{
+                  'symbol-placement': 'line-center',
+                  'text-field': ['get', 'name'],
+                  'text-size': 11,
+                  'text-font': ['DIN Pro Bold', 'Arial Unicode MS Bold'],
+                  'text-anchor': 'center',
+                  'text-max-angle': 30,
+                  'text-allow-overlap': false,
+                }}
+                paint={{
+                  'text-color': '#065f46',
+                  'text-halo-color': '#ffffff',
+                  'text-halo-width': 2,
+                  'text-halo-blur': 0.5,
+                  'text-opacity': 0.9,
+                }}
+              />
+            </Source>
+          )}
+
+          {/* Biking trails layer */}
+          {preset === 'biking-trails' && bikingTrailsData && (
+            <Source id="biking-trails" type="geojson" data={bikingTrailsData}>
+              <Layer
+                id="biking-trails-layer"
+                type="line"
+                paint={{
+                  'line-color': '#3b82f6',
+                  'line-width': 3,
+                  'line-opacity': 0.85,
+                }}
+                layout={{
+                  'line-join': 'round',
+                  'line-cap': 'round',
+                }}
+              />
+              <Layer
+                id="biking-trails-labels"
+                type="symbol"
+                layout={{
+                  'symbol-placement': 'line-center',
+                  'text-field': ['get', 'name'],
+                  'text-size': 11,
+                  'text-font': ['DIN Pro Bold', 'Arial Unicode MS Bold'],
+                  'text-anchor': 'center',
+                  'text-max-angle': 30,
+                  'text-allow-overlap': false,
+                }}
+                paint={{
+                  'text-color': '#1e40af',
+                  'text-halo-color': '#ffffff',
+                  'text-halo-width': 2,
+                  'text-halo-blur': 0.5,
+                  'text-opacity': 0.9,
                 }}
               />
             </Source>
