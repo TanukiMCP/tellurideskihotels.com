@@ -72,24 +72,24 @@ The absence of chains means each property has distinct personality, decor, and s
 
 Mountain Village includes some properties with brand affiliations, though most operate under independent management despite carrying recognizable names. The Peaks Resort, for instance, maintains its identity rather than conforming to corporate standards. Even these properties emphasize individual character over chain consistency.
 
+<HotelGrid 
+  hotelIds={["lp2ff71", "lp35ebc", "lp7924d"]}
+  title="Independent Downtown Boutique Hotels"
+  client:load
+/>
+
 ### Two Distinct Hotel Districts
 
 Downtown Telluride and Mountain Village function as separate hotel markets despite the [13-minute gondola connection](/blog/planning-tips/telluride-gondola-guide). Downtown hotels sit at 8,750 feet in the historic town center, surrounded by Victorian architecture, Main Street restaurants, bars, galleries, and nightlife. Mountain Village properties cluster at the ski resort base around 9,500 feet, providing ski-in/ski-out access, resort amenities, and modern mountain architecture.
 
 <BlogMap 
   preset="overview"
-  caption="Downtown Telluride (left) and Mountain Village (right) connected by the free gondola"
+  markers={[
+    { lng: -107.8123, lat: 37.9375, label: "Downtown Telluride", icon: "default" },
+    { lng: -107.848, lat: 37.939, label: "Mountain Village", icon: "hotel" }
+  ]}
+  caption="Downtown Telluride and Mountain Village connected by the free gondola"
   client:load
-/>
-
-<BlogImage 
-  images={{
-    src: "https://images.unsplash.com/photo-1465239040612?fm=jpg&q=90&w=1200&auto=compress&cs=tinysrgb&h=450",
-    alt: "Grassy mountainside in Telluride",
-    photographer: "Kyle Cesmat",
-    photographerUrl: "https://unsplash.com/@kylecesmat",
-    source: "Unsplash"
-  }}
 />
 
 Downtown hotels typically cost 20-40% less than equivalent Mountain Village properties, reflecting the trade-off between historic charm with walkable amenities versus direct slope access. According to [Telluride's official lodging guide](https://www.telluride.com/lodging), the resort area offers over 300 accommodation options across both areas. Downtown delivers authentic small-town character, diverse dining within walking distance, and vibrant nightlife. You'll ride the free gondola 10-15 minutes each morning to reach the slopes, then again at day's end. Mountain Village provides ski-in/ski-out convenience, modern resort facilities, and the ability to ski until lifts close without worrying about catching the gondola. However, dining options concentrate in resort hotels, nightlife remains limited, and the atmosphere feels more manufactured than organic.
@@ -198,17 +198,13 @@ Basic rooms with queen or king beds and private bathrooms represent standard off
 
 ### $200-400/Night
 
-<BlogImage 
-  images={{
-    src: "https://images.unsplash.com/photo-1627578057698?fm=jpg&q=90&w=1200&auto=compress&cs=tinysrgb&h=450",
-    alt: "Mountain scene in Colorado",
-    photographer: "Christine Finkelson",
-    photographerUrl: "https://unsplash.com/@cfinkelson",
-    source: "Unsplash"
-  }}
-/>
-
 Mid-range properties deliver notably better quality with modern or updated rooms, superior bedding and linens, and improved bathroom amenities. Complimentary hot breakfast with eggs, meat, and baked goods rather than just continental. Multiple hot tubs with better views and maintenance. Afternoon wine and appetizer receptions. Ski storage with boot dryers. Rooftop spaces with fire pits or gathering areas. More attentive service and recommendation assistance.
+
+<HotelGrid 
+  hotelIds={["lp2ff71", "lp35ebc", "lp7924d"]}
+  title="Mid-Range Properties ($200-400/Night)"
+  client:load
+/>
 
 ### $400-700/Night
 
@@ -226,31 +222,59 @@ Main Street (Colorado Avenue) location provides maximum walkability to restauran
 
 South end downtown near the Bear Creek trailhead provides quick access to hiking while remaining within the downtown boundaries. North end properties sit closest to the gondola, shortening your morning commute to slopes. West end locations (toward the airport) require slightly longer walks to Main Street but often provide better mountain views from properties. The entire downtown area remains compact enough that location within downtown matters less than in sprawling resort towns.
 
+<BlogMap 
+  preset="town"
+  caption="Downtown Telluride hotel locations and Main Street corridor"
+  client:load
+/>
+
 ### Within Mountain Village
 
 Ski-in/ski-out designation varies in quality—some properties genuinely allow skiing to your door, while others require a short walk on paths. Properties directly on the main Mountain Village plaza provide the most services, restaurants, and activity without needing to leave the immediate area. Properties further up the mountain or on periphery deliver more privacy and quiet but less immediate access to dining and services.
 
 Gondola proximity within Mountain Village affects your access to downtown Telluride. Properties near the Mountain Village gondola station enable quick trips downtown for dining variety and nightlife. More remote Mountain Village locations require walking or shuttle bus to reach the gondola, adding time and friction to downtown visits.
 
+<BlogMap 
+  preset="mountain-village"
+  caption="Mountain Village resort base and ski-in/ski-out hotel locations"
+  client:load
+/>
+
 ## Booking Strategies
+
+Successfully booking Telluride hotels requires understanding the unique market dynamics, timing considerations, and strategic approaches that differ from typical resort destinations. The combination of limited inventory, high demand during peak periods, independent property management, and dramatic seasonal pricing variations creates opportunities for strategic travelers while penalizing those who approach booking casually.
 
 ### Book Direct vs Third-Party
 
 Hotels increasingly match or beat third-party booking site rates while adding perks unavailable through intermediaries. Direct booking often includes complimentary breakfast worth $25-40 per person daily, room upgrades when available, resort credits usable for dining or spa services, and free parking in downtown worth $25-40 daily. These extras deliver $50-150 daily value that third-party bookings forfeit.
 
-Call hotels directly even if the website shows no availability or high rates. Properties sometimes hold back rooms or offer unadvertised packages unavailable online. Phone agents can also alert you to upcoming promotions or suggest alternative dates with better pricing.
+Call hotels directly even if the website shows no availability or high rates. Properties sometimes hold back rooms or offer unadvertised packages unavailable online. Phone agents can also alert you to upcoming promotions or suggest alternative dates with better pricing. Independent properties particularly appreciate direct bookings since they avoid commission fees paid to third-party sites, making them more likely to offer upgrades, credits, or flexible policies.
+
+Many downtown boutique hotels don't participate fully in major booking platforms, maintaining availability exclusively through their own websites or phone reservations. This means direct contact reveals options invisible to travelers searching only through Booking.com or Expedia. Additionally, direct bookings enable direct communication about specific room preferences, special occasions, or accessibility needs that automated systems can't accommodate.
 
 ### Timing Your Reservation
 
-Peak periods (Christmas-New Year's, Presidents Day) require booking 6-9 months ahead minimum. Properties sell out completely and impose substantial minimums. Missing these windows forces you to accept whatever remains at premium pricing or look at alternative dates entirely.
+Peak periods (Christmas-New Year's, Presidents Day) require booking 6-9 months ahead minimum. Properties sell out completely and impose substantial minimums. Missing these windows forces you to accept whatever remains at premium pricing or look at alternative dates entirely. Properties release peak-season inventory in early spring, so booking 9-12 months ahead secures the best selection and sometimes slightly better rates before demand fully materializes.
 
 Prime season (January-March) benefits from 3-4 months advance booking, balancing selection with avoiding excessive early commitment. Shoulder season (early December, late March) needs only 1-2 months ahead, offering flexibility for weather-dependent decisions. Summer outside major festivals and spring/fall allow last-minute booking, often with discounts for filling empty rooms.
+
+Flexible travelers can capitalize on last-minute cancellations during peak periods. Properties often release cancelled rooms 1-2 weeks before arrival at original booking rates rather than premium last-minute pricing. Setting up availability alerts or checking directly with properties in the final weeks before desired dates sometimes reveals unexpectedly available inventory at peak periods.
 
 ### Package Deals and Promotions
 
 Ski-stay packages bundling lodging with lift tickets save 15-25% compared to separate bookings. These packages appear most commonly at ski-in/ski-out properties with resort relationships. Multi-night stays of 5-7 nights may include dining credits, spa discounts, or room upgrades. Always ask about packages when booking—many properties offer deals not advertised online.
 
-Shoulder season promotions appear regularly as properties seek to maintain occupancy during slower periods. Sign up for property email lists to receive notification of flash sales and limited-time offers. Following properties on social media sometimes reveals exclusive deals.
+Shoulder season promotions appear regularly as properties seek to maintain occupancy during slower periods. Sign up for property email lists to receive notification of flash sales and limited-time offers. Following properties on social media sometimes reveals exclusive deals. Many properties offer "stay 4 nights, get 5th night free" promotions during shoulder seasons that significantly reduce average nightly rates.
+
+Group bookings (typically 5+ rooms) unlock additional discounts and benefits. Properties often provide group coordinators with complimentary accommodations, meeting spaces, or welcome amenities. Booking multiple rooms together sometimes enables access to better room categories or preferred locations that individual bookings can't secure. Group rates typically require signing contracts and providing deposits 3-6 months ahead.
+
+### Cancellation Policies and Flexibility
+
+Understanding cancellation policies proves crucial given Telluride's weather variability and remote location. Peak season bookings often require full prepayment with strict cancellation windows 30-60 days before arrival. Shoulder season and off-season bookings typically offer more flexible cancellation policies, sometimes allowing changes until 7-14 days before arrival.
+
+Travel insurance becomes valuable for peak-season bookings where cancellation policies are restrictive. Weather-related delays, illness, or unexpected circumstances can result in forfeiting thousands of dollars in prepaid accommodations without proper coverage. Many properties recommend travel insurance for peak periods and some require it for group bookings.
+
+Last-minute flexibility enables taking advantage of weather-dependent cancellations from other travelers. Properties sometimes offer significant discounts (20-40% off) for same-day or next-day bookings when they have unexpected availability. This approach requires flexibility in travel dates but can yield exceptional value for spontaneous travelers.
 
 ## Common Questions and Considerations
 
@@ -269,8 +293,8 @@ Multiple Telluride hotels welcome dogs, though policies and fees vary. Hotel Tel
 Families benefit from condo-hotels with full kitchens and multiple bedrooms. Lumiere, Mountain Lodge, and Inn at Lost Creek provide residential-style space accommodating families comfortably. Peaks Resort offers kids' programs, multiple dining options, and amenities keeping children entertained. Downtown properties work less well for families with young children due to smaller rooms and stairs, though older kids often enjoy the walkable downtown atmosphere.
 
 <HotelGrid 
-  hotelIds={["lp4153f", "lp35351", "lp31628", "lp3e47f"]}
-  limit={4}
+  hotelIds={["lp4153f", "lp35351", "lp31628"]}
+  limit={3}
   title="Family-Friendly Accommodations"
   client:load
 />
