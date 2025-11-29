@@ -522,7 +522,7 @@ export function BlogMap({
         return res.json();
       })
       .then(data => {
-        if (data) {
+        if (data && data.features && data.features.length > 0) {
           setHikingTrailsData(data);
         }
       })
@@ -542,7 +542,7 @@ export function BlogMap({
         return res.json();
       })
       .then(data => {
-        if (data) {
+        if (data && data.features && data.features.length > 0) {
           setBikingTrailsData(data);
         }
       })
@@ -1051,7 +1051,7 @@ export function BlogMap({
           )}
 
           {/* Hiking trails layer */}
-          {preset === 'hiking-trails' && hikingTrailsData && (
+          {preset === 'hiking-trails' && hikingTrailsData && hikingTrailsData.features && hikingTrailsData.features.length > 0 && (
             <Source id="hiking-trails" type="geojson" data={hikingTrailsData}>
               <Layer
                 id="hiking-trails-layer"
@@ -1090,7 +1090,7 @@ export function BlogMap({
           )}
 
           {/* Biking trails layer */}
-          {preset === 'biking-trails' && bikingTrailsData && (
+          {preset === 'biking-trails' && bikingTrailsData && bikingTrailsData.features && bikingTrailsData.features.length > 0 && (
             <Source id="biking-trails" type="geojson" data={bikingTrailsData}>
               <Layer
                 id="biking-trails-layer"
