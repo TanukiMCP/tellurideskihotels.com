@@ -3,12 +3,12 @@
 import { useState, useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { 
-  Users, Moon, Bed, Ticket, Utensils, 
+  Users, Moon, Bed, Ticket, Utensils, Calendar,
   Minus, Plus, DollarSign, Calculator, Compass
 } from 'lucide-react';
 import { HotelGrid } from '@/components/blog/HotelGrid';
 import { ActivityGrid } from '@/components/blog/ActivityGrid';
-import { format, addDays } from 'date-fns';
+import { format, addDays, differenceInDays, parseISO } from 'date-fns';
 
 export interface TripCalculatorProps {
   defaultNights?: number;
@@ -26,19 +26,28 @@ const DEFAULT_ALLOCATION = {
 };
 
 export function TripCalculator({
-  defaultNights = 4,
+  defaultNights = 3,
   defaultGuests = 2,
   defaultBudget = 4000,
   title = 'Plan Your Trip Budget',
 }: TripCalculatorProps) {
   const [budget, setBudget] = useState(defaultBudget);
   const [guests, setGuests] = useState(defaultGuests);
-  const [nights, setNights] = useState(defaultNights);
   const [allocation, setAllocation] = useState(DEFAULT_ALLOCATION);
 
-  // Computed dates for passing to HotelGrid
-  const checkIn = format(addDays(new Date(), 60), 'yyyy-MM-dd');
-  const checkOut = format(addDays(new Date(), 60 + nights), 'yyyy-MM-dd');
+  // Default dates: 7 days from now, 3 night stay
+  const [checkIn, setCheckIn] = useState(() => format(addDays(new Date(), 7), 'yyyy-MM-dd'));
+  const [checkOut, setCheckOut] = useState(() => format(addDays(new Date(), 7 + defaultNights), 'yyyy-MM-dd'));
+
+  // Calculate nights from dates
+  const nights = useMemo(() => {
+    try {
+      const diff = differenceInDays(parseISO(checkOut), parseISO(checkIn));
+      return Math.max(1, diff);
+    } catch {
+      return defaultNights;
+    }
+  }, [checkIn, checkOut, defaultNights]);
 
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('en-US', {
@@ -98,7 +107,28 @@ export function TripCalculator({
     setAllocation(newAllocation);
   };
 
+  // Handle date changes
+  const handleCheckInChange = (newCheckIn: string) => {
+    setCheckIn(newCheckIn);
+    // Ensure checkout is at least 1 day after checkin
+    const checkInDate = parseISO(newCheckIn);
+    const checkOutDate = parseISO(checkOut);
+    if (checkOutDate <= checkInDate) {
+      setCheckOut(format(addDays(checkInDate, 1), 'yyyy-MM-dd'));
+    }
+  };
+
+  const handleCheckOutChange = (newCheckOut: string) => {
+    const checkInDate = parseISO(checkIn);
+    const newCheckOutDate = parseISO(newCheckOut);
+    // Ensure checkout is after checkin
+    if (newCheckOutDate > checkInDate) {
+      setCheckOut(newCheckOut);
+    }
+  };
+
   const budgetPresets = [2000, 4000, 6000, 10000];
+  const minCheckIn = format(addDays(new Date(), 1), 'yyyy-MM-dd');
 
   return (
     <Card className="my-12 not-prose border-0 shadow-xl bg-gradient-to-br from-primary-50 to-primary-100/50 overflow-hidden">
@@ -119,7 +149,7 @@ export function TripCalculator({
 
       <CardContent className="p-6 space-y-6">
         {/* Budget + Trip Details */}
-        <div className="grid gap-4 md:grid-cols-2">
+        <div className="grid gap-4 lg:grid-cols-3">
           {/* Budget Input */}
           <div>
             <label className="block text-sm font-semibold text-neutral-700 mb-2">
@@ -136,7 +166,7 @@ export function TripCalculator({
                 step="500"
               />
             </div>
-            <div className="flex gap-2 mt-2">
+            <div className="flex gap-2 mt-2 flex-wrap">
               {budgetPresets.map((preset) => (
                 <button
                   key={preset}
@@ -153,37 +183,62 @@ export function TripCalculator({
             </div>
           </div>
 
-          {/* Travelers + Nights */}
-          <div className="flex gap-4">
-            <div className="flex-1">
-              <label className="block text-sm font-semibold text-neutral-700 mb-2">
-                <Users className="w-4 h-4 inline mr-1" />
-                Travelers
-              </label>
-              <div className="flex items-center justify-between bg-white border-2 border-neutral-200 rounded-xl px-3 py-2">
-                <button onClick={() => setGuests(Math.max(1, guests - 1))} className="p-1 hover:text-primary-600">
-                  <Minus className="w-5 h-5" />
-                </button>
-                <span className="text-xl font-bold tabular-nums">{guests}</span>
-                <button onClick={() => setGuests(Math.min(12, guests + 1))} className="p-1 hover:text-primary-600">
-                  <Plus className="w-5 h-5" />
-                </button>
+          {/* Date Range */}
+          <div>
+            <label className="block text-sm font-semibold text-neutral-700 mb-2">
+              <Calendar className="w-4 h-4 inline mr-1" />
+              Travel Dates
+            </label>
+            <div className="flex gap-2">
+              <div className="flex-1">
+                <input
+                  type="date"
+                  value={checkIn}
+                  onChange={(e) => handleCheckInChange(e.target.value)}
+                  min={minCheckIn}
+                  className="w-full px-3 py-3 bg-white border-2 border-neutral-200 rounded-xl text-sm focus:border-primary-500 focus:outline-none transition-all"
+                />
+                <span className="text-xs text-neutral-500 mt-1 block">Check-in</span>
+              </div>
+              <div className="flex-1">
+                <input
+                  type="date"
+                  value={checkOut}
+                  onChange={(e) => handleCheckOutChange(e.target.value)}
+                  min={format(addDays(parseISO(checkIn), 1), 'yyyy-MM-dd')}
+                  className="w-full px-3 py-3 bg-white border-2 border-neutral-200 rounded-xl text-sm focus:border-primary-500 focus:outline-none transition-all"
+                />
+                <span className="text-xs text-neutral-500 mt-1 block">Check-out</span>
               </div>
             </div>
-            <div className="flex-1">
-              <label className="block text-sm font-semibold text-neutral-700 mb-2">
-                <Moon className="w-4 h-4 inline mr-1" />
-                Nights
-              </label>
-              <div className="flex items-center justify-between bg-white border-2 border-neutral-200 rounded-xl px-3 py-2">
-                <button onClick={() => setNights(Math.max(1, nights - 1))} className="p-1 hover:text-primary-600">
-                  <Minus className="w-5 h-5" />
-                </button>
-                <span className="text-xl font-bold tabular-nums">{nights}</span>
-                <button onClick={() => setNights(Math.min(14, nights + 1))} className="p-1 hover:text-primary-600">
-                  <Plus className="w-5 h-5" />
-                </button>
-              </div>
+            <div className="text-center mt-2">
+              <span className="text-sm font-medium text-primary-700">{nights} {nights === 1 ? 'night' : 'nights'}</span>
+            </div>
+          </div>
+
+          {/* Travelers */}
+          <div>
+            <label className="block text-sm font-semibold text-neutral-700 mb-2">
+              <Users className="w-4 h-4 inline mr-1" />
+              Travelers
+            </label>
+            <div className="flex items-center justify-between bg-white border-2 border-neutral-200 rounded-xl px-4 py-3">
+              <button 
+                onClick={() => setGuests(Math.max(1, guests - 1))} 
+                className="w-10 h-10 rounded-lg bg-neutral-100 hover:bg-neutral-200 flex items-center justify-center transition-colors"
+              >
+                <Minus className="w-5 h-5" />
+              </button>
+              <span className="text-2xl font-bold tabular-nums">{guests}</span>
+              <button 
+                onClick={() => setGuests(Math.min(12, guests + 1))} 
+                className="w-10 h-10 rounded-lg bg-neutral-100 hover:bg-neutral-200 flex items-center justify-center transition-colors"
+              >
+                <Plus className="w-5 h-5" />
+              </button>
+            </div>
+            <div className="text-center mt-2">
+              <span className="text-sm text-neutral-500">{formatCurrency(budget / guests)} per person</span>
             </div>
           </div>
         </div>
@@ -192,7 +247,7 @@ export function TripCalculator({
         <div className="bg-white rounded-xl p-4 border border-neutral-200">
           <div className="flex items-center justify-between mb-3">
             <span className="text-sm font-semibold text-neutral-700">Budget Breakdown</span>
-            <span className="text-sm text-neutral-500">{formatCurrency(budget / guests)} per person</span>
+            <span className="text-xs text-neutral-500">Adjust to prioritize what matters</span>
           </div>
           
           {/* Visual Bar */}
@@ -252,7 +307,7 @@ export function TripCalculator({
             limit={3}
             checkIn={checkIn}
             checkOut={checkOut}
-            title={`Hotels at ${formatCurrency(breakdown.lodging.perNight)}/night`}
+            title={`Hotels up to ${formatCurrency(breakdown.lodging.perNight)}/night`}
           />
         </div>
 
@@ -268,7 +323,7 @@ export function TripCalculator({
         {/* Summary CTA */}
         <div className="bg-primary-600 rounded-xl p-5 text-center">
           <p className="text-primary-100 text-sm mb-1">
-            {guests} travelers • {nights} nights • {formatCurrency(budget)} total budget
+            {guests} travelers • {nights} nights ({format(parseISO(checkIn), 'MMM d')} - {format(parseISO(checkOut), 'MMM d')}) • {formatCurrency(budget)} total
           </p>
           <p className="text-white font-bold text-lg mb-4">
             Ready to book your Telluride trip?

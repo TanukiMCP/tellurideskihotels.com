@@ -535,33 +535,41 @@ export function HotelGrid({
   }, [hotels, minPriceFilter, maxPriceFilter]);
 
   // Filter hotels by price range if specified
-  // Uses live rates when available, falls back to typical prices for filtering
+  // Uses the actual displayed price (mergedPrices) for accurate filtering
   const filteredHotels = useMemo(() => {
     // If no price filters specified, return all hotels
     if (minPriceFilter === undefined && maxPriceFilter === undefined) {
       return hotels;
     }
     
-    // Filter hotels using price range check (works with fallback prices if live rates not loaded)
+    // Filter hotels using the actual price that will be displayed
     return hotels.filter(hotel => {
-      const hotelPricing = pricingData[hotel.hotel_id];
-      if (!hotelPricing) return true; // Include if no pricing data (better than excluding)
-
-      const hotelMin = hotelPricing.typicalMinPrice;
-      const hotelMax = hotelPricing.typicalMaxPrice;
-
-      // Check if hotel's typical range overlaps with filter range
-      if (minPriceFilter !== undefined && hotelMax < minPriceFilter) {
-        return false; // Hotel's max is below filter min
+      const displayedPrice = mergedPrices[hotel.hotel_id];
+      
+      // If no price data, check against pricingData typical range as fallback
+      if (!displayedPrice || displayedPrice === 0) {
+        const hotelPricing = pricingData[hotel.hotel_id];
+        if (!hotelPricing) return true; // Include if no pricing data
+        
+        // Use typical min price for filtering when no live rate
+        const typicalPrice = hotelPricing.typicalMinPrice;
+        if (minPriceFilter !== undefined && typicalPrice < minPriceFilter) return false;
+        if (maxPriceFilter !== undefined && typicalPrice > maxPriceFilter) return false;
+        return true;
       }
 
-      if (maxPriceFilter !== undefined && hotelMin > maxPriceFilter) {
-        return false; // Hotel's min is above filter max
+      // Filter based on actual displayed price
+      if (minPriceFilter !== undefined && displayedPrice < minPriceFilter) {
+        return false;
       }
 
-      return true; // Overlaps with filter range
+      if (maxPriceFilter !== undefined && displayedPrice > maxPriceFilter) {
+        return false;
+      }
+
+      return true;
     });
-  }, [hotels, minPriceFilter, maxPriceFilter, pricingData]);
+  }, [hotels, minPriceFilter, maxPriceFilter, mergedPrices, pricingData]);
 
   // Determine display mode based on number of filtered hotels
   const displayMode = filteredHotels.length === 1 ? 'single' : filteredHotels.length === 2 ? 'double' : 'triple';
