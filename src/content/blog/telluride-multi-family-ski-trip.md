@@ -46,7 +46,7 @@ This comprehensive guide provides everything you need to plan your Telluride mul
 
 <BlogImage 
   images={{
-    src: "https://images.unsplash.com/photo-1678879150716?fm=jpg&q=90&w=1200&auto=compress&cs=tinysrgb&h=450",
+    src: "https://images.unsplash.com/photo-1678879150716-6a3ad4bb335a?fm=jpg&q=80&w=1200&auto=compress&cs=tinysrgb&h=450",
     alt: "A group of people riding skis down a snow covered slope",
     photographer: "R Marte",
     photographerUrl: "https://unsplash.com/@rmarte",
@@ -130,7 +130,7 @@ Flexibility becomes essential when coordinating multiple families with different
 
 <BlogImage 
   images={{
-    src: "https://images.unsplash.com/photo-1678879150716?fm=jpg&q=90&w=1200&auto=compress&cs=tinysrgb&h=450",
+    src: "https://images.unsplash.com/photo-1678879150716-6a3ad4bb335a?fm=jpg&q=80&w=1200&auto=compress&cs=tinysrgb&h=450",
     alt: "A group of people riding skis down a snow covered slope",
     photographer: "R Marte",
     photographerUrl: "https://unsplash.com/@rmarte",

@@ -46,7 +46,7 @@ This comprehensive guide provides everything you need to plan your solo Tellurid
 
 <BlogImage 
   images={{
-    src: "https://images.unsplash.com/photo-1596473535762?fm=jpg&q=90&w=1200&auto=compress&cs=tinysrgb&h=450",
+    src: "https://images.unsplash.com/photo-1596473535762-ce7f43470748?fm=jpg&q=80&w=1200&auto=compress&cs=tinysrgb&h=450",
     alt: "Person in orange jacket riding ski blades on snow covered mountain",
     photographer: "Glade Optics",
     photographerUrl: "https://unsplash.com/@gladegoggles",
@@ -121,7 +121,7 @@ Dining experiences work well for solo travelers in Telluride, as many restaurant
 
 <BlogImage 
   images={{
-    src: "https://images.unsplash.com/photo-1709882370244?fm=jpg&q=90&w=1200&auto=compress&cs=tinysrgb&h=450",
+    src: "https://images.unsplash.com/photo-1709882370244-4fae019515c2?fm=jpg&q=80&w=1200&auto=compress&cs=tinysrgb&h=450",
     alt: "A man riding skis down a snow covered slope",
     photographer: "Live Kaiah",
     photographerUrl: "https://unsplash.com/@livekaiah",

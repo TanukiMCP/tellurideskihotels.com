@@ -60,7 +60,7 @@ Whether you're planning a quick weekend escape or a longer girlfriend getaway, u
 
 <BlogImage 
   images={{
-    src: "https://images.unsplash.com/photo-1734329596076?fm=jpg&q=90&w=1200&auto=compress&cs=tinysrgb&h=450",
+    src: "https://images.unsplash.com/photo-1734329596076-4aa090053d5f?fm=jpg&q=80&w=1200&auto=compress&cs=tinysrgb&h=450",
     alt: "A hot tub with a mountain view in the background",
     photographer: "Hailey Tong",
     photographerUrl: "https://unsplash.com/@haileytong",
