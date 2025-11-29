@@ -9,7 +9,7 @@ import { useRef, useState, useEffect, useMemo, useCallback } from 'react';
 import Map, { Marker, NavigationControl, Popup, Source, Layer } from 'react-map-gl/mapbox';
 import type { MapRef, ViewStateChangeEvent } from 'react-map-gl/mapbox';
 import { MAPBOX_TOKEN, TELLURIDE_CENTER, MOUNTAIN_VILLAGE_CENTER, TELLURIDE_AREA_CENTER } from '@/lib/mapbox-utils';
-import { MapPin, Mountain, Building2, Cable, Trees, Info, X, ChevronRight, Star, RotateCcw } from 'lucide-react';
+import { MapPin, Mountain, Building2, Cable, Trees, Info, X, ChevronRight, Star, RotateCcw, Clock, Navigation, Route } from 'lucide-react';
 import 'mapbox-gl/dist/mapbox-gl.css';
 
 // Trail area definitions for bowl/zone focusing
@@ -144,6 +144,15 @@ const PRESETS = {
     showTrails: true,
     showLifts: true,
   },
+  // Driving routes mode - shows multiple route options with stops
+  'driving-routes': {
+    center: [-106.5, 38.5] as [number, number], // Center of Colorado
+    zoom: 7,
+    pitch: 0,
+    bearing: 0,
+    showTrails: false,
+    showLifts: false,
+  },
 };
 
 const MAP_STYLE = 'mapbox://styles/mapbox/outdoors-v12';
@@ -179,7 +188,7 @@ export interface BlogMapMarker {
 }
 
 export interface BlogMapProps {
-  preset?: 'resort' | 'town' | 'mountain-village' | 'overview' | 'hotels' | 'trails' | 'trails-overhead';
+  preset?: 'resort' | 'town' | 'mountain-village' | 'overview' | 'hotels' | 'trails' | 'trails-overhead' | 'driving-routes';
   center?: [number, number];
   zoom?: number;
   /** Camera pitch angle in degrees (0 = flat top-down, 60-75 = dramatic 3D view looking up at terrain) */
@@ -202,6 +211,8 @@ export interface BlogMapProps {
   caption?: string;
   interactive?: boolean;
   showLegend?: boolean;
+  /** Route ID for driving routes mode (denver-to-telluride or colorado-springs-to-telluride) */
+  routeId?: string;
 }
 
 interface HotelData {
@@ -348,6 +359,7 @@ export function BlogMap({
   caption,
   interactive = true,
   showLegend = true,
+  routeId,
 }: BlogMapProps) {
   const mapRef = useRef<MapRef>(null);
   const [isMapLoaded, setIsMapLoaded] = useState(false);
@@ -358,6 +370,20 @@ export function BlogMap({
   const [simplePopupInfo, setSimplePopupInfo] = useState<{ lng: number; lat: number; label: string } | null>(null);
   const [isLegendOpen, setIsLegendOpen] = useState(false);
   const [hasMovedFromDefault, setHasMovedFromDefault] = useState(false);
+  
+  // Driving routes state
+  const [routeData, setRouteData] = useState<any>(null);
+  const [routes, setRoutes] = useState<Array<{
+    id: string;
+    name: string;
+    distance: number;
+    duration: number;
+    geometry: any;
+    color: string;
+  }>>([]);
+  const [selectedRouteIndex, setSelectedRouteIndex] = useState(0);
+  const [routeStops, setRouteStops] = useState<any[]>([]);
+  const [loadingRoutes, setLoadingRoutes] = useState(false);
 
   // Get preset config
   const presetConfig = PRESETS[preset];
@@ -510,6 +536,141 @@ export function BlogMap({
     lng: hotel.longitude || hotel.location?.longitude || 0,
   });
 
+  // Load route data and fetch directions for driving routes mode
+  useEffect(() => {
+    if (preset !== 'driving-routes' || !routeId) return;
+    
+    const loadRouteData = async () => {
+      setLoadingRoutes(true);
+      try {
+        // Load route stops data from JSON
+        const response = await fetch(`/data/driving-routes/${routeId}-stops.json`);
+        if (!response.ok) {
+          console.error(`[BlogMap] Failed to load route data for ${routeId}`);
+          setLoadingRoutes(false);
+          return;
+        }
+        
+        const data = await response.json();
+        setRouteData(data);
+        
+        // Collect all waypoints from all routes
+        const allWaypoints: Array<[number, number]> = [];
+        data.routes.forEach((route: any) => {
+          route.waypoints.forEach((wp: any) => {
+            allWaypoints.push(wp.coordinates);
+          });
+        });
+        
+        // Fetch directions for each route (origin to destination only - waypoints shown as markers)
+        const routePromises = data.routes.map(async (routeDef: any, routeIndex: number) => {
+          // For Directions API, use just origin and destination to get clean route
+          // Waypoints will be displayed as separate markers
+          const coordinates: Array<[number, number]> = [
+            data.origin.coordinates,
+            data.destination.coordinates,
+          ];
+          
+          try {
+            const directionsResponse = await fetch('/api/mapbox/directions', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                coordinates,
+                alternatives: routeIndex === 0, // Only get alternatives for primary route
+                routeId: routeDef.id,
+              }),
+            });
+            
+            if (!directionsResponse.ok) {
+              console.error(`[BlogMap] Failed to fetch directions for route ${routeDef.id}`);
+              return null;
+            }
+            
+            const directionsData = await directionsResponse.json();
+            return {
+              id: routeDef.id,
+              name: routeDef.name,
+              waypoints: routeDef.waypoints || [],
+              routes: directionsData.routes.map((r: any, idx: number) => ({
+                ...r,
+                color: idx === 0 ? '#2563eb' : idx === 1 ? '#10b981' : '#f59e0b',
+              })),
+            };
+          } catch (error) {
+            console.error(`[BlogMap] Error fetching directions for ${routeDef.id}:`, error);
+            return null;
+          }
+        });
+        
+        const routeResults = await Promise.all(routePromises);
+        const validRoutes = routeResults.filter((r): r is NonNullable<typeof r> => r !== null);
+        
+        // Flatten routes from all route definitions
+        const allRoutes = validRoutes.flatMap(routeResult => 
+          routeResult.routes.map((r, idx) => ({
+            id: `${routeResult.id}-${idx + 1}`,
+            name: routeResult.name + (routeResult.routes.length > 1 ? ` (Option ${idx + 1})` : ''),
+            distance: r.distance,
+            duration: r.duration,
+            geometry: r.geometry,
+            color: r.color,
+          }))
+        );
+        
+        setRoutes(allRoutes);
+        
+        // Collect all waypoints from all route definitions for markers
+        const allWaypoints: any[] = [];
+        validRoutes.forEach(routeResult => {
+          if (routeResult.waypoints && routeResult.waypoints.length > 0) {
+            allWaypoints.push(...routeResult.waypoints);
+          }
+        });
+        // Remove duplicates based on coordinates
+        const uniqueWaypoints = allWaypoints.filter((wp, index, self) =>
+          index === self.findIndex(w => 
+            w.coordinates[0] === wp.coordinates[0] && w.coordinates[1] === wp.coordinates[1]
+          )
+        );
+        setRouteStops(uniqueWaypoints);
+        
+        // Fit map to show all routes
+        if (mapRef.current && allRoutes.length > 0) {
+          const map = mapRef.current.getMap();
+          const allCoords: Array<[number, number]> = [
+            data.origin.coordinates,
+            data.destination.coordinates,
+          ];
+          
+          data.routes.forEach((route: any) => {
+            route.waypoints.forEach((wp: any) => {
+              allCoords.push(wp.coordinates);
+            });
+          });
+          
+          const lngs = allCoords.map(c => c[0]);
+          const lats = allCoords.map(c => c[1]);
+          const minLng = Math.min(...lngs);
+          const maxLng = Math.max(...lngs);
+          const minLat = Math.min(...lats);
+          const maxLat = Math.max(...lats);
+          
+          map.fitBounds(
+            [[minLng - 0.5, minLat - 0.3], [maxLng + 0.5, maxLat + 0.3]],
+            { padding: 80, duration: 1000 }
+          );
+        }
+      } catch (error) {
+        console.error('[BlogMap] Error loading route data:', error);
+      } finally {
+        setLoadingRoutes(false);
+      }
+    };
+    
+    loadRouteData();
+  }, [preset, routeId]);
+
   // Handle map load
   const handleMapLoad = () => {
     setIsMapLoaded(true);
@@ -638,12 +799,78 @@ export function BlogMap({
   // Show reset button when terrain is enabled or when moved from default
   const showResetButton = enableTerrain || hasMovedFromDefault;
 
+  // Format duration helper
+  const formatDuration = (seconds: number): string => {
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    if (hours > 0) {
+      return `${hours}h ${minutes}m`;
+    }
+    return `${minutes}m`;
+  };
+
+  // Format distance helper
+  const formatDistance = (meters: number): string => {
+    const miles = meters * 0.000621371;
+    if (miles < 1) {
+      return `${Math.round(miles * 10) / 10} mi`;
+    }
+    return `${Math.round(miles)} mi`;
+  };
+
   return (
     <div className="my-8 not-prose">
+      {/* Route Selector UI for driving routes */}
+      {preset === 'driving-routes' && routes.length > 0 && (
+        <div className="mb-4 bg-white rounded-lg shadow-md border border-neutral-200 p-4">
+          <div className="flex flex-wrap gap-3">
+            {routes.map((route, index) => (
+              <button
+                key={route.id}
+                onClick={() => setSelectedRouteIndex(index)}
+                className={`flex-1 min-w-[200px] px-4 py-3 rounded-lg border-2 transition-all ${
+                  selectedRouteIndex === index
+                    ? 'border-primary-600 bg-primary-50'
+                    : 'border-neutral-200 bg-white hover:border-neutral-300'
+                }`}
+              >
+                <div className="flex items-center justify-between mb-1">
+                  <div className="flex items-center gap-2">
+                    <div 
+                      className="w-4 h-4 rounded-full"
+                      style={{ backgroundColor: route.color }}
+                    />
+                    <span className="font-semibold text-sm text-neutral-900">
+                      {route.name}
+                    </span>
+                  </div>
+                </div>
+                <div className="flex items-center gap-4 text-xs text-neutral-600 mt-2">
+                  <div className="flex items-center gap-1">
+                    <Clock size={14} />
+                    <span>{formatDuration(route.duration)}</span>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <Route size={14} />
+                    <span>{formatDistance(route.distance)}</span>
+                  </div>
+                </div>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
       <div 
         className="relative rounded-xl overflow-hidden border border-neutral-200 shadow-md"
         style={{ height }}
       >
+        {loadingRoutes && (
+          <div className="absolute inset-0 bg-white/80 backdrop-blur-sm z-50 flex items-center justify-center">
+            <div className="text-neutral-600 font-medium">Loading routes...</div>
+          </div>
+        )}
+        
         <Map
           ref={mapRef}
           initialViewState={initialViewState}
@@ -760,6 +987,114 @@ export function BlogMap({
                 }}
               />
             </Source>
+          )}
+
+          {/* Driving Routes */}
+          {preset === 'driving-routes' && routes.map((route, index) => (
+            <Source key={route.id} id={`route-${route.id}`} type="geojson" data={route.geometry}>
+              <Layer
+                id={`route-${route.id}-outline`}
+                type="line"
+                paint={{
+                  'line-color': '#ffffff',
+                  'line-width': 8,
+                  'line-opacity': 0.8,
+                }}
+                layout={{
+                  'line-join': 'round',
+                  'line-cap': 'round',
+                }}
+              />
+              <Layer
+                id={`route-${route.id}-line`}
+                type="line"
+                paint={{
+                  'line-color': route.color,
+                  'line-width': selectedRouteIndex === index ? 5 : 3,
+                  'line-opacity': selectedRouteIndex === index ? 1 : 0.6,
+                }}
+                layout={{
+                  'line-join': 'round',
+                  'line-cap': 'round',
+                }}
+              />
+            </Source>
+          ))}
+
+          {/* Route Stop Markers */}
+          {preset === 'driving-routes' && routeData && (
+            <>
+              {/* Origin marker */}
+              <Marker
+                longitude={routeData.origin.coordinates[0]}
+                latitude={routeData.origin.coordinates[1]}
+                anchor="bottom"
+              >
+                <div 
+                  className="cursor-pointer transform"
+                  style={{ 
+                    backgroundColor: '#22c55e',
+                    padding: '8px',
+                    borderRadius: '50%',
+                    boxShadow: '0 2px 8px rgba(0,0,0,0.3)',
+                    border: '3px solid white',
+                  }}
+                >
+                  <MapPin size={20} color="white" />
+                </div>
+              </Marker>
+              
+              {/* Destination marker */}
+              <Marker
+                longitude={routeData.destination.coordinates[0]}
+                latitude={routeData.destination.coordinates[1]}
+                anchor="bottom"
+              >
+                <div 
+                  className="cursor-pointer transform"
+                  style={{ 
+                    backgroundColor: '#ef4444',
+                    padding: '8px',
+                    borderRadius: '50%',
+                    boxShadow: '0 2px 8px rgba(0,0,0,0.3)',
+                    border: '3px solid white',
+                  }}
+                >
+                  <MapPin size={20} color="white" />
+                </div>
+              </Marker>
+              
+              {/* Stop markers */}
+              {routeStops.map((stop, index) => (
+                <Marker
+                  key={`stop-${index}`}
+                  longitude={stop.coordinates[0]}
+                  latitude={stop.coordinates[1]}
+                  anchor="bottom"
+                  onClick={(e) => {
+                    e.originalEvent.stopPropagation();
+                    setSimplePopupInfo({ 
+                      lng: stop.coordinates[0], 
+                      lat: stop.coordinates[1], 
+                      label: stop.name 
+                    });
+                  }}
+                >
+                  <div 
+                    className="cursor-pointer transform hover:scale-110 transition-transform"
+                    style={{ 
+                      backgroundColor: '#6366f1',
+                      padding: '6px',
+                      borderRadius: '50%',
+                      boxShadow: '0 2px 8px rgba(0,0,0,0.3)',
+                      border: '2px solid white',
+                    }}
+                  >
+                    <MapPin size={16} color="white" />
+                  </div>
+                </Marker>
+              ))}
+            </>
           )}
 
           {/* Hotel Markers */}

@@ -28,10 +28,19 @@ seasonalRelevance: ["winter", "spring", "summer", "fall"]
 import { HotelGrid } from '@/components/blog/HotelGrid';
 import { ArticleBookingWidget } from '@/components/blog/ArticleBookingWidget';
 import { BlogImage } from '@/components/blog/BlogImage';
+import { BlogMap } from '@/components/blog/BlogMap';
 
 The 330-mile drive from Denver to Telluride ranks among Colorado's most scenic road trips, but calling it "scenic" understates the challenges involved. This journey crosses the Continental Divide, navigates I-70's notorious weekend traffic, traverses multiple mountain passes, and requires 6-9 hours depending on conditions, timing, and route selection. I've made this drive dozens of times in all seasons, and the experience varies dramatically based on factors you can control and many you cannot. For winter driving safety tips, see our [winter driving guide](/blog/planning-tips/winter-driving-telluride-safety). To plan your Telluride stay, check our [where to stay guide](/blog/destination-guides/where-to-stay-telluride) or browse [all Telluride lodging options](/lodging).
 
 Understanding your route options, timing your departure strategically, and preparing for mountain driving conditions transforms this from a potentially frustrating ordeal into an enjoyable part of your Telluride trip. Colorado residents familiar with I-70's weekend chaos know that departure timing matters as much as route selection, while out-of-state visitors often underestimate both the distance and the impact of elevation, weather, and traffic. For a comprehensive overview of everything Telluride offers, see our [complete Telluride guide](/blog/destination-guides/complete-guide-telluride).
+
+<BlogMap 
+  preset="driving-routes"
+  routeId="denver-to-telluride"
+  height="500px"
+  caption="Two route options from Denver to Telluride: I-70 West (primary) and US-285 South (alternative)"
+  client:load
+/>
 
 <HotelGrid 
   hotelIds={["lp4b27f", "lp21ee2", "lp31628"]}

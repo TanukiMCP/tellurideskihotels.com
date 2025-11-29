@@ -1,0 +1,92 @@
+{
+  "routeId": "denver-to-telluride",
+  "origin": {
+    "name": "Denver, Colorado",
+    "coordinates": [-104.9903, 39.7392]
+  },
+  "destination": {
+    "name": "Telluride, Colorado",
+    "coordinates": [-107.8123, 37.9375]
+  },
+  "routes": [
+    {
+      "id": "i70-primary",
+      "name": "I-70 West (Primary Route)",
+      "description": "Most direct route via Eisenhower Tunnel, Vail, and Glenwood Canyon",
+      "approximateMiles": 330,
+      "approximateHours": 6.5,
+      "waypoints": [
+        {
+          "name": "Idaho Springs",
+          "coordinates": [-105.5136, 39.7425],
+          "type": "gas-food",
+          "description": "First stop for coffee or breakfast, 30 miles from Denver"
+        },
+        {
+          "name": "Silverthorne/Dillon",
+          "coordinates": [-106.0739, 39.6291],
+          "type": "gas-food-services",
+          "description": "Extensive services including gas, restaurants, grocery stores - logical midpoint stop"
+        },
+        {
+          "name": "Glenwood Springs",
+          "coordinates": [-107.3248, 39.5505],
+          "type": "gas-food-scenic",
+          "description": "Preferred lunch stop with hot springs, roughly halfway through journey"
+        },
+        {
+          "name": "Grand Junction",
+          "coordinates": [-108.5506, 39.0639],
+          "type": "gas-food-full-services",
+          "description": "Last full-service city before Telluride - stock up on supplies"
+        },
+        {
+          "name": "Montrose",
+          "coordinates": [-107.8762, 38.4783],
+          "type": "gas-food",
+          "description": "Final services before last 65-mile push to Telluride, lower gas prices"
+        }
+      ]
+    },
+    {
+      "id": "us285-alternative",
+      "name": "US-285 South (Alternative Route)",
+      "description": "Avoids I-70 traffic via Monarch Pass, adds 20 miles but can be faster during peak times",
+      "approximateMiles": 350,
+      "approximateHours": 7,
+      "waypoints": [
+        {
+          "name": "Conifer",
+          "coordinates": [-105.3008, 39.5197],
+          "type": "gas-food",
+          "description": "Early stop option on US-285"
+        },
+        {
+          "name": "Fairplay",
+          "coordinates": [-106.0003, 39.2244],
+          "type": "gas-food",
+          "description": "Authentic mountain community in South Park basin"
+        },
+        {
+          "name": "Monarch Pass",
+          "coordinates": [-106.3456, 38.4969],
+          "type": "scenic-pass",
+          "description": "Continental Divide crossing at 11,312 feet elevation"
+        },
+        {
+          "name": "Poncha Springs",
+          "coordinates": [-106.0775, 38.5128],
+          "type": "gas-food",
+          "description": "Junction point where US-285 meets US-50"
+        },
+        {
+          "name": "Montrose",
+          "coordinates": [-107.8762, 38.4783],
+          "type": "gas-food",
+          "description": "Final services before last 65-mile push to Telluride"
+        }
+      ]
+    }
+  ]
+}
+

@@ -2617,6 +2617,52 @@ When using images from `media-library/*.csv` files, extract the data and format 
 | `hotels` | Auto-fit to hotels | Hotel markers | Hotel reviews, listicles |
 | `trails` | Trail-focused (3D) | Color-coded difficulty | Terrain guides (dramatic) |
 | `trails-overhead` | Trail-focused (top-down) | Color-coded, lower pitch | Terrain guides (readable) |
+| `driving-routes` | Route-focused | Multiple route options with stops | Driving guides (Denver/Telluride, Colorado Springs/Telluride) |
+
+**⚠️ DRIVING ROUTES MODE (NEW):**
+
+The `driving-routes` preset displays interactive driving directions with multiple route options, travel times, distances, and essential stops/services marked along the route. This feature uses real Mapbox Directions API data for accurate routing.
+
+**Available Routes:**
+- `routeId="denver-to-telluride"` - Shows I-70 primary route and US-285 alternative route
+- `routeId="colorado-springs-to-telluride"` - Shows US-285 primary route and I-25 alternative route
+
+**How It Works:**
+1. Component loads route data from JSON files (`/data/driving-routes/{routeId}-stops.json`)
+2. Fetches actual directions from Mapbox Directions API via `/api/mapbox/directions`
+3. Displays up to 3 route alternatives with different colors
+4. Shows interactive route selector with time/distance for each option
+5. Marks origin (green), destination (red), and stops/services (blue) along the route
+
+**Syntax Example:**
+```markdown
+<BlogMap 
+  preset="driving-routes"
+  routeId="denver-to-telluride"
+  height="500px"
+  caption="Two route options from Denver to Telluride with essential stops marked"
+  client:load
+/>
+```
+
+**Features:**
+- **Multiple Route Options**: Up to 3 routes displayed simultaneously with different colors
+- **Route Selector UI**: Clickable cards above map showing time and distance for each route
+- **Stop Markers**: Essential stops (gas, food, services) marked along the route with clickable popups
+- **Real Directions**: Uses Mapbox Directions API for accurate routing and travel times
+- **Auto-fit Bounds**: Map automatically zooms to show entire route with stops
+
+**Route Data Structure:**
+Route data is stored in JSON files at `src/data/driving-routes/{routeId}-stops.json` with:
+- Origin and destination coordinates
+- Multiple route definitions (primary and alternatives)
+- Waypoints/stops with coordinates, names, types, and descriptions
+
+**When to Use:**
+- Driving guide articles (Denver to Telluride, Colorado Springs to Telluride)
+- Road trip planning content
+- Articles discussing route options and timing
+- Content about essential stops and services along routes
 
 **Focus Areas (Pre-configured Trail Zones):**
 
@@ -2720,6 +2766,7 @@ When using `hotelIds` with BlogMap, you MUST manually curate the hotel IDs by:
 | `caption` | string | - | Caption below map |
 | `interactive` | boolean | `true` | Allow pan/zoom |
 | `showLegend` | boolean | `true` | Show trail difficulty legend |
+| `routeId` | string | - | Route ID for driving-routes preset: `"denver-to-telluride"` or `"colorado-springs-to-telluride"` |
 
 **Camera Orientation Guide (pitch & bearing):**
 
@@ -2757,6 +2804,7 @@ For trail visualization, balance readability with visual appeal:
 2. **Trail/Terrain Sections:** Use `preset="trails"` with `highlightTrails` when discussing specific runs
 3. **Hotel Location Sections:** Use `preset="hotels"` with `hotelIds` when discussing proximity/access
 4. **Comparison Articles:** Use `preset="overview"` with custom markers to show differences
+5. **Driving Guides:** Use `preset="driving-routes"` with `routeId` when showing route options and stops
 
 **Example: Complete Guide Section**
 ```markdown
@@ -3451,6 +3499,51 @@ Generate detailed outline:
 - FAQ questions
 - Conclusion points
 - CTAs and conversion points
+
+**Step 3.5: Pre-Writing Checklist (MANDATORY - Complete Before Writing)**
+
+⚠️ **CRITICAL INSTRUCTION:** This checklist must be completed IN CHAT ONLY. Do NOT create new documents, files, or markdown files to answer this survey. Simply respond to each item in the chat conversation before proceeding to write the article.
+
+**Research Verified**
+- [ ] Verified current facts/statistics from official sources (not memory)
+- [ ] Confirmed names, prices, dates are accurate
+- [ ] Reviewed top 3 competitors for this keyword
+
+**Content Planned**
+- [ ] Article type: _____________ | Word count target: _____
+- [ ] Main sections outlined (4-8 H2s)
+- [ ] FAQ questions listed (5-8)
+
+**Images Ready (5-8 Required)**
+- [ ] Identified which media library files to use
+- [ ] Selected specific images for key sections
+- [ ] Confirmed images match content (no generic stock as specific locations)
+
+**Widgets Planned (3+ Required)**
+
+Hotel widgets:
+- [ ] Listed hotels mentioned in article: _________________
+- [ ] Found their IDs in CSV (if applicable)
+
+Other components:
+- [ ] BlogMap (if geographic/location content): YES / NO
+- [ ] Calculator/Planning tool (if cost/planning content): YES / NO
+- [ ] Booking CTAs planned: Intro / Mid / End
+
+**SEO Ready**
+- [ ] Primary keyword: _____________
+- [ ] Secondary keywords (3-5): _________________
+- [ ] Internal links identified (5-10 total)
+- [ ] External sources to cite (2-4): _________________
+
+**Quality Check**
+- [ ] metaDescription will be ≤150 chars
+- [ ] All facts verified (not assumed)
+- [ ] Widget placements match content context
+
+**Ready to write: YES / NO**
+
+**⚠️ DO NOT PROCEED TO WRITING UNTIL ALL ITEMS ARE COMPLETED AND VERIFIED IN CHAT.**
 
 **Step 4: Write Section by Section**
 

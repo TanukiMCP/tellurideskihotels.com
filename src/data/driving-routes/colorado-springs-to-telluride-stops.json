@@ -1,0 +1,110 @@
+{
+  "routeId": "colorado-springs-to-telluride",
+  "origin": {
+    "name": "Colorado Springs, Colorado",
+    "coordinates": [-104.8214, 38.8339]
+  },
+  "destination": {
+    "name": "Telluride, Colorado",
+    "coordinates": [-107.8123, 37.9375]
+  },
+  "routes": [
+    {
+      "id": "us285-primary",
+      "name": "US-285 to US-50 via Monarch Pass (Primary Route)",
+      "description": "Most common route via US-24, US-285, and US-50 crossing Monarch Pass",
+      "approximateMiles": 300,
+      "approximateHours": 6.5,
+      "waypoints": [
+        {
+          "name": "Woodland Park",
+          "coordinates": [-105.0575, 38.9939],
+          "type": "gas-food",
+          "description": "First town after leaving Colorado Springs, climbing toward Wilkerson Pass"
+        },
+        {
+          "name": "Buena Vista",
+          "coordinates": [-106.1311, 38.8422],
+          "type": "gas-food-hot-springs",
+          "description": "Excellent lunch options and access to hot springs"
+        },
+        {
+          "name": "Mount Princeton Hot Springs",
+          "coordinates": [-106.1758, 38.7553],
+          "type": "scenic-detour",
+          "description": "Worthwhile detour for lunch or quick soak near Nathrop"
+        },
+        {
+          "name": "Monarch Pass",
+          "coordinates": [-106.3456, 38.4969],
+          "type": "scenic-pass",
+          "description": "Continental Divide crossing at 11,312 feet - demands respect especially in winter"
+        },
+        {
+          "name": "Gunnison",
+          "coordinates": [-106.9278, 38.5458],
+          "type": "gas-food-full-services",
+          "description": "Logical midpoint stop - last significant services before final push to Telluride"
+        },
+        {
+          "name": "Montrose",
+          "coordinates": [-107.8762, 38.4783],
+          "type": "gas-food",
+          "description": "Final turn south onto US-550 toward Telluride"
+        },
+        {
+          "name": "Ridgway",
+          "coordinates": [-107.7564, 38.1478],
+          "type": "gas-food-scenic",
+          "description": "Pleasant final stop 25 miles north of Telluride with views of Sneffels Range"
+        }
+      ]
+    },
+    {
+      "id": "i25-alternative",
+      "name": "I-25 South via Walsenburg (Alternative Route)",
+      "description": "Adds 30-40 miles but keeps you on interstate longer, crosses Wolf Creek Pass",
+      "approximateMiles": 340,
+      "approximateHours": 7.5,
+      "waypoints": [
+        {
+          "name": "Walsenburg",
+          "coordinates": [-104.7804, 37.6247],
+          "type": "gas-food",
+          "description": "Turn west onto US-160 toward Wolf Creek Pass"
+        },
+        {
+          "name": "Wolf Creek Pass",
+          "coordinates": [-106.7981, 37.4725],
+          "type": "scenic-pass",
+          "description": "Crossing at 10,850 feet - receives significant snow in winter"
+        },
+        {
+          "name": "Pagosa Springs",
+          "coordinates": [-107.0097, 37.2694],
+          "type": "gas-food-hot-springs",
+          "description": "Services available before connecting to US-550 north"
+        },
+        {
+          "name": "Durango",
+          "coordinates": [-107.8801, 37.2753],
+          "type": "gas-food-full-services",
+          "description": "Major city with full services before turning north toward Telluride"
+        },
+        {
+          "name": "Ouray",
+          "coordinates": [-107.6715, 38.0225],
+          "type": "gas-food-scenic",
+          "description": "Scenic stop on Million Dollar Highway north of Telluride"
+        },
+        {
+          "name": "Ridgway",
+          "coordinates": [-107.7564, 38.1478],
+          "type": "gas-food",
+          "description": "Final approach to Telluride via CO-62 and CO-145"
+        }
+      ]
+    }
+  ]
+}
+
