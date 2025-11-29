@@ -102,11 +102,8 @@ export function ProductDetails({ productCode }: ProductDetailsProps) {
   const images = product.images || [];
   const mainImage = images.find(img => img.isCover) || images[0];
   const selectedImage = images[selectedImageIndex] || mainImage;
-  // Request high-resolution images (1400px+) to avoid blurriness
-  const imageUrl = selectedImage?.variants?.find(v => v.width >= 1400)?.url || 
-                   selectedImage?.variants?.find(v => v.width >= 1200)?.url ||
-                   selectedImage?.variants?.find(v => v.width >= 800)?.url ||
-                   selectedImage?.variants?.[selectedImage.variants.length - 1]?.url; // Fallback to largest
+  // Request high-resolution images (1920px+ for best quality)
+  const imageUrl = getViatorImageUrl(selectedImage || {}, 1920);
   const hasReviews = product.reviews && product.reviews.totalReviews > 0;
   const durationText = formatDuration(product.duration);
   const priceText = formatPrice(product.pricing);

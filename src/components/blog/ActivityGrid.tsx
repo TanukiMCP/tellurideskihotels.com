@@ -5,6 +5,7 @@ import { Card, CardContent } from '@/components/ui/Card';
 import { LoadingSpinner } from '@/components/shared/LoadingSpinner';
 import { Compass, Star, Clock, ChevronRight, Sparkles, MapPin } from 'lucide-react';
 import type { ViatorProductSummary } from '@/lib/viator/types';
+import { getViatorImageUrl } from '@/lib/image-optimization';
 
 interface ActivityGridProps {
   /** Filter by category */
@@ -21,8 +22,8 @@ function SingleActivityShowcase({ activity }: { activity: ViatorProductSummary }
   const rating = activity.reviews?.combinedAverageRating;
   const reviewCount = activity.reviews?.totalReviews;
   const duration = activity.duration?.fixedDurationInMinutes;
-  const imageUrl = activity.images?.[0]?.variants?.find(v => v.width >= 600)?.url || 
-                   activity.images?.[0]?.variants?.[0]?.url;
+  // Use high-quality image (minimum 1920px width for best quality in blog showcase)
+  const imageUrl = getViatorImageUrl(activity.images?.[0] || {}, 1920);
 
   const formatPrice = (amount: number) => {
     return new Intl.NumberFormat('en-US', {

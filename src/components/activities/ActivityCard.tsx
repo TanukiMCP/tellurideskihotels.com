@@ -7,6 +7,7 @@
 import type { ViatorProductSummary } from '@/lib/viator/types';
 import { formatDuration, formatPrice } from '@/lib/viator/client';
 import { getExperienceCategoriesSync, getCategoryLabel } from '@/lib/category-mapper';
+import { getViatorImageUrl } from '@/lib/image-optimization';
 
 interface ActivityCardProps {
   activity: ViatorProductSummary;
@@ -17,7 +18,8 @@ export function ActivityCard({ activity, className = '' }: ActivityCardProps) {
   const detailsUrl = `/things-to-do/${activity.productCode}`;
   const images = activity.images || [];
   const mainImage = images.find(img => img.isCover) || images[0];
-  const imageUrl = mainImage?.variants?.find(v => v.width >= 400)?.url || mainImage?.variants?.[0]?.url;
+  // Use high-quality image (minimum 1200px width for crisp display)
+  const imageUrl = getViatorImageUrl(mainImage || {}, 1200);
   const hasReviews = activity.reviews && activity.reviews.totalReviews > 0;
   const durationText = formatDuration(activity.duration);
   const priceText = formatPrice(activity.pricing);

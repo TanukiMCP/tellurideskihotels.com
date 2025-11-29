@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { ChevronLeft, ChevronRight, X, Maximize2, Camera, ExternalLink, Grid3X3 } from 'lucide-react';
+import { optimizeImageUrl, ImageSizes } from '@/lib/image-optimization';
 
 /**
  * BlogImage Component
@@ -76,11 +77,17 @@ function ImageWithLoading({
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const imgRef = useRef<HTMLImageElement>(null);
+  
+  // Optimize image URL for high quality
+  const optimizedSrc = optimizeImageUrl(src, {
+    width: ImageSizes.large.width,
+    quality: 90,
+  });
 
   useEffect(() => {
     setLoading(true);
     setError(false);
-  }, [src]);
+  }, [optimizedSrc]);
 
   useEffect(() => {
     const checkComplete = setTimeout(() => {
@@ -91,7 +98,7 @@ function ImageWithLoading({
       }
     }, 0);
     return () => clearTimeout(checkComplete);
-  }, [src, onLoad]);
+  }, [optimizedSrc, onLoad]);
 
   const handleLoad = () => {
     setLoading(false);
@@ -119,7 +126,7 @@ function ImageWithLoading({
     <div className={`relative overflow-hidden bg-neutral-100 ${className}`}>
       <img
         ref={imgRef}
-        src={src}
+        src={optimizedSrc}
         alt={alt}
         className="w-full h-full object-cover"
         onLoad={handleLoad}

@@ -22,7 +22,7 @@ export default defineConfig({
     mdx(),
   ],
   image: {
-    domains: ['images.pexels.com'],
+    domains: ['images.pexels.com', 'images.unsplash.com'],
     service: {
       entrypoint: 'astro/assets/services/sharp',
       config: {
