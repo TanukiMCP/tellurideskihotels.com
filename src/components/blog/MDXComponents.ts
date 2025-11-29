@@ -4,6 +4,7 @@ export { HotelGrid } from './HotelGrid';
 export { ActivityGrid } from './ActivityGrid';
 export { BlogMap } from './BlogMap';
 export { BlogImage } from './BlogImage';
+export { BlogEventsWidget } from './BlogEventsWidget';
 
 // Planning components
 export { TripCalculator } from '@/components/planning/TripCalculator';

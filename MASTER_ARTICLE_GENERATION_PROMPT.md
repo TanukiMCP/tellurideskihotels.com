@@ -1817,6 +1817,7 @@ The [National Weather Service Grand Junction office](https://www.weather.gov/gjt
 5. **Booking CTAs:** `ArticleBookingWidget` - For conversion points
 6. **Planning Tools:** `TripCalculator` - For trip cost estimation and engagement
 7. **Activities:** `ActivityShowcase` - For highlighting experiences
+8. **Events & Festivals:** `BlogEventsWidget` - For displaying local events and festivals with manual curation
 
 **⚠️ VARIETY IS KEY:** Don't overuse any single component type. Balance hotel grids with maps and planning tools. Use `BlogMap` when content discusses geography, locations, or spatial relationships instead of adding more hotel widgets.
 
@@ -2280,7 +2281,96 @@ The Madeline and Peaks Resort both offer exceptional ski-in/ski-out access with 
 - `description` (Optional): Custom description.
 - `image` (Optional): Specific image URL (if not using default).
 
-### 4. BlogImage (Unified Image Display Widget)
+### 4. BlogEventsWidget (Local Events & Festivals Display)
+
+**Use Case:** Displaying upcoming Telluride events and festivals with manual curation support.
+**Best For:** Festival season articles, event guides, seasonal content, "Things to Do" articles.
+
+**⚠️ CRITICAL: Manual Curation Support**
+
+BlogEventsWidget supports manual curation via `eventIds` prop, allowing you to display specific events mentioned in your article text. This ensures widgets show events that match your content context.
+
+**Syntax Examples:**
+
+**Manual Curation (Recommended - When Events Are Mentioned):**
+```markdown
+<BlogEventsWidget 
+  eventIds={["67", "telluride-film-festival", "63", "66", "68"]}
+  type="festival"
+  limit={5}
+  title="Upcoming Telluride Festivals"
+  client:load
+/>
+```
+
+**Filter by Type:**
+```markdown
+<BlogEventsWidget 
+  type="festival"
+  limit={3}
+  title="Major Festivals"
+  client:load
+/>
+```
+
+**All Upcoming Events:**
+```markdown
+<BlogEventsWidget 
+  limit={4}
+  title="Upcoming Events in Telluride"
+  client:load
+/>
+```
+
+**Props:**
+- `eventIds` (Optional): Array of event IDs for manual curation. When events are mentioned in article text, use their IDs to ensure widget displays relevant events.
+- `type` (Optional): Filter by event type: `"festival"` | `"concert"` | `"sports"` | `"art"` | `"community"`
+- `limit` (Optional): Number of events to display (default: 3)
+- `title` (Optional): Custom title for the widget
+- `upcomingOnly` (Optional): Show only upcoming events (default: true)
+
+**Available Event IDs:**
+- `"67"` - Telluride Bluegrass Festival
+- `"telluride-film-festival"` - Telluride Film Festival
+- `"63"` - Mountainfilm
+- `"66"` - Telluride Food + Vine
+- `"68"` - Telluride Yoga Festival
+- `"69"` - Telluride Plein Air
+- `"70"` - Red, White & Blues
+- `"71"` - Telluride Fourth of July Parade
+- `"64"` - Telluride Balloon Festival
+
+**⚠️ MANUAL CURATION WORKFLOW:**
+
+When writing about specific festivals or events:
+1. Identify events mentioned in your article text
+2. Use their event IDs in the `eventIds` prop array
+3. Widget will display only those events, ensuring content-widget alignment
+4. If no `eventIds` provided, widget shows all upcoming events filtered by `type` (if specified)
+
+**Example: Festival Season Section:**
+```markdown
+## Festival Season: World-Class Events
+
+Telluride's festival calendar includes the Telluride Bluegrass Festival in June, the Telluride Film Festival over Labor Day, and Mountainfilm in May. Each brings its own character and transforms the town.
+
+<BlogEventsWidget 
+  eventIds={["67", "telluride-film-festival", "63"]}
+  type="festival"
+  limit={5}
+  title="Upcoming Telluride Festivals"
+  client:load
+/>
+```
+
+**Design Integration:**
+- Matches homepage EventsWidget design patterns
+- Consistent styling with other blog widgets
+- Responsive layout (adapts to screen size)
+- Links to official Telluride.com event pages
+- "View All Events" CTA button included
+
+### 5. BlogImage (Unified Image Display Widget)
 
 **Use Case:** Professional, consistent image display throughout articles with proper sizing, captions, credits, and lightbox support.
 **Best For:** Any article requiring embedded images - replaces manual markdown image syntax for better control.

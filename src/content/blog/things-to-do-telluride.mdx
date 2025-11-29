@@ -30,6 +30,7 @@ import { HotelGrid } from '@/components/blog/HotelGrid';
 import { ActivityGrid } from '@/components/blog/ActivityGrid';
 import { BlogMap } from '@/components/blog/BlogMap';
 import { BlogImage } from '@/components/blog/BlogImage';
+import { BlogEventsWidget } from '@/components/blog/BlogEventsWidget';
 
 Telluride's identity extends far beyond its reputation as a challenging ski destination. This box canyon town of 2,600 permanent residents hosts world-class film and music festivals, provides access to hundreds of miles of alpine trails, operates North America's only free public gondola, and maintains a Victorian downtown that feels authentically preserved rather than theme-park manufactured. The combination creates a year-round destination where you'll find compelling activities regardless of season, weather, or whether you even ski. For detailed skiing information, see our [ski resort guide](/blog/ski-guides/telluride-ski-resort-guide). To plan your visit timing, check our [best time to visit guide](/blog/seasonal-guides/best-time-visit-telluride).
 
@@ -40,6 +41,8 @@ I've spent time in Telluride across all four seasons, and what strikes me most i
   title="Downtown Telluride Hotels"
   client:load
 />
+
+Whether you're planning a ski-focused winter trip or a summer festival visit, Telluride offers diverse accommodations to match your needs. The town's compact size means you're never far from the action, whether that's the slopes, the gondola, or downtown's dining and nightlife.
 
 <ActivityGrid 
   limit={3}
@@ -132,6 +135,14 @@ The [Telluride Film Festival](https://www.telluridefilmfestival.org) over Labor 
 
 Other festivals cover jazz, blues, mushroom foraging, wine, and various cultural themes. Each brings its own character and crowd, transforming the town while maintaining that essential Telluride atmosphere. The festivals require advance planning—hotels book months ahead, and ticket sales often sell out. But experiencing Telluride during a major festival reveals a different side of the town's personality.
 
+<BlogEventsWidget 
+  eventIds={["67", "telluride-film-festival", "63", "66", "68"]}
+  type="festival"
+  limit={5}
+  title="Upcoming Telluride Festivals"
+  client:load
+/>
+
 ## Exploring Downtown Telluride's Victorian Character
 
 Colorado Avenue, Telluride's main street, stretches four walkable blocks lined with Victorian storefronts dating to the 1880s. These preserved buildings now house art galleries, boutiques, restaurants, and bars, creating a downtown that feels authentically historic rather than artificially themed. You can walk the entire street in 15 minutes, yet you could spend hours exploring the shops, galleries, and cafes.
@@ -175,6 +186,22 @@ Beyond biking, summer offers rock climbing, fly fishing, stand-up paddleboarding
 The Telluride area doesn't have natural hot springs within town, but several options exist within driving distance. Orvis Hot Springs, about 35 miles north near Ridgway, offers multiple pools with varying temperatures and clothing-optional policies. The setting is low-key and focused on soaking rather than resort amenities, appealing to travelers seeking authentic hot springs experiences.
 
 Ouray, 45 miles north, bills itself as the "Switzerland of America" and features multiple hot springs pools including the Ouray Hot Springs Pool and various hotel-based options. The drive from Telluride to Ouray crosses Red Mountain Pass via the Million Dollar Highway, one of Colorado's most scenic and dramatic mountain roads. The drive itself justifies the trip, with the hot springs providing a relaxing conclusion.
+
+<BlogMap 
+  preset="overview"
+  center={[-107.8, 38.05]}
+  zoom={10}
+  pitch={0}
+  bearing={0}
+  markers={[
+    { lng: -107.8123, lat: 37.9375, label: "Telluride", icon: "default" },
+    { lng: -107.75, lat: 38.15, label: "Orvis Hot Springs", icon: "viewpoint" },
+    { lng: -107.67, lat: 38.02, label: "Ouray Hot Springs", icon: "viewpoint" }
+  ]}
+  caption="Hot springs locations near Telluride: Orvis Hot Springs (35 miles north) and Ouray Hot Springs (45 miles north)"
+  height="400px"
+  client:load
+/>
 
 <BlogImage 
   images={{
