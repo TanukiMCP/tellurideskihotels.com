@@ -842,17 +842,6 @@ For the ultimate convenience, consider staying at a [ski-in/ski-out hotel](/lodg
 - Mix of wide shots and details
 - Professional quality
 
-**⚠️ CRITICAL: LANDSCAPE ORIENTATION ONLY**
-
-**Vertical/Portrait images look broken in our blog layout. You must ONLY select landscape/horizontal images.**
-
-**Selection Rules:**
-1. When reading the CSV files, look for `width` and `height` columns.
-2. **ONLY select images where `width` > `height`.**
-3. If dimensions are not available, look for descriptive keywords like "panoramic", "wide", "landscape", "view".
-4. **REJECT** images described as "portrait", "vertical", "tall", or "close-up" if they imply vertical orientation.
-5. **REJECT** images where the `medium_url` has parameters implying vertical crops (e.g. `h=650` is fine, but check if it looks like a vertical phone shot).
-
 **⚠️ CRITICAL: REAL PRODUCT IMAGES FOR ACTUAL HOTELS**
 
 **NEVER use generic stock photos for hotels we actually sell on our platform.**
@@ -864,7 +853,7 @@ When writing reviews or mentions of specific hotels that are bookable through ou
 
 **Image Sources Priority:**
 1. **Real hotel images via `HotelShowcase` component** (see Component Reference)
-2. Pexels media library (for atmospheric/contextual content - LANDSCAPE ONLY)
+2. Pexels media library (for atmospheric/contextual content)
 3. Official Telluride resort images
 4. Original photography when available
 
@@ -1026,9 +1015,10 @@ Every article MUST include 5-8 embedded images throughout the body content. Imag
 
 **Available Image Categories:**
 
-We have TWO types of media libraries:
+We have THREE types of media libraries:
 1. **LiteAPI Hotel Images** (~31,000 real hotel photos) - Use for specific property content
-2. **Unsplash/Pexels Images** (~200 atmospheric photos) - Use for general content
+2. **Viator Activity Images** (~587 real activity photos) - Use for activity guides and things-to-do content
+3. **Unsplash/Pexels Images** (~200 atmospheric photos) - Use for general content
 
 ### LiteAPI Hotel Images (Real Property Photos)
 
@@ -1042,6 +1032,40 @@ We have TWO types of media libraries:
 | `hotel-spas.csv` | 2 | Spa facilities (limited - use Unsplash for more) |
 
 **⚠️ NOTE:** These are categorized by image caption keywords from actual Telluride hotel listings. Quality and relevance varies.
+
+### Viator Activity Images (Real Telluride Activity Photos)
+
+**✅ VERIFIED TELLURIDE ACTIVITY IMAGES - Real photos from actual Telluride experiences**
+
+| Category File | Count | Use For |
+|---------------|-------|---------|
+| `viator-tours-activities.csv` | 158 | Guided tours, sightseeing, scenic drives |
+| `viator-adventure-activities.csv` | 111 | Rock climbing, ice climbing, via ferrata, extreme sports |
+| `viator-cultural-activities.csv` | 104 | Museums, historic sites, galleries, festivals |
+| `viator-water-activities.csv` | 95 | Rafting, kayaking, paddleboarding, fishing |
+| `viator-winter-activities.csv` | 57 | Skiing, snowboarding, ice climbing, backcountry |
+| `viator-hiking-activities.csv` | 49 | Hiking tours, trail walks, nature excursions |
+| `viator-family-activities.csv` | 9 | Family-friendly activities, beginner options |
+| `viator-wellness-activities.csv` | 4 | Spa, relaxation, wellness experiences |
+
+**What These Files Contain:**
+- Real photos from actual Telluride activities and experiences
+- Images sourced from Viator's partner network (TripAdvisor CDN)
+- Each image includes product code, product title, and activity category
+- Mix of cover images and gallery images from each activity
+
+**⚠️ These images represent REAL Telluride activities and can be used with activity-specific captions.**
+
+**Viator CSV Format:**
+```
+id,original_url,large_url,medium_url,small_url,width,height,photographer,photographer_url,alt,query,source,product_code,product_title,category,is_cover
+```
+
+**Viator-Specific Columns:**
+- `product_code` - Viator product code (for reference)
+- `product_title` - Activity/tour name
+- `category` - Activity category (winter, hiking, adventure, etc.)
+- `is_cover` - Whether this is the primary/cover image for the activity
 
 ### Telluride-Specific Images (Verified from Unsplash Search)
 
@@ -1095,7 +1119,7 @@ id,original_url,large_url,medium_url,small_url,width,height,photographer,photogr
 - `photographer` - Use for BlogImage `photographer` attribution
 - `photographer_url` - Use for BlogImage `photographerUrl` link
 - `source` or `unsplash_url` - Use "Unsplash" or "Pexels" for BlogImage `source`
-- `width` and `height` - Check these to ensure landscape orientation (width > height)
+- `width` and `height` - Image dimensions (available for reference)
 
 **MANDATORY: How to Use the Media Library (STEP-BY-STEP):**
 
@@ -1103,7 +1127,7 @@ id,original_url,large_url,medium_url,small_url,width,height,photographer,photogr
 - Use the `read_file` tool to open relevant CSV files from `media-library/` directory
 - **Full path:** `media-library/[category-name].csv`
 - Example: For a hotel review article, read `media-library/hotel-exteriors.csv`, `media-library/hotel-rooms.csv`, `media-library/hotel-amenities.csv`
-- Review the available images, their URLs, alt text, photographers, and verify landscape orientation (width > height)
+- Review the available images, their URLs, alt text, and photographers
 
 **STEP 2: SELECT 5-8 IMAGES**
 - Choose images that match your article sections
@@ -1157,7 +1181,23 @@ id,original_url,large_url,medium_url,small_url,width,height,photographer,photogr
 />
 ```
 
-**⚠️ IMPORTANT:** Always append `&auto=compress&cs=tinysrgb&h=450` to Unsplash URLs for optimal compression. For Pexels URLs, use `?auto=compress&cs=tinysrgb&h=450`.
+**REAL EXAMPLE from viator-adventure-activities.csv:**
+```markdown
+<BlogImage 
+  images={{
+    src: "https://media-cdn.tripadvisor.com/media/attractions-splice-spp-720x480/12/14/ad/58.jpg",
+    alt: "Half-Day Ice Climbing - Telluride",
+    photographer: "Viator",
+    photographerUrl: "",
+    source: "Viator"
+  }}
+/>
+```
+
+**⚠️ IMPORTANT:** 
+- Always append `&auto=compress&cs=tinysrgb&h=450` to Unsplash URLs for optimal compression
+- For Pexels URLs, use `?auto=compress&cs=tinysrgb&h=450`
+- Viator images from TripAdvisor CDN are already optimized - use URLs as-is
 
 **For Multiple Images (2-3 side by side):**
 ```markdown
@@ -1186,10 +1226,22 @@ For ACTUAL property photos (LiteAPI verified):
 - `media-library/hotel-amenities.csv` - Real amenity photos
 - `media-library/hotel-views.csv` - Real views from properties
 
+**Image Selection Example for "Things to Do in Telluride" Article:**
+
+For ACTUAL activity photos (Viator verified):
+- `media-library/viator-winter-activities.csv` - Real skiing, snowboarding, ice climbing
+- `media-library/viator-hiking-activities.csv` - Real hiking tours and trails
+- `media-library/viator-adventure-activities.csv` - Rock climbing, via ferrata, extreme sports
+- `media-library/viator-tours-activities.csv` - Guided tours, scenic drives, sightseeing
+- `media-library/viator-water-activities.csv` - Rafting, kayaking, paddleboarding
+- `media-library/viator-cultural-activities.csv` - Museums, festivals, historic sites
+- `media-library/viator-family-activities.csv` - Family-friendly activities
+
 **Best Practice:**
 1. Use `<HotelShowcase hotelId="..." />` for specific hotels (fetches real images)
 2. Use LiteAPI CSVs for verified property photos
-3. Use generic action CSVs ONLY for people/activity shots with NO location claims
+3. Use Viator CSVs for activity/experience content (real Telluride activities)
+4. Use generic action CSVs ONLY for people/activity shots with NO location claims
 
 **❌ WRONG: Articles with NO images in body content**
 ```markdown
@@ -2206,9 +2258,9 @@ The Madeline and Peaks Resort both offer exceptional ski-in/ski-out access with 
 - Match image content to surrounding text
 - One BlogImage widget every 300-400 words
 
-**5. Landscape vs Portrait:**
-- **PREFER landscape (16:9, 4:3)** for most content - better blog layout fit
-- Use portrait (3:4, 9:16) only when subject requires it (tall buildings, vertical shots)
+**5. Image Orientation:**
+- BlogImage component supports both landscape and portrait orientations
+- Select images based on what best matches your content and subject matter
 - Gallery mode handles mixed orientations automatically
 
 ---
@@ -2217,6 +2269,7 @@ The Madeline and Peaks Resort both offer exceptional ski-in/ski-out access with 
 
 When using images from `media-library/*.csv` files, extract the data and format as:
 
+**For Pexels/Unsplash/LiteAPI Images:**
 ```markdown
 // From media-library CSV row:
 // id,original_url,large_url,medium_url,small_url,width,height,photographer,photographer_url,alt,query
@@ -2232,7 +2285,26 @@ When using images from `media-library/*.csv` files, extract the data and format 
 />
 ```
 
-**⚠️ ALWAYS use `medium_url` with compression parameters for optimal loading.**
+**For Viator Activity Images:**
+```markdown
+// From viator-*.csv row:
+// id,original_url,large_url,medium_url,small_url,width,height,photographer,photographer_url,alt,query,source,product_code,product_title,category,is_cover
+
+<BlogImage 
+  images={{
+    src: "[medium_url from CSV]",
+    alt: "[alt from CSV or product_title]",
+    photographer: "Viator",
+    photographerUrl: "",
+    source: "Viator"
+  }}
+/>
+```
+
+**⚠️ Notes:**
+- Use `medium_url` with compression parameters for Pexels/Unsplash images
+- Viator images from TripAdvisor CDN are pre-optimized - use URLs as-is
+- Viator CSVs include `product_title` which makes great alt text
 
 ### 6. BlogMap (Interactive Map Widget)
 
@@ -3021,7 +3093,6 @@ Before publishing any planning article, verify:
 - [ ] Proper frontmatter JSON with all fields
 - [ ] `metaDescription` is 150 chars or less
 - [ ] Images compressed and optimized
-- [ ] **ALL images are LANDSCAPE orientation**
 - [ ] **At least 3 interactive components used** (mix of HotelGrid, BlogMap, Planning Tools, etc.)
 - [ ] **BlogMap used for geographic/location context** (trails, hotel proximity, area overview)
 - [ ] Real Hotel IDs used in `HotelShowcase` (checked `src/data/telluride-hotels.csv`)
