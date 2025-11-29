@@ -522,7 +522,7 @@ export function BlogMap({
         return res.json();
       })
       .then(data => {
-        if (data && data.features && data.features.length > 0) {
+        if (data) {
           setHikingTrailsData(data);
         }
       })
@@ -542,7 +542,7 @@ export function BlogMap({
         return res.json();
       })
       .then(data => {
-        if (data && data.features && data.features.length > 0) {
+        if (data) {
           setBikingTrailsData(data);
         }
       })
@@ -614,14 +614,6 @@ export function BlogMap({
         
         const data = await response.json();
         setRouteData(data);
-        
-        // Collect all waypoints from all routes
-        const allWaypoints: Array<[number, number]> = [];
-        data.routes.forEach((route: any) => {
-          route.waypoints.forEach((wp: any) => {
-            allWaypoints.push(wp.coordinates);
-          });
-        });
         
         // Fetch directions for each route (origin to destination only - waypoints shown as markers)
         const routePromises = data.routes.map(async (routeDef: any, routeIndex: number) => {
@@ -1051,7 +1043,7 @@ export function BlogMap({
           )}
 
           {/* Hiking trails layer */}
-          {preset === 'hiking-trails' && hikingTrailsData && hikingTrailsData.features && hikingTrailsData.features.length > 0 && (
+          {preset === 'hiking-trails' && hikingTrailsData && (
             <Source id="hiking-trails" type="geojson" data={hikingTrailsData}>
               <Layer
                 id="hiking-trails-layer"
@@ -1090,7 +1082,7 @@ export function BlogMap({
           )}
 
           {/* Biking trails layer */}
-          {preset === 'biking-trails' && bikingTrailsData && bikingTrailsData.features && bikingTrailsData.features.length > 0 && (
+          {preset === 'biking-trails' && bikingTrailsData && (
             <Source id="biking-trails" type="geojson" data={bikingTrailsData}>
               <Layer
                 id="biking-trails-layer"
