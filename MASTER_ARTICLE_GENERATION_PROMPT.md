@@ -360,6 +360,95 @@ Use web search tools to verify ALL factual claims before writing:
 4. Identify content structure and gaps
 5. Find unique angles to differentiate
 
+**Step 2.5: Research Local Sentiment & Real Experiences (REQUIRED)**
+
+**Purpose:** Gather authentic, first-hand perspectives from real visitors and locals to add genuine insight and credibility to your content. This research helps you understand what people actually experience, not just what official sources claim.
+
+**Where to Research:**
+- Community forums and discussion boards (search for "Telluride [topic]" discussions)
+- Travel discussion platforms (look for recent threads about your topic)
+- Local community groups and pages (find community discussions about the area)
+- Review platforms' discussion sections (beyond just star ratings, read detailed experiences)
+- Q&A platforms (search for questions about your specific topic)
+
+**What to Look For:**
+1. **Common Themes & Patterns**
+   - What do multiple people consistently mention? (e.g., "Many visitors note that...")
+   - Recurring complaints or praises across different sources
+   - Seasonal patterns or timing insights
+   - Insider tips that locals or repeat visitors share
+
+2. **Specific Experiences**
+   - Real scenarios and situations people encountered
+   - Unexpected challenges or pleasant surprises
+   - Practical details not found in official descriptions
+   - "What to know before you go" type insights
+
+3. **Balanced Perspectives**
+   - Both positive and negative experiences (don't cherry-pick)
+   - Different perspectives for different traveler types
+   - Honest assessments, not just glowing reviews
+
+4. **Recent & Relevant**
+   - Focus on discussions from the past 1-2 years
+   - Look for mentions of current conditions, recent changes
+   - Seasonal relevance (winter vs summer experiences)
+
+**How to Use This Research:**
+
+✅ **DO:**
+- Synthesize multiple perspectives into general insights: "Many visitors find that..."
+- Use specific examples without attribution: "One common experience is..."
+- Present patterns as general knowledge: "Travelers often mention..."
+- Include practical warnings: "Some visitors have noted that..."
+- Add authentic details: "A frequent observation is that..."
+- Balance with official information - use sentiment to add color, not replace facts
+
+❌ **DON'T:**
+- Quote directly from any discussion platforms
+- Mention where you found the information
+- Present single anecdotes as universal truths
+- Use inflammatory or extreme language from discussions
+- Copy specific usernames, quotes, or identifiable details
+- Make claims you can't verify with multiple sources
+
+**Writing Style for Incorporating Sentiment:**
+
+**Good Examples:**
+- "Many visitors appreciate the convenience of the gondola, though some note it can get crowded during peak times."
+- "Travelers often mention that the altitude affects them more than expected, so planning for acclimatization is wise."
+- "A common observation is that while Telluride is beautiful, the remote location means longer travel times than some expect."
+- "Repeat visitors frequently recommend booking restaurants well in advance, especially during festival season."
+
+**Bad Examples:**
+- "According to a Reddit user..." ❌
+- "Someone on Facebook said..." ❌
+- "I found this on a forum..." ❌
+- "One person posted that..." ❌
+
+**Disclaimers for Anecdotal Information:**
+
+When incorporating sentiment-based insights, use natural disclaimers:
+- "Many visitors report that..." (implies multiple sources, not universal)
+- "Some travelers find..." (acknowledges it's not everyone)
+- "A common observation is..." (suggests pattern, not fact)
+- "Based on visitor experiences..." (general attribution)
+- "Travelers often mention..." (acknowledges subjectivity)
+
+**When to Use Sentiment Research:**
+- Adding practical tips and warnings
+- Explaining what the experience is actually like (beyond official descriptions)
+- Addressing common concerns or questions
+- Providing insider knowledge
+- Balancing official claims with real-world experiences
+- Adding authenticity and relatability to content
+
+**When NOT to Use:**
+- For factual data (use official sources)
+- For pricing (use booking sites)
+- For official statistics (use resort/official sources)
+- For specific names or details (verify independently)
+
 **Step 3: Document Sources**
 - Keep a list of sources used during research
 - Include authoritative external links in article
@@ -375,6 +464,9 @@ Use web search tools to verify ALL factual claims before writing:
 - [ ] Checked festival/event dates for current year
 - [ ] Gathered authoritative sources for statistics
 - [ ] Reviewed recent reviews and visitor feedback
+- [ ] Researched local sentiment and real visitor experiences (community discussions, forums)
+- [ ] Identified common themes and patterns from multiple sources
+- [ ] Balanced positive and negative perspectives
 - [ ] Analyzed competitor articles
 - [ ] Noted any information that couldn't be verified
 
@@ -3484,10 +3576,15 @@ Before writing:
    - Identify "Secondary Keywords" and "LSI Keywords" from the list to include.
 2. **Analyze search intent** for primary keyword
 3. **Review top 5 ranking articles**
-4. **Identify content gaps** and opportunities
-5. **Gather current facts and data**
-6. **Note internal linking opportunities** (from `INTERNAL_EXTERNAL_LINKING_PLAN.md`)
-7. **Plan article structure**
+4. **Gather current facts and data** (see Research Requirements section above)
+5. **Research local sentiment and real experiences** (see Step 2.5 in Research Requirements)
+   - Search community discussions and forums for authentic perspectives
+   - Identify common themes, patterns, and practical insights
+   - Balance positive and negative experiences
+   - Synthesize into natural, unattributed insights for your content
+6. **Identify content gaps** and opportunities
+7. **Note internal linking opportunities** (from `INTERNAL_EXTERNAL_LINKING_PLAN.md`)
+8. **Plan article structure**
 
 **Step 3: Create Outline**
 
@@ -3507,6 +3604,8 @@ Generate detailed outline:
 **Research Verified**
 - [ ] Verified current facts/statistics from official sources (not memory)
 - [ ] Confirmed names, prices, dates are accurate
+- [ ] Researched local sentiment and real visitor experiences (community discussions, forums)
+- [ ] Identified common themes and patterns from multiple sources
 - [ ] Reviewed top 3 competitors for this keyword
 
 **Content Planned**

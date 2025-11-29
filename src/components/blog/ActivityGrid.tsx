@@ -14,6 +14,10 @@ interface ActivityGridProps {
   limit?: number;
   /** Optional title */
   title?: string;
+  /** Maximum price to filter activities */
+  maxPrice?: number;
+  /** Minimum price to filter activities */
+  minPrice?: number;
 }
 
 // Single Activity Showcase - Full width, rich content
@@ -253,7 +257,9 @@ function ActivityCard({ activity, featured = false }: { activity: ViatorProductS
 export function ActivityGrid({ 
   category,
   limit = 3,
-  title = 'Things to Do in Telluride'
+  title = 'Things to Do in Telluride',
+  maxPrice,
+  minPrice,
 }: ActivityGridProps) {
   const [activities, setActivities] = useState<ViatorProductSummary[]>([]);
   const [loading, setLoading] = useState(true);
@@ -261,7 +267,7 @@ export function ActivityGrid({
 
   useEffect(() => {
     fetchActivities();
-  }, [category, limit]);
+  }, [category, limit, maxPrice, minPrice]);
 
   async function fetchActivities() {
     try {
@@ -275,6 +281,12 @@ export function ActivityGrid({
 
       if (category) {
         params.set('category', category);
+      }
+      if (maxPrice) {
+        params.set('maxPrice', maxPrice.toString());
+      }
+      if (minPrice) {
+        params.set('minPrice', minPrice.toString());
       }
       
       const response = await fetch(`/api/viator/search?${params.toString()}`);

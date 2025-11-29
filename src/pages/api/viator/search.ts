@@ -20,6 +20,10 @@ export const GET: APIRoute = async ({ url }) => {
     const start = parseInt(searchParams.get('start') || '0');
     const count = parseInt(searchParams.get('count') || searchParams.get('pageSize') || '20');
     
+    // Parse price filtering
+    const maxPrice = searchParams.get('maxPrice') ? parseFloat(searchParams.get('maxPrice')!) : undefined;
+    const minPrice = searchParams.get('minPrice') ? parseFloat(searchParams.get('minPrice')!) : undefined;
+    
     // Parse sorting
     let sorting: ViatorSearchRequestBody['sorting'] | undefined;
     if (sortParam) {
@@ -34,12 +38,13 @@ export const GET: APIRoute = async ({ url }) => {
       }
     }
 
-    console.log('[API] Viator search request:', { text, sorting, start, count });
+    console.log('[API] Viator search request:', { text, sorting, start, count, minPrice, maxPrice });
 
     const results = await searchTellurideActivities({
       text,
       sorting,
       pagination: { start, count },
+      priceRange: (minPrice || maxPrice) ? { min: minPrice, max: maxPrice } : undefined,
     });
 
     return new Response(JSON.stringify(results), {
