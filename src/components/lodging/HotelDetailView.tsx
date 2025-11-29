@@ -12,6 +12,7 @@ import { getAmenityIcon } from '@/lib/amenity-icons';
 import type { SelectedRoom, SelectedAddon } from '@/lib/types';
 import { WeatherWidget } from '@/components/weather/WeatherWidget';
 import { WeatherAwareAmenities } from './WeatherAwareAmenities';
+import { PetPolicyCard } from './PetPolicyCard';
 
 export interface HotelDetailViewProps {
   hotel: LiteAPIHotel;
@@ -394,6 +395,15 @@ export function HotelDetailView({ hotel, checkIn, checkOut, adults, children = 0
 
       {/* Weather Widget */}
       <WeatherWidget startDate={checkIn} endDate={checkOut} title="Weather During Your Stay" />
+
+      {/* Pet Policy - Shows only for pet-friendly properties */}
+      {hotel.amenities && hotel.amenities.length > 0 && (
+        <PetPolicyCard 
+          amenities={hotel.amenities}
+          importantInformation={hotel.hotelImportantInformation}
+          hotelName={hotel.name}
+        />
+      )}
 
       {/* Amenities - Weather Aware */}
       {hotel.amenities && hotel.amenities.length > 0 && (

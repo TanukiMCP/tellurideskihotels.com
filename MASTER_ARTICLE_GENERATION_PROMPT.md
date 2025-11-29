@@ -959,6 +959,67 @@ When writing about ski-in/ski-out properties:
 2. Pick 2-3 properties with good names
 3. Use their IDs in `HotelGrid` or `HotelShowcase` components
 
+### Pet-Friendly Properties Reference
+
+**We have 74 verified pet-friendly properties in Telluride.**
+
+The curated list is available at:
+- **CSV:** `src/data/pet-friendly-accommodations.csv`
+- **JSON:** `src/data/pet-friendly-accommodations.json`
+
+**Data Columns Available:**
+| Column | Description |
+|--------|-------------|
+| `id` | LiteAPI property ID (use in HotelGrid/HotelShowcase) |
+| `name` | Property name |
+| `pet_facilities` | Specific pet amenities (e.g., "Pets allowed", "Pet bowls") |
+| `has_fee` | Whether pet fees apply (Yes/Unknown) |
+| `fee_amount` | Fee amount if known (e.g., "$75") |
+| `policy_text` | Extracted policy details from property info |
+| `address`, `city` | Location details |
+
+**Top Pet-Friendly Properties (Recommended for Content):**
+
+| ID | Name | Notes |
+|----|------|-------|
+| `lp21ee2` | The Peaks Resort and Spa | Major resort, confirmed pet fees |
+| `lp2ff71` | The Hotel Telluride | Boutique hotel, pet bowls provided |
+| `lp4153f` | Lumiere by Dunton | Luxury, pet bowls |
+| `lp3d0c1` | Fairmont Heritage Place | Luxury, pet bowls |
+| `lp6dfb6` | Element 52, Auberge Collection | Boutique luxury, pet bowls |
+| `lp31628` | Inn at Lost Creek | Mid-range, pet-friendly |
+| `lp656eafa2` | 2 BR Condominium - Luxury Skiin and out | Ski-in/ski-out + pet-friendly |
+| `lp65767eda` | Beautiful Mountain Lodge Ski in Ski out | Ski access + pets |
+
+**How to Use in Content:**
+
+When writing about pet-friendly properties:
+1. Read the CSV: `cat src/data/pet-friendly-accommodations.csv`
+2. Search for specific properties: `grep -i "peaks\|hotel telluride" src/data/pet-friendly-accommodations.csv`
+3. Use their IDs in `HotelGrid` or `HotelShowcase` components
+4. Include policy information from the `policy_text` column
+
+**⚠️ Important Notes for Pet-Friendly Content:**
+- Always recommend readers contact the property directly to confirm current pet policies
+- Pet fees, weight limits, and breed restrictions vary by property
+- Some properties require advance notice for pet stays
+- Include a disclaimer that policies may change
+
+**Example Pet-Friendly Article Widget:**
+```markdown
+## Pet-Friendly Hotels in Telluride
+
+Traveling with your furry friend? These Telluride properties welcome pets:
+
+<HotelGrid 
+  hotelIds={["lp21ee2", "lp2ff71", "lp4153f"]}
+  title="Top Pet-Friendly Hotels"
+  client:load
+/>
+
+**Note:** Pet fees and restrictions vary by property. Contact the hotel directly to confirm their current pet policy before booking.
+```
+
 ### Using Listing Images in Articles
 
 **Option 1: HotelShowcase Component (Preferred for Featured Properties)**
