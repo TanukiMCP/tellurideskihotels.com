@@ -1919,6 +1919,71 @@ The [National Weather Service Grand Junction office](https://www.weather.gov/gjt
 - `title` (Optional): Custom title for the widget
 - `checkIn` (Optional): Default check-in date (YYYY-MM-DD)
 - `checkOut` (Optional): Default check-out date (YYYY-MM-DD)
+- `minPrice` (Optional): Minimum price per night filter - only shows hotels within this price range
+- `maxPrice` (Optional): Maximum price per night filter - only shows hotels within this price range
+
+**⚠️ CRITICAL: Price Range Filtering & Manual Curation by Price**
+
+**System Overview:**
+- **Pricing Data File:** `src/data/hotel-price-ranges.json` stores typical/fallback price ranges for hotels
+- **Always-On Pricing:** HotelGrid automatically displays prices using:
+  1. **Live rates** from LiteAPI (when available for selected dates)
+  2. **Fallback prices** from pricing data file (when live rates unavailable)
+- **Price Filtering:** Use `minPrice` and `maxPrice` props to filter hotels to only show those in specific price ranges
+
+**How to Find Price Range Information:**
+
+**STEP 1: Check Pricing Data File**
+```bash
+read_file tool → src/data/hotel-price-ranges.json
+```
+
+This file contains typical price ranges for hotels. Each entry includes:
+- `hotelId`: The LiteAPI hotel ID
+- `typicalMinPrice`: Typical minimum price per night
+- `typicalMaxPrice`: Typical maximum price per night  
+- `priceRange`: Category (`under-200`, `200-400`, `400-700`, `700-plus`)
+
+**STEP 2: Find Hotels in a Price Range**
+
+When writing about price ranges (e.g., "$200-400/night properties"), you must:
+
+1. **Identify hotels mentioned in the text** - Check what hotels are actually discussed in that price range section
+2. **Verify their typical price ranges** - Look up each hotel in `hotel-price-ranges.json`
+3. **Create a curated pool** - Include ALL hotels mentioned in text PLUS additional candidates that typically fall in that range
+4. **Use price filters** - Add `minPrice` and `maxPrice` props to automatically filter to hotels that actually fall within range
+
+**Example: Manual Curation for $200-400/Night Section**
+
+```markdown
+### $200-400/Night
+
+Mid-range properties like Hotel Telluride, New Sheridan, and Hotel Columbia deliver better quality...
+
+<HotelGrid 
+  hotelIds={["lp2ff71", "lp35ebc", "lp7924d", "lp31628"]}
+  minPrice={200}
+  maxPrice={400}
+  title="Mid-Range Properties ($200-400/Night)"
+  client:load
+/>
+```
+
+**What Happens:**
+- Component loads hotels: Hotel Telluride, New Sheridan, Hotel Columbia, Inn at Lost Creek
+- Component fetches live rates for these hotels
+- Component filters to only show hotels where live rate OR typical price falls within $200-400
+- Only hotels that match the price range are displayed
+- Prices are ALWAYS shown (live rate when available, fallback when not)
+
+**Price Range Categories:**
+
+| Category | Typical Range | Example Hotels |
+|----------|--------------|----------------|
+| `under-200` | $0-200/night | Camel's Garden, Victorian Inn |
+| `200-400` | $200-400/night | Hotel Telluride, New Sheridan, Hotel Columbia |
+| `400-700` | $400-700/night | Inn at Lost Creek, Mountain Lodge Telluride |
+| `700-plus` | $700+/night | Madeline, Peaks Resort, Capella, Lumiere |
 
 **⚠️ CRITICAL: Manual Curation Workflow**
 
@@ -2054,6 +2119,77 @@ grep -i "townhouse\|townhome" src/data/telluride-hotels.csv
 - **Use `filter`**: Only when discussing a category but NOT naming specific properties AND no property type emphasis
 - **Use both**: `hotelIds` takes priority, `filter` is ignored when `hotelIds` is provided
 - **Match property type**: If text says "condos are better for families", show condo IDs not hotel IDs
+
+**⚠️ CRITICAL: Manual Curation for Price Range Sections**
+
+When writing content about specific price ranges (e.g., "Hotels Under $200/Night", "$200-400/Night Properties"), follow this workflow:
+
+**STEP 1: Identify Hotels Mentioned in Text**
+- Read the section you're writing
+- Note which hotels are explicitly mentioned
+- Example: Section says "Camel's Garden Hotel, Victorian Inn, and Oak Street Inn" → These must be included
+
+**STEP 2: Look Up Price Ranges**
+- Open `src/data/hotel-price-ranges.json`
+- Find each mentioned hotel's `priceRange` category
+- Verify they typically fall within the stated price range
+
+**STEP 3: Build Curated Pool**
+- Start with hotels mentioned in text
+- Add additional hotels that typically fall in that price range (from pricing data file)
+- Create a pool larger than 3 hotels (component will filter down based on live rates)
+
+**STEP 4: Use Price Filter Props**
+- Add `minPrice={200}` and `maxPrice={400}` props to HotelGrid
+- Component will automatically filter to show only hotels in that range
+- Only hotels with prices in range (live OR typical) will be displayed
+
+**Complete Example: $200-400/Night Section**
+
+Text mentions: "Hotel Telluride, New Sheridan, and Hotel Columbia"
+
+```markdown
+### $200-400/Night
+
+Mid-range properties deliver notably better quality. Hotels like Hotel Telluride, New Sheridan, and Hotel Columbia balance character, service, and pricing at $200-500 nightly.
+
+<HotelGrid 
+  hotelIds={["lp2ff71", "lp35ebc", "lp7924d", "lp31628"]}
+  minPrice={200}
+  maxPrice={400}
+  title="Mid-Range Properties ($200-400/Night)"
+  client:load
+/>
+```
+
+**Why This Works:**
+- Includes all hotels mentioned: Hotel Telluride (lp2ff71), New Sheridan (lp35ebc), Hotel Columbia (lp7924d)
+- Adds candidate: Inn at Lost Creek (lp31628) - may fall in range depending on season
+- Price filters ensure only hotels actually in $200-400 range are shown
+- Prices are ALWAYS displayed (live rates preferred, fallback when unavailable)
+
+**Common Price Range Hotel IDs:**
+
+**Under $200/Night:**
+- `lp2be73` - Camel's Garden Hotel
+- `lp3489e` - The Victorian Inn
+
+**$200-400/Night:**
+- `lp2ff71` - The Hotel Telluride
+- `lp35ebc` - New Sheridan Hotel
+- `lp7924d` - Hotel Columbia
+
+**$400-700/Night:**
+- `lp31628` - Inn at Lost Creek
+- `lp35351` - Mountain Lodge Telluride
+
+**$700+/Night:**
+- `lp4b27f` - Madeline Hotel & Residences
+- `lp21ee2` or `lp3e47f` - The Peaks Resort
+- `lp4153f` - Lumiere by Dunton
+- `lp3d0c1` - Fairmont Heritage Place
+
+**⚠️ IMPORTANT:** Always check `src/data/hotel-price-ranges.json` for the most current price range data before manually curating price range sections.
 
 ---
 

@@ -14,6 +14,10 @@ interface HotelGridProps {
   checkIn?: string;
   checkOut?: string;
   title?: string;
+  /** Minimum price per night to display (filters results after fetching rates) */
+  minPrice?: number;
+  /** Maximum price per night to display (filters results after fetching rates) */
+  maxPrice?: number;
 }
 
 // Single Hotel Showcase - Full width, rich content
@@ -181,10 +185,13 @@ export function HotelGrid({
   limit = 3,
   checkIn,
   checkOut,
-  title
+  title,
+  minPrice: minPriceFilter,
+  maxPrice: maxPriceFilter
 }: HotelGridProps) {
   const [hotels, setHotels] = useState<LiteAPIHotel[]>([]);
   const [minPrices, setMinPrices] = useState<Record<string, number>>({});
+  const [fallbackPrices, setFallbackPrices] = useState<Record<string, number>>({});
   const [computedCheckIn, setComputedCheckIn] = useState<string>('');
   const [computedCheckOut, setComputedCheckOut] = useState<string>('');
   const [isLoadingHotels, setIsLoadingHotels] = useState(true);
@@ -345,6 +352,51 @@ export function HotelGrid({
     return hotels.map(h => h.hotel_id).sort().join(',');
   }, [hotels]);
 
+  // Load fallback prices for all hotels from pricing API (runs once when hotels are loaded)
+  useEffect(() => {
+    if (hotels.length === 0) {
+      setFallbackPrices({});
+      return;
+    }
+
+    let isMounted = true;
+
+    async function loadFallbackPrices() {
+      try {
+        // Fetch pricing data from API
+        const response = await fetch('/api/hotels/pricing');
+        if (!response.ok) {
+          console.warn('[HotelGrid] Failed to load pricing data');
+          return;
+        }
+
+        const pricingData = await response.json();
+        
+        // Build fallback price map using typical average prices
+        const fallbackPriceMap: Record<string, number> = {};
+        hotels.forEach(hotel => {
+          const hotelPricing = pricingData.hotels?.[hotel.hotel_id];
+          if (hotelPricing) {
+            const avgPrice = Math.round((hotelPricing.typicalMinPrice + hotelPricing.typicalMaxPrice) / 2);
+            fallbackPriceMap[hotel.hotel_id] = avgPrice;
+          }
+        });
+
+        if (isMounted) {
+          setFallbackPrices(fallbackPriceMap);
+        }
+      } catch (error) {
+        console.error('[HotelGrid] Error loading fallback prices:', error);
+      }
+    }
+
+    loadFallbackPrices();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [hotels]);
+
   // Fetch min-rates once dates are computed AND hotels are loaded
   useEffect(() => {
     if (!computedCheckIn || !computedCheckOut || hotels.length === 0) {
@@ -401,13 +453,15 @@ export function HotelGrid({
             }
           });
         }
+        
+        // Store live prices (will be merged with fallback in useMemo)
         setMinPrices(prices);
         setIsLoadingRates(false);
       })
       .catch(() => {
-        // Continue - show hotels without prices
+        // On error, use fallback prices so hotels always show prices
         if (isMounted) {
-          setMinPrices({});
+          setMinPrices(fallbackPrices);
           setIsLoadingRates(false);
         }
       });
@@ -427,8 +481,93 @@ export function HotelGrid({
     return Math.max(1, diffDays);
   }, [computedCheckIn, computedCheckOut]);
 
-  // Determine display mode based on number of hotels
-  const displayMode = hotels.length === 1 ? 'single' : hotels.length === 2 ? 'double' : 'triple';
+  // Merge live rates with fallback prices - always show prices (prefer live, use fallback)
+  const mergedPrices = useMemo(() => {
+    const merged: Record<string, number> = {};
+    hotels.forEach(hotel => {
+      // Prefer live rate, fallback to typical average price
+      merged[hotel.hotel_id] = minPrices[hotel.hotel_id] ?? fallbackPrices[hotel.hotel_id] ?? 0;
+    });
+    return merged;
+  }, [hotels, minPrices, fallbackPrices]);
+
+  // Load pricing data for price range filtering
+  const [pricingData, setPricingData] = useState<Record<string, { typicalMinPrice: number; typicalMaxPrice: number }>>({});
+  
+  useEffect(() => {
+    if (hotels.length === 0 || (minPriceFilter === undefined && maxPriceFilter === undefined)) {
+      return;
+    }
+
+    let isMounted = true;
+
+    async function loadPricingForFiltering() {
+      try {
+        const response = await fetch('/api/hotels/pricing');
+        if (!response.ok) return;
+        
+        const data = await response.json();
+        const pricingMap: Record<string, { typicalMinPrice: number; typicalMaxPrice: number }> = {};
+        
+        hotels.forEach(hotel => {
+          const hotelPricing = data.hotels?.[hotel.hotel_id];
+          if (hotelPricing) {
+            pricingMap[hotel.hotel_id] = {
+              typicalMinPrice: hotelPricing.typicalMinPrice,
+              typicalMaxPrice: hotelPricing.typicalMaxPrice,
+            };
+          }
+        });
+
+        if (isMounted) {
+          setPricingData(pricingMap);
+        }
+      } catch (error) {
+        console.error('[HotelGrid] Error loading pricing for filtering:', error);
+      }
+    }
+
+    loadPricingForFiltering();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [hotels, minPriceFilter, maxPriceFilter]);
+
+  // Filter hotels by price range if specified
+  // Uses live rates when available, falls back to typical prices for filtering
+  const filteredHotels = useMemo(() => {
+    // If no price filters specified, return all hotels
+    if (minPriceFilter === undefined && maxPriceFilter === undefined) {
+      return hotels;
+    }
+    
+    // Filter hotels using price range check (works with fallback prices if live rates not loaded)
+    return hotels.filter(hotel => {
+      const hotelPricing = pricingData[hotel.hotel_id];
+      if (!hotelPricing) return true; // Include if no pricing data (better than excluding)
+
+      const hotelMin = hotelPricing.typicalMinPrice;
+      const hotelMax = hotelPricing.typicalMaxPrice;
+
+      // Check if hotel's typical range overlaps with filter range
+      if (minPriceFilter !== undefined && hotelMax < minPriceFilter) {
+        return false; // Hotel's max is below filter min
+      }
+
+      if (maxPriceFilter !== undefined && hotelMin > maxPriceFilter) {
+        return false; // Hotel's min is above filter max
+      }
+
+      return true; // Overlaps with filter range
+    });
+  }, [hotels, minPriceFilter, maxPriceFilter, pricingData]);
+
+  // Determine display mode based on number of filtered hotels
+  const displayMode = filteredHotels.length === 1 ? 'single' : filteredHotels.length === 2 ? 'double' : 'triple';
+  
+  // Check if we're waiting for prices to filter
+  const isPriceFilterPending = (minPriceFilter !== undefined || maxPriceFilter !== undefined) && isLoadingRates;
 
   return (
     <div className="my-12 not-prose">
@@ -436,13 +575,17 @@ export function HotelGrid({
         <h3 className="text-2xl font-bold text-neutral-900 mb-8">{title}</h3>
       )}
       
-      {isLoadingHotels ? (
+      {isLoadingHotels || isPriceFilterPending ? (
         <div className="border-2 border-neutral-200 rounded-lg p-8 text-center bg-neutral-50">
-          <p className="text-neutral-600">Loading hotels...</p>
+          <p className="text-neutral-600">Loading properties{isPriceFilterPending ? ' and checking prices' : ''}...</p>
         </div>
-      ) : hotels.length === 0 ? (
+      ) : filteredHotels.length === 0 ? (
         <div className="border-2 border-neutral-200 rounded-lg p-8 text-center bg-neutral-50">
-          <p className="text-neutral-600 mb-2">No properties found matching your criteria</p>
+          <p className="text-neutral-600 mb-2">
+            {(minPriceFilter !== undefined || maxPriceFilter !== undefined) 
+              ? `No properties found in the ${minPriceFilter ? `$${minPriceFilter}` : '$0'}-${maxPriceFilter ? `$${maxPriceFilter}` : '+'}/night range for selected dates`
+              : 'No properties found matching your criteria'}
+          </p>
           <a
             href={`/places-to-stay${filter ? `?filter=${filter}` : ''}`}
             className="inline-flex items-center gap-2 text-primary-600 hover:text-primary-700 font-medium"
@@ -453,10 +596,10 @@ export function HotelGrid({
       ) : (
         <>
           {/* Single Hotel Mode - Full width showcase */}
-          {displayMode === 'single' && hotels[0] && (
+          {displayMode === 'single' && filteredHotels[0] && (
             <SingleHotelShowcase
-              hotel={hotels[0]}
-              minPrice={minPrices[hotels[0].hotel_id]}
+              hotel={filteredHotels[0]}
+              minPrice={mergedPrices[filteredHotels[0].hotel_id] || undefined}
               currency="USD"
               nights={nights}
               checkIn={computedCheckIn}
@@ -467,16 +610,16 @@ export function HotelGrid({
           {/* Double Hotel Mode - 2 column split */}
           {displayMode === 'double' && (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {hotels.map((hotel) => (
+              {filteredHotels.map((hotel) => (
                 <HotelCard
                   key={hotel.hotel_id}
                   hotel={hotel}
-                  minPrice={minPrices[hotel.hotel_id]}
+                  minPrice={mergedPrices[hotel.hotel_id] || undefined}
                   currency="USD"
                   nights={nights}
                   checkInDate={computedCheckIn || undefined}
                   checkOutDate={computedCheckOut || undefined}
-                  priceLoading={isLoadingRates}
+                  priceLoading={isLoadingRates && !fallbackPrices[hotel.hotel_id]}
                   onSelect={(id) => {
                     const checkInDate = computedCheckIn || format(addDays(new Date(), 60), 'yyyy-MM-dd');
                     const checkOutDate = computedCheckOut || format(addDays(new Date(), 67), 'yyyy-MM-dd');
@@ -490,16 +633,16 @@ export function HotelGrid({
           {/* Triple Hotel Mode - 3 column split */}
           {displayMode === 'triple' && (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {hotels.map((hotel) => (
+              {filteredHotels.map((hotel) => (
                   <HotelCard
                   key={hotel.hotel_id}
                     hotel={hotel}
-                    minPrice={minPrices[hotel.hotel_id]}
+                    minPrice={mergedPrices[hotel.hotel_id] || undefined}
                     currency="USD"
                     nights={nights}
                     checkInDate={computedCheckIn || undefined}
                     checkOutDate={computedCheckOut || undefined}
-                    priceLoading={isLoadingRates}
+                    priceLoading={isLoadingRates && !fallbackPrices[hotel.hotel_id]}
                     onSelect={(id) => {
                       const checkInDate = computedCheckIn || format(addDays(new Date(), 60), 'yyyy-MM-dd');
                       const checkOutDate = computedCheckOut || format(addDays(new Date(), 67), 'yyyy-MM-dd');
@@ -534,11 +677,11 @@ export function HotelGrid({
                 </svg>
               </a>
             </div>
-            {Object.keys(minPrices).length > 0 && (
+            {Object.keys(mergedPrices).length > 0 && (
               <p className="text-xs text-neutral-500 text-center">
                 Prices shown are sample rates for {computedCheckIn && computedCheckOut 
                   ? `${format(new Date(computedCheckIn), 'MMM d')} - ${format(new Date(computedCheckOut), 'MMM d')}`
-                  : 'selected dates'}. Actual rates vary by date and availability. Hotels without prices may not have availability for these dates.
+                  : 'selected dates'}. Actual rates vary by date and availability. Some prices shown are typical ranges when live rates are unavailable.
               </p>
             )}
           </div>

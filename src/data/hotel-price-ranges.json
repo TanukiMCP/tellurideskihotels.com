@@ -1,0 +1,125 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "Typical price ranges for Telluride hotels (fallback prices when live rates unavailable). Prices in USD per night. Ranges represent typical peak season (winter) prices.",
+  "hotels": {
+    "lp2be73": {
+      "hotelId": "lp2be73",
+      "name": "Camel's Garden Hotel",
+      "typicalMinPrice": 150,
+      "typicalMaxPrice": 250,
+      "priceRange": "under-200",
+      "notes": "Budget downtown hotel"
+    },
+    "lp3489e": {
+      "hotelId": "lp3489e",
+      "name": "The Victorian Inn",
+      "typicalMinPrice": 120,
+      "typicalMaxPrice": 200,
+      "priceRange": "under-200",
+      "notes": "Budget downtown hotel"
+    },
+    "lp2ff71": {
+      "hotelId": "lp2ff71",
+      "name": "The Hotel Telluride",
+      "typicalMinPrice": 250,
+      "typicalMaxPrice": 450,
+      "priceRange": "200-400",
+      "notes": "Mid-range downtown boutique"
+    },
+    "lp35ebc": {
+      "hotelId": "lp35ebc",
+      "name": "New Sheridan Hotel",
+      "typicalMinPrice": 280,
+      "typicalMaxPrice": 500,
+      "priceRange": "200-400",
+      "notes": "Mid-range downtown historic hotel"
+    },
+    "lp7924d": {
+      "hotelId": "lp7924d",
+      "name": "Hotel Columbia",
+      "typicalMinPrice": 300,
+      "typicalMaxPrice": 550,
+      "priceRange": "200-400",
+      "notes": "Mid-range downtown hotel"
+    },
+    "lp31628": {
+      "hotelId": "lp31628",
+      "name": "Inn at Lost Creek",
+      "typicalMinPrice": 450,
+      "typicalMaxPrice": 700,
+      "priceRange": "400-700",
+      "notes": "Upper mid-range Mountain Village"
+    },
+    "lp35351": {
+      "hotelId": "lp35351",
+      "name": "Mountain Lodge Telluride",
+      "typicalMinPrice": 500,
+      "typicalMaxPrice": 750,
+      "priceRange": "400-700",
+      "notes": "Upper mid-range condo-hotel"
+    },
+    "lp4153f": {
+      "hotelId": "lp4153f",
+      "name": "Lumiere by Dunton",
+      "typicalMinPrice": 800,
+      "typicalMaxPrice": 1500,
+      "priceRange": "700-plus",
+      "notes": "Luxury ski-in/ski-out"
+    },
+    "lp4b27f": {
+      "hotelId": "lp4b27f",
+      "name": "Madeline Hotel & Residences, Auberge Collection",
+      "typicalMinPrice": 700,
+      "typicalMaxPrice": 1800,
+      "priceRange": "700-plus",
+      "notes": "Luxury ski-in/ski-out"
+    },
+    "lp21ee2": {
+      "hotelId": "lp21ee2",
+      "name": "The Peaks Resort and Spa",
+      "typicalMinPrice": 650,
+      "typicalMaxPrice": 1400,
+      "priceRange": "700-plus",
+      "notes": "Luxury ski-in/ski-out resort"
+    },
+    "lp3e47f": {
+      "hotelId": "lp3e47f",
+      "name": "The Peaks Resort and Spa",
+      "typicalMinPrice": 650,
+      "typicalMaxPrice": 1400,
+      "priceRange": "700-plus",
+      "notes": "Alternative ID for Peaks Resort"
+    },
+    "lp3d0c1": {
+      "hotelId": "lp3d0c1",
+      "name": "Fairmont Heritage Place",
+      "typicalMinPrice": 750,
+      "typicalMaxPrice": 1600,
+      "priceRange": "700-plus",
+      "notes": "Luxury condo-hotel"
+    }
+  },
+  "priceRangeCategories": {
+    "under-200": {
+      "min": 0,
+      "max": 200,
+      "description": "Budget properties"
+    },
+    "200-400": {
+      "min": 200,
+      "max": 400,
+      "description": "Mid-range properties"
+    },
+    "400-700": {
+      "min": 400,
+      "max": 700,
+      "description": "Upper mid-range properties"
+    },
+    "700-plus": {
+      "min": 700,
+      "max": null,
+      "description": "Luxury properties"
+    }
+  }
+}
+
