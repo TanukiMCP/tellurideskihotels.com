@@ -1,0 +1,40 @@
+---
+export const prerender = false;
+
+import PageLayout from '@/components/layout/PageLayout.astro';
+import Container from '@/components/layout/Container.astro';
+import { TripCalculator } from '@/components/planning/TripCalculator';
+
+const pageTitle = 'Plan Your Telluride Trip | Budget Calculator & Trip Planner';
+const pageDescription = 'Plan your Telluride ski vacation with our interactive trip calculator. Set your budget, dates, and group size to find hotels and activities that fit.';
+---
+
+<PageLayout title={pageTitle} description={pageDescription}>
+  <!-- Page Header -->
+  <div class="bg-gradient-to-b from-primary-50 to-white py-12 lg:py-16 border-b border-neutral-100">
+    <Container>
+      <div class="max-w-4xl mx-auto text-center">
+        <h1 class="text-display-sm lg:text-display-md mb-4 text-neutral-900 font-extrabold">
+          Plan Your Trip
+        </h1>
+        <p class="text-lg lg:text-xl text-neutral-600 leading-relaxed">
+          Set your budget, travel dates, and group size—we'll show you real hotels and activities that fit.
+        </p>
+      </div>
+    </Container>
+  </div>
+
+  <!-- Trip Calculator -->
+  <div class="py-8 lg:py-12">
+    <Container>
+      <TripCalculator 
+        client:load
+        defaultNights={4}
+        defaultGuests={2}
+        defaultBudget={4000}
+        title="Trip Budget Planner"
+      />
+    </Container>
+  </div>
+</PageLayout>
+
