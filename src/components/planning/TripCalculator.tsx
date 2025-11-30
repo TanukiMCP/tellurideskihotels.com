@@ -784,8 +784,8 @@ export function TripCalculator({
                     {locked && <span className="text-[10px] opacity-75">(required)</span>}
                   </button>
                 ))}
-              </div>
-
+          </div>
+          
               {/* Skiing Details - Collapsible */}
               {categories.skiing && (
                 <div className="border-t border-neutral-100 mt-6 pt-5">
@@ -796,7 +796,7 @@ export function TripCalculator({
                     <div className="flex items-center gap-3">
                       <div className="w-10 h-10 rounded-xl bg-sky-100 flex items-center justify-center group-hover:bg-sky-200 transition-colors">
                         <Snowflake className="w-5 h-5 text-sky-600" />
-                      </div>
+            </div>
                       <div>
                         <h3 className="text-sm font-bold text-neutral-800">Skiing Details</h3>
                         {liftTicketCalc && (adultSkiers > 0 || childSkiers > 0) && !showSkiDetails && (
@@ -805,8 +805,8 @@ export function TripCalculator({
                         {!tripInSkiSeason && (
                           <span className="text-xs bg-amber-100 text-amber-700 px-2 py-0.5 rounded">Off-season</span>
                         )}
-                      </div>
-                    </div>
+            </div>
+            </div>
                     <div className={`w-8 h-8 rounded-lg flex items-center justify-center transition-colors ${showSkiDetails ? 'bg-sky-100' : 'bg-neutral-100 group-hover:bg-neutral-200'}`}>
                       {showSkiDetails ? <ChevronUp className="w-4 h-4 text-sky-600" /> : <ChevronDown className="w-4 h-4 text-neutral-500" />}
                     </div>
@@ -861,15 +861,15 @@ export function TripCalculator({
                               <span className="text-lg font-bold w-8 text-center tabular-nums">{skiDays}</span>
                               <button onClick={() => setSkiDays(Math.min(nights, skiDays + 1))} className="w-7 h-7 rounded bg-white border border-neutral-200 flex items-center justify-center hover:bg-neutral-50 text-neutral-600"><Plus className="w-3.5 h-3.5" /></button>
                             </div>
-                          </div>
-                        </div>
+            </div>
+          </div>
 
                         {liftTicketCalc && (adultSkiers > 0 || childSkiers > 0) && (
                           <div className="mt-4 pt-4 border-t border-sky-200 flex items-center justify-between">
                             <div>
                               <p className="text-xs text-neutral-600">Estimated Cost</p>
                               <p className="text-xl font-bold text-sky-700">{formatCurrency(liftTicketCalc.totalCost)}</p>
-                            </div>
+                </div>
                             <div className="text-right text-xs text-neutral-500">
                               {liftTicketCalc.breakdown.adults.count > 0 && <p>{liftTicketCalc.breakdown.adults.count} adult{liftTicketCalc.breakdown.adults.count > 1 ? 's' : ''} × {skiDays} day{skiDays > 1 ? 's' : ''}</p>}
                               {liftTicketCalc.breakdown.children.count > 0 && <p>{liftTicketCalc.breakdown.children.count} kid{liftTicketCalc.breakdown.children.count > 1 ? 's' : ''} × {skiDays} day{skiDays > 1 ? 's' : ''}</p>}
@@ -886,7 +886,7 @@ export function TripCalculator({
 
             {/* Budget Allocation - Collapsible */}
             <div className="border-t border-neutral-100 mt-6 pt-5">
-              <button 
+                  <button 
                 onClick={() => setShowAllocation(!showAllocation)}
                 className="w-full flex items-center justify-between text-left group"
               >
@@ -902,7 +902,7 @@ export function TripCalculator({
                 <div className={`w-8 h-8 rounded-lg flex items-center justify-center transition-colors ${showAllocation ? 'bg-primary-100' : 'bg-neutral-100 group-hover:bg-neutral-200'}`}>
                   {showAllocation ? <ChevronUp className="w-4 h-4 text-primary-600" /> : <ChevronDown className="w-4 h-4 text-neutral-500" />}
                 </div>
-              </button>
+                  </button>
               
               {showAllocation && (
                 <div className="mt-5 space-y-4">
@@ -1033,234 +1033,113 @@ export function TripCalculator({
                   ) : hotels.length > 0 ? (
                     (() => {
                       const maxBudget = budgetBreakdown.lodging.perNight;
-                      // Sort hotels: within budget first (sorted by price desc), then over budget (sorted by price asc)
-                      const sortedHotels = [...hotels].sort((a, b) => {
-                        const priceA = hotelPrices[a.hotel_id] || 200;
-                        const priceB = hotelPrices[b.hotel_id] || 200;
-                        const aInBudget = priceA <= maxBudget;
-                        const bInBudget = priceB <= maxBudget;
-                        
-                        // In-budget hotels come first
-                        if (aInBudget && !bInBudget) return -1;
-                        if (!aInBudget && bInBudget) return 1;
-                        
-                        // Within same category, sort by rating×reviews score
-                        const scoreA = (a.review_score || 0) * Math.log10((a.review_count || 0) + 1);
-                        const scoreB = (b.review_score || 0) * Math.log10((b.review_count || 0) + 1);
-                        return scoreB - scoreA;
-                      });
+                      // ONLY show hotels within budget - filter out everything else
+                      const inBudgetHotels = hotels
+                        .filter(h => (hotelPrices[h.hotel_id] || 200) <= maxBudget)
+                        .sort((a, b) => {
+                          // Sort by rating×reviews score
+                          const scoreA = (a.review_score || 0) * Math.log10((a.review_count || 0) + 1);
+                          const scoreB = (b.review_score || 0) * Math.log10((b.review_count || 0) + 1);
+                          return scoreB - scoreA;
+                        });
                       
-                      const inBudgetHotels = sortedHotels.filter(h => (hotelPrices[h.hotel_id] || 200) <= maxBudget);
-                      const overBudgetHotels = sortedHotels.filter(h => (hotelPrices[h.hotel_id] || 200) > maxBudget);
-                      
-                      return (
-                        <div className="space-y-6">
-                          {/* In-budget hotels */}
-                          {inBudgetHotels.length > 0 && (
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                              {inBudgetHotels.map((hotel) => {
-                                const isSelected = selectedHotel?.id === hotel.hotel_id;
-                                const firstImage = hotel.images?.[0] as { url?: string; variants?: { url?: string }[] } | undefined;
-                                const imageUrl = firstImage?.url || firstImage?.variants?.[0]?.url;
-                                const price = hotelPrices[hotel.hotel_id] || 200;
-                                const rating = hotel.review_score || 0;
-                                
-                                return (
-                                  <div 
-                                    key={hotel.hotel_id}
-                                    className={`relative bg-white rounded-xl border-2 overflow-hidden transition-all duration-300 ${
-                                      isSelected 
-                                        ? 'border-primary-500 shadow-lg ring-2 ring-primary-200' 
-                                        : 'border-neutral-200 hover:border-primary-300 hover:shadow-md'
-                                    }`}
-                                  >
-                                    {isSelected && (
-                                      <div className="absolute top-3 left-3 z-20 flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-primary-600 text-white text-sm font-bold shadow-lg">
-                                        <Check className="w-4 h-4" />
-                                        Selected
-                                      </div>
-                                    )}
+                      return inBudgetHotels.length > 0 ? (
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          {inBudgetHotels.map((hotel) => {
+                            const isSelected = selectedHotel?.id === hotel.hotel_id;
+                            const firstImage = hotel.images?.[0] as { url?: string; variants?: { url?: string }[] } | undefined;
+                            const imageUrl = firstImage?.url || firstImage?.variants?.[0]?.url;
+                            const price = hotelPrices[hotel.hotel_id] || 200;
+                            const rating = hotel.review_score || 0;
+                            
+                            return (
+                              <div 
+                                key={hotel.hotel_id}
+                                className={`relative bg-white rounded-xl border-2 overflow-hidden transition-all duration-300 ${
+                                  isSelected 
+                                    ? 'border-primary-500 shadow-lg ring-2 ring-primary-200' 
+                                    : 'border-neutral-200 hover:border-primary-300 hover:shadow-md'
+                                }`}
+                              >
+                                {isSelected && (
+                                  <div className="absolute top-3 left-3 z-20 flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-primary-600 text-white text-sm font-bold shadow-lg">
+                                    <Check className="w-4 h-4" />
+                                    Selected
+        </div>
+                                )}
 
-                                    <div className="relative h-40 bg-neutral-100">
-                                      {imageUrl ? (
-                                        <img
-                                          src={imageUrl}
-                                          alt={hotel.name || 'Hotel'}
-                                          className="w-full h-full object-cover"
-                                          loading="lazy"
-                                        />
-                                      ) : (
-                                        <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-neutral-100 to-neutral-200">
-                                          <Hotel className="w-8 h-8 text-neutral-300" />
-                                        </div>
-                                      )}
-                                      
-                                      {/* Price badge - green tint for in-budget */}
-                                      <div className="absolute bottom-3 right-3 bg-white/95 backdrop-blur px-3 py-1.5 rounded-lg shadow-lg border border-green-200">
-                                        <div className="flex items-baseline gap-1">
-                                          <span className="text-xs text-green-600">From</span>
-                                          <span className="text-lg font-bold text-green-700">{formatCurrency(price)}</span>
-                                          <span className="text-xs text-green-600">/night</span>
-                                        </div>
-                                      </div>
-                                    </div>
-
-                                    <div className="p-4">
-                                      <h4 className="font-bold text-neutral-900 text-lg mb-1 line-clamp-1">{hotel.name}</h4>
-                                      
-                                      <div className="flex items-center gap-3 text-sm text-neutral-600 mb-3">
-                                        {rating > 0 && (
-                                          <div className="flex items-center gap-1">
-                                            <Star className="w-4 h-4 fill-amber-400 text-amber-400" />
-                                            <span className="font-semibold">{rating.toFixed(1)}</span>
-                                          </div>
-                                        )}
-                                        <p className="text-xs text-neutral-500">
-                                          ~{formatCurrency(price * nights)} for {nights} night{nights > 1 ? 's' : ''}
-                                        </p>
-                                      </div>
-
-                                      <button
-                                        onClick={() => handleHotelSelect(hotel)}
-                                        className={`w-full flex items-center justify-center gap-2 py-3 px-4 rounded-lg font-semibold transition-all ${
-                                          isSelected
-                                            ? 'bg-primary-100 text-primary-700 hover:bg-primary-200'
-                                            : 'bg-primary-600 text-white hover:bg-primary-700'
-                                        }`}
-                                      >
-                                        {isSelected ? (
-                                          <>
-                                            <X className="w-4 h-4" />
-                                            Remove Selection
-                                          </>
-                                        ) : (
-                                          <>
-                                            <Plus className="w-4 h-4" />
-                                            Select This Hotel
-                                          </>
-                                        )}
-                                      </button>
+                                <div className="relative h-40 bg-neutral-100">
+                                  {imageUrl ? (
+                                    <img
+                                      src={imageUrl}
+                                      alt={hotel.name || 'Hotel'}
+                                      className="w-full h-full object-cover"
+                                      loading="lazy"
+                                    />
+                                  ) : (
+                                    <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-neutral-100 to-neutral-200">
+                                      <Hotel className="w-8 h-8 text-neutral-300" />
+        </div>
+                                  )}
+                                  
+                                  <div className="absolute bottom-3 right-3 bg-white/95 backdrop-blur px-3 py-1.5 rounded-lg shadow-lg">
+                                    <div className="flex items-baseline gap-1">
+                                      <span className="text-xs text-neutral-500">From</span>
+                                      <span className="text-lg font-bold text-neutral-900">{formatCurrency(price)}</span>
+                                      <span className="text-xs text-neutral-500">/night</span>
                                     </div>
                                   </div>
-                                );
-                              })}
-                            </div>
-                          )}
-                          
-                          {/* Over-budget hotels section */}
-                          {overBudgetHotels.length > 0 && (
-                            <>
-                              <div className="border-t border-neutral-200 pt-4">
-                                <p className="text-sm text-neutral-500 mb-4 flex items-center gap-2">
-                                  <span className="w-2 h-2 rounded-full bg-amber-400"></span>
-                                  Above your {formatCurrency(maxBudget)}/night budget
-                                </p>
-                              </div>
-                              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 opacity-75">
-                                {overBudgetHotels.slice(0, 4).map((hotel) => {
-                                  const isSelected = selectedHotel?.id === hotel.hotel_id;
-                                  const firstImage = hotel.images?.[0] as { url?: string; variants?: { url?: string }[] } | undefined;
-                                  const imageUrl = firstImage?.url || firstImage?.variants?.[0]?.url;
-                                  const price = hotelPrices[hotel.hotel_id] || 200;
-                                  const rating = hotel.review_score || 0;
-                                  const overBy = price - maxBudget;
+                                </div>
+
+                                <div className="p-4">
+                                  <h4 className="font-bold text-neutral-900 text-lg mb-1 line-clamp-1">{hotel.name}</h4>
                                   
-                                  return (
-                                    <div 
-                                      key={hotel.hotel_id}
-                                      className={`relative bg-white rounded-xl border-2 overflow-hidden transition-all duration-300 ${
-                                        isSelected 
-                                          ? 'border-primary-500 shadow-lg ring-2 ring-primary-200 opacity-100' 
-                                          : 'border-amber-200 hover:border-amber-300 hover:shadow-md hover:opacity-100'
-                                      }`}
-                                    >
-                                      {/* Over budget badge */}
-                                      <div className="absolute top-3 left-3 z-20 flex items-center gap-1.5 px-2 py-1 rounded-full bg-amber-100 text-amber-700 text-xs font-medium shadow">
-                                        +{formatCurrency(overBy)}/night
+                                  <div className="flex items-center gap-3 text-sm text-neutral-600 mb-3">
+                                    {rating > 0 && (
+                                      <div className="flex items-center gap-1">
+                                        <Star className="w-4 h-4 fill-amber-400 text-amber-400" />
+                                        <span className="font-semibold">{rating.toFixed(1)}</span>
                                       </div>
-                                      
-                                      {isSelected && (
-                                        <div className="absolute top-3 right-3 z-20 flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-primary-600 text-white text-sm font-bold shadow-lg">
-                                          <Check className="w-4 h-4" />
-                                        </div>
-                                      )}
+                                    )}
+                                    <p className="text-xs text-neutral-500">
+                                      ~{formatCurrency(price * nights)} for {nights} night{nights > 1 ? 's' : ''}
+                                    </p>
+                                  </div>
 
-                                      <div className="relative h-40 bg-neutral-100">
-                                        {imageUrl ? (
-                                          <img
-                                            src={imageUrl}
-                                            alt={hotel.name || 'Hotel'}
-                                            className="w-full h-full object-cover"
-                                            loading="lazy"
-                                          />
-                                        ) : (
-                                          <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-neutral-100 to-neutral-200">
-                                            <Hotel className="w-8 h-8 text-neutral-300" />
-                                          </div>
-                                        )}
-                                        
-                                        {/* Price badge - amber tint for over-budget */}
-                                        <div className="absolute bottom-3 right-3 bg-white/95 backdrop-blur px-3 py-1.5 rounded-lg shadow-lg border border-amber-200">
-                                          <div className="flex items-baseline gap-1">
-                                            <span className="text-xs text-amber-600">From</span>
-                                            <span className="text-lg font-bold text-amber-700">{formatCurrency(price)}</span>
-                                            <span className="text-xs text-amber-600">/night</span>
-                                          </div>
-                                        </div>
-                                      </div>
-
-                                      <div className="p-4">
-                                        <h4 className="font-bold text-neutral-900 text-lg mb-1 line-clamp-1">{hotel.name}</h4>
-                                        
-                                        <div className="flex items-center gap-3 text-sm text-neutral-600 mb-3">
-                                          {rating > 0 && (
-                                            <div className="flex items-center gap-1">
-                                              <Star className="w-4 h-4 fill-amber-400 text-amber-400" />
-                                              <span className="font-semibold">{rating.toFixed(1)}</span>
-                                            </div>
-                                          )}
-                                          <p className="text-xs text-neutral-500">
-                                            ~{formatCurrency(price * nights)} for {nights} night{nights > 1 ? 's' : ''}
-                                          </p>
-                                        </div>
-
-                                        <button
-                                          onClick={() => handleHotelSelect(hotel)}
-                                          className={`w-full flex items-center justify-center gap-2 py-3 px-4 rounded-lg font-semibold transition-all ${
-                                            isSelected
-                                              ? 'bg-primary-100 text-primary-700 hover:bg-primary-200'
-                                              : 'bg-amber-100 text-amber-700 hover:bg-amber-200'
-                                          }`}
-                                        >
-                                          {isSelected ? (
-                                            <>
-                                              <X className="w-4 h-4" />
-                                              Remove
-                                            </>
-                                          ) : (
-                                            <>
-                                              <Plus className="w-4 h-4" />
-                                              Select Anyway
-                                            </>
-                                          )}
-                                        </button>
-                                      </div>
-                                    </div>
-                                  );
-                                })}
+                                  <button
+                                    onClick={() => handleHotelSelect(hotel)}
+                                    className={`w-full flex items-center justify-center gap-2 py-3 px-4 rounded-lg font-semibold transition-all ${
+                                      isSelected
+                                        ? 'bg-primary-100 text-primary-700 hover:bg-primary-200'
+                                        : 'bg-primary-600 text-white hover:bg-primary-700'
+                                    }`}
+                                  >
+                                    {isSelected ? (
+                                      <>
+                                        <X className="w-4 h-4" />
+                                        Remove Selection
+                                      </>
+                                    ) : (
+                                      <>
+                                        <Plus className="w-4 h-4" />
+                                        Select This Hotel
+                                      </>
+                                    )}
+                                  </button>
+                                </div>
                               </div>
-                            </>
-                          )}
-                          
-                          {/* No hotels in budget message */}
-                          {inBudgetHotels.length === 0 && (
-                            <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 text-center">
-                              <p className="text-amber-700 text-sm">
-                                No hotels found within your {formatCurrency(maxBudget)}/night budget. 
-                                Consider increasing your budget or adjusting the lodging allocation.
-                              </p>
-                            </div>
-                          )}
+                            );
+                          })}
+                        </div>
+                      ) : (
+                        <div className="bg-amber-50 border border-amber-200 rounded-xl p-6 text-center">
+                          <Hotel className="w-10 h-10 mx-auto mb-3 text-amber-400" />
+                          <p className="text-amber-800 font-medium mb-2">
+                            No hotels found within your {formatCurrency(maxBudget)}/night budget
+                          </p>
+                          <p className="text-amber-700 text-sm">
+                            Try increasing your total budget or adjusting the lodging allocation percentage.
+                          </p>
                         </div>
                       );
                     })()
