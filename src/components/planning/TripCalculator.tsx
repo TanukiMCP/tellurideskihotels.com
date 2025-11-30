@@ -106,8 +106,8 @@ export function TripCalculator({
     dining: 15,
   });
   
-  // UI state
-  const [showSkiDetails, setShowSkiDetails] = useState(true);
+  // UI state - collapse sections by default to reduce visual clutter
+  const [showSkiDetails, setShowSkiDetails] = useState(false);
   const [showAllocation, setShowAllocation] = useState(false);
   const [isExporting, setIsExporting] = useState(false);
   const [activeSection, setActiveSection] = useState<'hotels' | 'activities' | 'events'>('hotels');
@@ -281,10 +281,11 @@ export function TripCalculator({
             adults: guests.toString(),
           });
           
+          let currentPrices: Record<string, number> = {};
+          
           const ratesRes = await fetch(`/api/hotels/min-rates?${ratesParams}`);
           if (ratesRes.ok && !cancelled) {
             const ratesData = await ratesRes.json();
-            const prices: Record<string, number> = {};
             
             // Calculate nights for per-night price
             const nightsCount = Math.max(1, differenceInDays(parseISO(checkOut), parseISO(checkIn)));
@@ -292,37 +293,63 @@ export function TripCalculator({
             if (ratesData?.data && Array.isArray(ratesData.data)) {
               ratesData.data.forEach((item: { hotelId?: string; price?: number }) => {
                 if (item.hotelId && item.price && item.price > 0) {
-                  prices[item.hotelId] = Math.round(item.price / nightsCount);
+                  currentPrices[item.hotelId] = Math.round(item.price / nightsCount);
                 }
               });
             }
             
             if (!cancelled) {
-              setHotelPrices(prices);
+              setHotelPrices(currentPrices);
             }
           }
           
-          // Step 3: Get fallback prices from pricing API
+          // Step 3: Get fallback prices from pricing API + star-rating estimates
           if (!cancelled) {
             try {
               const pricingRes = await fetch('/api/hotels/pricing');
-              if (pricingRes.ok) {
-                const pricingData = await pricingRes.json();
-                const fallbackPrices: Record<string, number> = { ...prices };
-                hotelList.forEach(hotel => {
-                  if (!fallbackPrices[hotel.hotel_id]) {
-                    const hotelPricing = pricingData.hotels?.[hotel.hotel_id];
-                    if (hotelPricing) {
-                      fallbackPrices[hotel.hotel_id] = Math.round((hotelPricing.typicalMinPrice + hotelPricing.typicalMaxPrice) / 2);
-                    }
+              const pricingData = pricingRes.ok ? await pricingRes.json() : { hotels: {} };
+              const fallbackPrices: Record<string, number> = { ...currentPrices };
+              
+              hotelList.forEach(hotel => {
+                if (!fallbackPrices[hotel.hotel_id] || fallbackPrices[hotel.hotel_id] === 0) {
+                  // First try: use pricing database
+                  const hotelPricing = pricingData.hotels?.[hotel.hotel_id];
+                  if (hotelPricing) {
+                    // Use typicalMinPrice as the "from" price (conservative estimate)
+                    fallbackPrices[hotel.hotel_id] = hotelPricing.typicalMinPrice;
+                  } else {
+                    // Second fallback: estimate based on star rating
+                    // These are conservative "from" prices for Telluride area
+                    const starRating = hotel.star_rating || 3;
+                    const starBasedEstimates: Record<number, number> = {
+                      1: 120,  // Budget
+                      2: 150,  // Economy
+                      3: 200,  // Mid-range
+                      4: 400,  // Upper mid-range
+                      5: 700,  // Luxury
+                    };
+                    fallbackPrices[hotel.hotel_id] = starBasedEstimates[Math.min(5, Math.max(1, starRating))] || 250;
                   }
-                });
-                if (!cancelled) {
-                  setHotelPrices(fallbackPrices);
                 }
+              });
+              
+              if (!cancelled) {
+                setHotelPrices(fallbackPrices);
               }
             } catch (e) {
-              console.warn('Failed to fetch fallback prices');
+              // Even on error, provide star-rating based estimates so prices always show
+              const emergencyFallback: Record<string, number> = { ...currentPrices };
+              hotelList.forEach(hotel => {
+                if (!emergencyFallback[hotel.hotel_id] || emergencyFallback[hotel.hotel_id] === 0) {
+                  const starRating = hotel.star_rating || 3;
+                  const estimates: Record<number, number> = { 1: 120, 2: 150, 3: 200, 4: 400, 5: 700 };
+                  emergencyFallback[hotel.hotel_id] = estimates[Math.min(5, Math.max(1, starRating))] || 250;
+                }
+              });
+              if (!cancelled) {
+                setHotelPrices(emergencyFallback);
+              }
+              console.warn('Failed to fetch fallback prices, using star-rating estimates');
             }
           }
         }
@@ -513,15 +540,19 @@ export function TripCalculator({
     if (isSelected) {
       removeHotel();
     } else {
-      const imageUrl = hotel.images?.[0]?.url || hotel.images?.[0]?.variants?.[0]?.url || '';
+      // Handle different possible image formats from API
+      const firstImage = hotel.images?.[0] as { url?: string; variants?: { url?: string }[] } | undefined;
+      const imageUrl = firstImage?.url || firstImage?.variants?.[0]?.url || '';
       const price = hotelPrices[hotel.hotel_id] || budgetBreakdown.lodging.perNight;
+      // Handle different possible address formats from API  
+      const hotelAddress = hotel.address as { line1?: string; full?: string; city?: string } | undefined;
       selectHotel({
         id: hotel.hotel_id,
         name: hotel.name || 'Unknown Hotel',
         image: imageUrl,
         pricePerNight: price,
         totalPrice: price * nights,
-        address: hotel.address?.line1 || hotel.address?.full || '',
+        address: hotelAddress?.line1 || hotelAddress?.full || '',
         rating: hotel.review_score || 0,
         checkIn,
         checkOut,
@@ -606,31 +637,32 @@ export function TripCalculator({
   return (
     <div ref={containerRef} className="relative">
       {/* Main Layout */}
-      <div className="flex flex-col xl:flex-row gap-6">
+      <div className="flex flex-col xl:flex-row gap-8">
         {/* Left Side: Planning Controls */}
-        <div className="flex-1 space-y-6">
+        <div className="flex-1 min-w-0 space-y-8">
           {/* Header Card */}
           <div className="bg-white rounded-2xl shadow-lg border border-neutral-200 overflow-hidden">
-            <div className="bg-gradient-to-r from-primary-600 via-primary-700 to-primary-800 text-white p-6">
+            <div className="bg-gradient-to-r from-primary-600 via-primary-700 to-primary-800 text-white p-5 sm:p-6">
         <div className="flex items-center gap-4">
-          <div className="w-14 h-14 bg-white/10 backdrop-blur rounded-xl flex items-center justify-center">
-            <Calculator className="w-7 h-7 text-white" />
+                <div className="w-12 h-12 sm:w-14 sm:h-14 bg-white/10 backdrop-blur rounded-xl flex items-center justify-center flex-shrink-0">
+                  <Calculator className="w-6 h-6 sm:w-7 sm:h-7 text-white" />
           </div>
-                <div className="flex-1">
-                  <h2 className="text-2xl font-bold">{title}</h2>
-                  <p className="text-primary-100 text-sm">Set your budget, choose your experiences, build your itinerary</p>
+                <div className="flex-1 min-w-0">
+                  <h2 className="text-xl sm:text-2xl font-bold">{title}</h2>
+                  <p className="text-primary-100 text-sm hidden sm:block">Set your budget, choose your experiences, build your itinerary</p>
           </div>
                 <img 
                   src="/favicon-icon.png" 
                   alt="Telluride Insider" 
-                  className="h-10 w-auto opacity-90 hidden sm:block"
+                  className="h-10 w-auto opacity-90 hidden md:block"
                 />
         </div>
             </div>
 
             {/* Trip Basics */}
-            <div className="p-6 space-y-6">
-              <div className="grid gap-4 md:grid-cols-3">
+            <div className="p-5 sm:p-6">
+              {/* Budget, Dates, Travelers - Better grid layout */}
+              <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
                 {/* Budget */}
           <div>
             <label className="block text-sm font-semibold text-neutral-700 mb-2">
@@ -721,245 +753,259 @@ export function TripCalculator({
               <span className="text-sm text-neutral-500">{formatCurrency(budget / guests)} per person</span>
             </div>
           </div>
+            </div>
+          </div>
         </div>
 
-              {/* Category Toggles */}
-              <div className="bg-neutral-50 rounded-xl p-4">
-                <h3 className="text-sm font-semibold text-neutral-700 mb-3">What's included in your trip?</h3>
-                <div className="flex flex-wrap gap-2">
-                  {[
-                    { key: 'lodging', label: 'Lodging', icon: Bed, locked: true },
-                    { key: 'skiing', label: 'Skiing', icon: Mountain },
-                    { key: 'activities', label: 'Activities', icon: Compass },
-                    { key: 'dining', label: 'Dining', icon: Utensils },
-                    { key: 'events', label: 'Local Events', icon: Music },
-                  ].map(({ key, label, icon: Icon, locked }) => (
-                    <button
-                      key={key}
-                      onClick={() => toggleCategory(key as keyof TripCategories)}
-                      disabled={locked}
-                      className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-                        categories[key as keyof TripCategories]
-                          ? 'bg-primary-600 text-white'
-                          : 'bg-white text-neutral-600 border border-neutral-200 hover:border-primary-300'
-                      } ${locked ? 'cursor-not-allowed' : ''}`}
-                    >
-                      <Icon className="w-4 h-4" />
-                      {label}
-                      {locked && <span className="text-xs opacity-75">(required)</span>}
-                    </button>
-                  ))}
-                </div>
-          </div>
-          
-              {/* Skiing Details */}
+          {/* Category Toggles - Separate card for visual hierarchy */}
+          <div className="bg-white rounded-2xl shadow-lg border border-neutral-200 overflow-hidden">
+            <div className="p-5 sm:p-6">
+              <h3 className="text-base font-bold text-neutral-800 mb-4">What's included in your trip?</h3>
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2 sm:gap-3">
+                {[
+                  { key: 'lodging', label: 'Lodging', icon: Bed, locked: true },
+                  { key: 'skiing', label: 'Skiing', icon: Mountain },
+                  { key: 'activities', label: 'Activities', icon: Compass },
+                  { key: 'dining', label: 'Dining', icon: Utensils },
+                  { key: 'events', label: 'Events', icon: Music },
+                ].map(({ key, label, icon: Icon, locked }) => (
+                  <button
+                    key={key}
+                    onClick={() => toggleCategory(key as keyof TripCategories)}
+                    disabled={locked}
+                    className={`flex flex-col items-center gap-2 p-3 sm:p-4 rounded-xl text-sm font-medium transition-all ${
+                      categories[key as keyof TripCategories]
+                        ? 'bg-primary-600 text-white shadow-md'
+                        : 'bg-neutral-50 text-neutral-600 border border-neutral-200 hover:border-primary-300 hover:bg-primary-50'
+                    } ${locked ? 'cursor-default' : 'cursor-pointer'}`}
+                  >
+                    <Icon className="w-5 h-5" />
+                    <span>{label}</span>
+                    {locked && <span className="text-[10px] opacity-75">(required)</span>}
+                  </button>
+                ))}
+              </div>
+
+              {/* Skiing Details - Collapsible */}
               {categories.skiing && (
-                <div className="bg-sky-50 rounded-xl p-4 border border-sky-200">
+                <div className="border-t border-neutral-100 mt-6 pt-5">
                   <button 
                     onClick={() => setShowSkiDetails(!showSkiDetails)}
-                    className="w-full flex items-center justify-between text-left"
+                    className="w-full flex items-center justify-between text-left group"
                   >
-                    <div className="flex items-center gap-2">
-                      <Snowflake className="w-5 h-5 text-sky-600" />
-                      <h3 className="text-sm font-semibold text-neutral-700">Skiing Details</h3>
-                      {!tripInSkiSeason && (
-                        <span className="text-xs bg-amber-100 text-amber-700 px-2 py-0.5 rounded">Off-season</span>
-                      )}
-            </div>
-                    {showSkiDetails ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
-                  </button>
-                  
-                  {showSkiDetails && (
-                    <div className="mt-4 space-y-4">
-                      {!tripInSkiSeason ? (
-                        <p className="text-sm text-amber-700 bg-amber-50 p-3 rounded-lg">
-                          Your dates are outside ski season ({seasonInfo.start} to {seasonInfo.end}).
-                        </p>
-                      ) : (
-                        <>
-                          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                            <div>
-                              <label className="block text-xs font-medium text-neutral-600 mb-1">
-                                <User className="w-3 h-3 inline mr-1" />Adults (13+)
-                              </label>
-                              <div className="flex items-center gap-2">
-                                <button onClick={() => setAdultSkiers(Math.max(0, adultSkiers - 1))} className="w-8 h-8 rounded bg-white border border-neutral-200 flex items-center justify-center hover:bg-neutral-50"><Minus className="w-4 h-4" /></button>
-                                <span className="text-lg font-bold w-8 text-center">{adultSkiers}</span>
-                                <button onClick={() => setAdultSkiers(Math.min(guests, adultSkiers + 1))} className="w-8 h-8 rounded bg-white border border-neutral-200 flex items-center justify-center hover:bg-neutral-50"><Plus className="w-4 h-4" /></button>
-            </div>
-            </div>
-                            <div>
-                              <label className="block text-xs font-medium text-neutral-600 mb-1">
-                                <User className="w-3 h-3 inline mr-1" />Children (6-12)
-                              </label>
-                              <div className="flex items-center gap-2">
-                                <button onClick={() => setChildSkiers(Math.max(0, childSkiers - 1))} className="w-8 h-8 rounded bg-white border border-neutral-200 flex items-center justify-center hover:bg-neutral-50"><Minus className="w-4 h-4" /></button>
-                                <span className="text-lg font-bold w-8 text-center">{childSkiers}</span>
-                                <button onClick={() => setChildSkiers(Math.min(guests - adultSkiers, childSkiers + 1))} className="w-8 h-8 rounded bg-white border border-neutral-200 flex items-center justify-center hover:bg-neutral-50"><Plus className="w-4 h-4" /></button>
-                              </div>
-                            </div>
-                            <div>
-                              <label className="block text-xs font-medium text-neutral-600 mb-1">
-                                <Baby className="w-3 h-3 inline mr-1" />Under 5 (Free)
-                              </label>
-                              <div className="flex items-center gap-2">
-                                <button onClick={() => setToddlerSkiers(Math.max(0, toddlerSkiers - 1))} className="w-8 h-8 rounded bg-white border border-neutral-200 flex items-center justify-center hover:bg-neutral-50"><Minus className="w-4 h-4" /></button>
-                                <span className="text-lg font-bold w-8 text-center">{toddlerSkiers}</span>
-                                <button onClick={() => setToddlerSkiers(Math.min(guests - adultSkiers - childSkiers, toddlerSkiers + 1))} className="w-8 h-8 rounded bg-white border border-neutral-200 flex items-center justify-center hover:bg-neutral-50"><Plus className="w-4 h-4" /></button>
-                              </div>
-                            </div>
-                            <div>
-                              <label className="block text-xs font-medium text-neutral-600 mb-1">
-                                <Ticket className="w-3 h-3 inline mr-1" />Ski Days
-                              </label>
-                              <div className="flex items-center gap-2">
-                                <button onClick={() => setSkiDays(Math.max(1, skiDays - 1))} className="w-8 h-8 rounded bg-white border border-neutral-200 flex items-center justify-center hover:bg-neutral-50"><Minus className="w-4 h-4" /></button>
-                                <span className="text-lg font-bold w-8 text-center">{skiDays}</span>
-                                <button onClick={() => setSkiDays(Math.min(nights, skiDays + 1))} className="w-8 h-8 rounded bg-white border border-neutral-200 flex items-center justify-center hover:bg-neutral-50"><Plus className="w-4 h-4" /></button>
-                              </div>
-            </div>
-          </div>
-
-                          {liftTicketCalc && (adultSkiers > 0 || childSkiers > 0) && (
-                            <div className="bg-white rounded-lg p-4 border border-sky-200">
-                              <div className="flex items-center justify-between">
-                                <div>
-                                  <p className="text-sm text-neutral-600">Estimated Lift Ticket Cost</p>
-                                  <p className="text-2xl font-bold text-sky-700">{formatCurrency(liftTicketCalc.totalCost)}</p>
-                </div>
-                                <div className="text-right text-sm text-neutral-500">
-                                  {liftTicketCalc.breakdown.adults.count > 0 && <p>{liftTicketCalc.breakdown.adults.count} adult{liftTicketCalc.breakdown.adults.count > 1 ? 's' : ''} × {skiDays} day{skiDays > 1 ? 's' : ''}</p>}
-                                  {liftTicketCalc.breakdown.children.count > 0 && <p>{liftTicketCalc.breakdown.children.count} child{liftTicketCalc.breakdown.children.count > 1 ? 'ren' : ''} × {skiDays} day{skiDays > 1 ? 's' : ''}</p>}
-                                  {liftTicketCalc.savings > 0 && <p className="text-green-600 font-medium">Savings: {formatCurrency(liftTicketCalc.savings)}</p>}
-                                </div>
-                              </div>
-                            </div>
-                          )}
-                        </>
-                      )}
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-xl bg-sky-100 flex items-center justify-center group-hover:bg-sky-200 transition-colors">
+                        <Snowflake className="w-5 h-5 text-sky-600" />
+                      </div>
+                      <div>
+                        <h3 className="text-sm font-bold text-neutral-800">Skiing Details</h3>
+                        {liftTicketCalc && (adultSkiers > 0 || childSkiers > 0) && !showSkiDetails && (
+                          <p className="text-xs text-sky-600 font-semibold">{formatCurrency(liftTicketCalc.totalCost)} estimated</p>
+                        )}
+                        {!tripInSkiSeason && (
+                          <span className="text-xs bg-amber-100 text-amber-700 px-2 py-0.5 rounded">Off-season</span>
+                        )}
+                      </div>
                     </div>
-                  )}
-                </div>
-              )}
-
-              {/* Budget Allocation Toggle */}
-              <div className="bg-white rounded-xl p-4 border border-neutral-200">
-                  <button 
-                  onClick={() => setShowAllocation(!showAllocation)}
-                  className="w-full flex items-center justify-between text-left"
-                >
-                  <span className="text-sm font-semibold text-neutral-700">Budget Allocation</span>
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs text-neutral-500">Adjust percentages</span>
-                    {showAllocation ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
-                  </div>
+                    <div className={`w-8 h-8 rounded-lg flex items-center justify-center transition-colors ${showSkiDetails ? 'bg-sky-100' : 'bg-neutral-100 group-hover:bg-neutral-200'}`}>
+                      {showSkiDetails ? <ChevronUp className="w-4 h-4 text-sky-600" /> : <ChevronDown className="w-4 h-4 text-neutral-500" />}
+                    </div>
                   </button>
                 
-                {showAllocation && (
-                  <div className="mt-4 space-y-4">
-                    {/* Visual Bar */}
-                    <div className="h-6 rounded-full overflow-hidden flex">
-                      {budgetBreakdown.fixedCosts > 0 && (
-                        <div className="bg-sky-500 flex items-center justify-center text-white text-xs font-medium" style={{ width: `${(budgetBreakdown.fixedCosts / budget) * 100}%` }}>Ski</div>
-                      )}
-                      {categories.lodging && (
-                        <div className="bg-primary-500 flex items-center justify-center text-white text-xs font-medium" style={{ width: `${(budgetBreakdown.lodging.total / budget) * 100}%` }}>Stay</div>
-                      )}
-                      {categories.activities && (
-                        <div className="bg-secondary-500 flex items-center justify-center text-white text-xs font-medium" style={{ width: `${(budgetBreakdown.activities.total / budget) * 100}%` }}>Do</div>
-                      )}
-                      {categories.dining && (
-                        <div className="bg-accent-500 flex items-center justify-center text-white text-xs font-medium" style={{ width: `${(budgetBreakdown.dining.total / budget) * 100}%` }}>Eat</div>
-                      )}
-                    </div>
+                {showSkiDetails && (
+                  <div className="mt-5 pl-13 space-y-4">
+                    {!tripInSkiSeason ? (
+                      <p className="text-sm text-amber-700 bg-amber-50 p-4 rounded-xl border border-amber-200">
+                        Your dates are outside ski season ({seasonInfo.start} to {seasonInfo.end}).
+                      </p>
+                    ) : (
+                      <div className="bg-sky-50 rounded-xl p-4 border border-sky-100">
+                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                          <div className="text-center">
+                            <label className="block text-xs font-medium text-neutral-600 mb-2">
+                              <User className="w-3 h-3 inline mr-1" />Adults (13+)
+                            </label>
+                            <div className="flex items-center justify-center gap-1">
+                              <button onClick={() => setAdultSkiers(Math.max(0, adultSkiers - 1))} className="w-7 h-7 rounded bg-white border border-neutral-200 flex items-center justify-center hover:bg-neutral-50 text-neutral-600"><Minus className="w-3.5 h-3.5" /></button>
+                              <span className="text-lg font-bold w-8 text-center tabular-nums">{adultSkiers}</span>
+                              <button onClick={() => setAdultSkiers(Math.min(guests, adultSkiers + 1))} className="w-7 h-7 rounded bg-white border border-neutral-200 flex items-center justify-center hover:bg-neutral-50 text-neutral-600"><Plus className="w-3.5 h-3.5" /></button>
+                            </div>
+                          </div>
+                          <div className="text-center">
+                            <label className="block text-xs font-medium text-neutral-600 mb-2">
+                              <User className="w-3 h-3 inline mr-1" />Kids (6-12)
+                            </label>
+                            <div className="flex items-center justify-center gap-1">
+                              <button onClick={() => setChildSkiers(Math.max(0, childSkiers - 1))} className="w-7 h-7 rounded bg-white border border-neutral-200 flex items-center justify-center hover:bg-neutral-50 text-neutral-600"><Minus className="w-3.5 h-3.5" /></button>
+                              <span className="text-lg font-bold w-8 text-center tabular-nums">{childSkiers}</span>
+                              <button onClick={() => setChildSkiers(Math.min(guests - adultSkiers, childSkiers + 1))} className="w-7 h-7 rounded bg-white border border-neutral-200 flex items-center justify-center hover:bg-neutral-50 text-neutral-600"><Plus className="w-3.5 h-3.5" /></button>
+                            </div>
+                          </div>
+                          <div className="text-center">
+                            <label className="block text-xs font-medium text-neutral-600 mb-2">
+                              <Baby className="w-3 h-3 inline mr-1" />Under 5
+                            </label>
+                            <div className="flex items-center justify-center gap-1">
+                              <button onClick={() => setToddlerSkiers(Math.max(0, toddlerSkiers - 1))} className="w-7 h-7 rounded bg-white border border-neutral-200 flex items-center justify-center hover:bg-neutral-50 text-neutral-600"><Minus className="w-3.5 h-3.5" /></button>
+                              <span className="text-lg font-bold w-8 text-center tabular-nums">{toddlerSkiers}</span>
+                              <button onClick={() => setToddlerSkiers(Math.min(guests - adultSkiers - childSkiers, toddlerSkiers + 1))} className="w-7 h-7 rounded bg-white border border-neutral-200 flex items-center justify-center hover:bg-neutral-50 text-neutral-600"><Plus className="w-3.5 h-3.5" /></button>
+                            </div>
+                            <span className="text-[10px] text-green-600 font-medium">FREE</span>
+                          </div>
+                          <div className="text-center">
+                            <label className="block text-xs font-medium text-neutral-600 mb-2">
+                              <Ticket className="w-3 h-3 inline mr-1" />Ski Days
+                            </label>
+                            <div className="flex items-center justify-center gap-1">
+                              <button onClick={() => setSkiDays(Math.max(1, skiDays - 1))} className="w-7 h-7 rounded bg-white border border-neutral-200 flex items-center justify-center hover:bg-neutral-50 text-neutral-600"><Minus className="w-3.5 h-3.5" /></button>
+                              <span className="text-lg font-bold w-8 text-center tabular-nums">{skiDays}</span>
+                              <button onClick={() => setSkiDays(Math.min(nights, skiDays + 1))} className="w-7 h-7 rounded bg-white border border-neutral-200 flex items-center justify-center hover:bg-neutral-50 text-neutral-600"><Plus className="w-3.5 h-3.5" /></button>
+                            </div>
+                          </div>
+                        </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                      {categories.lodging && (
-                        <div className="text-center p-3 bg-primary-50 rounded-lg">
-                          <div className="flex items-center justify-center gap-1 mb-1">
-                            <Bed className="w-4 h-4 text-primary-600" />
-                            <span className="text-xs font-medium text-neutral-600">Lodging</span>
+                        {liftTicketCalc && (adultSkiers > 0 || childSkiers > 0) && (
+                          <div className="mt-4 pt-4 border-t border-sky-200 flex items-center justify-between">
+                            <div>
+                              <p className="text-xs text-neutral-600">Estimated Cost</p>
+                              <p className="text-xl font-bold text-sky-700">{formatCurrency(liftTicketCalc.totalCost)}</p>
+                            </div>
+                            <div className="text-right text-xs text-neutral-500">
+                              {liftTicketCalc.breakdown.adults.count > 0 && <p>{liftTicketCalc.breakdown.adults.count} adult{liftTicketCalc.breakdown.adults.count > 1 ? 's' : ''} × {skiDays} day{skiDays > 1 ? 's' : ''}</p>}
+                              {liftTicketCalc.breakdown.children.count > 0 && <p>{liftTicketCalc.breakdown.children.count} kid{liftTicketCalc.breakdown.children.count > 1 ? 's' : ''} × {skiDays} day{skiDays > 1 ? 's' : ''}</p>}
+                              {liftTicketCalc.savings > 0 && <p className="text-green-600 font-semibold">Save {formatCurrency(liftTicketCalc.savings)}</p>}
+                            </div>
                           </div>
-                          <div className="text-lg font-bold text-neutral-900">{formatCurrency(budgetBreakdown.lodging.perNight)}</div>
-                          <div className="text-xs text-neutral-500">per night</div>
-                          <div className="flex justify-center gap-1 mt-2">
-                            <button onClick={() => adjustAllocation('lodging', -5)} className="w-6 h-6 rounded bg-white border border-neutral-200 flex items-center justify-center hover:bg-neutral-50"><Minus className="w-3 h-3" /></button>
-                            <span className="w-10 text-center text-sm font-medium">{allocation.lodging}%</span>
-                            <button onClick={() => adjustAllocation('lodging', 5)} className="w-6 h-6 rounded bg-white border border-neutral-200 flex items-center justify-center hover:bg-neutral-50"><Plus className="w-3 h-3" /></button>
-                          </div>
-                        </div>
-                      )}
-                      {categories.activities && (
-                        <div className="text-center p-3 bg-secondary-50 rounded-lg">
-                          <div className="flex items-center justify-center gap-1 mb-1">
-                            <Compass className="w-4 h-4 text-secondary-600" />
-                            <span className="text-xs font-medium text-neutral-600">Activities</span>
-                          </div>
-                          <div className="text-lg font-bold text-neutral-900">{formatCurrency(budgetBreakdown.activities.perPerson)}</div>
-                          <div className="text-xs text-neutral-500">per person</div>
-                          <div className="flex justify-center gap-1 mt-2">
-                            <button onClick={() => adjustAllocation('activities', -5)} className="w-6 h-6 rounded bg-white border border-neutral-200 flex items-center justify-center hover:bg-neutral-50"><Minus className="w-3 h-3" /></button>
-                            <span className="w-10 text-center text-sm font-medium">{allocation.activities}%</span>
-                            <button onClick={() => adjustAllocation('activities', 5)} className="w-6 h-6 rounded bg-white border border-neutral-200 flex items-center justify-center hover:bg-neutral-50"><Plus className="w-3 h-3" /></button>
-                          </div>
-                        </div>
-                      )}
-                      {categories.dining && (
-                        <div className="text-center p-3 bg-accent-50 rounded-lg">
-                          <div className="flex items-center justify-center gap-1 mb-1">
-                            <Utensils className="w-4 h-4 text-accent-600" />
-                            <span className="text-xs font-medium text-neutral-600">Dining</span>
-                          </div>
-                          <div className="text-lg font-bold text-neutral-900">{formatCurrency(budgetBreakdown.dining.perPersonPerDay)}</div>
-                          <div className="text-xs text-neutral-500">per person/day</div>
-                          <div className="flex justify-center gap-1 mt-2">
-                            <button onClick={() => adjustAllocation('dining', -5)} className="w-6 h-6 rounded bg-white border border-neutral-200 flex items-center justify-center hover:bg-neutral-50"><Minus className="w-3 h-3" /></button>
-                            <span className="w-10 text-center text-sm font-medium">{allocation.dining}%</span>
-                            <button onClick={() => adjustAllocation('dining', 5)} className="w-6 h-6 rounded bg-white border border-neutral-200 flex items-center justify-center hover:bg-neutral-50"><Plus className="w-3 h-3" /></button>
-                          </div>
-                        </div>
-                      )}
-                    </div>
+                        )}
+                      </div>
+                    )}
                   </div>
                 )}
               </div>
+            )}
+
+            {/* Budget Allocation - Collapsible */}
+            <div className="border-t border-neutral-100 mt-6 pt-5">
+              <button 
+                onClick={() => setShowAllocation(!showAllocation)}
+                className="w-full flex items-center justify-between text-left group"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-primary-100 flex items-center justify-center group-hover:bg-primary-200 transition-colors">
+                    <DollarSign className="w-5 h-5 text-primary-600" />
+                  </div>
+                  <div>
+                    <h3 className="text-sm font-bold text-neutral-800">Budget Allocation</h3>
+                    <p className="text-xs text-neutral-500">Adjust how your budget is divided</p>
+                  </div>
+                </div>
+                <div className={`w-8 h-8 rounded-lg flex items-center justify-center transition-colors ${showAllocation ? 'bg-primary-100' : 'bg-neutral-100 group-hover:bg-neutral-200'}`}>
+                  {showAllocation ? <ChevronUp className="w-4 h-4 text-primary-600" /> : <ChevronDown className="w-4 h-4 text-neutral-500" />}
+                </div>
+              </button>
+              
+              {showAllocation && (
+                <div className="mt-5 space-y-4">
+                  {/* Visual Bar */}
+                  <div className="h-6 rounded-full overflow-hidden flex shadow-inner bg-neutral-200">
+                    {budgetBreakdown.fixedCosts > 0 && (
+                      <div className="bg-sky-500 flex items-center justify-center text-white text-xs font-medium" style={{ width: `${(budgetBreakdown.fixedCosts / budget) * 100}%` }}>Ski</div>
+                    )}
+                    {categories.lodging && (
+                      <div className="bg-primary-500 flex items-center justify-center text-white text-xs font-medium" style={{ width: `${(budgetBreakdown.lodging.total / budget) * 100}%` }}>Stay</div>
+                    )}
+                    {categories.activities && (
+                      <div className="bg-secondary-500 flex items-center justify-center text-white text-xs font-medium" style={{ width: `${(budgetBreakdown.activities.total / budget) * 100}%` }}>Do</div>
+                    )}
+                    {categories.dining && (
+                      <div className="bg-accent-500 flex items-center justify-center text-white text-xs font-medium" style={{ width: `${(budgetBreakdown.dining.total / budget) * 100}%` }}>Eat</div>
+                    )}
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    {categories.lodging && (
+                      <div className="text-center p-3 bg-primary-50 rounded-xl border border-primary-100">
+                        <div className="flex items-center justify-center gap-1 mb-1">
+                          <Bed className="w-4 h-4 text-primary-600" />
+                          <span className="text-xs font-semibold text-neutral-700">Lodging</span>
+                        </div>
+                        <div className="text-lg font-bold text-neutral-900">{formatCurrency(budgetBreakdown.lodging.perNight)}</div>
+                        <div className="text-xs text-neutral-500 mb-2">per night</div>
+                        <div className="flex justify-center gap-1">
+                          <button onClick={() => adjustAllocation('lodging', -5)} className="w-6 h-6 rounded bg-white border border-neutral-200 flex items-center justify-center hover:bg-neutral-50"><Minus className="w-3 h-3" /></button>
+                          <span className="w-10 text-center text-sm font-semibold tabular-nums">{allocation.lodging}%</span>
+                          <button onClick={() => adjustAllocation('lodging', 5)} className="w-6 h-6 rounded bg-white border border-neutral-200 flex items-center justify-center hover:bg-neutral-50"><Plus className="w-3 h-3" /></button>
+                        </div>
+                      </div>
+                    )}
+                    {categories.activities && (
+                      <div className="text-center p-3 bg-secondary-50 rounded-xl border border-secondary-100">
+                        <div className="flex items-center justify-center gap-1 mb-1">
+                          <Compass className="w-4 h-4 text-secondary-600" />
+                          <span className="text-xs font-semibold text-neutral-700">Activities</span>
+                        </div>
+                        <div className="text-lg font-bold text-neutral-900">{formatCurrency(budgetBreakdown.activities.perPerson)}</div>
+                        <div className="text-xs text-neutral-500 mb-2">per person</div>
+                        <div className="flex justify-center gap-1">
+                          <button onClick={() => adjustAllocation('activities', -5)} className="w-6 h-6 rounded bg-white border border-neutral-200 flex items-center justify-center hover:bg-neutral-50"><Minus className="w-3 h-3" /></button>
+                          <span className="w-10 text-center text-sm font-semibold tabular-nums">{allocation.activities}%</span>
+                          <button onClick={() => adjustAllocation('activities', 5)} className="w-6 h-6 rounded bg-white border border-neutral-200 flex items-center justify-center hover:bg-neutral-50"><Plus className="w-3 h-3" /></button>
+                        </div>
+                      </div>
+                    )}
+                    {categories.dining && (
+                      <div className="text-center p-3 bg-accent-50 rounded-xl border border-accent-100">
+                        <div className="flex items-center justify-center gap-1 mb-1">
+                          <Utensils className="w-4 h-4 text-accent-600" />
+                          <span className="text-xs font-semibold text-neutral-700">Dining</span>
+                        </div>
+                        <div className="text-lg font-bold text-neutral-900">{formatCurrency(budgetBreakdown.dining.perPersonPerDay)}</div>
+                        <div className="text-xs text-neutral-500 mb-2">per person/day</div>
+                        <div className="flex justify-center gap-1">
+                          <button onClick={() => adjustAllocation('dining', -5)} className="w-6 h-6 rounded bg-white border border-neutral-200 flex items-center justify-center hover:bg-neutral-50"><Minus className="w-3 h-3" /></button>
+                          <span className="w-10 text-center text-sm font-semibold tabular-nums">{allocation.dining}%</span>
+                          <button onClick={() => adjustAllocation('dining', 5)} className="w-6 h-6 rounded bg-white border border-neutral-200 flex items-center justify-center hover:bg-neutral-50"><Plus className="w-3 h-3" /></button>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
             </div>
           </div>
+          </div>
 
-          {/* Selection Tabs */}
+          {/* Selection Tabs - Browse hotels, activities, events */}
           <div className="bg-white rounded-2xl shadow-lg border border-neutral-200 overflow-hidden">
-            <div className="flex border-b border-neutral-200">
+            <div className="flex border-b border-neutral-200 bg-neutral-50">
               {[
-                { id: 'hotels', label: 'Hotels', icon: Bed, count: selectedHotel ? 1 : 0 },
+                { id: 'hotels', label: 'Hotels', icon: Hotel, count: selectedHotel ? 1 : 0 },
                 { id: 'activities', label: 'Activities', icon: Compass, count: selectedActivities.length },
                 { id: 'events', label: 'Events', icon: Music, count: selectedEvents.length },
               ].map(({ id, label, icon: Icon, count }) => (
                   <button 
                   key={id}
                   onClick={() => setActiveSection(id as 'hotels' | 'activities' | 'events')}
-                  className={`flex-1 flex items-center justify-center gap-2 py-4 px-4 font-medium transition-all relative ${
+                  className={`flex-1 flex items-center justify-center gap-2 py-4 px-3 font-medium transition-all relative ${
                     activeSection === id 
-                      ? 'text-primary-600 bg-primary-50' 
-                      : 'text-neutral-500 hover:text-neutral-700 hover:bg-neutral-50'
+                      ? 'text-primary-700 bg-white border-b-2 border-primary-600' 
+                      : 'text-neutral-500 hover:text-neutral-700 hover:bg-white/50'
                   }`}
                 >
                   <Icon className="w-5 h-5" />
-                  <span className="hidden sm:inline">{label}</span>
+                  <span className="hidden sm:inline text-sm">{label}</span>
                   {count > 0 && (
-                    <span className={`w-5 h-5 rounded-full text-xs flex items-center justify-center font-bold ${
+                    <span className={`min-w-[20px] h-5 px-1.5 rounded-full text-xs flex items-center justify-center font-bold ${
                       activeSection === id ? 'bg-primary-600 text-white' : 'bg-neutral-300 text-white'
                     }`}>
                       {count}
                     </span>
                   )}
-                  {activeSection === id && (
-                    <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary-600" />
-                  )}
                   </button>
               ))}
                 </div>
 
-            <div className="p-6">
+            <div className="p-5 sm:p-6">
               {/* Hotels Section */}
               {activeSection === 'hotels' && (
                 <div>
@@ -988,7 +1034,9 @@ export function TripCalculator({
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       {hotels.map((hotel) => {
                         const isSelected = selectedHotel?.id === hotel.hotel_id;
-                        const imageUrl = hotel.images?.[0]?.url || hotel.images?.[0]?.variants?.[0]?.url;
+                        // Handle different image formats from API
+                        const firstImage = hotel.images?.[0] as { url?: string; variants?: { url?: string }[] } | undefined;
+                        const imageUrl = firstImage?.url || firstImage?.variants?.[0]?.url;
                         const price = hotelPrices[hotel.hotel_id] || 0;
                         const rating = hotel.review_score || 0;
                         
@@ -1005,7 +1053,7 @@ export function TripCalculator({
                               <div className="absolute top-3 left-3 z-20 flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-primary-600 text-white text-sm font-bold shadow-lg">
                                 <Check className="w-4 h-4" />
                                 Selected
-        </div>
+                              </div>
                             )}
 
                             <div className="relative h-40 bg-neutral-100">
@@ -1019,17 +1067,17 @@ export function TripCalculator({
                               ) : (
                                 <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-neutral-100 to-neutral-200">
                                   <Hotel className="w-8 h-8 text-neutral-300" />
-        </div>
-                              )}
-                              
-                              {price > 0 && (
-                                <div className="absolute bottom-3 right-3 bg-white/95 backdrop-blur px-3 py-1.5 rounded-lg shadow-lg">
-                                  <div className="flex items-baseline gap-1">
-                                    <span className="text-lg font-bold text-neutral-900">{formatCurrency(price)}</span>
-                                    <span className="text-xs text-neutral-500">/night</span>
-                                  </div>
                                 </div>
                               )}
+                              
+                              {/* Always show price - use "From ~" for estimates */}
+                              <div className="absolute bottom-3 right-3 bg-white/95 backdrop-blur px-3 py-1.5 rounded-lg shadow-lg">
+                                <div className="flex items-baseline gap-1">
+                                  <span className="text-xs text-neutral-500">From</span>
+                                  <span className="text-lg font-bold text-neutral-900">{formatCurrency(price > 0 ? price : 200)}</span>
+                                  <span className="text-xs text-neutral-500">/night</span>
+                                </div>
+                              </div>
                             </div>
 
                             <div className="p-4">
@@ -1042,11 +1090,9 @@ export function TripCalculator({
                                     <span className="font-semibold">{rating.toFixed(1)}</span>
                                   </div>
                                 )}
-                                {price > 0 && (
-                                  <p className="text-xs text-neutral-500">
-                                    {formatCurrency(price * nights)} for {nights} night{nights > 1 ? 's' : ''}
-                                  </p>
-                                )}
+                                <p className="text-xs text-neutral-500">
+                                  ~{formatCurrency((price > 0 ? price : 200) * nights)} for {nights} night{nights > 1 ? 's' : ''}
+                                </p>
                               </div>
 
                               <button
@@ -1345,11 +1391,11 @@ export function TripCalculator({
           </div>
         </div>
 
-        {/* Right Side: Itinerary Panel */}
-        <div className="xl:w-96 xl:flex-shrink-0">
-          <div className="xl:sticky xl:top-6">
-            {/* Itinerary Card */}
-            <div ref={itineraryRef} className="bg-white rounded-2xl shadow-lg border border-neutral-200 overflow-hidden">
+        {/* Right Side: Itinerary Panel - Fixed with internal scroll */}
+        <div className="xl:w-[380px] xl:flex-shrink-0">
+          <div className="xl:sticky xl:top-4 xl:max-h-[calc(100vh-2rem)] flex flex-col">
+            {/* Itinerary Card - Scrollable */}
+            <div ref={itineraryRef} className="bg-white rounded-2xl shadow-lg border border-neutral-200 overflow-hidden flex flex-col xl:max-h-[calc(100vh-2rem)]">
               {/* Header */}
               <div className="bg-gradient-to-r from-primary-600 to-primary-700 text-white p-5">
                 <div className="flex items-center justify-between mb-4">
@@ -1407,7 +1453,8 @@ export function TripCalculator({
                 </div>
               ) : (
                 <>
-                  <div className="divide-y divide-neutral-100">
+                  {/* Scrollable content area */}
+                  <div className="divide-y divide-neutral-100 xl:overflow-y-auto xl:max-h-[40vh]">
                     {/* Hotel */}
                     {selectedHotel && (
                       <div className="p-4">
