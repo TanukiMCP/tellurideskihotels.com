@@ -12,12 +12,13 @@ import {
   Minus, Plus, DollarSign, Calculator, Compass, Music,
   Mountain, ChevronDown, ChevronUp, Snowflake, Baby, User,
   Download, Share2, Printer, MapPin, ExternalLink, Check, X,
-  Star, Clock, Hotel, CalendarCheck
+  Star, Clock, Hotel, CalendarCheck, Loader2
 } from 'lucide-react';
 import { format, addDays, differenceInDays, parseISO } from 'date-fns';
 import { calculateLiftTicketCost, isWithinSkiSeason, getSeasonInfo, type SkierGroup } from '@/lib/lift-tickets';
 import { getEventsInRange, type TellurideEvent } from '@/data/telluride-events';
 import { useTripPlannerStore } from '@/stores/tripPlannerStore';
+import type { LiteAPIHotel } from '@/lib/liteapi/types';
 import html2canvas from 'html2canvas';
 
 export interface TripCalculatorProps {
@@ -50,6 +51,9 @@ export function TripCalculator({
   const containerRef = useRef<HTMLDivElement>(null);
   const itineraryRef = useRef<HTMLDivElement>(null);
   
+  // Track if component is mounted (for hydration)
+  const [isMounted, setIsMounted] = useState(false);
+  
   // Get store functions
   const { 
     setTripDates, 
@@ -76,9 +80,9 @@ export function TripCalculator({
   const [budget, setBudget] = useState(defaultBudget);
   const [guests, setGuests] = useState(defaultGuests);
   
-  // Dates
-  const [checkIn, setCheckIn] = useState(() => format(addDays(new Date(), 14), 'yyyy-MM-dd'));
-  const [checkOut, setCheckOut] = useState(() => format(addDays(new Date(), 14 + defaultNights), 'yyyy-MM-dd'));
+  // Dates - initialized on client side to avoid hydration mismatch
+  const [checkIn, setCheckIn] = useState('');
+  const [checkOut, setCheckOut] = useState('');
   
   // Category toggles
   const [categories, setCategories] = useState<TripCategories>({
@@ -109,23 +113,36 @@ export function TripCalculator({
   const [activeSection, setActiveSection] = useState<'hotels' | 'activities' | 'events'>('hotels');
   const [showItinerary, setShowItinerary] = useState(false);
   
-  // Hotels state (we'll fetch these)
-  const [hotels, setHotels] = useState<any[]>([]);
-  const [hotelsLoading, setHotelsLoading] = useState(false);
+  // Hotels state
+  const [hotels, setHotels] = useState<LiteAPIHotel[]>([]);
+  const [hotelPrices, setHotelPrices] = useState<Record<string, number>>({});
+  const [hotelsLoading, setHotelsLoading] = useState(true);
   
   // Activities state
   const [activities, setActivities] = useState<any[]>([]);
-  const [activitiesLoading, setActivitiesLoading] = useState(false);
+  const [activitiesLoading, setActivitiesLoading] = useState(true);
 
-  // Sync with store
+  // Initialize dates and mount state on client side only
   useEffect(() => {
+    setIsMounted(true);
+    // Set default dates 14 days from now
+    const defaultCheckIn = format(addDays(new Date(), 14), 'yyyy-MM-dd');
+    const defaultCheckOut = format(addDays(new Date(), 14 + defaultNights), 'yyyy-MM-dd');
+    setCheckIn(defaultCheckIn);
+    setCheckOut(defaultCheckOut);
+  }, [defaultNights]);
+
+  // Sync with store (only after mount)
+  useEffect(() => {
+    if (!isMounted || !checkIn || !checkOut) return;
     setTripDates({ checkIn, checkOut });
     setStoreGuests(guests);
     setBudgetTotal(budget);
-  }, [checkIn, checkOut, guests, budget]);
+  }, [checkIn, checkOut, guests, budget, isMounted]);
 
   // Calculate nights
   const nights = useMemo(() => {
+    if (!checkIn || !checkOut) return defaultNights;
     try {
       const diff = differenceInDays(parseISO(checkOut), parseISO(checkIn));
       return Math.max(1, diff);
@@ -135,11 +152,14 @@ export function TripCalculator({
   }, [checkIn, checkOut, defaultNights]);
 
   // Check ski season
-  const tripInSkiSeason = useMemo(() => isWithinSkiSeason(checkIn, checkOut), [checkIn, checkOut]);
+  const tripInSkiSeason = useMemo(() => {
+    if (!checkIn || !checkOut) return true; // Default to ski season
+    return isWithinSkiSeason(checkIn, checkOut);
+  }, [checkIn, checkOut]);
 
   // Calculate lift ticket costs
   const liftTicketCalc = useMemo(() => {
-    if (!categories.skiing || !tripInSkiSeason) return null;
+    if (!categories.skiing || !tripInSkiSeason || !checkIn || !checkOut) return null;
     const skiers: SkierGroup = { adults: adultSkiers, children: childSkiers, toddlers: toddlerSkiers };
     return calculateLiftTicketCost(checkIn, checkOut, skiers, skiDays);
   }, [categories.skiing, tripInSkiSeason, checkIn, checkOut, adultSkiers, childSkiers, toddlerSkiers, skiDays]);
@@ -187,7 +207,7 @@ export function TripCalculator({
       activities: categories.activities ? (allocation.activities / totalAllocation) * 100 : 0,
       dining: categories.dining ? (allocation.dining / totalAllocation) * 100 : 0,
     };
-    
+
     return {
       fixedCosts,
       remainingBudget,
@@ -208,58 +228,162 @@ export function TripCalculator({
 
   // Get events in date range
   const tripEvents = useMemo(() => {
-    if (!categories.events) return [];
+    if (!categories.events || !checkIn || !checkOut) return [];
     return getEventsInRange(checkIn, checkOut);
   }, [categories.events, checkIn, checkOut]);
 
-  // Fetch hotels when dates/budget change
+  // Fetch hotels from search API then get rates
   useEffect(() => {
+    if (!isMounted || !categories.lodging || !checkIn || !checkOut) return;
+    
+    let cancelled = false;
+    
     const fetchHotels = async () => {
-      if (!categories.lodging) return;
       setHotelsLoading(true);
       try {
-        const params = new URLSearchParams({
-          checkIn,
-          checkOut,
-          adults: guests.toString(),
-          rooms: '1',
-          limit: '8',
+        // Step 1: Get hotel list
+        const searchParams = new URLSearchParams({
+          cityName: 'Telluride',
+          countryCode: 'US',
+          limit: '100',
         });
-        const res = await fetch(`/api/hotels/search?${params}`);
-        if (res.ok) {
-          const data = await res.json();
-          setHotels(data.hotels || []);
+        
+        const hotelsRes = await fetch(`/api/hotels/search?${searchParams}`);
+        if (!hotelsRes.ok || cancelled) return;
+        
+        const hotelsData = await hotelsRes.json();
+        let hotelList: LiteAPIHotel[] = hotelsData.data || [];
+        
+        // Filter to hotels with images and sort by rating
+        hotelList = hotelList
+          .filter(h => h.images && h.images.length > 0)
+          .sort((a, b) => {
+            const ratingA = a.review_score || 0;
+            const ratingB = b.review_score || 0;
+            const countA = a.review_count || 0;
+            const countB = b.review_count || 0;
+            const scoreA = ratingA * Math.log10(countA + 1);
+            const scoreB = ratingB * Math.log10(countB + 1);
+            return scoreB - scoreA;
+          })
+          .slice(0, 8);
+        
+        if (cancelled) return;
+        setHotels(hotelList);
+        
+        // Step 2: Get rates for these hotels
+        if (hotelList.length > 0) {
+          const hotelIds = hotelList.map(h => h.hotel_id).join(',');
+          const ratesParams = new URLSearchParams({
+            hotelIds,
+            checkIn,
+            checkOut,
+            adults: guests.toString(),
+          });
+          
+          const ratesRes = await fetch(`/api/hotels/min-rates?${ratesParams}`);
+          if (ratesRes.ok && !cancelled) {
+            const ratesData = await ratesRes.json();
+            const prices: Record<string, number> = {};
+            
+            // Calculate nights for per-night price
+            const nightsCount = Math.max(1, differenceInDays(parseISO(checkOut), parseISO(checkIn)));
+            
+            if (ratesData?.data && Array.isArray(ratesData.data)) {
+              ratesData.data.forEach((item: { hotelId?: string; price?: number }) => {
+                if (item.hotelId && item.price && item.price > 0) {
+                  prices[item.hotelId] = Math.round(item.price / nightsCount);
+                }
+              });
+            }
+            
+            if (!cancelled) {
+              setHotelPrices(prices);
+            }
+          }
+          
+          // Step 3: Get fallback prices from pricing API
+          if (!cancelled) {
+            try {
+              const pricingRes = await fetch('/api/hotels/pricing');
+              if (pricingRes.ok) {
+                const pricingData = await pricingRes.json();
+                const fallbackPrices: Record<string, number> = { ...prices };
+                hotelList.forEach(hotel => {
+                  if (!fallbackPrices[hotel.hotel_id]) {
+                    const hotelPricing = pricingData.hotels?.[hotel.hotel_id];
+                    if (hotelPricing) {
+                      fallbackPrices[hotel.hotel_id] = Math.round((hotelPricing.typicalMinPrice + hotelPricing.typicalMaxPrice) / 2);
+                    }
+                  }
+                });
+                if (!cancelled) {
+                  setHotelPrices(fallbackPrices);
+                }
+              }
+            } catch (e) {
+              console.warn('Failed to fetch fallback prices');
+            }
+          }
         }
       } catch (error) {
         console.error('Failed to fetch hotels:', error);
       } finally {
-        setHotelsLoading(false);
+        if (!cancelled) {
+          setHotelsLoading(false);
+        }
       }
     };
     
     fetchHotels();
-  }, [checkIn, checkOut, guests, categories.lodging]);
+    
+    return () => {
+      cancelled = true;
+    };
+  }, [checkIn, checkOut, guests, categories.lodging, isMounted]);
 
-  // Fetch activities
+  // Fetch activities from Viator
   useEffect(() => {
+    if (!isMounted || !categories.activities) return;
+    
+    let cancelled = false;
+    
     const fetchActivities = async () => {
-      if (!categories.activities) return;
       setActivitiesLoading(true);
       try {
-        const res = await fetch(`/api/viator/products?limit=8`);
-        if (res.ok) {
+        // Use the correct Viator search endpoint - get activities without price filter
+        // then filter client-side to show more results
+        const params = new URLSearchParams({
+          count: '20',
+        });
+        const res = await fetch(`/api/viator/search?${params}`);
+        if (res.ok && !cancelled) {
           const data = await res.json();
-          setActivities(data.products || []);
+          // Sort by price and take first 8 within budget
+          const products = (data.products || [])
+            .sort((a: any, b: any) => {
+              const priceA = a.pricing?.summary?.fromPrice || 0;
+              const priceB = b.pricing?.summary?.fromPrice || 0;
+              return priceA - priceB;
+            })
+            .slice(0, 8);
+          setActivities(products);
         }
       } catch (error) {
         console.error('Failed to fetch activities:', error);
       } finally {
-        setActivitiesLoading(false);
+        if (!cancelled) {
+          setActivitiesLoading(false);
+        }
       }
     };
     
     fetchActivities();
-  }, [categories.activities]);
+    
+    return () => {
+      cancelled = true;
+    };
+  }, [categories.activities, isMounted]);
 
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('en-US', {
@@ -384,13 +508,13 @@ export function TripCalculator({
   };
 
   // Hotel selection handler
-  const handleHotelSelect = (hotel: any) => {
+  const handleHotelSelect = (hotel: LiteAPIHotel) => {
     const isSelected = selectedHotel?.id === hotel.hotel_id;
     if (isSelected) {
       removeHotel();
     } else {
       const imageUrl = hotel.images?.[0]?.url || hotel.images?.[0]?.variants?.[0]?.url || '';
-      const price = hotel.rate?.price || budgetBreakdown.lodging.perNight;
+      const price = hotelPrices[hotel.hotel_id] || budgetBreakdown.lodging.perNight;
       selectHotel({
         id: hotel.hotel_id,
         name: hotel.name || 'Unknown Hotel',
@@ -458,13 +582,26 @@ export function TripCalculator({
   };
 
   const budgetPresets = [3000, 5000, 7500, 10000];
-  const minCheckIn = format(addDays(new Date(), 1), 'yyyy-MM-dd');
+  const minCheckIn = useMemo(() => format(addDays(new Date(), 1), 'yyyy-MM-dd'), []);
   const seasonInfo = getSeasonInfo();
   
-  const totalCost = getTotalCost();
-  const hasSelections = selectedHotel || selectedActivities.length > 0 || selectedEvents.length > 0 || (storedLiftTickets && storedLiftTickets.totalCost > 0);
+  // Only calculate costs after mount to avoid hydration issues
+  const totalCost = isMounted ? getTotalCost() : 0;
+  const hasSelections = isMounted && (selectedHotel || selectedActivities.length > 0 || selectedEvents.length > 0 || (storedLiftTickets && storedLiftTickets.totalCost > 0));
   const budgetRemaining = budget - totalCost;
   const budgetUsedPercent = budget > 0 ? Math.min((totalCost / budget) * 100, 100) : 0;
+
+  // Show loading state until dates are initialized
+  if (!isMounted || !checkIn || !checkOut) {
+  return (
+      <div className="flex items-center justify-center py-20">
+        <div className="flex flex-col items-center gap-4">
+          <Loader2 className="w-8 h-8 animate-spin text-primary-600" />
+          <p className="text-neutral-500">Loading trip planner...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div ref={containerRef} className="relative">
@@ -475,116 +612,116 @@ export function TripCalculator({
           {/* Header Card */}
           <div className="bg-white rounded-2xl shadow-lg border border-neutral-200 overflow-hidden">
             <div className="bg-gradient-to-r from-primary-600 via-primary-700 to-primary-800 text-white p-6">
-              <div className="flex items-center gap-4">
-                <div className="w-14 h-14 bg-white/10 backdrop-blur rounded-xl flex items-center justify-center">
-                  <Calculator className="w-7 h-7 text-white" />
-                </div>
+        <div className="flex items-center gap-4">
+          <div className="w-14 h-14 bg-white/10 backdrop-blur rounded-xl flex items-center justify-center">
+            <Calculator className="w-7 h-7 text-white" />
+          </div>
                 <div className="flex-1">
-                  <h1 className="text-2xl font-bold">{title}</h1>
+                  <h2 className="text-2xl font-bold">{title}</h2>
                   <p className="text-primary-100 text-sm">Set your budget, choose your experiences, build your itinerary</p>
-                </div>
+          </div>
                 <img 
                   src="/favicon-icon.png" 
                   alt="Telluride Insider" 
                   className="h-10 w-auto opacity-90 hidden sm:block"
                 />
-              </div>
+        </div>
             </div>
 
             {/* Trip Basics */}
             <div className="p-6 space-y-6">
               <div className="grid gap-4 md:grid-cols-3">
                 {/* Budget */}
-                <div>
-                  <label className="block text-sm font-semibold text-neutral-700 mb-2">
+          <div>
+            <label className="block text-sm font-semibold text-neutral-700 mb-2">
                     <DollarSign className="w-4 h-4 inline mr-1" />
                     Total Budget
-                  </label>
-                  <div className="relative">
-                    <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-neutral-400" />
-                    <input
-                      type="number"
-                      value={budget}
-                      onChange={(e) => setBudget(Math.max(1000, parseInt(e.target.value) || 0))}
-                      className="w-full pl-10 pr-4 py-3 text-xl font-bold bg-white border-2 border-neutral-200 rounded-xl focus:border-primary-500 focus:outline-none transition-all tabular-nums"
-                      min="1000"
-                      step="500"
-                    />
-                  </div>
-                  <div className="flex gap-2 mt-2 flex-wrap">
-                    {budgetPresets.map((preset) => (
-                      <button
-                        key={preset}
-                        onClick={() => setBudget(preset)}
-                        className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${
+            </label>
+            <div className="relative">
+              <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-neutral-400" />
+              <input
+                type="number"
+                value={budget}
+                onChange={(e) => setBudget(Math.max(1000, parseInt(e.target.value) || 0))}
+                className="w-full pl-10 pr-4 py-3 text-xl font-bold bg-white border-2 border-neutral-200 rounded-xl focus:border-primary-500 focus:outline-none transition-all tabular-nums"
+                min="1000"
+                step="500"
+              />
+            </div>
+            <div className="flex gap-2 mt-2 flex-wrap">
+              {budgetPresets.map((preset) => (
+                <button
+                  key={preset}
+                  onClick={() => setBudget(preset)}
+                  className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${
                           budget === preset ? 'bg-primary-600 text-white' : 'bg-neutral-100 text-neutral-600 hover:bg-neutral-200'
-                        }`}
-                      >
-                        {formatCurrency(preset)}
-                      </button>
-                    ))}
-                  </div>
-                </div>
+                  }`}
+                >
+                  {formatCurrency(preset)}
+                </button>
+              ))}
+            </div>
+          </div>
 
                 {/* Dates */}
-                <div>
-                  <label className="block text-sm font-semibold text-neutral-700 mb-2">
-                    <Calendar className="w-4 h-4 inline mr-1" />
-                    Travel Dates
-                  </label>
-                  <div className="flex gap-2">
-                    <div className="flex-1">
-                      <input
-                        type="date"
-                        value={checkIn}
-                        onChange={(e) => handleCheckInChange(e.target.value)}
-                        min={minCheckIn}
+          <div>
+            <label className="block text-sm font-semibold text-neutral-700 mb-2">
+              <Calendar className="w-4 h-4 inline mr-1" />
+              Travel Dates
+            </label>
+            <div className="flex gap-2">
+              <div className="flex-1">
+                <input
+                  type="date"
+                  value={checkIn}
+                  onChange={(e) => handleCheckInChange(e.target.value)}
+                  min={minCheckIn}
                         className="w-full px-3 py-3 bg-white border-2 border-neutral-200 rounded-xl text-sm focus:border-primary-500 focus:outline-none"
-                      />
-                      <span className="text-xs text-neutral-500 mt-1 block">Check-in</span>
-                    </div>
-                    <div className="flex-1">
-                      <input
-                        type="date"
-                        value={checkOut}
-                        onChange={(e) => handleCheckOutChange(e.target.value)}
-                        min={format(addDays(parseISO(checkIn), 1), 'yyyy-MM-dd')}
-                        className="w-full px-3 py-3 bg-white border-2 border-neutral-200 rounded-xl text-sm focus:border-primary-500 focus:outline-none"
-                      />
-                      <span className="text-xs text-neutral-500 mt-1 block">Check-out</span>
-                    </div>
-                  </div>
-                  <div className="text-center mt-2">
-                    <span className="text-sm font-medium text-primary-700">{nights} {nights === 1 ? 'night' : 'nights'}</span>
-                  </div>
-                </div>
-
-                {/* Travelers */}
-                <div>
-                  <label className="block text-sm font-semibold text-neutral-700 mb-2">
-                    <Users className="w-4 h-4 inline mr-1" />
-                    Total Travelers
-                  </label>
-                  <div className="flex items-center justify-between bg-white border-2 border-neutral-200 rounded-xl px-4 py-3">
-                    <button 
-                      onClick={() => setGuests(Math.max(1, guests - 1))} 
-                      className="w-10 h-10 rounded-lg bg-neutral-100 hover:bg-neutral-200 flex items-center justify-center transition-colors"
-                    >
-                      <Minus className="w-5 h-5" />
-                    </button>
-                    <span className="text-2xl font-bold tabular-nums">{guests}</span>
-                    <button 
-                      onClick={() => setGuests(Math.min(20, guests + 1))} 
-                      className="w-10 h-10 rounded-lg bg-neutral-100 hover:bg-neutral-200 flex items-center justify-center transition-colors"
-                    >
-                      <Plus className="w-5 h-5" />
-                    </button>
-                  </div>
-                  <div className="text-center mt-2">
-                    <span className="text-sm text-neutral-500">{formatCurrency(budget / guests)} per person</span>
-                  </div>
-                </div>
+                />
+                <span className="text-xs text-neutral-500 mt-1 block">Check-in</span>
               </div>
+              <div className="flex-1">
+                <input
+                  type="date"
+                  value={checkOut}
+                  onChange={(e) => handleCheckOutChange(e.target.value)}
+                  min={format(addDays(parseISO(checkIn), 1), 'yyyy-MM-dd')}
+                        className="w-full px-3 py-3 bg-white border-2 border-neutral-200 rounded-xl text-sm focus:border-primary-500 focus:outline-none"
+                />
+                <span className="text-xs text-neutral-500 mt-1 block">Check-out</span>
+              </div>
+            </div>
+            <div className="text-center mt-2">
+              <span className="text-sm font-medium text-primary-700">{nights} {nights === 1 ? 'night' : 'nights'}</span>
+            </div>
+          </div>
+
+          {/* Travelers */}
+          <div>
+            <label className="block text-sm font-semibold text-neutral-700 mb-2">
+              <Users className="w-4 h-4 inline mr-1" />
+                    Total Travelers
+            </label>
+            <div className="flex items-center justify-between bg-white border-2 border-neutral-200 rounded-xl px-4 py-3">
+              <button 
+                onClick={() => setGuests(Math.max(1, guests - 1))} 
+                className="w-10 h-10 rounded-lg bg-neutral-100 hover:bg-neutral-200 flex items-center justify-center transition-colors"
+              >
+                <Minus className="w-5 h-5" />
+              </button>
+              <span className="text-2xl font-bold tabular-nums">{guests}</span>
+              <button 
+                      onClick={() => setGuests(Math.min(20, guests + 1))} 
+                className="w-10 h-10 rounded-lg bg-neutral-100 hover:bg-neutral-200 flex items-center justify-center transition-colors"
+              >
+                <Plus className="w-5 h-5" />
+              </button>
+            </div>
+            <div className="text-center mt-2">
+              <span className="text-sm text-neutral-500">{formatCurrency(budget / guests)} per person</span>
+            </div>
+          </div>
+        </div>
 
               {/* Category Toggles */}
               <div className="bg-neutral-50 rounded-xl p-4">
@@ -613,8 +750,8 @@ export function TripCalculator({
                     </button>
                   ))}
                 </div>
-              </div>
-
+          </div>
+          
               {/* Skiing Details */}
               {categories.skiing && (
                 <div className="bg-sky-50 rounded-xl p-4 border border-sky-200">
@@ -628,7 +765,7 @@ export function TripCalculator({
                       {!tripInSkiSeason && (
                         <span className="text-xs bg-amber-100 text-amber-700 px-2 py-0.5 rounded">Off-season</span>
                       )}
-                    </div>
+            </div>
                     {showSkiDetails ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
                   </button>
                   
@@ -649,8 +786,8 @@ export function TripCalculator({
                                 <button onClick={() => setAdultSkiers(Math.max(0, adultSkiers - 1))} className="w-8 h-8 rounded bg-white border border-neutral-200 flex items-center justify-center hover:bg-neutral-50"><Minus className="w-4 h-4" /></button>
                                 <span className="text-lg font-bold w-8 text-center">{adultSkiers}</span>
                                 <button onClick={() => setAdultSkiers(Math.min(guests, adultSkiers + 1))} className="w-8 h-8 rounded bg-white border border-neutral-200 flex items-center justify-center hover:bg-neutral-50"><Plus className="w-4 h-4" /></button>
-                              </div>
-                            </div>
+            </div>
+            </div>
                             <div>
                               <label className="block text-xs font-medium text-neutral-600 mb-1">
                                 <User className="w-3 h-3 inline mr-1" />Children (6-12)
@@ -680,8 +817,8 @@ export function TripCalculator({
                                 <span className="text-lg font-bold w-8 text-center">{skiDays}</span>
                                 <button onClick={() => setSkiDays(Math.min(nights, skiDays + 1))} className="w-8 h-8 rounded bg-white border border-neutral-200 flex items-center justify-center hover:bg-neutral-50"><Plus className="w-4 h-4" /></button>
                               </div>
-                            </div>
-                          </div>
+            </div>
+          </div>
 
                           {liftTicketCalc && (adultSkiers > 0 || childSkiers > 0) && (
                             <div className="bg-white rounded-lg p-4 border border-sky-200">
@@ -689,7 +826,7 @@ export function TripCalculator({
                                 <div>
                                   <p className="text-sm text-neutral-600">Estimated Lift Ticket Cost</p>
                                   <p className="text-2xl font-bold text-sky-700">{formatCurrency(liftTicketCalc.totalCost)}</p>
-                                </div>
+                </div>
                                 <div className="text-right text-sm text-neutral-500">
                                   {liftTicketCalc.breakdown.adults.count > 0 && <p>{liftTicketCalc.breakdown.adults.count} adult{liftTicketCalc.breakdown.adults.count > 1 ? 's' : ''} × {skiDays} day{skiDays > 1 ? 's' : ''}</p>}
                                   {liftTicketCalc.breakdown.children.count > 0 && <p>{liftTicketCalc.breakdown.children.count} child{liftTicketCalc.breakdown.children.count > 1 ? 'ren' : ''} × {skiDays} day{skiDays > 1 ? 's' : ''}</p>}
@@ -707,7 +844,7 @@ export function TripCalculator({
 
               {/* Budget Allocation Toggle */}
               <div className="bg-white rounded-xl p-4 border border-neutral-200">
-                <button 
+                  <button 
                   onClick={() => setShowAllocation(!showAllocation)}
                   className="w-full flex items-center justify-between text-left"
                 >
@@ -716,7 +853,7 @@ export function TripCalculator({
                     <span className="text-xs text-neutral-500">Adjust percentages</span>
                     {showAllocation ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
                   </div>
-                </button>
+                  </button>
                 
                 {showAllocation && (
                   <div className="mt-4 space-y-4">
@@ -797,7 +934,7 @@ export function TripCalculator({
                 { id: 'activities', label: 'Activities', icon: Compass, count: selectedActivities.length },
                 { id: 'events', label: 'Events', icon: Music, count: selectedEvents.length },
               ].map(({ id, label, icon: Icon, count }) => (
-                <button
+                  <button 
                   key={id}
                   onClick={() => setActiveSection(id as 'hotels' | 'activities' | 'events')}
                   className={`flex-1 flex items-center justify-center gap-2 py-4 px-4 font-medium transition-all relative ${
@@ -818,9 +955,9 @@ export function TripCalculator({
                   {activeSection === id && (
                     <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary-600" />
                   )}
-                </button>
+                  </button>
               ))}
-            </div>
+                </div>
 
             <div className="p-6">
               {/* Hotels Section */}
@@ -833,20 +970,26 @@ export function TripCalculator({
                     <span className="text-sm text-neutral-500">
                       Budget: up to {formatCurrency(budgetBreakdown.lodging.perNight)}/night
                     </span>
-                  </div>
+              </div>
 
                   {hotelsLoading ? (
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      {[1,2,3,4].map(i => (
-                        <div key={i} className="animate-pulse bg-neutral-100 rounded-xl h-72" />
-                      ))}
-                    </div>
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-center gap-2 text-neutral-500 py-8">
+                        <Loader2 className="w-5 h-5 animate-spin" />
+                        <span>Loading hotels...</span>
+                      </div>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {[1,2,3,4].map(i => (
+                          <div key={i} className="animate-pulse bg-neutral-100 rounded-xl h-72" />
+            ))}
+          </div>
+        </div>
                   ) : hotels.length > 0 ? (
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       {hotels.map((hotel) => {
                         const isSelected = selectedHotel?.id === hotel.hotel_id;
                         const imageUrl = hotel.images?.[0]?.url || hotel.images?.[0]?.variants?.[0]?.url;
-                        const price = hotel.rate?.price || budgetBreakdown.lodging.perNight;
+                        const price = hotelPrices[hotel.hotel_id] || 0;
                         const rating = hotel.review_score || 0;
                         
                         return (
@@ -862,7 +1005,7 @@ export function TripCalculator({
                               <div className="absolute top-3 left-3 z-20 flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-primary-600 text-white text-sm font-bold shadow-lg">
                                 <Check className="w-4 h-4" />
                                 Selected
-                              </div>
+        </div>
                             )}
 
                             <div className="relative h-40 bg-neutral-100">
@@ -876,7 +1019,7 @@ export function TripCalculator({
                               ) : (
                                 <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-neutral-100 to-neutral-200">
                                   <Hotel className="w-8 h-8 text-neutral-300" />
-                                </div>
+        </div>
                               )}
                               
                               {price > 0 && (
@@ -899,9 +1042,11 @@ export function TripCalculator({
                                     <span className="font-semibold">{rating.toFixed(1)}</span>
                                   </div>
                                 )}
-                                <p className="text-xs text-neutral-500">
-                                  {formatCurrency(price * nights)} for {nights} night{nights > 1 ? 's' : ''}
-                                </p>
+                                {price > 0 && (
+                                  <p className="text-xs text-neutral-500">
+                                    {formatCurrency(price * nights)} for {nights} night{nights > 1 ? 's' : ''}
+                                  </p>
+                                )}
                               </div>
 
                               <button
@@ -960,10 +1105,16 @@ export function TripCalculator({
                   </div>
 
                   {activitiesLoading ? (
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      {[1,2,3,4].map(i => (
-                        <div key={i} className="animate-pulse bg-neutral-100 rounded-xl h-64" />
-                      ))}
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-center gap-2 text-neutral-500 py-8">
+                        <Loader2 className="w-5 h-5 animate-spin" />
+                        <span>Loading activities...</span>
+                      </div>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {[1,2,3,4].map(i => (
+                          <div key={i} className="animate-pulse bg-neutral-100 rounded-xl h-64" />
+                        ))}
+                      </div>
                     </div>
                   ) : activities.length > 0 ? (
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -1073,8 +1224,8 @@ export function TripCalculator({
                   )}
 
                   <div className="mt-6 text-center">
-                    <a 
-                      href="/things-to-do"
+            <a
+              href="/things-to-do"
                       className="inline-flex items-center gap-2 text-secondary-600 hover:text-secondary-700 font-semibold"
                     >
                       Browse All Activities <ExternalLink className="w-4 h-4" />
@@ -1320,7 +1471,7 @@ export function TripCalculator({
                     {selectedActivities.length > 0 && (
                       <div className="p-4">
                         <div className="flex items-center gap-2 text-sm font-semibold text-neutral-500 mb-3">
-                          <Compass className="w-4 h-4" />
+              <Compass className="w-4 h-4" />
                           <span>Activities ({selectedActivities.length})</span>
                         </div>
                         
@@ -1496,9 +1647,9 @@ export function TripCalculator({
                     </li>
                   )}
                 </ul>
-              </div>
-            )}
           </div>
+            )}
+        </div>
         </div>
       </div>
     </div>
