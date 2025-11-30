@@ -254,7 +254,8 @@ export function TripCalculator({
         const hotelsData = await hotelsRes.json();
         let hotelList: LiteAPIHotel[] = hotelsData.data || [];
         
-        // Filter to hotels with images and sort by rating
+        // Filter to hotels with images and sort by review quality score
+        // Formula: rating × log10(reviewCount + 1) - balances quality AND popularity
         hotelList = hotelList
           .filter(h => h.images && h.images.length > 0)
           .sort((a, b) => {
@@ -262,11 +263,14 @@ export function TripCalculator({
             const ratingB = b.review_score || 0;
             const countA = a.review_count || 0;
             const countB = b.review_count || 0;
+            // Quality score = rating × log10(reviews + 1)
+            // e.g., 9.0 rating with 500 reviews = 9.0 × 2.7 = 24.3
+            // vs 9.5 rating with 10 reviews = 9.5 × 1.04 = 9.9
             const scoreA = ratingA * Math.log10(countA + 1);
             const scoreB = ratingB * Math.log10(countB + 1);
             return scoreB - scoreA;
           })
-          .slice(0, 8);
+          .slice(0, 20); // Fetch more so budget filtering has options
         
         if (cancelled) return;
         setHotels(hotelList);
@@ -386,12 +390,18 @@ export function TripCalculator({
         const res = await fetch(`/api/viator/search?${params}`);
         if (res.ok && !cancelled) {
           const data = await res.json();
-          // Sort by price and take first 8 within budget
+          // Sort by review quality score: rating × log10(reviewCount + 1)
+          // This prioritizes activities with both high ratings AND many reviews
           const products = (data.products || [])
             .sort((a: any, b: any) => {
-              const priceA = a.pricing?.summary?.fromPrice || 0;
-              const priceB = b.pricing?.summary?.fromPrice || 0;
-              return priceA - priceB;
+              const ratingA = a.reviews?.combinedAverageRating || 0;
+              const ratingB = b.reviews?.combinedAverageRating || 0;
+              const countA = a.reviews?.totalReviews || 0;
+              const countB = b.reviews?.totalReviews || 0;
+              // Quality score = rating × log10(reviews + 1)
+              const scoreA = ratingA * Math.log10(countA + 1);
+              const scoreB = ratingB * Math.log10(countB + 1);
+              return scoreB - scoreA;
             })
             .slice(0, 8);
           setActivities(products);
