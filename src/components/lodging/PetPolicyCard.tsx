@@ -198,3 +198,4 @@ export function PetPolicyCard({ amenities, importantInformation, hotelName }: Pe
 }
 
 
+
