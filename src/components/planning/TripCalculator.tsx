@@ -1031,95 +1031,239 @@ export function TripCalculator({
           </div>
         </div>
                   ) : hotels.length > 0 ? (
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      {hotels.map((hotel) => {
-                        const isSelected = selectedHotel?.id === hotel.hotel_id;
-                        // Handle different image formats from API
-                        const firstImage = hotel.images?.[0] as { url?: string; variants?: { url?: string }[] } | undefined;
-                        const imageUrl = firstImage?.url || firstImage?.variants?.[0]?.url;
-                        const price = hotelPrices[hotel.hotel_id] || 0;
-                        const rating = hotel.review_score || 0;
+                    (() => {
+                      const maxBudget = budgetBreakdown.lodging.perNight;
+                      // Sort hotels: within budget first (sorted by price desc), then over budget (sorted by price asc)
+                      const sortedHotels = [...hotels].sort((a, b) => {
+                        const priceA = hotelPrices[a.hotel_id] || 200;
+                        const priceB = hotelPrices[b.hotel_id] || 200;
+                        const aInBudget = priceA <= maxBudget;
+                        const bInBudget = priceB <= maxBudget;
                         
-                        return (
-                          <div 
-                            key={hotel.hotel_id}
-                            className={`relative bg-white rounded-xl border-2 overflow-hidden transition-all duration-300 ${
-                              isSelected 
-                                ? 'border-primary-500 shadow-lg ring-2 ring-primary-200' 
-                                : 'border-neutral-200 hover:border-primary-300 hover:shadow-md'
-                            }`}
-                          >
-                            {isSelected && (
-                              <div className="absolute top-3 left-3 z-20 flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-primary-600 text-white text-sm font-bold shadow-lg">
-                                <Check className="w-4 h-4" />
-                                Selected
-                              </div>
-                            )}
+                        // In-budget hotels come first
+                        if (aInBudget && !bInBudget) return -1;
+                        if (!aInBudget && bInBudget) return 1;
+                        
+                        // Within same category, sort by rating×reviews score
+                        const scoreA = (a.review_score || 0) * Math.log10((a.review_count || 0) + 1);
+                        const scoreB = (b.review_score || 0) * Math.log10((b.review_count || 0) + 1);
+                        return scoreB - scoreA;
+                      });
+                      
+                      const inBudgetHotels = sortedHotels.filter(h => (hotelPrices[h.hotel_id] || 200) <= maxBudget);
+                      const overBudgetHotels = sortedHotels.filter(h => (hotelPrices[h.hotel_id] || 200) > maxBudget);
+                      
+                      return (
+                        <div className="space-y-6">
+                          {/* In-budget hotels */}
+                          {inBudgetHotels.length > 0 && (
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                              {inBudgetHotels.map((hotel) => {
+                                const isSelected = selectedHotel?.id === hotel.hotel_id;
+                                const firstImage = hotel.images?.[0] as { url?: string; variants?: { url?: string }[] } | undefined;
+                                const imageUrl = firstImage?.url || firstImage?.variants?.[0]?.url;
+                                const price = hotelPrices[hotel.hotel_id] || 200;
+                                const rating = hotel.review_score || 0;
+                                
+                                return (
+                                  <div 
+                                    key={hotel.hotel_id}
+                                    className={`relative bg-white rounded-xl border-2 overflow-hidden transition-all duration-300 ${
+                                      isSelected 
+                                        ? 'border-primary-500 shadow-lg ring-2 ring-primary-200' 
+                                        : 'border-neutral-200 hover:border-primary-300 hover:shadow-md'
+                                    }`}
+                                  >
+                                    {isSelected && (
+                                      <div className="absolute top-3 left-3 z-20 flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-primary-600 text-white text-sm font-bold shadow-lg">
+                                        <Check className="w-4 h-4" />
+                                        Selected
+                                      </div>
+                                    )}
 
-                            <div className="relative h-40 bg-neutral-100">
-                              {imageUrl ? (
-                                <img
-                                  src={imageUrl}
-                                  alt={hotel.name || 'Hotel'}
-                                  className="w-full h-full object-cover"
-                                  loading="lazy"
-                                />
-                              ) : (
-                                <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-neutral-100 to-neutral-200">
-                                  <Hotel className="w-8 h-8 text-neutral-300" />
-                                </div>
-                              )}
-                              
-                              {/* Always show price - use "From ~" for estimates */}
-                              <div className="absolute bottom-3 right-3 bg-white/95 backdrop-blur px-3 py-1.5 rounded-lg shadow-lg">
-                                <div className="flex items-baseline gap-1">
-                                  <span className="text-xs text-neutral-500">From</span>
-                                  <span className="text-lg font-bold text-neutral-900">{formatCurrency(price > 0 ? price : 200)}</span>
-                                  <span className="text-xs text-neutral-500">/night</span>
-                                </div>
-                              </div>
-                            </div>
+                                    <div className="relative h-40 bg-neutral-100">
+                                      {imageUrl ? (
+                                        <img
+                                          src={imageUrl}
+                                          alt={hotel.name || 'Hotel'}
+                                          className="w-full h-full object-cover"
+                                          loading="lazy"
+                                        />
+                                      ) : (
+                                        <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-neutral-100 to-neutral-200">
+                                          <Hotel className="w-8 h-8 text-neutral-300" />
+                                        </div>
+                                      )}
+                                      
+                                      {/* Price badge - green tint for in-budget */}
+                                      <div className="absolute bottom-3 right-3 bg-white/95 backdrop-blur px-3 py-1.5 rounded-lg shadow-lg border border-green-200">
+                                        <div className="flex items-baseline gap-1">
+                                          <span className="text-xs text-green-600">From</span>
+                                          <span className="text-lg font-bold text-green-700">{formatCurrency(price)}</span>
+                                          <span className="text-xs text-green-600">/night</span>
+                                        </div>
+                                      </div>
+                                    </div>
 
-                            <div className="p-4">
-                              <h4 className="font-bold text-neutral-900 text-lg mb-1 line-clamp-1">{hotel.name}</h4>
-                              
-                              <div className="flex items-center gap-3 text-sm text-neutral-600 mb-3">
-                                {rating > 0 && (
-                                  <div className="flex items-center gap-1">
-                                    <Star className="w-4 h-4 fill-amber-400 text-amber-400" />
-                                    <span className="font-semibold">{rating.toFixed(1)}</span>
+                                    <div className="p-4">
+                                      <h4 className="font-bold text-neutral-900 text-lg mb-1 line-clamp-1">{hotel.name}</h4>
+                                      
+                                      <div className="flex items-center gap-3 text-sm text-neutral-600 mb-3">
+                                        {rating > 0 && (
+                                          <div className="flex items-center gap-1">
+                                            <Star className="w-4 h-4 fill-amber-400 text-amber-400" />
+                                            <span className="font-semibold">{rating.toFixed(1)}</span>
+                                          </div>
+                                        )}
+                                        <p className="text-xs text-neutral-500">
+                                          ~{formatCurrency(price * nights)} for {nights} night{nights > 1 ? 's' : ''}
+                                        </p>
+                                      </div>
+
+                                      <button
+                                        onClick={() => handleHotelSelect(hotel)}
+                                        className={`w-full flex items-center justify-center gap-2 py-3 px-4 rounded-lg font-semibold transition-all ${
+                                          isSelected
+                                            ? 'bg-primary-100 text-primary-700 hover:bg-primary-200'
+                                            : 'bg-primary-600 text-white hover:bg-primary-700'
+                                        }`}
+                                      >
+                                        {isSelected ? (
+                                          <>
+                                            <X className="w-4 h-4" />
+                                            Remove Selection
+                                          </>
+                                        ) : (
+                                          <>
+                                            <Plus className="w-4 h-4" />
+                                            Select This Hotel
+                                          </>
+                                        )}
+                                      </button>
+                                    </div>
                                   </div>
-                                )}
-                                <p className="text-xs text-neutral-500">
-                                  ~{formatCurrency((price > 0 ? price : 200) * nights)} for {nights} night{nights > 1 ? 's' : ''}
+                                );
+                              })}
+                            </div>
+                          )}
+                          
+                          {/* Over-budget hotels section */}
+                          {overBudgetHotels.length > 0 && (
+                            <>
+                              <div className="border-t border-neutral-200 pt-4">
+                                <p className="text-sm text-neutral-500 mb-4 flex items-center gap-2">
+                                  <span className="w-2 h-2 rounded-full bg-amber-400"></span>
+                                  Above your {formatCurrency(maxBudget)}/night budget
                                 </p>
                               </div>
+                              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 opacity-75">
+                                {overBudgetHotels.slice(0, 4).map((hotel) => {
+                                  const isSelected = selectedHotel?.id === hotel.hotel_id;
+                                  const firstImage = hotel.images?.[0] as { url?: string; variants?: { url?: string }[] } | undefined;
+                                  const imageUrl = firstImage?.url || firstImage?.variants?.[0]?.url;
+                                  const price = hotelPrices[hotel.hotel_id] || 200;
+                                  const rating = hotel.review_score || 0;
+                                  const overBy = price - maxBudget;
+                                  
+                                  return (
+                                    <div 
+                                      key={hotel.hotel_id}
+                                      className={`relative bg-white rounded-xl border-2 overflow-hidden transition-all duration-300 ${
+                                        isSelected 
+                                          ? 'border-primary-500 shadow-lg ring-2 ring-primary-200 opacity-100' 
+                                          : 'border-amber-200 hover:border-amber-300 hover:shadow-md hover:opacity-100'
+                                      }`}
+                                    >
+                                      {/* Over budget badge */}
+                                      <div className="absolute top-3 left-3 z-20 flex items-center gap-1.5 px-2 py-1 rounded-full bg-amber-100 text-amber-700 text-xs font-medium shadow">
+                                        +{formatCurrency(overBy)}/night
+                                      </div>
+                                      
+                                      {isSelected && (
+                                        <div className="absolute top-3 right-3 z-20 flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-primary-600 text-white text-sm font-bold shadow-lg">
+                                          <Check className="w-4 h-4" />
+                                        </div>
+                                      )}
 
-                              <button
-                                onClick={() => handleHotelSelect(hotel)}
-                                className={`w-full flex items-center justify-center gap-2 py-3 px-4 rounded-lg font-semibold transition-all ${
-                                  isSelected
-                                    ? 'bg-primary-100 text-primary-700 hover:bg-primary-200'
-                                    : 'bg-primary-600 text-white hover:bg-primary-700'
-                                }`}
-                              >
-                                {isSelected ? (
-                                  <>
-                                    <X className="w-4 h-4" />
-                                    Remove Selection
-                                  </>
-                                ) : (
-                                  <>
-                                    <Plus className="w-4 h-4" />
-                                    Select This Hotel
-                                  </>
-                                )}
-                              </button>
+                                      <div className="relative h-40 bg-neutral-100">
+                                        {imageUrl ? (
+                                          <img
+                                            src={imageUrl}
+                                            alt={hotel.name || 'Hotel'}
+                                            className="w-full h-full object-cover"
+                                            loading="lazy"
+                                          />
+                                        ) : (
+                                          <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-neutral-100 to-neutral-200">
+                                            <Hotel className="w-8 h-8 text-neutral-300" />
+                                          </div>
+                                        )}
+                                        
+                                        {/* Price badge - amber tint for over-budget */}
+                                        <div className="absolute bottom-3 right-3 bg-white/95 backdrop-blur px-3 py-1.5 rounded-lg shadow-lg border border-amber-200">
+                                          <div className="flex items-baseline gap-1">
+                                            <span className="text-xs text-amber-600">From</span>
+                                            <span className="text-lg font-bold text-amber-700">{formatCurrency(price)}</span>
+                                            <span className="text-xs text-amber-600">/night</span>
+                                          </div>
+                                        </div>
+                                      </div>
+
+                                      <div className="p-4">
+                                        <h4 className="font-bold text-neutral-900 text-lg mb-1 line-clamp-1">{hotel.name}</h4>
+                                        
+                                        <div className="flex items-center gap-3 text-sm text-neutral-600 mb-3">
+                                          {rating > 0 && (
+                                            <div className="flex items-center gap-1">
+                                              <Star className="w-4 h-4 fill-amber-400 text-amber-400" />
+                                              <span className="font-semibold">{rating.toFixed(1)}</span>
+                                            </div>
+                                          )}
+                                          <p className="text-xs text-neutral-500">
+                                            ~{formatCurrency(price * nights)} for {nights} night{nights > 1 ? 's' : ''}
+                                          </p>
+                                        </div>
+
+                                        <button
+                                          onClick={() => handleHotelSelect(hotel)}
+                                          className={`w-full flex items-center justify-center gap-2 py-3 px-4 rounded-lg font-semibold transition-all ${
+                                            isSelected
+                                              ? 'bg-primary-100 text-primary-700 hover:bg-primary-200'
+                                              : 'bg-amber-100 text-amber-700 hover:bg-amber-200'
+                                          }`}
+                                        >
+                                          {isSelected ? (
+                                            <>
+                                              <X className="w-4 h-4" />
+                                              Remove
+                                            </>
+                                          ) : (
+                                            <>
+                                              <Plus className="w-4 h-4" />
+                                              Select Anyway
+                                            </>
+                                          )}
+                                        </button>
+                                      </div>
+                                    </div>
+                                  );
+                                })}
+                              </div>
+                            </>
+                          )}
+                          
+                          {/* No hotels in budget message */}
+                          {inBudgetHotels.length === 0 && (
+                            <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 text-center">
+                              <p className="text-amber-700 text-sm">
+                                No hotels found within your {formatCurrency(maxBudget)}/night budget. 
+                                Consider increasing your budget or adjusting the lodging allocation.
+                              </p>
                             </div>
-                          </div>
-                        );
-                      })}
-                    </div>
+                          )}
+                        </div>
+                      );
+                    })()
                   ) : (
                     <div className="text-center py-12 text-neutral-500">
                       <Hotel className="w-12 h-12 mx-auto mb-3 text-neutral-300" />
